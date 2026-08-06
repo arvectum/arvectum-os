@@ -1,117 +1,120 @@
 # Arvectum OS Platform Metrics
 
 Status: `Informative`
-Version: `0.1.0`
+Version: `0.2.0`
 Updated: `2026-08-06`
-Architecture basis: `RFC-0001 v0.4.0`
+Architecture basis: `RFC-0001 v0.5.0`
+Constitution basis: `1.2.0`
 
 ## Purpose
 
-This document defines the initial evidence framework for evaluating whether Arvectum OS creates measurable platform leverage.
+This document defines the initial evidence framework for evaluating whether Arvectum OS creates measurable organizational and platform leverage.
 
-It is intentionally separate from RFC-0001 because metrics, targets and review cadence should evolve with the stage of the company, product portfolio and operating baseline.
-
-This document is informative. It does not override the Constitution, accepted RFCs or approved product commitments.
+Metrics, targets and cadence evolve with company stage, product portfolio and operating baseline. This document does not override the Constitution, accepted RFCs or product commitments.
 
 ## Measurement Principle
 
-The platform is valuable only when it improves outcomes for products and organizations.
+The platform is valuable only when it improves outcomes while preserving organizational control, security and portability.
 
-The platform must not be evaluated primarily by:
-
-- number of services;
-- number of abstractions;
-- number of RFCs;
-- lines of code;
-- infrastructure complexity;
-- percentage of code nominally labeled as platform.
-
-Evidence should focus on reuse, delivery speed, operating cost, quality, risk, explainability and integration effort.
+It must not be evaluated primarily by service count, abstraction count, RFC count, lines of code, infrastructure complexity or code nominally labeled as platform.
 
 ## Initial Metric Groups
 
-### Product Delivery
+### Product Delivery and Experimentation
 
-- time to integrate a new product;
-- platform-caused product delivery delay;
-- time from product need to usable capability;
-- time to implement a second consumer of an existing capability.
+- time from product need to bounded Product Experiment;
+- time from validated experiment to usable incubating capability;
+- platform-caused delivery delay;
+- percentage of experiments with owner, review date and exit path;
+- percentage promoted, contained or retired by the declared review date.
 
 ### Reuse and Platform Gravity
 
-- number of real consumers per capability;
-- percentage of active capabilities used by more than one consumer;
-- number of duplicated shared capabilities;
-- capability adoption and abandonment;
+- real consumers per capability;
+- percentage of Active capabilities used by multiple consumers;
+- time and cost to implement a second consumer;
+- duplicated validated shared capabilities;
+- capability adoption, bypass and abandonment;
 - number and age of architectural exceptions.
 
 ### Economics
 
 - capability ownership and support cost;
-- integration cost compared with a product-specific alternative;
-- measurable operating cost avoided through shared capabilities;
-- cost of migration or capability replacement;
-- cost of replacing a model or infrastructure adapter.
+- integration cost versus product-specific or external alternatives;
+- measurable operating cost or risk avoided;
+- de-platformization and retirement cost;
+- cost of replacing a model or technology adapter.
 
 ### Governance and Explainability
 
 - percentage of consequential executions with complete provenance;
 - time required to reconstruct a consequential output;
-- percentage of required approvals and validations captured correctly;
-- change failure rate for standards, policies and workflows;
-- number of unauthorized or unexplained canonical changes.
+- required approvals and validations captured correctly;
+- unauthorized or unexplained canonical changes;
+- change-failure rate for standards, policies and workflows.
+
+### Security, Privacy and Isolation
+
+- unauthorized access and tenant-isolation incidents;
+- percentage of governed records with declared tenant scope and classification where required;
+- percentage of actors and components reviewed for least privilege;
+- sensitive-data operations with attributable audit records;
+- overdue retention or deletion actions;
+- data-minimization exceptions and their review age.
+
+### Organizational Control and Portability
+
+- time to produce a governed export;
+- percentage of export scope preserving identities, versions, relationships and provenance;
+- tested migration success rate;
+- deletion requests completed under applicable policy;
+- customer or organizational assets dependent on inaccessible proprietary representation;
+- portability defects discovered during handover or migration tests.
 
 ### Capability Lifecycle
 
-- duration of capability incubation;
-- percentage of incubating capabilities promoted to Active;
-- percentage returned to products, replaced or retired;
+- duration of incubation;
+- promotion rate to Active;
+- return-to-product, replacement and retirement rate;
 - overdue incubation reviews;
-- deprecated capabilities without an active migration plan.
+- Deprecated capabilities without migration plans;
+- Active capabilities that no longer satisfy admission criteria.
 
 ### Reliability and Quality
 
 - execution failure rate attributable to platform components;
-- contract compatibility failures detected before execution;
-- incidents caused by shared platform capabilities;
-- recovery time for platform-caused failures;
-- output quality improvement attributable to shared validation or knowledge.
+- compatibility failures detected before execution;
+- incidents caused by shared capabilities;
+- recovery time from platform-caused failures;
+- output-quality improvement attributable to shared validation or knowledge.
 
 ## Baselines and Targets
 
-Exact targets must be established only after an operational baseline exists.
+Targets require an operational baseline.
 
-Every target should identify:
+Every metric should identify definition, data source, owner, review period, baseline, target, rationale, limitations and possible harmful incentives.
 
-- measurement definition;
-- data source;
-- accountable owner;
-- review period;
-- current baseline;
-- target and rationale;
-- known limitations;
-- behavior the metric could accidentally incentivize.
-
-A metric without a reliable data source should be treated as a hypothesis rather than reported as fact.
+A metric without a reliable data source is a hypothesis, not a reported fact.
 
 ## Anti-gaming Rules
 
 Metrics must not encourage:
 
-- premature movement of product code into the platform;
+- premature movement of product logic into the platform;
+- relabeling Product Experiments as platform reuse;
 - superficial reuse that increases total cost;
-- keeping failed capabilities alive to avoid a retirement count;
-- excessive approvals merely to improve governance coverage;
-- artificial fragmentation of consumers or capabilities;
-- hiding platform-caused delays inside product estimates;
-- treating documentation volume as product value.
+- retaining failed capabilities to avoid retirement;
+- excessive approvals for coverage statistics;
+- collecting unnecessary data to improve observability metrics;
+- hiding platform delay inside product estimates;
+- treating documentation volume as organizational value.
 
-A metric should be changed or retired when it no longer reflects the intended business outcome.
+A metric should be changed or retired when it no longer represents the intended outcome.
 
 ## Review Cadence
 
-During the initial product-validation stage, metrics should be reviewed at meaningful delivery or pilot milestones rather than through a heavy fixed reporting process.
+During product validation, metrics should be reviewed at meaningful pilot, delivery, security, migration or capability-review milestones rather than through a heavy reporting process.
 
-A recurring cadence may be introduced after stable operational data exists.
+A fixed cadence may be introduced after stable operational data exists.
 
-The owner of Arvectum OS may change this metric set without amending RFC-0001, provided the new metrics remain consistent with its Platform Evidence requirements.
+The owner of Arvectum OS may update this metric set without amending RFC-0001 when the changes remain consistent with its Platform Evidence requirements.
