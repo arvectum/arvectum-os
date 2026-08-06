@@ -17,7 +17,13 @@ The Constitution has higher authority than every RFC. Accepted RFCs have higher 
 
 | RFC | Title | Category | Status | Version |
 |---|---|---|---|---|
-| [RFC-0001](RFC-0001-arvectum-os-architecture.md) | Arvectum OS Architecture | platform | Proposed | 0.5.0 |
+| [RFC-0001](RFC-0001-arvectum-os-architecture.md) | Arvectum OS Architecture | platform | Proposed | 0.6.0 |
+
+## Acceptance Integrity
+
+An RFC is validly `Accepted` only when its canonical document contains completed approval metadata or an equivalent immutable approval reference and the index is updated in the same canonical decision.
+
+A status label without the required approval evidence does not constitute acceptance.
 
 ## Governance Notes
 
