@@ -1,9 +1,9 @@
 # Arvectum OS Platform Metrics
 
 Status: `Informative`
-Version: `0.2.0`
-Updated: `2026-08-06`
-Architecture basis: `RFC-0001 v0.5.0`
+Version: `0.3.0`
+Updated: `2026-08-07`
+Architecture basis: `RFC-0001 v0.6.0`
 Constitution basis: `1.2.0`
 
 ## Purpose
@@ -28,6 +28,14 @@ It must not be evaluated primarily by service count, abstraction count, RFC coun
 - percentage of experiments with owner, review date and exit path;
 - percentage promoted, contained or retired by the declared review date.
 
+### Contract Proportionality
+
+- percentage of completely product-local experiments conducted without unnecessary platform-contract work;
+- time required to create a minimal Provisional Product Contract when platform interaction begins;
+- number of experiments accessing platform capabilities or canonical state without a declared provisional contract;
+- contract fields or controls found unnecessary for the experiment's actual platform interaction;
+- product delay attributable to contract ceremony rather than risk control.
+
 ### Reuse and Platform Gravity
 
 - real consumers per capability;
@@ -39,7 +47,7 @@ It must not be evaluated primarily by service count, abstraction count, RFC coun
 
 ### Economics
 
-- capability ownership and support cost;
+- capability responsibility and support cost;
 - integration cost versus product-specific or external alternatives;
 - measurable operating cost or risk avoided;
 - de-platformization and retirement cost;
@@ -78,7 +86,8 @@ It must not be evaluated primarily by service count, abstraction count, RFC coun
 - return-to-product, replacement and retirement rate;
 - overdue incubation reviews;
 - Deprecated capabilities without migration plans;
-- Active capabilities that no longer satisfy admission criteria.
+- Active capabilities that no longer satisfy admission criteria;
+- exploratory areas incorrectly treated as funded roadmap commitments.
 
 ### Reliability and Quality
 
@@ -101,9 +110,11 @@ A metric without a reliable data source is a hypothesis, not a reported fact.
 Metrics must not encourage:
 
 - premature movement of product logic into the platform;
+- requiring platform contracts for experiments that have no platform interaction;
 - relabeling Product Experiments as platform reuse;
 - superficial reuse that increases total cost;
 - retaining failed capabilities to avoid retirement;
+- treating exploratory inventory as an approved roadmap;
 - excessive approvals for coverage statistics;
 - collecting unnecessary data to improve observability metrics;
 - hiding platform delay inside product estimates;
