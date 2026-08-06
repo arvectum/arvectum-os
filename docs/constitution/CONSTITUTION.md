@@ -1,11 +1,11 @@
 # The Constitution of Arvectum OS
 
 Status: `Ratified`
-Version: `1.1.0`
+Version: `1.2.0`
 Ratified: `2026-08-06`
 Owner: `ООО «Арвектум»`
 Canonical language: `English`
-Supersedes: `1.0.0`
+Supersedes: `1.1.0`
 
 ## Preamble
 
@@ -57,7 +57,7 @@ Product-local experiments must have an explicit path to promotion, containment o
 
 ## Article III. Domain Boundaries
 
-The kernel and shared platform logic must remain domain-neutral.
+Shared platform foundations, contracts and governance mechanisms must remain domain-neutral.
 
 They may understand universal organizational capabilities such as:
 
@@ -74,7 +74,7 @@ They may understand universal organizational capabilities such as:
 
 Arvectum OS may store, govern and serve domain knowledge through product-owned modules, schemas and contracts.
 
-Domain knowledge must not leak into the kernel or redefine shared platform behavior.
+Domain knowledge must not leak into shared platform behavior or redefine shared platform contracts.
 
 Business expertise belongs to domain products, agents and modules.
 
@@ -118,31 +118,43 @@ Arvectum OS must support governed export, migration and deletion where legally a
 
 Organizational continuity must not depend on an inaccessible proprietary representation.
 
-## Article VIII. Decisions
+## Article VIII. Security, Privacy and Isolation
 
-Every significant architectural, product or operational decision shall be recorded.
+Security, privacy, confidentiality and data isolation are structural properties of Arvectum OS.
 
-Each decision must include:
+Identity, least privilege, authorization, tenant isolation, data minimization, retention, deletion and auditability must be designed into platform capabilities and workflows.
+
+No product experiment, automation or implementation shortcut may bypass applicable security, privacy, legal or contractual controls.
+
+The rigor of controls must be proportionate to data sensitivity, consequence and threat.
+
+## Article IX. Decisions
+
+Every material, durable or consequential architectural, product or operational decision shall be recorded at a level proportionate to its impact.
+
+The record should preserve, where applicable:
 
 - context;
-- alternatives;
+- alternatives considered;
 - rationale;
 - consequences;
-- approval.
+- decision authority or approval.
 
-No important decision should exist only in chat history.
+No material, durable or consequential decision should exist only in chat history.
 
-## Article IX. Workflows
+## Article X. Workflows
 
 Every repeatable and operationally significant organizational process should be represented as a versioned workflow.
 
 A workflow defines how work is performed.
 
-A workflow must not depend on a specific AI model, vendor or runtime implementation.
+The business meaning, governance and durable state of a workflow must not be inseparably bound to a specific AI model, vendor or runtime implementation.
+
+Vendor-specific implementations are permitted when their dependencies are declared, bounded and replaceable without loss of governed organizational state.
 
 The rigor of workflow formalization must be proportionate to its risk, frequency and organizational importance.
 
-## Article X. Events and Observability
+## Article XI. Events and Observability
 
 Every meaningful action generates an observable record proportionate to its consequence.
 
@@ -152,7 +164,7 @@ Nothing important happens silently.
 
 The system must preserve enough context to reconstruct consequential operations.
 
-## Article XI. Explainability
+## Article XII. Explainability
 
 Every significant system output must be explainable.
 
@@ -168,7 +180,7 @@ The platform must be able to identify, where applicable:
 - the validation results;
 - the human approvals required or obtained.
 
-## Article XII. Human Governance
+## Article XIII. Human Governance
 
 Artificial intelligence may assist.
 
@@ -186,13 +198,13 @@ They do not silently modify approved standards, policies, workflows or productio
 
 The level of human control must be proportionate to consequence, reversibility and external impact.
 
-## Article XIII. Reproducibility
+## Article XIV. Reproducibility
 
 Any approved organizational asset or consequential operation shall be reproducible to the extent permitted by its declared inputs and dependencies.
 
 Given identical inputs, standards, policies and versions, Arvectum OS should be capable of producing an equivalent result or explaining why equivalence cannot be achieved.
 
-## Article XIV. Version Everything Significant
+## Article XV. Version Everything Significant
 
 Every significant governed object is versioned.
 
@@ -213,7 +225,7 @@ Historical approved versions remain identifiable so that past outputs and decisi
 
 Transient or experimental objects may use lighter versioning when their status, scope and retention are explicit.
 
-## Article XV. Organizational Assets
+## Article XVI. Organizational Assets
 
 An organizational artifact becomes a governed organizational asset when it is designated as authoritative, reusable, evidentiary or operationally significant.
 
@@ -234,7 +246,7 @@ Governed organizational assets are versioned, discoverable, attributable and reu
 
 Transient outputs do not automatically become permanent organizational assets.
 
-## Article XVI. Value and Proportionality
+## Article XVII. Value and Proportionality
 
 Architecture serves organizational value.
 
@@ -246,7 +258,7 @@ Temporary solutions and experiments are permitted when their scope, risks, owner
 
 Architectural discipline must enable learning and delivery rather than replace them.
 
-## Article XVII. Architecture Before Irreversible Implementation
+## Article XVIII. Architecture Before Irreversible Implementation
 
 Architecture precedes cross-cutting, irreversible or materially constraining implementation.
 
@@ -265,7 +277,7 @@ The preferred order for durable platform capabilities is:
 7. operational evidence;
 8. controlled revision.
 
-## Article XVIII. Technology Independence
+## Article XIX. Technology Independence
 
 No constitutional principle shall depend on a specific programming language, framework, database, model provider, editor, vendor or third-party product.
 
@@ -273,7 +285,7 @@ Technologies may change.
 
 Architecture, contracts and organizational assets must remain understandable, portable and evolvable.
 
-## Article XIX. Extensibility
+## Article XX. Extensibility
 
 Products are extensions and clients of Arvectum OS.
 
@@ -283,7 +295,7 @@ Products contribute domain expertise and may incubate new capabilities through b
 
 Products must not redefine shared platform behavior or duplicate validated shared platform responsibilities without an approved architectural exception.
 
-## Article XX. Continuous Evolution
+## Article XXI. Continuous Evolution
 
 Organizations improve through accumulated experience.
 
@@ -299,7 +311,7 @@ Evolution is deliberate, governed and traceable.
 
 Never accidental.
 
-## Article XXI. Engineering Philosophy
+## Article XXII. Engineering Philosophy
 
 The platform values:
 

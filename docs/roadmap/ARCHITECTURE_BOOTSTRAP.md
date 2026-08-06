@@ -1,7 +1,7 @@
 # Arvectum OS Architecture Bootstrap
 
 Status: `Active`
-Version: `0.1`
+Version: `0.2`
 
 ## Goal
 
@@ -18,27 +18,29 @@ Deliverables:
 
 Exit criteria:
 
-- owner approves Constitution v0.1;
+- owner ratifies Constitution `1.2.0`;
+- constitutional amendments are recorded through accepted RFCs;
 - no external product or vendor is named as a constitutional dependency;
 - precedence between Constitution, RFCs, ADRs and code is explicit.
 
 ## Phase A1 — System architecture
 
-Document: `RFC-0001 Architecture`
+Document: `RFC-0002 Architecture`
 
 Must define:
 
 - platform boundary;
-- domain-neutral kernel;
-- platform services;
+- shared platform foundations;
+- whether a kernel abstraction is required and, if so, its responsibilities;
+- platform capabilities and service boundaries;
 - product clients;
 - event-driven interaction model;
-- identity, permissions and provenance boundaries;
+- identity, permissions, security, isolation and provenance boundaries;
 - deployment-neutral component view.
 
 ## Phase A2 — Entity and relation model
 
-Document: `RFC-0002 Entity Model`
+Document: `RFC-0003 Entity Model`
 
 Must define:
 
@@ -53,7 +55,7 @@ Must define:
 
 ## Phase A3 — Service model
 
-Document: `RFC-0003 Service Model`
+Document: `RFC-0004 Service Model`
 
 Initial service candidates:
 
@@ -74,7 +76,7 @@ The RFC must validate boundaries rather than assume that every candidate becomes
 
 Documents:
 
-- `RFC-0004 Event Model`;
+- `RFC-0005 Event Model`;
 - `docs/catalogs/events/`.
 
 Must define:
@@ -92,23 +94,23 @@ Must define:
 
 Documents:
 
-- `RFC-0005 Workflow Model`;
-- `RFC-0006 Decision and Approval Model`.
+- `RFC-0006 Workflow Model`;
+- `RFC-0007 Decision and Approval Model`.
 
-Must define reproducibility, checkpoints, human approvals, validation, failure handling and observable outcomes.
+Must define reproducibility, checkpoints, human approvals, validation, failure handling, dependency declaration, replaceability and observable outcomes.
 
 ## Phase A6 — Memory, knowledge and controlled learning
 
 Documents:
 
-- `RFC-0007 Memory and Knowledge Model`;
-- `RFC-0008 Controlled Learning Model`.
+- `RFC-0008 Memory and Knowledge Model`;
+- `RFC-0009 Controlled Learning Model`.
 
 The learning model must remain implementation-neutral. Existing external systems may later be evaluated as adapters, references or migration sources, but none is a constitutional dependency.
 
 ## Phase A7 — Product interface
 
-Document: `RFC-0009 Product Integration Contract`
+Document: `RFC-0010 Product Integration Contract`
 
 Must define how Tender Agent, Marketing Agent and future products:
 
@@ -117,15 +119,15 @@ Must define how Tender Agent, Marketing Agent and future products:
 - register domain entity extensions;
 - emit platform events;
 - request workflows and documents;
-- enforce permissions;
+- enforce permissions and isolation;
 - avoid duplicating platform responsibilities.
 
 ## Phase A8 — Document platform
 
 Documents:
 
-- `RFC-0010 Document Generation Contract`;
-- `RFC-0011 Validation Contract`.
+- `RFC-0011 Document Generation Contract`;
+- `RFC-0012 Validation Contract`.
 
 First acceptance scenario:
 
@@ -135,12 +137,13 @@ First acceptance scenario:
 
 Only after A0–A8 are accepted:
 
-- implement the smallest modular kernel;
+- implement the smallest modular reference architecture;
 - implement schemas and conformance tests;
 - support one end-to-end document workflow;
 - integrate one product as the first client;
-- record all state changes as events;
-- demonstrate reproducibility from recorded inputs and versions.
+- record all consequential state changes as events;
+- demonstrate reproducibility from recorded inputs and versions;
+- demonstrate security, isolation and portability boundaries.
 
 ## Not in the bootstrap scope
 

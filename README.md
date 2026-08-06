@@ -1,6 +1,6 @@
 # Arvectum OS
 
-Arvectum OS is a cognitive operating system for organizations: a domain-neutral platform for organizational memory, knowledge, standards, workflows, decisions, documents, governance and controlled improvement.
+Arvectum OS is an operating system for organizational intelligence: a domain-neutral platform foundation for organizational memory, knowledge, standards, workflows, decisions, documents, governance and controlled improvement.
 
 ## Start here
 
@@ -10,7 +10,7 @@ Every human contributor, AI agent and connected product must begin with:
 2. [Agent Rules](AGENTS.md)
 3. relevant accepted RFCs and ADRs
 
-The Constitution has the highest architectural authority in this repository.
+The Constitution has the highest architectural authority in this repository. The current ratified version is `1.2.0`.
 
 For ChatGPT projects and long-lived chats, use:
 
@@ -26,7 +26,9 @@ Domain products such as procurement, marketing, finance or legal agents live out
 
 `Foundation / Architecture Bootstrap`
 
-Production implementation is intentionally deferred until the foundational RFCs define the platform architecture, language, core models and contracts.
+Production implementation is intentionally deferred until the foundational RFCs define the platform architecture, language, core models, security boundaries and contracts.
+
+The next architecture document is `RFC-0002 Architecture`. RFC identifiers `0000` and `0001` record the constitutional amendments that produced versions `1.1.0` and `1.2.0`.
 
 ## Authority order
 

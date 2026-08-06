@@ -16,7 +16,7 @@ RFCs define cross-cutting architecture, public contracts and platform behavior b
 An RFC is required for:
 
 - changes to the Constitution;
-- kernel responsibilities;
+- shared platform foundation responsibilities;
 - entity, relation, event or workflow models;
 - public product integration contracts;
 - persistent storage semantics;
@@ -52,9 +52,10 @@ Every RFC must contain:
 RFC files use four-digit identifiers:
 
 ```text
-RFC-0000-constitution.md
-RFC-0001-architecture.md
-RFC-0002-entity-model.md
+RFC-0000-constitution-1.1.md
+RFC-0001-constitution-1.2.md
+RFC-0002-architecture.md
+RFC-0003-entity-model.md
 ```
 
 Numbers are never reused, including rejected or withdrawn RFCs.
