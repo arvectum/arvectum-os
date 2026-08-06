@@ -1,121 +1,145 @@
 # Arvectum OS Capability Catalog
 
 Status: `Informative`
-Version: `0.2.0`
+Version: `0.3.0`
 Updated: `2026-08-06`
-Architecture basis: `RFC-0001 v0.4.0`
+Architecture basis: `RFC-0001 v0.5.0`
+Constitution basis: `1.2.0`
 
 ## Purpose
 
-This catalog records the current candidate, incubating, active, deprecated and retired capability areas of Arvectum OS.
+This catalog records candidate, incubating, active, deprecated and retired platform capability areas of Arvectum OS.
 
-It is intentionally separate from RFC-0001 because capabilities may be added, split, merged, renamed, returned to a product or retired without changing the foundational architecture, provided the change remains compatible with accepted RFCs.
+It does not catalog ordinary product features or Product Experiments.
 
-This document is not an authority above the Constitution or accepted RFCs.
+Capabilities may be added, split, merged, renamed, returned to products or retired without changing foundational architecture when the change remains compatible with the Constitution and accepted RFCs.
 
-## Lifecycle States
+This document is informative and does not itself authorize implementation.
 
-Capabilities use the lifecycle defined by RFC-0001:
+## Product Experiments Are Not Platform Capabilities
+
+A Product Experiment is owned by a product or operational sponsor while uncertainty is high.
+
+It may contain domain-specific logic and does not enter this catalog merely because it may later prove reusable.
+
+A Product Experiment must have:
+
+- an owner;
+- bounded scope;
+- risk and data classification;
+- a review date;
+- applicable security, privacy, legal and contractual controls;
+- an explicit path to promotion, containment or retirement.
+
+A reusable pattern enters this catalog only after a decision creates a `Candidate` or `Incubating` Platform Capability with a proposed domain-neutral boundary.
+
+## Capability Lifecycle
 
 ```text
 Candidate → Incubating → Active → Deprecated → Retired
 ```
 
-- `Candidate` — documented proposal without an implementation commitment.
-- `Incubating` — limited implementation being tested through a real product or organizational need.
+- `Candidate` — documented platform proposal without implementation commitment.
+- `Incubating` — limited domain-neutral platform boundary being tested through real consumers.
 - `Active` — approved shared capability with supported contracts and evidence for platform ownership.
 - `Deprecated` — available for migration but not recommended for new consumers.
-- `Retired` — no longer available except through preserved historical or archival support.
+- `Retired` — unavailable except through preserved history or explicit archival support.
 
-A lifecycle transition must identify the approving decision, owner and effective date.
+Lifecycle transitions must identify the decision, owner and effective date.
 
 ## Capability Entry Requirements
 
-Each capability entry should identify:
+Each entry should identify:
 
-- capability owner;
+- owner;
 - organizational outcome;
-- sponsoring need or product;
+- source Product Experiment or strategic need;
 - current and expected consumers;
 - lifecycle status;
 - public or provisional contracts;
-- canonical record ownership;
+- canonical record and organizational asset ownership;
 - dependencies;
 - emitted events;
-- authority and access rules;
-- compatibility policy;
+- authority and least-privilege rules;
+- tenant scope and data classification;
+- retention, deletion, export and portability obligations;
+- compatibility and migration policy;
 - operational evidence;
-- review date where required;
-- promotion, deprecation and retirement criteria.
+- review date;
+- promotion, deprecation, de-platformization and retirement criteria.
 
 ## Incubation Requirements
 
 An `Incubating` capability must declare:
 
-- a sponsoring product or organizational need;
-- an accountable owner;
-- a bounded implementation scope and budget;
-- a reuse hypothesis;
-- a review date;
-- criteria for promotion to `Active`;
-- criteria for returning the capability to a product, replacing it or retiring it;
-- provisional contracts and known compatibility limits.
+- source experiment or organizational need;
+- accountable platform owner;
+- bounded implementation scope and budget;
+- sponsoring and expected consumers;
+- reuse hypothesis;
+- provisional domain-neutral contract;
+- security, privacy, isolation and portability requirements;
+- review date;
+- promotion criteria;
+- criteria for return to a product, replacement or retirement.
 
-Incubation does not prove that the capability belongs permanently in the platform.
+Incubation does not prove permanent platform ownership.
 
 ## Promotion to Active
 
-A capability may become `Active` only after passing the Economic Admission Test in RFC-0001.
+A capability may become `Active` only after satisfying RFC-0001 admission rules.
 
-The supporting decision should show:
+The supporting decision should demonstrate:
 
-- constitutional or cross-product need;
-- demonstrated or credible consumers;
-- measurable product, cost, quality, control or risk benefit;
+- constitutional, strategic or cross-product need;
+- credible consumers;
+- measurable product, cost, quality, governance, security, portability or risk benefit;
+- domain-neutral contracts;
 - ownership and support capacity;
-- compatibility and migration policy;
+- compatibility, export and migration policy;
 - why platform ownership is better than product ownership or an external solution.
 
 ## Exit and De-platformization
 
-A capability should be returned to a product, replaced, deprecated or retired when evidence no longer supports centralized platform ownership.
+A capability should be returned to a product, replaced, deprecated or retired when centralized ownership is no longer justified.
 
 Review triggers include:
 
-- no second consumer appears within the incubation period;
-- integration remains slower or more expensive than local implementation;
-- the capability becomes a recurring product bottleneck;
-- support cost exceeds demonstrated value;
-- a commodity external solution provides a better outcome;
-- the abstraction cannot remain domain-independent.
+- no second consumer within the declared period;
+- integration slower or more expensive than local implementation;
+- recurring product bottlenecks;
+- support cost above demonstrated value;
+- a superior commodity external solution;
+- failure to remain domain-neutral;
+- inability to meet security, isolation or portability obligations.
 
-Exit decisions must preserve required history, compatibility obligations and migration paths.
+Exit decisions must preserve required history, contractual commitments, governed export and migration paths.
 
 ## Current Capability Areas
 
-All entries below remain `Candidate`. Listing does not authorize implementation or imply that a separate service must exist.
+All entries remain `Candidate`. Listing does not authorize implementation or imply a separate service.
 
 | Capability area | Intended organizational outcome | Status | Owner | Sponsor | Review date |
 |---|---|---|---|---|---|
-| Identity and Authority | Attribute actions, evaluate permissions and represent delegated authority | Candidate | Unassigned | Unassigned | Not set |
-| Canonical Records and Relationships | Preserve significant organizational objects and their graph | Candidate | Unassigned | Unassigned | Not set |
+| Identity and Authority | Attribute actions, enforce least privilege and represent delegated authority | Candidate | Unassigned | Unassigned | Not set |
+| Canonical Records, Relationships and Assets | Preserve governed objects, versions, organizational assets and their graph | Candidate | Unassigned | Unassigned | Not set |
+| Security, Privacy and Tenant Isolation | Enforce classification, minimization, isolation, retention, deletion and auditability | Candidate | Unassigned | Unassigned | Not set |
+| Organizational Control and Portability | Provide governed export, migration, handover and deletion capabilities | Candidate | Unassigned | Unassigned | Not set |
 | Product Contracts and Extension Registry | Validate product-platform compatibility and registered extensions | Candidate | Unassigned | Unassigned | Not set |
 | Governed Workflow Execution | Execute repeatable processes within explicit Execution Contexts | Candidate | Unassigned | Unassigned | Not set |
 | Events, Provenance and Observability | Reconstruct meaningful actions, causes, inputs and outputs | Candidate | Unassigned | Unassigned | Not set |
-| Governance and Approvals | Apply proportional human authority to consequential changes and decisions | Candidate | Unassigned | Unassigned | Not set |
-| Validation | Execute reusable structural, semantic, quality and policy controls | Candidate | Unassigned | Unassigned | Not set |
-| Organizational Memory | Retain structured operational experience with provenance | Candidate | Unassigned | Unassigned | Not set |
+| Governance and Approvals | Apply proportional authority to consequential changes and decisions | Candidate | Unassigned | Unassigned | Not set |
+| Validation | Execute reusable structural, semantic, quality, security and policy controls | Candidate | Unassigned | Unassigned | Not set |
+| Organizational Memory | Retain structured operational experience with provenance and permitted use | Candidate | Unassigned | Unassigned | Not set |
 | Organizational Knowledge | Preserve validated, reusable organizational understanding | Candidate | Unassigned | Unassigned | Not set |
-| Standards and Policies | Version approved production methods and behavioral constraints | Candidate | Unassigned | Unassigned | Not set |
-| Decisions | Preserve context, alternatives, rationale, consequences and approval | Candidate | Unassigned | Unassigned | Not set |
-| Documents and Artifacts | Manage identity, versions, generation context and lifecycle of deliverables | Candidate | Unassigned | Unassigned | Not set |
-| Search and Context Resolution | Resolve relevant records and relationships without creating a second source of truth | Candidate | Unassigned | Unassigned | Not set |
-| Integration and Adapter Management | Register and operate replaceable technology and external-system adapters | Candidate | Unassigned | Unassigned | Not set |
+| Standards and Policies | Version approved methods and behavioral constraints | Candidate | Unassigned | Unassigned | Not set |
+| Decisions | Preserve context, alternatives, rationale, consequences and authority | Candidate | Unassigned | Unassigned | Not set |
+| Documents and Artifacts | Manage versions, generation context, classification and lifecycle of deliverables | Candidate | Unassigned | Unassigned | Not set |
+| Search and Context Resolution | Resolve relevant records without creating a second source of truth | Candidate | Unassigned | Unassigned | Not set |
+| Integration and Adapter Management | Operate replaceable technology and external-system adapters | Candidate | Unassigned | Unassigned | Not set |
 
 ## Change Rule
 
-Changing this catalog does not by itself authorize implementation.
+A catalog change requires an RFC when it changes a foundational law, Kernel primitive, product boundary, security or sovereignty invariant, portability obligation or another accepted architectural contract.
 
-A catalog change requires an RFC when it changes a foundational law, Kernel primitive, product boundary, sovereignty rule or another accepted architectural contract.
-
-Other lifecycle and inventory changes may be governed by an ADR or an approved catalog maintenance process, provided the required evidence and ownership are recorded.
+Other inventory and lifecycle changes may be governed by an ADR or approved catalog-maintenance process when evidence, ownership and migration are recorded.
