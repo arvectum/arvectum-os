@@ -1,18 +1,15 @@
 # RFC-0001: Arvectum OS Architecture
 
 Status: `Proposed`
-Version: `0.6.0`
+Version: `0.7.0`
 Created: `2026-08-06`
 Updated: `2026-08-07`
 Authors: `ООО «Арвектум»`
 Category: `platform`
 Constitution: `1.2.0`
-Supersedes: `RFC-0001 v0.5.0`
+Supersedes: `RFC-0001 v0.6.0`
 Superseded by: `None`
 Decision owner: `ООО «Арвектум»`
-Approved by: `Pending`
-Approval date: `Pending`
-Approval commit: `Pending`
 
 ## 1. Executive Summary
 
@@ -69,9 +66,9 @@ Where this RFC is ambiguous, the Constitution prevails.
 
 ### 2.1 Normative Status
 
-This RFC contains both normative architectural requirements and informative strategic guidance.
+This RFC contains normative architectural requirements and informative strategic guidance.
 
-The capitalized terms **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT** and **MAY** have the following meanings:
+The capitalized terms **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT** and **MAY** mean:
 
 - **MUST** or **MUST NOT** — mandatory for conformance unless an approved architectural exception explicitly applies;
 - **SHOULD** or **SHOULD NOT** — the default expectation; deviation requires recorded rationale proportionate to impact;
@@ -83,10 +80,12 @@ The following parts are normative:
 
 - the three architectural laws;
 - the Platform Kernel and its admission rules;
+- authority modes for canonical records;
 - Product Experiment, Platform Capability and Platform Service boundaries;
 - Product Contract and dependency rules;
 - security, privacy, isolation, sovereignty and portability invariants;
 - extension and AI authority constraints;
+- the scoped conformance model and fitness tests;
 - acceptance and approval requirements.
 
 The following parts are informative unless a statement explicitly uses a capitalized normative keyword:
@@ -155,8 +154,9 @@ Arvectum OS should enable ООО «Арвектум» and organizations using th
 6. maintain clear architectural responsibility and permitted use of platform, product and customer knowledge;
 7. detect incompatible contracts and dependencies before consequential execution;
 8. export, migrate and delete organizational data and assets under governed rules;
-9. replace technologies without losing organizational meaning or history;
-10. prove that platform investment creates measurable leverage rather than architecture overhead.
+9. integrate with external systems of record without creating competing sources of truth;
+10. replace technologies without losing organizational meaning or history;
+11. prove that platform investment creates measurable leverage rather than architecture overhead.
 
 ## 5. Non-goals
 
@@ -247,17 +247,37 @@ Those rights and obligations are determined by applicable law and contract.
 
 Where this RFC says that a product, platform capability, service or organization is architecturally responsible for an object or behavior, it refers only to the architectural meaning above.
 
-## 7. Canonical Records, Organizational Assets and Transient Outputs
+## 7. Canonical Records, Authority Modes, Organizational Assets and Transient Outputs
 
 ### 7.1 Law One: Every Significant Governed Object Has a Canonical Record
 
-Every significant governed object managed by Arvectum OS **MUST** have one canonical record within its declared scope and type.
+Every significant governed object managed by Arvectum OS **MUST** have one Canonical Record within its declared scope and type.
 
-A canonical record is authoritative about the identity, status, provenance and governed state of that object. This does not mean that every statement contained in a record is validated organizational knowledge.
+A Canonical Record is authoritative about how Arvectum OS identifies, scopes, governs and references the object. It does not necessarily make Arvectum OS the originating system of record for every underlying fact.
 
-Every canonical record **MUST** have an immutable version identity.
+Every Canonical Record **MUST** declare one authority mode:
 
-A changeable object **MUST** use a stable object identity and a sequence of immutable versions.
+- `Native` — Arvectum OS is the authoritative source for the governed object;
+- `External Reference` — an external system remains authoritative and Arvectum OS stores a governed identity, reference and access or retrieval contract;
+- `Governed Replica` — an external system remains authoritative while Arvectum OS stores a synchronized governed representation under an explicit synchronization contract.
+
+When an external system remains authoritative, Arvectum OS **MUST** preserve a Canonical Record that identifies the external authority and **MUST NOT** create a competing authoritative source for the same scope.
+
+An `External Reference` or `Governed Replica` **MUST** declare, where applicable:
+
+- external system and object identity;
+- authority scope;
+- synchronization or retrieval mechanism;
+- freshness and latency expectations;
+- conflict-resolution rule;
+- failure and unavailability behavior;
+- provenance;
+- permitted local transformations;
+- retention, deletion and portability obligations.
+
+Every Canonical Record **MUST** have an immutable version identity.
+
+A changeable native or replicated object **MUST** use a stable object identity and a sequence of immutable versions within Arvectum OS.
 
 An event or another immutable observation is normally a single-version record. Corrections, reversals and compensations **MUST** create additional linked records rather than mutate history.
 
@@ -272,10 +292,11 @@ A record is significant when it materially affects one or more of:
 - a reusable or evidentiary asset;
 - reconstruction of a consequential result.
 
-A significant canonical record **MUST** expose, directly or by reference:
+A significant Canonical Record **MUST** expose, directly or by reference:
 
 - stable object identity where applicable;
 - immutable version identity;
+- authority mode and authoritative source;
 - semantic type and schema version;
 - accountable architectural owner;
 - organization or tenant scope;
@@ -310,36 +331,29 @@ A **Transient Output** is a temporary result that has not been promoted into aut
 
 Examples may include drafts, intermediate model outputs, temporary files, exploratory analyses and short-lived experiment data.
 
-Transient and experimental objects **MAY** use lighter versioning, observability and retention when their:
-
-- status;
-- scope;
-- owner;
-- risk;
-- retention;
-- promotion or deletion path
-
-are explicit.
+Transient and experimental objects **MAY** use lighter versioning, observability and retention when their status, scope, owner, risk, retention and promotion or deletion path are explicit.
 
 A transient output **MUST NOT** become validated knowledge, organizational memory or a permanent asset automatically.
 
 ### 7.4 Law Two: Operational Context Is a Graph
 
-Arvectum OS **MUST** represent operationally relevant organizational context as canonical records connected through explicit, typed relationships.
+Arvectum OS **MUST** represent operationally relevant organizational context as Canonical Records connected through explicit, typed relationships.
 
 The graph is a governed representation inside the platform. It is not a claim that all organizational reality is captured or reducible to a graph.
 
 Examples:
 
 ```text
-Knowledge       --supported_by--> Evidence
-Decision        --uses----------> Knowledge
-Policy          --governs-------> Workflow
-Workflow Run    --produces------> Artifact Version
-Memory          --derived_from--> Event
-Asset           --classified_as-> Confidential
-Product         --implements----> Product Contract
-Record          --retained_by---> Retention Policy
+Knowledge        --supported_by------> Evidence
+Decision         --uses--------------> Knowledge
+Policy           --governs-----------> Workflow
+Workflow Run     --produces----------> Artifact Version
+Memory           --derived_from------> Event
+Asset            --classified_as-----> Confidential
+Product          --implements--------> Product Contract
+Record           --retained_by-------> Retention Policy
+External Record  --authoritative_in--> ERP System
+Replica          --synchronized_from-> External Record
 ```
 
 Relationships **MUST** be typed, directionally meaningful, attributable and traceable, and **MUST** be version-aware where required.
@@ -369,9 +383,10 @@ Governed Execution **MUST** identify, where applicable:
 - organization or tenant;
 - initiating actor;
 - authority and delegated authority;
-- product and product contract;
+- product and Product Contract;
 - workflow and version;
 - input records and versions;
+- external authoritative sources and synchronization state;
 - standards and policies;
 - knowledge and memory used;
 - deterministic and AI components;
@@ -446,9 +461,11 @@ Identity · Canonical Record · Relationship · Event · Execution Context
 Storage · Search · Queues · Models · Files · Authentication · APIs
 ```
 
+External systems of record may remain authoritative through `External Reference` or `Governed Replica` authority modes.
+
 Security, privacy, isolation, portability and governance constrain every layer. They are not a separate outer layer that can be bypassed.
 
-The diagram is informative. Normative experiment and contract rules are defined in Sections 11 and 13.
+The diagram is informative. Normative experiment, authority and contract rules are defined in Sections 7, 11 and 13.
 
 ## 10. Platform Kernel
 
@@ -464,7 +481,7 @@ Stable reference to organizations, actors, products, records, executions, events
 
 #### Canonical Record
 
-The authoritative representation of a governed object or immutable observation at a specific version.
+The governed representation of an object or immutable observation at a specific version, including its authority mode and authoritative source.
 
 #### Typed Relationship
 
@@ -518,6 +535,7 @@ That provisional contract **MUST** declare at least:
 
 - experiment identity and owner;
 - platform capabilities or state accessed;
+- authority modes and external systems involved;
 - tenant and data scope;
 - permissions and authority;
 - emitted events and outputs;
@@ -530,41 +548,50 @@ A Product Experiment remains product-responsible until a separate decision promo
 
 A **Platform Capability** is a reusable, domain-neutral organizational ability exposed by Arvectum OS to products or other capabilities.
 
-A capability **MUST** have:
+Requirements depend on lifecycle:
 
-- a clear organizational outcome;
-- an accountable architectural owner;
-- canonical records or declared stateless behavior;
-- public or provisional contracts;
-- declared dependencies;
-- emitted events;
+#### Candidate
+
+A `Candidate` capability **MUST** declare:
+
+- proposed organizational outcome;
+- accountable architectural owner;
+- sponsor or constitutional rationale;
+- intended domain-neutral boundary;
+- expected consumers or strategic need;
+- reuse hypothesis;
+- review date;
+- criteria for incubation, containment or rejection.
+
+A `Candidate` does not require an implemented contract or implementation commitment.
+
+#### Incubating
+
+An `Incubating` capability **MUST** additionally declare:
+
+- source Product Experiment or organizational need;
+- sponsoring consumers;
+- bounded scope and budget;
+- a `Provisional` domain-neutral contract;
+- canonical-record and authority-mode responsibilities;
+- dependencies and emitted events;
 - security, authority and data-handling rules;
-- portability, compatibility and migration rules;
-- lifecycle status;
-- evidence appropriate to that status.
+- portability, compatibility and migration requirements;
+- promotion, return-to-product, replacement and retirement criteria.
+
+#### Active
+
+An `Active` capability **MUST** have:
+
+- a supported stable public contract;
+- declared compatibility and migration policy;
+- accountable operational support;
+- measurable evidence appropriate to platform responsibility;
+- maintained security, portability and lifecycle obligations.
 
 The current inventory belongs in the Capability Catalog.
 
-### 11.3 Incubating Platform Capability
-
-An **Incubating Platform Capability** begins only after evidence or strategy justifies testing a reusable, domain-neutral boundary.
-
-It **MUST** declare:
-
-- the source Product Experiment or organizational need;
-- accountable platform owner;
-- sponsoring consumers;
-- bounded scope and budget;
-- reuse hypothesis;
-- provisional domain-neutral contract;
-- security and portability requirements;
-- review date;
-- promotion criteria;
-- criteria for return to a product, replacement or retirement.
-
-Incubation does not prove permanent platform responsibility.
-
-### 11.4 Active Capability Admission
+### 11.3 Active Capability Admission
 
 A capability **MAY** become `Active` only when at least one strategic condition is met:
 
@@ -575,9 +602,9 @@ A capability **MAY** become `Active` only when at least one strategic condition 
 
 It **MUST** also materially improve product speed, cost, quality, risk, explainability, governance, portability or integration.
 
-The admission decision **MUST** consider abstraction, ownership, migration, security and opportunity costs.
+The admission decision **MUST** consider abstraction, responsibility, migration, security and opportunity costs.
 
-### 11.5 Capability Lifecycle and Exit
+### 11.4 Capability Lifecycle and Exit
 
 ```text
 Candidate → Incubating → Active → Deprecated → Retired
@@ -589,7 +616,7 @@ A capability **MUST** be simplified, returned to a product, replaced, deprecated
 
 Required history, contractual obligations, exportability and migration paths **MUST** be preserved.
 
-### 11.6 Platform Service
+### 11.5 Platform Service
 
 A Platform Service is an implementation and architectural-responsibility boundary that realizes one or more capabilities.
 
@@ -621,7 +648,7 @@ The platform **MUST NOT** absorb product logic merely to appear comprehensive.
 - **The platform must earn reuse before centralizing.**
 - **Experiments remain product-local until promotion is justified.**
 
-The three statements above summarize intent; the enforceable requirements are the capitalized rules in this RFC.
+The three statements above summarize intent; enforceable requirements are the capitalized rules in this RFC.
 
 ## 13. Product Contracts
 
@@ -632,6 +659,7 @@ A stable or provisional Product Contract **MUST** declare, where applicable:
 - product or experiment identity, version and architectural owner;
 - required capabilities and compatible versions;
 - domain record and relationship types;
+- Canonical Record authority modes and authoritative systems;
 - schemas and workflows;
 - validators, standards and policies;
 - event and artifact types;
@@ -668,7 +696,7 @@ Platform Kernel
       ↓
 Technology Adapter Contracts
       ↓
-Concrete Technologies
+Concrete Technologies and External Systems
 ```
 
 Mandatory rules:
@@ -679,10 +707,11 @@ Mandatory rules:
 4. Products **MUST NOT** access each other's internals.
 5. Cross-product interaction **MUST** use records, events or explicit contracts.
 6. Technologies **MUST NOT** define organizational semantics.
-7. Internal implementation details **MUST NOT** become accidental public interfaces.
-8. Circular architectural-responsibility dependencies are prohibited.
-9. Security and tenant boundaries **MUST** apply across all dependency paths.
-10. Exceptions **MUST** record scope, owner, rationale, review or expiry date and exit plan.
+7. External systems of record **MUST** be represented through declared authority modes and contracts.
+8. Internal implementation details **MUST NOT** become accidental public interfaces.
+9. Circular architectural-responsibility dependencies are prohibited.
+10. Security and tenant boundaries **MUST** apply across all dependency paths.
+11. Exceptions **MUST** record scope, owner, rationale, review or expiry date and exit plan.
 
 ## 15. Structural Security, Privacy and Isolation
 
@@ -707,17 +736,12 @@ Detailed mechanisms require a dedicated RFC and ADRs, but no implementation may 
 
 An organization retains governance and control over its data, organizational intelligence, standards, decisions and operational history subject to law and contract.
 
-Arvectum OS **MUST** support governed:
-
-- export;
-- migration;
-- retention;
-- deletion;
-- service termination and handover.
+Arvectum OS **MUST** support governed export, migration, retention, deletion, service termination and handover within the applicable conformance scope.
 
 A governed export **MUST** preserve, where applicable:
 
 - record identities and versions;
+- authority modes and external authoritative-source references;
 - schemas and semantic types;
 - typed relationships;
 - provenance and evidence references;
@@ -739,6 +763,8 @@ Deletion **MUST** distinguish:
 
 Organizational continuity **MUST NOT** depend on an inaccessible proprietary representation or a specific employee, AI system, vendor or runtime.
 
+A manual, documented and tested process **MAY** satisfy an early-stage portability or deletion requirement when it is proportionate to the declared conformance scope and risk.
+
 ## 17. Organizational and Tenant Sovereignty
 
 Unless an explicit contract and policy state otherwise:
@@ -759,7 +785,7 @@ These categories describe architectural scope and governance. They do not determ
 
 Arvectum OS **MAY** be extended through registered and versioned products, agents, workflows, schemas, validators, templates, policies, connectors, tools, adapters and UI modules.
 
-Every extension **MUST** declare identity, version, architectural owner, required contracts, compatibility, tenant scope, permissions, data handling, inputs, outputs, events, failure behavior, portability and deprecation rules.
+Every extension **MUST** declare identity, version, architectural owner, required contracts, compatibility, tenant scope, permissions, data handling, inputs, outputs, events, failure behavior, portability and deprecation rules proportionate to its lifecycle and conformance scope.
 
 Extensions **MAY** add domain behavior. They **MUST NOT** weaken Kernel, security, sovereignty or governance invariants.
 
@@ -774,13 +800,13 @@ They **MUST NOT** silently:
 - change approved standards, policies or workflows;
 - grant permissions;
 - approve consequential decisions;
-- replace canonical records;
+- replace Canonical Records;
 - promote observations to validated knowledge;
 - share data across organizations;
 - extend retention or permitted use;
 - bypass validation, security or approval gates.
 
-For consequential operations the platform **MUST** identify relevant model or component reference, instructions, retrieval sources, tool access, settings, validation and approval state.
+For consequential operations the platform **MUST** identify relevant model or component reference, instructions, retrieval sources, tool access, settings, validation and approval state within the declared conformance scope.
 
 Replacing an AI model **SHOULD NOT** require redefining organizational semantics unless the model is explicitly part of a contract.
 
@@ -806,7 +832,7 @@ The first vertical spine should include only what one real consequential workflo
 
 ### 21.2 Modular Monolith by Default
 
-The initial implementation should prefer a modular monolith unless evidence requires distribution for scaling, security, isolation, regulation, availability, release cadence, ownership or unacceptable contention.
+The initial implementation should prefer a modular monolith unless evidence requires distribution for scaling, security, isolation, regulation, availability, release cadence, responsibility boundaries or unacceptable contention.
 
 Distribution is not an architectural objective.
 
@@ -835,38 +861,70 @@ Before an irreversible cross-cutting commitment becomes binding, the relevant RF
 
 The follow-up RFC sequence is recommended, not a general delivery gate. Work with real sensitive or customer data requires the minimum security, privacy, isolation and portability decisions applicable to that work.
 
-## 22. Architectural Fitness Tests
+## 22. Scoped Conformance Model
 
-An implementation conforms only if the following can be answered positively:
+Conformance is evaluated against a declared scope, not against every possible future capability of Arvectum OS.
 
-1. Does every significant governed object have one canonical record within its scope?
-2. Are historical versions immutable and events append-only?
-3. Are authoritative knowledge, governed assets and transient outputs distinguishable?
-4. Are relationships explicit, typed and traceable?
-5. Does every consequential canonical change have an Execution Context?
-6. Can a consequential output be reconstructed from inputs, versions, components, controls and approvals?
-7. Can the platform operate without embedding product-domain behavior?
-8. Can a product-local experiment operate without unnecessary platform ceremony?
-9. Does any experiment interacting with platform capabilities or canonical state use a proportionate Provisional Product Contract?
-10. Can an incubating capability be promoted, returned, replaced or retired?
-11. Are access, tenant scope, classification, retention and deletion rules identifiable?
-12. Can prohibited cross-organization use be prevented and audited?
-13. Can an organization obtain a usable governed export of its permitted data and assets?
-14. Can technologies or AI models be replaced without losing governed organizational state?
-15. Is commodity infrastructure reused unless custom implementation is justified?
-16. Is platform complexity proportionate to maturity, risk and value?
-17. Is architectural responsibility distinguishable from legal ownership and contractual rights?
-18. Is the platform reducing total cost or risk rather than relocating complexity?
+Any implementation, pilot, deployment or capability claiming conformance with this RFC **MUST** maintain a Conformance Statement that identifies:
 
-A negative answer indicates architectural debt, missing evidence or non-conformance.
+- subject and version being assessed;
+- organization, tenant and deployment scope;
+- lifecycle stage: `Experiment`, `Candidate`, `Incubating`, `Active` or `Production`;
+- workflows and capabilities in scope;
+- data classes, sensitivity and risk level;
+- Canonical Record authority modes and external systems involved;
+- applicable normative sections of this RFC;
+- requirements declared not applicable, with rationale;
+- manual or provisional controls used;
+- approved architectural exceptions;
+- known gaps and remediation owner;
+- review date and conditions requiring reassessment.
 
-## 23. Platform Evidence
+A requirement **MAY** be declared not applicable only when the subject does not perform, store, govern or expose the behavior or data addressed by that requirement.
+
+A requirement **MUST NOT** be declared not applicable merely because implementation is inconvenient or incomplete.
+
+Manual, product-specific or provisional controls **MAY** satisfy a requirement when they preserve the constitutional invariant, are proportionate to risk, are documented in the Conformance Statement and have a review or replacement condition.
+
+An implementation **MUST NOT** claim full-platform conformance when only a limited scope has been assessed.
+
+## 23. Architectural Fitness Tests
+
+The following fitness tests are normative within the scope declared by a Conformance Statement.
+
+A conforming subject **MUST** be able to answer positively, where applicable:
+
+1. Does every significant governed object have one Canonical Record within its scope?
+2. Is the authority mode and authoritative source explicit for each Canonical Record?
+3. Are competing sources of truth prevented when an external system remains authoritative?
+4. Are historical versions immutable and events append-only?
+5. Are authoritative knowledge, governed assets and transient outputs distinguishable?
+6. Are relationships explicit, typed and traceable?
+7. Does every consequential canonical change have an Execution Context?
+8. Can a consequential output be reconstructed from inputs, versions, components, controls and approvals?
+9. Can the platform operate without embedding product-domain behavior?
+10. Can a product-local experiment operate without unnecessary platform ceremony?
+11. Does any experiment interacting with platform capabilities or canonical state use a proportionate Provisional Product Contract?
+12. Do capability requirements match the declared lifecycle stage?
+13. Can an incubating capability be promoted, returned, replaced or retired?
+14. Are access, tenant scope, classification, retention and deletion rules identifiable?
+15. Can prohibited cross-organization use be prevented and audited?
+16. Can the organization obtain a usable governed export within the declared scope?
+17. Can technologies or AI models be replaced without losing governed organizational state where replacement is required by contract or risk?
+18. Is commodity infrastructure reused unless custom implementation is justified?
+19. Is platform complexity proportionate to maturity, risk and value?
+20. Is architectural responsibility distinguishable from legal ownership and contractual rights?
+21. Is the platform reducing total cost or risk rather than relocating complexity?
+
+A negative answer indicates non-conformance, an approved exception, a declared gap or an incorrectly scoped claim. The Conformance Statement **MUST** identify which applies.
+
+## 24. Platform Evidence
 
 Platform value should be evaluated through measurable evidence of:
 
 - product and workflow delivery speed;
 - validated reuse;
-- operating and ownership cost;
+- operating and responsibility cost;
 - reliability and output quality;
 - risk reduction;
 - explainability and governance;
@@ -876,7 +934,7 @@ Platform value should be evaluated through measurable evidence of:
 
 Detailed metrics remain informative operating artifacts and may evolve without amending this RFC.
 
-## 24. Risks and Mitigations
+## 25. Risks and Mitigations
 
 ### Premature Platformization
 
@@ -889,6 +947,14 @@ Mitigated by self-service contracts, product responsibility, modular implementat
 ### Contract Ceremony Slowing Experiments
 
 Mitigated by allowing completely product-local experiments without platform contracts and requiring only a minimal Provisional Product Contract when platform state is involved.
+
+### Competing Sources of Truth
+
+Mitigated by explicit authority modes, authoritative-source declarations and synchronization contracts.
+
+### Overclaiming Conformance
+
+Mitigated by scoped Conformance Statements, lifecycle-specific requirements and explicit gaps or exceptions.
 
 ### Security or Privacy Added Too Late
 
@@ -926,15 +992,18 @@ Mitigated by Build vs Buy review and explicit justification.
 
 Mitigated by separating architectural responsibility from legal title, IP ownership, licensing and contractual data rights.
 
-## 25. Consequences
+## 26. Consequences
 
 ### Positive
 
 - organizational intelligence becomes a durable governed capability;
 - platform and product boundaries remain explicit;
+- external systems may remain authoritative without creating competing truth;
 - experiments can move quickly without becoming accidental platform commitments;
 - product-local experiments avoid unnecessary platform contracts;
 - platform interaction remains governed through proportionate provisional contracts;
+- capability obligations grow with lifecycle maturity;
+- conformance claims remain scoped and honest;
 - security, privacy, isolation and portability are architectural properties;
 - customer knowledge governance and permitted reuse are explicit;
 - organizational assets remain usable beyond a specific vendor or model;
@@ -945,20 +1014,22 @@ Mitigated by separating architectural responsibility from legal title, IP owners
 
 ### Costs
 
-- canonical records, relationships and provenance create engineering overhead;
+- Canonical Records, authority modes, relationships and provenance create engineering overhead;
+- external-system synchronization requires explicit contracts and failure handling;
 - security, classification, retention and export require lifecycle discipline;
-- capability owners must support compatibility and migration;
+- capability owners must support compatibility and migration appropriate to lifecycle;
 - governance may slow consequential changes;
 - provisional contracts and experiments require active review;
+- Conformance Statements require disciplined scope management;
 - retirement and portability require deliberate implementation work.
 
 These costs are accepted only where they purchase value, control, continuity, evidence or validated reuse.
 
-## 26. Follow-up Documents
+## 27. Follow-up Documents
 
 The recommended, non-blocking sequence is:
 
-1. `RFC-0002 — Canonical Record, Relationship and Organizational Asset Model`;
+1. `RFC-0002 — Canonical Record, Authority, Relationship and Organizational Asset Model`;
 2. `RFC-0003 — Identity, Security, Privacy, Tenant Sovereignty and Portability`;
 3. `RFC-0004 — Product Contract, Product Experiment and Extension Model`;
 4. `RFC-0005 — Governed Execution and Workflow Model`;
@@ -972,52 +1043,55 @@ Before processing real sensitive or customer data, the applicable minimum decisi
 
 The Capability Catalog and Platform Metrics remain informative documents.
 
-## 27. Acceptance Criteria
+## 28. Acceptance Criteria
 
-This RFC may be accepted only when the owner explicitly approves:
+This RFC may be accepted only when the owner explicitly approves the following normative decisions:
 
 1. alignment with Constitution `1.2.0`;
-2. organizational intelligence as the platform's strategic subject;
-3. the normative-status model and keyword meanings;
-4. the three scoped architectural laws;
-5. the five Kernel primitives;
+2. the normative-status model and keyword meanings;
+3. the three scoped architectural laws;
+4. the five Kernel primitives;
+5. Canonical Record authority modes and the rule against competing sources of truth;
 6. the distinction between Canonical Record, Governed Organizational Asset and Transient Output;
-7. the distinction between Product Experiment and Incubating Platform Capability;
+7. the distinction between Product Experiment and Platform Capability;
 8. the rule that product-local experiments need no platform contract while platform interaction requires a proportionate Provisional Product Contract;
-9. the capability admission, lifecycle and de-platformization rules;
+9. lifecycle-specific capability obligations, admission, de-platformization and exit rules;
 10. the Product Contract and domain boundary;
-11. structural security, privacy, least privilege and tenant isolation invariants;
+11. structural security, privacy, least privilege and tenant-isolation invariants;
 12. organizational control, export, migration, retention and deletion principles;
 13. cross-organization rights and knowledge-reuse constraints;
 14. the distinction between architectural responsibility and legal ownership or contractual rights;
-15. Build vs Buy and semantic portability;
-16. proportional governance and parallel experimentation;
-17. the recommended follow-up document sequence;
-18. the formal Approval Record process.
+15. the scoped conformance model and normative fitness tests;
+16. the formal Approval Record process.
+
+The owner acknowledges, but does not make normative through acceptance, the current informative guidance on Founder Thesis, Business Outcomes, Platform Gravity, Build vs Buy, delivery strategy, risks, consequences and follow-up sequence.
 
 Acceptance does not authorize unspecified technologies, approve every cataloged capability, transfer customer rights or commit Arvectum OS to a specific commercial delivery model.
 
-## 28. Decision
+## 29. Decision
 
 RFC-0001 remains `Proposed`.
 
 Acceptance requires explicit approval by the owner of Arvectum OS and completion of the Approval Record below.
 
-## 29. Approval Record
+## 30. Approval Record
 
 Decision: `Pending`
 Decision authority: `ООО «Арвектум»`
 Approved by: `Pending`
 Decision date: `Pending`
 Canonical approval reference: `Pending`
-Approval commit: `Pending`
 
-When this RFC is accepted, the same canonical change **MUST**:
+The canonical approval reference **MUST** identify an approval record that exists before or independently of the repository commit that marks this RFC `Accepted`. It may reference an approved governance record, signed decision, issue, pull-request approval or another immutable owner-approved source.
+
+When this RFC is accepted, one repository change **MUST**:
 
 1. set `Status` to `Accepted`;
-2. complete the approval metadata and this Approval Record;
-3. identify the approving authority and canonical approval reference;
+2. set the accepted version to `1.0.0` unless the owner explicitly approves another stable version;
+3. complete this Approval Record using the pre-existing canonical approval reference;
 4. update the RFC Index to the accepted version and status;
-5. preserve the approval commit or equivalent immutable repository reference.
+5. preserve the resulting repository commit or release tag as external repository evidence.
 
-A status change without this approval evidence does not constitute a valid acceptance decision.
+The repository commit **MUST NOT** be embedded inside the same commit as a required self-reference.
+
+A status change without a completed Approval Record and matching RFC Index does not constitute valid acceptance.
