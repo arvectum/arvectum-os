@@ -17,4 +17,4 @@ The Constitution has higher authority than every RFC. Accepted RFCs have higher 
 
 | RFC | Title | Category | Status | Version |
 |---|---|---|---|---|
-| [RFC-0001](RFC-0001-arvectum-os-architecture.md) | Arvectum OS Architecture | platform | Proposed | 0.3.0 |
+| [RFC-0001](RFC-0001-arvectum-os-architecture.md) | Arvectum OS Architecture | platform | Proposed | 0.4.0 |
