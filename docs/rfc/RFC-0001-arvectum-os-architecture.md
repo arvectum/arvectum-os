@@ -1,13 +1,13 @@
 # RFC-0001: Arvectum OS Architecture
 
 Status: `Proposed`
-Version: `0.3.0`
+Version: `0.4.0`
 Created: `2026-08-06`
 Updated: `2026-08-06`
 Authors: `ООО «Арвектум»`
 Category: `platform`
 Constitution: `1.0.0`
-Supersedes: `RFC-0001 v0.2.0`
+Supersedes: `RFC-0001 v0.3.0`
 Superseded by: `None`
 
 ## 1. Executive Summary
@@ -16,29 +16,31 @@ Arvectum OS is the shared operational foundation for AI-native organizations and
 
 Its purpose is not to accumulate infrastructure. Its purpose is to create organizational leverage: every new product should become faster to build, cheaper to operate, safer to automate and more capable because previous products have already contributed reusable platform capabilities.
 
-The primary asset created by Arvectum OS is an **Executable Organizational Model**: a durable, versioned and governed representation of an organization's records, relationships, authority, workflows, evidence and operational history.
+The core architectural asset maintained by Arvectum OS is an **Executable Organizational Model**: a durable, governed representation of an organization's records, relationships, authority, workflows, evidence and operational history.
 
 For a specific organization, the living instance of that model is called its **Organizational Twin**.
 
 Arvectum OS is governed by three architectural laws:
 
-1. **Everything significant is a Versioned Record.**
-2. **An organization is a Graph of Records and Relationships.**
-3. **Organizational change occurs through Governed Execution.**
+1. **Everything significant is a Canonical Record.**
+2. **Arvectum OS represents operationally relevant organizational context as a Graph of Records and Relationships.**
+3. **Consequential changes to canonical state managed by Arvectum OS occur through Governed Execution.**
 
-All platform capabilities, product contracts, services, agents, workflows and implementation decisions must be derivable from and compatible with these laws.
+All platform capabilities, product contracts, services, agents, workflows and implementation decisions must be compatible with these laws.
 
 The permanent Platform Kernel is deliberately small. It defines only:
 
 - Identity;
-- Versioned Record;
+- Canonical Record;
 - Typed Relationship;
 - Event;
 - Execution Context.
 
+Every canonical record has a version identity. Changeable canonical objects may have multiple immutable versions. Events and similar immutable observations normally have one immutable version; corrections are represented by additional records or events rather than mutation.
+
 Everything else is a capability implemented above the Kernel and allowed to evolve independently.
 
-This RFC defines the enduring system model. It does not freeze a service list, deployment topology, technology stack or product portfolio.
+This RFC defines the enduring system model. It does not freeze a service list, deployment topology, technology stack, commercial delivery model or product portfolio.
 
 ## 2. Constitutional Basis
 
@@ -123,18 +125,19 @@ This RFC does not define:
 - user interface design;
 - pricing, packaging or go-to-market strategy;
 - the internal architecture of a specific product;
-- a claim that an Organizational Twin is a complete simulation of a real organization.
+- a claim that an Organizational Twin is a complete simulation of a real organization;
+- whether Arvectum OS will remain an internal platform, be embedded in Arvectum products, be deployed for customers or be commercialized as a standalone offering.
 
-These subjects belong to capability catalogs, subsequent RFCs, ADRs or product contracts.
+These subjects belong to capability catalogs, subsequent RFCs, ADRs, product contracts or commercial strategy decisions.
 
-## 6. The Primary Asset: Executable Organizational Model
+## 6. The Core Architectural Asset: Executable Organizational Model
 
 ### 6.1 Definition
 
 The Executable Organizational Model is the canonical combination of:
 
 - organizational identities and authority;
-- versioned records;
+- canonical records and their versions;
 - typed relationships;
 - standards and policies;
 - workflows and execution history;
@@ -149,6 +152,8 @@ It is **executable** because governed workflows can act on this model and produc
 It is **organizational** because meaning and authority come from the organization, not from a model provider, database schema or software framework.
 
 It is a **model** because it represents selected operational reality; it is not identical to reality and must expose its scope, freshness, uncertainty and evidence.
+
+This is the core architectural asset maintained by the platform. It is not a claim that it is the only or most valuable asset of ООО «Арвектум» or of any customer organization.
 
 ### 6.2 Organizational Twin
 
@@ -182,11 +187,17 @@ Consequences:
 
 ## 7. The Three Architectural Laws
 
-### 7.1 Law One: Everything Significant Is a Versioned Record
+### 7.1 Law One: Everything Significant Is a Canonical Record
 
-Every significant organizational object is represented by a canonical, versioned record.
+Every significant organizational object managed by Arvectum OS is represented by a canonical record.
 
-Examples include:
+Every canonical record has an immutable version identity.
+
+A changeable canonical object is represented by a stable object identity and a sequence of immutable versions.
+
+An event or another immutable observation is normally a single-version canonical record. It is not revised. Corrections, reversals and compensations are represented by additional records or events linked to the original.
+
+Examples of canonical records include:
 
 - actors;
 - organizations;
@@ -216,7 +227,7 @@ A record is significant when it affects one or more of the following:
 - production behavior;
 - an external commitment;
 - money, legal position or material risk;
-- a canonical state;
+- canonical state;
 - a reusable organizational asset;
 - the explanation or reconstruction of a consequential result.
 
@@ -224,7 +235,7 @@ Raw files, logs, messages and model outputs may exist outside the canonical reco
 
 A significant record must expose, directly or by reference:
 
-- stable identity;
+- stable object identity where applicable;
 - immutable version identity;
 - semantic type;
 - schema version;
@@ -234,15 +245,17 @@ A significant record must expose, directly or by reference:
 - effective period where applicable;
 - provenance;
 - typed relationships;
-- supersession history;
+- supersession history where applicable;
 - classification and access constraints where applicable;
 - integrity metadata.
 
-Mutable projections and indexes may exist for convenience. They are not independent authorities.
+Mutable projections, caches and indexes may exist for convenience. They are not independent authorities.
 
-### 7.2 Law Two: An Organization Is a Graph of Records and Relationships
+### 7.2 Law Two: Arvectum OS Represents Operational Context as a Graph
 
-Records gain organizational meaning through explicit, typed relationships.
+Arvectum OS represents the operationally relevant state and context of an organization as canonical records connected through explicit, typed relationships.
+
+The graph is a governed representation inside Arvectum OS. It is not a claim that the organization itself is reducible to a graph or that all organizational reality is captured.
 
 Examples:
 
@@ -281,9 +294,11 @@ The organizational graph is the basis for:
 
 The graph model does not require a graph database. Storage technology is an implementation choice.
 
-### 7.3 Law Three: Organizational Change Occurs Through Governed Execution
+### 7.3 Law Three: Consequential Canonical Change Requires Governed Execution
 
-A consequential change may occur only through an explicit Execution Context and an authorized operation.
+Consequential changes to canonical state managed by Arvectum OS may occur only through an explicit Execution Context and an authorized operation.
+
+This law does not claim to govern every real-world change inside an organization. It governs changes that Arvectum OS records, performs, approves or treats as canonical.
 
 A consequential operation is one that can materially affect:
 
@@ -420,11 +435,11 @@ Identity provides stable reference to:
 
 Identity does not itself define authentication, role policy or domain meaning.
 
-#### 10.2.2 Versioned Record
+#### 10.2.2 Canonical Record
 
-A Versioned Record is the canonical representation of a significant organizational object at a specific version.
+A Canonical Record is the authoritative representation of a significant organizational object or immutable observation at a specific version.
 
-The Kernel defines record invariants, not every record schema.
+The Kernel defines identity, version and integrity invariants. It does not define every record schema or require every record to have multiple versions.
 
 #### 10.2.3 Typed Relationship
 
@@ -434,9 +449,11 @@ The Kernel defines relationship invariants, not every relationship vocabulary.
 
 #### 10.2.4 Event
 
-An Event is an append-only observation that something meaningful occurred.
+An Event is an append-only, single-version observation that something meaningful occurred.
 
 The Kernel defines the event envelope, including identity, type, time, actor, affected objects, correlation, causation and provenance references.
+
+Corrections and compensations create additional events rather than replacing the original event.
 
 #### 10.2.5 Execution Context
 
@@ -495,7 +512,8 @@ A capability must have:
 - emitted events;
 - access and authority rules;
 - compatibility and migration rules;
-- operational evidence of value.
+- lifecycle status;
+- operational evidence appropriate to that lifecycle status.
 
 The active capability set belongs in a separately maintained Capability Catalog, not in this foundational RFC.
 
@@ -517,11 +535,11 @@ Service boundaries may evolve through ADRs while capability contracts and the th
 
 ### 11.3 Economic Admission Test
 
-A proposed capability may enter Arvectum OS only when it passes both a strategic reuse test and an economic value test.
+A capability may become `Active` only when it passes both a strategic reuse test and an economic value test.
 
 It passes the strategic reuse test when at least one of the following is true:
 
-1. two or more products require the capability;
+1. two or more real consumers require the capability;
 2. the capability implements a constitutional or Kernel-level invariant;
 3. an approved architectural decision identifies a credible near-term second consumer and demonstrates that early centralization costs less than later duplication and migration.
 
@@ -545,7 +563,51 @@ The proposal must also identify:
 - expected consumers;
 - evidence that the platform is the correct ownership boundary.
 
-A capability that fails these tests remains product-specific until evidence changes.
+A capability that has not yet passed these tests may be incubated under the rules below. It must not be represented as a proven shared platform capability.
+
+### 11.4 Capability Lifecycle
+
+Every capability has one of these lifecycle states:
+
+```text
+Candidate → Incubating → Active → Deprecated → Retired
+```
+
+- `Candidate` — a documented proposal with no implementation commitment.
+- `Incubating` — a limited capability being tested through one or more real product needs.
+- `Active` — an approved shared capability with supported contracts and evidence for platform ownership.
+- `Deprecated` — still available for migration but no longer recommended for new consumers.
+- `Retired` — no longer available except through preserved historical records or explicit archival support.
+
+An `Incubating` capability must declare:
+
+- a sponsoring product or organizational need;
+- an accountable owner;
+- a bounded implementation scope and budget;
+- a reuse hypothesis;
+- a review date;
+- criteria for promotion to `Active`;
+- criteria for returning the capability to a product, replacing it or retiring it;
+- provisional contracts and known compatibility limits.
+
+Incubation allows the first product to generate evidence without forcing premature platform generalization.
+
+### 11.5 Capability Exit and De-platformization
+
+Platform ownership is reversible.
+
+A capability must be simplified, returned to a product, replaced, deprecated or retired when evidence no longer supports centralized ownership.
+
+Triggers include:
+
+- the expected second consumer does not appear within the declared review period;
+- integration remains more expensive or slower than a product-specific implementation;
+- the capability becomes a recurring product-delivery bottleneck;
+- ownership and support costs exceed demonstrated reuse, control or risk-reduction value;
+- a commodity external solution now provides a better economic or operational result;
+- the capability's abstraction is driven by one product and cannot remain domain-independent.
+
+Retirement and de-platformization must preserve required historical records, compatibility obligations and migration paths.
 
 ## 12. Product Boundary
 
@@ -567,7 +629,9 @@ Products own:
 
 The platform owns reusable organizational semantics and capabilities.
 
-A product must not duplicate a platform capability merely for local convenience. Equally, the platform must not absorb product behavior merely to appear comprehensive.
+A product must not duplicate an `Active` platform capability merely for local convenience. An `Incubating` capability may coexist temporarily with product-specific behavior when its provisional contract explicitly permits this.
+
+Equally, the platform must not absorb product behavior merely to appear comprehensive.
 
 This creates a two-sided discipline:
 
@@ -595,7 +659,8 @@ It declares, where applicable:
 - approval gates;
 - extensions and adapters used;
 - migration requirements;
-- lifecycle and support status.
+- lifecycle and support status;
+- whether any dependency is `Provisional` or `Incubating`.
 
 A product is compatible with Arvectum OS only when its active contract can be validated before execution.
 
@@ -755,14 +820,14 @@ Signals of weak Platform Gravity include:
 
 - products repeatedly bypass platform contracts;
 - platform integration takes longer than local implementation;
-- abstractions serve only one product for an extended period;
+- abstractions serve only one product beyond their incubation period;
 - the platform team becomes a delivery bottleneck;
 - service boundaries change whenever one product changes;
 - duplicate memory, workflow, identity or provenance systems appear.
 
-Weak Platform Gravity is evidence that capability design, ownership, contracts or economics must be corrected. It is not grounds for coercive adoption.
+Weak Platform Gravity is evidence that capability design, ownership, contracts or economics must be corrected. It may justify de-platformization. It is not grounds for coercive adoption.
 
-## 19. Delivery Strategy
+## 19. Delivery and Technology Strategy
 
 ### 19.1 Product Pull Before Platform Push
 
@@ -803,61 +868,108 @@ A capability or service should be extracted into an independently deployed compo
 
 Distribution without evidence increases cost and operational risk and is not an architectural objective.
 
+### 19.3 Build vs Buy and Semantic Portability
+
+Arvectum OS should own differentiated organizational semantics, public contracts and behavior that creates strategic advantage.
+
+Commodity infrastructure should normally be adopted, integrated or purchased rather than recreated.
+
+Examples include mature capabilities for:
+
+- database storage;
+- authentication primitives;
+- queues and event transport;
+- object storage;
+- search infrastructure;
+- document conversion;
+- observability transport;
+- commodity model serving.
+
+A custom implementation of commodity infrastructure requires evidence of at least one material reason:
+
+- strategic differentiation;
+- security, sovereignty or regulatory necessity;
+- unacceptable vendor or continuity risk;
+- materially better economics at demonstrated scale;
+- absence of an adequate external solution.
+
+Technology independence means that organizational semantics and contracts remain portable. It does not require speculative abstraction around every vendor or rebuilding proven infrastructure.
+
+Adapters should be introduced where replacement risk, testing, security or contract stability justifies them. They must not be created merely to conceal every concrete technology choice.
+
+### 19.4 Architecture and Delivery in Parallel
+
+Architecture precedes irreversible implementation, but documentation and delivery do not need to proceed as fully sequential phases.
+
+RFCs, ADRs, experiments and MVP implementation may proceed in parallel when:
+
+- the Constitution and accepted RFCs are not violated;
+- the decision is reversible or explicitly time-bounded;
+- provisional boundaries are documented;
+- contracts are marked `Provisional` where they are not yet accepted;
+- production risk is proportionally controlled;
+- the experiment has an owner, review date and exit path.
+
+A `Provisional` contract may support learning and integration. It must not be represented as a stable platform guarantee.
+
+Before an irreversible cross-cutting commitment or production dependency becomes binding, the relevant architectural decision must be approved through the appropriate RFC or ADR.
+
+The follow-up RFC sequence in this document is recommended, not a delivery gate.
+
 ## 20. Architectural Fitness Tests
 
 An implementation conforms to this RFC only if the following questions can be answered positively:
 
-1. Is every significant organizational object represented by one canonical versioned record?
-2. Are organizational relationships explicit, typed and traceable?
-3. Does every consequential operation have an Execution Context?
-4. Can a past output be traced to exact inputs, versions, policies, workflow, components and approvals?
-5. Can the platform operate without understanding product-domain rules?
-6. Can a product use platform capabilities without accessing implementation internals?
-7. Can an AI model or technology adapter be replaced without redefining organizational meaning?
-8. Can incompatible product, capability and platform versions be detected before execution?
-9. Can a proposed improvement be prevented from silently changing production behavior?
-10. Can the system distinguish event, observation, memory, knowledge proposal and approved knowledge?
-11. Can tenant and knowledge ownership be determined for every significant record?
-12. Can the first implementation remain a modular monolith without violating logical boundaries?
-13. Can a second consumer reuse a capability with less effort than rebuilding it?
-14. Is the platform reducing total cost or risk rather than merely relocating complexity?
+1. Is every significant organizational object managed by Arvectum OS represented by one canonical record?
+2. Does every canonical record have an immutable version identity?
+3. Are changeable objects versioned without mutating historical versions?
+4. Are events preserved as immutable observations with corrections represented separately?
+5. Are organizational relationships explicit, typed and traceable?
+6. Does every consequential canonical change have an Execution Context?
+7. Can a past output be traced to exact inputs, versions, policies, workflow, components and approvals?
+8. Can the platform operate without understanding product-domain rules?
+9. Can a product use platform capabilities without accessing implementation internals?
+10. Can an AI model or technology adapter be replaced without redefining organizational meaning?
+11. Can incompatible product, capability and platform versions be detected before execution?
+12. Can a proposed improvement be prevented from silently changing production behavior?
+13. Can the system distinguish event, observation, memory, knowledge proposal and approved knowledge?
+14. Can tenant and knowledge ownership be determined for every significant record?
+15. Can the first implementation remain a modular monolith without violating logical boundaries?
+16. Can an incubating capability be promoted, returned to a product or retired using declared evidence?
+17. Is commodity infrastructure being reused unless custom implementation has explicit justification?
+18. Is the platform reducing total cost or risk rather than merely relocating complexity?
 
 A negative answer indicates architectural debt, missing evidence or non-conformance.
 
-## 21. Founder Metrics
+## 21. Platform Evidence
 
-The platform should be evaluated with business and architectural evidence, not by the number of services or lines of code.
+Platform value must be evaluated through measurable evidence of:
 
-Relevant metrics include:
+- product reuse;
+- delivery speed;
+- operating cost;
+- quality and reliability;
+- risk reduction;
+- explainability and governance;
+- integration and migration effort.
 
-- time to integrate a new product;
-- time to implement the second consumer of a capability;
-- percentage of product capabilities reused from the platform;
-- number of duplicated shared capabilities;
-- number and age of architectural exceptions;
-- time required to reconstruct a consequential output;
-- percentage of consequential executions with complete provenance;
-- change failure rate for standards, policies and workflows;
-- cost of replacing a model or infrastructure adapter;
-- platform-caused delivery delay;
-- capability adoption and abandonment;
-- measurable risk or operating cost avoided through shared controls.
+The detailed metric set, targets and review cadence are informative operating artifacts and may change as the company evolves. They are maintained separately from this foundational RFC.
 
-Exact targets must be established after the first operational baseline. Metrics must not be optimized in ways that encourage premature centralization or superficial reuse.
+Metrics must not reward premature centralization, superficial reuse or documentation volume without product value.
 
 ## 22. Risks and Mitigations
 
 ### 22.1 Premature Platformization
 
-**Risk:** capabilities are generalized before a second real consumer exists.
+**Risk:** capabilities are generalized before evidence supports shared ownership.
 
-**Mitigation:** Economic Admission Test, Product Pull and explicit evidence requirements.
+**Mitigation:** incubation, review dates, Economic Admission Test and Product Pull.
 
 ### 22.2 Platform Bottleneck
 
 **Risk:** all product delivery becomes dependent on one platform team.
 
-**Mitigation:** stable self-service contracts, clear ownership, modular implementation and measurable integration time.
+**Mitigation:** stable self-service contracts, provisional integration paths, clear ownership, modular implementation and measurable integration time.
 
 ### 22.3 False Completeness of the Organizational Twin
 
@@ -881,7 +993,7 @@ Exact targets must be established after the first operational baseline. Metrics 
 
 **Risk:** the first product shapes the platform into a tender-specific system.
 
-**Mitigation:** product contracts, domain-independence fitness tests and explicit ownership review.
+**Mitigation:** product contracts, incubation limits, domain-independence fitness tests and explicit ownership review.
 
 ### 22.7 Cross-tenant Knowledge Leakage
 
@@ -889,11 +1001,30 @@ Exact targets must be established after the first operational baseline. Metrics 
 
 **Mitigation:** sovereignty by default, explicit classification, access policy and governed promotion.
 
+### 22.8 Commodity Infrastructure Reinvention
+
+**Risk:** the company spends scarce resources recreating mature infrastructure under the banner of technology independence.
+
+**Mitigation:** Build vs Buy review and explicit justification for custom commodity components.
+
+### 22.9 Architecture Before Revenue
+
+**Risk:** RFC production and platform abstractions delay a valuable customer workflow.
+
+**Mitigation:** Product Pull, provisional contracts, parallel delivery and review of platform-caused delay.
+
+### 22.10 Capability Accumulation
+
+**Risk:** the platform continuously adds responsibilities but rarely removes them.
+
+**Mitigation:** lifecycle states, mandatory incubation reviews, de-platformization and retirement rules.
+
 ## 23. Consequences
 
 ### 23.1 Positive Consequences
 
 - the platform is defined by durable laws rather than a temporary component list;
+- the laws apply only to operational state represented and governed by Arvectum OS;
 - organizational information becomes a governed asset rather than transient application state;
 - each product can contribute to a compounding organizational model;
 - product and platform ownership boundaries remain explicit;
@@ -901,22 +1032,27 @@ Exact targets must be established after the first operational baseline. Metrics 
 - service topology may evolve without rewriting foundational architecture;
 - explainability and governance are structural;
 - customer and company knowledge ownership becomes explicit;
-- platform investment is subjected to economic evidence.
+- platform investment is subjected to economic evidence;
+- unproven capabilities can incubate without being falsely treated as permanent platform commitments;
+- failed platform bets can be reversed;
+- commodity infrastructure can be adopted without sacrificing organizational semantics.
 
 ### 23.2 Costs
 
-- versioned records, relationships and provenance create engineering overhead;
-- product teams cannot bypass contracts for short-term convenience;
-- capability owners must support compatibility and migration;
+- canonical records, relationships and provenance create engineering overhead;
+- product teams cannot bypass stable contracts for short-term convenience;
+- capability owners must support compatibility, review and migration;
 - governance can slow consequential change;
 - organizational graph quality requires disciplined ownership;
-- platform value must be measured rather than assumed.
+- platform value must be measured rather than assumed;
+- provisional contracts require explicit lifecycle management;
+- retirement and de-platformization require deliberate migration work.
 
 These costs are accepted only where they purchase reuse, control, evidence or durable organizational value.
 
 ## 24. Follow-up Documents
 
-The recommended sequence is:
+The recommended, non-blocking sequence is:
 
 1. `RFC-0002 — Canonical Record and Relationship Model`;
 2. `RFC-0003 — Product Contract and Extension Model`;
@@ -926,26 +1062,32 @@ The recommended sequence is:
 6. `RFC-0007 — Memory, Knowledge and Governed Learning Lifecycle`;
 7. `RFC-0008 — Document and Artifact Architecture`.
 
-The active inventory of capabilities should be maintained in a non-constitutional Capability Catalog.
+The active inventory and lifecycle of capabilities are maintained in the informative Capability Catalog.
 
-Implementation technology choices should be recorded in ADRs only after the relevant logical contract is accepted.
+Detailed platform metrics are maintained in an informative Platform Metrics document.
+
+Implementation ADRs and reversible experiments may proceed in parallel with these RFCs under Section 19.4. They may not contradict the Constitution or accepted RFCs.
 
 ## 25. Acceptance Criteria
 
 This RFC may be accepted only when the owner of Arvectum OS explicitly approves:
 
-1. the three architectural laws;
-2. the Executable Organizational Model as the primary platform asset;
+1. the scoped three architectural laws;
+2. the Executable Organizational Model as the core architectural asset maintained by Arvectum OS;
 3. the limited definition of Organizational Twin;
-4. the five Kernel primitives;
+4. the five Kernel primitives and the distinction between multi-version objects and single-version events;
 5. the distinction between Capability and Service;
-6. the Economic Admission Test;
-7. Product Pull and the requirement to prove reuse;
-8. organizational and tenant sovereignty principles;
-9. the Product Contract boundary;
-10. the follow-up RFC sequence.
+6. the Economic Admission Test and capability lifecycle;
+7. Product Pull, incubation and the requirement to prove reuse;
+8. capability retirement and de-platformization;
+9. organizational and tenant sovereignty principles;
+10. the Product Contract boundary;
+11. Build vs Buy and semantic portability;
+12. commercial-model neutrality;
+13. parallel RFC, ADR and MVP delivery through provisional contracts;
+14. the non-blocking follow-up RFC sequence.
 
-Acceptance of this RFC does not authorize unspecified implementation technologies or imply approval of every future capability.
+Acceptance of this RFC does not authorize unspecified implementation technologies, approve every cataloged capability or commit Arvectum OS to a specific commercial delivery model.
 
 ## 26. Decision
 
