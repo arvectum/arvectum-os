@@ -1,9 +1,9 @@
 # Arvectum OS Conformance Statement Template
 
 Status: `Informative Template`
-Version: `0.1.0`
+Version: `0.2.0`
 Updated: `2026-08-07`
-Architecture basis: `RFC-0001 v0.7.0`
+Architecture basis: `RFC-0001 v0.8.0`
 Constitution basis: `1.2.0`
 
 ## Purpose
@@ -17,9 +17,12 @@ A Conformance Statement defines the assessed scope. It does not imply that the w
 Subject: `<name>`
 Subject version or commit: `<version or immutable reference>`
 Statement version: `<version>`
-Lifecycle stage: `<Experiment | Candidate | Incubating | Active | Production>`
+Subject lifecycle: `<Product Experiment | Candidate | Incubating | Active | Deprecated | Retired | Not Applicable>`
+Operational environment: `<Local | Development | Test | Pilot | Production; one or more>`
+Conformance maturity: `<Draft | Provisional | Scoped | Scoped with Exceptions | Not Conformant>`
 Architectural owner: `<owner>`
 Assessment owner: `<owner>`
+Conformance approver: `<independent approver where required>`
 Assessment date: `<YYYY-MM-DD>`
 Next review date: `<YYYY-MM-DD or triggering condition>`
 Status: `<Draft | Approved | Superseded>`
@@ -66,11 +69,15 @@ Applicable legal, contractual or policy constraints:
 |---|---|---|---|---|
 | `<type>` | `<Native | External Reference | Governed Replica>` | `<system>` | `<rule>` | `<rule>` |
 
-Known external-system availability or continuity constraints:
+## 4. Kernel Metamodel Assumptions
 
-- `<constraint>`
+Until RFC-0002 is accepted, identify provisional assumptions about Identity, Canonical Record, Typed Relationship, Event and Execution Context.
 
-## 4. Applicable RFC-0001 Requirements
+| Assumption | Status | Migration boundary | Irreversible commitment avoided |
+|---|---|---|---|
+| `<assumption>` | `<Provisional | Approved>` | `<boundary>` | `<how>` |
+
+## 5. Applicable RFC-0001 Requirements
 
 | RFC section | Applicable | Evidence or implementation reference | Status |
 |---|---|---|---|
@@ -78,27 +85,27 @@ Known external-system availability or continuity constraints:
 
 A requirement may be marked `Not Applicable` only when the subject does not perform, store, govern or expose the relevant behavior or data.
 
-## 5. Manual and Provisional Controls
+## 6. Manual and Provisional Controls
 
 | Requirement | Manual or provisional control | Owner | Review or replacement condition |
 |---|---|---|---|
 | `<requirement>` | `<control>` | `<owner>` | `<condition>` |
 
-## 6. Architectural Exceptions
+## 7. Decision Authority and Architectural Exceptions
 
-| Exception reference | Scope | Rationale | Owner | Expiry or review date | Exit plan |
+| Decision or exception | Proposer | Decision authority | Independence check | Canonical reference | Expiry or review date |
 |---|---|---|---|---|---|
-| `<reference>` | `<scope>` | `<rationale>` | `<owner>` | `<date>` | `<plan>` |
+| `<decision>` | `<proposer>` | `<authority>` | `<independent | delegated low-risk self-approval>` | `<reference>` | `<date>` |
 
-## 7. Known Gaps
+Material risk, shared-platform obligations, Active promotion, stable public-contract changes, cross-organization use and production exceptions require an appropriately independent decision authority.
 
-| Gap | Risk | Remediation owner | Planned action | Due or review date |
-|---|---|---|---|---|
-| `<gap>` | `<risk>` | `<owner>` | `<action>` | `<date>` |
+## 8. Known Gaps
 
-## 8. Fitness Test Result
+| Gap | Risk | Remediation owner | Planned action | Due or review date | Risk acceptance authority |
+|---|---|---|---|---|---|
+| `<gap>` | `<risk>` | `<owner>` | `<action>` | `<date>` | `<authority>` |
 
-Summarize the RFC-0001 fitness tests applicable to this scope.
+## 9. Fitness Test Result
 
 Passed:
 
@@ -116,29 +123,32 @@ Not applicable:
 
 - `<test and rationale>`
 
-## 9. Conformance Claim
+## 10. Conformance Claim
 
-Select one:
+Subject lifecycle:
 
-- `Conformant within the declared scope`;
-- `Conformant within the declared scope with approved exceptions`;
-- `Provisionally conformant within the declared scope`;
-- `Not conformant`.
+`<selected lifecycle>`
 
-Claim:
+Operational environment:
 
-`<selected claim>`
+`<selected environment or environments>`
 
-Limitations:
+Conformance maturity:
+
+`<selected maturity>`
+
+Claim limitations:
 
 `<limitations>`
 
 This statement does not claim conformance outside the scope declared above.
 
-## 10. Approval
+## 11. Approval
 
 Decision: `<Pending | Approved | Rejected | Superseded>`
 Decision authority: `<authority>`
 Approved by: `<person or governance body>`
 Decision date: `<YYYY-MM-DD>`
 Canonical approval reference: `<pre-existing approval record>`
+
+The approver must be independent from the proposer when required by RFC-0001 and the approved Decision Authority Policy.
