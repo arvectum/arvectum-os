@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `1.2.3`
+Version: `1.3.0`
 Created: `2026-08-07`
 Updated: `2026-08-07`
 Owner: `ООО «Арвектум»`
@@ -13,7 +13,7 @@ This document is the canonical planning source for the development sequence of A
 
 It answers:
 
-> What should Arvectum OS work on next, in what order, and what constitutes completion of the current foundation stage?
+> What should Arvectum OS work on next, in what order, and what constitutes completion of the current phase?
 
 This roadmap coordinates work. It does **not** override architectural or governance authority.
 
@@ -30,35 +30,40 @@ Authority remains, in descending order:
 
 If this roadmap conflicts with a higher-authority source, the higher-authority source prevails and this roadmap must be corrected.
 
+Detailed RFC approval/publication evidence is maintained in [`docs/rfc/README.md`](../rfc/README.md). This roadmap intentionally summarizes completed architecture milestones rather than duplicating their full governance history.
+
 ## 2. Versioning and update rules
 
 This roadmap is versioned in Git and uses semantic versioning:
 
 - `PATCH` — progress, status, links, wording clarifications and other non-structural updates;
-- `MINOR` — sequencing, milestone scope, exit-criteria or roadmap-maintenance process changes that do not alter an Accepted architectural contract;
+- `MINOR` — sequencing, milestone scope, work-breakdown or maintenance-process changes that do not alter an Accepted architectural contract;
 - `MAJOR` — restructuring of the roadmap lifecycle or planning model.
 
-A roadmap update must never silently redefine the scope of an Accepted RFC. If an Accepted RFC must change, use the applicable architecture-governance process first, then update the roadmap to reflect the accepted decision.
+A roadmap update must never silently redefine the scope of an Accepted RFC. If an Accepted RFC must change, use the applicable architecture-governance process first, then update the roadmap.
 
 Git history is the canonical history of roadmap revisions.
 
 ### 2.1 Identifier namespaces
 
-Roadmap block identifiers and RFC identifiers are **independent namespaces** and MUST NOT be inferred from one another.
+Roadmap identifiers, RFC identifiers and ADR identifiers are independent namespaces.
 
-| Identifier | Namespace | Canonical meaning |
+Examples:
+
+| Identifier | Namespace | Meaning |
 |---|---|---|
-| `0H` | Roadmap block | `Reference implementation readiness` — a non-RFC delivery/readiness milestone |
-| `RFC-0008` | RFC | `Document and Artifact Architecture` — Accepted architecture RFC |
+| `0H` | Roadmap block | Reference implementation readiness |
+| `P1.02` | Phase 1 work item | Native subject + first immutable Canonical Record version |
+| `RFC-0008` | RFC | Document and Artifact Architecture |
 
 Rules:
 
-- a roadmap block such as `0H` is never shorthand for `RFC-0008`;
-- an RFC number is assigned only to an RFC artifact listed through the RFC governance process and RFC Index;
-- non-RFC implementation, readiness, delivery or validation milestones MAY appear between RFCs in the roadmap without consuming an RFC number;
-- the informative follow-up sequence in RFC-0001 does not require every intervening roadmap milestone to become an RFC;
-- when referring to the completed readiness work, use `Block 0H — Reference implementation readiness` or `Reference implementation readiness`, not `RFC-0008 readiness`;
-- `RFC-0008` refers only to `Document and Artifact Architecture` unless a future properly governed RFC change explicitly changes that assignment.
+- roadmap work identifiers never consume RFC or ADR numbers;
+- an RFC number is assigned only through RFC governance and the RFC Index;
+- an ADR number is assigned only to an ADR artifact;
+- a work item keeps its roadmap identifier when wording is clarified without materially changing the work;
+- a materially different work item receives a new identifier;
+- project chats, commits and implementation notes SHOULD use the roadmap identifier together with the task name.
 
 ## 3. Status and progress legend
 
@@ -71,320 +76,158 @@ Rules:
 | 🟥 | Blocked or conflicted |
 | ⚫ | Deferred / not currently scheduled |
 
-Progress bars are planning indicators, not conformance claims.
+Progress bars are planning indicators, not conformance or capability-lifecycle claims.
 
 `██████████ 100%` — complete  
 `█████░░░░░ 50%` — partially complete  
 `░░░░░░░░░░ 0%` — not started
 
-## 4. Current phase
+## 4. Architecture baseline
 
-**Phase 0 — Foundation / Architecture Bootstrap — Complete**
+Current verified canonical baseline:
 
-The goal of Phase 0 is to establish enough shared language, architecture, governance and contracts to permit reversible implementation without premature platform lock-in.
+- Constitution `1.2.0` — `Ratified`;
+- RFC-0001 through RFC-0008 — `Accepted 1.0.0`;
+- Architecture Glossary aligned through Accepted RFC-0008;
+- Phase 0 reference implementation readiness completed and owner-confirmed.
 
-The phase does **not** require the entire future platform to be fully specified before useful product experiments or reversible reference implementation work can begin.
+The RFC Index remains the canonical source for RFC status and acceptance evidence.
+
+## 5. Phase 0 — Foundation / Architecture Bootstrap
+
+**Status:** 🟩 Complete  
+**Progress:** `██████████ 100%`
 
 ### Phase 0 overview
 
 | Block | Scope | Status | Progress |
 |---|---|---:|---:|
-| 🟪 0A | Governance baseline | 🟩 | `██████████ 100%` |
-| 🟦 0B | Architecture language baseline | 🟩 | `██████████ 100%` |
-| 🟪 0C | RFC-0002 — Kernel metamodel | 🟩 | `██████████ 100%` |
-| 🟢 0D | RFC-0003 — Identity, security, privacy, sovereignty | 🟩 | `██████████ 100%` |
-| 🟠 0E | RFC-0004 — Product Contract and extension model | 🟩 | `██████████ 100%` |
-| 🔵 0F | RFC-0005/0006 — Governed execution, events and provenance | 🟩 | `██████████ 100%` |
-| 🟣 0G | RFC-0007 — Memory, knowledge and learning lifecycle | 🟩 | `██████████ 100%` |
-| 🟨 0H | Reference implementation readiness — non-RFC milestone | 🟩 | `██████████ 100%` |
+| 🟪 `0A` | Governance baseline | 🟩 | `██████████ 100%` |
+| 🟦 `0B` | Architecture language baseline | 🟩 | `██████████ 100%` |
+| 🟪 `0C` | RFC-0002 — Kernel metamodel | 🟩 | `██████████ 100%` |
+| 🟢 `0D` | RFC-0003 — Identity, security, privacy, sovereignty | 🟩 | `██████████ 100%` |
+| 🟠 `0E` | RFC-0004 — Product Contract and extension model | 🟩 | `██████████ 100%` |
+| 🔵 `0F` | RFC-0005/0006 — Governed execution, events and provenance | 🟩 | `██████████ 100%` |
+| 🟣 `0G` | RFC-0007 — Memory, knowledge and learning lifecycle | 🟩 | `██████████ 100%` |
+| 🟨 `0H` | Reference implementation readiness — non-RFC milestone | 🟩 | `██████████ 100%` |
 
-RFC-0008 was intentionally prepared and accepted after Phase 0 readiness as a parallel architecture refinement. It does not retroactively change the Phase 0 completion boundary.
+Phase 0 established sufficient shared language, architecture, governance and contracts to begin bounded implementation without inventing cross-cutting architecture in code.
 
-## 5. Block 0A — Governance baseline
+The readiness baseline is [`docs/implementation/REFERENCE-IMPLEMENTATION-READINESS.md`](../implementation/REFERENCE-IMPLEMENTATION-READINESS.md).
 
-**Status:** 🟩 Complete  
-**Progress:** `██████████ 100%`
+RFC-0008 — Document and Artifact Architecture — was accepted after Phase 0 readiness as a parallel architecture refinement. It does not retroactively change the Phase 0 completion boundary, but it is binding whenever shared Document/Artifact semantics are implemented.
 
-### Completed
+## 6. Phase 1 — Reference Implementation
 
-- 🟩 Constitution `1.2.0` — `Ratified`;
-- 🟩 RFC Index established;
-- 🟩 RFC-0001 `Arvectum OS Architecture` `1.0.0` — `Accepted`;
-- 🟩 canonical roadmap established in this file;
-- 🟩 repository agent rules identify governance work as a first-class task classification;
-- 🟩 Constitution amendment provenance for `1.0.0 → 1.1.0 → 1.2.0` recovered from immutable Git history and indexed;
-- 🟩 historical legacy/current `RFC-0001` identifier collision documented without renumbering current Accepted RFCs;
-- 🟩 [`Constitution 1.2.0 Provenance Record`](../governance/CONSTITUTION-PROVENANCE.md) closed under [`DECISION-2026-08-07-CONSTITUTION-1.2-PROVENANCE-REPAIR`](../governance/decisions/DECISION-2026-08-07-CONSTITUTION-1.2-PROVENANCE-REPAIR.md).
+**Status:** 🟨 In progress  
+**Purpose:** prove the smallest domain-neutral executable architectural spine of Arvectum OS using reversible implementation techniques before adding infrastructure.
 
-### Governance provenance closure
+Canonical detailed work breakdown:
 
-The former Constitution `1.2.0` provenance debt is resolved. Original historical amendment artifacts, resulting Constitution transitions and explicit owner approval were verified from immutable Git history. The RFC Index records the legacy amendment namespace and the historical identifier collision explicitly.
+- [`docs/roadmap/PHASE-1-REFERENCE-IMPLEMENTATION.md`](PHASE-1-REFERENCE-IMPLEMENTATION.md) — `Active 1.0.0`.
 
-No unresolved Phase 0 governance provenance debt remains.
+### Phase 1 overview
 
-### Exit criterion
+| ID | Work item | Status | Progress |
+|---|---|---:|---:|
+| `P1.01` | Organization scope and attributable Actor / Principal | 🟩 | `██████████ 100%` |
+| `P1.02` | Native subject + first immutable Canonical Record version | 🟦 | `░░░░░░░░░░ 0%` |
+| `P1.03` | Versioned Workflow baseline | ⬜ | `░░░░░░░░░░ 0%` |
+| `P1.04` | Execution Context + exact version pinning | ⬜ | `░░░░░░░░░░ 0%` |
+| `P1.05` | Authorization and Organizational Authority gates | ⬜ | `░░░░░░░░░░ 0%` |
+| `P1.06` | Governed Canonical Mutation + second immutable version | ⬜ | `░░░░░░░░░░ 0%` |
+| `P1.07` | Canonical Event admission and execution linkage | ⬜ | `░░░░░░░░░░ 0%` |
+| `P1.08` | Provenance, causation and reconstruction evidence | ⬜ | `░░░░░░░░░░ 0%` |
+| `P1.09` | Observation creation without Knowledge promotion | ⬜ | `░░░░░░░░░░ 0%` |
+| `P1.10` | Portable semantic fixture export | ⬜ | `░░░░░░░░░░ 0%` |
+| `P1.11` | Negative-path and architecture fitness tests | 🟨 | `█░░░░░░░░░ 10%` |
+| `P1.12` | Phase 1 bounded-slice closure review | ⬜ | `░░░░░░░░░░ 0%` |
 
-There is one canonical architecture baseline and one canonical planning source in the repository.
+### Current implementation evidence
 
-## 6. Block 0B — Architecture language baseline
+`P1.01` is implemented in [`reference/python`](../../reference/python/README.md) with executable fitness tests proving explicit Organization scope and attributable Actor/Principal semantics.
 
-**Status:** 🟩 Complete  
-**Progress:** `██████████ 100%`
+`P1.11` is cross-cutting and has started because `P1.01` already contributes executable negative-path/fitness coverage. The complete Phase 1 fitness matrix remains unfinished.
 
-### Objective
+### Current canonical action
 
-Create a shared vocabulary before further detailed architecture work so that contributors, products and AI agents use the same terms consistently.
+> **`P1.02 — Native subject + first immutable Canonical Record version`: create one `Native` canonical subject with stable Subject Identity, first immutable Version Identity, explicit Organization scope, authority mode and the minimum governed envelope required by Accepted RFC-0002 and applicable RFC-0003 constraints.**
 
-### Deliverable
+No database or durable persistence technology is required for `P1.02`.
 
-Published and synchronized:
-
-- 🟩 [`docs/architecture/GLOSSARY.md`](../architecture/GLOSSARY.md) — Arvectum OS Architecture Glossary `1.3.0`, aligned through Accepted RFC-0008.
-
-The glossary provides current navigation for architectural terms established by the Constitution and Accepted RFCs, including Organization/Tenant, Kernel primitives, Product Contract, Governed Execution, Event/Provenance, Memory/Knowledge and Document/Artifact architecture.
-
-### Constraint
-
-The glossary is a language and navigation artifact. It summarizes terms from higher-authority sources and does not create new architectural obligations or silently redefine Accepted RFC terminology.
-
-### Exit criterion
-
-🟩 Achieved: a contributor can resolve the meaning and canonical source of core Arvectum OS terms without relying on chat history or model memory.
-
-## 7. Block 0C — RFC-0002: Kernel metamodel
-
-**Status:** 🟩 Complete — `Accepted`  
-**Progress:** `██████████ 100%`
-
-### Canonical scope
-
-RFC-0002 is `Canonical Record, Kernel Metamodel, Authority, Relationship and Organizational Asset Model` and establishes the stable five-primitive Kernel metamodel, identity/version semantics, Canonical Lineage/Head/Effective Version, authority modes, relationship semantics, organizational-asset designation and migration constraints.
-
-### Completed
-
-- 🟩 RFC-0002 `1.0.0` — `Accepted`;
-- 🟩 owner approval recorded independently in [`DECISION-2026-08-07-RFC-0002-ACCEPTANCE`](../governance/decisions/DECISION-2026-08-07-RFC-0002-ACCEPTANCE.md);
-- 🟩 structured draft review and cross-section validation completed;
-- 🟩 RFC Index and glossary synchronized.
-
-### Accepted boundary
-
-Within RFC-0002 scope, the Kernel metamodel is no longer provisional. Acceptance does not select a physical database model or other implementation technology.
-
-### Exit criterion
-
-🟩 Achieved: RFC-0002 is `Accepted` with prior owner approval evidence and synchronized canonical navigation.
-
-## 8. Block 0D — RFC-0003: Identity, security, privacy, tenant sovereignty and portability
-
-**Status:** 🟩 Complete — `Accepted`  
-**Progress:** `██████████ 100%`
-
-### RFC
-
-`RFC-0003 — Identity, Security, Privacy, Tenant Sovereignty and Portability`
-
-### Completed
-
-- 🟩 working draft and functional cross-review completed;
-- 🟩 reviewed proposal published;
-- 🟩 owner approval recorded independently in [`DECISION-2026-08-07-RFC-0003-ACCEPTANCE`](../governance/decisions/DECISION-2026-08-07-RFC-0003-ACCEPTANCE.md);
-- 🟩 [`RFC-0003`](../rfc/RFC-0003-identity-security-privacy-tenant-sovereignty-portability.md) published as `Accepted 1.0.0`;
-- 🟩 RFC Index synchronized with acceptance evidence.
-
-### Accepted boundary
-
-RFC-0003 `1.0.0` is binding architecture for identity administration, authentication, authorization, Organizational Authority separation, tenant isolation, privacy/data governance, cross-organization sharing constraints, privileged/break-glass access and portability.
-
-### Exit criterion
-
-🟩 Achieved: the platform has accepted domain-neutral security, privacy, identity, authority and sovereignty semantics.
-
-## 9. Block 0E — RFC-0004: Product Contract, Product Experiment and Extension Model
-
-**Status:** 🟩 Complete — `Accepted`  
-**Progress:** `██████████ 100%`
-
-### RFC
-
-[`RFC-0004 — Product Contract, Product Experiment and Extension Model`](../rfc/RFC-0004-product-contract-product-experiment-extension-model-v1.0.0.md) — `Accepted 1.0.0`.
-
-### Completed
-
-- 🟩 complete working draft and functional cross-review completed;
-- 🟩 reviewed proposal `0.3.0` preserved with immutable proposal blob `5a413a240588677211ad56f3a23b30a65d1c4334`;
-- 🟩 owner approval recorded in [`DECISION-2026-08-07-RFC-0004-OWNER-APPROVAL-REPAIR`](../governance/decisions/DECISION-2026-08-07-RFC-0004-OWNER-APPROVAL-REPAIR.md);
-- 🟩 compatibility re-check against Accepted RFC-0003 completed;
-- 🟩 RFC-0004 published as `Accepted 1.0.0`;
-- 🟩 RFC Index synchronized.
-
-### Accepted boundary
-
-RFC-0004 is binding architecture for Product Contract identity/version/lifecycle semantics, bounded Product Experiments, explicit capability/canonical-state/operation/Event/Artifact boundaries, extension registration and compatibility/migration/deprecation rules.
-
-### Exit criterion
-
-🟩 Achieved: products can interact with Arvectum OS through an explicit, versioned and governed boundary without leaking product business logic into the platform.
-
-## 10. Block 0F — Governed execution, events and provenance
-
-**Status:** 🟩 Complete — RFC-0005 and RFC-0006 `Accepted 1.0.0`  
-**Progress:** `██████████ 100%`
-
-### RFCs
-
-1. `RFC-0005 — Governed Execution and Workflow Model`;
-2. `RFC-0006 — Event, Provenance and Observability Model`.
-
-### Completed
-
-- 🟩 RFC-0005 review, owner approval and `Accepted 1.0.0` publication completed;
-- 🟩 RFC-0006 review, owner approval and `Accepted 1.0.0` publication completed;
-- 🟩 RFC Index synchronized with approval and publication evidence.
-
-### Accepted Block 0F boundary
-
-RFC-0005 establishes domain-neutral Governed Execution and Workflow semantics. RFC-0006 establishes Event, Provenance and Observability semantics. Together they support reconstructable consequential state change without selecting workflow, broker or observability technologies.
-
-### Exit criterion
-
-🟩 Achieved: consequential execution and operational history have accepted domain-neutral models sufficient for explainability, reconstruction and controlled state change.
-
-## 11. Block 0G — Memory, knowledge and governed learning
-
-**Status:** 🟩 Complete — RFC-0007 `Accepted 1.0.0`  
-**Progress:** `██████████ 100%`
-
-### RFC
-
-[`RFC-0007 — Memory, Knowledge and Governed Learning Lifecycle`](../rfc/RFC-0007-memory-knowledge-governed-learning-lifecycle-v1.0.0.md) — `Accepted 1.0.0`.
-
-### Completed
-
-- 🟩 functional cross-review completed after 4 of maximum 7 iterations with result `Pass after bounded reconciliation`;
-- 🟩 reviewed RFC-0007 `0.2.0` published;
-- 🟩 explicit owner approval recorded independently in [`DECISION-2026-08-07-RFC-0007-ACCEPTANCE`](../governance/decisions/DECISION-2026-08-07-RFC-0007-ACCEPTANCE.md);
-- 🟩 RFC-0007 published as `Accepted 1.0.0`;
-- 🟩 RFC Index synchronized.
-
-### Accepted boundary
-
-RFC-0007 is binding architecture for Observation, Organizational Memory, Knowledge Candidate, Improvement Proposal, validated Knowledge, governed promotion, AI authority boundaries and non-authoritative retrieval/index projections.
-
-### Exit criterion
-
-🟩 Achieved: the platform distinguishes observations, memory, validated knowledge and proposals without silent AI-driven mutation of governed state.
-
-## 12. Block 0H — Reference implementation readiness — non-RFC milestone
-
-**Status:** 🟩 Complete  
-**Progress:** `██████████ 100%`
-
-### Objective
-
-Make the smallest useful reference implementation startable after the foundational semantic RFC sequence through RFC-0007, without introducing speculative technology or cross-cutting architecture in code.
-
-### Completed
-
-- 🟩 [`Reference Implementation Readiness Baseline`](../implementation/REFERENCE-IMPLEMENTATION-READINESS.md) `1.0.0` published;
-- 🟩 logical modular-monolith implementation structure defined without fixing permanent service topology;
-- 🟩 first domain-neutral executable slice and failure cases defined;
-- 🟩 minimum architecture fitness matrix mapped to RFC-0001 through RFC-0007;
-- 🟩 security/privacy/Organization-scope bootstrap constraints defined;
-- 🟩 Product Contract entry condition for real product interaction defined;
-- 🟩 ADR trigger criteria defined;
-- 🟩 minimum ADR set before the first in-memory/in-process slice assessed as `zero`;
-- 🟩 functional cross-review completed after 3 of maximum 7 iterations with result `Pass after bounded reconciliation`;
-- 🟩 explicit owner confirmation of completion recorded in [`DECISION-2026-08-07-BLOCK-0H-REFERENCE-IMPLEMENTATION-READINESS-CONFIRMATION`](../governance/decisions/DECISION-2026-08-07-BLOCK-0H-REFERENCE-IMPLEMENTATION-READINESS-CONFIRMATION.md) — `Approved`.
-
-### Readiness boundary
-
-The first reference implementation may begin with domain-neutral semantic modules, in-memory persistence ports, in-process application calls and executable fitness fixtures.
-
-No programming language, database, API protocol, event broker, workflow engine, IAM provider, policy engine, vector store, LLM/model provider, cloud topology or permanent package structure is selected by Block 0H.
-
-Reference implementation readiness is not operational readiness and does not make any capability `Active`.
-
-### Exit criterion for Phase 0
-
-🟩 **Achieved. Phase 0 is complete and explicitly confirmed by the Owner.**
-
-## 13. Post-Phase-0 architecture and delivery state
-
-The reference implementation delivery track is now in progress:
+## 7. Phase 1 dependency-aware sequence
 
 ```text
-Roadmap Block 0H — Reference implementation readiness
-(non-RFC milestone)                     ✅ COMPLETE + OWNER CONFIRMED
-        ↓
-First bounded executable slice          🟨 IN PROGRESS
+P1.01 ✅ Organization scope + Actor / Principal
+   ↓
+P1.02 🟦 Native subject + Canonical Record v1
+   ↓
+P1.03 ⬜ Versioned Workflow
+   ↓
+P1.04 ⬜ Execution Context + version pinning
+   ↓
+P1.05 ⬜ Authorization + Organizational Authority gates
+   ↓
+P1.06 ⬜ Canonical Mutation → immutable v2
+   ↓
+P1.07 ⬜ Canonical Event
+   ↓
+P1.08 ⬜ Provenance / reconstruction
+   ↓
+P1.09 ⬜ Observation ≠ Knowledge
+   ↓
+P1.10 ⬜ Portable semantic fixture
+   ↓
+P1.12 ⬜ Closure review
 ```
 
-Scenario step 1 is implemented in [`reference/python`](../../reference/python/README.md): explicit Organization scope and attributable Actor/Principal semantics with executable fitness tests. The remaining scenario steps are not yet complete.
+`P1.11` fitness tests run continuously across the sequence.
 
-The architecture RFC track is now:
+Bounded parallel work is permitted when dependencies remain explicit and the work does not prejudge unresolved architecture or technology choices.
 
-```text
-RFC-0007 — Memory, Knowledge and Governed Learning Lifecycle  ✅ ACCEPTED 1.0.0
-        ↓
-RFC-0008 — Document and Artifact Architecture                ✅ ACCEPTED 1.0.0
-```
+## 8. Phase 1 implementation constraints
 
-RFC-0008 acceptance does not retroactively make it a prerequisite for a bounded slice that does not rely on Document/Artifact semantics. Where future implementation does rely on shared Document/Artifact semantics, Accepted RFC-0008 is now binding.
-
-### RFC-0008 completed
-
-- 🟩 Constitution `1.2.0`, RFC Index and Accepted RFC-0001 through RFC-0007 re-verified before substantive work;
-- 🟩 RFC-0008 `0.1.0` working draft published;
-- 🟩 functional cross-review completed after 4 of maximum 7 iterations;
-- 🟩 review result: `Pass after bounded reconciliation`;
-- 🟩 review evidence published in [`docs/reviews/RFC-0008-functional-cross-review.md`](../reviews/RFC-0008-functional-cross-review.md);
-- 🟩 all bounded reconciliation items incorporated into reviewed proposal `0.2.0`;
-- 🟩 reviewed proposal preserved by immutable blob SHA `0de6a1dead4e06605d72d0781505bb44598d752a`;
-- 🟩 explicit owner approval recorded independently in [`DECISION-2026-08-07-RFC-0008-ACCEPTANCE`](../governance/decisions/DECISION-2026-08-07-RFC-0008-ACCEPTANCE.md), approval commit `9b104307dc1ee2e04ac65146b6beb73db0d13019`;
-- 🟩 [`RFC-0008 — Document and Artifact Architecture`](../rfc/RFC-0008-document-artifact-architecture-v1.0.0.md) published as `Accepted 1.0.0`, publication commit `230fb452f5aa8688950056cf1c4965840803c835`;
-- 🟩 RFC Index synchronized with acceptance evidence;
-- 🟩 Architecture Glossary synchronized to `1.3.0` through Accepted RFC-0008;
-- 🟩 repository README synchronized to Accepted RFC-0008;
-- 🟩 roadmap synchronized to this accepted state.
-
-### Accepted RFC-0008 boundary
-
-RFC-0008 `1.0.0` is binding domain-neutral architecture for logical Document identity, immutable Document Versions, Artifact representations, Working Copies, governed content resolution/manifests, renditions, external document authority, generation/admission, transformation/redaction, signature/approval evidence, exact-version reliance, packages, security/privacy propagation, portability/export and migration.
-
-It introduces no new Kernel primitive and selects no DMS, object store, database, file format, OCR engine, signing provider, search engine, workflow engine or service topology.
-
-Acceptance does not make any document/artifact Platform Capability `Active`, establish production/operational readiness, create SLA/support/archival/legal-signature commitments, or approve product-specific document taxonomies, templates or workflows.
-
-## 14. Next canonical action
-
-The current delivery action remains:
-
-> **Implement the first bounded reference implementation executable slice defined by `docs/implementation/REFERENCE-IMPLEMENTATION-READINESS.md`: prove stable identities, immutable canonical versions, explicit Organization/authority gates, Governed Execution mutation, canonical Event evidence, provenance and Observation non-promotion with executable tests before adding infrastructure.**
-
-### Current delivery progress
-
-- 🟩 Scenario step 1 — establish one explicit Organization scope and attributable Actor/Principal — implemented and validated with executable tests;
-- 🟦 Scenario step 2 — create one `Native` canonical subject with stable Subject Identity and first immutable Version Identity — next.
-
-Completion of scenario step 1 does not by itself satisfy the full bounded-slice fitness matrix or establish an `Active` capability, production readiness or full-platform conformance.
-
-Accepted RFC-0008 must be applied if that slice or a later slice begins to implement shared Document/Artifact semantics.
-
-For implementation:
+Implementation MUST remain within the Accepted architecture and readiness boundary:
 
 - prefer the simplest reversible solution;
-- keep product-domain semantics out of shared modules;
-- use an ADR before a concrete choice crosses the readiness document's ADR gate;
-- do not treat working code or RFC acceptance as an `Active` Platform Capability or production-readiness evidence by itself.
+- keep product-domain semantics out of shared reference modules;
+- begin with in-memory persistence and in-process interfaces where sufficient;
+- preserve explicit Organization, authorization, Organizational Authority and data-governance boundaries;
+- require Governed Execution for consequential canonical mutation;
+- preserve semantic immutability and exact version reliance;
+- keep canonical Events distinct from telemetry;
+- do not promote Observation to validated Knowledge automatically;
+- use Accepted RFC-0008 when Document/Artifact semantics enter scope;
+- do not represent working code as an `Active` Platform Capability or production-readiness evidence by itself.
 
-Naming rule:
+## 9. ADR gate
 
-- completed readiness work = `Block 0H` / `Reference implementation readiness`;
-- accepted document/artifact architecture = `RFC-0008` / `RFC-0008 — Document and Artifact Architecture`;
-- never use `RFC-0008` as a label for Block 0H.
+No new ADR is required merely because Phase 1 has begun.
 
-## 15. Roadmap maintenance rule
+Create an ADR before relying on an implementation choice when the choice becomes materially constraining, including when it:
+
+1. constrains multiple platform modules or products;
+2. creates material migration cost or public-contract breakage;
+3. becomes a stable cross-product/public interface;
+4. materially determines tenant isolation, authorization enforcement, evidence integrity or external authority behavior;
+5. creates a durable dependency on a database, broker, orchestration runtime, identity provider, schema registry, retrieval engine or vendor-specific format;
+6. has materially different portability, security, reliability or operational consequences compared with plausible alternatives.
+
+## 10. Phase 1 exit criterion
+
+Phase 1 first bounded executable slice is complete only when:
+
+1. `P1.01` through `P1.10` are complete within the declared slice scope;
+2. the applicable `P1.11` fitness matrix passes;
+3. `P1.12` closure review confirms no product-domain leakage into shared modules;
+4. no technology choice crossed an ADR gate without an ADR;
+5. the implementation remains reversible and migration-friendly;
+6. implementation-neutral fixture export preserves required organizational semantics;
+7. Roadmap status is synchronized with repository evidence.
+
+Completion of Phase 1 does not automatically make any Platform Capability `Active`, establish operational readiness or create SLA/support/conformance claims beyond the explicitly tested scope.
+
+## 11. Roadmap maintenance rule
 
 Every roadmap update **MUST begin with repository synchronization**, not chat-memory reconstruction.
 
@@ -393,17 +236,16 @@ Before changing roadmap status or progress:
 1. fetch the current canonical `docs/constitution/CONSTITUTION.md`;
 2. fetch `docs/rfc/README.md` and determine the actual status/version of every relevant RFC;
 3. inspect relevant Accepted RFC/ADR/decision records for the milestone being updated;
-4. fetch the current `docs/roadmap/ROADMAP.md` from the canonical repository;
-5. reconcile repository state with any project-chat context; repository state remains authoritative unless a current governance repair is explicitly being recorded.
+4. fetch the current `docs/roadmap/ROADMAP.md` and applicable phase work-breakdown file;
+5. inspect implementation/tests for any work item whose progress is changing;
+6. reconcile repository state with project-chat context; repository state remains authoritative unless a current governance repair is explicitly being recorded.
 
-After every accepted RFC, material planning decision, or meaningful implementation milestone:
+After every accepted RFC, material planning decision or meaningful implementation milestone:
 
-1. update status and progress in this file;
+1. update status and progress in this file and the applicable phase work breakdown;
 2. update links and dependencies;
-3. increment the roadmap version according to Section 2;
+3. increment versions according to their versioning rules;
 4. commit the update to the canonical repository;
 5. do not maintain a competing roadmap in chat, local notes or another repository.
 
-The approved [`RFC State Transition Procedure`](../governance/RFC-STATE-TRANSITION-PROCEDURE.md) additionally requires each owner-approved RFC transition to be fully closed through canonical publication, RFC Index synchronization, roadmap synchronization and read-after-write consistency verification before substantive work advances to the next RFC.
-
-Chats may discuss future roadmap changes, but only the version committed here is canonical.
+Chats may discuss future roadmap changes, but only committed roadmap artifacts are canonical.
