@@ -32,7 +32,9 @@ Domain products such as procurement, marketing, finance or legal agents live out
 
 The current sequence is maintained only in the [Canonical Roadmap](docs/roadmap/ROADMAP.md).
 
-The Architecture Glossary (`docs/architecture/GLOSSARY.md`) is published as the shared language baseline. The next major architecture decision is `RFC-0002 — Canonical Record, Kernel Metamodel, Authority, Relationship and Organizational Asset Model`, as required by Accepted RFC-0001.
+The Architecture Glossary (`docs/architecture/GLOSSARY.md`) is published as the shared language baseline. RFC-0002 `Canonical Record, Kernel Metamodel, Authority, Relationship and Organizational Asset Model` is `Accepted 1.0.0`.
+
+The current major architecture proposal is RFC-0003 `Identity, Security, Privacy, Tenant Sovereignty and Portability` `0.2.0` — `Proposed`, with functional role cross-review complete. It remains non-normative until explicit owner approval and valid acceptance publication.
 
 Production implementation is not allowed to prejudge unresolved cross-cutting architecture. Bounded, reversible and migration-friendly reference implementation work may proceed in parallel when permitted by the Accepted architecture.
 
