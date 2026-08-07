@@ -9,11 +9,12 @@ Every human contributor, AI agent and connected product must begin with:
 1. [The Constitution of Arvectum OS](docs/constitution/CONSTITUTION.md)
 2. [Agent Rules](AGENTS.md)
 3. [RFC Index](docs/rfc/README.md) and relevant Accepted RFCs/ADRs
-4. [Canonical Roadmap](docs/roadmap/ROADMAP.md) when determining sequence, next work, milestones or implementation readiness
+4. [Architecture Glossary](docs/architecture/GLOSSARY.md) for canonical terminology and source navigation
+5. [Canonical Roadmap](docs/roadmap/ROADMAP.md) when determining sequence, next work, milestones or implementation readiness
 
 The Constitution has the highest architectural authority in this repository. The current ratified version is `1.2.0`.
 
-The roadmap is the canonical planning source, but it does not override the Constitution, Accepted RFCs or Accepted ADRs.
+The glossary is informative and does not override the Constitution or Accepted RFCs. The roadmap is the canonical planning source, but it does not override the Constitution, Accepted RFCs or Accepted ADRs.
 
 For ChatGPT projects and long-lived chats, use:
 
@@ -31,7 +32,7 @@ Domain products such as procurement, marketing, finance or legal agents live out
 
 The current sequence is maintained only in the [Canonical Roadmap](docs/roadmap/ROADMAP.md).
 
-The next planned artifact is the Architecture Glossary (`docs/architecture/GLOSSARY.md`). After that, the next major architecture decision is `RFC-0002 — Canonical Record, Kernel Metamodel, Authority, Relationship and Organizational Asset Model`, as required by Accepted RFC-0001.
+The Architecture Glossary (`docs/architecture/GLOSSARY.md`) is published as the shared language baseline. The next major architecture decision is `RFC-0002 — Canonical Record, Kernel Metamodel, Authority, Relationship and Organizational Asset Model`, as required by Accepted RFC-0001.
 
 Production implementation is not allowed to prejudge unresolved cross-cutting architecture. Bounded, reversible and migration-friendly reference implementation work may proceed in parallel when permitted by the Accepted architecture.
 
