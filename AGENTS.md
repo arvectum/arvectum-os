@@ -17,6 +17,20 @@ Before any substantive work:
 
 For ChatGPT project instructions, use `docs/governance/CHATGPT_PROJECT_BOOTSTRAP.md`.
 
+## Project-chat continuity
+
+When this repository is used from a ChatGPT project, use available project conversation context to recover the goal, current stage, prior user instructions, rationale and unfinished work, but restore the factual current state from this repository.
+
+Do not require the user to paste or repeat another project chat when the task can be reconstructed from project context and repository state.
+
+If a PR, issue, branch, RFC, ADR or repository file is referenced, attempt access through the available GitHub connector before claiming that artifact is unavailable.
+
+Incomplete conversational context is not a reason to stop when the canonical repository contains sufficient state to continue.
+
+For continued canonical work, use:
+
+`project context → repository → Constitution → RFC Index → relevant Accepted RFC/ADR → current artifact → continue`
+
 ## Mandatory classification
 
 Classify every task as one of:
