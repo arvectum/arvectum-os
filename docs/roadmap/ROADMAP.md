@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `1.0.7`
+Version: `1.0.8`
 Created: `2026-08-07`
 Updated: `2026-08-07`
 Owner: `ООО «Арвектум»`
@@ -74,7 +74,7 @@ The phase does **not** require the entire future platform to be fully specified 
 | 🟪 0A | Governance baseline | 🟩 | `██████████ 100%` |
 | 🟦 0B | Architecture language baseline | 🟩 | `██████████ 100%` |
 | 🟪 0C | RFC-0002 — Kernel metamodel | 🟩 | `██████████ 100%` |
-| 🟢 0D | RFC-0003 — Identity, security, privacy, sovereignty | 🟦 | `░░░░░░░░░░ 0%` |
+| 🟢 0D | RFC-0003 — Identity, security, privacy, sovereignty | 🟨 | `████████░░ 80%` |
 | 🟠 0E | RFC-0004 — Product Contract and extension model | ⬜ | `░░░░░░░░░░ 0%` |
 | 🔵 0F | RFC-0005/0006 — Governed execution, events and provenance | ⬜ | `░░░░░░░░░░ 0%` |
 | 🟣 0G | RFC-0007 — Memory, knowledge and learning lifecycle | ⬜ | `░░░░░░░░░░ 0%` |
@@ -205,8 +205,8 @@ Acceptance also does not make a capability `Active`, establish production readin
 
 ## 8. Block 0D — RFC-0003: Identity, security, privacy, tenant sovereignty and portability
 
-**Status:** 🟦 Ready / next planned work  
-**Progress:** `░░░░░░░░░░ 0%`
+**Status:** 🟨 In progress — reviewed proposal available  
+**Progress:** `████████░░ 80%`
 
 ### Planned RFC
 
@@ -214,7 +214,27 @@ Acceptance also does not make a capability `Active`, establish production readin
 
 ### Dependency baseline
 
-RFC-0003 must build on the Accepted Kernel semantics in RFC-0001 and RFC-0002 without redefining Identity as mutable canonical state, turning Typed Relationships into implicit permissions, or creating competing authority across organizations.
+RFC-0003 builds on the Accepted Kernel semantics in RFC-0001 and RFC-0002 without redefining Identity as mutable canonical state, turning Typed Relationships into implicit permissions, or creating competing authority across organizations.
+
+### Completed
+
+- 🟩 first complete working draft `0.1.0` prepared;
+- 🟩 functional role-based cross-review completed across CEO/strategy, COO/operations, CTO/architecture, CISO/security, Privacy, Legal/rights, Product and Engineering perspectives;
+- 🟩 review corrections incorporated into [`RFC-0003 v0.2.0`](../rfc/RFC-0003-identity-security-privacy-tenant-sovereignty-portability.md) — `Proposed`;
+- 🟩 detailed review evidence published in [`docs/reviews/RFC-0003-functional-cross-review.md`](../reviews/RFC-0003-functional-cross-review.md);
+- 🟩 RFC Index synchronized to the reviewed proposal.
+
+### Current proposal boundary
+
+RFC-0003 `0.2.0` defines domain-neutral architecture for identity administration, authentication, authorization, organizational authority separation, tenant isolation, privacy/data governance, cross-organization sharing constraints, privileged/break-glass access and portability.
+
+It intentionally does not select IAM, cryptographic, database or cloud technologies and does not pre-empt RFC-0004 Product Contracts, RFC-0005 Governed Execution, RFC-0006 Event/Provenance or RFC-0007 Memory/Knowledge semantics.
+
+### Remaining action
+
+- ⬜ owner decision on RFC-0003 `0.2.0`;
+- ⬜ if approved, create independent approval record and publish `Accepted 1.0.0` with Acceptance Integrity evidence;
+- ⬜ synchronize glossary and roadmap after acceptance.
 
 ### Exit criterion
 
@@ -316,7 +336,7 @@ Architecture Glossary                   ✅
         ↓
 RFC-0002 Kernel Metamodel               ✅ ACCEPTED 1.0.0
         ↓
-RFC-0003 Identity / Security / Privacy  NEXT
+RFC-0003 Identity / Security / Privacy  🟨 PROPOSED 0.2.0 — OWNER DECISION NEXT
         ↓
 RFC-0004 Product Contract / Extensions
         ↓
@@ -339,9 +359,11 @@ Parallel work is permitted when the work is bounded and reversible and does not 
 
 The current architecture work item is:
 
-> **Begin RFC-0003 — Identity, Security, Privacy, Tenant Sovereignty and Portability — using Constitution `1.2.0`, Accepted RFC-0001 `1.0.0` and Accepted RFC-0002 `1.0.0` as the canonical architectural baseline.**
+> **Owner decision on reviewed RFC-0003 `0.2.0` — Identity, Security, Privacy, Tenant Sovereignty and Portability.**
 
-RFC-0003 should resolve the identity-administration, authentication, authorization, isolation, sovereignty and portability mechanisms intentionally deferred by the accepted architecture while preserving the RFC-0002 Kernel metamodel.
+The proposal and functional cross-review are complete. It remains non-normative until explicit owner approval and valid Acceptance Integrity publication occur.
+
+If approved, the next architecture work item becomes RFC-0004 — Product Contract, Product Experiment and Extension Model.
 
 ## 15. Roadmap maintenance rule
 
