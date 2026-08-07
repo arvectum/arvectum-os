@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `1.2.1`
+Version: `1.2.2`
 Created: `2026-08-07`
 Updated: `2026-08-07`
 Owner: `ООО «Арвектум»`
@@ -111,11 +111,16 @@ RFC-0008 was intentionally prepared and accepted after Phase 0 readiness as a pa
 - 🟩 RFC Index established;
 - 🟩 RFC-0001 `Arvectum OS Architecture` `1.0.0` — `Accepted`;
 - 🟩 canonical roadmap established in this file;
-- 🟩 repository agent rules identify governance work as a first-class task classification.
+- 🟩 repository agent rules identify governance work as a first-class task classification;
+- 🟩 Constitution amendment provenance for `1.0.0 → 1.1.0 → 1.2.0` recovered from immutable Git history and indexed;
+- 🟩 historical legacy/current `RFC-0001` identifier collision documented without renumbering current Accepted RFCs;
+- 🟩 [`Constitution 1.2.0 Provenance Record`](../governance/CONSTITUTION-PROVENANCE.md) closed under [`DECISION-2026-08-07-CONSTITUTION-1.2-PROVENANCE-REPAIR`](../governance/decisions/DECISION-2026-08-07-CONSTITUTION-1.2-PROVENANCE-REPAIR.md).
 
-### Known governance debt
+### Governance provenance closure
 
-The RFC Index records a provenance gap for the transition to Constitution `1.2.0`. This debt must be repaired only from confirmed owner-approved evidence and must not be reconstructed by assumption.
+The former Constitution `1.2.0` provenance debt is resolved. Original historical amendment artifacts, resulting Constitution transitions and explicit owner approval were verified from immutable Git history. The RFC Index records the legacy amendment namespace and the historical identifier collision explicitly.
+
+No unresolved Phase 0 governance provenance debt remains.
 
 ### Exit criterion
 
