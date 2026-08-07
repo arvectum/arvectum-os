@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `1.0.9`
+Version: `1.1.0`
 Created: `2026-08-07`
 Updated: `2026-08-07`
 Owner: `ООО «Арвектум»`
@@ -35,7 +35,7 @@ If this roadmap conflicts with a higher-authority source, the higher-authority s
 This roadmap is versioned in Git and uses semantic versioning:
 
 - `PATCH` — progress, status, links, wording clarifications and other non-structural updates;
-- `MINOR` — sequencing, milestone scope or exit-criteria changes that do not alter an Accepted architectural contract;
+- `MINOR` — sequencing, milestone scope, exit-criteria or roadmap-maintenance process changes that do not alter an Accepted architectural contract;
 - `MAJOR` — restructuring of the roadmap lifecycle or planning model.
 
 A roadmap update must never silently redefine the scope of an Accepted RFC. If an Accepted RFC must change, use the applicable architecture-governance process first, then update the roadmap to reflect the accepted decision.
@@ -74,7 +74,7 @@ The phase does **not** require the entire future platform to be fully specified 
 | 🟪 0A | Governance baseline | 🟩 | `██████████ 100%` |
 | 🟦 0B | Architecture language baseline | 🟩 | `██████████ 100%` |
 | 🟪 0C | RFC-0002 — Kernel metamodel | 🟩 | `██████████ 100%` |
-| 🟢 0D | RFC-0003 — Identity, security, privacy, sovereignty | 🟨 | `████████░░ 80%` |
+| 🟢 0D | RFC-0003 — Identity, security, privacy, sovereignty | 🟨 | `█████████░ 90%` |
 | 🟠 0E | RFC-0004 — Product Contract and extension model | 🟨 | `████████░░ 80%` |
 | 🔵 0F | RFC-0005/0006 — Governed execution, events and provenance | ⬜ | `░░░░░░░░░░ 0%` |
 | 🟣 0G | RFC-0007 — Memory, knowledge and learning lifecycle | ⬜ | `░░░░░░░░░░ 0%` |
@@ -205,10 +205,10 @@ Acceptance also does not make a capability `Active`, establish production readin
 
 ## 8. Block 0D — RFC-0003: Identity, security, privacy, tenant sovereignty and portability
 
-**Status:** 🟨 In progress — reviewed proposal available  
-**Progress:** `████████░░ 80%`
+**Status:** 🟨 Acceptance publication in progress — owner approval recorded  
+**Progress:** `█████████░ 90%`
 
-### Planned RFC
+### RFC
 
 `RFC-0003 — Identity, Security, Privacy, Tenant Sovereignty and Portability`
 
@@ -220,21 +220,22 @@ RFC-0003 builds on the Accepted Kernel semantics in RFC-0001 and RFC-0002 withou
 
 - 🟩 first complete working draft `0.1.0` prepared;
 - 🟩 functional role-based cross-review completed across CEO/strategy, COO/operations, CTO/architecture, CISO/security, Privacy, Legal/rights, Product and Engineering perspectives;
-- 🟩 review corrections incorporated into [`RFC-0003 v0.2.0`](../rfc/RFC-0003-identity-security-privacy-tenant-sovereignty-portability.md) — `Proposed`;
+- 🟩 review corrections incorporated into [`RFC-0003 v0.2.0`](../rfc/RFC-0003-identity-security-privacy-tenant-sovereignty-portability.md) — reviewed proposal;
 - 🟩 detailed review evidence published in [`docs/reviews/RFC-0003-functional-cross-review.md`](../reviews/RFC-0003-functional-cross-review.md);
-- 🟩 RFC Index synchronized to the reviewed proposal.
+- 🟩 owner approval canonicalized independently in [`DECISION-2026-08-07-RFC-0003-ACCEPTANCE`](../governance/decisions/DECISION-2026-08-07-RFC-0003-ACCEPTANCE.md).
 
-### Current proposal boundary
+### Current repository state
 
-RFC-0003 `0.2.0` defines domain-neutral architecture for identity administration, authentication, authorization, organizational authority separation, tenant isolation, privacy/data governance, cross-organization sharing constraints, privileged/break-glass access and portability.
+The approved RFC-0003 proposal is substantively complete and owner-approved, but the RFC file and RFC Index have not yet been republished as `Accepted 1.0.0`. Until that acceptance publication is completed, the current indexed normative status remains `Proposed 0.2.0`.
 
-It intentionally does not select IAM, cryptographic, database or cloud technologies and does not pre-empt RFC-0004 Product Contracts, RFC-0005 Governed Execution, RFC-0006 Event/Provenance or RFC-0007 Memory/Knowledge semantics.
+This distinction preserves Acceptance Integrity: owner approval and acceptance publication are separate repository events.
 
 ### Remaining action
 
-- ⬜ owner decision on RFC-0003 `0.2.0`;
-- ⬜ if approved, create independent approval record and publish `Accepted 1.0.0` with Acceptance Integrity evidence;
-- ⬜ synchronize glossary and roadmap after acceptance.
+- ⬜ publish RFC-0003 as `Accepted 1.0.0` without changing the owner-approved normative substance;
+- ⬜ update the RFC Index with acceptance evidence;
+- ⬜ synchronize Architecture Glossary to the new Accepted source baseline;
+- ⬜ mark this block complete in the roadmap.
 
 ### Exit criterion
 
@@ -264,12 +265,12 @@ RFC-0004 `0.3.0` defines Product Contract identity/version/lifecycle semantics, 
 
 The proposal keeps Product Contract lifecycle independent from Platform Capability lifecycle, keeps product-domain logic product-owned by default, treats extension registration as distinct from authorization/organizational authority, and prohibits undocumented direct database/internal-import coupling.
 
-RFC-0004 normatively depends only on Accepted RFC-0001 and RFC-0002. RFC-0003 `0.2.0` remains `Proposed`; it was considered only for forward compatibility and must be rechecked if accepted or materially changed before RFC-0004 acceptance.
+RFC-0004 normatively depends only on Accepted RFC-0001 and RFC-0002. The owner-approved RFC-0003 proposal has been considered for forward compatibility, but RFC-0003 does not become normative until its acceptance publication is completed.
 
 ### Remaining action
 
-- ⬜ complete owner decision on RFC-0003 `0.2.0` first under the default sequence;
-- ⬜ re-check RFC-0004 against the resulting RFC-0003 state if RFC-0003 is Accepted or changes materially;
+- ⬜ complete RFC-0003 acceptance publication first under the default sequence;
+- ⬜ re-check RFC-0004 against Accepted RFC-0003 after publication;
 - ⬜ owner decision on RFC-0004 `0.3.0`;
 - ⬜ if approved, create independent approval record and publish `Accepted 1.0.0` with Acceptance Integrity evidence;
 - ⬜ synchronize glossary and roadmap after acceptance.
@@ -361,7 +362,7 @@ Architecture Glossary                   ✅
         ↓
 RFC-0002 Kernel Metamodel               ✅ ACCEPTED 1.0.0
         ↓
-RFC-0003 Identity / Security / Privacy  🟨 PROPOSED 0.2.0 — OWNER DECISION NEXT
+RFC-0003 Identity / Security / Privacy  🟨 OWNER APPROVAL RECORDED — ACCEPTANCE PUBLICATION NEXT
         ↓
 RFC-0004 Product Contract / Extensions  🟨 PROPOSED 0.3.0 — REVIEWED IN PARALLEL
         ↓
@@ -382,15 +383,23 @@ Parallel work is permitted when the work is bounded and reversible and does not 
 
 ## 14. Next canonical action
 
-The current architecture work item remains:
+The current architecture work item is:
 
-> **Owner decision on reviewed RFC-0003 `0.2.0` — Identity, Security, Privacy, Tenant Sovereignty and Portability.**
+> **Publish owner-approved RFC-0003 `0.2.0` as `Accepted 1.0.0`, update the RFC Index and synchronize the Architecture Glossary.**
 
-RFC-0004 `0.3.0` has been prepared and cross-reviewed in parallel under the roadmap's parallel-work rule. It remains non-normative and does not displace the dependency-aware sequence.
-
-If RFC-0003 is approved, RFC-0004 must be re-checked against the resulting Accepted RFC-0003 before its own owner decision. If RFC-0003 changes materially instead, RFC-0004 must be reconciled before acceptance consideration.
+RFC-0004 `0.3.0` has been prepared and cross-reviewed in parallel under the roadmap's parallel-work rule. After RFC-0003 acceptance publication, RFC-0004 must be re-checked against the Accepted RFC-0003 state before its own owner decision.
 
 ## 15. Roadmap maintenance rule
+
+Every roadmap update **MUST begin with repository synchronization**, not chat-memory reconstruction.
+
+Before changing roadmap status or progress:
+
+1. fetch the current canonical `docs/constitution/CONSTITUTION.md`;
+2. fetch `docs/rfc/README.md` and determine the actual status/version of every relevant RFC;
+3. inspect relevant Accepted RFC/ADR/decision records for the milestone being updated;
+4. fetch the current `docs/roadmap/ROADMAP.md` from the canonical repository;
+5. reconcile repository state with any project-chat context; repository state remains authoritative unless a current governance repair is explicitly being recorded.
 
 After every accepted RFC, material planning decision, or meaningful implementation milestone:
 
