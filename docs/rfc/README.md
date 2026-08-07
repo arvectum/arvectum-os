@@ -17,7 +17,7 @@ The Constitution has higher authority than every RFC. Accepted RFCs have higher 
 
 | RFC | Title | Category | Status | Version |
 |---|---|---|---|---|
-| [RFC-0001](RFC-0001-arvectum-os-architecture.md) | Arvectum OS Architecture | platform | Proposed | 0.8.0 |
+| [RFC-0001](RFC-0001-arvectum-os-architecture.md) | Arvectum OS Architecture | platform | Proposed | 0.9.0 |
 
 ## Acceptance Integrity
 
@@ -33,11 +33,13 @@ An RFC must not require its acceptance commit hash to be embedded inside the sam
 
 ## Related Governance
 
-RFC-0001 v0.8.0 requires an approved decision-authority policy before the first `Active` capability or external production conformance claim.
+RFC-0001 v0.9.0 requires an approved decision-authority policy before the first `Active` capability or external production conformance claim.
+
+It also requires operational-readiness approval before a capability becomes `Active`, and requires externally relied-upon commercial claims to remain within approved lifecycle, contract and conformance scope.
 
 Current proposed policy:
 
-- [`Decision Authority Policy`](../governance/DECISION-AUTHORITY-POLICY.md) — `Proposed` v0.1.0.
+- [`Decision Authority Policy`](../governance/DECISION-AUTHORITY-POLICY.md) — `Proposed` v0.2.0.
 
 Until that policy or a replacement is approved, the owner of Arvectum OS retains residual decision authority.
 
