@@ -1,7 +1,7 @@
 # Arvectum OS Phase 1 — Reference Implementation
 
 Status: `Active`
-Version: `1.0.1`
+Version: `1.0.2`
 Created: `2026-08-07`
 Updated: `2026-08-07`
 Owner: `ООО «Арвектум»`
@@ -43,15 +43,15 @@ The slice must demonstrate stable identity, immutable canonical versions, explic
 |---|---|---:|---:|
 | `P1.01` | Organization scope and attributable Actor / Principal | 🟩 | `██████████ 100%` |
 | `P1.02` | Native subject + first immutable Canonical Record version | 🟩 | `██████████ 100%` |
-| `P1.03` | Versioned Workflow baseline | 🟦 | `░░░░░░░░░░ 0%` |
-| `P1.04` | Execution Context + exact version pinning | ⬜ | `░░░░░░░░░░ 0%` |
+| `P1.03` | Versioned Workflow baseline | 🟩 | `██████████ 100%` |
+| `P1.04` | Execution Context + exact version pinning | 🟦 | `░░░░░░░░░░ 0%` |
 | `P1.05` | Authorization and Organizational Authority gates | ⬜ | `░░░░░░░░░░ 0%` |
 | `P1.06` | Governed Canonical Mutation + second immutable version | ⬜ | `░░░░░░░░░░ 0%` |
 | `P1.07` | Canonical Event admission and execution linkage | ⬜ | `░░░░░░░░░░ 0%` |
 | `P1.08` | Provenance, causation and reconstruction evidence | ⬜ | `░░░░░░░░░░ 0%` |
 | `P1.09` | Observation creation without Knowledge promotion | ⬜ | `░░░░░░░░░░ 0%` |
 | `P1.10` | Portable semantic fixture export | ⬜ | `░░░░░░░░░░ 0%` |
-| `P1.11` | Negative-path and architecture fitness tests | 🟨 | `██░░░░░░░░ 20%` |
+| `P1.11` | Negative-path and architecture fitness tests | 🟨 | `███░░░░░░░ 30%` |
 | `P1.12` | Phase 1 bounded-slice closure review | ⬜ | `░░░░░░░░░░ 0%` |
 
 Progress bars are planning indicators, not conformance or capability-lifecycle claims.
@@ -87,17 +87,30 @@ The implementation intentionally rejects `External Reference` and `Governed Repl
 
 Repository evidence: `reference/python/arvectum_os_ref/canonical.py` and `reference/python/tests/test_p1_02_native_canonical_record.py`.
 
-Executable validation for P1.01 + P1.02: `14` unit tests passed.
-
 ### P1.03 — Versioned Workflow baseline
 
-**Status:** 🟦 Next
+**Status:** 🟩 Complete
 
-Represent one versioned domain-neutral Workflow that is permitted to update the reference subject while preserving stable identity and exact Workflow version semantics.
+Implemented one bounded domain-neutral governed Workflow definition with:
+
+- stable Workflow Subject Identity;
+- distinct immutable Workflow Version Identity;
+- a `Native` Canonical Record envelope for the Workflow version;
+- explicit Organization scope, accountable owner, lifecycle and provenance;
+- one immutable semantic operation targeting the exact P1.02 reference Subject Identity and semantic type;
+- RFC-0005 `CanonicalMutation` side-effect classification;
+- fail-closed Organization-scope validation;
+- explicit non-equivalence between Workflow operation declaration and authorization, Organizational Authority or consequential approval.
+
+P1.03 does not start an Execution Context and does not mutate canonical state. It introduces no workflow engine, scheduler, queue, public protocol or durable workflow registry.
+
+Repository evidence: `reference/python/arvectum_os_ref/workflow.py`, package exports in `reference/python/arvectum_os_ref/__init__.py`, and `reference/python/tests/test_p1_03_versioned_workflow.py`.
+
+Executable validation across P1.01–P1.03: `21` unit tests passed, including `7` P1.03 tests.
 
 ### P1.04 — Execution Context + exact version pinning
 
-**Status:** ⬜ Planned
+**Status:** 🟦 Next
 
 Start one Execution Context and pin the effective Workflow version and materially relied-upon input Version Identity.
 
@@ -162,7 +175,7 @@ The bounded slice must include applicable executable tests proving at least:
 - Observation cannot be consumed as validated Knowledge without promotion;
 - projection/index results cannot substitute for exact governed Version Identity reliance.
 
-`P1.01` and `P1.02` now contribute executable negative-path and architecture-fitness coverage, including unresolved Organization scope, authentication non-authority, immutable identity/record values, Organization-consistent attribution, required Canonical Record envelope validation and fail-closed rejection of unsupported authority modes. The full matrix remains incomplete.
+`P1.01`, `P1.02` and `P1.03` now contribute executable negative-path and architecture-fitness coverage, including unresolved Organization scope, authentication non-authority, immutable identity/record/workflow values, Organization-consistent attribution, required Canonical Record envelope validation, fail-closed rejection of unsupported authority modes, exact Workflow Subject/Version identity separation, scoped operation targets and proof that a Workflow declaration does not itself grant authorization or Organizational Authority. The full matrix remains incomplete.
 
 ### P1.12 — Phase 1 bounded-slice closure review
 
@@ -187,9 +200,9 @@ P1.01 ✅ Organization / Actor
    ↓
 P1.02 ✅ Native subject + Canonical Record v1
    ↓
-P1.03 🟦 Versioned Workflow
+P1.03 ✅ Versioned Workflow
    ↓
-P1.04 Execution Context + version pinning
+P1.04 🟦 Execution Context + version pinning
    ↓
 P1.05 Authorization + Organizational Authority gates
    ↓
