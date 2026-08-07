@@ -1,14 +1,15 @@
 # RFC-0002: Canonical Record, Kernel Metamodel, Authority, Relationship and Organizational Asset Model
 
-Status: `Proposed`
-Version: `0.10.0`
+Status: `Accepted`
+Version: `1.0.0`
 Created: `2026-08-07`
 Updated: `2026-08-07`
+Accepted: `2026-08-07`
 Authors: `ООО «Арвектум»`
 Category: `platform`
 Constitution: `1.2.0`
 Depends on: `RFC-0001 v1.0.0`
-Supersedes: `None`
+Supersedes: `RFC-0002 v0.10.0`
 Superseded by: `None`
 Decision owner: `ООО «Арвектум»`
 
@@ -24,7 +25,7 @@ RFC-0001 defines the permanent Platform Kernel of Arvectum OS through five seman
 
 RFC-0001 intentionally leaves the precise metamodel relationships among these primitives provisional and requires RFC-0002 to finalize them before an irreversible cross-cutting public contract is established.
 
-This RFC proposes the following metamodel:
+This RFC defines the following metamodel:
 
 1. **Identity is the stable, non-versioned reference primitive.** It is not a Canonical Record and contains no mutable organizational state.
 2. **Canonical Record is the immutable governed representation of one logical subject at one specific version.** A changeable governed subject has one stable Subject Identity and a sequence of immutable Canonical Record versions.
@@ -976,7 +977,7 @@ This RFC intentionally leaves the following to later documents:
 
 No later RFC may weaken the metamodel invariants accepted here without a superseding architectural decision.
 
-## 22. Review and Proposal Readiness
+## 22. Review and Acceptance Readiness
 
 ### 22.1 Typed Relationship Overhead
 
@@ -1045,29 +1046,27 @@ The proposal was reviewed against Constitution `1.2.0`, Accepted RFC-0001 `1.0.0
 |---|---|---|
 | RFC-0001 assignment coverage | Pass | identity/version semantics, Event placement, Execution Context placement/lifecycle, relationship identity/versioning and provisional migration are defined |
 | Kernel primitive consistency | Pass after wording correction | Section 7.1 defines Identity as a reference to a semantic referent, consistently covering both Subject Identity and Version Identity |
-| authority semantics | Pass after management correction | external authority contract requirements are now restored to RFC-0001 normative strength in Section 12.3 |
-| Canonical Record accountability | Pass after management correction | accountable architectural owner plus classification/access/retention/deletion references are now explicit in Section 8.1 |
+| authority semantics | Pass after management correction | external authority contract requirements are restored to RFC-0001 normative strength in Section 12.3 |
+| Canonical Record accountability | Pass after management correction | accountable architectural owner plus classification/access/retention/deletion references are explicit in Section 8.1 |
 | later-RFC boundary | Pass | authentication, authorization mechanisms, tenant-isolation mechanisms, workflow orchestration, event delivery, observability backends and physical persistence remain deferred |
 | product/platform boundary | Pass | migration semantics are platform-neutral and do not import product-specific schemas or business rules into the Kernel |
 | technology independence | Pass | no normative rule requires a database, language, framework, broker, model provider or deployment topology |
-| glossary consistency | Pass | the informative glossary continues to state that exact metamodel relations remain provisional until RFC-0002 is Accepted |
-| index and roadmap consistency | Pass subject to publication sync | RFC status/version and roadmap stage must be updated together with proposal publication |
+| glossary consistency | Pass before acceptance publication | the informative glossary required synchronization once RFC-0002 became Accepted |
+| index and roadmap consistency | Pass subject to acceptance publication sync | RFC status/version and roadmap stage are synchronized as part of acceptance publication |
 
-The initial architecture-focused consistency pass did not identify the missing accountable-owner requirement or the weakening of external-authority contract fields. The subsequent role-based top-management cross-review identified both gaps, and version `0.10.0` corrects them rather than preserving the earlier false-negative finding.
+The initial architecture-focused consistency pass did not identify the missing accountable-owner requirement or the weakening of external-authority contract fields. The subsequent role-based top-management cross-review identified both gaps, and version `0.10.0` corrected them rather than preserving the earlier false-negative finding.
 
 No relevant Accepted ADR exists in the canonical repository that further constrains this metamodel.
 
-### 22.9 Proposal Readiness Decision
+### 22.9 Acceptance Decision
 
 RFC-0002 moved from `Draft` to `Proposed` at version `0.9.0` after architecture and scenario review.
 
-The top-management cross-review introduced substantive but scope-preserving governance corrections, so the proposal advances to version `0.10.0` and remains `Proposed` for owner review.
+The top-management cross-review introduced substantive but scope-preserving governance corrections, advancing the proposal to version `0.10.0` for owner review.
 
-`Proposed` has no normative force. The Kernel metamodel remains provisional until valid acceptance is recorded according to the RFC Index.
+The Owner of Arvectum OS explicitly approved proposal `0.10.0` on `2026-08-07` without further substantive architectural changes. The approval is recorded independently in [`DECISION-2026-08-07-RFC-0002-ACCEPTANCE`](../governance/decisions/DECISION-2026-08-07-RFC-0002-ACCEPTANCE.md).
 
-If owner review requires further substantive architectural changes, the proposal **MUST** be revised again before approval.
-
-If the owner approves the proposal without further substantive architectural change, acceptance publication may advance the RFC to `1.0.0` together with the required independent approval record and synchronized RFC Index update.
+This acceptance publication advances RFC-0002 to version `1.0.0` with status `Accepted`. The Kernel metamodel defined by this RFC is therefore no longer provisional within its declared scope.
 
 ### 22.10 Role-based Top-management Cross-review
 
@@ -1085,15 +1084,15 @@ This review applies executive and control-function perspectives to the proposal.
 
 After these corrections, the role-based review found no management-level issue that requires changing the Kernel primitive set, absorbing product-domain logic or predefining the implementation choices reserved for later RFCs and ADRs.
 
-Residual acceptance questions are governance questions rather than unresolved metamodel design questions: owner approval, independent approval evidence, publication as `Accepted 1.0.0`, and later operational implementation decisions remain outstanding.
+Remaining work after acceptance belongs to subordinate architecture, implementation and operational decisions rather than unresolved RFC-0002 metamodel design.
 
 ## 23. Approval Record
 
-Status: `Pending`.
-Decision: `Pending`.
+Status: `Approved`.
+Decision: `Accept RFC-0002 v1.0.0`.
 Decision authority: `ООО «Арвектум»` / Owner of Arvectum OS.
-Approval evidence: `None`.
+Decision date: `2026-08-07`.
+Approval evidence: [`DECISION-2026-08-07-RFC-0002-ACCEPTANCE`](../governance/decisions/DECISION-2026-08-07-RFC-0002-ACCEPTANCE.md).
+Approved proposal: `RFC-0002 v0.10.0`.
 
-This document is `Proposed` and has no normative force.
-
-It **MUST NOT** be represented as `Accepted` until an owner-approved decision exists independently of the acceptance publication and the RFC Index acceptance-integrity requirements are satisfied.
+The approval decision exists independently in repository history before this acceptance publication, satisfying the RFC Index acceptance-integrity requirement for prior owner-approved evidence.
