@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `1.1.7`
+Version: `1.1.8`
 Created: `2026-08-07`
 Updated: `2026-08-07`
 Owner: `ООО «Арвектум»`
@@ -77,8 +77,8 @@ The phase does **not** require the entire future platform to be fully specified 
 | 🟢 0D | RFC-0003 — Identity, security, privacy, sovereignty | 🟩 | `██████████ 100%` |
 | 🟠 0E | RFC-0004 — Product Contract and extension model | 🟩 | `██████████ 100%` |
 | 🔵 0F | RFC-0005/0006 — Governed execution, events and provenance | 🟩 | `██████████ 100%` |
-| 🟣 0G | RFC-0007 — Memory, knowledge and learning lifecycle | 🟨 | `████████░░ 80%` |
-| 🟨 0H | Reference implementation readiness | ⬜ | `░░░░░░░░░░ 0%` |
+| 🟣 0G | RFC-0007 — Memory, knowledge and learning lifecycle | 🟩 | `██████████ 100%` |
+| 🟨 0H | Reference implementation readiness | 🟦 | `░░░░░░░░░░ 0%` |
 
 ## 5. Block 0A — Governance baseline
 
@@ -309,7 +309,7 @@ RFC-0005 `1.0.0` is binding architecture for Governed Execution and Workflow sem
 
 Together they establish the domain-neutral model for consequential execution, observable operational history, Event admission/immutability, causation/correlation, required evidence, delivery/replay semantics, provenance, telemetry boundaries, reconstruction, security/privacy of observability data and semantic portability.
 
-They preserve RFC-0004 Product Contract boundaries, RFC-0003 authority/security/privacy invariants and the RFC-0007 boundary for Memory, Knowledge and Governed Learning. Their acceptance does not make an implementation capability `Active`, establish operational readiness, or select a broker/workflow/observability technology.
+They preserve RFC-0004 Product Contract boundaries and RFC-0003 authority/security/privacy invariants. Their acceptance does not make an implementation capability `Active`, establish operational readiness, or select a broker/workflow/observability technology.
 
 ### Exit criterion
 
@@ -317,16 +317,12 @@ They preserve RFC-0004 Product Contract boundaries, RFC-0003 authority/security/
 
 ## 11. Block 0G — Memory, knowledge and governed learning
 
-**Status:** 🟨 In progress — RFC-0007 `0.2.0` Proposed  
-**Progress:** `████████░░ 80%`
+**Status:** 🟩 Complete — RFC-0007 `Accepted 1.0.0`  
+**Progress:** `██████████ 100%`
 
 ### RFC
 
-[`RFC-0007 — Memory, Knowledge and Governed Learning Lifecycle`](../rfc/RFC-0007-memory-knowledge-governed-learning-lifecycle.md) — `Proposed 0.2.0`.
-
-### Dependency baseline
-
-RFC-0007 builds on Accepted RFC-0001 through RFC-0006. It preserves the distinction among operational Events/evidence, observations, organizational Memory, validated Knowledge, proposals and approved reusable organizational assets, and does not allow silent AI-driven promotion into governed state.
+[`RFC-0007 — Memory, Knowledge and Governed Learning Lifecycle`](../rfc/RFC-0007-memory-knowledge-governed-learning-lifecycle-v1.0.0.md) — `Accepted 1.0.0`.
 
 ### Completed
 
@@ -335,39 +331,31 @@ RFC-0007 builds on Accepted RFC-0001 through RFC-0006. It preserves the distinct
 - 🟩 4 of maximum 7 review iterations completed;
 - 🟩 review result: `Pass after bounded reconciliation`;
 - 🟩 review evidence published in [`docs/reviews/RFC-0007-functional-cross-review.md`](../reviews/RFC-0007-functional-cross-review.md);
-- 🟩 bounded reconciliation incorporated;
-- 🟩 reviewed RFC-0007 `0.2.0` published as `Proposed`;
-- 🟩 RFC Index synchronized to show RFC-0007 `Proposed 0.2.0` and review evidence.
+- 🟩 reviewed RFC-0007 `0.2.0` published as `Proposed` with immutable blob SHA `06dc706c3f717a159c0d9495a3c9ae3f29fbdf11`;
+- 🟩 explicit owner approval recorded independently in [`DECISION-2026-08-07-RFC-0007-ACCEPTANCE`](../governance/decisions/DECISION-2026-08-07-RFC-0007-ACCEPTANCE.md), approval commit `0de3fc2a85f5b567e28cae2eed95f67838b66b4e`;
+- 🟩 RFC-0007 published as `Accepted 1.0.0`, publication commit `45eb9f08f3d039b6642379e5dd7bc762b9289927`;
+- 🟩 RFC Index synchronized with approval, proposal, review and publication evidence.
 
-### Remaining transition
+### Accepted boundary
 
-- 🟨 explicit owner approval of reviewed RFC-0007 `0.2.0`;
-- ⬜ canonical approval decision record created independently before acceptance publication;
-- ⬜ RFC-0007 acceptance publication as `1.0.0`;
-- ⬜ RFC Index acceptance evidence synchronization;
-- ⬜ roadmap closure of Block 0G;
-- ⬜ read-after-write consistency verification under the approved RFC State Transition Procedure.
+RFC-0007 `1.0.0` is binding architecture for Observation, Organizational Memory, Knowledge Candidate, Improvement Proposal, validated Knowledge, explicit governed promotion, freshness/contradiction/supersession/retraction, AI authority boundaries, RAG/index/embedding non-authority, product and cross-organization learning boundaries, and portability/migration semantics.
 
-### Proposed boundary
-
-RFC-0007 `0.2.0` proposes the domain-neutral lifecycle for Observation, Organizational Memory, Knowledge Candidate, Improvement Proposal and validated Knowledge; explicit promotion gates; freshness/contradiction/supersession/retraction handling; AI authority boundaries; RAG/index/embedding non-authority; product and cross-organization learning boundaries; and portability/migration semantics.
-
-Because RFC-0007 remains `Proposed`, these refinements are not yet binding architecture and do not override Accepted RFC-0001 through RFC-0006.
+It does not create a new Kernel primitive, make any implementation capability `Active`, establish operational readiness, select persistence/retrieval/model technology, authorize cross-organization reuse, or approve product-specific domain knowledge.
 
 ### Exit criterion
 
-The platform has an accepted model for distinguishing observations, memory, validated knowledge, proposals and approved reusable organizational assets without allowing silent AI-driven mutation of governed state.
+🟩 Achieved: the platform has an accepted model for distinguishing observations, memory, validated knowledge, proposals and approved reusable organizational assets without allowing silent AI-driven mutation of governed state.
 
 ## 12. Block 0H — Reference implementation readiness
 
-**Status:** ⬜ Planned  
+**Status:** 🟦 Ready — next  
 **Progress:** `░░░░░░░░░░ 0%`
 
 ### Objective
 
-Begin the smallest useful reference implementation once the relevant architectural dependencies are sufficiently defined.
+Begin the smallest useful reference implementation now that the planned foundational semantic RFC sequence through RFC-0007 is Accepted.
 
-Implementation may proceed in parallel with later RFC work when it is:
+Implementation may proceed when it is:
 
 - bounded;
 - reversible;
@@ -394,8 +382,8 @@ Technology choices are not constitutional or fundamental architectural principle
 Phase 0 is complete when:
 
 1. the core architectural language is discoverable and aligned with Accepted sources;
-2. RFC-0002 through the minimum set of foundational RFCs required for the first reference implementation are Accepted or explicitly not required for its bounded scope;
-3. unresolved areas are clearly marked provisional and migration-safe;
+2. the foundational RFCs required for the first reference implementation are Accepted;
+3. unresolved implementation areas are clearly marked provisional and migration-safe;
 4. the first reference implementation can start without inventing cross-cutting architecture in code;
 5. product experiments can connect through explicit boundaries where platform interaction exists.
 
@@ -422,9 +410,9 @@ RFC-0005 Governed Execution / Workflow  ✅ ACCEPTED 1.0.0
         ↓
 RFC-0006 Event / Provenance / Observability  ✅ ACCEPTED 1.0.0
         ↓
-RFC-0007 Memory / Knowledge / Learning  🟨 PROPOSED 0.2.0 — OWNER APPROVAL NEXT
+RFC-0007 Memory / Knowledge / Learning  ✅ ACCEPTED 1.0.0
         ↓
-Reference Implementation + ADRs
+Reference Implementation + ADRs         🟦 NEXT
         ↓
 Product-driven validation and capability incubation
 ```
@@ -435,11 +423,11 @@ Parallel work is permitted when the work is bounded and reversible and does not 
 
 ## 14. Next canonical action
 
-The current architecture action is:
+The current architecture/delivery work item is:
 
-> **Obtain explicit owner approval for reviewed RFC-0007 `0.2.0`. After approval, complete the canonical acceptance publication and transition closure before treating RFC-0007 as binding architecture or closing Block 0G.**
+> **Begin Block 0H — Reference implementation readiness. Define only the minimum subordinate ADRs and implementation structure required to start a bounded, reversible reference implementation conforming to Accepted RFC-0001 through RFC-0007.**
 
-The reviewed proposal and cross-review are already canonical. No additional review iteration is required unless owner review identifies a new material concern.
+Acceptance of RFC-0007 closes Block 0G. Reference implementation work must not invent new cross-cutting contracts in code where an Accepted RFC, ADR or other appropriate governance artifact is required.
 
 ## 15. Roadmap maintenance rule
 
