@@ -39,7 +39,14 @@ That first slice is intentionally reversible and does not yet canonically select
 
 Working reference code does not by itself make a Platform Capability `Active`, establish operational readiness, create an SLA/support commitment or authorize a full-platform production conformance claim.
 
-RFC-0008 remains reserved by RFC-0001 for `Document and Artifact Architecture`; Reference implementation readiness is Roadmap Block 0H rather than RFC-0008.
+## Roadmap blocks and RFC identifiers
+
+Roadmap blocks and RFCs use separate identifier namespaces.
+
+- `Block 0H` = `Reference implementation readiness` — completed non-RFC roadmap milestone.
+- `RFC-0008` = `Document and Artifact Architecture` — separate future RFC scope reserved by Accepted RFC-0001 §29 and not yet present in the RFC Index.
+
+Do not call Block 0H `RFC-0008 readiness`. A roadmap milestone may occur between RFCs without consuming or renumbering an RFC identifier.
 
 The current sequence is maintained only in the [Canonical Roadmap](docs/roadmap/ROADMAP.md).
 
