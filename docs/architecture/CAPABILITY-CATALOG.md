@@ -1,9 +1,9 @@
 # Arvectum OS Capability Catalog
 
 Status: `Informative`
-Version: `0.7.0`
+Version: `0.7.1`
 Updated: `2026-08-07`
-Architecture basis: `RFC-0001 v0.9.0`
+Architecture basis: `RFC-0001 v1.0.0 Accepted`
 Constitution basis: `1.2.0`
 
 ## Purpose
