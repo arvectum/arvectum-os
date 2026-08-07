@@ -1,7 +1,7 @@
 # RFC-0002: Canonical Record, Kernel Metamodel, Authority, Relationship and Organizational Asset Model
 
-Status: `Draft`
-Version: `0.3.0`
+Status: `Proposed`
+Version: `0.9.0`
 Created: `2026-08-07`
 Updated: `2026-08-07`
 Authors: `ООО «Арвектум»`
@@ -169,7 +169,9 @@ Typed Relationship, Event and Execution Context are governed objects with proven
 
 ### 7.1 Identity Is a Reference Primitive
 
-An Identity is an opaque stable reference to one semantic subject within a declared identity namespace and organization or platform scope.
+An Identity is an opaque stable reference to one semantic referent within a declared identity namespace and organization or platform scope.
+
+Identity roles include Subject Identity and Version Identity. The referenced semantic subject or immutable version carries governed meaning through Canonical Records; the Identity primitive itself does not contain mutable organizational state.
 
 Identity **MUST** be:
 
@@ -872,9 +874,7 @@ This RFC intentionally leaves the following to later documents:
 
 No later RFC may weaken the metamodel invariants accepted here without a superseding architectural decision.
 
-## 22. Draft Review Results
-
-Draft `0.3.0` incorporates the first structured review of the six questions recorded in draft `0.1.0` and a domain-neutral scenario validation pass.
+## 22. Review and Proposal Readiness
 
 ### 22.1 Typed Relationship Overhead
 
@@ -882,25 +882,25 @@ Decision: **retain Typed Relationship as a Canonical Record specialization**.
 
 The uniform governance envelope resolves more ambiguity than it creates, provided physical persistence remains unconstrained.
 
-The model now clarifies that Relationship Identity represents an assertion instance and is not derived solely from a source/type/target tuple.
+Relationship Identity represents an assertion instance and is not derived solely from a source/type/target tuple.
 
 ### 22.2 Execution Context Versioning Precision
 
 Decision: **retain governance-significant transition versioning and define a normative materiality test**.
 
-The RFC now lists the categories of changes that require a new Execution Context version while leaving technical workflow state machines to RFC-0005.
+The RFC lists categories of changes that require a new Execution Context version while leaving technical workflow state machines to RFC-0005.
 
 ### 22.3 Authority Transition Coverage
 
-Decision: **strengthen cutover semantics**.
+Decision: **retain explicit cutover semantics**.
 
-Authority transitions now require preservation of prior authority, an effective transition point, conflict behavior, in-flight or delayed-data handling where applicable, and explicit failure behavior without implicit dual authority.
+Authority transitions require preservation of prior authority, an effective transition point, conflict behavior, in-flight or delayed-data handling where applicable, and explicit failure behavior without implicit dual authority.
 
 ### 22.4 Governed Organizational Asset Designation
 
 Decision: **retain designation outside the Kernel primitive set and make the designation itself governed canonical state**.
 
-The RFC now permits several semantic representations while requiring explicit versioning, provenance and reconstructability.
+The RFC permits several semantic representations while requiring explicit versioning, provenance and reconstructability.
 
 ### 22.5 Migration Practicality
 
@@ -918,7 +918,7 @@ No normative metamodel requirement depends on Python, PostgreSQL, FastAPI, a gra
 
 ### 22.7 Domain-neutral Scenario Validation
 
-Draft `0.3.0` was tested against the review fixtures defined in draft `0.2.0`.
+Draft `0.3.0` was tested against the domain-neutral review fixtures introduced during drafting.
 
 | Scenario | Result | RFC consequence |
 |---|---|---|
@@ -931,26 +931,48 @@ Draft `0.3.0` was tested against the review fixtures defined in draft `0.2.0`.
 | lawful deletion limits later reconstruction | Pass | the system must expose the retained-evidence limitation rather than overclaim reconstruction |
 | legacy identifier and technical job record with incomplete provenance | Pass | migration honesty forbids fabricated provenance or upgraded evidentiary status |
 
-The delayed-replica scenario exposed a real ambiguity in draft `0.2.0`: a later arrival could have been misread as the next canonical replica head even when the source considered it stale. Section 12.5 and the conformance tests now require source-ordering or conflict semantics from the synchronization contract.
+The delayed-replica scenario exposed a material ambiguity in draft `0.2.0`: a later arrival could have been misread as the next canonical replica head even when the source considered it stale. Section 12.5 and the conformance tests require source-ordering or conflict semantics from the synchronization contract.
 
 The scenarios are review fixtures, not new Kernel primitives or product rules.
 
-### 22.8 Remaining Draft Work Before Proposed
+### 22.8 Cross-section Consistency Validation
 
-Before moving this RFC to `Proposed`, review should now focus on cross-section consistency rather than adding new metamodel scope.
+The proposal was reviewed against Constitution `1.2.0`, Accepted RFC-0001 `1.0.0`, the RFC Index, the Architecture Glossary and the Canonical Roadmap.
 
-At minimum, confirm:
+| Review item | Result | Finding |
+|---|---|---|
+| RFC-0001 assignment coverage | Pass | identity/version semantics, Event placement, Execution Context placement/lifecycle, relationship identity/versioning and provisional migration are all defined |
+| Kernel primitive consistency | Pass after wording correction | Section 7.1 now defines Identity as a reference to a semantic referent, consistently covering both Subject Identity and Version Identity |
+| authority semantics | Pass | all Canonical Record specializations remain within RFC-0001 authority modes; Arvectum OS Governed Execution context is correctly `Native` for its governance envelope |
+| later-RFC boundary | Pass | authentication, authorization, tenant-isolation mechanisms, workflow orchestration, event delivery, observability backends and physical persistence remain deferred |
+| product/platform boundary | Pass | migration semantics are platform-neutral and do not import product-specific schemas or business rules into the Kernel |
+| technology independence | Pass | no normative rule requires a database, language, framework, broker, model provider or deployment topology |
+| glossary consistency | Pass | the informative glossary continues to state that exact metamodel relations remain provisional until RFC-0002 is Accepted |
+| index and roadmap consistency | Pass subject to publication sync | RFC status/version and roadmap stage must be updated together with this proposal publication |
 
-1. every Kernel primitive satisfies the RFC-0001 requirements assigned to RFC-0002;
-2. no rule in this RFC predefines authentication, authorization, workflow orchestration, event delivery or storage technology reserved for later RFCs;
-3. Canonical Record authority semantics remain coherent for all three specializations;
-4. migration and conformance language can be implemented without requiring a product-specific schema;
-5. the RFC Index, Architecture Glossary and Canonical Roadmap remain consistent with the Draft status.
+No conflict with Constitution `1.2.0` or Accepted RFC-0001 was found.
 
-If that consistency review finds no material issue, the next governance step may be a version bump and transition from `Draft` to `Proposed`. `Proposed` would still have no normative force until valid acceptance and approval evidence exist.
+No relevant Accepted ADR exists in the canonical repository that further constrains this metamodel.
+
+### 22.9 Proposal Readiness Decision
+
+The metamodel scope required by RFC-0001 is complete enough for owner review without adding implementation-specific or product-specific architecture.
+
+RFC-0002 therefore moves from `Draft` to `Proposed` as version `0.9.0`.
+
+`Proposed` has no normative force. The Kernel metamodel remains provisional until valid acceptance is recorded according to the RFC Index.
+
+If owner review requires substantive architectural changes, the proposal **MUST** return to an appropriate pre-acceptance revision before approval.
+
+If the owner approves the proposal without substantive architectural change, acceptance publication may advance the RFC to `1.0.0` together with the required independent approval record and synchronized RFC Index update.
 
 ## 23. Approval Record
 
-Status: `Not requested`.
+Status: `Pending`.
+Decision: `Pending`.
+Decision authority: `ООО «Арвектум»` / Owner of Arvectum OS.
+Approval evidence: `None`.
 
-This document is a Draft and has no normative force until the RFC acceptance requirements in the RFC Index are satisfied.
+This document is `Proposed` and has no normative force.
+
+It **MUST NOT** be represented as `Accepted` until an owner-approved decision exists independently of the acceptance publication and the RFC Index acceptance-integrity requirements are satisfied.
