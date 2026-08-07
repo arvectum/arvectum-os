@@ -23,7 +23,7 @@ The Constitution has higher authority than every RFC. Accepted RFCs have higher 
 | [RFC-0004](RFC-0004-product-contract-product-experiment-extension-model-v1.0.0.md) | Product Contract, Product Experiment and Extension Model | product_contract | Accepted | 1.0.0 |
 | [RFC-0005](RFC-0005-governed-execution-workflow-model-v1.0.0.md) | Governed Execution and Workflow Model | platform | Accepted | 1.0.0 |
 | [RFC-0006](RFC-0006-event-provenance-observability-model-v1.0.0.md) | Event, Provenance and Observability Model | platform | Accepted | 1.0.0 |
-| [RFC-0007](RFC-0007-memory-knowledge-governed-learning-lifecycle.md) | Memory, Knowledge and Governed Learning Lifecycle | platform | Proposed | 0.2.0 |
+| [RFC-0007](RFC-0007-memory-knowledge-governed-learning-lifecycle-v1.0.0.md) | Memory, Knowledge and Governed Learning Lifecycle | platform | Accepted | 1.0.0 |
 
 ## Acceptance Integrity
 
@@ -159,12 +159,17 @@ Accepted RFC publication:
 
 RFC-0006 `1.0.0` is binding architecture within its declared Event, Provenance and Observability scope.
 
-## RFC-0007 Proposal Evidence
+## RFC-0007 Approval Evidence
 
-Reviewed proposal:
+Canonical owner approval:
 
-- [`RFC-0007 v0.2.0`](RFC-0007-memory-knowledge-governed-learning-lifecycle.md) — `Proposed`;
-- reviewed proposal content SHA `06dc706c3f717a159c0d9495a3c9ae3f29fbdf11`;
+- [`DECISION-2026-08-07-RFC-0007-ACCEPTANCE`](../governance/decisions/DECISION-2026-08-07-RFC-0007-ACCEPTANCE.md) — `Approved`;
+- approval commit: `0de3fc2a85f5b567e28cae2eed95f67838b66b4e`.
+
+Approved reviewed proposal:
+
+- [`RFC-0007 v0.2.0`](RFC-0007-memory-knowledge-governed-learning-lifecycle.md);
+- immutable proposal blob SHA `06dc706c3f717a159c0d9495a3c9ae3f29fbdf11`;
 - reviewed proposal publication commit: `afe3c5169c702c27fd8210f879120cc9ce6803b8`.
 
 Review evidence:
@@ -173,7 +178,12 @@ Review evidence:
 - iterations completed: 4 of maximum 7;
 - result: `Pass after bounded reconciliation`.
 
-RFC-0007 remains non-normative until explicit owner approval exists independently and the acceptance publication transition is completed under the approved RFC State Transition Procedure.
+Accepted RFC publication:
+
+- [`RFC-0007 v1.0.0`](RFC-0007-memory-knowledge-governed-learning-lifecycle-v1.0.0.md) — `Accepted`;
+- publication commit: `45eb9f08f3d039b6642379e5dd7bc762b9289927`.
+
+RFC-0007 `1.0.0` is binding architecture within its declared Memory, Knowledge and Governed Learning scope.
 
 ## Related Governance
 
