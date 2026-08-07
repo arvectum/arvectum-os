@@ -1,111 +1,120 @@
 # Arvectum OS Architecture Glossary
 
 Document status: `Active`
-Version: `1.1.0`
+Version: `1.2.0`
 Created: `2026-08-07`
 Updated: `2026-08-07`
 Owner: `ООО «Арвектум»`
 Task classification: `platform`
 Normative status: `Informative`
-Source baseline: Constitution `1.2.0`; RFC-0001 `1.0.0` (`Accepted`); RFC-0002 `1.0.0` (`Accepted`)
+Source baseline: Constitution `1.2.0`; RFC-0001 through RFC-0007 `1.0.0` (`Accepted`)
 
 ## 1. Purpose
 
 This glossary provides a shared architectural vocabulary for Arvectum OS.
 
-It summarizes terms already established by the [Constitution](../constitution/CONSTITUTION.md), [Accepted RFC-0001](../rfc/RFC-0001-arvectum-os-architecture.md) and [Accepted RFC-0002](../rfc/RFC-0002-canonical-record-kernel-metamodel.md) so that contributors, products and AI agents can resolve core meanings without relying on chat history, model memory or implementation conventions.
+It summarizes terms already established by the [Constitution](../constitution/CONSTITUTION.md) and Accepted RFCs so contributors, products and AI agents can resolve core meanings without relying on chat history, model memory or implementation conventions.
 
-This document does not create independent architectural requirements. If a glossary definition is incomplete, ambiguous or inconsistent with a higher-authority source, the Constitution and Accepted RFCs prevail.
-
-RFC-0002 `1.0.0` finalizes the Kernel metamodel relationships that RFC-0001 left provisional. Identity remains a stable non-record reference primitive; Canonical Record is the immutable governed representation at one version; Typed Relationship, Event and Execution Context are semantic specializations of Canonical Record.
+This document does not create independent architectural requirements. If a definition is incomplete, ambiguous or inconsistent with a higher-authority source, the Constitution and Accepted RFCs prevail.
 
 ## 2. Authority and usage
 
 Terms are summarized from the following sources, in descending authority:
 
-1. [The Constitution of Arvectum OS](../constitution/CONSTITUTION.md), version `1.2.0`, `Ratified`;
-2. [RFC-0001 — Arvectum OS Architecture](../rfc/RFC-0001-arvectum-os-architecture.md), version `1.0.0`, `Accepted`;
-3. [RFC-0002 — Canonical Record, Kernel Metamodel, Authority, Relationship and Organizational Asset Model](../rfc/RFC-0002-canonical-record-kernel-metamodel.md), version `1.0.0`, `Accepted`.
+1. Constitution `1.2.0` — `Ratified`;
+2. RFC-0001 `1.0.0` — `Accepted`;
+3. RFC-0002 `1.0.0` — `Accepted`;
+4. RFC-0003 `1.0.0` — `Accepted`;
+5. RFC-0004 `1.0.0` — `Accepted`;
+6. RFC-0005 `1.0.0` — `Accepted`;
+7. RFC-0006 `1.0.0` — `Accepted`;
+8. RFC-0007 `1.0.0` — `Accepted`.
 
-Draft, Proposed and other non-Accepted documents may be useful for design discussion but do not change the meanings recorded here.
+Draft, Proposed and other non-Accepted artifacts may be useful for discussion but do not change the meanings recorded here.
 
-Later Accepted RFCs may refine terms further. When that happens, this glossary should be updated to point to the newer accepted definition without silently changing the underlying architecture.
+## 3. Organizational and authority terms
 
-## 3. Core organizational terms
+### Organization
 
-### Organization / Tenant
+An **Organization** is the governance, authority, data-isolation and sovereignty scope within which an organization-specific Executable Organizational Model is operated.
 
-An **Organization** is the organizational governance, authority, data-isolation and sovereignty scope within which Arvectum OS operates an organization-specific model.
+Governed records, relationships, executions and artifacts carry or resolve to an Organization scope unless explicitly governed as platform-global or cross-organization shared state.
 
-**Tenant** is used by RFC-0001 as a technical scoping term for records, relationships, executions, artifacts, access boundaries and conformance claims associated with an organization.
+One organization's data, authority, memory or knowledge does not alter another organization's governed state without an explicit governed basis.
 
-RFC-0001 does not finalize whether Organization and Tenant are one-to-one, how tenancy is represented, or whether either is modeled as a distinct governed object. That mapping remains subject to a later Accepted identity, security, privacy and sovereignty RFC.
+Canonical sources: Constitution Articles VII and VIII; RFC-0001 Sections 6.3, 17 and 19; RFC-0003 Section 7.
 
-By default, one organization's data must not alter another organization's canonical model, and cross-organization access is denied unless explicitly authorized by applicable contracts, rights, classification and governance.
+### Tenant
 
-Canonical sources: Constitution Articles VII and VIII; RFC-0001 Sections 6.3, 17, 19 and 24.
+A **Tenant** is the technical isolation context used to enforce an Organization boundary or an explicitly governed subdivision of one Organization.
+
+An Organization may use multiple technical tenant partitions. Each tenant context must resolve unambiguously to one governing Organization for authority and sovereignty evaluation. Multiple Organizations must not share one undifferentiated tenant authority context.
+
+Tenant topology is an implementation/security mechanism; Organization is the governance and sovereignty boundary.
+
+Canonical source: RFC-0003 Section 7.
 
 ### Organizational Intelligence
 
 **Organizational Intelligence** is accumulated knowledge, operational experience, standards, workflows, decisions, relationships and institutional memory that strengthen future work.
 
-Arvectum OS preserves and operationalizes the portion that an organization is entitled and chooses to govern through the platform. Processing organizational intelligence does not by itself transfer legal ownership or create rights for cross-organization reuse.
+Arvectum OS preserves and operationalizes only the portion the organization is entitled and chooses to govern. Processing organizational intelligence does not by itself transfer legal ownership or create cross-organization reuse rights.
 
 Canonical sources: Constitution Article 0; RFC-0001 Section 6.1.
 
 ### Executable Organizational Model
 
-The **Executable Organizational Model** is the durable, governed representation of organizational intelligence through identities, records, relationships, authority, workflows, evidence and operational history.
+The **Executable Organizational Model** is the durable governed representation of organizational intelligence through identities, records, relationships, authority, workflows, evidence and operational history.
 
-It includes, among other things, Canonical Records and versions, typed relationships, governed assets, standards and policies, workflows and execution history, decisions and approvals, memory and knowledge, documents and artifacts, events, evidence, provenance, and product or extension contracts.
+It is executable because Governed Execution can act on governed state and produce records, Events and artifacts. It is organizational because meaning and authority come from the organization, contracts and governance rather than implementation technology.
 
-It is executable because governed workflows can act on the model and produce records, events and artifacts. It is organizational because meaning and authority come from the organization, applicable contracts and governance. It is a model because it represents selected operational reality rather than claiming to be a complete simulation of the organization.
-
-Canonical source: RFC-0001 Sections 1 and 6.2.
+Canonical source: RFC-0001 Section 6.2.
 
 ### Organization-specific Model Instance / Organizational Twin
 
-An **Organization-specific Model Instance** is the isolated organization-specific instance or view of the Executable Organizational Model.
+An **Organization-specific Model Instance** is the isolated organization-specific instance or governed view of the Executable Organizational Model.
 
-**Organizational Twin** is an informative descriptive term for that instance. It is not a separate Kernel primitive and does not imply completeness, real-time simulation or autonomous management.
+**Organizational Twin** is an informative descriptive term. It is not a separate Kernel primitive and does not imply a complete or real-time simulation of the organization.
 
 Canonical source: RFC-0001 Section 6.3.
 
 ### Organizational Semantics
 
-**Organizational Semantics** are the stable meanings, authority rules and governed operating concepts defined by the organization and preserved across products and technologies.
+**Organizational Semantics** are stable meanings, authority rules and governed operating concepts that should survive changes in products and technologies.
 
-RFC-0001 summarizes the intended separation as: the organization defines meaning, products specialize meaning, and technologies execute meaning.
+The organization defines meaning, products specialize meaning, and technologies execute meaning.
 
 Canonical source: RFC-0001 Section 6.4.
 
 ### Architectural Responsibility
 
-**Architectural Responsibility** is responsibility within Arvectum OS for canonical state, lifecycle, contracts, validation, change control and operational support.
+**Architectural Responsibility** is responsibility for canonical state, lifecycle, contracts, validation, change control and operational support within Arvectum OS.
 
-It is distinct from legal title, intellectual-property ownership, licensing rights, confidentiality obligations, contractual data rights and legal controller/processor roles.
-
-RFC-0002 requires significant Canonical Records to expose an accountable architectural owner, directly or through governed reference.
+It is distinct from legal title, intellectual-property ownership, licensing rights, confidentiality obligations, contractual data rights and privacy-law roles.
 
 Canonical sources: RFC-0001 Section 6.5; RFC-0002 Section 8.1.
 
-### Organizational Control and Portability
+### Authority Mode
 
-**Organizational Control and Portability** describe the requirement that an organization retain governance and control over its data, organizational intelligence, standards, decisions and operational history, subject to applicable law and contract, and that Arvectum OS support governed export, migration, deletion, service termination and handover within the applicable scope.
+An **Authority Mode** declares the relationship between a Canonical Record and authority for the governed subject.
 
-Portability protects continuity of organizational meaning and governed history; it does not imply that every item may be exported, retained or transferred regardless of legal, contractual, privacy or classification restrictions.
+Exactly three modes exist:
 
-Canonical sources: Constitution Article VII; RFC-0001 Sections 18 and 19.
+- `Native` — Arvectum OS is authoritative for the governed subject within the declared scope;
+- `External Reference` — an external system remains authoritative and Arvectum OS governs a reference/retrieval contract;
+- `Governed Replica` — an external system remains authoritative while Arvectum OS stores a synchronized governed representation.
 
-### Proportionality
+External modes preserve external authority, freshness, conflict, failure and synchronization semantics rather than creating a competing source of truth.
 
-**Proportionality** is the principle that governance, standardization, validation, observability, security controls and architectural rigor should match the risk, maturity, consequence and expected organizational value of the work.
+Canonical sources: RFC-0001 Section 7.1; RFC-0002 Section 12.
 
-Proportionality permits bounded manual or provisional controls where appropriate. It does not waive mandatory constitutional, security, legal, contractual or Accepted RFC requirements.
+### Authoritative Source
 
-RFC-0002 applies this principle to the Kernel metamodel by permitting governed references instead of unnecessary physical duplication and by rejecting automatic wholesale migration of legacy product-local data.
+An **Authoritative Source** is the source designated as authoritative for a governed fact or subject within a declared scope.
 
-Canonical sources: Constitution Articles VIII, XIII and XVII; RFC-0001 Sections 7.3, 11, 17, 23 and 24; RFC-0002 Sections 8.8 and 17.8.
+Arvectum OS may be authoritative for its own governance envelope or organizational interpretation while another system remains authoritative for an underlying external fact.
+
+Canonical sources: Constitution Article IV; RFC-0001 Section 7.1; RFC-0002 Section 12; RFC-0007 Section 7.2.
 
 ## 4. Kernel and canonical-state terms
 
@@ -113,7 +122,7 @@ Canonical sources: Constitution Articles VIII, XIII and XVII; RFC-0001 Sections 
 
 The **Kernel** is the smallest stable semantic foundation required for products and platform capabilities to interoperate consistently.
 
-RFC-0001 defines five Kernel primitives:
+RFC-0001 defines five primitives:
 
 1. Identity;
 2. Canonical Record;
@@ -121,20 +130,20 @@ RFC-0001 defines five Kernel primitives:
 4. Event;
 5. Execution Context.
 
-RFC-0002 `1.0.0` finalizes their metamodel relationships. Identity is the stable non-versioned reference primitive and is not a Canonical Record. Canonical Record is the immutable governed representation of one logical subject at one specific version. Typed Relationship, Event and Execution Context are semantic specializations of Canonical Record.
+RFC-0002 finalizes their metamodel: Identity is a stable non-record reference primitive; Canonical Record is the immutable governed representation at one version; Typed Relationship, Event and Execution Context are semantic specializations of Canonical Record.
 
-Canonical sources: RFC-0001 Sections 1 and 10; RFC-0002 Section 6.
+Canonical sources: RFC-0001 Section 10; RFC-0002 Section 6.
 
 ### Identity
 
-**Identity** is an opaque stable reference to one semantic referent within a declared identity namespace and organization or platform scope.
+**Identity** is an opaque stable reference to one semantic referent within a declared identity namespace and organization/platform scope.
 
-RFC-0002 distinguishes two roles:
+RFC-0002 distinguishes:
 
-- **Subject Identity** identifies one logical governed subject across time;
-- **Version Identity** identifies exactly one immutable Canonical Record version.
+- **Subject Identity** — one logical governed subject across time;
+- **Version Identity** — one exact immutable Canonical Record version.
 
-Identity is immutable after issuance, non-recycled and independent of mutable business meaning. Possession or resolvability of an Identity does not itself grant permission, delegated authority or access.
+Identity is immutable after issuance, non-recycled and independent of mutable business meaning. Possessing or resolving an Identity grants neither permission nor Organizational Authority.
 
 Canonical source: RFC-0002 Section 7.
 
@@ -142,81 +151,83 @@ Canonical source: RFC-0002 Section 7.
 
 A **Canonical Record** is the immutable governed representation of one logical subject at one specific version.
 
-A changeable governed subject has one stable Subject Identity and an unambiguous canonical lineage of immutable versions, each with its own Version Identity. The **Canonical Head** is the latest admitted version in that lineage; it is distinct from the **Effective Version**, which is the version applicable for a declared evaluation context.
+A changeable subject has one stable Subject Identity and an unambiguous lineage of immutable versions, each with its own Version Identity.
 
-Canonical Record semantics include authority, accountable architectural ownership, provenance, organization or tenant scope, classification/access constraints and applicable retention/deletion references. The common envelope is semantic and does not require one physical table or duplicated payload.
+The common record envelope carries or resolves governance semantics such as Organization scope, authority, accountable ownership, provenance, classification/access and applicable retention/deletion constraints. The model is semantic and does not mandate one physical table or database.
 
-Canonical sources: RFC-0001 Section 7.1; RFC-0002 Sections 8 and 16.
+Canonical sources: RFC-0001 Section 7.1; RFC-0002 Section 8.
 
 ### Significant Governed Object
 
-A **Significant Governed Object** is an object whose state or meaning materially affects organizational meaning, authority, production behavior, external commitments, financial or legal position, security, safety, reputation, canonical state, a reusable asset, or reconstruction of a consequential result.
+A **Significant Governed Object** is an object whose state or meaning materially affects organizational meaning, authority, production behavior, external commitments, security, financial/legal position, canonical state, reusable assets or reconstruction of a consequential result.
 
-The Canonical Record requirement applies to every significant governed object managed by Arvectum OS within its declared scope and type. RFC-0002 does not broaden that significance threshold: non-significant technical state and explicit transient outputs do not become Canonical Records merely because they are stored or convenient to persist.
+Non-significant technical state does not become canonical merely because it is persisted.
 
 Canonical sources: RFC-0001 Section 7.1; RFC-0002 Section 8.8.
 
-### Canonical State
-
-**Canonical State** is the authoritative governed state managed by Arvectum OS within a declared scope.
-
-Consequential changes to canonical state managed by Arvectum OS occur through Governed Execution. Canonical state must not be confused with caches, projections, indexes, transient outputs or underlying external facts that remain authoritative in another system.
-
-Canonical sources: Constitution Article IV; RFC-0001 Sections 7.1 and 7.5.
-
 ### Canonical Lineage
 
-A **Canonical Lineage** is the one unambiguous sequence of immutable Canonical Record versions for a changeable governed subject within one declared authority scope.
+A **Canonical Lineage** is one unambiguous sequence of immutable Canonical Record versions for a governed subject within one declared authority scope.
 
-Competing draft, simulated or branch representations may exist outside the canonical lineage, but they do not silently create parallel canonical heads.
+Drafts, simulations and alternatives may exist outside that lineage but do not silently create parallel canonical heads.
 
 Canonical source: RFC-0002 Section 8.3.
 
 ### Canonical Head
 
-The **Canonical Head** is the latest admitted version in a Canonical Lineage for a governed subject within one declared authority scope.
+The **Canonical Head** is the latest admitted version in a Canonical Lineage.
 
-It is a lineage concept and is not necessarily the version effective at a particular evaluation time.
+It is a lineage concept and is not necessarily the version effective for a particular evaluation context.
 
 Canonical source: RFC-0002 Section 8.4.
 
 ### Effective Version
 
-The **Effective Version** is the canonical version applicable for a declared evaluation context, such as effective time, authority scope or another version-resolution condition.
+The **Effective Version** is the canonical version applicable for a declared evaluation context, such as effective time or authority scope.
 
-A future-effective Canonical Head may therefore coexist with an earlier version that remains currently effective.
+Consequential reliance on a mutable Subject Identity resolves and preserves the exact Version Identity materially used.
 
-Canonical source: RFC-0002 Section 8.5.
+Canonical sources: RFC-0002 Sections 8.5 and 14.
 
-### Authoritative Source
+### Canonical State
 
-An **Authoritative Source** is the source designated as authoritative for a governed object or fact within a declared scope.
+**Canonical State** is authoritative governed state managed by Arvectum OS within a declared scope.
 
-The authoritative source may be Arvectum OS or an external system. Arvectum OS must not create a competing authoritative source where an external system remains authoritative.
+Consequential changes to canonical state managed by Arvectum OS occur through Governed Execution. Canonical state must not be confused with caches, projections, indexes, transient outputs or underlying external facts that remain authoritative elsewhere.
 
-Canonical sources: Constitution Article IV; RFC-0001 Section 7.1; RFC-0002 Section 12.
+Canonical sources: Constitution Article IV; RFC-0001 Sections 7.1 and 7.5; RFC-0005 Section 13.
 
-### Authority Mode
+### Typed Relationship
 
-An **Authority Mode** declares the relationship between a Canonical Record and the authoritative source for the governed object.
+A **Typed Relationship** is a Canonical Record specialization representing one governed semantic relationship assertion instance from a source reference to a target reference.
 
-Exactly three modes exist:
+It has a stable Relationship Identity and immutable versions. Endpoints distinguish Subject Identity references from exact Version Identity references. Relationship existence does not itself grant access, delegation, approval power or cross-organization visibility.
 
-- `Native` — Arvectum OS is the authoritative source for the governed object;
-- `External Reference` — an external system remains authoritative and Arvectum OS stores a governed identity, reference and access or retrieval contract;
-- `Governed Replica` — an external system remains authoritative while Arvectum OS stores a synchronized governed representation under an explicit synchronization contract.
+Canonical sources: RFC-0002 Section 9; RFC-0003 Section 11.4.
 
-For external modes, RFC-0002 requires enough explicit retrieval/synchronization, freshness, ordering, conflict, failure, transformation, retention, deletion and portability semantics to avoid competing authority and ambiguous cutover behavior.
+### Event
 
-Canonical sources: RFC-0001 Section 7.1; RFC-0002 Section 12.
+An **Event** is a Canonical Record specialization representing an append-only governed observation/assertion that something meaningful occurred.
+
+One Event has a stable Event Identity and normally one immutable canonical version. Correction, reversal, compensation or invalidation creates additional linked Events rather than mutation.
+
+Receiving a queue message, webhook, log entry or CDC row is not the same as admitting a canonical Event.
+
+Canonical sources: RFC-0002 Section 10; RFC-0006 Sections 6–8.
+
+### Execution Context
+
+An **Execution Context** is a Canonical Record specialization representing one governed execution instance.
+
+One execution has one stable Execution Identity and immutable versions for governance-significant transitions. Exact materially relied-upon versions are preserved for reconstruction. A terminal execution version is sealed.
+
+Canonical sources: RFC-0002 Section 11; RFC-0005 Sections 6 and 8.
 
 ### Governed Organizational Asset
 
-A **Governed Organizational Asset** is an explicit governed designation applied to a Canonical Record, record lineage, represented artifact or another governed subject that the organization designates as authoritative, reusable, evidentiary or operationally significant.
+A **Governed Organizational Asset** is an explicit governed designation applied to a Canonical Record, lineage, represented artifact or another governed subject designated as authoritative, reusable, evidentiary or operationally significant.
 
-It is not a sixth Kernel primitive. The designation itself is governed, attributable, version-identifiable and reconstructable. Asset status does not create legal title, intellectual-property ownership, licensing rights or cross-organization reuse rights.
-
-Persistence alone does not imply asset status.
+It is not a sixth Kernel primitive. Persistence alone does not create asset status, and asset status does not create legal ownership or cross-organization reuse rights.
 
 Canonical sources: Constitution Article XVI; RFC-0001 Section 7.2; RFC-0002 Section 13.
 
@@ -224,323 +235,437 @@ Canonical sources: Constitution Article XVI; RFC-0001 Section 7.2; RFC-0002 Sect
 
 A **Transient Output** is a temporary result that has not been promoted into authoritative state or a Governed Organizational Asset.
 
-Transient and experimental outputs may use lighter versioning, observability and retention when their status, scope, owner, risk, retention and promotion or deletion path are explicit. They do not automatically become validated knowledge, organizational memory or permanent organizational assets.
+AI output, generated content, caches and intermediate results are transient by default unless an applicable governed process promotes them.
 
-Canonical sources: Constitution Articles XV and XVI; RFC-0001 Section 7.3; RFC-0002 Section 13.4.
+Canonical sources: RFC-0001 Section 7.3; RFC-0002 Section 13.4; RFC-0005 Section 20.
 
-### Typed Relationship
+## 5. Identity, security, privacy and authority terms
 
-A **Typed Relationship** is a Canonical Record specialization representing one governed semantic relationship assertion instance from a source reference to a target reference.
+### Principal
 
-It has its own stable Relationship Identity and immutable versions. Endpoints explicitly distinguish Subject Identity references from Version Identity references. Relationship Identity represents an assertion instance and is not derived solely from the source/type/target tuple.
+A **Principal** is an RFC-0002 Subject Identity that may participate in authentication, authorization or authority evaluation.
 
-A Typed Relationship expresses governed semantics; its existence or resolvability does not itself grant access, delegated authority, approval power or cross-organization visibility.
+Principal categories may include human, service, workload, external system, AI agent/mediated actor or integration client. Category is governed state and is not inferred from identifier syntax alone.
 
-Canonical source: RFC-0002 Section 9.
+Canonical source: RFC-0003 Section 8.1.
 
-### Event
+### Actor
 
-An **Event** is a Canonical Record specialization representing an append-only observation that something meaningful occurred.
+An **Actor** is the Principal acting in a specific execution context together with relevant representation, delegation and authentication context.
 
-An Event has one stable Event Identity and normally exactly one immutable canonical version. Corrections, reversals, compensations and invalidations create additional linked Events rather than mutating prior history.
+The same Principal may act under different organizations, grants, delegations and assurance levels without changing Identity.
 
-Canonical sources: Constitution Article XI; RFC-0001 Sections 7.1 and 10.2; RFC-0002 Section 10.
+Canonical source: RFC-0003 Section 8.2.
 
-### Execution Context
+### Authentication
 
-An **Execution Context** is a Canonical Record specialization representing one governed execution instance.
+**Authentication** establishes contextual evidence that an actor controls, represents or acts through an asserted Principal Identity.
 
-One governed execution has one stable Execution Identity and immutable versions for governance-significant state transitions. For Arvectum OS Governed Execution, the Execution Context uses `Native` authority mode for its governance envelope even when external systems remain authoritative for underlying inputs.
+Authentication is evidence, not authorization or permanent identity state.
 
-Consequential reliance on changeable governed inputs pins the exact Version Identities materially used. Terminal execution state is sealed; required history is preserved subject to applicable retention, deletion, privacy, legal and contractual constraints.
+Canonical source: RFC-0003 Sections 6.3 and 10.
 
-Canonical sources: RFC-0001 Section 7.5; RFC-0002 Section 11.
+### Authorization
 
-### Governed Execution
+**Authorization** is the explicit deny-by-default decision whether an actor may perform an operation on a governed resource under applicable Organization scope, policy and context.
 
-**Governed Execution** is an authorized operation carried out through an explicit Execution Context for consequential changes to canonical state managed by Arvectum OS.
+An allow decision has an explicit governed basis. Authentication, relationship existence or technical possession of a contract does not imply authorization.
 
-It binds technical execution to organizational authority, declared inputs, applicable rules, validation and approvals, resulting outputs and events, and sufficient context for reconstruction and explainability where applicable.
+Canonical source: RFC-0003 Section 11.
 
-RFC-0001 may require governed context for other consequential behavior through additional controls, but this glossary does not extend Law Three beyond its Accepted requirement for consequential canonical-state change.
+### Organizational Authority
 
-Technical ability to perform an action does not itself grant organizational authority to an AI system, product or service.
+**Organizational Authority** is entitlement to make or approve a consequential organizational decision or state change.
 
-Canonical sources: RFC-0001 Section 7.5; RFC-0002 Section 11.
+Technical authorization does not substitute for Organizational Authority. Delegation is explicit governed state and AI does not acquire independent authority merely by receiving tool access.
 
-### Provenance
+Canonical sources: RFC-0003 Sections 6.5 and 12; RFC-0005 Section 12.
 
-**Provenance** is traceable origin and lineage information that allows governed records, relationships, events, artifacts and executions to be attributed to relevant sources, actors, versions and transformations.
+### Data Governance
 
-RFC-0001 requires provenance throughout Canonical Records, Typed Relationships, Governed Execution, learning and governed export. RFC-0002 requires provenance within the Kernel metamodel but leaves detailed Event, Provenance and Observability mechanics to RFC-0006.
+**Data Governance** is the set of governed constraints determining whether collection, use, disclosure, retention, export, deletion or cross-organization movement is permitted for a declared purpose.
 
-Canonical sources: Constitution Articles V, XII and XVI; RFC-0001 Sections 7, 8, 18 and 29; RFC-0002 Sections 8–12.
+It remains distinct from authentication, authorization and Organizational Authority.
 
-### Observation
+Canonical source: RFC-0003 Sections 6 and 16–20.
 
-**Observation** is a term used by the governed learning loop for an observed operational result, pattern or fact carried forward for evaluation.
+### Tenant Isolation
 
-Observation is not a separate Kernel primitive under RFC-0002. An observation is not automatically validated knowledge; promotion requires applicable provenance, rights, classification, validation and approval.
+**Tenant Isolation** is the structural property that prevents one Organization's governed or sensitive state from becoming visible or mutable from another Organization without explicit governed authorization.
 
-Canonical sources: Constitution Article XXI; RFC-0001 Section 8; RFC-0002 Section 6.
+Unresolved Organization scope fails closed. Background jobs, caches, indexes, AI context and other asynchronous/derived paths remain Organization-scoped.
 
-## 5. Product and platform terms
+Canonical source: RFC-0003 Section 14.
+
+### Break-glass
+
+**Break-glass** is an explicitly governed exceptional emergency-access path.
+
+It is attributable, purpose- and time-bounded, minimal in scope, observable and reviewable, and cannot silently become a permanent grant.
+
+Canonical source: RFC-0003 Section 13.2.
+
+### Organizational Control and Portability
+
+**Organizational Control and Portability** require that an organization retain governance over its data, intelligence, decisions and operational history and can perform governed export, migration, deletion, termination and handover within applicable rights and constraints.
+
+Portability preserves semantic identity, versions, authority, relationships and required history; it is not merely a raw database dump and does not require export of prohibited/non-exportable secrets.
+
+Canonical sources: Constitution Article VII; RFC-0001 Sections 18–19; RFC-0003 Sections 20–21.
+
+### Proportionality
+
+**Proportionality** means governance, standardization, evidence, security and operational rigor match risk, consequence, maturity, reversibility and organizational value.
+
+It permits bounded manual or provisional controls when appropriate but does not waive structural security, isolation, legal, contractual or Accepted RFC requirements.
+
+Canonical sources: Constitution Articles VIII, XIII and XVII; RFC-0001 cross-cutting; RFC-0003 Section 25.
+
+## 6. Product and platform terms
 
 ### Product
 
-A **Product** is an extension and client of Arvectum OS that is architecturally responsible for domain meaning and product-specific behavior while consuming shared platform foundations through explicit contracts where platform interaction exists.
+A **Product** is architecturally responsible by default for domain meaning, domain schemas, workflows, validation, knowledge, integrations, user experience, commercial behavior and bounded Product Experiments.
 
-Products are architecturally responsible for domain concepts, schemas, knowledge, workflows, validators, standards, risk rules, templates, agents, integrations, user experience, commercial packaging and Product Experiments before platform promotion.
+Products consume shared platform behavior through explicit boundaries where platform interaction exists.
 
-This architectural responsibility does not determine legal ownership or contractual rights.
-
-Canonical sources: Constitution Articles II, III and XX; RFC-0001 Sections 6.5, 9 and 12.
+Canonical sources: Constitution Articles II, III and XX; RFC-0001 Section 12; RFC-0004 Section 6.
 
 ### Product Experiment
 
-A **Product Experiment** is a bounded and reversible implementation under the architectural responsibility of a product or operational sponsor while uncertainty is high.
+A **Product Experiment** is bounded, reversible work under product or operational responsibility while uncertainty is high.
 
-It may contain domain-specific logic and use proportionately lighter documentation and versioning, but it is not a shared platform guarantee and does not bypass applicable security, privacy, legal, contractual, data-integrity or governance controls.
+A fully product-local experiment may operate without a Product Contract when it does not consume Platform Capabilities, canonical platform state or shared platform history. Success does not automatically promote it into the platform.
 
-RFC-0001 requires a Product Experiment to have an owner, scope, effort or budget bound, review date and explicit path to promotion, containment or retirement.
-
-A fully product-local experiment that does not consume platform capabilities, emit events into shared platform history, or read or change canonical platform state may operate without a Product Contract. Once it interacts with those platform responsibilities, it uses a minimal `Provisional` Product Contract proportionate to the interaction.
-
-RFC-0002 does not require Kernel conformance merely because a fully product-local reversible experiment exists. Success also does not automatically promote an experiment into a Platform Capability; promotion is a separate governed decision.
-
-Canonical sources: Constitution Articles II, XVII and XVIII; RFC-0001 Section 11.1; RFC-0002 Sections 17.8 and 18.
+Canonical sources: RFC-0001 Section 11.1; RFC-0004 Sections 7 and 13.
 
 ### Product Contract
 
-A **Product Contract** is the versioned boundary between a product and Arvectum OS.
+A **Product Contract** is the explicit versioned product/platform boundary.
 
-It declares, where applicable, the product or experiment identity, version and architectural owner; capability dependencies; record and relationship types; authority modes and authoritative systems; schemas and workflows; validators, standards and policies; event and artifact types; permissions, classifications and authority requirements; approval gates; extensions and adapters; portability and export obligations; retention and deletion responsibilities; migration and support status; and provisional or incubating dependencies.
+It records only boundary-relevant semantics such as platform dependencies, domain types crossing the boundary, canonical reads/writes, operations, Events/artifacts, security/authority/data handling, portability, compatibility, migration and support status.
 
-Products and experiments do not access platform internals through undocumented conventions, direct database coupling or internal imports that bypass declared contracts.
+It is not a security credential and does not grant authorization or Organizational Authority.
 
-A Product Contract defines architectural responsibility and interaction boundaries; it does not by itself determine legal title, IP ownership, licensing rights or contractual data rights.
+Canonical source: RFC-0004.
 
-Canonical sources: RFC-0001 Sections 6.5 and 13.
+### Product Contract lifecycle
 
-### Provisional Product Contract
+The lifecycle is:
 
-A **Provisional Product Contract** is a Product Contract used for bounded product/platform interaction before the dependency or contract has matured into a stable supported boundary.
+`Draft → Provisional → Stable → Deprecated → Retired`.
 
-It is intentionally proportionate to the experiment or interaction and must not be represented as a stable platform guarantee merely because it exists.
+`Provisional` is the normal bounded early-integration state. `Stable` means the declared product/platform boundary is approved as a durable supported integration contract for its scope. Contract lifecycle does not change Platform Capability lifecycle.
 
-Canonical sources: RFC-0001 Sections 9, 11.1 and 13.
+Canonical source: RFC-0004 Section 9.
 
 ### Platform Capability
 
-A **Platform Capability** is a reusable, domain-neutral organizational ability exposed by Arvectum OS to products or other capabilities.
+A **Platform Capability** is a reusable domain-neutral organizational ability exposed by Arvectum OS.
 
-Platform Capability is a responsibility and contract concept, not merely a piece of code. Capability maturity is expressed through the lifecycle `Candidate → Incubating → Active → Deprecated → Retired`.
+It is responsibility plus contract, not merely code.
+
+Lifecycle:
+
+`Candidate → Incubating → Active → Deprecated → Retired`.
+
+Successful implementation or reuse does not automatically advance lifecycle.
 
 Canonical source: RFC-0001 Sections 11.2–11.4.
 
 ### Candidate
 
-A **Candidate** is a proposed Platform Capability whose organizational outcome, owner, sponsor or constitutional rationale, domain-neutral boundary, expected consumers or strategic need, reuse hypothesis, review date and disposition criteria are declared.
+A **Candidate** is a proposed Platform Capability with declared outcome, responsibility, consumer/reuse hypothesis and disposition criteria.
 
-Candidate status does not imply an implementation commitment or a supported platform contract.
+Candidate status is not an implementation or support commitment.
 
 Canonical source: RFC-0001 Section 11.2.
 
 ### Incubating
 
-An **Incubating** capability is a Platform Capability under bounded platform incubation with a `Provisional` domain-neutral contract and declared source need, consumers, scope, Canonical Record responsibilities, dependencies, events, security and data rules, migration requirements and exit criteria.
+An **Incubating** capability is undergoing bounded platform incubation under a provisional domain-neutral contract and explicit exit criteria.
 
-Incubating does not mean `Active` or externally supported as a stable capability.
+It is not `Active` and must not be marketed as a stable supported platform capability.
 
 Canonical source: RFC-0001 Section 11.2.
 
 ### Active
 
-An **Active** capability is a Platform Capability that has passed applicable admission requirements and has a supported stable public contract, declared compatibility and migration policy, accountable operational support, approved operational readiness, appropriate evidence, and maintained security, portability and lifecycle obligations.
+An **Active** capability has met applicable admission requirements, stable contract expectations and approved operational readiness for its declared scope.
 
-`Active` is a capability lifecycle state. It must not be confused with an operational environment such as `Production`.
+`Active` is a capability lifecycle state, not a synonym for `Production` environment.
 
-RFC-0002 conformance alone does not make a capability `Active` and does not establish production readiness, an SLA or a support guarantee.
+Canonical source: RFC-0001 Sections 11.2–11.4 and 24.
 
-Canonical sources: RFC-0001 Sections 11.2–11.4 and 24; RFC-0002 Section 18.2.
+### Deprecated / Retired
 
-### Deprecated
+A **Deprecated** capability remains in managed exit while consumers migrate under declared responsibilities.
 
-A **Deprecated** capability is a previously supported capability that remains in the lifecycle while consumers move away from it under declared migration and deprecation responsibilities.
-
-RFC-0001 requires preservation of required history, contractual obligations, exportability and migration paths during capability exit.
-
-Canonical source: RFC-0001 Section 11.4.
-
-### Retired
-
-A **Retired** capability is a capability whose platform responsibility has ended after the applicable exit, preservation and migration obligations have been addressed.
+A **Retired** capability has ended platform responsibility after applicable history, migration and commitment obligations are addressed.
 
 Canonical source: RFC-0001 Section 11.4.
 
 ### Platform Service
 
-A **Platform Service** is an implementation and architectural-responsibility boundary that realizes one or more Platform Capabilities.
+A **Platform Service** is an implementation and architectural-responsibility boundary realizing one or more Platform Capabilities.
 
-A Platform Service is not necessarily a separate process, network service, repository or deployment. Service boundaries therefore must not be inferred directly from deployment topology.
+It is not necessarily a separate process, repository or deployment unit. Service boundaries must not be inferred from microservice topology.
 
 Canonical source: RFC-0001 Section 11.5.
 
 ### Extension
 
-An **Extension** is a registered and versioned product, agent, workflow, schema, validator, template, policy, connector, tool, adapter or UI module that extends Arvectum OS through declared contracts and bounded permissions.
+An **Extension** is a registered and versioned component/artifact that extends product or platform behavior through a declared contract without redefining Kernel or shared platform invariants.
 
-Extensions do not weaken Kernel, security, sovereignty or governance invariants.
+Registration makes it governable/discoverable and does not itself grant permission, Organizational Authority, cross-organization visibility or `Active` capability status.
 
-Canonical source: RFC-0001 Section 20.
+Canonical source: RFC-0004 Section 15.
 
 ### Platform Gravity
 
-**Platform Gravity** is the informative concept that the platform should become easier to reuse than to replace because it creates real value rather than coercive dependency.
-
-Weak Platform Gravity is indicated by repeated contract bypass, slower integration than local implementation, persistent single-product abstractions, platform bottlenecks or duplicate shared foundations.
-
-This term is informative and does not define a conformance requirement by itself.
+**Platform Gravity** is the informative idea that the platform should become easier to reuse than to replace because it creates real value rather than coercive dependency.
 
 Canonical source: RFC-0001 Section 22.
 
 ### Platform Evidence
 
-**Platform Evidence** is the informative body of measurable evidence used to evaluate whether platform responsibility creates organizational value rather than merely relocating complexity.
-
-RFC-0001 suggests evidence across delivery speed, validated reuse, operating cost, reliability, quality, risk reduction, governance, security, portability, integration effort and de-platformization effort.
-
-Platform Evidence informs investment, promotion, redesign and de-platformization decisions but is not itself a fixed universal metric set.
+**Platform Evidence** is measurable evidence used to determine whether shared platform responsibility creates organizational value through reuse, delivery speed, operating cost, reliability, quality, risk reduction, governance, security, portability and integration effort.
 
 Canonical source: RFC-0001 Section 26.
 
-## 6. Workflow, memory and knowledge terms
+## 7. Governed Execution, Event and provenance terms
 
 ### Workflow
 
-A **Workflow** is the versioned representation of how repeatable and operationally significant work is performed.
+A **Workflow** is a versioned governed definition of how repeatable or operationally significant work is performed.
 
-Its business meaning, governance and durable state are not inseparably bound to a specific AI model, vendor or runtime. The rigor of workflow formalization is proportionate to risk, frequency and organizational importance.
+One admitted Workflow version is immutable. Consequential execution preserves the exact effective Workflow Version Identity.
 
-Canonical source: Constitution Article X.
+Product-specific business workflow meaning remains product-owned by default.
 
-### Memory / Organizational Memory
+Canonical source: RFC-0005 Sections 6–7.
 
-**Memory** is not conversation history.
+### Governed Execution
 
-Organizational Memory consists of structured, versioned organizational records together with their relationships, provenance and evolution over time. In the governed learning loop, observations may contribute to organizational memory, but memory does not automatically turn them into validated knowledge.
+**Governed Execution** is performance of work inside an Execution Context under applicable authentication evidence, authorization, Organizational Authority, data-governance, validation, approval and evidence requirements.
 
-Canonical sources: Constitution Article V; RFC-0001 Section 8.
+Every consequential change to canonical state managed by Arvectum OS occurs through Governed Execution and an authorized operation.
+
+Canonical source: RFC-0005 Sections 6.4 and 13.
+
+### Operation
+
+An **Operation** is a stable semantic action against governed state, an external system or a controlled side-effect boundary.
+
+RFC-0005 distinguishes at least:
+
+- `ReadOnly`;
+- `Transient`;
+- `CanonicalMutation`;
+- `ExternalMutation`;
+- `Commitment`.
+
+One operation may belong to more than one side-effect class.
+
+Canonical source: RFC-0005 Section 10.
+
+### Idempotency / Uncertainty / Reconciliation
+
+**Idempotency** describes whether retry can repeat an operation safely without duplicating consequential effects.
+
+When the outcome of a non-idempotent external action is unknown, execution enters an explicit uncertainty/reconciliation path instead of blindly retrying.
+
+Canonical source: RFC-0005 Section 15.
+
+### Provenance
+
+**Provenance** is traceable origin and lineage information linking governed records, Events, artifacts and executions to material sources, actors, versions and transformations.
+
+It is not a sixth Kernel primitive. Provenance may be represented by governed references, Events, Execution Contexts, relationships, manifests and external-source evidence.
+
+Canonical source: RFC-0006 Section 14.
+
+### Operational Telemetry
+
+**Operational Telemetry** is diagnostic data such as logs, metrics, traces, health signals and delivery metadata used to understand runtime behavior.
+
+Telemetry is non-canonical by default and may be sampled, aggregated or retention-bounded when required governed evidence is preserved.
+
+Canonical source: RFC-0006 Sections 6.2 and 16.
+
+### Event admission
+
+**Event admission** is the governed step that accepts an occurrence into canonical Event history after resolving/validating required identity, schema, Organization scope, authority/source, attribution, classification, provenance/integrity and payload interpretability.
+
+Transport receipt is not admission.
+
+Canonical source: RFC-0006 Section 7.
+
+### Correlation and causation
+
+**Correlation** groups records that may share context.
+
+**Causation** records a material causal relation to a triggering Event, Execution, operation/command or other governed object.
+
+Correlation is not causation. Neither creates authorization, Organizational Authority or cross-organization rights.
+
+Canonical source: RFC-0006 Section 10.
+
+### Replay
+
+**Replay** reprocesses an existing Event representation/reference while preserving the original Event Identity.
+
+Projection rebuild replay is side-effect safe. If replay intentionally causes a new consequential action, that action receives a new Execution Identity and normal Governed Execution controls.
+
+Canonical source: RFC-0006 Section 13.5.
+
+## 8. Memory, knowledge and learning terms
+
+### Observation
+
+An **Observation** is an observed operational result, pattern, assertion, signal or fact carried forward for evaluation in the Governed Learning Loop.
+
+Observation is a semantic role, not a new Kernel primitive and not validated Knowledge merely because it is repeated, confident, stored or AI-generated.
+
+Canonical source: RFC-0007 Section 6.1.
+
+### Organizational Memory
+
+**Organizational Memory** is the structured, versioned body of organizational records, relationships, provenance and evolution retained so experience and context survive transient conversations, people, model context windows and technologies.
+
+Memory preserves epistemic and authority status. Remembering an assertion does not validate it.
+
+Canonical source: RFC-0007 Section 6.2.
+
+### Knowledge Candidate
+
+A **Knowledge Candidate** is a governed proposal that a claim, rule, interpretation, model or reusable understanding should become Knowledge.
+
+It is explicitly not Knowledge until applicable validation and approval gates succeed.
+
+Canonical source: RFC-0007 Section 6.3.
+
+### Improvement Proposal
+
+An **Improvement Proposal** proposes a change to an approved organizational asset or behavior such as a Standard, Policy, Workflow, Product Contract, validator or capability contract.
+
+Validated Knowledge may justify an Improvement Proposal, but it does not silently change production behavior.
+
+Canonical sources: RFC-0007 Sections 6.4 and 19.
 
 ### Knowledge
 
-**Knowledge** is validated organizational understanding.
+**Knowledge** is validated organizational understanding within a declared scope.
 
-It is versioned, reusable, explainable and independent of implementation technologies. Observations, transient outputs and AI-generated material do not become validated knowledge merely by being produced; promotion is governed.
+Significant Knowledge uses Canonical Record identity/version semantics and carries or resolves applicability, provenance/evidence, validation, authority/source, approval where required, rights/classification, freshness and supersession/retraction information.
 
-Canonical sources: Constitution Article VI; RFC-0001 Sections 8 and 21.
+A Native Knowledge Record may be authoritative for the organization's adopted interpretation while an external system remains authoritative for an underlying external fact.
+
+Canonical sources: RFC-0007 Sections 6.5 and 7.
+
+### Knowledge lifecycle / applicability state
+
+Knowledge may distinguish states such as `Current`, `Review Required`, `Superseded`, `Retracted` and `Retired` where those distinctions affect reliance.
+
+Contradiction or changed evidence does not rewrite historical versions; it triggers explicit review, supersession, retraction or another governed outcome.
+
+Canonical sources: RFC-0007 Sections 9–11.
 
 ### Governed Learning Loop
 
-The **Governed Learning Loop** is the controlled path by which operational evidence can contribute to future approved organizational behavior without silent production mutation.
+The **Governed Learning Loop** is the controlled path:
 
-RFC-0001 describes the sequence as Governed Execution → Events and Outcomes → Observations → Organizational Memory → Knowledge or Improvement Proposal → Validation, Rights Review and Approval → Approved Knowledge / Standard / Policy / Workflow Version → Future Governed Execution.
+```text
+Governed Execution
+        ↓
+Events / Outcomes / Sources
+        ↓
+Observation
+        ↓
+Organizational Memory
+        ↓
+Knowledge Candidate or Improvement Proposal
+        ↓
+Validation + authority/source + rights/classification review
+        ↓
+Approval where required
+        ↓
+Knowledge or separately governed change path
+        ↓
+Future Governed Execution
+```
 
-Learning mechanisms may propose changes but do not silently activate them.
+Learning can propose changes but does not silently mutate approved Standards, Policies, Workflows, Product Contracts or capability lifecycle.
 
-Canonical source: RFC-0001 Section 8.
+Canonical sources: RFC-0001 Section 8; RFC-0007 Section 8.
 
-## 7. Governance, security and commercial terms
+### Retrieval / RAG / derived projections
+
+**Retrieval**, **RAG**, embeddings, vector/lexical indexes, caches, summaries and derived graph projections are execution/retrieval techniques and non-canonical projections by default.
+
+Retrieval does not prove truth, current applicability, authority or permission to use. Consequential reliance resolves to governed exact source versions rather than treating a ranking/index hit as authority.
+
+Canonical sources: RFC-0007 Sections 14–15.
+
+## 9. Governance, AI and conformance terms
 
 ### Decision Authority
 
 **Decision Authority** is the accountable authority permitted to approve a governed decision within its declared scope.
 
-A governed decision identifies its subject and scope, proposer, decision authority, rationale and evidence, effective date, review/expiry/supersession condition where applicable, and canonical decision reference.
-
-The owner of Arvectum OS retains residual decision authority until authority is explicitly delegated. Before the first `Active` capability or external production conformance claim, a separate approved governance policy must define the current authority matrix, delegation limits, escalation paths and substitute approvers.
+Until approved delegation exists, residual authority remains with the Owner under Accepted rules. The current Decision Authority Policy must not be treated as effective while its canonical status remains `Proposed`.
 
 Canonical source: RFC-0001 Section 16.
 
 ### Architectural Exception
 
-An **Architectural Exception** is an approved, scoped deviation from an otherwise applicable architectural requirement.
+An **Architectural Exception** is an approved scoped deviation from an otherwise applicable architectural requirement.
 
-Exceptions record scope, proposer, decision authority, rationale, review or expiry date and exit plan. An exception does not silently rewrite the underlying architectural rule.
+It records scope, authority, rationale, risk, review/expiry and exit path and does not silently rewrite the underlying rule.
 
-Canonical sources: RFC-0001 Sections 2.1, 15 and 16.
+Canonical source: RFC-0001 Sections 15–16.
 
 ### Operational Readiness
 
-**Operational Readiness** is the evidence and approval, proportionate to scope, consequence and customer commitments, required before a Platform Capability becomes `Active`.
+**Operational Readiness** is proportionate evidence and approval required before a Platform Capability becomes `Active` for its declared scope.
 
-It may include support responsibility, observability and health evidence, incident and recovery paths, continuity assumptions, backup or reconstruction paths, migration and deprecation responsibilities, and customer-facing operational commitments relevant to the capability.
+It may address support ownership, observability/health, incident/recovery, continuity/dependencies, backup/reconstruction, migration/deprecation and customer-facing commitments.
 
-Canonical source: RFC-0001 Sections 11.2 and 11.3.
+Operational readiness is distinct from reference implementation readiness.
+
+Canonical source: RFC-0001 Sections 11.2–11.3.
 
 ### Commercial Commitment Integrity
 
-**Commercial Commitment Integrity** is the rule that externally relied-upon commercial language and commitments must stay within the approved architectural, lifecycle, contract, conformance and operational-readiness state of Arvectum OS.
+**Commercial Commitment Integrity** means externally relied-upon language must remain within approved lifecycle, contract, conformance and operational-readiness state.
 
-A Product Experiment, `Candidate` or `Incubating` capability must not be represented as an `Active` supported platform capability, and a commercial commitment must not create an unapproved stable platform obligation, compatibility promise, portability promise, support guarantee or broader conformance claim.
+Product Experiments, Candidates and Incubating capabilities must not be represented as `Active`; a technical implementation does not create an SLA, support guarantee, compatibility promise or full-platform conformance claim.
 
-Bounded pilots and Product Experiments may be described commercially when their lifecycle, limitations, support expectations and provisional or non-production status are represented accurately.
-
-RFC-0002 conformance is only a scoped metamodel claim and does not itself establish production readiness or an external support commitment.
-
-Canonical sources: RFC-0001 Section 14; RFC-0002 Section 18.2.
-
-### Security, Privacy and Isolation
-
-**Security, Privacy and Isolation** are structural properties that constrain platform capabilities, products, experiments, workflows, extensions and adapters.
-
-Accepted requirements include deny-by-default access, least privilege, organization scoping, data minimization, classification- and rights-aware handling, applicable retention and deletion rules, attributable consequential access and change, and failure behavior that does not silently broaden access or cross tenant boundaries.
-
-RFC-0002 adds metamodel-level guardrails: possession of an Identity or existence of a Typed Relationship does not itself grant access or authority, and physical Canonical Record representation must not require unnecessary sensitive-data duplication.
-
-The exact identity, authorization, cryptography, isolation and privacy mechanisms remain subject to later Accepted architecture and subordinate decisions.
-
-Canonical sources: Constitution Article VIII; RFC-0001 Sections 17 and 19; RFC-0002 Sections 7.5, 8.8 and 9.7.
+Canonical sources: RFC-0001 Section 14; RFC-0004 Section 22.
 
 ### AI Authority
 
-**AI Authority** describes the boundary that AI is an execution capability, not an organizational authority source or canonical source by default.
+**AI Authority** is the boundary that AI is an execution, analysis and proposal mechanism rather than an independent organizational authority source.
 
-AI systems may analyze, retrieve, classify, recommend, draft, transform, generate and propose improvements. They do not gain authority merely because they can technically perform an action, and they must not silently change approved standards, grant permissions, approve consequential decisions, replace Canonical Records, promote observations to validated knowledge, share data across organizations, extend retention or bypass validation, security or approval gates.
+AI may analyze, retrieve, classify, generate, recommend, propose and execute bounded authorized operations. AI does not independently grant permissions, create Organizational Authority, serve as final consequential approver, silently promote Knowledge, expand data rights or mutate approved governance/production behavior.
 
-Canonical sources: Constitution Article XIII; RFC-0001 Sections 7.5 and 21.
-
-## 8. Conformance terms
+Canonical sources: Constitution Article XIII; RFC-0003 Section 23; RFC-0005 Section 14; RFC-0007 Section 13.
 
 ### Conformance
 
-**Conformance** is assessed against a declared scope rather than against every possible future capability of Arvectum OS.
+**Conformance** is assessed against an explicit scope, not every possible future Arvectum OS capability.
 
-A conformance claim separates three different axes:
+It separates:
 
 1. subject lifecycle;
 2. operational environment;
 3. conformance maturity.
 
-A limited pilot, experiment or capability must not be described as fully platform-conformant merely because its bounded scope satisfies applicable requirements.
-
-RFC-0002 additionally defines scoped conformance to the Kernel metamodel; that claim is not equivalent to `Active` lifecycle, production readiness, SLA/support or full-platform conformance.
-
-Canonical sources: RFC-0001 Section 24; RFC-0002 Section 18.
-
-### Conformance Statement
-
-A **Conformance Statement** is the scoped record of a conformance assessment for an implementation, pilot, deployment or capability claiming Arvectum OS conformance.
-
-It identifies the subject and version, organization/tenant and deployment scope, workflows and capabilities in scope, relevant data and risk, authority modes and external systems, applicable normative sections, exclusions and rationale, manual or provisional controls, exceptions, known gaps, assessment and approval responsibility, operational-readiness evidence where relevant, external commitments, and reassessment conditions.
-
 Canonical source: RFC-0001 Section 24.
 
 ### Subject Lifecycle
 
-**Subject Lifecycle** is the lifecycle axis used in a Conformance Statement.
-
-RFC-0001 permits:
+The conformance lifecycle axis may use:
 
 - `Product Experiment`;
 - `Candidate`;
@@ -548,15 +673,13 @@ RFC-0001 permits:
 - `Active`;
 - `Deprecated`;
 - `Retired`;
-- `Not Applicable` when the assessed subject is not a capability or experiment.
+- `Not Applicable`.
 
 Canonical source: RFC-0001 Section 24.
 
 ### Operational Environment
 
-**Operational Environment** is the deployment/use-context axis used in a Conformance Statement.
-
-RFC-0001 permits one or more of:
+Operational environment may include:
 
 - `Local`;
 - `Development`;
@@ -564,107 +687,89 @@ RFC-0001 permits one or more of:
 - `Pilot`;
 - `Production`.
 
-Operational environment is separate from capability lifecycle. In particular, `Production` does not mean `Active`.
+Environment is separate from lifecycle. `Production` does not mean `Active`.
 
 Canonical source: RFC-0001 Section 24.
 
 ### Conformance Maturity
 
-**Conformance Maturity** is the assessment-maturity axis used in a Conformance Statement.
+Conformance maturity may be:
 
-RFC-0001 defines:
-
-- `Draft` — assessment incomplete;
-- `Provisional` — applicable invariants are addressed through bounded, manual or provisional controls;
-- `Scoped` — assessed and conformant within the declared scope;
-- `Scoped with Exceptions` — conformant within scope subject to approved exceptions;
+- `Draft`;
+- `Provisional`;
+- `Scoped`;
+- `Scoped with Exceptions`;
 - `Not Conformant`.
 
 Canonical source: RFC-0001 Section 24.
 
 ### Provisional
 
-**Provisional** is a qualifier indicating that a definition, implementation, contract or conformance control is intentionally not yet final or stable within its relevant context.
+**Provisional** means intentionally not yet stable/final within the relevant artifact or lifecycle context.
 
-The Kernel metamodel itself is no longer provisional after acceptance of RFC-0002 `1.0.0`. The qualifier remains valid in other distinct contexts, including Provisional Product Contracts, provisional capability contracts during incubation, provisional implementation choices in unresolved areas, and `Provisional` conformance maturity.
+The Kernel metamodel is no longer provisional after RFC-0002 acceptance, but Provisional Product Contracts, provisional implementation choices and Provisional conformance maturity remain valid distinct concepts.
 
-The exact meaning must therefore be read from the lifecycle or artifact being qualified rather than treated as a single global status.
+Canonical sources: RFC-0001 Sections 11, 13 and 24; RFC-0002; RFC-0004.
 
-Canonical sources: RFC-0001 Sections 11, 13 and 24; RFC-0002 `1.0.0`.
+## 10. Terms and implementation choices intentionally not finalized here
 
-## 9. Normative language
+The foundational semantic sequence through RFC-0007 is Accepted. The following remain deliberately subordinate or deferred rather than silently finalized by this glossary:
 
-RFC-0001 uses capitalized normative keywords as follows:
-
-- **MUST / MUST NOT** — mandatory for conformance unless an approved architectural exception explicitly applies;
-- **SHOULD / SHOULD NOT** — default expectation; deviation requires recorded rationale proportionate to impact;
-- **MAY** — permitted but not required.
-
-Lower-case uses in explanatory prose do not create additional normative force.
-
-Canonical source: RFC-0001 Section 2.1.
-
-## 10. Terms intentionally not finalized here
-
-RFC-0002 finalizes the Kernel metamodel questions previously listed here: Identity and version semantics, Typed Relationship identity/versioning, Event placement, Execution Context placement/lifecycle and product-neutral migration semantics are now governed by Accepted RFC-0002 `1.0.0`.
-
-The following areas remain deliberately not finalized by this glossary because they are reserved for later Accepted RFCs or subordinate decisions:
-
-- exact Organization/Tenant mapping and tenancy metamodel;
-- identity administration, authentication, authorization, security, privacy and tenant-sovereignty mechanisms;
 - global identifier wire encoding;
-- detailed Product Contract and extension model beyond RFC-0001;
-- detailed Governed Execution and Workflow model;
-- detailed Event, Provenance and Observability taxonomy/mechanics;
-- detailed Memory, Knowledge and Governed Learning lifecycle;
-- physical persistence topology, database schema and identifier encoding;
-- relationship-type catalogs and reusable record schemas beyond the metamodel invariants accepted in RFC-0002.
+- database/storage topology and physical schemas;
+- repository/package layout;
+- programming language/runtime;
+- API/RPC/message protocol;
+- authentication provider and concrete authorization engine;
+- cryptographic algorithms and key-management technology;
+- event broker, event-store and observability backend;
+- workflow/orchestration engine;
+- concrete Product Contract serialization/registry technology;
+- relationship/event/knowledge catalogs not already standardized;
+- Memory/Knowledge persistence and retrieval technology;
+- chunking, embedding, vector/lexical/graph indexing technology;
+- LLM/model provider and agent framework;
+- product-specific schemas, workflows, ontologies, policies and domain knowledge;
+- concrete operational-readiness standards, SLOs, RTO/RPO and support procedures;
+- detailed Document and Artifact Architecture reserved in the RFC-0001 follow-up sequence for RFC-0008 unless later canonical governance changes that scope.
 
-These areas remain subject to the follow-up RFC sequence coordinated by the [Canonical Roadmap](../roadmap/ROADMAP.md).
+These choices belong to the lowest sufficient subordinate artifact when implementation or product evidence makes them necessary.
 
 ## 11. Quick source map
 
 | Term family | Primary canonical source |
 |---|---|
-| Organizational Intelligence | Constitution Article 0; RFC-0001 §6.1 |
-| Executable Organizational Model | RFC-0001 §6.2 |
-| Architectural Responsibility | RFC-0001 §6.5; RFC-0002 §8.1 |
-| Organizational Control / Portability | Constitution Article VII; RFC-0001 §§18–19 |
-| Proportionality | Constitution Articles VIII, XIII, XVII; RFC-0001 cross-cutting; RFC-0002 §§8.8, 17.8 |
+| Organizational Intelligence / Executable Organizational Model | Constitution Article 0; RFC-0001 §6 |
+| Organization / Tenant / Principal / Actor | RFC-0003 §§7–8 |
+| Authentication / Authorization / Organizational Authority | RFC-0003 §§6, 10–12 |
+| Security / privacy / isolation / portability | RFC-0003 §§14–21 |
 | Kernel metamodel | RFC-0002 §6 |
-| Identity / Subject Identity / Version Identity | RFC-0002 §7 |
-| Canonical Record / Lineage / Head / Effective Version | RFC-0002 §8 |
-| Authority Modes / transitions | RFC-0001 §7.1; RFC-0002 §12 |
-| Governed Organizational Asset | Constitution Article XVI; RFC-0001 §7.2; RFC-0002 §13 |
-| Transient Output | RFC-0001 §7.3; RFC-0002 §13.4 |
+| Identity | RFC-0002 §7 |
+| Canonical Record / lineage / head / effective version | RFC-0002 §§8, 14 |
 | Typed Relationship | RFC-0002 §9 |
-| Event | Constitution Article XI; RFC-0002 §10 |
-| Governed Execution / Execution Context | RFC-0001 §7.5; RFC-0002 §11 |
-| Product Experiment | RFC-0001 §11.1; RFC-0002 §§17.8, 18 |
-| Platform Capability lifecycle | RFC-0001 §§11.2–11.4 |
-| Platform Service | RFC-0001 §11.5 |
-| Product boundary | Constitution Articles II, III, XX; RFC-0001 §12 |
-| Product Contract | RFC-0001 §13 |
-| Commercial Commitment Integrity | RFC-0001 §14; RFC-0002 §18.2 |
-| Decision Authority / Exceptions | RFC-0001 §16 |
-| Security / Privacy / Isolation | Constitution Article VIII; RFC-0001 §17; RFC-0002 §§7.5, 8.8, 9.7 |
-| Sovereignty / cross-organization rules | RFC-0001 §19 |
-| Extensions | RFC-0001 §20 |
-| AI authority | Constitution Article XIII; RFC-0001 §21 |
-| Platform Gravity | RFC-0001 §22 |
-| Platform Evidence | RFC-0001 §26 |
-| Workflow | Constitution Article X |
-| Memory | Constitution Article V; RFC-0001 §8 |
-| Knowledge | Constitution Article VI; RFC-0001 §8 |
-| Conformance | RFC-0001 §§24–25; RFC-0002 §18 |
+| Event | RFC-0002 §10; RFC-0006 §§6–13 |
+| Execution Context | RFC-0002 §11; RFC-0005 |
+| Authority modes | RFC-0001 §7.1; RFC-0002 §12 |
+| Governed Organizational Asset / Transient Output | RFC-0002 §13 |
+| Product Experiment / Product Contract / Extension | RFC-0004 |
+| Platform Capability lifecycle | RFC-0001 §11 |
+| Workflow / Governed Execution / Operation | RFC-0005 |
+| Provenance / telemetry / replay | RFC-0006 |
+| Observation / Memory / Candidate / Knowledge | RFC-0007 |
+| Retrieval / RAG / projections | RFC-0007 §§14–15 |
+| Decision Authority / Operational Readiness | RFC-0001 §§11, 16 |
+| Commercial Commitment Integrity | RFC-0001 §14; RFC-0004 §22 |
+| AI authority | Constitution XIII; RFC-0003/0005/0007 |
+| Conformance | RFC-0001 §§24–25 |
 
 ## 12. Maintenance note
 
 This glossary is a navigation and language artifact, not a substitute for Accepted architecture.
 
-When a later Accepted RFC refines a term, the glossary should be updated to:
+When a later Accepted source refines a term, update this glossary to:
 
 1. preserve the established term where still valid;
-2. point to the new accepted source;
-3. distinguish refinements from superseded meanings;
-4. avoid introducing requirements that do not exist in the higher-authority source.
+2. point to the newer Accepted source;
+3. distinguish refinement from supersession;
+4. remove stale statements that describe already-Accepted scope as future/deferred;
+5. avoid introducing requirements that do not exist in higher-authority sources.
