@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `1.3.0`
+Version: `1.3.1`
 Created: `2026-08-07`
 Updated: `2026-08-07`
 Owner: `ООО «Арвектум»`
@@ -124,15 +124,15 @@ RFC-0008 — Document and Artifact Architecture — was accepted after Phase 0 r
 
 Canonical detailed work breakdown:
 
-- [`docs/roadmap/PHASE-1-REFERENCE-IMPLEMENTATION.md`](PHASE-1-REFERENCE-IMPLEMENTATION.md) — `Active 1.0.0`.
+- [`docs/roadmap/PHASE-1-REFERENCE-IMPLEMENTATION.md`](PHASE-1-REFERENCE-IMPLEMENTATION.md) — `Active 1.0.1`.
 
 ### Phase 1 overview
 
 | ID | Work item | Status | Progress |
 |---|---|---:|---:|
 | `P1.01` | Organization scope and attributable Actor / Principal | 🟩 | `██████████ 100%` |
-| `P1.02` | Native subject + first immutable Canonical Record version | 🟦 | `░░░░░░░░░░ 0%` |
-| `P1.03` | Versioned Workflow baseline | ⬜ | `░░░░░░░░░░ 0%` |
+| `P1.02` | Native subject + first immutable Canonical Record version | 🟩 | `██████████ 100%` |
+| `P1.03` | Versioned Workflow baseline | 🟦 | `░░░░░░░░░░ 0%` |
 | `P1.04` | Execution Context + exact version pinning | ⬜ | `░░░░░░░░░░ 0%` |
 | `P1.05` | Authorization and Organizational Authority gates | ⬜ | `░░░░░░░░░░ 0%` |
 | `P1.06` | Governed Canonical Mutation + second immutable version | ⬜ | `░░░░░░░░░░ 0%` |
@@ -140,29 +140,33 @@ Canonical detailed work breakdown:
 | `P1.08` | Provenance, causation and reconstruction evidence | ⬜ | `░░░░░░░░░░ 0%` |
 | `P1.09` | Observation creation without Knowledge promotion | ⬜ | `░░░░░░░░░░ 0%` |
 | `P1.10` | Portable semantic fixture export | ⬜ | `░░░░░░░░░░ 0%` |
-| `P1.11` | Negative-path and architecture fitness tests | 🟨 | `█░░░░░░░░░ 10%` |
+| `P1.11` | Negative-path and architecture fitness tests | 🟨 | `██░░░░░░░░ 20%` |
 | `P1.12` | Phase 1 bounded-slice closure review | ⬜ | `░░░░░░░░░░ 0%` |
 
 ### Current implementation evidence
 
 `P1.01` is implemented in [`reference/python`](../../reference/python/README.md) with executable fitness tests proving explicit Organization scope and attributable Actor/Principal semantics.
 
-`P1.11` is cross-cutting and has started because `P1.01` already contributes executable negative-path/fitness coverage. The complete Phase 1 fitness matrix remains unfinished.
+`P1.02` is implemented in the same bounded reference harness with a domain-neutral `Native` Canonical Record carrying stable Subject Identity, distinct first Version Identity, explicit Organization and authority scope, accountable owner, attributable creation context, bounded provenance and proportional in-memory integrity metadata. External authority modes remain explicitly unsupported in this work item.
+
+Executable validation across `P1.01` and `P1.02`: `14` unit tests passed.
+
+`P1.11` is cross-cutting and now includes negative-path/fitness evidence from both `P1.01` and `P1.02`. The complete Phase 1 fitness matrix remains unfinished.
 
 ### Current canonical action
 
-> **`P1.02 — Native subject + first immutable Canonical Record version`: create one `Native` canonical subject with stable Subject Identity, first immutable Version Identity, explicit Organization scope, authority mode and the minimum governed envelope required by Accepted RFC-0002 and applicable RFC-0003 constraints.**
+> **`P1.03 — Versioned Workflow baseline`: represent one versioned domain-neutral Workflow that is permitted to update the reference subject while preserving stable Workflow Subject Identity, immutable Workflow Version Identity and exact version semantics required by Accepted RFC-0005.**
 
-No database or durable persistence technology is required for `P1.02`.
+No workflow engine, scheduler or external orchestration runtime is required for `P1.03`.
 
 ## 7. Phase 1 dependency-aware sequence
 
 ```text
 P1.01 ✅ Organization scope + Actor / Principal
    ↓
-P1.02 🟦 Native subject + Canonical Record v1
+P1.02 ✅ Native subject + Canonical Record v1
    ↓
-P1.03 ⬜ Versioned Workflow
+P1.03 🟦 Versioned Workflow
    ↓
 P1.04 ⬜ Execution Context + version pinning
    ↓

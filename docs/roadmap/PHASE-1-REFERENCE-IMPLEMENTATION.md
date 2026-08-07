@@ -1,7 +1,7 @@
 # Arvectum OS Phase 1 — Reference Implementation
 
 Status: `Active`
-Version: `1.0.0`
+Version: `1.0.1`
 Created: `2026-08-07`
 Updated: `2026-08-07`
 Owner: `ООО «Арвектум»`
@@ -42,8 +42,8 @@ The slice must demonstrate stable identity, immutable canonical versions, explic
 | ID | Work item | Status | Progress |
 |---|---|---:|---:|
 | `P1.01` | Organization scope and attributable Actor / Principal | 🟩 | `██████████ 100%` |
-| `P1.02` | Native subject + first immutable Canonical Record version | 🟦 | `░░░░░░░░░░ 0%` |
-| `P1.03` | Versioned Workflow baseline | ⬜ | `░░░░░░░░░░ 0%` |
+| `P1.02` | Native subject + first immutable Canonical Record version | 🟩 | `██████████ 100%` |
+| `P1.03` | Versioned Workflow baseline | 🟦 | `░░░░░░░░░░ 0%` |
 | `P1.04` | Execution Context + exact version pinning | ⬜ | `░░░░░░░░░░ 0%` |
 | `P1.05` | Authorization and Organizational Authority gates | ⬜ | `░░░░░░░░░░ 0%` |
 | `P1.06` | Governed Canonical Mutation + second immutable version | ⬜ | `░░░░░░░░░░ 0%` |
@@ -51,7 +51,7 @@ The slice must demonstrate stable identity, immutable canonical versions, explic
 | `P1.08` | Provenance, causation and reconstruction evidence | ⬜ | `░░░░░░░░░░ 0%` |
 | `P1.09` | Observation creation without Knowledge promotion | ⬜ | `░░░░░░░░░░ 0%` |
 | `P1.10` | Portable semantic fixture export | ⬜ | `░░░░░░░░░░ 0%` |
-| `P1.11` | Negative-path and architecture fitness tests | 🟨 | `█░░░░░░░░░ 10%` |
+| `P1.11` | Negative-path and architecture fitness tests | 🟨 | `██░░░░░░░░ 20%` |
 | `P1.12` | Phase 1 bounded-slice closure review | ⬜ | `░░░░░░░░░░ 0%` |
 
 Progress bars are planning indicators, not conformance or capability-lifecycle claims.
@@ -68,21 +68,30 @@ Current repository evidence: implemented in `reference/python` with executable f
 
 ### P1.02 — Native subject + first immutable Canonical Record version
 
-**Status:** 🟦 Next
+**Status:** 🟩 Complete
 
-Create one `Native` canonical subject with:
+Implemented one bounded domain-neutral `Native` canonical subject with:
 
 - stable Subject Identity;
-- first immutable Version Identity;
+- first distinct immutable Version Identity;
 - explicit Organization scope;
-- authority mode;
-- minimum governed envelope required by Accepted RFC-0002 and applicable RFC-0003 constraints.
+- explicit `Native` authority mode and authority scope;
+- accountable architectural owner reference;
+- attributable creation Actor and timezone-aware creation time;
+- bounded provenance references;
+- proportional integrity metadata for the in-memory reference representation;
+- immutable in-memory payload and lifecycle state;
+- no predecessor for the first admitted version.
 
-No database or durable persistence technology is required for this task.
+The implementation intentionally rejects `External Reference` and `Governed Replica` in P1.02 because their required external-authority contracts are outside this work item. It does not introduce a database, durable persistence, Canonical Head resolver, public wire format or cryptographic integrity mechanism.
+
+Repository evidence: `reference/python/arvectum_os_ref/canonical.py` and `reference/python/tests/test_p1_02_native_canonical_record.py`.
+
+Executable validation for P1.01 + P1.02: `14` unit tests passed.
 
 ### P1.03 — Versioned Workflow baseline
 
-**Status:** ⬜ Planned
+**Status:** 🟦 Next
 
 Represent one versioned domain-neutral Workflow that is permitted to update the reference subject while preserving stable identity and exact Workflow version semantics.
 
@@ -153,7 +162,7 @@ The bounded slice must include applicable executable tests proving at least:
 - Observation cannot be consumed as validated Knowledge without promotion;
 - projection/index results cannot substitute for exact governed Version Identity reliance.
 
-`P1.01` already contributes executable tests to this task, so `P1.11` is not at zero even though the full matrix is incomplete.
+`P1.01` and `P1.02` now contribute executable negative-path and architecture-fitness coverage, including unresolved Organization scope, authentication non-authority, immutable identity/record values, Organization-consistent attribution, required Canonical Record envelope validation and fail-closed rejection of unsupported authority modes. The full matrix remains incomplete.
 
 ### P1.12 — Phase 1 bounded-slice closure review
 
@@ -176,9 +185,9 @@ Default dependency-aware order:
 ```text
 P1.01 ✅ Organization / Actor
    ↓
-P1.02 🟦 Native subject + Canonical Record v1
+P1.02 ✅ Native subject + Canonical Record v1
    ↓
-P1.03 Versioned Workflow
+P1.03 🟦 Versioned Workflow
    ↓
 P1.04 Execution Context + version pinning
    ↓
