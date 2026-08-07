@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `1.0.2`
+Version: `1.0.3`
 Created: `2026-08-07`
 Updated: `2026-08-07`
 Owner: `ООО «Арвектум»`
@@ -73,7 +73,7 @@ The phase does **not** require the entire future platform to be fully specified 
 |---|---|---:|---:|
 | 🟪 0A | Governance baseline | 🟩 | `██████████ 100%` |
 | 🟦 0B | Architecture language baseline | 🟩 | `██████████ 100%` |
-| 🟪 0C | RFC-0002 — Kernel metamodel | 🟦 | `░░░░░░░░░░ 0%` |
+| 🟪 0C | RFC-0002 — Kernel metamodel | 🟨 | `████░░░░░░ 40%` |
 | 🟢 0D | RFC-0003 — Identity, security, privacy, sovereignty | ⬜ | `░░░░░░░░░░ 0%` |
 | 🟠 0E | RFC-0004 — Product Contract and extension model | ⬜ | `░░░░░░░░░░ 0%` |
 | 🔵 0F | RFC-0005/0006 — Governed execution, events and provenance | ⬜ | `░░░░░░░░░░ 0%` |
@@ -152,8 +152,8 @@ The glossary is a language and navigation artifact. It summarizes terms from hig
 
 ## 7. Block 0C — RFC-0002: Kernel metamodel
 
-**Status:** 🟦 Next  
-**Progress:** `░░░░░░░░░░ 0%`
+**Status:** 🟨 In progress  
+**Progress:** `████░░░░░░ 40%`
 
 ### Canonical scope
 
@@ -171,6 +171,17 @@ It must define, at minimum, the items required by RFC-0001:
 - whether Typed Relationship has independent identity and versioning;
 - preservation and lifecycle requirements for completed Execution Contexts;
 - compatibility and migration rules for provisional implementations.
+
+### Current work
+
+- 🟨 RFC-0002 Draft `0.2.0` is maintained on PR #4 (`rfc-0002-kernel-metamodel`);
+- 🟨 the first structured draft review is complete;
+- 🟨 the draft now distinguishes canonical lineage head from effective-version resolution;
+- 🟨 consequential Subject Identity resolution now pins the Version Identity materially used;
+- 🟨 Relationship Identity is defined as an assertion-instance identity rather than a tuple-derived identity;
+- 🟨 Execution Context versioning now has a governance-significant transition test;
+- 🟨 authority cutover and organizational-asset designation semantics have been strengthened;
+- 🟦 the next review step is domain-neutral scenario validation before promotion to `Proposed`.
 
 ### Constraint before acceptance
 
@@ -287,7 +298,7 @@ Canonical Roadmap                       ✅
         ↓
 Architecture Glossary                   ✅
         ↓
-RFC-0002 Kernel Metamodel               NEXT
+RFC-0002 Kernel Metamodel               IN PROGRESS
         ↓
 RFC-0003 Identity / Security / Privacy
         ↓
@@ -310,9 +321,9 @@ Parallel work is permitted when the work is bounded and reversible and does not 
 
 ## 14. Next canonical action
 
-The next planned architecture decision is:
+The current architecture work item is:
 
-> **`RFC-0002 — Canonical Record, Kernel Metamodel, Authority, Relationship and Organizational Asset Model`**
+> **Validate RFC-0002 Draft `0.2.0` against the domain-neutral review scenarios defined in the RFC, then determine whether it is ready to move to `Proposed`.**
 
 RFC-0002 must refine the provisional Kernel metamodel without contradicting Constitution `1.2.0` or Accepted RFC-0001.
 
