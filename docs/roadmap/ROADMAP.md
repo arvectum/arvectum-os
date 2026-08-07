@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `1.1.5`
+Version: `1.1.6`
 Created: `2026-08-07`
 Updated: `2026-08-07`
 Owner: `ООО «Арвектум»`
@@ -76,8 +76,8 @@ The phase does **not** require the entire future platform to be fully specified 
 | 🟪 0C | RFC-0002 — Kernel metamodel | 🟩 | `██████████ 100%` |
 | 🟢 0D | RFC-0003 — Identity, security, privacy, sovereignty | 🟩 | `██████████ 100%` |
 | 🟠 0E | RFC-0004 — Product Contract and extension model | 🟩 | `██████████ 100%` |
-| 🔵 0F | RFC-0005/0006 — Governed execution, events and provenance | 🟨 | `█████████▌ 95%` |
-| 🟣 0G | RFC-0007 — Memory, knowledge and learning lifecycle | ⬜ | `░░░░░░░░░░ 0%` |
+| 🔵 0F | RFC-0005/0006 — Governed execution, events and provenance | 🟩 | `██████████ 100%` |
+| 🟣 0G | RFC-0007 — Memory, knowledge and learning lifecycle | 🟦 | `░░░░░░░░░░ 0%` |
 | 🟨 0H | Reference implementation readiness | ⬜ | `░░░░░░░░░░ 0%` |
 
 ## 5. Block 0A — Governance baseline
@@ -271,8 +271,8 @@ RFC-0004 is subordinate to Accepted RFC-0003 security, privacy, isolation, autho
 
 ## 10. Block 0F — Governed execution, events and provenance
 
-**Status:** 🟨 In progress — RFC-0005 `Accepted`; RFC-0006 `Proposed 0.2.0`  
-**Progress:** `█████████▌ 95%`
+**Status:** 🟩 Complete — RFC-0005 and RFC-0006 `Accepted 1.0.0`  
+**Progress:** `██████████ 100%`
 
 ### Planned RFCs
 
@@ -292,48 +292,41 @@ RFC-0004 is subordinate to Accepted RFC-0003 security, privacy, isolation, autho
 - 🟩 [`RFC-0005`](../rfc/RFC-0005-governed-execution-workflow-model-v1.0.0.md) published as `Accepted 1.0.0`;
 - 🟩 RFC Index synchronized with approval and publication evidence.
 
-### Accepted RFC-0005 boundary
-
-RFC-0005 `1.0.0` is binding architecture for domain-neutral Governed Execution and Workflow semantics, including versioned workflows, Execution Context lifecycle, authority/approval separation, consequential version pinning, canonical mutation controls, AI authority constraints, idempotency/retry/uncertainty, compensation, in-flight migration, reconstructability and semantic portability.
-
-RFC-0005 preserves RFC-0004 Product Contract boundaries and does not move product-specific workflow meaning into the platform. Event/Provenance/Observability details remain RFC-0006 scope; Memory/Knowledge/Governed Learning details remain RFC-0007 scope.
-
-### RFC-0006 reviewed proposal
+### RFC-0006 completed
 
 - 🟩 RFC-0006 `0.1.0` working draft prepared;
 - 🟩 functional cross-review completed across architecture, operations, engineering/SRE, security, privacy, legal, product and AI-governance perspectives;
 - 🟩 review completed after 4 of maximum 7 iterations with result `Pass after bounded reconciliation`;
 - 🟩 review evidence published in [`docs/reviews/RFC-0006-functional-cross-review.md`](../reviews/RFC-0006-functional-cross-review.md);
-- 🟩 corrections incorporated for Event admission, conflicting Event Identity, correction/reversal semantics, required-event failure handling, sensitive observability access, observability-control changes, deletion/minimization, replay safety and evidentiary limits;
-- 🟨 [`RFC-0006`](../rfc/RFC-0006-event-provenance-observability-model.md) published as reviewed `Proposed 0.2.0`;
-- 🟨 RFC Index synchronized to `Proposed 0.2.0` with review evidence;
-- ⬜ explicit owner approval and acceptance publication not yet performed.
+- 🟩 reviewed proposal `0.2.0` published with immutable blob SHA `5468001d2a0ff13fb16b7f88f7a3bc26f6bc6225`;
+- 🟩 explicit owner approval recorded in [`DECISION-2026-08-07-RFC-0006-ACCEPTANCE`](../governance/decisions/DECISION-2026-08-07-RFC-0006-ACCEPTANCE.md), approval commit `26a92a6663083cc2923bc25e5ccf920b61c17387`;
+- 🟩 [`RFC-0006`](../rfc/RFC-0006-event-provenance-observability-model-v1.0.0.md) published as `Accepted 1.0.0`, publication commit `49f88d04f6440dcbeedb860ccbf7b5f43a2b7b2a`;
+- 🟩 RFC Index synchronized with approval, proposal, review and publication evidence.
 
-### Proposed RFC-0006 boundary
+### Accepted Block 0F boundary
 
-RFC-0006 `0.2.0` proposes a technology-independent domain-neutral model in which canonical Events are append-only RFC-0002 Canonical Record specializations, transport receipt is distinct from Event admission, operational telemetry remains non-canonical by default, provenance remains traceable lineage rather than a sixth Kernel primitive, and required Event/evidence paths cannot fail silently for consequential operations.
+RFC-0005 `1.0.0` is binding architecture for Governed Execution and Workflow semantics. RFC-0006 `1.0.0` is binding architecture for Event, Provenance and Observability semantics.
 
-The proposal preserves RFC-0003 security/privacy/isolation constraints, RFC-0004 Product Contract boundaries, RFC-0005 Governed Execution authority and retry semantics, and does not pre-empt RFC-0007 Memory/Knowledge/Governed Learning lifecycle.
+Together they establish the domain-neutral model for consequential execution, observable operational history, Event admission/immutability, causation/correlation, required evidence, delivery/replay semantics, provenance, telemetry boundaries, reconstruction, security/privacy of observability data and semantic portability.
 
-RFC-0006 remains non-normative until explicit owner approval and a complete Accepted publication transition.
-
-### Next work
-
-- 🟦 Owner decision on reviewed RFC-0006 `0.2.0`.
-- If approved, publish RFC-0006 as `Accepted 1.0.0`, synchronize RFC Index and this roadmap, and perform read-after-write consistency verification before substantive RFC-0007 work begins.
+They preserve RFC-0004 Product Contract boundaries, RFC-0003 authority/security/privacy invariants and the RFC-0007 boundary for Memory, Knowledge and Governed Learning. Their acceptance does not make an implementation capability `Active`, establish operational readiness, or select a broker/workflow/observability technology.
 
 ### Exit criterion
 
-Consequential execution and operational history have accepted domain-neutral models sufficient for explainability, reconstruction and controlled state change.
+🟩 Achieved: consequential execution and operational history have accepted domain-neutral models sufficient for explainability, reconstruction and controlled state change.
 
 ## 11. Block 0G — Memory, knowledge and governed learning
 
-**Status:** ⬜ Planned  
+**Status:** 🟦 Ready — RFC-0007 next  
 **Progress:** `░░░░░░░░░░ 0%`
 
 ### Planned RFC
 
 `RFC-0007 — Memory, Knowledge and Governed Learning Lifecycle`
+
+### Dependency baseline
+
+RFC-0007 may now build on Accepted RFC-0001 through RFC-0006. It must preserve the distinction among operational Events/evidence, observations, organizational Memory, validated Knowledge, proposals and approved reusable organizational assets, and must not allow silent AI-driven promotion into governed state.
 
 ### Exit criterion
 
@@ -401,9 +394,9 @@ RFC-0004 Product Contract / Extensions  ✅ ACCEPTED 1.0.0
         ↓
 RFC-0005 Governed Execution / Workflow  ✅ ACCEPTED 1.0.0
         ↓
-RFC-0006 Event / Provenance / Observability  🟨 PROPOSED 0.2.0 — OWNER DECISION NEXT
+RFC-0006 Event / Provenance / Observability  ✅ ACCEPTED 1.0.0
         ↓
-RFC-0007 Memory / Knowledge / Learning
+RFC-0007 Memory / Knowledge / Learning  🟦 NEXT
         ↓
 Reference Implementation + ADRs
         ↓
@@ -416,11 +409,11 @@ Parallel work is permitted when the work is bounded and reversible and does not 
 
 ## 14. Next canonical action
 
-The current architecture action is:
+The current architecture work item is:
 
-> **Owner decision on reviewed RFC-0006 `0.2.0` — Event, Provenance and Observability Model.**
+> **Begin RFC-0007 — Memory, Knowledge and Governed Learning Lifecycle, using Accepted RFC-0001 through RFC-0006 as the normative baseline.**
 
-Functional cross-review is complete but does not constitute approval. If the owner approves RFC-0006, the same working cycle must publish `Accepted 1.0.0`, synchronize the RFC Index and this roadmap, and perform read-after-write consistency verification under the approved RFC State Transition Procedure before substantive RFC-0007 work begins.
+RFC-0006 acceptance closes Block 0F. Substantive RFC-0007 work may begin only after read-after-write verification confirms consistency among RFC-0006 publication, owner approval, RFC Index and this roadmap under the approved RFC State Transition Procedure.
 
 ## 15. Roadmap maintenance rule
 
