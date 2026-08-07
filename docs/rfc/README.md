@@ -213,6 +213,32 @@ Accepted RFC publication:
 
 RFC-0008 `1.0.0` is binding architecture within its declared Document and Artifact scope. Acceptance does not itself activate a document/artifact Platform Capability or establish production, operational, SLA, support, archival, legal-signature or product-specific commitments.
 
+## Historical Constitutional Amendment Provenance
+
+The current canonical RFC namespace is the table above under `docs/rfc/`. Historical repository evidence predating finalization of this index used a legacy `docs/rfcs/` namespace for constitutional amendments.
+
+Confirmed historical amendment chain:
+
+| Historical reference | Purpose | Result | Immutable evidence |
+|---|---|---|---|
+| `legacy RFC-0000 constitutional amendment` | Amend Constitution `1.0.0 → 1.1.0` | `1.1.0` | commit `611278850e2af5e159332650858574a3c647330b`; blob `835425ca01705adf07da724389038ea2228f15ce` |
+| `legacy constitutional amendment RFC-0001` | Amend Constitution `1.1.0 → 1.2.0` | `1.2.0` | commit `bd012cc435461fe903d6f9420282a0f906ca5bbd`; blob `85b3cc9895dc4a398a0e30428926fe486f62062a` |
+
+Both historical artifacts record status `Accepted` and explicit owner approval on `2026-08-06`.
+
+The legacy `RFC-0001` identifier was later reused when the current canonical RFC index assigned `RFC-0001` to `Arvectum OS Architecture`. This is recorded as a historical governance migration defect rather than hidden or retroactively rewritten.
+
+Canonical reference rule:
+
+- historical Constitution `1.0.0 → 1.1.0` evidence is referenced as `legacy RFC-0000 constitutional amendment` plus immutable commit/blob evidence;
+- historical Constitution `1.1.0 → 1.2.0` evidence is referenced as `legacy constitutional amendment RFC-0001` plus immutable commit/blob evidence;
+- unqualified `RFC-0001` refers to the current Accepted [`RFC-0001 — Arvectum OS Architecture`](RFC-0001-arvectum-os-architecture.md);
+- current RFC-0001 through RFC-0008 identifiers are not renumbered.
+
+The repair and interpretation are approved in [`DECISION-2026-08-07-CONSTITUTION-1.2-PROVENANCE-REPAIR`](../governance/decisions/DECISION-2026-08-07-CONSTITUTION-1.2-PROVENANCE-REPAIR.md).
+
+The Constitution provenance record is [`Closed`](../governance/CONSTITUTION-PROVENANCE.md).
+
 ## Related Governance
 
 RFC-0001 v1.0.0 requires an approved decision-authority policy before the first `Active` capability or external production conformance claim.
@@ -227,8 +253,8 @@ Until that policy or a replacement is approved, the owner of Arvectum OS retains
 
 ## Governance Notes
 
-The canonical Constitution is version `1.2.0`.
+The canonical Constitution is version `1.2.0`, `Ratified` and frozen.
 
-The repository currently does not contain an indexed accepted amendment RFC documenting the transition to Constitution `1.2.0`. This provenance gap is recorded in [`docs/governance/CONSTITUTION-PROVENANCE.md`](../governance/CONSTITUTION-PROVENANCE.md) and must be resolved from confirmed owner-approved records rather than reconstructed by assumption.
+The historical amendment provenance for Constitution `1.0.0 → 1.1.0 → 1.2.0` is confirmed and indexed above. The former Constitution `1.2.0` provenance gap is closed through [`DECISION-2026-08-07-CONSTITUTION-1.2-PROVENANCE-REPAIR`](../governance/decisions/DECISION-2026-08-07-CONSTITUTION-1.2-PROVENANCE-REPAIR.md).
 
 The approved [`RFC State Transition Procedure`](../governance/RFC-STATE-TRANSITION-PROCEDURE.md) requires owner approval, canonical publication, RFC Index synchronization, roadmap synchronization and read-after-write consistency verification to close each RFC status transition before substantive work proceeds to the next RFC.
