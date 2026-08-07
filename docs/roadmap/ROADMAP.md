@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `1.0.0`
+Version: `1.0.1`
 Created: `2026-08-07`
 Updated: `2026-08-07`
 Owner: `ООО «Арвектум»`
@@ -72,8 +72,8 @@ The phase does **not** require the entire future platform to be fully specified 
 | Block | Scope | Status | Progress |
 |---|---|---:|---:|
 | 🟪 0A | Governance baseline | 🟩 | `██████████ 100%` |
-| 🟦 0B | Architecture language baseline | 🟦 | `░░░░░░░░░░ 0%` |
-| 🟪 0C | RFC-0002 — Kernel metamodel | ⬜ | `░░░░░░░░░░ 0%` |
+| 🟦 0B | Architecture language baseline | 🟩 | `██████████ 100%` |
+| 🟪 0C | RFC-0002 — Kernel metamodel | 🟦 | `░░░░░░░░░░ 0%` |
 | 🟢 0D | RFC-0003 — Identity, security, privacy, sovereignty | ⬜ | `░░░░░░░░░░ 0%` |
 | 🟠 0E | RFC-0004 — Product Contract and extension model | ⬜ | `░░░░░░░░░░ 0%` |
 | 🔵 0F | RFC-0005/0006 — Governed execution, events and provenance | ⬜ | `░░░░░░░░░░ 0%` |
@@ -103,8 +103,8 @@ There is one canonical architecture baseline and one canonical planning source i
 
 ## 6. Block 0B — Architecture language baseline
 
-**Status:** 🟦 Next  
-**Progress:** `░░░░░░░░░░ 0%`
+**Status:** 🟩 Complete  
+**Progress:** `██████████ 100%`
 
 ### Objective
 
@@ -112,11 +112,11 @@ Create a shared vocabulary before further detailed architecture work so that con
 
 ### Deliverable
 
-Create:
+Published:
 
-`docs/architecture/GLOSSARY.md`
+- 🟩 [`docs/architecture/GLOSSARY.md`](../architecture/GLOSSARY.md) — Arvectum OS Architecture Glossary `1.0.0`.
 
-The glossary should define the current canonical meaning of architectural terms already established by the Constitution and Accepted RFCs, including at minimum:
+The glossary defines the current canonical meaning of architectural terms already established by the Constitution and Accepted RFCs, including at minimum:
 
 - Organization / Tenant;
 - Organizational Intelligence;
@@ -144,15 +144,15 @@ The glossary should define the current canonical meaning of architectural terms 
 
 ### Constraint
 
-The glossary is a language and navigation artifact. It must summarize terms from higher-authority sources and must not create new architectural obligations or silently redefine Accepted RFC terminology.
+The glossary is a language and navigation artifact. It summarizes terms from higher-authority sources and does not create new architectural obligations or silently redefine Accepted RFC terminology.
 
 ### Exit criterion
 
-A contributor can resolve the meaning and canonical source of core Arvectum OS terms without relying on chat history or model memory.
+🟩 Achieved: a contributor can resolve the meaning and canonical source of core Arvectum OS terms without relying on chat history or model memory.
 
 ## 7. Block 0C — RFC-0002: Kernel metamodel
 
-**Status:** ⬜ Planned  
+**Status:** 🟦 Next  
 **Progress:** `░░░░░░░░░░ 0%`
 
 ### Canonical scope
@@ -285,9 +285,9 @@ RFC-0001 Architecture                   ✅
         ↓
 Canonical Roadmap                       ✅
         ↓
-Architecture Glossary                   NEXT
+Architecture Glossary                   ✅
         ↓
-RFC-0002 Kernel Metamodel
+RFC-0002 Kernel Metamodel               NEXT
         ↓
 RFC-0003 Identity / Security / Privacy
         ↓
@@ -310,11 +310,11 @@ Parallel work is permitted when the work is bounded and reversible and does not 
 
 ## 14. Next canonical action
 
-The next planned artifact is:
+The next planned architecture decision is:
 
-> **`docs/architecture/GLOSSARY.md` — Arvectum OS Architecture Glossary**
+> **`RFC-0002 — Canonical Record, Kernel Metamodel, Authority, Relationship and Organizational Asset Model`**
 
-After the glossary is published, the next major architecture decision is RFC-0002 as defined by Accepted RFC-0001.
+RFC-0002 must refine the provisional Kernel metamodel without contradicting Constitution `1.2.0` or Accepted RFC-0001.
 
 ## 15. Roadmap maintenance rule
 
