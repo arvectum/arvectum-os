@@ -20,7 +20,7 @@ The Constitution has higher authority than every RFC. Accepted RFCs have higher 
 | [RFC-0001](RFC-0001-arvectum-os-architecture.md) | Arvectum OS Architecture | platform | Accepted | 1.0.0 |
 | [RFC-0002](RFC-0002-canonical-record-kernel-metamodel.md) | Canonical Record, Kernel Metamodel, Authority, Relationship and Organizational Asset Model | platform | Accepted | 1.0.0 |
 | [RFC-0003](RFC-0003-identity-security-privacy-tenant-sovereignty-portability.md) | Identity, Security, Privacy, Tenant Sovereignty and Portability | platform | Accepted | 1.0.0 |
-| [RFC-0004](RFC-0004-product-contract-product-experiment-extension-model.md) | Product Contract, Product Experiment and Extension Model | product_contract | Proposed | 0.3.0 |
+| [RFC-0004](RFC-0004-product-contract-product-experiment-extension-model-v1.0.0.md) | Product Contract, Product Experiment and Extension Model | product_contract | Accepted | 1.0.0 |
 | [RFC-0005](RFC-0005-governed-execution-workflow-model.md) | Governed Execution and Workflow Model | platform | Proposed | 0.2.0 |
 
 ## Acceptance Integrity
@@ -79,16 +79,30 @@ Accepted RFC publication commit:
 
 - `1552970e2107bf1c3bbbe20353747f3b9a4361ce`.
 
-RFC-0003 `1.0.0` is now binding architecture within its declared scope.
+RFC-0003 `1.0.0` is binding architecture within its declared scope.
 
-## RFC-0004 Proposal Evidence
+## RFC-0004 Approval Evidence
 
-Current reviewed proposal:
+Canonical owner approval repair record:
 
-- RFC-0004 `0.3.0` — `Proposed`;
-- functional role cross-review: [`docs/reviews/RFC-0004-functional-cross-review.md`](../reviews/RFC-0004-functional-cross-review.md) — `Complete`, 3 review iterations of maximum 7.
+- [`DECISION-2026-08-07-RFC-0004-OWNER-APPROVAL-REPAIR`](../governance/decisions/DECISION-2026-08-07-RFC-0004-OWNER-APPROVAL-REPAIR.md) — `Approved`.
 
-RFC-0004 was reviewed while RFC-0003 was still Proposed. Before RFC-0004 owner decision, it must be re-checked against Accepted RFC-0003 `1.0.0` for compatibility. Until accepted, RFC-0004 has no normative force.
+Approved reviewed proposal:
+
+- RFC-0004 `0.3.0`;
+- immutable proposal blob SHA `5a413a240588677211ad56f3a23b30a65d1c4334`.
+
+Compatibility re-check against Accepted RFC-0003 `1.0.0`:
+
+- [`RFC-0004 compatibility re-check`](../reviews/RFC-0004-accepted-rfc0003-compatibility-review.md) — `Complete`, review iteration 4 of maximum 7;
+- result: no material conflict; stale RFC-0003 lifecycle wording reconciled for acceptance publication.
+
+Accepted RFC publication:
+
+- [`RFC-0004 v1.0.0`](RFC-0004-product-contract-product-experiment-extension-model-v1.0.0.md) — `Accepted`;
+- publication commit: `3b3f72a01bd76d9cfb6a1ef78e7ec6a627173ee2`.
+
+RFC-0004 `1.0.0` is binding architecture within its declared product-contract scope.
 
 ## RFC-0005 Proposal Evidence
 
@@ -100,7 +114,9 @@ Current reviewed proposal:
 - cross-review evidence commit: `972cedc45f711dff529d99bae8f27aec7dd036c8`;
 - reviewed proposal publication commit: `c2c604b57ec6298944fbce6bd7453e23ff3268dc`.
 
-RFC-0005 normatively depends only on Accepted RFC-0001, RFC-0002 and RFC-0003. RFC-0004 remains `Proposed` and is referenced only for forward compatibility. Before RFC-0005 owner decision, the then-current status and content of RFC-0004 must be re-checked. Until accepted, RFC-0005 has no normative force.
+RFC-0005 was prepared while RFC-0004 was not yet canonically Accepted. Because RFC-0004 `1.0.0` is now binding and materially defines Product Contract boundary semantics used by Governed Execution, RFC-0005 must be re-checked against Accepted RFC-0004 and updated to use it as a normative dependency before owner decision.
+
+Until accepted, RFC-0005 has no normative force.
 
 ## Related Governance
 
@@ -119,3 +135,5 @@ Until that policy or a replacement is approved, the owner of Arvectum OS retains
 The canonical Constitution is version `1.2.0`.
 
 The repository currently does not contain an indexed accepted amendment RFC documenting the transition to Constitution `1.2.0`. This provenance gap is recorded in [`docs/governance/CONSTITUTION-PROVENANCE.md`](../governance/CONSTITUTION-PROVENANCE.md) and must be resolved from confirmed owner-approved records rather than reconstructed by assumption.
+
+The approved [`RFC State Transition Procedure`](../governance/RFC-STATE-TRANSITION-PROCEDURE.md) requires owner approval, canonical publication, RFC Index synchronization, roadmap synchronization and read-after-write consistency verification to close each RFC status transition before substantive work proceeds to the next RFC.
