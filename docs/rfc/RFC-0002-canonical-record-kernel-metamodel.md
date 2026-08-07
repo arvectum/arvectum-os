@@ -1,7 +1,7 @@
 # RFC-0002: Canonical Record, Kernel Metamodel, Authority, Relationship and Organizational Asset Model
 
 Status: `Proposed`
-Version: `0.9.0`
+Version: `0.10.0`
 Created: `2026-08-07`
 Updated: `2026-08-07`
 Authors: `ООО «Арвектум»`
@@ -40,9 +40,11 @@ This RFC also clarifies:
 - authority declarations and transitions;
 - subject-level versus version-pinned references;
 - mandatory version pinning for consequential dereference;
-- organizational-asset designation;
+- accountable architectural ownership of significant canonical state;
+- organizational-asset designation and legal-rights neutrality;
 - transient outputs;
-- migration from provisional implementations.
+- proportional representation and data minimization;
+- migration from provisional implementations without mandatory big-bang migration.
 
 It does **not** define authentication, authorization, cryptography, complete workflow semantics, event taxonomy, observability infrastructure, database topology or product-specific schemas. Those belong to later RFCs, ADRs, standards and Product Contracts.
 
@@ -59,6 +61,8 @@ The most relevant constitutional requirements are:
 - consequential operations are reconstructable and explainable;
 - governed organizational assets are explicitly designated, attributable, discoverable and reusable under applicable controls;
 - transient outputs do not automatically become permanent organizational assets;
+- architecture and governance remain proportionate to risk, maturity and organizational value;
+- security, privacy, isolation, minimization, retention and deletion are structural requirements;
 - architecture precedes cross-cutting irreversible implementation;
 - technology implementation must remain replaceable without loss of governed organizational meaning.
 
@@ -89,7 +93,9 @@ It defines:
 - minimum Event immutability semantics;
 - minimum Execution Context lifecycle, transition and preservation semantics;
 - authority declaration and transition semantics for Canonical Records;
+- accountable architectural ownership required by the Canonical Record envelope;
 - the distinction among Canonical Records, Governed Organizational Assets and Transient Outputs;
+- proportional representation and data-minimization constraints on the logical metamodel;
 - technology-independent persistence constraints;
 - migration and compatibility requirements for provisional implementations;
 - scoped conformance tests for this metamodel.
@@ -112,9 +118,11 @@ This RFC does not define:
 - retention periods or legal bases;
 - relationship-type catalogs for particular products or domains;
 - product-specific record schemas;
+- organization-wide RACI, named executive roles, delegation limits or financial approval thresholds;
+- pricing, SLAs, support packages or other customer-facing commercial commitments;
 - memory or knowledge promotion rules beyond organizational-asset designation.
 
-These subjects belong to RFC-0003, RFC-0005, RFC-0006, RFC-0007, subordinate ADRs, standards, catalogs, Product Contracts or product decisions.
+These subjects belong to RFC-0003, RFC-0005, RFC-0006, RFC-0007, subordinate ADRs, standards, catalogs, Product Contracts, governance policies, legal agreements or product decisions.
 
 ## 5. Normative Language
 
@@ -228,6 +236,8 @@ A resolver **MUST** apply the relevant organization or platform scope, authority
 
 For consequential behavior, resolution of a Subject Identity **MUST** result in an explicit Version Identity before the resolved state is relied upon, and that Version Identity **MUST** be preserved in the applicable Execution Context or equivalent governed evidence.
 
+Possession or resolvability of an Identity **MUST NOT** by itself grant permission, delegated authority or access to the referenced governed state.
+
 ## 8. Canonical Record Model
 
 ### 8.1 Definition
@@ -243,13 +253,17 @@ A Canonical Record **MUST** identify, directly or by governed reference, at leas
 - organization or tenant scope;
 - authority mode;
 - authoritative source and authority scope where applicable;
+- accountable architectural owner;
 - creation actor and creation time;
 - provenance sufficient for its declared consequence and use;
 - lifecycle or validation status where applicable;
-- classification and policy references where applicable;
+- classification and access constraints where applicable;
+- retention and deletion policy references where applicable;
 - effective period where applicable;
 - predecessor or supersession reference where applicable;
 - integrity metadata appropriate to its consequence.
+
+The accountable architectural owner is the owner of architectural responsibility in the sense defined by RFC-0001 Section 6.5. It does not by itself establish legal title, intellectual-property ownership, licensing rights, contractual data rights or privacy-law roles.
 
 The exact physical field layout is not normative.
 
@@ -260,6 +274,8 @@ Once a Canonical Record version is admitted to canonical history, that version *
 A change to governed state **MUST** create a new Canonical Record version under the same Subject Identity when the semantic subject remains the same.
 
 A corrected or superseding version **MUST** preserve enough lineage to identify the prior canonical version.
+
+A change in accountable architectural ownership that materially changes responsibility for the continuing governed subject **MUST** be represented as governed state, either through a new Canonical Record version or through a separately versioned governed ownership assignment referenced by the subject.
 
 ### 8.3 Canonical Lineage
 
@@ -304,6 +320,18 @@ Indexes, search documents, caches, denormalized tables, embeddings, read models 
 They **MUST NOT** become independent authorities.
 
 A projection **MUST** be attributable to canonical source versions when used for consequential behavior.
+
+### 8.8 Proportional Representation and Data Minimization
+
+Canonical Record specialization is a semantic requirement, not a requirement to duplicate every metadata field or payload in every physical representation.
+
+A conforming implementation **MAY** satisfy common envelope requirements through stable governed references to immutable or appropriately versioned shared context when the resulting record remains attributable, reconstructable and portable within its declared scope.
+
+Implementations **SHOULD** minimize duplicated governed payload, metadata and retained runtime detail when duplication does not improve authority, reconstruction, legal evidence, security, reproducibility or organizational value.
+
+Implementations **MUST NOT** retain additional sensitive or regulated payload solely to satisfy an assumed physical interpretation of Canonical Record inheritance when the required semantics can be preserved through a lawful governed reference or other less data-intensive representation.
+
+This RFC does not broaden the RFC-0001 significance threshold. Non-significant technical state and explicitly transient outputs do not become Canonical Records merely because they exist, are cached, are repeatedly computed or are convenient to persist.
 
 ## 9. Typed Relationship Model
 
@@ -369,6 +397,16 @@ A later re-establishment of a semantically new relationship instance between the
 The Kernel does not require one universal catalog implementation.
 
 A relationship type **MAY** be defined through a governed schema, catalog, standard or Canonical Record above the minimal Kernel, provided historical relationship meaning remains reconstructable.
+
+### 9.7 Relationship Does Not Grant Access or Authority
+
+A Typed Relationship expresses governed semantics. Its existence, direction, type or resolvability **MUST NOT** by itself grant access, permission, delegated authority, approval power or cross-organization visibility to either endpoint.
+
+Creating, resolving and using a relationship **MUST** remain subject to the applicable organization scope, authorization, classification, rights and policy controls.
+
+A relationship **MUST NOT** be used as an implicit mechanism to bypass tenant or organizational isolation.
+
+This section preserves the security and sovereignty invariants of RFC-0001 without defining the authorization or tenant-isolation mechanisms deferred to RFC-0003.
 
 ## 10. Event Model
 
@@ -511,20 +549,26 @@ For `External Reference` and `Governed Replica`, the Canonical Record **MUST** d
 - what Arvectum OS governs about the reference or replica;
 - what external system remains authoritative for the underlying fact scope.
 
-### 12.3 Authority Scope
+### 12.3 Authority Scope and External Authority Contract
 
 Authority **MUST** be declared with enough scope to prevent two systems from simultaneously claiming authoritative control over the same fact scope without an explicit resolution rule.
 
-An authority declaration **SHOULD** identify, where applicable:
+Every `External Reference` or `Governed Replica` **MUST** identify, where applicable:
 
-- authoritative system;
-- authoritative object or dataset;
+- external authoritative system;
+- external object or dataset identity;
 - authority scope;
-- retrieval or synchronization contract;
-- freshness expectation;
-- conflict rule;
-- failure behavior;
-- permitted local transformations.
+- retrieval or synchronization mechanism;
+- freshness and latency expectations;
+- source-ordering or source-version semantics where required;
+- conflict-resolution rule;
+- failure and unavailability behavior;
+- provenance;
+- permitted local transformations;
+- retention and deletion obligations;
+- portability or export obligations.
+
+A `Native` authority declaration **SHOULD** identify additional operational or policy references where they are necessary to interpret the governed scope correctly.
 
 ### 12.4 Authority Transition
 
@@ -607,6 +651,14 @@ A transient object that becomes significant under RFC-0001 **MUST** enter govern
 
 Promotion **MUST NOT** occur silently as a side effect of AI generation, caching, indexing or repeated use.
 
+### 13.5 Asset Designation Does Not Create Legal Rights
+
+Governed Organizational Asset status is an architectural and governance designation. It **MUST NOT** be interpreted as creating or transferring legal title, intellectual-property ownership, licensing rights, confidentiality rights, contractual data rights or privacy-law roles.
+
+Designation **MUST NOT** expand permitted reuse beyond applicable law, contract, classification, rights and policy.
+
+Cross-organization reuse **MUST NOT** be inferred from asset status and remains subject to the rights, classification and governance requirements of RFC-0001.
+
 ## 14. Reference and Version Semantics
 
 ### 14.1 Subject References
@@ -683,6 +735,8 @@ It **MUST NOT** require a particular database technology for semantic correctnes
 
 Separate physical stores for Events, Relationships or Execution Contexts remain conforming when each object satisfies the Canonical Record semantics and cross-references remain stable.
 
+Shared immutable or versioned governance context **MAY** be referenced rather than physically duplicated when the reference preserves the required semantics.
+
 The public semantic contract **MUST NOT** require Python, PostgreSQL, FastAPI or any other current implementation technology.
 
 ## 17. Compatibility and Migration from Provisional Implementations
@@ -748,19 +802,27 @@ They **MUST** declare which representation remains canonical during the migratio
 
 They **MUST NOT** create a second competing canonical authority.
 
-### 17.8 Product-specific Migration
+### 17.8 Product-specific and Staged Migration
 
 This RFC defines platform semantics, not a migration plan for any one product.
 
 Existing product-local schemas, identifiers, ledgers and workflow records remain product implementation artifacts unless and until they are mapped through an applicable Product Contract, migration decision or platform implementation plan.
 
-A product-specific migration **SHOULD** be handled through the lowest sufficient subordinate artifact and **MUST NOT** reinterpret legacy product data as canonical platform history without evidence.
+Acceptance of this RFC **MUST NOT** be interpreted as requiring immediate wholesale migration of all legacy product-local data into the Platform Kernel.
+
+A migration obligation arises for a legacy subject when it is intentionally brought into Arvectum OS canonical platform scope, participates in shared platform history or behavior that requires the Kernel contract, or is included in a scope claiming RFC-0002 conformance.
+
+Product-specific migration **SHOULD** be staged through the lowest sufficient subordinate artifact and **MUST NOT** reinterpret legacy product data as canonical platform history without evidence.
+
+A staged migration **MAY** prioritize consequential, externally committed or high-value governed subjects before low-value legacy history, provided canonical authority during each migration stage remains explicit and no required security, legal, contractual or reconstruction obligation is bypassed.
 
 ## 18. Conformance
 
 Conformance to RFC-0002 is scoped to the Kernel metamodel.
 
 A subject may conform to this RFC without claiming conformance to all Arvectum OS capabilities or operational environments.
+
+A fully product-local reversible experiment that neither consumes platform capabilities, emits events into shared platform history, nor reads or changes canonical platform state is not required by this RFC to claim Kernel conformance merely because it exists. The RFC-0001 Product Experiment boundary remains controlling.
 
 ### 18.1 Minimum Fitness Tests
 
@@ -771,21 +833,41 @@ A conforming implementation **MUST** demonstrate at least the following:
 3. **Immutable history** — modifying governed state creates a new Canonical Record version rather than mutating a published historical version.
 4. **Single canonical lineage** — one governed subject and authority scope do not silently produce parallel canonical heads.
 5. **Head/effective distinction** — a future-effective head can be distinguished from the version currently effective for an evaluation context.
-6. **External authority preservation** — an `External Reference` or `Governed Replica` does not become a competing authoritative source for the external fact scope.
-7. **Authority cutover** — a source-of-truth transition preserves prior authority and defines cutover/conflict behavior.
-8. **Replica ordering** — a delayed or out-of-order `Governed Replica` update does not replace the canonical replica head solely because it arrived later.
-9. **Version-aware relationships** — the system distinguishes a relationship to a logical subject from a relationship to one exact record version.
-10. **Relationship instance identity** — repeated or independent assertions with the same endpoint tuple are not forced into one Relationship Identity.
-11. **Relationship history** — relationship termination or governed change remains reconstructable.
-12. **Append-only Events** — Event correction creates a linked Event rather than mutating the prior Event.
-13. **Execution transition versioning** — governance-significant changes create new Execution Context versions while purely technical progress need not.
-14. **Execution sealing** — a terminal Execution Context version is immutable and required reconstruction references remain available within declared retention scope.
-15. **Consequential version pinning** — resolution of mutable Subject Identity inputs records the exact Version Identities materially used.
-16. **Asset designation** — asset status is explicit governed state and does not arise from persistence alone.
-17. **Projection non-authority** — caches, indexes and read models can be rebuilt or traced to canonical sources and are not treated as independent authorities.
-18. **Migration honesty** — unknown historical provenance, approvals or authority are represented as unknown rather than fabricated.
-19. **Migration authority** — compatibility or dual-write layers identify one canonical authority during cutover.
-20. **Technology independence** — the public semantic contract does not depend on one database, framework, programming language or model provider.
+6. **Accountable ownership** — a significant Canonical Record exposes an accountable architectural owner without implying legal ownership.
+7. **Classification and lifecycle controls** — applicable classification, access, retention and deletion references are identifiable.
+8. **External authority preservation** — an `External Reference` or `Governed Replica` does not become a competing authoritative source for the external fact scope.
+9. **External authority contract completeness** — applicable retrieval or synchronization, freshness, conflict, failure, transformation, retention, deletion and portability semantics are declared.
+10. **Authority cutover** — a source-of-truth transition preserves prior authority and defines cutover/conflict behavior.
+11. **Replica ordering** — a delayed or out-of-order `Governed Replica` update does not replace the canonical replica head solely because it arrived later.
+12. **Version-aware relationships** — the system distinguishes a relationship to a logical subject from a relationship to one exact record version.
+13. **Relationship instance identity** — repeated or independent assertions with the same endpoint tuple are not forced into one Relationship Identity.
+14. **Relationship history** — relationship termination or governed change remains reconstructable.
+15. **Relationship non-authority** — relationship existence does not grant access, delegated authority or cross-organization visibility.
+16. **Append-only Events** — Event correction creates a linked Event rather than mutating the prior Event.
+17. **Execution transition versioning** — governance-significant changes create new Execution Context versions while purely technical progress need not.
+18. **Execution sealing** — a terminal Execution Context version is immutable and required reconstruction references remain available within declared retention scope.
+19. **Consequential version pinning** — resolution of mutable Subject Identity inputs records the exact Version Identities materially used.
+20. **Asset designation** — asset status is explicit governed state and does not arise from persistence alone.
+21. **Asset legal-rights neutrality** — asset designation does not create legal ownership or permission for reuse beyond applicable rights and policy.
+22. **Projection non-authority** — caches, indexes and read models can be rebuilt or traced to canonical sources and are not treated as independent authorities.
+23. **Proportional representation** — conformance does not require unnecessary payload duplication or retention when governed references preserve the required semantics.
+24. **Migration honesty** — unknown historical provenance, approvals or authority are represented as unknown rather than fabricated.
+25. **Migration authority** — compatibility or dual-write layers identify one canonical authority during cutover.
+26. **Technology independence** — the public semantic contract does not depend on one database, framework, programming language or model provider.
+
+### 18.2 Commercial and Management Interpretation
+
+RFC-0002 conformance is a scoped metamodel claim. It **MUST NOT** by itself be represented as:
+
+- an `Active` Platform Capability lifecycle status;
+- production or operational readiness;
+- an SLA, support guarantee or compatibility promise;
+- a broader portability or retention commitment than the approved scope;
+- full-platform conformance.
+
+External representations **MUST** continue to follow RFC-0001 commercial-commitment integrity and scoped-conformance rules.
+
+A management decision to adopt or migrate a particular product, customer or legacy dataset **MUST** be made through the applicable Product Contract, roadmap, migration decision, governance process or commercial authority rather than inferred automatically from acceptance of this metamodel.
 
 ## 19. Alternatives Considered
 
@@ -831,19 +913,34 @@ Rejected because later changes to the referenced subject could make reconstructi
 
 Subject-level references remain useful for navigation and durable logical relationships, but consequential reliance on mutable governed state requires the resolved Version Identity.
 
+### 19.8 Mandatory Physical Duplication of the Canonical Envelope
+
+Rejected because the Kernel defines governed semantics rather than a storage layout.
+
+Forcing every specialization to duplicate common metadata or payload would increase storage, privacy and migration cost without improving organizational meaning when stable governed references can preserve the same semantics.
+
+### 19.9 Immediate Wholesale Legacy Migration
+
+Rejected because acceptance of a domain-neutral metamodel is not evidence that migrating every historical product-local object creates organizational value.
+
+Migration should be evidence-preserving, staged and scoped to actual platform interaction, conformance or governed value.
+
 ## 20. Consequences
 
 ### 20.1 Positive Consequences
 
 - one coherent version model for governed Kernel objects;
 - explicit separation of stable identity from mutable state;
+- explicit accountable architectural ownership of significant canonical state;
 - explicit distinction between lineage head and effective version;
 - strong historical reconstruction without requiring event sourcing everywhere;
-- version-aware organizational graph semantics;
+- version-aware organizational graph semantics without turning graph edges into permissions;
 - relationship identities that support repeated real-world assertions without tuple-derived collisions;
 - deterministic evidence of which mutable inputs were actually used in consequential execution;
-- clear authority preservation and cutover semantics for external systems of record;
-- explicit governed asset designation without adding a sixth Kernel primitive;
+- clear authority preservation, external-source contract completeness and cutover semantics;
+- explicit governed asset designation without adding a sixth Kernel primitive or creating legal rights by architecture;
+- data-minimizing physical representations remain possible;
+- staged migration avoids a mandatory big-bang conversion of legacy product history;
 - easier migration across databases and implementation technologies;
 - reduced risk that AI outputs, caches or legacy logs become accidental canonical state;
 - a stable base for later identity, execution, observability and knowledge RFCs.
@@ -851,15 +948,18 @@ Subject-level references remain useful for navigation and durable logical relati
 ### 20.2 Costs and Risks
 
 - implementations must manage stable Subject Identities and immutable Version Identities separately;
+- significant Canonical Records require explicit accountable architectural ownership;
 - canonical lineage and effective-version resolution must be represented distinctly;
 - relationships gain first-class lifecycle and may require migration from simple foreign keys;
 - execution history may require more durable metadata than conventional job tables;
 - consequential subject resolution requires explicit version pinning;
+- external authority modes require explicit retrieval/synchronization, failure, retention, deletion and portability semantics;
 - authority transitions require explicit cutover semantics;
-- careless implementations may over-record transient state and create unnecessary storage or governance cost;
-- uniform Canonical Record semantics may be mistaken for a requirement to use one physical schema.
+- staged legacy migration requires prioritization and migration ownership;
+- careless implementations may still over-record transient state or duplicate governed metadata unnecessarily;
+- uniform Canonical Record semantics may be mistaken for a requirement to use one physical schema if Section 8.8 is ignored.
 
-These risks are mitigated by proportionality, explicit transient-state rules and technology-independent persistence.
+These risks are mitigated by proportionality, explicit ownership, staged migration, data minimization, transient-state rules and technology-independent persistence.
 
 ## 21. Follow-up Decisions
 
@@ -870,7 +970,9 @@ This RFC intentionally leaves the following to later documents:
 - RFC-0006: event taxonomy, provenance and observability mechanics;
 - RFC-0007: memory, knowledge and governed learning lifecycle;
 - subordinate ADRs: physical storage, identifier encoding, hashing/signature mechanisms, indexing and migration tooling;
-- standards/catalogs: relationship-type definitions, effective-version resolution profiles and reusable record schemas where common reuse is validated.
+- standards/catalogs: relationship-type definitions, effective-version resolution profiles and reusable record schemas where common reuse is validated;
+- approved governance policies: named decision roles, delegation limits, financial thresholds and executive escalation paths;
+- Product Contracts and migration decisions: product-specific adoption and legacy-data migration scope.
 
 No later RFC may weaken the metamodel invariants accepted here without a superseding architectural decision.
 
@@ -941,30 +1043,49 @@ The proposal was reviewed against Constitution `1.2.0`, Accepted RFC-0001 `1.0.0
 
 | Review item | Result | Finding |
 |---|---|---|
-| RFC-0001 assignment coverage | Pass | identity/version semantics, Event placement, Execution Context placement/lifecycle, relationship identity/versioning and provisional migration are all defined |
-| Kernel primitive consistency | Pass after wording correction | Section 7.1 now defines Identity as a reference to a semantic referent, consistently covering both Subject Identity and Version Identity |
-| authority semantics | Pass | all Canonical Record specializations remain within RFC-0001 authority modes; Arvectum OS Governed Execution context is correctly `Native` for its governance envelope |
-| later-RFC boundary | Pass | authentication, authorization, tenant-isolation mechanisms, workflow orchestration, event delivery, observability backends and physical persistence remain deferred |
+| RFC-0001 assignment coverage | Pass | identity/version semantics, Event placement, Execution Context placement/lifecycle, relationship identity/versioning and provisional migration are defined |
+| Kernel primitive consistency | Pass after wording correction | Section 7.1 defines Identity as a reference to a semantic referent, consistently covering both Subject Identity and Version Identity |
+| authority semantics | Pass after management correction | external authority contract requirements are now restored to RFC-0001 normative strength in Section 12.3 |
+| Canonical Record accountability | Pass after management correction | accountable architectural owner plus classification/access/retention/deletion references are now explicit in Section 8.1 |
+| later-RFC boundary | Pass | authentication, authorization mechanisms, tenant-isolation mechanisms, workflow orchestration, event delivery, observability backends and physical persistence remain deferred |
 | product/platform boundary | Pass | migration semantics are platform-neutral and do not import product-specific schemas or business rules into the Kernel |
 | technology independence | Pass | no normative rule requires a database, language, framework, broker, model provider or deployment topology |
 | glossary consistency | Pass | the informative glossary continues to state that exact metamodel relations remain provisional until RFC-0002 is Accepted |
-| index and roadmap consistency | Pass subject to publication sync | RFC status/version and roadmap stage must be updated together with this proposal publication |
+| index and roadmap consistency | Pass subject to publication sync | RFC status/version and roadmap stage must be updated together with proposal publication |
 
-No conflict with Constitution `1.2.0` or Accepted RFC-0001 was found.
+The initial architecture-focused consistency pass did not identify the missing accountable-owner requirement or the weakening of external-authority contract fields. The subsequent role-based top-management cross-review identified both gaps, and version `0.10.0` corrects them rather than preserving the earlier false-negative finding.
 
 No relevant Accepted ADR exists in the canonical repository that further constrains this metamodel.
 
 ### 22.9 Proposal Readiness Decision
 
-The metamodel scope required by RFC-0001 is complete enough for owner review without adding implementation-specific or product-specific architecture.
+RFC-0002 moved from `Draft` to `Proposed` at version `0.9.0` after architecture and scenario review.
 
-RFC-0002 therefore moves from `Draft` to `Proposed` as version `0.9.0`.
+The top-management cross-review introduced substantive but scope-preserving governance corrections, so the proposal advances to version `0.10.0` and remains `Proposed` for owner review.
 
 `Proposed` has no normative force. The Kernel metamodel remains provisional until valid acceptance is recorded according to the RFC Index.
 
-If owner review requires substantive architectural changes, the proposal **MUST** return to an appropriate pre-acceptance revision before approval.
+If owner review requires further substantive architectural changes, the proposal **MUST** be revised again before approval.
 
-If the owner approves the proposal without substantive architectural change, acceptance publication may advance the RFC to `1.0.0` together with the required independent approval record and synchronized RFC Index update.
+If the owner approves the proposal without further substantive architectural change, acceptance publication may advance the RFC to `1.0.0` together with the required independent approval record and synchronized RFC Index update.
+
+### 22.10 Role-based Top-management Cross-review
+
+This review applies executive and control-function perspectives to the proposal. It is a design-review method only. It does **not** assert that named executives, employees or external counsel performed the review, and it is not approval evidence.
+
+| Perspective | Management question | Finding | Correction in `0.10.0` |
+|---|---|---|---|
+| CEO / Strategy | Does the metamodel create compounding value without becoming compulsory platform ceremony? | Guardrail needed | Section 8.8 makes representation proportional and Section 17.8 rejects automatic wholesale legacy migration |
+| COO / Operations | Can responsibility and external-source failure behavior be assigned and operated? | Material gaps found | Section 8.1 restores accountable architectural ownership; Section 12.3 restores mandatory failure/unavailability and synchronization semantics |
+| CFO / Risk | Does adoption create uncontrolled storage or migration cost? | Cost risk needed an architectural bound | Sections 8.8, 16 and 17.8 permit governed references, minimize duplication and support staged migration |
+| CISO / Privacy | Are access, minimization, retention and tenant boundaries structurally preserved? | Incomplete envelope and graph guardrail | Section 8.1 adds access/retention/deletion references; Section 8.8 adds minimization; Section 9.7 prevents relationships from becoming access paths |
+| Legal / Rights | Could architectural ownership or asset status be misread as legal ownership or reuse rights? | Material interpretation risk | Sections 8.1 and 13.5 explicitly separate architectural responsibility and asset designation from legal title, licensing and cross-organization reuse rights |
+| Product / Commercial | Could conformance be sold as production readiness or force local experiments into platform migration? | Commercial-overclaim risk | Section 18.2 separates metamodel conformance from lifecycle, readiness and support; Sections 17.8 and 18 preserve product-local boundaries |
+| CTO / Architecture | Do management guardrails force a storage technology or expand the Kernel? | No | Five primitives and semantic specialization remain unchanged; physical persistence and future security/workflow mechanisms remain deferred |
+
+After these corrections, the role-based review found no management-level issue that requires changing the Kernel primitive set, absorbing product-domain logic or predefining the implementation choices reserved for later RFCs and ADRs.
+
+Residual acceptance questions are governance questions rather than unresolved metamodel design questions: owner approval, independent approval evidence, publication as `Accepted 1.0.0`, and later operational implementation decisions remain outstanding.
 
 ## 23. Approval Record
 
