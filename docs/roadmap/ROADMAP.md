@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `1.1.6`
+Version: `1.1.7`
 Created: `2026-08-07`
 Updated: `2026-08-07`
 Owner: `ООО «Арвектум»`
@@ -77,7 +77,7 @@ The phase does **not** require the entire future platform to be fully specified 
 | 🟢 0D | RFC-0003 — Identity, security, privacy, sovereignty | 🟩 | `██████████ 100%` |
 | 🟠 0E | RFC-0004 — Product Contract and extension model | 🟩 | `██████████ 100%` |
 | 🔵 0F | RFC-0005/0006 — Governed execution, events and provenance | 🟩 | `██████████ 100%` |
-| 🟣 0G | RFC-0007 — Memory, knowledge and learning lifecycle | 🟦 | `░░░░░░░░░░ 0%` |
+| 🟣 0G | RFC-0007 — Memory, knowledge and learning lifecycle | 🟨 | `████████░░ 80%` |
 | 🟨 0H | Reference implementation readiness | ⬜ | `░░░░░░░░░░ 0%` |
 
 ## 5. Block 0A — Governance baseline
@@ -317,16 +317,42 @@ They preserve RFC-0004 Product Contract boundaries, RFC-0003 authority/security/
 
 ## 11. Block 0G — Memory, knowledge and governed learning
 
-**Status:** 🟦 Ready — RFC-0007 next  
-**Progress:** `░░░░░░░░░░ 0%`
+**Status:** 🟨 In progress — RFC-0007 `0.2.0` Proposed  
+**Progress:** `████████░░ 80%`
 
-### Planned RFC
+### RFC
 
-`RFC-0007 — Memory, Knowledge and Governed Learning Lifecycle`
+[`RFC-0007 — Memory, Knowledge and Governed Learning Lifecycle`](../rfc/RFC-0007-memory-knowledge-governed-learning-lifecycle.md) — `Proposed 0.2.0`.
 
 ### Dependency baseline
 
-RFC-0007 may now build on Accepted RFC-0001 through RFC-0006. It must preserve the distinction among operational Events/evidence, observations, organizational Memory, validated Knowledge, proposals and approved reusable organizational assets, and must not allow silent AI-driven promotion into governed state.
+RFC-0007 builds on Accepted RFC-0001 through RFC-0006. It preserves the distinction among operational Events/evidence, observations, organizational Memory, validated Knowledge, proposals and approved reusable organizational assets, and does not allow silent AI-driven promotion into governed state.
+
+### Completed
+
+- 🟩 RFC-0007 `0.1.0` working draft published;
+- 🟩 functional cross-review completed across organizational-value, operations, architecture, security, privacy, legal/rights, product, engineering and AI-governance perspectives;
+- 🟩 4 of maximum 7 review iterations completed;
+- 🟩 review result: `Pass after bounded reconciliation`;
+- 🟩 review evidence published in [`docs/reviews/RFC-0007-functional-cross-review.md`](../reviews/RFC-0007-functional-cross-review.md);
+- 🟩 bounded reconciliation incorporated;
+- 🟩 reviewed RFC-0007 `0.2.0` published as `Proposed`;
+- 🟩 RFC Index synchronized to show RFC-0007 `Proposed 0.2.0` and review evidence.
+
+### Remaining transition
+
+- 🟨 explicit owner approval of reviewed RFC-0007 `0.2.0`;
+- ⬜ canonical approval decision record created independently before acceptance publication;
+- ⬜ RFC-0007 acceptance publication as `1.0.0`;
+- ⬜ RFC Index acceptance evidence synchronization;
+- ⬜ roadmap closure of Block 0G;
+- ⬜ read-after-write consistency verification under the approved RFC State Transition Procedure.
+
+### Proposed boundary
+
+RFC-0007 `0.2.0` proposes the domain-neutral lifecycle for Observation, Organizational Memory, Knowledge Candidate, Improvement Proposal and validated Knowledge; explicit promotion gates; freshness/contradiction/supersession/retraction handling; AI authority boundaries; RAG/index/embedding non-authority; product and cross-organization learning boundaries; and portability/migration semantics.
+
+Because RFC-0007 remains `Proposed`, these refinements are not yet binding architecture and do not override Accepted RFC-0001 through RFC-0006.
 
 ### Exit criterion
 
@@ -396,7 +422,7 @@ RFC-0005 Governed Execution / Workflow  ✅ ACCEPTED 1.0.0
         ↓
 RFC-0006 Event / Provenance / Observability  ✅ ACCEPTED 1.0.0
         ↓
-RFC-0007 Memory / Knowledge / Learning  🟦 NEXT
+RFC-0007 Memory / Knowledge / Learning  🟨 PROPOSED 0.2.0 — OWNER APPROVAL NEXT
         ↓
 Reference Implementation + ADRs
         ↓
@@ -409,11 +435,11 @@ Parallel work is permitted when the work is bounded and reversible and does not 
 
 ## 14. Next canonical action
 
-The current architecture work item is:
+The current architecture action is:
 
-> **Begin RFC-0007 — Memory, Knowledge and Governed Learning Lifecycle, using Accepted RFC-0001 through RFC-0006 as the normative baseline.**
+> **Obtain explicit owner approval for reviewed RFC-0007 `0.2.0`. After approval, complete the canonical acceptance publication and transition closure before treating RFC-0007 as binding architecture or closing Block 0G.**
 
-RFC-0006 acceptance closes Block 0F. Substantive RFC-0007 work may begin only after read-after-write verification confirms consistency among RFC-0006 publication, owner approval, RFC Index and this roadmap under the approved RFC State Transition Procedure.
+The reviewed proposal and cross-review are already canonical. No additional review iteration is required unless owner review identifies a new material concern.
 
 ## 15. Roadmap maintenance rule
 
