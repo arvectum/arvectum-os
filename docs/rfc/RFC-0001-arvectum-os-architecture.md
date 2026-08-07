@@ -1,13 +1,13 @@
 # RFC-0001: Arvectum OS Architecture
 
-Status: `Proposed`
-Version: `0.9.0`
+Status: `Accepted`
+Version: `1.0.0`
 Created: `2026-08-06`
 Updated: `2026-08-07`
 Authors: `ООО «Арвектум»`
 Category: `platform`
 Constitution: `1.2.0`
-Supersedes: `RFC-0001 v0.8.0`
+Supersedes: `RFC-0001 v0.9.0`
 Superseded by: `None`
 Decision owner: `ООО «Арвектум»`
 
@@ -985,26 +985,20 @@ The owner acknowledges, but does not make normative through acceptance, the info
 
 ## 31. Decision
 
-RFC-0001 remains `Proposed`.
+RFC-0001 is `Accepted` as version `1.0.0`.
 
-Acceptance requires explicit approval by the owner of Arvectum OS and completion of the Approval Record below.
+The owner approval is recorded in `docs/governance/decisions/DECISION-2026-08-07-RFC-0001-ACCEPTANCE.md`.
+
+No substantive architectural change was introduced between approved proposal `0.9.0` and accepted version `1.0.0`.
 
 ## 32. Approval Record
 
-Decision: `Pending`
+Decision: `Approved`
 Decision authority: `ООО «Арвектум»`
-Approved by: `Pending`
-Decision date: `Pending`
-Canonical approval reference: `Pending`
+Approved by: `Owner of Arvectum OS`
+Decision date: `2026-08-07`
+Canonical approval reference: `docs/governance/decisions/DECISION-2026-08-07-RFC-0001-ACCEPTANCE.md`
 
-The canonical approval reference **MUST** identify an approval record that exists before or independently of the repository commit that marks this RFC `Accepted`.
+The canonical approval reference identifies an owner-approved record that existed before the repository commit marking this RFC `Accepted`.
 
-When this RFC is accepted, one repository change **MUST**:
-
-1. set `Status` to `Accepted`;
-2. set the accepted version to `1.0.0` unless the owner explicitly approves another stable version;
-3. complete this Approval Record using the pre-existing canonical approval reference;
-4. update the RFC Index to the accepted version and status;
-5. preserve the resulting repository commit or release tag as external repository evidence.
-
-A status change without a completed Approval Record and matching RFC Index does not constitute valid acceptance.
+The resulting repository commit or release tag is preserved as external repository evidence and is intentionally not embedded as a self-reference inside this document.
