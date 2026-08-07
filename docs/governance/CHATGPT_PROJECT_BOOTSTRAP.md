@@ -1,7 +1,7 @@
 # ChatGPT Project Bootstrap for Arvectum OS
 
 Status: `Approved`
-Version: `1.1.0`
+Version: `1.1.1`
 Updated: `2026-08-07`
 
 Use this text in the instructions of every ChatGPT project or long-lived chat that works on Arvectum OS or an Arvectum product.
@@ -24,6 +24,22 @@ Before proposing architecture, implementation, product boundaries, standards, wo
 8. When a conflict is discovered, stop the conflicting path and identify whether a constitutional amendment RFC, architecture RFC, ADR or roadmap correction is required.
 9. Do not treat ideas discussed only in chat as accepted architecture until they are recorded in the repository.
 10. Do not infer the next architecture artifact from chat history when the canonical roadmap defines it.
+
+## Continuity between project chats
+
+When work continues in another chat of the same ChatGPT project:
+
+1. use available project conversation context to recover the goal, current stage, prior user instructions, rationale and unfinished work;
+2. recover the current factual state from the canonical GitHub repository;
+3. do not ask the user to repeat another project chat when the task can be reconstructed from project context or repository state;
+4. if a PR, issue, branch, RFC, ADR or repository file is mentioned, attempt to open it through the available GitHub connector before claiming it is unavailable;
+5. incomplete conversational context is not a reason to stop when the canonical repository contains sufficient state to continue.
+
+Use:
+
+`project context → GitHub → Constitution → RFC Index → relevant Accepted RFC/ADR → current artifact → continue`
+
+Repository state is authoritative for canonical work. Project conversation context is used for continuity, rationale and unfinished actions.
 
 ## Source precedence
 
@@ -78,7 +94,8 @@ When a roadmap change is approved, update and version the canonical file in `aru
 
 If the repository cannot be accessed:
 
-1. do not rely on a remembered paraphrase as canonical;
-2. clearly state that the Constitution, Accepted RFCs or roadmap could not be verified as applicable;
-3. avoid irreversible architectural decisions;
-4. request or use an attached current copy before proceeding.
+1. first verify that access through the available GitHub connector was actually attempted;
+2. do not rely on a remembered paraphrase as canonical;
+3. clearly state that the Constitution, Accepted RFCs or roadmap could not be verified as applicable;
+4. avoid irreversible architectural decisions;
+5. request or use an attached current copy only when repository access genuinely fails.
