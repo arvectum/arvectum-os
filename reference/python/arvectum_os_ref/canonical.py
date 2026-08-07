@@ -71,7 +71,11 @@ class CanonicalRecord:
             raise ValueError("creation_actor must be attributable")
         if self.creation_actor.organization != self.organization:
             raise ValueError("creation actor and Canonical Record must share Organization scope")
-        if not isinstance(self.created_at, datetime) or self.created_at.tzinfo is None:
+        if (
+            not isinstance(self.created_at, datetime)
+            or self.created_at.tzinfo is None
+            or self.created_at.utcoffset() is None
+        ):
             raise ValueError("created_at must be timezone-aware")
         if not isinstance(self.provenance_refs, tuple) or not self.provenance_refs:
             raise ValueError("provenance_refs must contain attributable governed references")
