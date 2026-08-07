@@ -1,7 +1,8 @@
 # ChatGPT Project Bootstrap for Arvectum OS
 
 Status: `Approved`
-Version: `1.0.0`
+Version: `1.1.0`
+Updated: `2026-08-07`
 
 Use this text in the instructions of every ChatGPT project or long-lived chat that works on Arvectum OS or an Arvectum product.
 
@@ -16,21 +17,27 @@ Before proposing architecture, implementation, product boundaries, standards, wo
    - a shared product contract;
    - a specific domain product;
    - governance or documentation.
-4. Read only the accepted RFCs, ADRs, catalogs and standards relevant to the task.
-5. Treat repository documents as authoritative over chat history, model memory and prior drafts.
-6. Do not propose or implement anything that conflicts with the Constitution.
-7. When a conflict is discovered, stop the conflicting path and identify whether a constitutional amendment RFC, architecture RFC or ADR is required.
-8. Do not treat ideas discussed only in chat as accepted architecture until they are recorded in the repository.
+4. Read `docs/rfc/README.md`, then the Accepted RFCs, ADRs, catalogs and standards relevant to the task.
+5. Read `docs/roadmap/ROADMAP.md` whenever the task asks what to do next, concerns sequencing or milestones, or may start a new architecture or implementation stage.
+6. Treat repository documents as authoritative over chat history, model memory and prior drafts.
+7. Do not propose or implement anything that conflicts with the Constitution or an Accepted RFC.
+8. When a conflict is discovered, stop the conflicting path and identify whether a constitutional amendment RFC, architecture RFC, ADR or roadmap correction is required.
+9. Do not treat ideas discussed only in chat as accepted architecture until they are recorded in the repository.
+10. Do not infer the next architecture artifact from chat history when the canonical roadmap defines it.
 
 ## Source precedence
 
 1. `docs/constitution/CONSTITUTION.md`
-2. accepted RFCs
-3. accepted ADRs
+2. Accepted RFCs
+3. Accepted ADRs
 4. approved catalogs, standards and policies
-5. implementation and tests
-6. current task materials
-7. chat history and model memory
+5. Product Contracts and approved product-specific decisions
+6. implementation and tests
+7. `docs/roadmap/ROADMAP.md` as the canonical planning source
+8. current task materials
+9. chat history and model memory
+
+The roadmap coordinates sequence, status and milestones. It does not override a higher-authority architectural or governance source.
 
 A lower-priority source may add context, but it may not silently override a higher-priority source.
 
@@ -42,6 +49,7 @@ For substantial architecture or implementation tasks, begin the working notes wi
 Constitution consulted: <version>
 Task classification: platform | product_contract | product_specific | governance
 Relevant RFCs/ADRs: <list or none>
+Roadmap consulted: <version or not applicable>
 Potential constitutional conflict: yes | no
 ```
 
@@ -55,13 +63,22 @@ Every Arvectum product repository should contain a root `AGENTS.md` that:
 - requires the Constitution to be consulted before cross-cutting work;
 - forbids duplication of shared platform responsibilities;
 - identifies product-specific domain boundaries;
-- points to the product contract with Arvectum OS.
+- points to the product contract with Arvectum OS;
+- points to the Arvectum OS canonical roadmap when platform sequencing or promotion work is involved.
+
+## Roadmap rule
+
+`docs/roadmap/ROADMAP.md` is the only canonical roadmap for Arvectum OS.
+
+Chats, local notes, product repositories and model memory may discuss roadmap proposals, but they must not be treated as competing canonical roadmaps.
+
+When a roadmap change is approved, update and version the canonical file in `arutyunoveth/arvectum-os`.
 
 ## Availability fallback
 
 If the repository cannot be accessed:
 
 1. do not rely on a remembered paraphrase as canonical;
-2. clearly state that the Constitution could not be verified;
+2. clearly state that the Constitution, Accepted RFCs or roadmap could not be verified as applicable;
 3. avoid irreversible architectural decisions;
 4. request or use an attached current copy before proceeding.
