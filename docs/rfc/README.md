@@ -23,6 +23,7 @@ The Constitution has higher authority than every RFC. Accepted RFCs have higher 
 | [RFC-0004](RFC-0004-product-contract-product-experiment-extension-model-v1.0.0.md) | Product Contract, Product Experiment and Extension Model | product_contract | Accepted | 1.0.0 |
 | [RFC-0005](RFC-0005-governed-execution-workflow-model-v1.0.0.md) | Governed Execution and Workflow Model | platform | Accepted | 1.0.0 |
 | [RFC-0006](RFC-0006-event-provenance-observability-model-v1.0.0.md) | Event, Provenance and Observability Model | platform | Accepted | 1.0.0 |
+| [RFC-0007](RFC-0007-memory-knowledge-governed-learning-lifecycle.md) | Memory, Knowledge and Governed Learning Lifecycle | platform | Proposed | 0.2.0 |
 
 ## Acceptance Integrity
 
@@ -157,6 +158,22 @@ Accepted RFC publication:
 - publication commit: `49f88d04f6440dcbeedb860ccbf7b5f43a2b7b2a`.
 
 RFC-0006 `1.0.0` is binding architecture within its declared Event, Provenance and Observability scope.
+
+## RFC-0007 Proposal Evidence
+
+Reviewed proposal:
+
+- [`RFC-0007 v0.2.0`](RFC-0007-memory-knowledge-governed-learning-lifecycle.md) — `Proposed`;
+- reviewed proposal content SHA `06dc706c3f717a159c0d9495a3c9ae3f29fbdf11`;
+- reviewed proposal publication commit: `afe3c5169c702c27fd8210f879120cc9ce6803b8`.
+
+Review evidence:
+
+- [`RFC-0007 functional cross-review`](../reviews/RFC-0007-functional-cross-review.md) — `Complete`;
+- iterations completed: 4 of maximum 7;
+- result: `Pass after bounded reconciliation`.
+
+RFC-0007 remains non-normative until explicit owner approval exists independently and the acceptance publication transition is completed under the approved RFC State Transition Procedure.
 
 ## Related Governance
 
