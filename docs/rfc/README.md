@@ -21,6 +21,7 @@ The Constitution has higher authority than every RFC. Accepted RFCs have higher 
 | [RFC-0002](RFC-0002-canonical-record-kernel-metamodel.md) | Canonical Record, Kernel Metamodel, Authority, Relationship and Organizational Asset Model | platform | Accepted | 1.0.0 |
 | [RFC-0003](RFC-0003-identity-security-privacy-tenant-sovereignty-portability.md) | Identity, Security, Privacy, Tenant Sovereignty and Portability | platform | Accepted | 1.0.0 |
 | [RFC-0004](RFC-0004-product-contract-product-experiment-extension-model.md) | Product Contract, Product Experiment and Extension Model | product_contract | Proposed | 0.3.0 |
+| [RFC-0005](RFC-0005-governed-execution-workflow-model.md) | Governed Execution and Workflow Model | platform | Proposed | 0.2.0 |
 
 ## Acceptance Integrity
 
@@ -88,6 +89,18 @@ Current reviewed proposal:
 - functional role cross-review: [`docs/reviews/RFC-0004-functional-cross-review.md`](../reviews/RFC-0004-functional-cross-review.md) — `Complete`, 3 review iterations of maximum 7.
 
 RFC-0004 was reviewed while RFC-0003 was still Proposed. Before RFC-0004 owner decision, it must be re-checked against Accepted RFC-0003 `1.0.0` for compatibility. Until accepted, RFC-0004 has no normative force.
+
+## RFC-0005 Proposal Evidence
+
+Current reviewed proposal:
+
+- RFC-0005 `0.2.0` — `Proposed`;
+- functional role cross-review: [`docs/reviews/RFC-0005-functional-cross-review.md`](../reviews/RFC-0005-functional-cross-review.md) — `Complete`, 3 review iterations of maximum 7;
+- initial proposal commit: `33ba810a596a27d0a3d39b225621033ddd657fb3`;
+- cross-review evidence commit: `972cedc45f711dff529d99bae8f27aec7dd036c8`;
+- reviewed proposal publication commit: `c2c604b57ec6298944fbce6bd7453e23ff3268dc`.
+
+RFC-0005 normatively depends only on Accepted RFC-0001, RFC-0002 and RFC-0003. RFC-0004 remains `Proposed` and is referenced only for forward compatibility. Before RFC-0005 owner decision, the then-current status and content of RFC-0004 must be re-checked. Until accepted, RFC-0005 has no normative force.
 
 ## Related Governance
 
