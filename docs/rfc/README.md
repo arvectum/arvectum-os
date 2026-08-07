@@ -20,6 +20,7 @@ The Constitution has higher authority than every RFC. Accepted RFCs have higher 
 | [RFC-0001](RFC-0001-arvectum-os-architecture.md) | Arvectum OS Architecture | platform | Accepted | 1.0.0 |
 | [RFC-0002](RFC-0002-canonical-record-kernel-metamodel.md) | Canonical Record, Kernel Metamodel, Authority, Relationship and Organizational Asset Model | platform | Accepted | 1.0.0 |
 | [RFC-0003](RFC-0003-identity-security-privacy-tenant-sovereignty-portability.md) | Identity, Security, Privacy, Tenant Sovereignty and Portability | platform | Proposed | 0.2.0 |
+| [RFC-0004](RFC-0004-product-contract-product-experiment-extension-model.md) | Product Contract, Product Experiment and Extension Model | product_contract | Proposed | 0.3.0 |
 
 ## Acceptance Integrity
 
@@ -71,6 +72,17 @@ Current reviewed proposal:
 - functional role cross-review: [`docs/reviews/RFC-0003-functional-cross-review.md`](../reviews/RFC-0003-functional-cross-review.md) — `Complete`.
 
 RFC-0003 has no normative force and no acceptance evidence yet. Cross-review evidence is not owner approval.
+
+## RFC-0004 Proposal Evidence
+
+Current reviewed proposal:
+
+- RFC-0004 `0.3.0` — `Proposed`;
+- functional role cross-review: [`docs/reviews/RFC-0004-functional-cross-review.md`](../reviews/RFC-0004-functional-cross-review.md) — `Complete`, 3 review iterations of maximum 7.
+
+RFC-0004 normatively depends only on Accepted RFC-0001 and RFC-0002. RFC-0003 `0.2.0` was considered for forward compatibility but remains non-normative while `Proposed`.
+
+RFC-0004 has no normative force and no acceptance evidence yet. Cross-review evidence is not owner approval.
 
 ## Related Governance
 
