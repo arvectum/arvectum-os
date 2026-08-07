@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `1.1.9`
+Version: `1.1.10`
 Created: `2026-08-07`
 Updated: `2026-08-07`
 Owner: `ООО «Арвектум»`
@@ -371,7 +371,8 @@ Make the smallest useful reference implementation startable now that the planned
 - 🟩 functional cross-review completed after 3 of maximum 7 iterations with result `Pass after bounded reconciliation`;
 - 🟩 review evidence published in [`docs/reviews/REFERENCE-IMPLEMENTATION-READINESS-functional-cross-review.md`](../reviews/REFERENCE-IMPLEMENTATION-READINESS-functional-cross-review.md);
 - 🟩 Architecture Glossary synchronized to `1.2.0` through Accepted RFC-0007;
-- 🟩 RFC-0008 numbering/scope collision prevented: readiness remains Roadmap Block 0H; RFC-0008 remains reserved by RFC-0001 for Document and Artifact Architecture.
+- 🟩 RFC-0008 numbering/scope collision prevented: readiness remains Roadmap Block 0H; RFC-0008 remains reserved by RFC-0001 for Document and Artifact Architecture;
+- 🟩 explicit owner confirmation of completion recorded in [`DECISION-2026-08-07-BLOCK-0H-REFERENCE-IMPLEMENTATION-READINESS-CONFIRMATION`](../governance/decisions/DECISION-2026-08-07-BLOCK-0H-REFERENCE-IMPLEMENTATION-READINESS-CONFIRMATION.md) — `Approved`.
 
 ### Readiness boundary
 
@@ -385,7 +386,7 @@ Reference implementation readiness is not operational readiness. This block does
 
 ### Exit criterion for Phase 0
 
-🟩 **Achieved. Phase 0 is complete.**
+🟩 **Achieved. Phase 0 is complete and explicitly confirmed by the Owner.**
 
 1. core architectural language is discoverable and aligned through Accepted RFC-0007 in Architecture Glossary `1.2.0`;
 2. the foundational RFCs required for the first reference implementation are Accepted;
@@ -418,7 +419,7 @@ RFC-0006 Event / Provenance / Observability  ✅ ACCEPTED 1.0.0
         ↓
 RFC-0007 Memory / Knowledge / Learning  ✅ ACCEPTED 1.0.0
         ↓
-Reference Implementation Readiness      ✅ BLOCK 0H COMPLETE
+Reference Implementation Readiness      ✅ BLOCK 0H COMPLETE + OWNER CONFIRMED
         ↓
 First bounded executable slice          🟦 NEXT
         ↓
