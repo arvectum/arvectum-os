@@ -1,7 +1,7 @@
 # RFC-0002: Canonical Record, Kernel Metamodel, Authority, Relationship and Organizational Asset Model
 
 Status: `Draft`
-Version: `0.2.0`
+Version: `0.3.0`
 Created: `2026-08-07`
 Updated: `2026-08-07`
 Authors: `ООО «Арвектум»`
@@ -542,11 +542,19 @@ The stable Subject Identity **MAY** remain unchanged when the semantic governed 
 
 If the governed semantic subject or authority scope changes materially, the transition **MUST** be evaluated as a possible new Subject Identity rather than assumed to be a continuation.
 
-### 12.5 Replica Freshness Is Not Authority
+### 12.5 Replica Freshness, Ordering and Authority
 
 A newer locally recorded replica does not become authoritative merely because it is newer or more available than the external system.
 
 Freshness, availability and synchronization status **MUST NOT** silently alter the declared authority mode.
+
+For a `Governed Replica`, arrival order at Arvectum OS **MUST NOT** by itself determine canonical source ordering or canonical-head replacement.
+
+The synchronization contract **MUST** define enough source-ordering, source-version, freshness or conflict semantics to determine whether an inbound external state is eligible to become the next canonical replica version.
+
+A delayed, stale or out-of-order external observation **MUST NOT** replace the current canonical replica head merely because it was received later.
+
+Such an observation **MAY** be rejected, retained as governed synchronization evidence, or represented as an Event or other observation according to the synchronization contract, but its handling **MUST** preserve provenance and **MUST NOT** create competing authority.
 
 ## 13. Governed Organizational Assets and Transient Outputs
 
@@ -763,18 +771,19 @@ A conforming implementation **MUST** demonstrate at least the following:
 5. **Head/effective distinction** — a future-effective head can be distinguished from the version currently effective for an evaluation context.
 6. **External authority preservation** — an `External Reference` or `Governed Replica` does not become a competing authoritative source for the external fact scope.
 7. **Authority cutover** — a source-of-truth transition preserves prior authority and defines cutover/conflict behavior.
-8. **Version-aware relationships** — the system distinguishes a relationship to a logical subject from a relationship to one exact record version.
-9. **Relationship instance identity** — repeated or independent assertions with the same endpoint tuple are not forced into one Relationship Identity.
-10. **Relationship history** — relationship termination or governed change remains reconstructable.
-11. **Append-only Events** — Event correction creates a linked Event rather than mutating the prior Event.
-12. **Execution transition versioning** — governance-significant changes create new Execution Context versions while purely technical progress need not.
-13. **Execution sealing** — a terminal Execution Context version is immutable and required reconstruction references remain available within declared retention scope.
-14. **Consequential version pinning** — resolution of mutable Subject Identity inputs records the exact Version Identities materially used.
-15. **Asset designation** — asset status is explicit governed state and does not arise from persistence alone.
-16. **Projection non-authority** — caches, indexes and read models can be rebuilt or traced to canonical sources and are not treated as independent authorities.
-17. **Migration honesty** — unknown historical provenance, approvals or authority are represented as unknown rather than fabricated.
-18. **Migration authority** — compatibility or dual-write layers identify one canonical authority during cutover.
-19. **Technology independence** — the public semantic contract does not depend on one database, framework, programming language or model provider.
+8. **Replica ordering** — a delayed or out-of-order `Governed Replica` update does not replace the canonical replica head solely because it arrived later.
+9. **Version-aware relationships** — the system distinguishes a relationship to a logical subject from a relationship to one exact record version.
+10. **Relationship instance identity** — repeated or independent assertions with the same endpoint tuple are not forced into one Relationship Identity.
+11. **Relationship history** — relationship termination or governed change remains reconstructable.
+12. **Append-only Events** — Event correction creates a linked Event rather than mutating the prior Event.
+13. **Execution transition versioning** — governance-significant changes create new Execution Context versions while purely technical progress need not.
+14. **Execution sealing** — a terminal Execution Context version is immutable and required reconstruction references remain available within declared retention scope.
+15. **Consequential version pinning** — resolution of mutable Subject Identity inputs records the exact Version Identities materially used.
+16. **Asset designation** — asset status is explicit governed state and does not arise from persistence alone.
+17. **Projection non-authority** — caches, indexes and read models can be rebuilt or traced to canonical sources and are not treated as independent authorities.
+18. **Migration honesty** — unknown historical provenance, approvals or authority are represented as unknown rather than fabricated.
+19. **Migration authority** — compatibility or dual-write layers identify one canonical authority during cutover.
+20. **Technology independence** — the public semantic contract does not depend on one database, framework, programming language or model provider.
 
 ## 19. Alternatives Considered
 
@@ -865,7 +874,7 @@ No later RFC may weaken the metamodel invariants accepted here without a superse
 
 ## 22. Draft Review Results
 
-Draft `0.2.0` incorporates the first structured review of the six questions recorded in draft `0.1.0`.
+Draft `0.3.0` incorporates the first structured review of the six questions recorded in draft `0.1.0` and a domain-neutral scenario validation pass.
 
 ### 22.1 Typed Relationship Overhead
 
@@ -907,20 +916,38 @@ Decision: **confirmed**.
 
 No normative metamodel requirement depends on Python, PostgreSQL, FastAPI, a graph database, an event store or another current implementation choice.
 
-### 22.7 Remaining Draft Validation Before Proposed
+### 22.7 Domain-neutral Scenario Validation
 
-Before moving this RFC to `Proposed`, the next review should validate the model against concrete but domain-neutral scenarios covering at least:
+Draft `0.3.0` was tested against the review fixtures defined in draft `0.2.0`.
 
-1. a `Native` record with a future-effective version;
-2. a `Governed Replica` receiving delayed external updates;
-3. authority transfer from one external system of record to another;
-4. repeated relationship assertion instances between the same endpoints;
-5. an Event correction and compensation chain;
-6. an Execution Context with mid-execution approval or input-version change;
-7. lawful deletion that limits later reconstruction;
-8. migration from a legacy identifier and technical job record with incomplete provenance.
+| Scenario | Result | RFC consequence |
+|---|---|---|
+| `Native` record with a future-effective version | Pass | Canonical Head and Effective Version remain distinct |
+| `Governed Replica` receives a delayed external update | Gap found and resolved | arrival order no longer permits stale replica head replacement |
+| authority transfer from one external system of record to another | Pass | authority cutover preserves prior source, transition point and conflict behavior |
+| repeated relationship assertions between the same endpoints | Pass | Relationship Identity is assertion-instance based rather than tuple-derived |
+| Event correction and compensation chain | Pass | new linked Events preserve append-only history |
+| Execution Context with mid-execution approval or input-version change | Pass | governance-significant transition rules require a new context version |
+| lawful deletion limits later reconstruction | Pass | the system must expose the retained-evidence limitation rather than overclaim reconstruction |
+| legacy identifier and technical job record with incomplete provenance | Pass | migration honesty forbids fabricated provenance or upgraded evidentiary status |
+
+The delayed-replica scenario exposed a real ambiguity in draft `0.2.0`: a later arrival could have been misread as the next canonical replica head even when the source considered it stale. Section 12.5 and the conformance tests now require source-ordering or conflict semantics from the synchronization contract.
 
 The scenarios are review fixtures, not new Kernel primitives or product rules.
+
+### 22.8 Remaining Draft Work Before Proposed
+
+Before moving this RFC to `Proposed`, review should now focus on cross-section consistency rather than adding new metamodel scope.
+
+At minimum, confirm:
+
+1. every Kernel primitive satisfies the RFC-0001 requirements assigned to RFC-0002;
+2. no rule in this RFC predefines authentication, authorization, workflow orchestration, event delivery or storage technology reserved for later RFCs;
+3. Canonical Record authority semantics remain coherent for all three specializations;
+4. migration and conformance language can be implemented without requiring a product-specific schema;
+5. the RFC Index, Architecture Glossary and Canonical Roadmap remain consistent with the Draft status.
+
+If that consistency review finds no material issue, the next governance step may be a version bump and transition from `Draft` to `Proposed`. `Proposed` would still have no normative force until valid acceptance and approval evidence exist.
 
 ## 23. Approval Record
 
