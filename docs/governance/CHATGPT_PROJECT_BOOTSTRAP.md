@@ -1,7 +1,7 @@
 # ChatGPT Project Bootstrap for Arvectum OS
 
 Status: `Approved`
-Version: `1.1.2`
+Version: `1.1.3`
 Updated: `2026-08-07`
 
 Use this text in the instructions of every ChatGPT project or long-lived chat that works on Arvectum OS or an Arvectum product.
@@ -63,13 +63,17 @@ For every substantive new task, use the following default loop:
 
 `execute → functional role cross-review → revise → functional role cross-review → revise → ...`
 
-Continue until all functional roles materially relevant to the task agree that the result is sufficient for the current lifecycle stage and that further changes would be disproportionate, speculative or unnecessary at that stage.
+Continue until all functional roles materially relevant to the task agree that the result is sufficient for the current lifecycle stage and that further changes would be disproportionate, speculative or unnecessary at that stage, but never exceed seven cross-review iterations for the same task.
+
+A cross-review iteration consists of one review of the current result by the materially relevant functional roles and incorporation of the material findings that can be resolved within that iteration. The initial execution before the first cross-review does not count toward the limit. Do not start an eighth cross-review iteration merely to continue refinement.
 
 Choose review roles according to the task's actual scope and consequences. Include architecture, engineering, product, operations, security, privacy, governance, commercial, legal or domain perspectives when they are materially relevant; do not require irrelevant roles merely to satisfy process ceremony.
 
-In each cycle, incorporate material findings that improve correctness, coherence, security, usability, operability, maintainability or stage-appropriate completeness, then repeat the review on the revised result.
+In each cycle, incorporate material findings that improve correctness, coherence, security, usability, operability, maintainability or stage-appropriate completeness, then repeat the review on the revised result while iterations remain.
 
-Stop when relevant roles have no material objections and further refinement is not justified by the current lifecycle stage, evidence, risk or task scope. The objective is to produce, within one user request whenever practical, the strongest stage-appropriate final result rather than an avoidably preliminary draft.
+Normally stop when relevant roles have no material objections and further refinement is not justified by the current lifecycle stage, evidence, risk or task scope. The objective is to produce, within one user request whenever practical, the strongest stage-appropriate final result rather than an avoidably preliminary draft.
+
+Always stop after the seventh cross-review iteration even if material objections remain. At that hard limit, preserve the strongest result reached within the allowed iterations and explicitly report unresolved material objections, risks, disagreements, assumptions and any required decision authority or follow-up work. Reaching the iteration limit must not be presented as role consensus or as formal approval.
 
 Functional cross-review is an execution-quality mechanism. It does not constitute formal governance approval, RFC or ADR acceptance, policy approval, decision-authority approval, lifecycle promotion or operational-readiness approval. Required canonical approvals remain mandatory.
 
