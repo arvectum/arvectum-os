@@ -21,7 +21,7 @@ The Constitution has higher authority than every RFC. Accepted RFCs have higher 
 | [RFC-0002](RFC-0002-canonical-record-kernel-metamodel.md) | Canonical Record, Kernel Metamodel, Authority, Relationship and Organizational Asset Model | platform | Accepted | 1.0.0 |
 | [RFC-0003](RFC-0003-identity-security-privacy-tenant-sovereignty-portability.md) | Identity, Security, Privacy, Tenant Sovereignty and Portability | platform | Accepted | 1.0.0 |
 | [RFC-0004](RFC-0004-product-contract-product-experiment-extension-model-v1.0.0.md) | Product Contract, Product Experiment and Extension Model | product_contract | Accepted | 1.0.0 |
-| [RFC-0005](RFC-0005-governed-execution-workflow-model.md) | Governed Execution and Workflow Model | platform | Proposed | 0.2.0 |
+| [RFC-0005](RFC-0005-governed-execution-workflow-model-v0.3.0.md) | Governed Execution and Workflow Model | platform | Proposed | 0.3.0 |
 
 ## Acceptance Integrity
 
@@ -108,15 +108,17 @@ RFC-0004 `1.0.0` is binding architecture within its declared product-contract sc
 
 Current reviewed proposal:
 
-- RFC-0005 `0.2.0` — `Proposed`;
-- functional role cross-review: [`docs/reviews/RFC-0005-functional-cross-review.md`](../reviews/RFC-0005-functional-cross-review.md) — `Complete`, 3 review iterations of maximum 7;
-- initial proposal commit: `33ba810a596a27d0a3d39b225621033ddd657fb3`;
-- cross-review evidence commit: `972cedc45f711dff529d99bae8f27aec7dd036c8`;
-- reviewed proposal publication commit: `c2c604b57ec6298944fbce6bd7453e23ff3268dc`.
+- [`RFC-0005 v0.3.0`](RFC-0005-governed-execution-workflow-model-v0.3.0.md) — `Proposed`;
+- incorporated reviewed baseline RFC-0005 `0.2.0` blob SHA `67e739ceacdbd308618f4fdfffd914dc65e99f09`;
+- original functional cross-review: [`docs/reviews/RFC-0005-functional-cross-review.md`](../reviews/RFC-0005-functional-cross-review.md) — `Complete`, 3 iterations;
+- additional cross-review against Accepted RFC-0004 and Roadmap `1.1.2`: [`RFC-0005 iteration 4`](../reviews/RFC-0005-cross-review-iteration-4.md) — `Complete`;
+- total review iterations: 4 of maximum 7;
+- iteration 4 result: `Pass with bounded reconciliation`;
+- RFC-0005 `0.3.0` publication commit: `b9d678456d2fe526c5a2d637001a970321240305`.
 
-RFC-0005 was prepared while RFC-0004 was not yet canonically Accepted. Because RFC-0004 `1.0.0` is now binding and materially defines Product Contract boundary semantics used by Governed Execution, RFC-0005 must be re-checked against Accepted RFC-0004 and updated to use it as a normative dependency before owner decision.
+RFC-0005 `0.3.0` now normatively depends on Accepted RFC-0001, RFC-0002, RFC-0003 and RFC-0004. Product Contract version attribution and boundary enforcement have been reconciled with RFC-0004 `1.0.0`.
 
-Until accepted, RFC-0005 has no normative force.
+RFC-0005 is ready for owner decision. Until explicitly approved and canonically published as `Accepted`, it has no normative force.
 
 ## Related Governance
 
