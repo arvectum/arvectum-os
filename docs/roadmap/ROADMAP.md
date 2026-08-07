@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `1.0.5`
+Version: `1.0.6`
 Created: `2026-08-07`
 Updated: `2026-08-07`
 Owner: `ООО «Арвектум»`
@@ -73,7 +73,7 @@ The phase does **not** require the entire future platform to be fully specified 
 |---|---|---:|---:|
 | 🟪 0A | Governance baseline | 🟩 | `██████████ 100%` |
 | 🟦 0B | Architecture language baseline | 🟩 | `██████████ 100%` |
-| 🟪 0C | RFC-0002 — Kernel metamodel | 🟨 | `████████░░ 80%` |
+| 🟪 0C | RFC-0002 — Kernel metamodel | 🟨 | `█████████░ 90%` |
 | 🟢 0D | RFC-0003 — Identity, security, privacy, sovereignty | ⬜ | `░░░░░░░░░░ 0%` |
 | 🟠 0E | RFC-0004 — Product Contract and extension model | ⬜ | `░░░░░░░░░░ 0%` |
 | 🔵 0F | RFC-0005/0006 — Governed execution, events and provenance | ⬜ | `░░░░░░░░░░ 0%` |
@@ -153,7 +153,7 @@ The glossary is a language and navigation artifact. It summarizes terms from hig
 ## 7. Block 0C — RFC-0002: Kernel metamodel
 
 **Status:** 🟨 In progress — proposal awaiting owner review  
-**Progress:** `████████░░ 80%`
+**Progress:** `█████████░ 90%`
 
 ### Canonical scope
 
@@ -174,17 +174,23 @@ It must define, at minimum, the items required by RFC-0001:
 
 ### Current work
 
-- 🟨 RFC-0002 `0.9.0` is `Proposed` on PR #4 (`rfc-0002-kernel-metamodel`);
+- 🟨 RFC-0002 `0.10.0` is `Proposed` on PR #4 (`rfc-0002-kernel-metamodel`);
 - 🟩 structured draft review is complete;
 - 🟩 domain-neutral scenario validation is complete;
-- 🟩 cross-section consistency validation against Constitution `1.2.0`, Accepted RFC-0001, the RFC Index, Architecture Glossary and roadmap is complete;
+- 🟩 architecture cross-section consistency validation is complete;
+- 🟩 role-based top-management cross-review across CEO, COO, CFO/Risk, CISO/Privacy, Legal/Rights, Product/Commercial and CTO/Architecture perspectives is complete;
+- 🟩 management review identified and corrected two RFC-0001 fidelity gaps that the earlier architecture-only pass had missed: accountable architectural ownership in the Canonical Record envelope and mandatory external-authority contract completeness;
 - 🟩 Canonical Head is distinguished from Effective Version resolution;
 - 🟩 consequential Subject Identity resolution pins the Version Identity materially used;
 - 🟩 Relationship Identity is an assertion-instance identity rather than a tuple-derived identity;
+- 🟩 relationships cannot implicitly grant access, delegated authority or cross-organization visibility;
 - 🟩 Execution Context versioning has a governance-significant transition test;
 - 🟩 authority cutover and organizational-asset designation semantics are strengthened;
+- 🟩 asset designation is explicitly separated from legal ownership and reuse rights;
 - 🟩 delayed or out-of-order `Governed Replica` updates cannot replace the canonical replica head merely because they arrived later;
-- 🟩 no material conflict with Constitution `1.2.0` or Accepted RFC-0001 was found;
+- 🟩 proportional representation, data minimization and staged legacy migration prevent the metamodel from requiring unnecessary physical duplication or wholesale migration;
+- 🟩 metamodel conformance is explicitly separated from `Active` lifecycle, production readiness, SLA/support and full-platform conformance claims;
+- 🟩 after corrections, no unresolved material conflict with Constitution `1.2.0` or Accepted RFC-0001 remains;
 - 🟦 the next governance step is explicit owner review and decision; no acceptance may be recorded before independent approval evidence exists.
 
 ### Constraint before acceptance
@@ -302,7 +308,7 @@ Canonical Roadmap                       ✅
         ↓
 Architecture Glossary                   ✅
         ↓
-RFC-0002 Kernel Metamodel               PROPOSED — OWNER REVIEW
+RFC-0002 Kernel Metamodel               PROPOSED 0.10.0 — OWNER REVIEW
         ↓
 RFC-0003 Identity / Security / Privacy
         ↓
@@ -327,7 +333,7 @@ Parallel work is permitted when the work is bounded and reversible and does not 
 
 The current architecture work item is:
 
-> **Owner review of RFC-0002 Proposed `0.9.0`. If approved without substantive architectural change, create the independent approval record first, then publish RFC-0002 `1.0.0` as `Accepted` together with the synchronized RFC Index and roadmap update.**
+> **Owner review of RFC-0002 Proposed `0.10.0`. If approved without further substantive architectural change, create the independent approval record first, then publish RFC-0002 `1.0.0` as `Accepted` together with the synchronized RFC Index and roadmap update.**
 
 Until that approval exists, RFC-0002 has no normative force and the Kernel metamodel remains provisional.
 
