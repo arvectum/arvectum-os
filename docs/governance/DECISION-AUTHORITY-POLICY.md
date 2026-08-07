@@ -1,12 +1,12 @@
 # Arvectum OS Decision Authority Policy
 
 Status: `Proposed`
-Version: `0.2.0`
+Version: `0.2.1`
 Created: `2026-08-07`
 Updated: `2026-08-07`
 Category: `governance`
 Constitution basis: `1.2.0`
-Architecture basis: `RFC-0001 v0.9.0`
+Architecture basis: `RFC-0001 v1.0.0 Accepted`
 Policy owner: `ООО «Арвектум»`
 
 ## Purpose
