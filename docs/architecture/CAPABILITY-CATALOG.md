@@ -1,9 +1,9 @@
 # Arvectum OS Capability Catalog
 
 Status: `Informative`
-Version: `0.6.0`
+Version: `0.7.0`
 Updated: `2026-08-07`
-Architecture basis: `RFC-0001 v0.8.0`
+Architecture basis: `RFC-0001 v0.9.0`
 Constitution basis: `1.2.0`
 
 ## Purpose
@@ -36,7 +36,7 @@ Candidate → Incubating → Active → Deprecated → Retired
 
 - `Candidate` — governed platform proposal with an accountable owner, sponsor or constitutional rationale, review date and no implementation commitment unless separately approved.
 - `Incubating` — limited domain-neutral platform boundary being tested through real consumers under a Provisional Contract.
-- `Active` — approved shared capability with a supported stable contract and evidence for platform responsibility.
+- `Active` — approved shared capability with a supported stable contract, evidence for platform responsibility and approved operational readiness for its declared scope.
 - `Deprecated` — available for migration but not recommended for new consumers.
 - `Retired` — unavailable except through preserved history or explicit archival support.
 
@@ -85,16 +85,35 @@ An Active entry must additionally identify:
 - supported stable public contract;
 - compatibility and migration policy;
 - accountable operational support;
+- approved operational-readiness evidence proportionate to scope, consequence and customer commitments;
+- support and escalation path;
+- observability and health evidence;
+- incident and recovery path;
+- continuity and dependency assumptions;
+- backup, reconstruction or restoration path where applicable;
+- customer-facing operational commitments;
 - evidence supporting centralized platform responsibility;
 - maintained security, portability and lifecycle obligations;
 - approved decision authority and canonical promotion reference;
-- deprecation and retirement path.
+- migration, deprecation and retirement communication path.
+
+A capability must not be represented as `Active` before these requirements are approved for its declared scope.
+
+## Commercial Commitment Integrity
+
+Commercial or customer-facing materials must reflect the lifecycle and approved conformance state recorded for a capability.
+
+A Product Experiment, Candidate or Incubating capability must not be represented as an Active supported platform capability.
+
+A catalog entry must not be used to justify a customer commitment, conformance claim, compatibility promise, support obligation, portability promise or SLA-like commitment that has not been approved by the applicable decision authority.
+
+Exploratory items are hypotheses only and must not be marketed or contracted as delivered capabilities.
 
 ## Decision Authority
 
 Every lifecycle transition must comply with RFC-0001 and the approved Decision Authority Policy.
 
-A proposer may not solely approve their own transition to `Active`, material exception, stable public-contract change or acceptance of a material known gap.
+A proposer may not solely approve their own transition to `Active`, material exception, stable public-contract change, material customer-facing commitment or acceptance of a material known gap.
 
 Until authority is delegated through an approved policy, the owner of Arvectum OS retains residual decision authority.
 
@@ -165,6 +184,8 @@ A capability claiming RFC-0001 conformance must separately record:
 - provisional Kernel assumptions;
 - data and tenant scope;
 - manual controls;
+- operational-readiness evidence where applicable;
+- applicable customer-facing commitments and their canonical references;
 - exceptions and their decision authorities;
 - known gaps;
 - review date.
@@ -179,6 +200,6 @@ Exit decisions must preserve required history, contractual commitments, governed
 
 ## Change Rule
 
-A catalog change requires an RFC when it changes a foundational law, Kernel primitive, metamodel constraint, authority mode, decision-authority invariant, product boundary, security invariant, sovereignty rule or portability obligation.
+A catalog change requires an RFC when it changes a foundational law, Kernel primitive, metamodel constraint, authority mode, decision-authority invariant, commercial-commitment integrity rule, operational-readiness invariant, product boundary, security invariant, sovereignty rule or portability obligation.
 
 Other lifecycle changes may be governed by an ADR or approved catalog-maintenance process when evidence, authority, responsibility, conformance scope and migration are recorded.
