@@ -1,13 +1,13 @@
 # RFC-0001: Arvectum OS Architecture
 
 Status: `Proposed`
-Version: `0.8.0`
+Version: `0.9.0`
 Created: `2026-08-06`
 Updated: `2026-08-07`
 Authors: `ООО «Арвектум»`
 Category: `platform`
 Constitution: `1.2.0`
-Supersedes: `RFC-0001 v0.7.0`
+Supersedes: `RFC-0001 v0.8.0`
 Superseded by: `None`
 Decision owner: `ООО «Арвектум»`
 
@@ -85,8 +85,10 @@ The following parts are normative:
 - authority modes for Canonical Records;
 - Product Experiment, Platform Capability and Platform Service boundaries;
 - Product Contract and dependency rules;
+- commercial-commitment integrity rules;
 - security, privacy, isolation, sovereignty and portability invariants;
 - decision-authority and architectural-exception rules;
+- operational-readiness requirements for `Active` capabilities;
 - extension and AI authority constraints;
 - the scoped conformance model and fitness tests;
 - acceptance and approval requirements.
@@ -542,8 +544,19 @@ An `Active` capability **MUST** have:
 - a supported stable public contract;
 - declared compatibility and migration policy;
 - accountable operational support;
+- approved operational readiness proportionate to scope, consequence and customer commitments;
 - measurable evidence appropriate to platform responsibility;
 - maintained security, portability and lifecycle obligations.
+
+Operational readiness **MUST** identify, where applicable:
+
+- support responsibility and escalation path;
+- observability and health evidence;
+- incident and recovery path;
+- continuity and dependency assumptions;
+- backup, reconstruction or restoration path proportionate to governed state;
+- migration and deprecation communication responsibilities;
+- customer-facing operational commitments that the capability is expected to satisfy.
 
 ### 11.3 Active Capability Admission
 
@@ -555,6 +568,8 @@ A capability **MAY** become `Active` only when at least one strategic condition 
 4. it is strategically required for governance, security, identity, provenance, portability or interoperability.
 
 It **MUST** also materially improve product speed, cost, quality, risk, explainability, governance, portability or integration.
+
+A capability **MUST NOT** become `Active` until the applicable operational-readiness evidence has been reviewed and approved by the decision authority responsible for the affected operational and customer scope.
 
 ### 11.4 Capability Lifecycle and Exit
 
@@ -607,7 +622,23 @@ A stable or provisional Product Contract **MUST** declare, where applicable:
 
 Products and experiments **MUST NOT** access platform internals through undocumented conventions, direct database coupling or internal imports that bypass declared contracts.
 
-## 14. Dependency Rules
+## 14. Commercial Commitment Integrity
+
+Commercial language and external commitments **MUST** reflect the approved architectural and conformance state of Arvectum OS.
+
+Commercial proposals, customer contracts, statements of work, service descriptions, sales commitments, marketing claims and other externally relied-upon representations **MUST NOT**:
+
+- represent a Product Experiment, `Candidate` or `Incubating` capability as an `Active` supported platform capability;
+- claim a conformance scope or maturity broader than an approved Conformance Statement;
+- create a stable platform obligation, compatibility promise, portability promise, support commitment or customer-facing operational guarantee that has not been approved by the applicable decision authority;
+- imply legal rights to customer data, organizational intelligence or shared reuse beyond applicable law and contract;
+- describe an informative concept, exploratory inventory item or roadmap hypothesis as a delivered contractual capability.
+
+A commercial commitment that materially changes platform obligations, supported contracts, conformance scope, security or portability expectations, or operational commitments **MUST** be reviewed by the decision authority responsible for the affected scope before it becomes binding.
+
+Commercial commitments **MAY** describe bounded pilots and Product Experiments when their lifecycle, limitations, support expectations and non-production or provisional status are represented accurately.
+
+## 15. Dependency Rules
 
 Mandatory rules:
 
@@ -623,7 +654,7 @@ Mandatory rules:
 10. Security and tenant boundaries **MUST** apply across all dependency paths.
 11. Exceptions **MUST** record scope, proposer, decision authority, rationale, review or expiry date and exit plan.
 
-## 15. Decision Authority and Architectural Exceptions
+## 16. Decision Authority and Architectural Exceptions
 
 Every governed decision **MUST** identify:
 
@@ -643,6 +674,7 @@ A proposer **MUST NOT** solely approve their own decision when it creates one or
 - a shared-platform obligation;
 - a new `Active` capability;
 - a backward-incompatible public contract or Kernel change;
+- a material customer-facing commercial or operational commitment;
 - cross-organization data access or knowledge reuse;
 - acceptance of a material known gap;
 - a production architectural exception with external impact.
@@ -660,7 +692,7 @@ A separate governance policy **MUST** define the current authority matrix, deleg
 
 The absence of a named employee or role-holder does not suspend governance. The owner retains residual decision authority until authority is explicitly delegated.
 
-## 16. Structural Security, Privacy and Isolation
+## 17. Structural Security, Privacy and Isolation
 
 The following invariants apply to platform capabilities, products, experiments, workflows, extensions and adapters:
 
@@ -675,7 +707,7 @@ The following invariants apply to platform capabilities, products, experiments, 
 9. Product Experiments **MUST NOT** bypass applicable security, privacy, legal or contractual controls.
 10. Failure behavior **MUST NOT** silently broaden access, cross tenant boundaries or lose required evidence.
 
-## 17. Organizational Control, Portability and Lifecycle
+## 18. Organizational Control, Portability and Lifecycle
 
 Arvectum OS **MUST** support governed export, migration, retention, deletion, service termination and handover within the applicable conformance scope.
 
@@ -685,7 +717,7 @@ A manual, documented and tested process **MAY** satisfy an early-stage portabili
 
 Organizational continuity **MUST NOT** depend on an inaccessible proprietary representation or a specific employee, AI system, vendor or runtime.
 
-## 18. Organizational and Tenant Sovereignty
+## 19. Organizational and Tenant Sovereignty
 
 Unless an explicit contract and policy state otherwise:
 
@@ -697,7 +729,7 @@ Unless an explicit contract and policy state otherwise:
 - cross-organization learning **MUST** require explicit rights, classification and governance;
 - shared knowledge **MUST** identify architectural owner, source rights and permitted use.
 
-## 19. Extension Model
+## 20. Extension Model
 
 Arvectum OS **MAY** be extended through registered and versioned products, agents, workflows, schemas, validators, templates, policies, connectors, tools, adapters and UI modules.
 
@@ -705,7 +737,7 @@ Every extension **MUST** declare identity, version, architectural owner, require
 
 Extensions **MUST NOT** weaken Kernel, security, sovereignty or governance invariants.
 
-## 20. AI Components
+## 21. AI Components
 
 AI is an execution capability, not an authority source or canonical source by default.
 
@@ -715,7 +747,7 @@ They **MUST NOT** silently change approved standards, grant permissions, approve
 
 For consequential operations the platform **MUST** identify relevant model or component reference, instructions, retrieval sources, tool access, settings, validation and approval state within the declared conformance scope.
 
-## 21. Platform Gravity
+## 22. Platform Gravity
 
 The platform should be easier to reuse than to replace.
 
@@ -723,7 +755,7 @@ Weak Platform Gravity appears when products repeatedly bypass contracts, integra
 
 Weak Platform Gravity may justify redesign or de-platformization. It is not grounds for coercive adoption.
 
-## 22. Delivery and Technology Strategy
+## 23. Delivery and Technology Strategy
 
 Arvectum OS should be built through real organizational and product demand.
 
@@ -737,7 +769,7 @@ RFCs, ADRs, Product Experiments and MVP implementation may proceed in parallel w
 
 Before an irreversible cross-cutting commitment becomes binding, the relevant RFC or ADR must be approved.
 
-## 23. Scoped Conformance Model
+## 24. Scoped Conformance Model
 
 Conformance is evaluated against a declared scope, not every possible future capability of Arvectum OS.
 
@@ -788,13 +820,15 @@ The Conformance Statement **MUST** also identify:
 - architectural exceptions and their decision authorities;
 - known gaps and remediation owner;
 - assessment owner and independent approver where required;
+- operational-readiness evidence where lifecycle is `Active`;
+- applicable customer-facing commitments and their canonical references where external commitments exist;
 - review date and reassessment triggers.
 
 A requirement **MAY** be declared not applicable only when the subject does not perform, store, govern or expose the addressed behavior or data.
 
 An implementation **MUST NOT** claim full-platform conformance when only a limited scope has been assessed.
 
-## 24. Architectural Fitness Tests
+## 25. Architectural Fitness Tests
 
 The fitness tests are normative within the scope declared by a Conformance Statement.
 
@@ -813,24 +847,26 @@ A conforming subject **MUST** be able to answer positively, where applicable:
 11. Does platform interaction use a proportionate Product Contract?
 12. Do capability requirements match lifecycle?
 13. Are decision authority and proposer separation adequate for material decisions?
-14. Are security, tenant, classification, retention and deletion rules identifiable?
-15. Can prohibited cross-organization use be prevented and audited?
-16. Can the organization obtain a usable governed export within scope?
-17. Are provisional Kernel metamodel assumptions explicit and migratable?
-18. Are lifecycle, environment and conformance maturity recorded separately?
-19. Is platform complexity proportionate to maturity, risk and value?
-20. Is architectural responsibility distinguishable from legal ownership?
-21. Is the platform reducing total cost or risk rather than relocating complexity?
+14. Do commercial commitments match approved capability lifecycle, conformance scope and supported contracts?
+15. Is operational readiness approved before an `Active` capability is represented as supported?
+16. Are security, tenant, classification, retention and deletion rules identifiable?
+17. Can prohibited cross-organization use be prevented and audited?
+18. Can the organization obtain a usable governed export within scope?
+19. Are provisional Kernel metamodel assumptions explicit and migratable?
+20. Are lifecycle, environment and conformance maturity recorded separately?
+21. Is platform complexity proportionate to maturity, risk and value?
+22. Is architectural responsibility distinguishable from legal ownership?
+23. Is the platform reducing total cost or risk rather than relocating complexity?
 
 A negative answer indicates non-conformance, an approved exception, a declared gap or an incorrectly scoped claim. The Conformance Statement **MUST** identify which applies.
 
-## 25. Platform Evidence
+## 26. Platform Evidence
 
 Platform value should be evaluated through measurable evidence of delivery speed, validated reuse, operating cost, reliability, quality, risk reduction, governance, security, portability, integration effort and de-platformization effort.
 
 Detailed metrics remain informative operating artifacts.
 
-## 26. Risks and Mitigations
+## 27. Risks and Mitigations
 
 ### Premature Platformization
 
@@ -852,6 +888,14 @@ Mitigated by the provisional metamodel constraint and RFC-0002 migration require
 
 Mitigated by separate lifecycle, operational-environment and conformance-maturity axes.
 
+### Commercial Overcommitment
+
+Mitigated by binding external claims to approved capability lifecycle, supported contracts, Conformance Statements and decision authority.
+
+### Active Without Operational Readiness
+
+Mitigated by requiring operational-readiness approval before promotion to or representation as an `Active` supported capability.
+
 ### Contract Ceremony Slowing Experiments
 
 Mitigated by allowing completely product-local experiments without platform contracts.
@@ -868,7 +912,7 @@ Mitigated by structural invariants applying to every layer.
 
 Mitigated by product pull, bounded experiments, provisional contracts and parallel delivery.
 
-## 27. Consequences
+## 28. Consequences
 
 ### Positive
 
@@ -876,6 +920,8 @@ Mitigated by product pull, bounded experiments, provisional contracts and parall
 - governance authority is clear enough to prevent both founder bottlenecks and uncontrolled self-approval;
 - Kernel semantics are stable without prematurely freezing the persistence metamodel;
 - experiments can move quickly without accidental platform commitments;
+- commercial claims cannot silently outrun approved platform maturity;
+- `Active` means both architecturally admitted and operationally ready for its declared scope;
 - capability obligations grow with lifecycle maturity;
 - conformance claims distinguish lifecycle from deployment environment;
 - external systems may remain authoritative;
@@ -884,13 +930,15 @@ Mitigated by product pull, bounded experiments, provisional contracts and parall
 ### Costs
 
 - decisions and exceptions require explicit authority and evidence;
+- externally binding commitments require alignment with approved platform state;
+- promotion to `Active` requires operational-readiness evidence;
 - provisional Kernel representations require migration discipline;
 - Conformance Statements require separate lifecycle and environment tracking;
 - Canonical Records, authority modes and provenance create engineering overhead.
 
 These costs are accepted only where they purchase value, control, continuity, evidence or validated reuse.
 
-## 28. Follow-up Documents
+## 29. Follow-up Documents
 
 Recommended sequence:
 
@@ -904,9 +952,11 @@ Recommended sequence:
 
 A governance authority policy must be approved before the first `Active` capability or external production conformance claim.
 
+An operational-readiness standard or equivalent approved process must exist before the first `Active` capability.
+
 Implementation ADRs and reversible experiments may proceed in parallel but may not contradict the Constitution or accepted RFCs.
 
-## 29. Acceptance Criteria
+## 30. Acceptance Criteria
 
 This RFC may be accepted only when the owner explicitly approves the following normative decisions:
 
@@ -919,25 +969,27 @@ This RFC may be accepted only when the owner explicitly approves the following n
 7. distinction between Product Experiment and Platform Capability;
 8. product-local experiment and Provisional Product Contract rules;
 9. lifecycle-specific capability obligations and exit rules;
-10. Product Contract and domain boundary;
-11. decision-authority, proposer-separation and exception rules;
-12. structural security, privacy, least privilege and tenant-isolation invariants;
-13. organizational control, portability and deletion principles;
-14. cross-organization rights and reuse constraints;
-15. architectural responsibility versus legal ownership;
-16. scoped conformance with separate lifecycle, environment and maturity axes;
-17. normative fitness tests;
-18. formal Approval Record process.
+10. operational-readiness requirement before `Active`;
+11. Product Contract and domain boundary;
+12. commercial-commitment integrity rules;
+13. decision-authority, proposer-separation and exception rules;
+14. structural security, privacy, least privilege and tenant-isolation invariants;
+15. organizational control, portability and deletion principles;
+16. cross-organization rights and reuse constraints;
+17. architectural responsibility versus legal ownership;
+18. scoped conformance with separate lifecycle, environment and maturity axes;
+19. normative fitness tests;
+20. formal Approval Record process.
 
 The owner acknowledges, but does not make normative through acceptance, the informative guidance on Founder Thesis, Business Outcomes, Platform Gravity, Build vs Buy, delivery strategy, risks, consequences and follow-up sequence.
 
-## 30. Decision
+## 31. Decision
 
 RFC-0001 remains `Proposed`.
 
 Acceptance requires explicit approval by the owner of Arvectum OS and completion of the Approval Record below.
 
-## 31. Approval Record
+## 32. Approval Record
 
 Decision: `Pending`
 Decision authority: `ООО «Арвектум»`
