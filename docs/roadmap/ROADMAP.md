@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `1.2.0`
+Version: `1.2.1`
 Created: `2026-08-07`
 Updated: `2026-08-07`
 Owner: `ООО «Арвектум»`
@@ -49,7 +49,7 @@ Roadmap block identifiers and RFC identifiers are **independent namespaces** and
 | Identifier | Namespace | Canonical meaning |
 |---|---|---|
 | `0H` | Roadmap block | `Reference implementation readiness` — a non-RFC delivery/readiness milestone |
-| `RFC-0008` | RFC | `Document and Artifact Architecture` — the follow-up RFC title reserved by Accepted RFC-0001 §29 |
+| `RFC-0008` | RFC | `Document and Artifact Architecture` — Accepted architecture RFC |
 
 Rules:
 
@@ -98,6 +98,8 @@ The phase does **not** require the entire future platform to be fully specified 
 | 🟣 0G | RFC-0007 — Memory, knowledge and learning lifecycle | 🟩 | `██████████ 100%` |
 | 🟨 0H | Reference implementation readiness — non-RFC milestone | 🟩 | `██████████ 100%` |
 
+RFC-0008 was intentionally prepared and accepted after Phase 0 readiness as a parallel architecture refinement. It does not retroactively change the Phase 0 completion boundary.
+
 ## 5. Block 0A — Governance baseline
 
 **Status:** 🟩 Complete  
@@ -132,38 +134,9 @@ Create a shared vocabulary before further detailed architecture work so that con
 
 Published and synchronized:
 
-- 🟩 [`docs/architecture/GLOSSARY.md`](../architecture/GLOSSARY.md) — Arvectum OS Architecture Glossary `1.2.0`, aligned through Accepted RFC-0007.
+- 🟩 [`docs/architecture/GLOSSARY.md`](../architecture/GLOSSARY.md) — Arvectum OS Architecture Glossary `1.3.0`, aligned through Accepted RFC-0008.
 
-The glossary provides current navigation for architectural terms established by the Constitution and Accepted RFCs, including at minimum:
-
-- Organization / Tenant;
-- Organizational Intelligence;
-- Executable Organizational Model;
-- Identity;
-- Canonical Record;
-- Canonical Lineage;
-- Canonical Head;
-- Effective Version;
-- Governed Organizational Asset;
-- Transient Output;
-- Typed Relationship;
-- Event;
-- Execution Context;
-- Governed Execution;
-- Principal / Actor;
-- Authentication / Authorization / Organizational Authority;
-- Product;
-- Product Experiment;
-- Product Contract;
-- Platform Capability;
-- Platform Service;
-- Kernel;
-- Workflow;
-- Memory;
-- Knowledge;
-- Provenance;
-- Authority Mode;
-- Conformance.
+The glossary provides current navigation for architectural terms established by the Constitution and Accepted RFCs, including Organization/Tenant, Kernel primitives, Product Contract, Governed Execution, Event/Provenance, Memory/Knowledge and Document/Artifact architecture.
 
 ### Constraint
 
@@ -180,48 +153,22 @@ The glossary is a language and navigation artifact. It summarizes terms from hig
 
 ### Canonical scope
 
-RFC-0001 explicitly reserved the precise Kernel metamodel for RFC-0002.
-
-RFC-0002 is:
-
-`Canonical Record, Kernel Metamodel, Authority, Relationship and Organizational Asset Model`
-
-It defines the items required by RFC-0001, including:
-
-- identity and version semantics for every Kernel primitive;
-- Event as a Canonical Record specialization;
-- Execution Context as a Canonical Record specialization with governed lifecycle and preservation semantics;
-- independent identity and versioning for Typed Relationship assertion instances;
-- Canonical Lineage, Canonical Head and Effective Version semantics;
-- version-pinned consequential resolution;
-- authority declarations, external-authority contracts and cutover semantics;
-- Governed Organizational Asset designation and legal-rights neutrality;
-- compatibility and staged migration rules for provisional implementations;
-- scoped Kernel metamodel conformance.
+RFC-0002 is `Canonical Record, Kernel Metamodel, Authority, Relationship and Organizational Asset Model` and establishes the stable five-primitive Kernel metamodel, identity/version semantics, Canonical Lineage/Head/Effective Version, authority modes, relationship semantics, organizational-asset designation and migration constraints.
 
 ### Completed
 
 - 🟩 RFC-0002 `1.0.0` — `Accepted`;
 - 🟩 owner approval recorded independently in [`DECISION-2026-08-07-RFC-0002-ACCEPTANCE`](../governance/decisions/DECISION-2026-08-07-RFC-0002-ACCEPTANCE.md);
-- 🟩 structured draft review completed;
-- 🟩 domain-neutral scenario validation completed;
-- 🟩 architecture cross-section consistency validation completed;
-- 🟩 role-based top-management cross-review across CEO, COO, CFO/Risk, CISO/Privacy, Legal/Rights, Product/Commercial and CTO/Architecture completed;
-- 🟩 management review corrected accountable architectural ownership and mandatory external-authority contract fidelity to RFC-0001;
-- 🟩 Architecture Glossary synchronized to Accepted RFC-0002 and later foundational RFCs;
-- 🟩 RFC Index synchronized to `Accepted 1.0.0`.
+- 🟩 structured draft review and cross-section validation completed;
+- 🟩 RFC Index and glossary synchronized.
 
 ### Accepted boundary
 
-Within RFC-0002 scope, the precise Kernel metamodel is no longer provisional.
-
-Implementation details intentionally left to later RFCs, ADRs, standards, Product Contracts and product decisions remain unresolved where RFC-0002 says so. Acceptance does not select a physical database model, authentication/authorization mechanism, workflow engine, observability backend or product-specific schema.
-
-Acceptance also does not make a capability `Active`, establish production readiness or an SLA/support commitment, grant legal reuse rights, or require immediate wholesale migration of product-local legacy data.
+Within RFC-0002 scope, the Kernel metamodel is no longer provisional. Acceptance does not select a physical database model or other implementation technology.
 
 ### Exit criterion
 
-🟩 Achieved: RFC-0002 is `Accepted` with prior owner approval evidence and synchronized RFC Index and glossary.
+🟩 Achieved: RFC-0002 is `Accepted` with prior owner approval evidence and synchronized canonical navigation.
 
 ## 8. Block 0D — RFC-0003: Identity, security, privacy, tenant sovereignty and portability
 
@@ -232,29 +179,21 @@ Acceptance also does not make a capability `Active`, establish production readin
 
 `RFC-0003 — Identity, Security, Privacy, Tenant Sovereignty and Portability`
 
-### Dependency baseline
-
-RFC-0003 builds on the Accepted Kernel semantics in RFC-0001 and RFC-0002 without redefining Identity as mutable canonical state, turning Typed Relationships into implicit permissions, or creating competing authority across organizations.
-
 ### Completed
 
-- 🟩 first complete working draft `0.1.0` prepared;
-- 🟩 functional role-based cross-review completed across CEO/strategy, COO/operations, CTO/architecture, CISO/security, Privacy, Legal/rights, Product and Engineering perspectives;
-- 🟩 review corrections incorporated into RFC-0003 `0.2.0` reviewed proposal;
-- 🟩 detailed review evidence published in [`docs/reviews/RFC-0003-functional-cross-review.md`](../reviews/RFC-0003-functional-cross-review.md);
+- 🟩 working draft and functional cross-review completed;
+- 🟩 reviewed proposal published;
 - 🟩 owner approval recorded independently in [`DECISION-2026-08-07-RFC-0003-ACCEPTANCE`](../governance/decisions/DECISION-2026-08-07-RFC-0003-ACCEPTANCE.md);
 - 🟩 [`RFC-0003`](../rfc/RFC-0003-identity-security-privacy-tenant-sovereignty-portability.md) published as `Accepted 1.0.0`;
 - 🟩 RFC Index synchronized with acceptance evidence.
 
 ### Accepted boundary
 
-RFC-0003 `1.0.0` is binding architecture within its declared scope for identity administration, authentication, authorization, organizational authority separation, tenant isolation, privacy/data governance, cross-organization sharing constraints, privileged/break-glass access and portability.
-
-It does not select IAM, cryptographic, database or cloud technologies and does not pre-empt RFC-0004 Product Contracts, RFC-0005 Governed Execution, RFC-0006 Event/Provenance or RFC-0007 Memory/Knowledge semantics.
+RFC-0003 `1.0.0` is binding architecture for identity administration, authentication, authorization, Organizational Authority separation, tenant isolation, privacy/data governance, cross-organization sharing constraints, privileged/break-glass access and portability.
 
 ### Exit criterion
 
-🟩 Achieved: the shared platform has accepted domain-neutral rules for identity administration, isolation, authority boundaries, portability and applicable security/privacy invariants without prematurely fixing commodity implementation technology.
+🟩 Achieved: the platform has accepted domain-neutral security, privacy, identity, authority and sovereignty semantics.
 
 ## 9. Block 0E — RFC-0004: Product Contract, Product Experiment and Extension Model
 
@@ -267,23 +206,16 @@ It does not select IAM, cryptographic, database or cloud technologies and does n
 
 ### Completed
 
-- 🟩 complete working draft prepared and iteratively refined;
-- 🟩 functional role-based cross-review completed across CEO/strategy, COO/operations, CTO/architecture, CISO/security, Privacy, Legal/rights, Product and Engineering perspectives;
+- 🟩 complete working draft and functional cross-review completed;
 - 🟩 reviewed proposal `0.3.0` preserved with immutable proposal blob `5a413a240588677211ad56f3a23b30a65d1c4334`;
-- 🟩 owner approval recovered through current canonical repair decision [`DECISION-2026-08-07-RFC-0004-OWNER-APPROVAL-REPAIR`](../governance/decisions/DECISION-2026-08-07-RFC-0004-OWNER-APPROVAL-REPAIR.md) — `Approved`;
-- 🟩 additional compatibility re-check performed against Accepted RFC-0003 `1.0.0` as review iteration 4;
-- 🟩 no material conflict found; stale RFC-0003 lifecycle wording reconciled for acceptance publication;
-- 🟩 RFC-0004 published as `Accepted 1.0.0` in commit `3b3f72a01bd76d9cfb6a1ef78e7ec6a627173ee2`;
-- 🟩 RFC Index synchronized with acceptance evidence;
-- 🟩 read-after-write transition verification completed against RFC publication, Index, owner approval and roadmap state.
+- 🟩 owner approval recorded in [`DECISION-2026-08-07-RFC-0004-OWNER-APPROVAL-REPAIR`](../governance/decisions/DECISION-2026-08-07-RFC-0004-OWNER-APPROVAL-REPAIR.md);
+- 🟩 compatibility re-check against Accepted RFC-0003 completed;
+- 🟩 RFC-0004 published as `Accepted 1.0.0`;
+- 🟩 RFC Index synchronized.
 
 ### Accepted boundary
 
-RFC-0004 `1.0.0` is binding architecture for Product Contract identity/version/lifecycle semantics, minimal provisional contracts for platform-interacting Product Experiments, explicit capability/canonical-state/operation/event/artifact boundaries, extension registration, compatibility/migration/deprecation rules, and evidence-based promotion from product-local experiments into platform incubation.
-
-Product Contract lifecycle remains independent from Platform Capability lifecycle. Product-domain logic remains product-owned by default. Extension registration remains distinct from authorization and Organizational Authority. Undocumented direct database/internal-import coupling across the product/platform boundary is non-conforming.
-
-RFC-0004 is subordinate to Accepted RFC-0003 security, privacy, isolation, authority and portability requirements.
+RFC-0004 is binding architecture for Product Contract identity/version/lifecycle semantics, bounded Product Experiments, explicit capability/canonical-state/operation/Event/Artifact boundaries, extension registration and compatibility/migration/deprecation rules.
 
 ### Exit criterion
 
@@ -294,42 +226,20 @@ RFC-0004 is subordinate to Accepted RFC-0003 security, privacy, isolation, autho
 **Status:** 🟩 Complete — RFC-0005 and RFC-0006 `Accepted 1.0.0`  
 **Progress:** `██████████ 100%`
 
-### Planned RFCs
+### RFCs
 
 1. `RFC-0005 — Governed Execution and Workflow Model`;
 2. `RFC-0006 — Event, Provenance and Observability Model`.
 
-### RFC-0005 completed
+### Completed
 
-- 🟩 RFC-0005 `0.1.0` initial complete proposal prepared;
-- 🟩 first functional cross-review completed with 3 iterations;
-- 🟩 reviewed proposal `0.2.0` published;
-- 🟩 RFC-0004 `1.0.0` accepted and its state transition fully closed;
-- 🟩 review iteration 4 completed against Accepted RFC-0004 and Roadmap `1.1.2`;
-- 🟩 result `Pass with bounded reconciliation`;
-- 🟩 RFC-0005 reviewed proposal `0.3.0` published with normative dependency on Accepted RFC-0004;
-- 🟩 explicit owner approval recorded in [`DECISION-2026-08-07-RFC-0005-ACCEPTANCE`](../governance/decisions/DECISION-2026-08-07-RFC-0005-ACCEPTANCE.md);
-- 🟩 [`RFC-0005`](../rfc/RFC-0005-governed-execution-workflow-model-v1.0.0.md) published as `Accepted 1.0.0`;
+- 🟩 RFC-0005 review, owner approval and `Accepted 1.0.0` publication completed;
+- 🟩 RFC-0006 review, owner approval and `Accepted 1.0.0` publication completed;
 - 🟩 RFC Index synchronized with approval and publication evidence.
-
-### RFC-0006 completed
-
-- 🟩 RFC-0006 `0.1.0` working draft prepared;
-- 🟩 functional cross-review completed across architecture, operations, engineering/SRE, security, privacy, legal, product and AI-governance perspectives;
-- 🟩 review completed after 4 of maximum 7 iterations with result `Pass after bounded reconciliation`;
-- 🟩 review evidence published in [`docs/reviews/RFC-0006-functional-cross-review.md`](../reviews/RFC-0006-functional-cross-review.md);
-- 🟩 reviewed proposal `0.2.0` published with immutable blob SHA `5468001d2a0ff13fb16b7f88f7a3bc26f6bc6225`;
-- 🟩 explicit owner approval recorded in [`DECISION-2026-08-07-RFC-0006-ACCEPTANCE`](../governance/decisions/DECISION-2026-08-07-RFC-0006-ACCEPTANCE.md), approval commit `26a92a6663083cc2923bc25e5ccf920b61c17387`;
-- 🟩 [`RFC-0006`](../rfc/RFC-0006-event-provenance-observability-model-v1.0.0.md) published as `Accepted 1.0.0`, publication commit `49f88d04f6440dcbeedb860ccbf7b5f43a2b7b2a`;
-- 🟩 RFC Index synchronized with approval, proposal, review and publication evidence.
 
 ### Accepted Block 0F boundary
 
-RFC-0005 `1.0.0` is binding architecture for Governed Execution and Workflow semantics. RFC-0006 `1.0.0` is binding architecture for Event, Provenance and Observability semantics.
-
-Together they establish the domain-neutral model for consequential execution, observable operational history, Event admission/immutability, causation/correlation, required evidence, delivery/replay semantics, provenance, telemetry boundaries, reconstruction, security/privacy of observability data and semantic portability.
-
-They preserve RFC-0004 Product Contract boundaries and RFC-0003 authority/security/privacy invariants. Their acceptance does not make an implementation capability `Active`, establish operational readiness, or select a broker/workflow/observability technology.
+RFC-0005 establishes domain-neutral Governed Execution and Workflow semantics. RFC-0006 establishes Event, Provenance and Observability semantics. Together they support reconstructable consequential state change without selecting workflow, broker or observability technologies.
 
 ### Exit criterion
 
@@ -346,25 +256,19 @@ They preserve RFC-0004 Product Contract boundaries and RFC-0003 authority/securi
 
 ### Completed
 
-- 🟩 RFC-0007 `0.1.0` working draft published;
-- 🟩 functional cross-review completed across organizational-value, operations, architecture, security, privacy, legal/rights, product, engineering and AI-governance perspectives;
-- 🟩 4 of maximum 7 review iterations completed;
-- 🟩 review result: `Pass after bounded reconciliation`;
-- 🟩 review evidence published in [`docs/reviews/RFC-0007-functional-cross-review.md`](../reviews/RFC-0007-functional-cross-review.md);
-- 🟩 reviewed RFC-0007 `0.2.0` published as `Proposed` with immutable blob SHA `06dc706c3f717a159c0d9495a3c9ae3f29fbdf11`;
-- 🟩 explicit owner approval recorded independently in [`DECISION-2026-08-07-RFC-0007-ACCEPTANCE`](../governance/decisions/DECISION-2026-08-07-RFC-0007-ACCEPTANCE.md), approval commit `0de3fc2a85f5b567e28cae2eed95f67838b66b4e`;
-- 🟩 RFC-0007 published as `Accepted 1.0.0`, publication commit `45eb9f08f3d039b6642379e5dd7bc762b9289927`;
-- 🟩 RFC Index synchronized with approval, proposal, review and publication evidence.
+- 🟩 functional cross-review completed after 4 of maximum 7 iterations with result `Pass after bounded reconciliation`;
+- 🟩 reviewed RFC-0007 `0.2.0` published;
+- 🟩 explicit owner approval recorded independently in [`DECISION-2026-08-07-RFC-0007-ACCEPTANCE`](../governance/decisions/DECISION-2026-08-07-RFC-0007-ACCEPTANCE.md);
+- 🟩 RFC-0007 published as `Accepted 1.0.0`;
+- 🟩 RFC Index synchronized.
 
 ### Accepted boundary
 
-RFC-0007 `1.0.0` is binding architecture for Observation, Organizational Memory, Knowledge Candidate, Improvement Proposal, validated Knowledge, explicit governed promotion, freshness/contradiction/supersession/retraction, AI authority boundaries, RAG/index/embedding non-authority, product and cross-organization learning boundaries, and portability/migration semantics.
-
-It does not create a new Kernel primitive, make any implementation capability `Active`, establish operational readiness, select persistence/retrieval/model technology, authorize cross-organization reuse, or approve product-specific domain knowledge.
+RFC-0007 is binding architecture for Observation, Organizational Memory, Knowledge Candidate, Improvement Proposal, validated Knowledge, governed promotion, AI authority boundaries and non-authoritative retrieval/index projections.
 
 ### Exit criterion
 
-🟩 Achieved: the platform has an accepted model for distinguishing observations, memory, validated knowledge, proposals and approved reusable organizational assets without allowing silent AI-driven mutation of governed state.
+🟩 Achieved: the platform distinguishes observations, memory, validated knowledge and proposals without silent AI-driven mutation of governed state.
 
 ## 12. Block 0H — Reference implementation readiness — non-RFC milestone
 
@@ -373,11 +277,10 @@ It does not create a new Kernel primitive, make any implementation capability `A
 
 ### Objective
 
-Make the smallest useful reference implementation startable now that the planned foundational semantic RFC sequence through RFC-0007 is Accepted, without introducing speculative technology or cross-cutting architecture in code.
+Make the smallest useful reference implementation startable after the foundational semantic RFC sequence through RFC-0007, without introducing speculative technology or cross-cutting architecture in code.
 
 ### Completed
 
-- 🟩 Constitution `1.2.0` and RFC-0001 through RFC-0007 `1.0.0` re-verified from the canonical repository;
 - 🟩 [`Reference Implementation Readiness Baseline`](../implementation/REFERENCE-IMPLEMENTATION-READINESS.md) `1.0.0` published;
 - 🟩 logical modular-monolith implementation structure defined without fixing permanent service topology;
 - 🟩 first domain-neutral executable slice and failure cases defined;
@@ -385,34 +288,23 @@ Make the smallest useful reference implementation startable now that the planned
 - 🟩 security/privacy/Organization-scope bootstrap constraints defined;
 - 🟩 Product Contract entry condition for real product interaction defined;
 - 🟩 ADR trigger criteria defined;
-- 🟩 minimum ADR set before the first in-memory/in-process slice assessed as `zero` because no constraining technology/public-contract choice is yet required;
+- 🟩 minimum ADR set before the first in-memory/in-process slice assessed as `zero`;
 - 🟩 functional cross-review completed after 3 of maximum 7 iterations with result `Pass after bounded reconciliation`;
-- 🟩 review evidence published in [`docs/reviews/REFERENCE-IMPLEMENTATION-READINESS-functional-cross-review.md`](../reviews/REFERENCE-IMPLEMENTATION-READINESS-functional-cross-review.md);
-- 🟩 Architecture Glossary synchronized to `1.2.0` through Accepted RFC-0007;
-- 🟩 roadmap/RFC identifier namespaces made explicit: Block `0H` is the readiness milestone; `RFC-0008` is reserved exclusively for `Document and Artifact Architecture`;
 - 🟩 explicit owner confirmation of completion recorded in [`DECISION-2026-08-07-BLOCK-0H-REFERENCE-IMPLEMENTATION-READINESS-CONFIRMATION`](../governance/decisions/DECISION-2026-08-07-BLOCK-0H-REFERENCE-IMPLEMENTATION-READINESS-CONFIRMATION.md) — `Approved`.
 
 ### Readiness boundary
 
 The first reference implementation may begin with domain-neutral semantic modules, in-memory persistence ports, in-process application calls and executable fitness fixtures.
 
-No programming language, database, API protocol, event broker, workflow engine, IAM provider, policy engine, vector store, LLM/model provider, cloud topology or permanent package structure is canonically selected by Block 0H.
+No programming language, database, API protocol, event broker, workflow engine, IAM provider, policy engine, vector store, LLM/model provider, cloud topology or permanent package structure is selected by Block 0H.
 
-An ADR becomes necessary only when an implementation choice becomes sufficiently constraining, such as a durable cross-module dependency, material migration commitment, stable public boundary, security/isolation mechanism or vendor/technology dependency with meaningful portability consequences.
-
-Reference implementation readiness is not operational readiness. This block does not make any capability `Active`, authorize a production conformance claim, create an SLA/support promise or make the Proposed Decision Authority Policy effective.
+Reference implementation readiness is not operational readiness and does not make any capability `Active`.
 
 ### Exit criterion for Phase 0
 
 🟩 **Achieved. Phase 0 is complete and explicitly confirmed by the Owner.**
 
-1. core architectural language is discoverable and aligned through Accepted RFC-0007 in Architecture Glossary `1.2.0`;
-2. the foundational RFCs required for the first reference implementation are Accepted;
-3. unresolved technology choices are explicitly deferred, provisional and migration-safe;
-4. the first executable slice is defined tightly enough to start without inventing cross-cutting architecture in code;
-5. product experiments have an explicit Product Contract entry boundary when platform interaction begins.
-
-## 13. Current post-Phase-0 work map
+## 13. Post-Phase-0 architecture and delivery state
 
 The reference implementation delivery track remains ready:
 
@@ -428,53 +320,54 @@ The architecture RFC track is now:
 ```text
 RFC-0007 — Memory, Knowledge and Governed Learning Lifecycle  ✅ ACCEPTED 1.0.0
         ↓
-RFC-0008 — Document and Artifact Architecture                🟨 PROPOSED 0.2.0 / OWNER REVIEW
+RFC-0008 — Document and Artifact Architecture                ✅ ACCEPTED 1.0.0
 ```
 
-RFC-0008 preparation is allowed in parallel with the bounded executable slice. The Proposed RFC has no normative force and does not become a prerequisite for the first slice unless that implementation begins relying on unresolved shared Document/Artifact semantics.
+RFC-0008 acceptance does not retroactively make it a prerequisite for a bounded slice that does not rely on Document/Artifact semantics. Where future implementation does rely on shared Document/Artifact semantics, Accepted RFC-0008 is now binding.
 
-### RFC-0008 progress
+### RFC-0008 completed
 
-- 🟩 Constitution `1.2.0`, RFC Index and Accepted RFC-0001 through RFC-0007 re-verified;
+- 🟩 Constitution `1.2.0`, RFC Index and Accepted RFC-0001 through RFC-0007 re-verified before substantive work;
 - 🟩 RFC-0008 `0.1.0` working draft published;
 - 🟩 functional cross-review completed after 4 of maximum 7 iterations;
 - 🟩 review result: `Pass after bounded reconciliation`;
 - 🟩 review evidence published in [`docs/reviews/RFC-0008-functional-cross-review.md`](../reviews/RFC-0008-functional-cross-review.md);
-- 🟩 all bounded reconciliation items incorporated;
-- 🟩 [`RFC-0008 — Document and Artifact Architecture`](../rfc/RFC-0008-document-artifact-architecture.md) published as `Proposed 0.2.0`;
-- 🟩 RFC Index synchronized to `Proposed 0.2.0` with explicit non-acceptance status;
-- 🟨 owner approval/decision pending;
-- ⬜ acceptance publication, RFC Index acceptance evidence, glossary synchronization and post-acceptance roadmap closure pending owner approval.
+- 🟩 all bounded reconciliation items incorporated into reviewed proposal `0.2.0`;
+- 🟩 reviewed proposal preserved by immutable blob SHA `0de6a1dead4e06605d72d0781505bb44598d752a`;
+- 🟩 explicit owner approval recorded independently in [`DECISION-2026-08-07-RFC-0008-ACCEPTANCE`](../governance/decisions/DECISION-2026-08-07-RFC-0008-ACCEPTANCE.md), approval commit `9b104307dc1ee2e04ac65146b6beb73db0d13019`;
+- 🟩 [`RFC-0008 — Document and Artifact Architecture`](../rfc/RFC-0008-document-artifact-architecture-v1.0.0.md) published as `Accepted 1.0.0`, publication commit `230fb452f5aa8688950056cf1c4965840803c835`;
+- 🟩 RFC Index synchronized with acceptance evidence;
+- 🟩 Architecture Glossary synchronized to `1.3.0` through Accepted RFC-0008;
+- 🟩 repository README synchronized to Accepted RFC-0008;
+- 🟩 roadmap synchronized to this accepted state.
 
-### Proposed boundary
+### Accepted RFC-0008 boundary
 
-RFC-0008 `0.2.0` currently proposes, but does not yet normatively establish, the domain-neutral architecture for logical Document identity, immutable Document Versions, Artifact representations, mutable Working Copies, governed content resolution/manifests, renditions, external authority, generation/admission, transformations/redaction, signatures/approval evidence, exact-version reliance, security/privacy propagation, packages, portability/export and migration.
+RFC-0008 `1.0.0` is binding domain-neutral architecture for logical Document identity, immutable Document Versions, Artifact representations, Working Copies, governed content resolution/manifests, renditions, external document authority, generation/admission, transformation/redaction, signature/approval evidence, exact-version reliance, packages, security/privacy propagation, portability/export and migration.
 
-It introduces no new Kernel primitive and selects no DMS, object store, format, OCR engine, signing provider, database, search engine or service topology.
+It introduces no new Kernel primitive and selects no DMS, object store, database, file format, OCR engine, signing provider, search engine, workflow engine or service topology.
+
+Acceptance does not make any document/artifact Platform Capability `Active`, establish production/operational readiness, create SLA/support/archival/legal-signature commitments, or approve product-specific document taxonomies, templates or workflows.
 
 ## 14. Next canonical action
 
-The current architecture-governance action is:
+The current delivery action remains:
 
-> **Owner review and explicit decision on RFC-0008 `0.2.0 Proposed`.**
+> **Implement the first bounded reference implementation executable slice defined by `docs/implementation/REFERENCE-IMPLEMENTATION-READINESS.md`: prove stable identities, immutable canonical versions, explicit Organization/authority gates, Governed Execution mutation, canonical Event evidence, provenance and Observation non-promotion with executable tests before adding infrastructure.**
 
-The reference implementation delivery action remains independently ready in parallel:
+Accepted RFC-0008 must be applied if that slice or a later slice begins to implement shared Document/Artifact semantics.
 
-> **Implement the first bounded reference implementation executable slice defined by `docs/implementation/REFERENCE-IMPLEMENTATION-READINESS.md` unless the slice begins to rely on unresolved shared Document/Artifact semantics.**
+For implementation:
 
-If RFC-0008 is approved, the same working cycle must create the canonical approval decision, publish `Accepted 1.0.0`, synchronize the RFC Index and roadmap, synchronize the Architecture Glossary to the Accepted semantics, and perform read-after-write consistency verification before characterizing RFC-0008 as binding.
+- prefer the simplest reversible solution;
+- keep product-domain semantics out of shared modules;
+- use an ADR before a concrete choice crosses the readiness document's ADR gate;
+- do not treat working code or RFC acceptance as an `Active` Platform Capability or production-readiness evidence by itself.
 
-Until that transition is complete:
+Naming rule:
 
-- RFC-0008 remains non-normative `Proposed`;
-- no document/artifact implementation capability becomes `Active`;
-- no production, SLA, legal-signature, archival or support commitment is implied;
-- product-domain document taxonomies, templates and workflows remain product-owned.
-
-Naming rule for future work communication:
-
-- call the completed readiness work `Block 0H` or `Reference implementation readiness`;
-- call this architecture work `RFC-0008` or `RFC-0008 — Document and Artifact Architecture`;
+- completed readiness work = `Block 0H` / `Reference implementation readiness`;
+- accepted document/artifact architecture = `RFC-0008` / `RFC-0008 — Document and Artifact Architecture`;
 - never use `RFC-0008` as a label for Block 0H.
 
 ## 15. Roadmap maintenance rule
