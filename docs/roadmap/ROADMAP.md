@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `1.0.1`
+Version: `1.0.2`
 Created: `2026-08-07`
 Updated: `2026-08-07`
 Owner: `ООО «Арвектум»`
@@ -114,7 +114,7 @@ Create a shared vocabulary before further detailed architecture work so that con
 
 Published:
 
-- 🟩 [`docs/architecture/GLOSSARY.md`](../architecture/GLOSSARY.md) — Arvectum OS Architecture Glossary `1.0.0`.
+- 🟩 [`docs/architecture/GLOSSARY.md`](../architecture/GLOSSARY.md) — Arvectum OS Architecture Glossary `1.0.1`.
 
 The glossary defines the current canonical meaning of architectural terms already established by the Constitution and Accepted RFCs, including at minimum:
 
