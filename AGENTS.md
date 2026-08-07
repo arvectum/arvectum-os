@@ -72,6 +72,24 @@ Code must not silently override architecture documents. The roadmap coordinates 
 - Ideas discussed only in chat are not accepted architecture until recorded through the repository governance process.
 - Do not maintain a competing roadmap in chat, local notes or another repository; update `docs/roadmap/ROADMAP.md` instead.
 
+## Iterative completion and functional cross-review
+
+For every substantive new task, the default execution model is an iterative completion loop:
+
+`execute → functional role cross-review → revise → functional role cross-review → revise → ...`
+
+The agent must continue this loop until all functional roles relevant to the task agree that the result is sufficient for the current lifecycle stage and that additional changes would be disproportionate, speculative or otherwise unnecessary at that stage.
+
+Functional role selection must be based on the actual scope and consequences of the task. It must include the perspectives materially needed to evaluate the work, such as architecture, engineering, product, operations, security, privacy, governance, commercial, legal or domain expertise where applicable. The loop does not require review by roles that have no material relevance to the task.
+
+Each cross-review must evaluate the result against the concerns of the selected roles and against the current project lifecycle, accepted architecture, applicable governance, delivery value, reversibility and risk. Review findings that materially improve correctness, coherence, security, usability, operability, maintainability or stage-appropriate completeness must be incorporated before the next review cycle.
+
+The stopping condition is reached when the relevant roles have no remaining material objections and further refinement would exceed what is justified by the current lifecycle stage, evidence, risk or task scope. The goal is to deliver, within one user request whenever practical, the strongest stage-appropriate final result rather than an avoidably preliminary draft.
+
+Functional cross-review is an execution-quality mechanism. It does not itself constitute formal approval, acceptance, delegation of authority or promotion of lifecycle status. Any change that requires owner approval, decision-authority approval, RFC acceptance, ADR acceptance, policy approval, operational-readiness approval or another canonical governance action remains subject to that action.
+
+Cross-review must not be used to create speculative requirements, unnecessary enterprise ceremony or irreversible commitments beyond the current task and lifecycle stage.
+
 ## Initial implementation boundary
 
 Until the relevant architecture RFCs are accepted:
