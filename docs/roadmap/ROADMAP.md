@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `1.1.0`
+Version: `1.1.1`
 Created: `2026-08-07`
 Updated: `2026-08-07`
 Owner: `ООО «Арвектум»`
@@ -74,8 +74,8 @@ The phase does **not** require the entire future platform to be fully specified 
 | 🟪 0A | Governance baseline | 🟩 | `██████████ 100%` |
 | 🟦 0B | Architecture language baseline | 🟩 | `██████████ 100%` |
 | 🟪 0C | RFC-0002 — Kernel metamodel | 🟩 | `██████████ 100%` |
-| 🟢 0D | RFC-0003 — Identity, security, privacy, sovereignty | 🟨 | `█████████░ 90%` |
-| 🟠 0E | RFC-0004 — Product Contract and extension model | 🟨 | `████████░░ 80%` |
+| 🟢 0D | RFC-0003 — Identity, security, privacy, sovereignty | 🟩 | `██████████ 100%` |
+| 🟠 0E | RFC-0004 — Product Contract and extension model | 🟦 | `████████░░ 80%` |
 | 🔵 0F | RFC-0005/0006 — Governed execution, events and provenance | ⬜ | `░░░░░░░░░░ 0%` |
 | 🟣 0G | RFC-0007 — Memory, knowledge and learning lifecycle | ⬜ | `░░░░░░░░░░ 0%` |
 | 🟨 0H | Reference implementation readiness | ⬜ | `░░░░░░░░░░ 0%` |
@@ -205,8 +205,8 @@ Acceptance also does not make a capability `Active`, establish production readin
 
 ## 8. Block 0D — RFC-0003: Identity, security, privacy, tenant sovereignty and portability
 
-**Status:** 🟨 Acceptance publication in progress — owner approval recorded  
-**Progress:** `█████████░ 90%`
+**Status:** 🟩 Complete — `Accepted`  
+**Progress:** `██████████ 100%`
 
 ### RFC
 
@@ -220,33 +220,28 @@ RFC-0003 builds on the Accepted Kernel semantics in RFC-0001 and RFC-0002 withou
 
 - 🟩 first complete working draft `0.1.0` prepared;
 - 🟩 functional role-based cross-review completed across CEO/strategy, COO/operations, CTO/architecture, CISO/security, Privacy, Legal/rights, Product and Engineering perspectives;
-- 🟩 review corrections incorporated into [`RFC-0003 v0.2.0`](../rfc/RFC-0003-identity-security-privacy-tenant-sovereignty-portability.md) — reviewed proposal;
+- 🟩 review corrections incorporated into RFC-0003 `0.2.0` reviewed proposal;
 - 🟩 detailed review evidence published in [`docs/reviews/RFC-0003-functional-cross-review.md`](../reviews/RFC-0003-functional-cross-review.md);
-- 🟩 owner approval canonicalized independently in [`DECISION-2026-08-07-RFC-0003-ACCEPTANCE`](../governance/decisions/DECISION-2026-08-07-RFC-0003-ACCEPTANCE.md).
+- 🟩 owner approval recorded independently in [`DECISION-2026-08-07-RFC-0003-ACCEPTANCE`](../governance/decisions/DECISION-2026-08-07-RFC-0003-ACCEPTANCE.md);
+- 🟩 [`RFC-0003`](../rfc/RFC-0003-identity-security-privacy-tenant-sovereignty-portability.md) published as `Accepted 1.0.0`;
+- 🟩 RFC Index synchronized with acceptance evidence.
 
-### Current repository state
+### Accepted boundary
 
-The approved RFC-0003 proposal is substantively complete and owner-approved, but the RFC file and RFC Index have not yet been republished as `Accepted 1.0.0`. Until that acceptance publication is completed, the current indexed normative status remains `Proposed 0.2.0`.
+RFC-0003 `1.0.0` is binding architecture within its declared scope for identity administration, authentication, authorization, organizational authority separation, tenant isolation, privacy/data governance, cross-organization sharing constraints, privileged/break-glass access and portability.
 
-This distinction preserves Acceptance Integrity: owner approval and acceptance publication are separate repository events.
-
-### Remaining action
-
-- ⬜ publish RFC-0003 as `Accepted 1.0.0` without changing the owner-approved normative substance;
-- ⬜ update the RFC Index with acceptance evidence;
-- ⬜ synchronize Architecture Glossary to the new Accepted source baseline;
-- ⬜ mark this block complete in the roadmap.
+It does not select IAM, cryptographic, database or cloud technologies and does not pre-empt RFC-0004 Product Contracts, RFC-0005 Governed Execution, RFC-0006 Event/Provenance or RFC-0007 Memory/Knowledge semantics.
 
 ### Exit criterion
 
-The shared platform has accepted domain-neutral rules for identity administration, isolation, authority boundaries, portability and applicable security/privacy invariants without prematurely fixing commodity implementation technology.
+🟩 Achieved: the shared platform has accepted domain-neutral rules for identity administration, isolation, authority boundaries, portability and applicable security/privacy invariants without prematurely fixing commodity implementation technology.
 
 ## 9. Block 0E — RFC-0004: Product Contract, Product Experiment and Extension Model
 
-**Status:** 🟨 In progress — reviewed proposal available  
+**Status:** 🟦 Next — reviewed proposal requires compatibility re-check  
 **Progress:** `████████░░ 80%`
 
-### Planned RFC
+### RFC
 
 `RFC-0004 — Product Contract, Product Experiment and Extension Model`
 
@@ -265,13 +260,13 @@ RFC-0004 `0.3.0` defines Product Contract identity/version/lifecycle semantics, 
 
 The proposal keeps Product Contract lifecycle independent from Platform Capability lifecycle, keeps product-domain logic product-owned by default, treats extension registration as distinct from authorization/organizational authority, and prohibits undocumented direct database/internal-import coupling.
 
-RFC-0004 normatively depends only on Accepted RFC-0001 and RFC-0002. The owner-approved RFC-0003 proposal has been considered for forward compatibility, but RFC-0003 does not become normative until its acceptance publication is completed.
+RFC-0004 was reviewed before RFC-0003 became binding. Accepted RFC-0003 `1.0.0` is now a higher-authority source that must be checked for compatibility before RFC-0004 owner decision.
 
 ### Remaining action
 
-- ⬜ complete RFC-0003 acceptance publication first under the default sequence;
-- ⬜ re-check RFC-0004 against Accepted RFC-0003 after publication;
-- ⬜ owner decision on RFC-0004 `0.3.0`;
+- 🟦 re-check RFC-0004 `0.3.0` against Accepted RFC-0003 `1.0.0`;
+- ⬜ incorporate any required compatibility corrections without changing higher-authority contracts;
+- ⬜ owner decision on the resulting RFC-0004 proposal;
 - ⬜ if approved, create independent approval record and publish `Accepted 1.0.0` with Acceptance Integrity evidence;
 - ⬜ synchronize glossary and roadmap after acceptance.
 
@@ -354,7 +349,7 @@ The current default sequence is:
 ```text
 Constitution 1.2.0                      ✅
         ↓
-RFC-0001 Architecture                   ✅
+RFC-0001 Architecture                   ✅ ACCEPTED 1.0.0
         ↓
 Canonical Roadmap                       ✅
         ↓
@@ -362,9 +357,9 @@ Architecture Glossary                   ✅
         ↓
 RFC-0002 Kernel Metamodel               ✅ ACCEPTED 1.0.0
         ↓
-RFC-0003 Identity / Security / Privacy  🟨 OWNER APPROVAL RECORDED — ACCEPTANCE PUBLICATION NEXT
+RFC-0003 Identity / Security / Privacy  ✅ ACCEPTED 1.0.0
         ↓
-RFC-0004 Product Contract / Extensions  🟨 PROPOSED 0.3.0 — REVIEWED IN PARALLEL
+RFC-0004 Product Contract / Extensions  🟦 NEXT — RE-CHECK PROPOSED 0.3.0
         ↓
 RFC-0005 Governed Execution / Workflow
         ↓
@@ -385,9 +380,9 @@ Parallel work is permitted when the work is bounded and reversible and does not 
 
 The current architecture work item is:
 
-> **Publish owner-approved RFC-0003 `0.2.0` as `Accepted 1.0.0`, update the RFC Index and synchronize the Architecture Glossary.**
+> **Re-check reviewed RFC-0004 `0.3.0` against Accepted RFC-0003 `1.0.0`, then prepare it for owner decision.**
 
-RFC-0004 `0.3.0` has been prepared and cross-reviewed in parallel under the roadmap's parallel-work rule. After RFC-0003 acceptance publication, RFC-0004 must be re-checked against the Accepted RFC-0003 state before its own owner decision.
+RFC-0004 was prepared and cross-reviewed in parallel while RFC-0003 was non-normative. RFC-0003 is now binding, so compatibility review is required before RFC-0004 can be accepted.
 
 ## 15. Roadmap maintenance rule
 
