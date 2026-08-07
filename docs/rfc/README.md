@@ -19,6 +19,7 @@ The Constitution has higher authority than every RFC. Accepted RFCs have higher 
 |---|---|---|---|---|
 | [RFC-0001](RFC-0001-arvectum-os-architecture.md) | Arvectum OS Architecture | platform | Accepted | 1.0.0 |
 | [RFC-0002](RFC-0002-canonical-record-kernel-metamodel.md) | Canonical Record, Kernel Metamodel, Authority, Relationship and Organizational Asset Model | platform | Accepted | 1.0.0 |
+| [RFC-0003](RFC-0003-identity-security-privacy-tenant-sovereignty-portability.md) | Identity, Security, Privacy, Tenant Sovereignty and Portability | platform | Proposed | 0.2.0 |
 
 ## Acceptance Integrity
 
@@ -61,6 +62,15 @@ Accepted RFC publication merge commit on `main`:
 - `8d247402db1b869fcca7bc1dc634cbb2f585c89a`.
 
 The merge commit preserves the independent approval commit and subsequent acceptance publication commits in repository history.
+
+## RFC-0003 Proposal Evidence
+
+Current reviewed proposal:
+
+- RFC-0003 `0.2.0` — `Proposed`;
+- functional role cross-review: [`docs/reviews/RFC-0003-functional-cross-review.md`](../reviews/RFC-0003-functional-cross-review.md) — `Complete`.
+
+RFC-0003 has no normative force and no acceptance evidence yet. Cross-review evidence is not owner approval.
 
 ## Related Governance
 
