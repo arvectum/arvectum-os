@@ -11,10 +11,11 @@ Every human contributor, AI agent and connected product must begin with:
 3. [RFC Index](docs/rfc/README.md) and relevant Accepted RFCs/ADRs
 4. [Architecture Glossary](docs/architecture/GLOSSARY.md) for canonical terminology and source navigation
 5. [Canonical Roadmap](docs/roadmap/ROADMAP.md) when determining sequence, next work, milestones or implementation readiness
+6. [Reference Implementation Readiness Baseline](docs/implementation/REFERENCE-IMPLEMENTATION-READINESS.md) before beginning the first shared reference implementation slice
 
 The Constitution has the highest architectural authority in this repository. The current ratified version is `1.2.0`.
 
-The glossary is informative and does not override the Constitution or Accepted RFCs. The roadmap is the canonical planning source, but it does not override the Constitution, Accepted RFCs or Accepted ADRs.
+The glossary and implementation-readiness baseline are subordinate navigation/delivery artifacts and do not override the Constitution or Accepted RFCs. The roadmap is the canonical planning source, but it does not override the Constitution, Accepted RFCs or Accepted ADRs.
 
 For ChatGPT projects and long-lived chats, use:
 
@@ -22,21 +23,25 @@ For ChatGPT projects and long-lived chats, use:
 
 ## Repository role
 
-This repository contains the canonical architecture, governance and future reference implementation of Arvectum OS.
+This repository contains the canonical architecture, governance and reference implementation of Arvectum OS.
 
-Domain products such as procurement, marketing, finance or legal agents live outside this repository and connect to Arvectum OS through explicit product contracts.
+Domain products such as procurement, marketing, finance or legal agents live outside this repository and connect to Arvectum OS through explicit Product Contracts when platform interaction exists.
 
 ## Current phase
 
-`Phase 0 — Foundation / Architecture Bootstrap`
+`Phase 0 — Foundation / Architecture Bootstrap` is complete.
+
+The foundational semantic sequence RFC-0001 through RFC-0007 is `Accepted 1.0.0`. Architecture Glossary `1.2.0` is synchronized to those Accepted sources, and Roadmap Block 0H `Reference implementation readiness` is complete.
+
+The next canonical delivery step is the first bounded executable reference implementation slice defined in [Reference Implementation Readiness Baseline](docs/implementation/REFERENCE-IMPLEMENTATION-READINESS.md).
+
+That first slice is intentionally reversible and does not yet canonically select a programming language, database, public API protocol, event broker, workflow engine, IAM provider, retrieval engine, model provider or permanent service topology. Concrete choices should use an ADR only when they become sufficiently constraining under the readiness baseline.
+
+Working reference code does not by itself make a Platform Capability `Active`, establish operational readiness, create an SLA/support commitment or authorize a full-platform production conformance claim.
+
+RFC-0008 remains reserved by RFC-0001 for `Document and Artifact Architecture`; Reference implementation readiness is Roadmap Block 0H rather than RFC-0008.
 
 The current sequence is maintained only in the [Canonical Roadmap](docs/roadmap/ROADMAP.md).
-
-The Architecture Glossary (`docs/architecture/GLOSSARY.md`) is published as the shared language baseline. RFC-0002 `Canonical Record, Kernel Metamodel, Authority, Relationship and Organizational Asset Model` is `Accepted 1.0.0`.
-
-The current major architecture proposal is RFC-0003 `Identity, Security, Privacy, Tenant Sovereignty and Portability` `0.2.0` — `Proposed`, with functional role cross-review complete. It remains non-normative until explicit owner approval and valid acceptance publication.
-
-Production implementation is not allowed to prejudge unresolved cross-cutting architecture. Bounded, reversible and migration-friendly reference implementation work may proceed in parallel when permitted by the Accepted architecture.
 
 ## Authority order
 
