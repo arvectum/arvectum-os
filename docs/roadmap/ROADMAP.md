@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `1.2.2`
+Version: `1.2.3`
 Created: `2026-08-07`
 Updated: `2026-08-07`
 Owner: `ООО «Арвектум»`
@@ -311,14 +311,16 @@ Reference implementation readiness is not operational readiness and does not mak
 
 ## 13. Post-Phase-0 architecture and delivery state
 
-The reference implementation delivery track remains ready:
+The reference implementation delivery track is now in progress:
 
 ```text
 Roadmap Block 0H — Reference implementation readiness
 (non-RFC milestone)                     ✅ COMPLETE + OWNER CONFIRMED
         ↓
-First bounded executable slice          🟦 READY / MAY PROCEED
+First bounded executable slice          🟨 IN PROGRESS
 ```
+
+Scenario step 1 is implemented in [`reference/python`](../../reference/python/README.md): explicit Organization scope and attributable Actor/Principal semantics with executable fitness tests. The remaining scenario steps are not yet complete.
 
 The architecture RFC track is now:
 
@@ -359,6 +361,13 @@ Acceptance does not make any document/artifact Platform Capability `Active`, est
 The current delivery action remains:
 
 > **Implement the first bounded reference implementation executable slice defined by `docs/implementation/REFERENCE-IMPLEMENTATION-READINESS.md`: prove stable identities, immutable canonical versions, explicit Organization/authority gates, Governed Execution mutation, canonical Event evidence, provenance and Observation non-promotion with executable tests before adding infrastructure.**
+
+### Current delivery progress
+
+- 🟩 Scenario step 1 — establish one explicit Organization scope and attributable Actor/Principal — implemented and validated with executable tests;
+- 🟦 Scenario step 2 — create one `Native` canonical subject with stable Subject Identity and first immutable Version Identity — next.
+
+Completion of scenario step 1 does not by itself satisfy the full bounded-slice fitness matrix or establish an `Active` capability, production readiness or full-platform conformance.
 
 Accepted RFC-0008 must be applied if that slice or a later slice begins to implement shared Document/Artifact semantics.
 
