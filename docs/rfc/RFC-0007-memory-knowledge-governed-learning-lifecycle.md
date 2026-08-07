@@ -1,16 +1,17 @@
 # RFC-0007: Memory, Knowledge and Governed Learning Lifecycle
 
-Status: `Draft`
-Version: `0.1.0`
+Status: `Proposed`
+Version: `0.2.0`
 Created: `2026-08-07`
 Updated: `2026-08-07`
 Authors: `ООО «Арвектум»`
 Category: `platform`
 Constitution: `1.2.0`
 Depends on: `RFC-0001 v1.0.0`; `RFC-0002 v1.0.0`; `RFC-0003 v1.0.0`; `RFC-0004 v1.0.0`; `RFC-0005 v1.0.0`; `RFC-0006 v1.0.0`
-Supersedes: `None`
+Supersedes: `RFC-0007 v0.1.0` working draft
 Superseded by: `None`
 Decision owner: `ООО «Арвектум»`
+Cross-review: `docs/reviews/RFC-0007-functional-cross-review.md`
 
 ## 1. Executive Summary
 
@@ -492,6 +493,7 @@ AI MAY:
 AI MUST NOT independently:
 
 - declare an unvalidated candidate to be Knowledge;
+- make its own output sufficient evidence for final promotion merely because it generated, scored or validated that output;
 - grant itself or another actor Organizational Authority;
 - bypass authorization, rights, privacy, tenant-isolation or approval gates;
 - silently broaden Knowledge scope or cross-organization reuse;
@@ -500,7 +502,7 @@ AI MUST NOT independently:
 - silently change approved Standards, Policies, Workflows, Product Contracts or production behavior;
 - treat its own prior output or model memory as canonical source merely because it generated or recalled it.
 
-A fully automated promotion path MAY exist only when an approved governance mechanism has explicitly delegated that bounded promotion authority for the declared low-consequence scope and all RFC-0003/RFC-0005 controls remain enforceable. Automation executes delegated governance; it does not create governance authority.
+Automated promotion **execution** MAY implement an already approved bounded governance rule when the final promotion predicate is independently defined by that approved governance mechanism and all RFC-0003/RFC-0005 controls remain enforceable. AI-generated judgement by itself MUST NOT constitute Organizational Authority or the final approval predicate for promotion into validated Knowledge. Automation executes delegated governance; it does not create governance authority.
 
 ## 14. Memory Retrieval and Use
 
@@ -563,6 +565,8 @@ Where a product reads, writes, proposes or relies upon shared platform Memory/Kn
 - version/retrieval compatibility relied upon;
 - failure and stale-data behavior;
 - portability and migration expectations.
+
+Declaring a read, write or propose operation in a Product Contract defines the permitted integration surface; it MUST NOT itself grant technical authorization, Organizational Authority, final validation authority or approval to promote Knowledge. Those gates remain independently evaluated under RFC-0003, RFC-0005 and applicable governance.
 
 Undocumented direct access to internal knowledge tables, private vector collections, hidden prompts, private indexes or internal memory stores MUST NOT become a governed product/platform dependency.
 
@@ -886,8 +890,23 @@ The following are intentionally left to subordinate decisions unless later evide
 - product-specific ontology and domain validation rules;
 - UI for review, contradiction and approval.
 
-## 33. Decision Requested
+## 33. Review Evidence
 
-Approve RFC-0007 as the domain-neutral architecture for Memory, Knowledge and Governed Learning Lifecycle after functional cross-review and bounded reconciliation are complete.
+Functional cross-review:
+
+- `docs/reviews/RFC-0007-functional-cross-review.md` — `Complete`;
+- iterations completed: 4 of maximum 7;
+- result: `Pass after bounded reconciliation`.
+
+Reviewed working draft:
+
+- RFC-0007 `0.1.0`;
+- immutable blob SHA `686e6fc3fe720709773efb3b685f97b45d458b69`.
+
+The bounded reconciliation required by the cross-review is incorporated in this `0.2.0` proposal.
+
+## 34. Decision Requested
+
+Approve RFC-0007 `0.2.0` as the domain-neutral architecture for Memory, Knowledge and Governed Learning Lifecycle.
 
 Acceptance would complete Roadmap Block 0G architecture and permit Phase 0 reference implementation work to proceed without inventing cross-cutting Memory/Knowledge semantics in code.
