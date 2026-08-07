@@ -18,7 +18,7 @@ The Constitution has higher authority than every RFC. Accepted RFCs have higher 
 | RFC | Title | Category | Status | Version |
 |---|---|---|---|---|
 | [RFC-0001](RFC-0001-arvectum-os-architecture.md) | Arvectum OS Architecture | platform | Accepted | 1.0.0 |
-| [RFC-0002](RFC-0002-canonical-record-kernel-metamodel.md) | Canonical Record, Kernel Metamodel, Authority, Relationship and Organizational Asset Model | platform | Draft | 0.3.0 |
+| [RFC-0002](RFC-0002-canonical-record-kernel-metamodel.md) | Canonical Record, Kernel Metamodel, Authority, Relationship and Organizational Asset Model | platform | Proposed | 0.9.0 |
 
 ## Acceptance Integrity
 
