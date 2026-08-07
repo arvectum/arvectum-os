@@ -1,14 +1,14 @@
 # RFC-0008: Document and Artifact Architecture
 
-Status: `Draft`
-Version: `0.1.0`
+Status: `Proposed`
+Version: `0.2.0`
 Created: `2026-08-07`
 Updated: `2026-08-07`
 Authors: `ООО «Арвектум»`
 Category: `platform`
 Constitution: `1.2.0`
 Depends on: `RFC-0001 v1.0.0`; `RFC-0002 v1.0.0`; `RFC-0003 v1.0.0`; `RFC-0004 v1.0.0`; `RFC-0005 v1.0.0`; `RFC-0006 v1.0.0`; `RFC-0007 v1.0.0`
-Supersedes: `None`
+Supersedes: `RFC-0008 v0.1.0 working draft`
 Superseded by: `None`
 Decision owner: `ООО «Арвектум»`
 Cross-review: `docs/reviews/RFC-0008-functional-cross-review.md`
@@ -21,24 +21,25 @@ The Constitution and Accepted RFC-0001 through RFC-0007 already establish the go
 
 This RFC defines the domain-neutral architecture for documents and artifacts on top of those Accepted semantics.
 
-The model is based on sixteen rules:
+The model is based on seventeen rules:
 
 1. **Document and Artifact are semantic roles above the Kernel, not new Kernel primitives.**
 2. **A Document is a logical content-bearing governed subject; a file is only one possible representation of it.**
 3. **A Document Version is immutable canonical governed state when the document is significant.**
-4. **An Artifact is a concrete produced, received, captured or exported content-bearing representation or package.** An Artifact may be transient or governed depending on significance and lifecycle.
-5. **Document identity, document-version identity, artifact identity, content bytes and storage locator are distinct concepts.**
-6. **A hash proves a claim about bytes, not semantic identity, authority, approval or truth.**
-7. **One Document Version may have multiple declared renditions without creating multiple logical document versions when their governed semantic content is declared equivalent for the relevant purpose.**
-8. **A material semantic content change creates a new Document Version rather than mutating the prior version.**
-9. **External document systems may remain authoritative.** Arvectum OS must preserve `External Reference` and `Governed Replica` authority semantics rather than creating competing sources of truth.
-10. **Generation, conversion, extraction, redaction, signing and packaging preserve provenance and do not erase source identity.**
-11. **A generated Artifact is transient by default.** Persistence, repeated use or AI confidence does not promote it into canonical state or a Governed Organizational Asset.
-12. **Signature and approval are distinct.** A cryptographic or electronic signature may be evidence; it does not independently create Organizational Authority or approval state.
-13. **Derived artifacts inherit Organization, classification, purpose, retention and deletion constraints unless a governed transformation explicitly establishes a permitted new scope or handling rule.**
-14. **Consequential reliance pins the exact governed Document Version and, where byte-level evidence matters, the exact Artifact/content reference materially used.**
-15. **Portability is manifest-based and representation-independent.** The organization must be able to export governed document semantics plus lawful content or durable external references without requiring the original storage technology.
-16. **Product-domain document types, templates and business approval rules remain product-owned by default.** Shared platform behavior remains domain-neutral.
+4. **Working copies may be mutable outside canonical history.** Consequential reliance requires an admitted immutable version or proportionate governed checkpoint.
+5. **An Artifact is a concrete produced, received, captured or exported content-bearing representation or package.** An Artifact may be transient or governed depending on significance and lifecycle.
+6. **Document identity, document-version identity, artifact identity, content bytes and storage locator are distinct concepts.**
+7. **A hash proves a claim about bytes, not semantic identity, authority, approval or truth.**
+8. **One Document Version may have multiple declared renditions without creating multiple logical document versions when their governed semantic content is declared equivalent for the relevant purpose.**
+9. **A material semantic content change creates a new Document Version rather than mutating the prior version.**
+10. **External document systems may remain authoritative.** Arvectum OS must preserve `External Reference` and `Governed Replica` authority semantics rather than creating competing sources of truth.
+11. **Generation, conversion, extraction, redaction, signing and packaging preserve provenance and do not erase source identity.**
+12. **A generated Artifact is transient by default.** Persistence, repeated use or AI confidence does not promote it into canonical state or a Governed Organizational Asset.
+13. **Signature and approval are distinct.** A cryptographic or electronic signature may be evidence; it does not independently create Organizational Authority or approval state.
+14. **Derived artifacts inherit Organization, classification, purpose, rights, retention and deletion constraints unless a governed transformation explicitly establishes a permitted new scope or handling rule.**
+15. **Consequential reliance pins the exact governed Document Version and, where byte-level or representation evidence matters, the exact Artifact/content reference materially used.**
+16. **Portability is manifest-based and representation-independent.** The organization must be able to export governed document semantics plus lawful content or durable external references without requiring the original storage technology.
+17. **Product-domain document types, templates and business approval rules remain product-owned by default.** Shared platform behavior remains domain-neutral.
 
 This RFC does not prescribe a document management system, object store, file format, office suite, OCR engine, signing vendor, content-addressing algorithm, antivirus product, metadata database, blob layout, search engine or UI.
 
@@ -79,7 +80,7 @@ Accepted RFC-0002 establishes the stable metamodel used here:
 - content persistence alone does not create Governed Organizational Asset status;
 - transient outputs need not become Canonical Records merely because they exist or are persisted.
 
-Accepted RFC-0003 governs Organization scope, authorization, Organizational Authority, classification, purpose limitation, minimization, retention/deletion, derived data, tenant isolation, export and portability.
+Accepted RFC-0003 governs Organization scope, authorization, Organizational Authority, classification, purpose limitation, minimization, rights/permitted use, retention/deletion, derived data, tenant isolation, export and portability.
 
 Accepted RFC-0004 governs Product Contract declarations for artifact surfaces and prohibits hidden product/platform coupling.
 
@@ -97,15 +98,17 @@ This RFC defines domain-neutral architecture for:
 
 - Document and Artifact semantic roles;
 - stable logical document identity and immutable versions;
+- mutable working copies and admission checkpoints;
 - content manifests and representation/rendition semantics;
 - locally stored, externally referenced and governed-replica content;
 - artifact identity, content identity and integrity metadata;
+- content availability/completeness semantics;
 - document ingestion, generation, transformation and admission boundaries;
 - attachments, bundles and packages;
 - templates and generated instances;
 - signing, approvals and evidence boundaries;
 - derivation, conversion, redaction and extraction provenance;
-- classification, access, purpose, retention and deletion propagation;
+- classification, access, purpose, rights, retention and deletion propagation;
 - exact-version reliance and reconstructability;
 - Product Contract artifact declarations;
 - portability, export, migration and external repository replacement;
@@ -198,26 +201,47 @@ One Document Version may be represented by one or more Artifacts. One Artifact m
 
 A conforming implementation **MUST NOT** assume that one file equals one logical Document or that one logical Document has only one file representation.
 
-### 6.5 Content Manifest
+### 6.5 Governed Content Resolution and Content Manifest
 
-A significant Document Version **SHOULD** resolve to a **Content Manifest** or equivalent governed structure describing the representations materially associated with that version.
+Every significant Document Version **MUST** resolve to governed content through at least one of:
 
-A Content Manifest may identify:
+- content carried in the governed payload;
+- an immutable content reference;
+- an `External Reference` retrieval contract to an authoritative external version/object;
+- a `Governed Replica` content reference bound to an explicit synchronization/version mapping.
+
+The resolution **MUST** preserve or resolve, where applicable:
 
 - Document Subject Identity;
 - Document Version Identity;
-- declared rendition/representation roles;
-- Artifact identities or immutable content references;
+- content/representation role;
+- Artifact Identity where the Artifact is independently governed;
+- immutable content reference or external authority/version reference;
 - media/content type and format version where material;
-- content length where useful;
-- integrity digest or equivalent integrity metadata where exact bytes matter;
-- external authority/reference information where content is not locally authoritative;
+- integrity metadata where exact bytes or package integrity matter;
 - generation/transformation provenance;
-- classification/handling references;
-- availability or deletion state;
-- relationship among source, canonical, display, archival, signed, redacted or other declared representations.
+- Organization scope and classification/handling constraints;
+- rights/permitted-use references where relevant;
+- retention/deletion rule references where relevant;
+- content availability state sufficient for the declared use.
+
+A significant Document Version with more than one materially relevant representation, attachment set or package membership **MUST** resolve to a **Content Manifest** or equivalent governed structure that makes those relationships explicit.
+
+For a single simple representation, the equivalent manifest semantics **MAY** be carried directly in the Canonical Record payload/reference rather than requiring a separate physical manifest object.
 
 The Content Manifest is a logical architectural concept. It does not require one physical manifest file or one storage schema.
+
+### 6.6 Working Copy / Draft Candidate
+
+A **Working Copy** or **Draft Candidate** is mutable content being edited, collaboratively authored, generated or prepared before admission as an immutable governed Document Version.
+
+A Working Copy is non-canonical by default and **MAY** use lighter persistence/versioning proportionate to consequence.
+
+A Working Copy **MUST NOT** silently replace or mutate an admitted Document Version.
+
+When a working state becomes materially relied upon, evidentiary, reusable, externally committed, approval-relevant or otherwise significant, the system **MUST** create an immutable governed checkpoint or admit a new Document Version before consequential reliance continues.
+
+Collaborative editing history, editor-native revisions or autosave states **MAY** remain implementation-local unless their preservation is required for evidence, policy, contract, security or reconstruction.
 
 ## 7. Identity Layers
 
@@ -261,7 +285,7 @@ Changing a locator **MUST NOT** change Document Subject Identity or Document Ver
 
 A locator **SHOULD** be replaceable without changing higher-level contracts unless the locator is itself an externally relied-upon contract.
 
-## 8. Renditions and Representation Equivalence
+## 8. Renditions, Equivalence and Availability
 
 ### 8.1 Rendition
 
@@ -285,11 +309,26 @@ A system **MUST NOT** infer semantic equivalence solely because:
 
 Where exact visual layout, signature container, embedded object, formula, image, macro, metadata or other representation detail is consequential, that detail **MUST** be included in the equivalence/reliance boundary.
 
-### 8.3 Canonical Rendition
+### 8.3 Designated Rendition Role
 
-A document type or Product Contract **MAY** designate a particular rendition role as canonical for a declared purpose, such as `authoring`, `exchange`, `signed`, `archival` or `machine-readable`.
+A document type or Product Contract **MAY** designate a rendition role for a declared purpose, such as `authoring`, `exchange`, `signed`, `archival` or `machine-readable`.
 
-Such designation **MUST NOT** be confused with the RFC-0001 Canonical Record authority model. A canonical rendition for presentation or exchange does not create an additional source of truth.
+A designated rendition role is a representation preference/requirement within a declared use. It **MUST NOT** redefine RFC-0001/RFC-0002 Canonical Record authority, create an additional source of truth or imply that other renditions are semantically equivalent outside the declared rule.
+
+### 8.4 Content Availability State
+
+Governed document semantics **MUST** distinguish materially different availability conditions where they affect reliance, reconstruction, export or user interpretation.
+
+An implementation must be able to express the equivalent of at least:
+
+- content available within the declared access path;
+- content lawfully deleted or payload removed;
+- externally authoritative content currently unavailable/unretrievable;
+- content intentionally omitted from an export or disclosure because export/use is not permitted or not in scope.
+
+This RFC does not mandate one storage enum or status vocabulary.
+
+A system **MUST NOT** represent these distinct conditions as an undifferentiated successful/complete state when the distinction is material.
 
 ## 9. Authority and External Document Systems
 
@@ -346,7 +385,7 @@ However, where reliance depends on status, a conforming system **MUST** distingu
 
 - working/unapproved content from governed approved/effective content where such approval/effectivity exists;
 - current effective version from historical/superseded versions where effectivity exists;
-- withdrawn/invalidated/deleted payload states from valid reliance states where applicable.
+- withdrawn/invalidated/deleted-payload states from valid reliance states where applicable.
 
 ### 10.2 Lifecycle versus Version
 
@@ -378,8 +417,9 @@ Admission of a significant Document/Artifact **MUST** establish or validate, pro
 - authority mode and source;
 - actor or source attribution;
 - classification and handling constraints;
+- rights/permitted-use constraints where relevant;
 - provenance;
-- integrity/interpretability sufficient for declared use;
+- content resolution and integrity/interpretability sufficient for declared use;
 - applicable retention/deletion rule references where required;
 - lifecycle/validation state where applicable;
 - relationships to executions, events, source records, templates or external objects where material.
@@ -470,7 +510,9 @@ A transformation that removes visible text **MUST NOT** be assumed to remove all
 
 A redacted Artifact is a derived representation.
 
-Where redaction is relied upon to permit broader disclosure, the redaction process **MUST** have validation and evidence proportionate to the sensitivity and consequence of disclosure.
+Where redaction is relied upon to support broader disclosure, the redaction process **MUST** have validation and evidence proportionate to the sensitivity and consequence of disclosure.
+
+Successful technical redaction **MUST NOT** by itself change classification, purpose limitation, permitted-use rights, authorization or Organizational Authority. The applicable governed rule or decision **MUST** establish whether and how the validated redacted derivative may receive different handling or disclosure scope.
 
 The unredacted source and redacted derivative **MUST** remain distinct identities/references where both are retained.
 
@@ -486,13 +528,17 @@ Replacing an attachment that materially changes the relied-upon package **MUST**
 
 A **Bundle** or **Package** is a governed collection of Documents/Artifacts assembled for a declared purpose such as submission, export, evidence, transfer or archival.
 
-A significant Package **SHOULD** use a manifest that pins its materially included Document Versions/Artifacts and preserves ordering or role semantics where material.
+A significant Package **MUST** use a manifest or equivalent governed structure that pins its materially included Document Versions/Artifacts and preserves ordering or role semantics where material.
 
 A package archive file is a representation of the package, not necessarily the package's only identity.
 
-### 15.3 Partial Availability
+### 15.3 Completeness and Partial Availability
 
-If a package references content that is deleted, unavailable, externally inaccessible or non-exportable, the manifest **MUST** expose the missing/unavailable state rather than pretending the package is complete.
+A significant package/export manifest **MUST** expose whether its declared material membership is complete for the stated purpose.
+
+If a member is deleted, unavailable, externally inaccessible, excluded by scope, non-exportable or not permitted for disclosure, the manifest **MUST** identify the material omission/unavailability and reason category rather than pretending the package is complete.
+
+Completeness is purpose-scoped: omission of a rebuildable non-authoritative preview may still permit a complete governed export when that preview is outside the declared export contract.
 
 ## 16. Signatures, Seals and Approval Evidence
 
@@ -572,7 +618,7 @@ A conforming document/artifact implementation **MUST**:
 - deny protected access by default;
 - apply least privilege;
 - distinguish authorization from Organizational Authority;
-- enforce purpose and classification before retrieval, generation, transformation, export or external disclosure;
+- enforce purpose, rights and classification before retrieval, generation, transformation, export or external disclosure;
 - avoid placing reusable secrets in document payload, metadata, logs or prompts merely for convenience;
 - prevent caches, previews, OCR text, thumbnails, indexes and model context from becoming cross-Organization disclosure paths;
 - preserve attributable consequential access/change where required;
@@ -659,16 +705,17 @@ Within declared scope, a governed export **MUST** preserve or explicitly account
 - document type/schema versions;
 - lifecycle/effectivity status;
 - authority mode and external authority references;
-- Content Manifests;
+- Content Manifests or equivalent content-resolution metadata;
 - lawful Artifact content or durable immutable/external references;
 - rendition roles;
 - integrity metadata;
 - Typed Relationships and attachments;
 - template/source/derivation provenance;
 - applicable classifications, rights and handling constraints;
-- retention/deletion state;
+- retention/deletion and content-availability state;
 - Workflow/Execution/Event references needed for reconstruction;
-- unavailable/deleted/non-exportable content markers;
+- unavailable/deleted/non-exportable/out-of-scope content markers with material reason categories;
+- package completeness for the declared export purpose;
 - package integrity/manifest metadata.
 
 ### 23.3 Representation Independence
@@ -767,7 +814,15 @@ The Content Manifest records PDF rendition A7 and, if retained, editable source 
 
 A later correction creates D8. D7 remains immutable.
 
-### 28.2 External Contract Repository
+### 28.2 Collaborative Working Draft
+
+Several users edit a Working Copy in a collaborative editor. Autosaves and editor-native revisions remain non-canonical implementation state.
+
+Before the content is submitted for consequential approval, the workflow admits immutable Document Version D4. Review and approval rely on D4 rather than a mutable editor URL.
+
+A later edit creates a new Working Copy based on D4 and, if admitted, a later immutable version D5.
+
+### 28.3 External Contract Repository
 
 A contract remains authoritative in an external DMS.
 
@@ -775,23 +830,23 @@ Arvectum OS creates an `External Reference` Document subject, preserving externa
 
 A workflow that relies on the contract pins the exact externally resolved version/reference state. A cache is not treated as authority.
 
-### 28.3 Scanned Source and OCR
+### 28.4 Scanned Source and OCR
 
 A scanned signed document is retained as the source Artifact. OCR produces derived text.
 
 The OCR text is linked to the source and is non-authoritative unless an explicit governed process declares a different role. A downstream extraction relying on OCR remains traceable to the scanned source and OCR transformation.
 
-### 28.4 Redacted Disclosure
+### 28.5 Redacted Disclosure
 
 An unredacted Document Version is classified restricted. A redaction process produces a derived Artifact for external disclosure.
 
-The redacted Artifact inherits restrictions until validation confirms the declared disclosure transformation. Authorization and Organizational Authority for disclosure remain separate from the technical redaction step.
+The redacted Artifact inherits restrictions. Validation confirms the technical redaction result, but a separate governed rule/decision determines whether the derivative may receive a broader disclosure scope. Authorization and Organizational Authority for disclosure remain separate from the technical redaction step.
 
-### 28.5 Portable Package
+### 28.6 Portable Package
 
 An Organization exports a governed project package containing several Document Versions, attachments, manifests, external references and provenance.
 
-The export preserves stable identities and version relationships. A proprietary preview cache and vector index are omitted because they are rebuildable and non-authoritative. A non-exportable externally authoritative artifact is represented by a governed external reference and explicit omission state.
+The export preserves stable identities and version relationships. A proprietary preview cache and vector index are omitted because they are rebuildable and non-authoritative. A non-exportable externally authoritative artifact is represented by a governed external reference and explicit omission state. The package records that it is complete for the declared governed-export purpose despite excluding those non-required derived projections.
 
 ## 29. Normative Fitness Tests
 
@@ -800,25 +855,29 @@ Within a declared conformance scope, a conforming subject **MUST** be able to an
 1. Can a logical Document be identified independently of filename, URL and storage key?
 2. Are significant Document Versions immutable and version-identifiable?
 3. Can the system distinguish Document Subject, Document Version, Artifact/content identity and storage locator?
-4. Does byte hashing avoid being treated as semantic identity, authority or approval?
-5. Can multiple renditions be represented without silently creating competing document authority?
-6. Does material content change create new governed version state?
-7. Is external document authority preserved without competing local truth?
-8. Are receipt/generation and canonical admission distinct?
-9. Are transient generated artifacts prevented from automatic asset/Knowledge promotion?
-10. Are derived artifacts traceable to source versions where material?
-11. Do derived artifacts inherit applicable Organization/classification/purpose/retention constraints?
-12. Are signature evidence and Organizational Authority distinguishable?
-13. Does consequential reliance pin the exact Document Version and exact Artifact/content where required?
-14. Can attachments/packages pin exact included versions and expose missing content?
-15. Are search/OCR/extraction/index projections non-authoritative and source-traceable?
-16. Are Product Contract artifact dependencies explicit where product/platform reliance exists?
-17. Can lawful deletion occur without semantically rewriting retained history or overstating reconstructability?
-18. Can the Organization export governed document semantics plus lawful content/references without the original proprietary runtime?
-19. Can repository/storage migration preserve semantic identities and authority?
-20. Do AI generation and transformation remain within authorization, Organizational Authority, privacy and promotion boundaries?
-21. Does the implementation avoid product-domain document logic in shared platform behavior?
-22. Is implementation complexity proportionate to risk and maturity?
+4. Does every significant Document Version resolve to governed content or an explicit authoritative content reference?
+5. Can mutable Working Copies exist without mutating admitted canonical history, and are they checkpointed before consequential reliance?
+6. Does byte hashing avoid being treated as semantic identity, authority or approval?
+7. Can multiple renditions be represented without silently creating competing document authority?
+8. Does material content change create new governed version state?
+9. Is external document authority preserved without competing local truth?
+10. Are receipt/generation and canonical admission distinct?
+11. Are transient generated artifacts prevented from automatic asset/Knowledge promotion?
+12. Are derived artifacts traceable to source versions where material?
+13. Do derived artifacts inherit applicable Organization/classification/purpose/rights/retention constraints?
+14. Does technical redaction remain distinct from reclassification/disclosure authorization?
+15. Are signature evidence and Organizational Authority distinguishable?
+16. Does consequential reliance pin the exact Document Version and exact Artifact/content where required?
+17. Can attachments/packages pin exact included versions and expose completeness and missing/omitted content?
+18. Can availability distinguish deleted, externally unavailable and intentionally non-exported content when material?
+19. Are search/OCR/extraction/index projections non-authoritative and source-traceable?
+20. Are Product Contract artifact dependencies explicit where product/platform reliance exists?
+21. Can lawful deletion occur without semantically rewriting retained history or overstating reconstructability?
+22. Can the Organization export governed document semantics plus lawful content/references without the original proprietary runtime?
+23. Can repository/storage migration preserve semantic identities and authority?
+24. Do AI generation and transformation remain within authorization, Organizational Authority, privacy and promotion boundaries?
+25. Does the implementation avoid product-domain document logic in shared platform behavior?
+26. Is implementation complexity proportionate to risk and maturity?
 
 A negative answer indicates non-conformance, an approved exception, a declared gap or an incorrectly scoped claim under RFC-0001 conformance rules.
 
@@ -829,7 +888,7 @@ An implementation or Product Contract handling documents/artifacts **SHOULD** ex
 - which Organization owns the governance scope;
 - who may read, create, replace, export, disclose or delete content;
 - which actions require Organizational Authority beyond technical authorization;
-- classification and purpose constraints;
+- classification, purpose and rights constraints;
 - external processing/providers;
 - previews, OCR, indexes, embeddings and model-context propagation;
 - retention/deletion cascading;
@@ -864,6 +923,7 @@ Legacy files may remain product-local until a real platform interaction or gover
 
 - organizational document identity survives storage/vendor changes;
 - files, documents, renditions and canonical records no longer collapse into one concept;
+- mutable collaborative editing can remain simple without mutating canonical history;
 - external DMS/ERP authority can be preserved cleanly;
 - generated content can move from transient output to governed asset through explicit gates;
 - exact-version and exact-byte reliance become reconstructable where needed;
@@ -932,7 +992,7 @@ Mitigation: semantic architecture only; simple reversible storage is permitted.
 
 Risk: export claims portability but omits identity, versions, authority or inaccessible external dependencies.
 
-Mitigation: governed manifest, explicit omission state and documented representation.
+Mitigation: governed manifest, explicit availability/omission state, completeness semantics and documented representation.
 
 ## 34. Acceptance Criteria
 
@@ -940,27 +1000,35 @@ RFC-0008 may be accepted only when the owner explicitly approves the following n
 
 1. Document and Artifact remain semantic roles above the existing five Kernel primitives;
 2. significant Documents use stable Subject Identity and immutable Canonical Record versions;
-3. Document, Document Version, Artifact/content identity and storage locator remain distinct;
-4. hashes do not establish semantic identity, authority, approval or truth;
-5. one Document Version may have multiple governed renditions under explicit equivalence semantics;
-6. material semantic change creates a new immutable Document Version;
-7. external document systems preserve RFC authority modes and do not become competing local authority;
-8. receipt/generation and canonical admission remain distinct;
-9. generated Artifacts are transient by default and promotion is explicit;
-10. transformations preserve source provenance and applicable data-governance constraints;
-11. signature evidence is distinct from Organizational Authority and approval;
-12. consequential reliance pins exact Document Version and exact Artifact/content where representation matters;
-13. Product Contract artifact surfaces are explicit and storage internals are not hidden contracts;
-14. portability uses documented manifests plus lawful content or explicit external/non-exportable references;
-15. deletion may remove payload while preserving permitted historical/tombstone semantics without rewriting history;
-16. search/OCR/extraction/index/AI projections remain non-authoritative by default;
-17. product-domain document semantics remain product-owned by default;
-18. implementation technology remains replaceable and proportional;
-19. scoped conformance uses the normative fitness tests in this RFC;
-20. acceptance does not make any document/artifact capability `Active` or establish operational/commercial commitments.
+3. mutable Working Copies may exist outside canonical history but cannot be consequentially relied upon as if they were admitted immutable versions;
+4. every significant Document Version resolves to governed content or an explicit authoritative content reference;
+5. Document, Document Version, Artifact/content identity and storage locator remain distinct;
+6. hashes do not establish semantic identity, authority, approval or truth;
+7. one Document Version may have multiple governed renditions under explicit equivalence semantics;
+8. material semantic change creates a new immutable Document Version;
+9. external document systems preserve RFC authority modes and do not become competing local authority;
+10. receipt/generation and canonical admission remain distinct;
+11. generated Artifacts are transient by default and promotion is explicit;
+12. transformations preserve source provenance and applicable data-governance/rights constraints;
+13. successful redaction does not itself create declassification or disclosure authority;
+14. signature evidence is distinct from Organizational Authority and approval;
+15. consequential reliance pins exact Document Version and exact Artifact/content where representation matters;
+16. packages/exports expose material completeness and availability/omission state;
+17. Product Contract artifact surfaces are explicit and storage internals are not hidden contracts;
+18. portability uses documented manifests plus lawful content or explicit external/non-exportable references;
+19. deletion may remove payload while preserving permitted historical/tombstone semantics without rewriting history;
+20. search/OCR/extraction/index/AI projections remain non-authoritative by default;
+21. product-domain document semantics remain product-owned by default;
+22. implementation technology remains replaceable and proportional;
+23. scoped conformance uses the normative fitness tests in this RFC;
+24. acceptance does not make any document repository, generation, signing, OCR, export or artifact-management capability `Active` or establish operational/commercial commitments.
 
 ## 35. Decision
 
-Status remains `Draft` until functional cross-review is complete and the reviewed proposal is published for owner decision.
+RFC-0008 `0.2.0` is `Proposed` for owner review.
 
-No owner approval is implied by preparation of this draft.
+Functional cross-review is complete after 4 of maximum 7 iterations with result `Pass after bounded reconciliation`.
+
+No owner approval is implied by preparation or publication of this proposal.
+
+If later accepted, RFC-0008 defines binding architecture within its declared scope only. Acceptance by itself does **not** create an `Active` document/artifact Platform Capability, establish production or operational readiness, select an implementation technology, create an SLA/support commitment, or approve product-specific document taxonomies, workflows, templates or legal-signature rules.
