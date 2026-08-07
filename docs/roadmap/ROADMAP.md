@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `1.1.1`
+Version: `1.1.2`
 Created: `2026-08-07`
 Updated: `2026-08-07`
 Owner: `ООО «Арвектум»`
@@ -75,8 +75,8 @@ The phase does **not** require the entire future platform to be fully specified 
 | 🟦 0B | Architecture language baseline | 🟩 | `██████████ 100%` |
 | 🟪 0C | RFC-0002 — Kernel metamodel | 🟩 | `██████████ 100%` |
 | 🟢 0D | RFC-0003 — Identity, security, privacy, sovereignty | 🟩 | `██████████ 100%` |
-| 🟠 0E | RFC-0004 — Product Contract and extension model | 🟦 | `████████░░ 80%` |
-| 🔵 0F | RFC-0005/0006 — Governed execution, events and provenance | ⬜ | `░░░░░░░░░░ 0%` |
+| 🟠 0E | RFC-0004 — Product Contract and extension model | 🟩 | `██████████ 100%` |
+| 🔵 0F | RFC-0005/0006 — Governed execution, events and provenance | 🟨 | `█████░░░░░ 50%` |
 | 🟣 0G | RFC-0007 — Memory, knowledge and learning lifecycle | ⬜ | `░░░░░░░░░░ 0%` |
 | 🟨 0H | Reference implementation readiness | ⬜ | `░░░░░░░░░░ 0%` |
 
@@ -238,51 +238,55 @@ It does not select IAM, cryptographic, database or cloud technologies and does n
 
 ## 9. Block 0E — RFC-0004: Product Contract, Product Experiment and Extension Model
 
-**Status:** 🟦 Next — reviewed proposal requires compatibility re-check  
-**Progress:** `████████░░ 80%`
+**Status:** 🟩 Complete — `Accepted`  
+**Progress:** `██████████ 100%`
 
 ### RFC
 
-`RFC-0004 — Product Contract, Product Experiment and Extension Model`
+[`RFC-0004 — Product Contract, Product Experiment and Extension Model`](../rfc/RFC-0004-product-contract-product-experiment-extension-model-v1.0.0.md) — `Accepted 1.0.0`.
 
 ### Completed
 
 - 🟩 complete working draft prepared and iteratively refined;
 - 🟩 functional role-based cross-review completed across CEO/strategy, COO/operations, CTO/architecture, CISO/security, Privacy, Legal/rights, Product and Engineering perspectives;
-- 🟩 review loop stopped after 3 of maximum 7 iterations when no further material correction was identified for the current lifecycle stage;
-- 🟩 review corrections incorporated into [`RFC-0004 v0.3.0`](../rfc/RFC-0004-product-contract-product-experiment-extension-model.md) — `Proposed`;
-- 🟩 detailed review evidence published in [`docs/reviews/RFC-0004-functional-cross-review.md`](../reviews/RFC-0004-functional-cross-review.md);
-- 🟩 RFC Index synchronized to the reviewed proposal.
+- 🟩 reviewed proposal `0.3.0` preserved with immutable proposal blob `5a413a240588677211ad56f3a23b30a65d1c4334`;
+- 🟩 owner approval recovered through current canonical repair decision [`DECISION-2026-08-07-RFC-0004-OWNER-APPROVAL-REPAIR`](../governance/decisions/DECISION-2026-08-07-RFC-0004-OWNER-APPROVAL-REPAIR.md) — `Approved`;
+- 🟩 additional compatibility re-check performed against Accepted RFC-0003 `1.0.0` as review iteration 4;
+- 🟩 no material conflict found; stale RFC-0003 lifecycle wording reconciled for acceptance publication;
+- 🟩 RFC-0004 published as `Accepted 1.0.0` in commit `3b3f72a01bd76d9cfb6a1ef78e7ec6a627173ee2`;
+- 🟩 RFC Index synchronized with acceptance evidence.
 
-### Current proposal boundary
+### Accepted boundary
 
-RFC-0004 `0.3.0` defines Product Contract identity/version/lifecycle semantics, minimal provisional contracts for platform-interacting Product Experiments, explicit capability/canonical-state/operation/event/artifact boundaries, extension registration, compatibility/migration/deprecation rules, and evidence-based promotion from product-local experiments into platform incubation.
+RFC-0004 `1.0.0` is binding architecture for Product Contract identity/version/lifecycle semantics, minimal provisional contracts for platform-interacting Product Experiments, explicit capability/canonical-state/operation/event/artifact boundaries, extension registration, compatibility/migration/deprecation rules, and evidence-based promotion from product-local experiments into platform incubation.
 
-The proposal keeps Product Contract lifecycle independent from Platform Capability lifecycle, keeps product-domain logic product-owned by default, treats extension registration as distinct from authorization/organizational authority, and prohibits undocumented direct database/internal-import coupling.
+Product Contract lifecycle remains independent from Platform Capability lifecycle. Product-domain logic remains product-owned by default. Extension registration remains distinct from authorization and Organizational Authority. Undocumented direct database/internal-import coupling across the product/platform boundary is non-conforming.
 
-RFC-0004 was reviewed before RFC-0003 became binding. Accepted RFC-0003 `1.0.0` is now a higher-authority source that must be checked for compatibility before RFC-0004 owner decision.
-
-### Remaining action
-
-- 🟦 re-check RFC-0004 `0.3.0` against Accepted RFC-0003 `1.0.0`;
-- ⬜ incorporate any required compatibility corrections without changing higher-authority contracts;
-- ⬜ owner decision on the resulting RFC-0004 proposal;
-- ⬜ if approved, create independent approval record and publish `Accepted 1.0.0` with Acceptance Integrity evidence;
-- ⬜ synchronize glossary and roadmap after acceptance.
+RFC-0004 is subordinate to Accepted RFC-0003 security, privacy, isolation, authority and portability requirements.
 
 ### Exit criterion
 
-Products can interact with Arvectum OS through an explicit, versioned and governed boundary without leaking product business logic into the platform.
+🟩 Achieved: products can interact with Arvectum OS through an explicit, versioned and governed boundary without leaking product business logic into the platform.
 
 ## 10. Block 0F — Governed execution, events and provenance
 
-**Status:** ⬜ Planned  
-**Progress:** `░░░░░░░░░░ 0%`
+**Status:** 🟨 In progress — RFC-0005 reviewed proposal requires re-check against newly Accepted RFC-0004  
+**Progress:** `█████░░░░░ 50%`
 
 ### Planned RFCs
 
 1. `RFC-0005 — Governed Execution and Workflow Model`;
 2. `RFC-0006 — Event, Provenance and Observability Model`.
+
+### RFC-0005 current state
+
+- 🟩 RFC-0005 `0.1.0` initial complete proposal prepared;
+- 🟩 first functional cross-review completed with 3 iterations;
+- 🟩 reviewed proposal `0.2.0` published;
+- 🟨 Accepted RFC-0004 `1.0.0` is now a new normative dependency that must be reconciled before RFC-0005 owner decision;
+- 🟦 perform review iteration 4 against Accepted RFC-0004 and this updated roadmap;
+- ⬜ publish resulting reviewed proposal and synchronize RFC Index;
+- ⬜ owner decision and acceptance transition after review closure.
 
 ### Exit criterion
 
@@ -359,9 +363,9 @@ RFC-0002 Kernel Metamodel               ✅ ACCEPTED 1.0.0
         ↓
 RFC-0003 Identity / Security / Privacy  ✅ ACCEPTED 1.0.0
         ↓
-RFC-0004 Product Contract / Extensions  🟦 NEXT — RE-CHECK PROPOSED 0.3.0
+RFC-0004 Product Contract / Extensions  ✅ ACCEPTED 1.0.0
         ↓
-RFC-0005 Governed Execution / Workflow
+RFC-0005 Governed Execution / Workflow  🟨 REVIEW ITERATION 4 / RECONCILIATION
         ↓
 RFC-0006 Event / Provenance / Observability
         ↓
@@ -380,9 +384,9 @@ Parallel work is permitted when the work is bounded and reversible and does not 
 
 The current architecture work item is:
 
-> **Re-check reviewed RFC-0004 `0.3.0` against Accepted RFC-0003 `1.0.0`, then prepare it for owner decision.**
+> **Re-check RFC-0005 against Accepted RFC-0004 `1.0.0` and the synchronized Roadmap `1.1.2`, publish the resulting reviewed proposal, then prepare RFC-0005 for owner decision.**
 
-RFC-0004 was prepared and cross-reviewed in parallel while RFC-0003 was non-normative. RFC-0003 is now binding, so compatibility review is required before RFC-0004 can be accepted.
+RFC-0005 was initially prepared while RFC-0004 was non-normative. RFC-0004 is now binding, so Product Contract references in RFC-0005 must be upgraded from forward compatibility to normative dependency without allowing product-specific behavior to leak into the platform execution model.
 
 ## 15. Roadmap maintenance rule
 
@@ -403,5 +407,7 @@ After every accepted RFC, material planning decision, or meaningful implementati
 3. increment the roadmap version according to Section 2;
 4. commit the update to the canonical repository;
 5. do not maintain a competing roadmap in chat, local notes or another repository.
+
+The approved [`RFC State Transition Procedure`](../governance/RFC-STATE-TRANSITION-PROCEDURE.md) additionally requires each owner-approved RFC transition to be fully closed through canonical publication, RFC Index synchronization, roadmap synchronization and read-after-write consistency verification before substantive work advances to the next RFC.
 
 Chats may discuss future roadmap changes, but only the version committed here is canonical.
