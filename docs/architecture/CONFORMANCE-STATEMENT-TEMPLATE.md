@@ -1,9 +1,9 @@
 # Arvectum OS Conformance Statement Template
 
 Status: `Informative Template`
-Version: `0.2.0`
+Version: `0.3.0`
 Updated: `2026-08-07`
-Architecture basis: `RFC-0001 v0.8.0`
+Architecture basis: `RFC-0001 v0.9.0`
 Constitution basis: `1.2.0`
 
 ## Purpose
@@ -97,15 +97,43 @@ A requirement may be marked `Not Applicable` only when the subject does not perf
 |---|---|---|---|---|---|
 | `<decision>` | `<proposer>` | `<authority>` | `<independent | delegated low-risk self-approval>` | `<reference>` | `<date>` |
 
-Material risk, shared-platform obligations, Active promotion, stable public-contract changes, cross-organization use and production exceptions require an appropriately independent decision authority.
+Material risk, shared-platform obligations, Active promotion, stable public-contract changes, material customer-facing commitments, cross-organization use and production exceptions require an appropriately independent decision authority.
 
-## 8. Known Gaps
+## 8. Commercial Commitments
+
+List external statements or commitments that rely on this subject.
+
+| Commitment or claim | Artifact / customer | Promised scope | Lifecycle represented | Conformance scope | Decision authority | Canonical reference |
+|---|---|---|---|---|---|---|
+| `<commitment>` | `<proposal / contract / SOW / marketing / other>` | `<scope>` | `<lifecycle>` | `<scope>` | `<authority>` | `<reference>` |
+
+Verify that no Product Experiment, Candidate or Incubating capability is represented as an Active supported capability and that no conformance claim exceeds this statement.
+
+## 9. Operational Readiness
+
+Required when lifecycle is `Active`; otherwise record why not applicable.
+
+| Readiness area | Owner | Evidence | Status | Review trigger |
+|---|---|---|---|---|
+| Support and escalation | `<owner>` | `<reference>` | `<Ready | Gap | Exception | N/A>` | `<trigger>` |
+| Observability and health | `<owner>` | `<reference>` | `<Ready | Gap | Exception | N/A>` | `<trigger>` |
+| Incident and recovery | `<owner>` | `<reference>` | `<Ready | Gap | Exception | N/A>` | `<trigger>` |
+| Continuity and dependencies | `<owner>` | `<reference>` | `<Ready | Gap | Exception | N/A>` | `<trigger>` |
+| Backup / restoration / reconstruction | `<owner>` | `<reference>` | `<Ready | Gap | Exception | N/A>` | `<trigger>` |
+| Migration and deprecation communication | `<owner>` | `<reference>` | `<Ready | Gap | Exception | N/A>` | `<trigger>` |
+| Customer-facing operational commitments | `<owner>` | `<reference>` | `<Ready | Gap | Exception | N/A>` | `<trigger>` |
+
+Operational-readiness approval reference:
+
+`<canonical reference>`
+
+## 10. Known Gaps
 
 | Gap | Risk | Remediation owner | Planned action | Due or review date | Risk acceptance authority |
 |---|---|---|---|---|---|
 | `<gap>` | `<risk>` | `<owner>` | `<action>` | `<date>` | `<authority>` |
 
-## 9. Fitness Test Result
+## 11. Fitness Test Result
 
 Passed:
 
@@ -123,7 +151,7 @@ Not applicable:
 
 - `<test and rationale>`
 
-## 10. Conformance Claim
+## 12. Conformance Claim
 
 Subject lifecycle:
 
@@ -143,7 +171,7 @@ Claim limitations:
 
 This statement does not claim conformance outside the scope declared above.
 
-## 11. Approval
+## 13. Approval
 
 Decision: `<Pending | Approved | Rejected | Superseded>`
 Decision authority: `<authority>`
