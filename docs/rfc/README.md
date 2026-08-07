@@ -18,7 +18,7 @@ The Constitution has higher authority than every RFC. Accepted RFCs have higher 
 | RFC | Title | Category | Status | Version |
 |---|---|---|---|---|
 | [RFC-0001](RFC-0001-arvectum-os-architecture.md) | Arvectum OS Architecture | platform | Accepted | 1.0.0 |
-| [RFC-0002](RFC-0002-canonical-record-kernel-metamodel.md) | Canonical Record, Kernel Metamodel, Authority, Relationship and Organizational Asset Model | platform | Proposed | 0.10.0 |
+| [RFC-0002](RFC-0002-canonical-record-kernel-metamodel.md) | Canonical Record, Kernel Metamodel, Authority, Relationship and Organizational Asset Model | platform | Accepted | 1.0.0 |
 
 ## Acceptance Integrity
 
@@ -41,6 +41,22 @@ Canonical owner approval:
 Accepted RFC publication commit:
 
 - `214faf049990a9475da66ca52f7327728c9a49eb`.
+
+## RFC-0002 Approval Evidence
+
+Canonical owner approval:
+
+- [`DECISION-2026-08-07-RFC-0002-ACCEPTANCE`](../governance/decisions/DECISION-2026-08-07-RFC-0002-ACCEPTANCE.md) — `Approved`.
+
+Approved proposal:
+
+- RFC-0002 `0.10.0`.
+
+Accepted RFC publication commit on the acceptance branch:
+
+- `ed936fcaa118368f81d2329b8f1ffa70d219ec4f`.
+
+The final merge commit on `main` is repository publication evidence and may be recorded here after merge without requiring self-reference from the acceptance publication itself.
 
 ## Related Governance
 
