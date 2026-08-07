@@ -8,9 +8,12 @@ Every human contributor, AI agent and connected product must begin with:
 
 1. [The Constitution of Arvectum OS](docs/constitution/CONSTITUTION.md)
 2. [Agent Rules](AGENTS.md)
-3. relevant accepted RFCs and ADRs
+3. [RFC Index](docs/rfc/README.md) and relevant Accepted RFCs/ADRs
+4. [Canonical Roadmap](docs/roadmap/ROADMAP.md) when determining sequence, next work, milestones or implementation readiness
 
 The Constitution has the highest architectural authority in this repository. The current ratified version is `1.2.0`.
+
+The roadmap is the canonical planning source, but it does not override the Constitution, Accepted RFCs or Accepted ADRs.
 
 For ChatGPT projects and long-lived chats, use:
 
@@ -24,18 +27,22 @@ Domain products such as procurement, marketing, finance or legal agents live out
 
 ## Current phase
 
-`Foundation / Architecture Bootstrap`
+`Phase 0 — Foundation / Architecture Bootstrap`
 
-Production implementation is intentionally deferred until the foundational RFCs define the platform architecture, language, core models, security boundaries and contracts.
+The current sequence is maintained only in the [Canonical Roadmap](docs/roadmap/ROADMAP.md).
 
-The next architecture document is `RFC-0002 Architecture`. RFC identifiers `0000` and `0001` record the constitutional amendments that produced versions `1.1.0` and `1.2.0`.
+The next planned artifact is the Architecture Glossary (`docs/architecture/GLOSSARY.md`). After that, the next major architecture decision is `RFC-0002 — Canonical Record, Kernel Metamodel, Authority, Relationship and Organizational Asset Model`, as required by Accepted RFC-0001.
+
+Production implementation is not allowed to prejudge unresolved cross-cutting architecture. Bounded, reversible and migration-friendly reference implementation work may proceed in parallel when permitted by the Accepted architecture.
 
 ## Authority order
 
 1. Constitution
-2. accepted RFCs
-3. accepted ADRs
+2. Accepted RFCs
+3. Accepted ADRs
 4. approved catalogs, standards and policies
-5. implementation and tests
-6. task materials
-7. chat history and model memory
+5. Product Contracts and approved product-specific decisions
+6. implementation and tests
+7. canonical roadmap as a planning artifact
+8. task materials
+9. chat history and model memory
