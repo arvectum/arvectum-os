@@ -22,7 +22,7 @@ The Constitution has higher authority than every RFC. Accepted RFCs have higher 
 | [RFC-0003](RFC-0003-identity-security-privacy-tenant-sovereignty-portability.md) | Identity, Security, Privacy, Tenant Sovereignty and Portability | platform | Accepted | 1.0.0 |
 | [RFC-0004](RFC-0004-product-contract-product-experiment-extension-model-v1.0.0.md) | Product Contract, Product Experiment and Extension Model | product_contract | Accepted | 1.0.0 |
 | [RFC-0005](RFC-0005-governed-execution-workflow-model-v1.0.0.md) | Governed Execution and Workflow Model | platform | Accepted | 1.0.0 |
-| [RFC-0006](RFC-0006-event-provenance-observability-model.md) | Event, Provenance and Observability Model | platform | Proposed | 0.2.0 |
+| [RFC-0006](RFC-0006-event-provenance-observability-model-v1.0.0.md) | Event, Provenance and Observability Model | platform | Accepted | 1.0.0 |
 
 ## Acceptance Integrity
 
@@ -132,13 +132,18 @@ Accepted RFC publication:
 
 RFC-0005 `1.0.0` is binding architecture within its declared Governed Execution and Workflow scope.
 
-## RFC-0006 Proposal Evidence
+## RFC-0006 Approval Evidence
 
-Current reviewed proposal:
+Canonical owner approval:
 
-- [`RFC-0006 v0.2.0`](RFC-0006-event-provenance-observability-model.md) — `Proposed`;
-- reviewed proposal publication commit: `eb6f7f5778cd8afe78f7988d00b95623423cb81d`;
-- current reviewed proposal blob SHA: `5468001d2a0ff13fb16b7f88f7a3bc26f6bc6225`.
+- [`DECISION-2026-08-07-RFC-0006-ACCEPTANCE`](../governance/decisions/DECISION-2026-08-07-RFC-0006-ACCEPTANCE.md) — `Approved`;
+- approval commit: `26a92a6663083cc2923bc25e5ccf920b61c17387`.
+
+Approved reviewed proposal:
+
+- [`RFC-0006 v0.2.0`](RFC-0006-event-provenance-observability-model.md);
+- immutable proposal blob SHA `5468001d2a0ff13fb16b7f88f7a3bc26f6bc6225`;
+- reviewed proposal publication commit: `eb6f7f5778cd8afe78f7988d00b95623423cb81d`.
 
 Review evidence:
 
@@ -146,7 +151,12 @@ Review evidence:
 - iterations completed: 4 of maximum 7;
 - result: `Pass after bounded reconciliation`.
 
-RFC-0006 `0.2.0` remains non-normative until explicit owner approval exists independently and the RFC State Transition Procedure completes acceptance publication, RFC Index synchronization, roadmap synchronization and read-after-write verification.
+Accepted RFC publication:
+
+- [`RFC-0006 v1.0.0`](RFC-0006-event-provenance-observability-model-v1.0.0.md) — `Accepted`;
+- publication commit: `49f88d04f6440dcbeedb860ccbf7b5f43a2b7b2a`.
+
+RFC-0006 `1.0.0` is binding architecture within its declared Event, Provenance and Observability scope.
 
 ## Related Governance
 
