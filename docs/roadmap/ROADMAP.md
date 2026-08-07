@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `1.1.2`
+Version: `1.1.3`
 Created: `2026-08-07`
 Updated: `2026-08-07`
 Owner: `ООО «Арвектум»`
@@ -76,7 +76,7 @@ The phase does **not** require the entire future platform to be fully specified 
 | 🟪 0C | RFC-0002 — Kernel metamodel | 🟩 | `██████████ 100%` |
 | 🟢 0D | RFC-0003 — Identity, security, privacy, sovereignty | 🟩 | `██████████ 100%` |
 | 🟠 0E | RFC-0004 — Product Contract and extension model | 🟩 | `██████████ 100%` |
-| 🔵 0F | RFC-0005/0006 — Governed execution, events and provenance | 🟨 | `█████░░░░░ 50%` |
+| 🔵 0F | RFC-0005/0006 — Governed execution, events and provenance | 🟨 | `████████░░ 80%` |
 | 🟣 0G | RFC-0007 — Memory, knowledge and learning lifecycle | ⬜ | `░░░░░░░░░░ 0%` |
 | 🟨 0H | Reference implementation readiness | ⬜ | `░░░░░░░░░░ 0%` |
 
@@ -254,7 +254,8 @@ It does not select IAM, cryptographic, database or cloud technologies and does n
 - 🟩 additional compatibility re-check performed against Accepted RFC-0003 `1.0.0` as review iteration 4;
 - 🟩 no material conflict found; stale RFC-0003 lifecycle wording reconciled for acceptance publication;
 - 🟩 RFC-0004 published as `Accepted 1.0.0` in commit `3b3f72a01bd76d9cfb6a1ef78e7ec6a627173ee2`;
-- 🟩 RFC Index synchronized with acceptance evidence.
+- 🟩 RFC Index synchronized with acceptance evidence;
+- 🟩 read-after-write transition verification completed against RFC publication, Index, owner approval and roadmap state.
 
 ### Accepted boundary
 
@@ -270,8 +271,8 @@ RFC-0004 is subordinate to Accepted RFC-0003 security, privacy, isolation, autho
 
 ## 10. Block 0F — Governed execution, events and provenance
 
-**Status:** 🟨 In progress — RFC-0005 reviewed proposal requires re-check against newly Accepted RFC-0004  
-**Progress:** `█████░░░░░ 50%`
+**Status:** 🟨 In progress — RFC-0005 reviewed proposal ready for owner decision  
+**Progress:** `████████░░ 80%`
 
 ### Planned RFCs
 
@@ -283,10 +284,13 @@ RFC-0004 is subordinate to Accepted RFC-0003 security, privacy, isolation, autho
 - 🟩 RFC-0005 `0.1.0` initial complete proposal prepared;
 - 🟩 first functional cross-review completed with 3 iterations;
 - 🟩 reviewed proposal `0.2.0` published;
-- 🟨 Accepted RFC-0004 `1.0.0` is now a new normative dependency that must be reconciled before RFC-0005 owner decision;
-- 🟦 perform review iteration 4 against Accepted RFC-0004 and this updated roadmap;
-- ⬜ publish resulting reviewed proposal and synchronize RFC Index;
-- ⬜ owner decision and acceptance transition after review closure.
+- 🟩 RFC-0004 `1.0.0` accepted and its state transition fully closed;
+- 🟩 review iteration 4 completed against Accepted RFC-0004 and Roadmap `1.1.2`;
+- 🟩 result `Pass with bounded reconciliation`;
+- 🟩 RFC-0005 reviewed proposal `0.3.0` published with normative dependency on Accepted RFC-0004;
+- 🟩 RFC Index synchronized to RFC-0005 `0.3.0`;
+- 🟦 next: explicit owner decision on RFC-0005 `0.3.0`;
+- ⬜ if approved, complete acceptance publication, Index synchronization, roadmap synchronization and read-after-write verification before substantive RFC-0006 work.
 
 ### Exit criterion
 
@@ -365,7 +369,7 @@ RFC-0003 Identity / Security / Privacy  ✅ ACCEPTED 1.0.0
         ↓
 RFC-0004 Product Contract / Extensions  ✅ ACCEPTED 1.0.0
         ↓
-RFC-0005 Governed Execution / Workflow  🟨 REVIEW ITERATION 4 / RECONCILIATION
+RFC-0005 Governed Execution / Workflow  🟦 OWNER DECISION NEXT — PROPOSED 0.3.0
         ↓
 RFC-0006 Event / Provenance / Observability
         ↓
@@ -384,9 +388,9 @@ Parallel work is permitted when the work is bounded and reversible and does not 
 
 The current architecture work item is:
 
-> **Re-check RFC-0005 against Accepted RFC-0004 `1.0.0` and the synchronized Roadmap `1.1.2`, publish the resulting reviewed proposal, then prepare RFC-0005 for owner decision.**
+> **Obtain explicit owner decision on reviewed RFC-0005 `0.3.0`. If approved, close its complete acceptance transition before starting substantive RFC-0006 work.**
 
-RFC-0005 was initially prepared while RFC-0004 was non-normative. RFC-0004 is now binding, so Product Contract references in RFC-0005 must be upgraded from forward compatibility to normative dependency without allowing product-specific behavior to leak into the platform execution model.
+RFC-0005 `0.3.0` now depends normatively on Accepted RFC-0004 and preserves the product/platform boundary while defining domain-neutral Governed Execution and Workflow semantics.
 
 ## 15. Roadmap maintenance rule
 
