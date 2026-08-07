@@ -78,13 +78,17 @@ For every substantive new task, the default execution model is an iterative comp
 
 `execute → functional role cross-review → revise → functional role cross-review → revise → ...`
 
-The agent must continue this loop until all functional roles relevant to the task agree that the result is sufficient for the current lifecycle stage and that additional changes would be disproportionate, speculative or otherwise unnecessary at that stage.
+The agent must continue this loop until all functional roles relevant to the task agree that the result is sufficient for the current lifecycle stage and that additional changes would be disproportionate, speculative or otherwise unnecessary at that stage, subject to a hard maximum of seven cross-review iterations per task.
+
+A cross-review iteration is one review of the current result by the materially relevant functional roles together with incorporation of the material findings that can be resolved within that iteration. The initial execution before the first cross-review is not counted as an iteration. No eighth cross-review iteration may be started for the same task merely to continue refinement.
 
 Functional role selection must be based on the actual scope and consequences of the task. It must include the perspectives materially needed to evaluate the work, such as architecture, engineering, product, operations, security, privacy, governance, commercial, legal or domain expertise where applicable. The loop does not require review by roles that have no material relevance to the task.
 
 Each cross-review must evaluate the result against the concerns of the selected roles and against the current project lifecycle, accepted architecture, applicable governance, delivery value, reversibility and risk. Review findings that materially improve correctness, coherence, security, usability, operability, maintainability or stage-appropriate completeness must be incorporated before the next review cycle.
 
-The stopping condition is reached when the relevant roles have no remaining material objections and further refinement would exceed what is justified by the current lifecycle stage, evidence, risk or task scope. The goal is to deliver, within one user request whenever practical, the strongest stage-appropriate final result rather than an avoidably preliminary draft.
+The normal stopping condition is reached when the relevant roles have no remaining material objections and further refinement would exceed what is justified by the current lifecycle stage, evidence, risk or task scope. The goal is to deliver, within one user request whenever practical, the strongest stage-appropriate final result rather than an avoidably preliminary draft.
+
+The hard stopping condition is reached after the seventh cross-review iteration even if material objections remain. In that case, the agent must stop the iterative improvement loop, preserve the strongest result reached within the seven-iteration limit, and explicitly report unresolved material objections, risks, disagreements, assumptions and any decision authority or follow-up work required. Reaching the limit must not be represented as role consensus or successful formal approval.
 
 Functional cross-review is an execution-quality mechanism. It does not itself constitute formal approval, acceptance, delegation of authority or promotion of lifecycle status. Any change that requires owner approval, decision-authority approval, RFC acceptance, ADR acceptance, policy approval, operational-readiness approval or another canonical governance action remains subject to that action.
 
