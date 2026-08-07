@@ -3,6 +3,7 @@
 Status: `Closed`
 Recorded: `2026-08-06`
 Resolved: `2026-08-07`
+Verification: `Complete`
 Category: `governance`
 Canonical Constitution: `1.2.0`
 Resolution decision: `DECISION-2026-08-07-CONSTITUTION-1.2-PROVENANCE-REPAIR`
@@ -109,6 +110,21 @@ Current Accepted RFC-0001 through RFC-0008 already declare Constitution `1.2.0` 
 - Historical constitutional amendment identifiers are provenance references only and do not compete with the current RFC index.
 - No older Constitution version should be used for new architectural work.
 
+## Closure verification
+
+Read-after-write verification against the repository default branch was completed on `2026-08-07` after the repair publications.
+
+Verified cross-source state:
+
+1. [`DECISION-2026-08-07-CONSTITUTION-1.2-PROVENANCE-REPAIR`](decisions/DECISION-2026-08-07-CONSTITUTION-1.2-PROVENANCE-REPAIR.md) is `Approved`;
+2. this provenance record is `Closed` and contains the immutable historical evidence and collision interpretation;
+3. `docs/rfc/README.md` lists current RFC-0001 through RFC-0008 as `Accepted 1.0.0` and separately indexes the historical constitutional amendments;
+4. `docs/roadmap/ROADMAP.md` version `1.2.2` records the provenance repair as complete, states that no unresolved Phase 0 governance provenance debt remains, and keeps Phase 0 / Blocks 0A–0H complete;
+5. Constitution `1.2.0` remains `Ratified` and unchanged;
+6. current `RFC-0001 — Arvectum OS Architecture` remains `Accepted 1.0.0` and unchanged.
+
+Cross-source status consistency: `Pass`.
+
 ## Decision
 
 This provenance record is `Closed`.
@@ -119,5 +135,5 @@ Closure basis:
 2. their amendment content and owner approval were verified;
 3. the historical identifier collision was explicitly recorded rather than hidden;
 4. the Owner approved the current governance repair on `2026-08-07`;
-5. the RFC Index and canonical roadmap are synchronized as part of this repair;
-6. read-after-write verification is required to complete operational closure.
+5. the RFC Index and canonical roadmap were synchronized as part of this repair;
+6. read-after-write verification completed successfully with cross-source status consistency `Pass`.
