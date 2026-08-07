@@ -31,11 +31,9 @@ Domain products such as procurement, marketing, finance or legal agents live out
 
 `Phase 0 — Foundation / Architecture Bootstrap` is complete.
 
-The foundational semantic sequence RFC-0001 through RFC-0007 is `Accepted 1.0.0`. Architecture Glossary `1.2.0` is synchronized to those Accepted sources, and Roadmap Block 0H `Reference implementation readiness` is complete.
+RFC-0001 through RFC-0008 are now `Accepted 1.0.0`. [`RFC-0008 — Document and Artifact Architecture`](docs/rfc/RFC-0008-document-artifact-architecture-v1.0.0.md) is binding architecture within its declared scope following explicit owner approval and canonical acceptance publication.
 
-`RFC-0008 — Document and Artifact Architecture` now exists as a reviewed [`Proposed 0.2.0`](docs/rfc/RFC-0008-document-artifact-architecture.md). Its [functional cross-review](docs/reviews/RFC-0008-functional-cross-review.md) is complete after 4 of maximum 7 iterations with result `Pass after bounded reconciliation`.
-
-RFC-0008 is **not yet Accepted** and therefore has no normative force. Owner approval and the full RFC state-transition closure are still required before it can become binding architecture.
+RFC-0008 establishes domain-neutral Document and Artifact semantics without adding a Kernel primitive or selecting a DMS, object store, database, file format, OCR engine, signing provider, search technology or service topology. Acceptance does not itself make a document/artifact Platform Capability `Active` or establish production, operational, SLA, support, archival, legal-signature or product-specific commitments.
 
 The reference implementation delivery track remains independently ready: the first bounded executable reference implementation slice is defined in [Reference Implementation Readiness Baseline](docs/implementation/REFERENCE-IMPLEMENTATION-READINESS.md).
 
@@ -48,11 +46,11 @@ Working reference code does not by itself make a Platform Capability `Active`, e
 Roadmap blocks and RFCs use separate identifier namespaces.
 
 - `Block 0H` = `Reference implementation readiness` — completed non-RFC roadmap milestone.
-- `RFC-0008` = `Document and Artifact Architecture` — separate architecture RFC, currently `Proposed 0.2.0`.
+- `RFC-0008` = `Document and Artifact Architecture` — separate architecture RFC, now `Accepted 1.0.0`.
 
 Do not call Block 0H `RFC-0008 readiness`. A roadmap milestone may occur between RFCs without consuming or renumbering an RFC identifier.
 
-The current sequence and owner-review state are maintained only in the [Canonical Roadmap](docs/roadmap/ROADMAP.md) and [RFC Index](docs/rfc/README.md).
+The current delivery sequence is maintained only in the [Canonical Roadmap](docs/roadmap/ROADMAP.md) and [RFC Index](docs/rfc/README.md).
 
 ## Authority order
 
