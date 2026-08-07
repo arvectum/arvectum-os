@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `1.0.8`
+Version: `1.0.9`
 Created: `2026-08-07`
 Updated: `2026-08-07`
 Owner: `ООО «Арвектум»`
@@ -75,7 +75,7 @@ The phase does **not** require the entire future platform to be fully specified 
 | 🟦 0B | Architecture language baseline | 🟩 | `██████████ 100%` |
 | 🟪 0C | RFC-0002 — Kernel metamodel | 🟩 | `██████████ 100%` |
 | 🟢 0D | RFC-0003 — Identity, security, privacy, sovereignty | 🟨 | `████████░░ 80%` |
-| 🟠 0E | RFC-0004 — Product Contract and extension model | ⬜ | `░░░░░░░░░░ 0%` |
+| 🟠 0E | RFC-0004 — Product Contract and extension model | 🟨 | `████████░░ 80%` |
 | 🔵 0F | RFC-0005/0006 — Governed execution, events and provenance | ⬜ | `░░░░░░░░░░ 0%` |
 | 🟣 0G | RFC-0007 — Memory, knowledge and learning lifecycle | ⬜ | `░░░░░░░░░░ 0%` |
 | 🟨 0H | Reference implementation readiness | ⬜ | `░░░░░░░░░░ 0%` |
@@ -242,12 +242,37 @@ The shared platform has accepted domain-neutral rules for identity administratio
 
 ## 9. Block 0E — RFC-0004: Product Contract, Product Experiment and Extension Model
 
-**Status:** ⬜ Planned  
-**Progress:** `░░░░░░░░░░ 0%`
+**Status:** 🟨 In progress — reviewed proposal available  
+**Progress:** `████████░░ 80%`
 
 ### Planned RFC
 
 `RFC-0004 — Product Contract, Product Experiment and Extension Model`
+
+### Completed
+
+- 🟩 complete working draft prepared and iteratively refined;
+- 🟩 functional role-based cross-review completed across CEO/strategy, COO/operations, CTO/architecture, CISO/security, Privacy, Legal/rights, Product and Engineering perspectives;
+- 🟩 review loop stopped after 3 of maximum 7 iterations when no further material correction was identified for the current lifecycle stage;
+- 🟩 review corrections incorporated into [`RFC-0004 v0.3.0`](../rfc/RFC-0004-product-contract-product-experiment-extension-model.md) — `Proposed`;
+- 🟩 detailed review evidence published in [`docs/reviews/RFC-0004-functional-cross-review.md`](../reviews/RFC-0004-functional-cross-review.md);
+- 🟩 RFC Index synchronized to the reviewed proposal.
+
+### Current proposal boundary
+
+RFC-0004 `0.3.0` defines Product Contract identity/version/lifecycle semantics, minimal provisional contracts for platform-interacting Product Experiments, explicit capability/canonical-state/operation/event/artifact boundaries, extension registration, compatibility/migration/deprecation rules, and evidence-based promotion from product-local experiments into platform incubation.
+
+The proposal keeps Product Contract lifecycle independent from Platform Capability lifecycle, keeps product-domain logic product-owned by default, treats extension registration as distinct from authorization/organizational authority, and prohibits undocumented direct database/internal-import coupling.
+
+RFC-0004 normatively depends only on Accepted RFC-0001 and RFC-0002. RFC-0003 `0.2.0` remains `Proposed`; it was considered only for forward compatibility and must be rechecked if accepted or materially changed before RFC-0004 acceptance.
+
+### Remaining action
+
+- ⬜ complete owner decision on RFC-0003 `0.2.0` first under the default sequence;
+- ⬜ re-check RFC-0004 against the resulting RFC-0003 state if RFC-0003 is Accepted or changes materially;
+- ⬜ owner decision on RFC-0004 `0.3.0`;
+- ⬜ if approved, create independent approval record and publish `Accepted 1.0.0` with Acceptance Integrity evidence;
+- ⬜ synchronize glossary and roadmap after acceptance.
 
 ### Exit criterion
 
@@ -338,7 +363,7 @@ RFC-0002 Kernel Metamodel               ✅ ACCEPTED 1.0.0
         ↓
 RFC-0003 Identity / Security / Privacy  🟨 PROPOSED 0.2.0 — OWNER DECISION NEXT
         ↓
-RFC-0004 Product Contract / Extensions
+RFC-0004 Product Contract / Extensions  🟨 PROPOSED 0.3.0 — REVIEWED IN PARALLEL
         ↓
 RFC-0005 Governed Execution / Workflow
         ↓
@@ -357,13 +382,13 @@ Parallel work is permitted when the work is bounded and reversible and does not 
 
 ## 14. Next canonical action
 
-The current architecture work item is:
+The current architecture work item remains:
 
 > **Owner decision on reviewed RFC-0003 `0.2.0` — Identity, Security, Privacy, Tenant Sovereignty and Portability.**
 
-The proposal and functional cross-review are complete. It remains non-normative until explicit owner approval and valid Acceptance Integrity publication occur.
+RFC-0004 `0.3.0` has been prepared and cross-reviewed in parallel under the roadmap's parallel-work rule. It remains non-normative and does not displace the dependency-aware sequence.
 
-If approved, the next architecture work item becomes RFC-0004 — Product Contract, Product Experiment and Extension Model.
+If RFC-0003 is approved, RFC-0004 must be re-checked against the resulting Accepted RFC-0003 before its own owner decision. If RFC-0003 changes materially instead, RFC-0004 must be reconciled before acceptance consideration.
 
 ## 15. Roadmap maintenance rule
 
