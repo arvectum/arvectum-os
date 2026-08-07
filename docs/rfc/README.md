@@ -21,7 +21,7 @@ The Constitution has higher authority than every RFC. Accepted RFCs have higher 
 | [RFC-0002](RFC-0002-canonical-record-kernel-metamodel.md) | Canonical Record, Kernel Metamodel, Authority, Relationship and Organizational Asset Model | platform | Accepted | 1.0.0 |
 | [RFC-0003](RFC-0003-identity-security-privacy-tenant-sovereignty-portability.md) | Identity, Security, Privacy, Tenant Sovereignty and Portability | platform | Accepted | 1.0.0 |
 | [RFC-0004](RFC-0004-product-contract-product-experiment-extension-model-v1.0.0.md) | Product Contract, Product Experiment and Extension Model | product_contract | Accepted | 1.0.0 |
-| [RFC-0005](RFC-0005-governed-execution-workflow-model-v0.3.0.md) | Governed Execution and Workflow Model | platform | Proposed | 0.3.0 |
+| [RFC-0005](RFC-0005-governed-execution-workflow-model-v1.0.0.md) | Governed Execution and Workflow Model | platform | Accepted | 1.0.0 |
 
 ## Acceptance Integrity
 
@@ -104,21 +104,32 @@ Accepted RFC publication:
 
 RFC-0004 `1.0.0` is binding architecture within its declared product-contract scope.
 
-## RFC-0005 Proposal Evidence
+## RFC-0005 Approval Evidence
 
-Current reviewed proposal:
+Canonical owner approval:
 
-- [`RFC-0005 v0.3.0`](RFC-0005-governed-execution-workflow-model-v0.3.0.md) — `Proposed`;
-- incorporated reviewed baseline RFC-0005 `0.2.0` blob SHA `67e739ceacdbd308618f4fdfffd914dc65e99f09`;
-- original functional cross-review: [`docs/reviews/RFC-0005-functional-cross-review.md`](../reviews/RFC-0005-functional-cross-review.md) — `Complete`, 3 iterations;
-- additional cross-review against Accepted RFC-0004 and Roadmap `1.1.2`: [`RFC-0005 iteration 4`](../reviews/RFC-0005-cross-review-iteration-4.md) — `Complete`;
+- [`DECISION-2026-08-07-RFC-0005-ACCEPTANCE`](../governance/decisions/DECISION-2026-08-07-RFC-0005-ACCEPTANCE.md) — `Approved`;
+- approval commit: `634feebe6837987599c507e9f9430591185a599c`.
+
+Approved reviewed proposal:
+
+- [`RFC-0005 v0.3.0`](RFC-0005-governed-execution-workflow-model-v0.3.0.md);
+- immutable proposal blob SHA `5a4b347dc39e88eeacf49a39861e37326beb7234`;
+- incorporated RFC-0005 `0.2.0` semantic baseline blob SHA `67e739ceacdbd308618f4fdfffd914dc65e99f09`.
+
+Review evidence:
+
+- [`RFC-0005 functional cross-review`](../reviews/RFC-0005-functional-cross-review.md) — `Complete`, iterations 1–3;
+- [`RFC-0005 iteration 4`](../reviews/RFC-0005-cross-review-iteration-4.md) — `Complete`;
 - total review iterations: 4 of maximum 7;
-- iteration 4 result: `Pass with bounded reconciliation`;
-- RFC-0005 `0.3.0` publication commit: `b9d678456d2fe526c5a2d637001a970321240305`.
+- iteration 4 result: `Pass with bounded reconciliation`.
 
-RFC-0005 `0.3.0` now normatively depends on Accepted RFC-0001, RFC-0002, RFC-0003 and RFC-0004. Product Contract version attribution and boundary enforcement have been reconciled with RFC-0004 `1.0.0`.
+Accepted RFC publication:
 
-RFC-0005 is ready for owner decision. Until explicitly approved and canonically published as `Accepted`, it has no normative force.
+- [`RFC-0005 v1.0.0`](RFC-0005-governed-execution-workflow-model-v1.0.0.md) — `Accepted`;
+- publication commit: `fcb4f93edbd6062b7ba1e4abbb21972fe4a64575`.
+
+RFC-0005 `1.0.0` is binding architecture within its declared Governed Execution and Workflow scope.
 
 ## Related Governance
 
