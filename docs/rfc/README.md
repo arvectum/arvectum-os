@@ -56,7 +56,11 @@ Accepted RFC publication commit on the acceptance branch:
 
 - `ed936fcaa118368f81d2329b8f1ffa70d219ec4f`.
 
-The final merge commit on `main` is repository publication evidence and may be recorded here after merge without requiring self-reference from the acceptance publication itself.
+Accepted RFC publication merge commit on `main`:
+
+- `8d247402db1b869fcca7bc1dc634cbb2f585c89a`.
+
+The merge commit preserves the independent approval commit and subsequent acceptance publication commits in repository history.
 
 ## Related Governance
 
