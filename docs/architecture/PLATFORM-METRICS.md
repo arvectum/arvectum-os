@@ -1,9 +1,9 @@
 # Arvectum OS Platform Metrics
 
 Status: `Informative`
-Version: `0.5.0`
+Version: `0.6.0`
 Updated: `2026-08-07`
-Architecture basis: `RFC-0001 v0.8.0`
+Architecture basis: `RFC-0001 v0.9.0`
 Constitution basis: `1.2.0`
 
 ## Purpose
@@ -33,6 +33,25 @@ It must not be evaluated primarily by service count, abstraction count, RFC coun
 - unnecessary contract fields or controls;
 - delay attributable to ceremony rather than risk control.
 
+## Commercial Commitment Integrity
+
+- customer-facing commitments mapped to an approved capability lifecycle and conformance scope;
+- Product Experiments, Candidates or Incubating capabilities incorrectly represented as Active;
+- commercial commitments creating undeclared stable platform obligations;
+- marketing or sales claims exceeding approved Conformance Statements;
+- customer commitments without a canonical decision reference where approval is required;
+- time required to review material commercial commitments without delaying ordinary bounded pilots.
+
+## Operational Readiness
+
+- Active capabilities with approved operational-readiness evidence;
+- Active capabilities without accountable support ownership;
+- missing observability, incident, recovery or continuity paths;
+- customer-facing operational commitments not covered by readiness evidence;
+- manual operational controls without review or replacement triggers;
+- recovery, restoration or reconstruction tests completed where applicable;
+- incidents attributable to premature Active promotion.
+
 ## Decision Authority and Governance
 
 - material decisions with a named decision authority;
@@ -40,6 +59,7 @@ It must not be evaluated primarily by service count, abstraction count, RFC coun
 - lifecycle transitions without canonical approval references;
 - architectural exceptions without expiry, review date or exit plan;
 - known gaps accepted by an authority lacking the affected scope;
+- material commercial commitments approved by an authority lacking the affected scope;
 - decisions unnecessarily escalated to the owner despite valid delegation;
 - overdue governance-policy reviews;
 - time from proposal to decision by risk class.
@@ -60,6 +80,8 @@ It must not be evaluated primarily by service count, abstraction count, RFC coun
 - unjustified `Not Applicable` declarations;
 - manual controls without review or replacement conditions;
 - material exceptions approved by their proposer;
+- Active subjects without operational-readiness evidence in the statement;
+- external commitments missing from the conformance scope;
 - overdue conformance reviews.
 
 ## Canonical Authority and External Systems
@@ -81,6 +103,7 @@ It must not be evaluated primarily by service count, abstraction count, RFC coun
 ## Economics
 
 - capability responsibility and support cost;
+- operational-readiness cost before Active promotion;
 - integration cost versus product-specific or external alternatives;
 - measurable operating cost or risk avoided;
 - de-platformization and retirement cost;
@@ -106,8 +129,8 @@ It must not be evaluated primarily by service count, abstraction count, RFC coun
 
 Targets require an operational baseline and must identify owner, data source, review period, rationale and harmful incentives.
 
-Metrics must not encourage premature platformization, unnecessary approvals, excessive data collection, retention of failed capabilities, or relabeling product experiments as platform reuse.
+Metrics must not encourage premature platformization, unnecessary approvals, commercial overclaiming, cosmetic operational-readiness checklists, excessive data collection, retention of failed capabilities, or relabeling product experiments as platform reuse.
 
 ## Review Cadence
 
-During product validation, metrics should be reviewed at meaningful pilot, delivery, governance, migration or capability milestones rather than through heavy fixed reporting.
+During product validation, metrics should be reviewed at meaningful pilot, delivery, governance, migration, commercial-commitment or capability milestones rather than through heavy fixed reporting.
