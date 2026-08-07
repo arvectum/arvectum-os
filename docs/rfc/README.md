@@ -24,7 +24,7 @@ The Constitution has higher authority than every RFC. Accepted RFCs have higher 
 | [RFC-0005](RFC-0005-governed-execution-workflow-model-v1.0.0.md) | Governed Execution and Workflow Model | platform | Accepted | 1.0.0 |
 | [RFC-0006](RFC-0006-event-provenance-observability-model-v1.0.0.md) | Event, Provenance and Observability Model | platform | Accepted | 1.0.0 |
 | [RFC-0007](RFC-0007-memory-knowledge-governed-learning-lifecycle-v1.0.0.md) | Memory, Knowledge and Governed Learning Lifecycle | platform | Accepted | 1.0.0 |
-| [RFC-0008](RFC-0008-document-artifact-architecture.md) | Document and Artifact Architecture | platform | Proposed | 0.2.0 |
+| [RFC-0008](RFC-0008-document-artifact-architecture-v1.0.0.md) | Document and Artifact Architecture | platform | Accepted | 1.0.0 |
 
 ## Acceptance Integrity
 
@@ -186,21 +186,32 @@ Accepted RFC publication:
 
 RFC-0007 `1.0.0` is binding architecture within its declared Memory, Knowledge and Governed Learning scope.
 
-## RFC-0008 Proposal Evidence
+## RFC-0008 Approval Evidence
 
-Reviewed proposal:
+Canonical owner approval:
 
-- [`RFC-0008 v0.2.0`](RFC-0008-document-artifact-architecture.md) — `Proposed`;
+- [`DECISION-2026-08-07-RFC-0008-ACCEPTANCE`](../governance/decisions/DECISION-2026-08-07-RFC-0008-ACCEPTANCE.md) — `Approved`;
+- approval commit: `9b104307dc1ee2e04ac65146b6beb73db0d13019`.
+
+Approved reviewed proposal:
+
+- [`RFC-0008 v0.2.0`](RFC-0008-document-artifact-architecture.md);
+- immutable proposal blob SHA `0de6a1dead4e06605d72d0781505bb44598d752a`;
 - reviewed proposal publication commit: `1e385ab73499a209da9a1bfad980902eef364d61`.
 
-Functional cross-review:
+Review evidence:
 
 - [`RFC-0008 functional cross-review`](../reviews/RFC-0008-functional-cross-review.md) — `Complete`;
 - iterations completed: 4 of maximum 7;
 - result: `Pass after bounded reconciliation`;
 - review publication commit: `3a5a52d6d6daa1e44386eb4b46ef095fab2c8ab2`.
 
-RFC-0008 has **not** been approved or accepted. It has no normative force until an independent owner approval exists and the acceptance transition is completed under the RFC State Transition Procedure.
+Accepted RFC publication:
+
+- [`RFC-0008 v1.0.0`](RFC-0008-document-artifact-architecture-v1.0.0.md) — `Accepted`;
+- publication commit: `230fb452f5aa8688950056cf1c4965840803c835`.
+
+RFC-0008 `1.0.0` is binding architecture within its declared Document and Artifact scope. Acceptance does not itself activate a document/artifact Platform Capability or establish production, operational, SLA, support, archival, legal-signature or product-specific commitments.
 
 ## Related Governance
 
