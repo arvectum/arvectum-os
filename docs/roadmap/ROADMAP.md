@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `1.1.8`
+Version: `1.1.9`
 Created: `2026-08-07`
 Updated: `2026-08-07`
 Owner: `ООО «Арвектум»`
@@ -61,7 +61,7 @@ Progress bars are planning indicators, not conformance claims.
 
 ## 4. Current phase
 
-**Phase 0 — Foundation / Architecture Bootstrap**
+**Phase 0 — Foundation / Architecture Bootstrap — Complete**
 
 The goal of Phase 0 is to establish enough shared language, architecture, governance and contracts to permit reversible implementation without premature platform lock-in.
 
@@ -78,7 +78,7 @@ The phase does **not** require the entire future platform to be fully specified 
 | 🟠 0E | RFC-0004 — Product Contract and extension model | 🟩 | `██████████ 100%` |
 | 🔵 0F | RFC-0005/0006 — Governed execution, events and provenance | 🟩 | `██████████ 100%` |
 | 🟣 0G | RFC-0007 — Memory, knowledge and learning lifecycle | 🟩 | `██████████ 100%` |
-| 🟨 0H | Reference implementation readiness | 🟦 | `░░░░░░░░░░ 0%` |
+| 🟨 0H | Reference implementation readiness | 🟩 | `██████████ 100%` |
 
 ## 5. Block 0A — Governance baseline
 
@@ -112,11 +112,11 @@ Create a shared vocabulary before further detailed architecture work so that con
 
 ### Deliverable
 
-Published:
+Published and synchronized:
 
-- 🟩 [`docs/architecture/GLOSSARY.md`](../architecture/GLOSSARY.md) — Arvectum OS Architecture Glossary `1.1.0`.
+- 🟩 [`docs/architecture/GLOSSARY.md`](../architecture/GLOSSARY.md) — Arvectum OS Architecture Glossary `1.2.0`, aligned through Accepted RFC-0007.
 
-The glossary defines the current canonical meaning of architectural terms already established by the Constitution and Accepted RFCs, including at minimum:
+The glossary provides current navigation for architectural terms established by the Constitution and Accepted RFCs, including at minimum:
 
 - Organization / Tenant;
 - Organizational Intelligence;
@@ -132,6 +132,8 @@ The glossary defines the current canonical meaning of architectural terms alread
 - Event;
 - Execution Context;
 - Governed Execution;
+- Principal / Actor;
+- Authentication / Authorization / Organizational Authority;
 - Product;
 - Product Experiment;
 - Product Contract;
@@ -188,7 +190,7 @@ It defines the items required by RFC-0001, including:
 - 🟩 architecture cross-section consistency validation completed;
 - 🟩 role-based top-management cross-review across CEO, COO, CFO/Risk, CISO/Privacy, Legal/Rights, Product/Commercial and CTO/Architecture completed;
 - 🟩 management review corrected accountable architectural ownership and mandatory external-authority contract fidelity to RFC-0001;
-- 🟩 Architecture Glossary synchronized to Accepted RFC-0002;
+- 🟩 Architecture Glossary synchronized to Accepted RFC-0002 and later foundational RFCs;
 - 🟩 RFC Index synchronized to `Accepted 1.0.0`.
 
 ### Accepted boundary
@@ -348,44 +350,48 @@ It does not create a new Kernel primitive, make any implementation capability `A
 
 ## 12. Block 0H — Reference implementation readiness
 
-**Status:** 🟦 Ready — next  
-**Progress:** `░░░░░░░░░░ 0%`
+**Status:** 🟩 Complete  
+**Progress:** `██████████ 100%`
 
 ### Objective
 
-Begin the smallest useful reference implementation now that the planned foundational semantic RFC sequence through RFC-0007 is Accepted.
+Make the smallest useful reference implementation startable now that the planned foundational semantic RFC sequence through RFC-0007 is Accepted, without introducing speculative technology or cross-cutting architecture in code.
 
-Implementation may proceed when it is:
+### Completed
 
-- bounded;
-- reversible;
-- explicitly provisional where required;
-- migration-friendly;
-- owned and reviewable;
-- consistent with security, governance, data-integrity and contractual constraints.
+- 🟩 Constitution `1.2.0` and RFC-0001 through RFC-0007 `1.0.0` re-verified from the canonical repository;
+- 🟩 [`Reference Implementation Readiness Baseline`](../implementation/REFERENCE-IMPLEMENTATION-READINESS.md) `1.0.0` published;
+- 🟩 logical modular-monolith implementation structure defined without fixing permanent service topology;
+- 🟩 first domain-neutral executable slice and failure cases defined;
+- 🟩 minimum architecture fitness matrix mapped to RFC-0001 through RFC-0007;
+- 🟩 security/privacy/Organization-scope bootstrap constraints defined;
+- 🟩 Product Contract entry condition for real product interaction defined;
+- 🟩 ADR trigger criteria defined;
+- 🟩 minimum ADR set before the first in-memory/in-process slice assessed as `zero` because no constraining technology/public-contract choice is yet required;
+- 🟩 functional cross-review completed after 3 of maximum 7 iterations with result `Pass after bounded reconciliation`;
+- 🟩 review evidence published in [`docs/reviews/REFERENCE-IMPLEMENTATION-READINESS-functional-cross-review.md`](../reviews/REFERENCE-IMPLEMENTATION-READINESS-functional-cross-review.md);
+- 🟩 Architecture Glossary synchronized to `1.2.0` through Accepted RFC-0007;
+- 🟩 RFC-0008 numbering/scope collision prevented: readiness remains Roadmap Block 0H; RFC-0008 remains reserved by RFC-0001 for Document and Artifact Architecture.
 
-### Expected subordinate decisions
+### Readiness boundary
 
-Use ADRs for concrete implementation choices only when they become necessary and sufficiently constraining, for example:
+The first reference implementation may begin with domain-neutral semantic modules, in-memory persistence ports, in-process application calls and executable fitness fixtures.
 
-- repository/runtime structure;
-- persistence technology;
-- API style;
-- migration tooling;
-- test strategy;
-- local development environment.
+No programming language, database, API protocol, event broker, workflow engine, IAM provider, policy engine, vector store, LLM/model provider, cloud topology or permanent package structure is canonically selected by Block 0H.
 
-Technology choices are not constitutional or fundamental architectural principles.
+An ADR becomes necessary only when an implementation choice becomes sufficiently constraining, such as a durable cross-module dependency, material migration commitment, stable public boundary, security/isolation mechanism or vendor/technology dependency with meaningful portability consequences.
+
+Reference implementation readiness is not operational readiness. This block does not make any capability `Active`, authorize a production conformance claim, create an SLA/support promise or make the Proposed Decision Authority Policy effective.
 
 ### Exit criterion for Phase 0
 
-Phase 0 is complete when:
+🟩 **Achieved. Phase 0 is complete.**
 
-1. the core architectural language is discoverable and aligned with Accepted sources;
+1. core architectural language is discoverable and aligned through Accepted RFC-0007 in Architecture Glossary `1.2.0`;
 2. the foundational RFCs required for the first reference implementation are Accepted;
-3. unresolved implementation areas are clearly marked provisional and migration-safe;
-4. the first reference implementation can start without inventing cross-cutting architecture in code;
-5. product experiments can connect through explicit boundaries where platform interaction exists.
+3. unresolved technology choices are explicitly deferred, provisional and migration-safe;
+4. the first executable slice is defined tightly enough to start without inventing cross-cutting architecture in code;
+5. product experiments have an explicit Product Contract entry boundary when platform interaction begins.
 
 ## 13. Default work sequence
 
@@ -398,7 +404,7 @@ RFC-0001 Architecture                   ✅ ACCEPTED 1.0.0
         ↓
 Canonical Roadmap                       ✅
         ↓
-Architecture Glossary                   ✅
+Architecture Glossary                   ✅ 1.2.0
         ↓
 RFC-0002 Kernel Metamodel               ✅ ACCEPTED 1.0.0
         ↓
@@ -412,7 +418,9 @@ RFC-0006 Event / Provenance / Observability  ✅ ACCEPTED 1.0.0
         ↓
 RFC-0007 Memory / Knowledge / Learning  ✅ ACCEPTED 1.0.0
         ↓
-Reference Implementation + ADRs         🟦 NEXT
+Reference Implementation Readiness      ✅ BLOCK 0H COMPLETE
+        ↓
+First bounded executable slice          🟦 NEXT
         ↓
 Product-driven validation and capability incubation
 ```
@@ -421,13 +429,20 @@ This is a **default dependency-aware sequence**, not a ban on parallel work.
 
 Parallel work is permitted when the work is bounded and reversible and does not prejudge unresolved higher-level architecture.
 
+RFC-0008 Document and Artifact Architecture may proceed when its scope becomes the highest-value unresolved architectural dependency; it is not a prerequisite for the already bounded first executable slice unless that slice begins to rely on unresolved shared Document/Artifact semantics.
+
 ## 14. Next canonical action
 
 The current architecture/delivery work item is:
 
-> **Begin Block 0H — Reference implementation readiness. Define only the minimum subordinate ADRs and implementation structure required to start a bounded, reversible reference implementation conforming to Accepted RFC-0001 through RFC-0007.**
+> **Implement the first bounded reference implementation executable slice defined by `docs/implementation/REFERENCE-IMPLEMENTATION-READINESS.md`: prove stable identities, immutable canonical versions, explicit Organization/authority gates, Governed Execution mutation, canonical Event evidence, provenance and Observation non-promotion with executable tests before adding infrastructure.**
 
-Acceptance of RFC-0007 closes Block 0G. Reference implementation work must not invent new cross-cutting contracts in code where an Accepted RFC, ADR or other appropriate governance artifact is required.
+For the first code slice:
+
+- prefer the simplest reversible implementation;
+- keep product-domain semantics out of shared modules;
+- use an ADR before a concrete choice crosses the readiness document's ADR gate;
+- do not treat working code as an `Active` Platform Capability or production-readiness evidence by itself.
 
 ## 15. Roadmap maintenance rule
 
