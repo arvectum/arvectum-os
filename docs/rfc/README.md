@@ -22,6 +22,7 @@ The Constitution has higher authority than every RFC. Accepted RFCs have higher 
 | [RFC-0003](RFC-0003-identity-security-privacy-tenant-sovereignty-portability.md) | Identity, Security, Privacy, Tenant Sovereignty and Portability | platform | Accepted | 1.0.0 |
 | [RFC-0004](RFC-0004-product-contract-product-experiment-extension-model-v1.0.0.md) | Product Contract, Product Experiment and Extension Model | product_contract | Accepted | 1.0.0 |
 | [RFC-0005](RFC-0005-governed-execution-workflow-model-v1.0.0.md) | Governed Execution and Workflow Model | platform | Accepted | 1.0.0 |
+| [RFC-0006](RFC-0006-event-provenance-observability-model.md) | Event, Provenance and Observability Model | platform | Proposed | 0.2.0 |
 
 ## Acceptance Integrity
 
@@ -130,6 +131,22 @@ Accepted RFC publication:
 - publication commit: `fcb4f93edbd6062b7ba1e4abbb21972fe4a64575`.
 
 RFC-0005 `1.0.0` is binding architecture within its declared Governed Execution and Workflow scope.
+
+## RFC-0006 Proposal Evidence
+
+Current reviewed proposal:
+
+- [`RFC-0006 v0.2.0`](RFC-0006-event-provenance-observability-model.md) — `Proposed`;
+- reviewed proposal publication commit: `eb6f7f5778cd8afe78f7988d00b95623423cb81d`;
+- current reviewed proposal blob SHA: `5468001d2a0ff13fb16b7f88f7a3bc26f6bc6225`.
+
+Review evidence:
+
+- [`RFC-0006 functional cross-review`](../reviews/RFC-0006-functional-cross-review.md) — `Complete`;
+- iterations completed: 4 of maximum 7;
+- result: `Pass after bounded reconciliation`.
+
+RFC-0006 `0.2.0` remains non-normative until explicit owner approval exists independently and the RFC State Transition Procedure completes acceptance publication, RFC Index synchronization, roadmap synchronization and read-after-write verification.
 
 ## Related Governance
 
