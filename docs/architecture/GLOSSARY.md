@@ -1,34 +1,35 @@
 # Arvectum OS Architecture Glossary
 
 Document status: `Active`
-Version: `1.0.1`
+Version: `1.1.0`
 Created: `2026-08-07`
 Updated: `2026-08-07`
 Owner: `ООО «Арвектум»`
 Task classification: `platform`
 Normative status: `Informative`
-Source baseline: Constitution `1.2.0`; RFC-0001 `1.0.0` (`Accepted`)
+Source baseline: Constitution `1.2.0`; RFC-0001 `1.0.0` (`Accepted`); RFC-0002 `1.0.0` (`Accepted`)
 
 ## 1. Purpose
 
 This glossary provides a shared architectural vocabulary for Arvectum OS.
 
-It summarizes terms already established by the [Constitution](../constitution/CONSTITUTION.md) and [Accepted RFC-0001](../rfc/RFC-0001-arvectum-os-architecture.md) so that contributors, products and AI agents can resolve core meanings without relying on chat history, model memory or implementation conventions.
+It summarizes terms already established by the [Constitution](../constitution/CONSTITUTION.md), [Accepted RFC-0001](../rfc/RFC-0001-arvectum-os-architecture.md) and [Accepted RFC-0002](../rfc/RFC-0002-canonical-record-kernel-metamodel.md) so that contributors, products and AI agents can resolve core meanings without relying on chat history, model memory or implementation conventions.
 
 This document does not create independent architectural requirements. If a glossary definition is incomplete, ambiguous or inconsistent with a higher-authority source, the Constitution and Accepted RFCs prevail.
 
-The precise Kernel metamodel remains provisional until RFC-0002 is Accepted. In particular, this glossary does not decide whether `Event`, `Execution Context` or `Typed Relationship` are Canonical Record subtypes, governed envelopes, independently persisted primitives or another compatible representation.
+RFC-0002 `1.0.0` finalizes the Kernel metamodel relationships that RFC-0001 left provisional. Identity remains a stable non-record reference primitive; Canonical Record is the immutable governed representation at one version; Typed Relationship, Event and Execution Context are semantic specializations of Canonical Record.
 
 ## 2. Authority and usage
 
 Terms are summarized from the following sources, in descending authority:
 
 1. [The Constitution of Arvectum OS](../constitution/CONSTITUTION.md), version `1.2.0`, `Ratified`;
-2. [RFC-0001 — Arvectum OS Architecture](../rfc/RFC-0001-arvectum-os-architecture.md), version `1.0.0`, `Accepted`.
+2. [RFC-0001 — Arvectum OS Architecture](../rfc/RFC-0001-arvectum-os-architecture.md), version `1.0.0`, `Accepted`;
+3. [RFC-0002 — Canonical Record, Kernel Metamodel, Authority, Relationship and Organizational Asset Model](../rfc/RFC-0002-canonical-record-kernel-metamodel.md), version `1.0.0`, `Accepted`.
 
 Draft, Proposed and other non-Accepted documents may be useful for design discussion but do not change the meanings recorded here.
 
-Later Accepted RFCs may refine terms that RFC-0001 explicitly leaves provisional. When that happens, this glossary should be updated to point to the newer accepted definition without silently changing the underlying architecture.
+Later Accepted RFCs may refine terms further. When that happens, this glossary should be updated to point to the newer accepted definition without silently changing the underlying architecture.
 
 ## 3. Core organizational terms
 
@@ -84,7 +85,9 @@ Canonical source: RFC-0001 Section 6.4.
 
 It is distinct from legal title, intellectual-property ownership, licensing rights, confidentiality obligations, contractual data rights and legal controller/processor roles.
 
-Canonical source: RFC-0001 Section 6.5.
+RFC-0002 requires significant Canonical Records to expose an accountable architectural owner, directly or through governed reference.
+
+Canonical sources: RFC-0001 Section 6.5; RFC-0002 Section 8.1.
 
 ### Organizational Control and Portability
 
@@ -100,7 +103,9 @@ Canonical sources: Constitution Article VII; RFC-0001 Sections 18 and 19.
 
 Proportionality permits bounded manual or provisional controls where appropriate. It does not waive mandatory constitutional, security, legal, contractual or Accepted RFC requirements.
 
-Canonical sources: Constitution Articles VIII, XIII and XVII; RFC-0001 Sections 7.3, 11, 17, 23 and 24.
+RFC-0002 applies this principle to the Kernel metamodel by permitting governed references instead of unnecessary physical duplication and by rejecting automatic wholesale migration of legacy product-local data.
+
+Canonical sources: Constitution Articles VIII, XIII and XVII; RFC-0001 Sections 7.3, 11, 17, 23 and 24; RFC-0002 Sections 8.8 and 17.8.
 
 ## 4. Kernel and canonical-state terms
 
@@ -116,35 +121,40 @@ RFC-0001 defines five Kernel primitives:
 4. Event;
 5. Execution Context.
 
-The precise metamodel relationships among these primitives are provisional until RFC-0002 is Accepted.
+RFC-0002 `1.0.0` finalizes their metamodel relationships. Identity is the stable non-versioned reference primitive and is not a Canonical Record. Canonical Record is the immutable governed representation of one logical subject at one specific version. Typed Relationship, Event and Execution Context are semantic specializations of Canonical Record.
 
-Canonical source: RFC-0001 Sections 1 and 10.
+Canonical sources: RFC-0001 Sections 1 and 10; RFC-0002 Section 6.
 
 ### Identity
 
-**Identity** is a stable reference to organizations, actors, products, governed objects, executions, events and extensions.
+**Identity** is an opaque stable reference to one semantic referent within a declared identity namespace and organization or platform scope.
 
-RFC-0001 establishes Identity semantics as a Kernel primitive but reserves the precise identity and version metamodel for RFC-0002.
+RFC-0002 distinguishes two roles:
 
-Canonical source: RFC-0001 Section 10.2 and provisional constraints in Section 10.3.
+- **Subject Identity** identifies one logical governed subject across time;
+- **Version Identity** identifies exactly one immutable Canonical Record version.
+
+Identity is immutable after issuance, non-recycled and independent of mutable business meaning. Possession or resolvability of an Identity does not itself grant permission, delegated authority or access.
+
+Canonical source: RFC-0002 Section 7.
 
 ### Canonical Record
 
-A **Canonical Record** is the governed representation of an object or immutable observation at a specific version, including its authority mode and authoritative source.
+A **Canonical Record** is the immutable governed representation of one logical subject at one specific version.
 
-Every significant governed object managed by Arvectum OS has one Canonical Record within its declared scope and type. A Canonical Record is authoritative for how Arvectum OS identifies, scopes, governs and references the object; it does not necessarily make Arvectum OS the originating system of record for every underlying fact.
+A changeable governed subject has one stable Subject Identity and an unambiguous canonical lineage of immutable versions, each with its own Version Identity. The **Canonical Head** is the latest admitted version in that lineage; it is distinct from the **Effective Version**, which is the version applicable for a declared evaluation context.
 
-Every Canonical Record has an immutable version identity. Changeable native or replicated objects use a stable object identity plus a sequence of immutable versions.
+Canonical Record semantics include authority, accountable architectural ownership, provenance, organization or tenant scope, classification/access constraints and applicable retention/deletion references. The common envelope is semantic and does not require one physical table or duplicated payload.
 
-Canonical source: RFC-0001 Sections 7.1 and 10.2.
+Canonical sources: RFC-0001 Section 7.1; RFC-0002 Sections 8 and 16.
 
 ### Significant Governed Object
 
 A **Significant Governed Object** is an object whose state or meaning materially affects organizational meaning, authority, production behavior, external commitments, financial or legal position, security, safety, reputation, canonical state, a reusable asset, or reconstruction of a consequential result.
 
-The Canonical Record requirement applies to every significant governed object managed by Arvectum OS within its declared scope and type.
+The Canonical Record requirement applies to every significant governed object managed by Arvectum OS within its declared scope and type. RFC-0002 does not broaden that significance threshold: non-significant technical state and explicit transient outputs do not become Canonical Records merely because they are stored or convenient to persist.
 
-Canonical source: RFC-0001 Section 7.1.
+Canonical sources: RFC-0001 Section 7.1; RFC-0002 Section 8.8.
 
 ### Canonical State
 
@@ -154,37 +164,61 @@ Consequential changes to canonical state managed by Arvectum OS occur through Go
 
 Canonical sources: Constitution Article IV; RFC-0001 Sections 7.1 and 7.5.
 
+### Canonical Lineage
+
+A **Canonical Lineage** is the one unambiguous sequence of immutable Canonical Record versions for a changeable governed subject within one declared authority scope.
+
+Competing draft, simulated or branch representations may exist outside the canonical lineage, but they do not silently create parallel canonical heads.
+
+Canonical source: RFC-0002 Section 8.3.
+
+### Canonical Head
+
+The **Canonical Head** is the latest admitted version in a Canonical Lineage for a governed subject within one declared authority scope.
+
+It is a lineage concept and is not necessarily the version effective at a particular evaluation time.
+
+Canonical source: RFC-0002 Section 8.4.
+
+### Effective Version
+
+The **Effective Version** is the canonical version applicable for a declared evaluation context, such as effective time, authority scope or another version-resolution condition.
+
+A future-effective Canonical Head may therefore coexist with an earlier version that remains currently effective.
+
+Canonical source: RFC-0002 Section 8.5.
+
 ### Authoritative Source
 
 An **Authoritative Source** is the source designated as authoritative for a governed object or fact within a declared scope.
 
 The authoritative source may be Arvectum OS or an external system. Arvectum OS must not create a competing authoritative source where an external system remains authoritative.
 
-Canonical sources: Constitution Article IV; RFC-0001 Section 7.1.
+Canonical sources: Constitution Article IV; RFC-0001 Section 7.1; RFC-0002 Section 12.
 
 ### Authority Mode
 
 An **Authority Mode** declares the relationship between a Canonical Record and the authoritative source for the governed object.
 
-RFC-0001 defines exactly three modes:
+Exactly three modes exist:
 
 - `Native` — Arvectum OS is the authoritative source for the governed object;
 - `External Reference` — an external system remains authoritative and Arvectum OS stores a governed identity, reference and access or retrieval contract;
 - `Governed Replica` — an external system remains authoritative while Arvectum OS stores a synchronized governed representation under an explicit synchronization contract.
 
-Canonical source: RFC-0001 Section 7.1.
+For external modes, RFC-0002 requires enough explicit retrieval/synchronization, freshness, ordering, conflict, failure, transformation, retention, deletion and portability semantics to avoid competing authority and ambiguous cutover behavior.
+
+Canonical sources: RFC-0001 Section 7.1; RFC-0002 Section 12.
 
 ### Governed Organizational Asset
 
-A **Governed Organizational Asset** is a record or artifact explicitly designated as authoritative, reusable, evidentiary or operationally significant.
+A **Governed Organizational Asset** is an explicit governed designation applied to a Canonical Record, record lineage, represented artifact or another governed subject that the organization designates as authoritative, reusable, evidentiary or operationally significant.
 
-Such assets are discoverable, attributable and versioned at a level proportionate to their importance, and they may be reused only under applicable permissions, classifications, rights and policies.
+It is not a sixth Kernel primitive. The designation itself is governed, attributable, version-identifiable and reconstructable. Asset status does not create legal title, intellectual-property ownership, licensing rights or cross-organization reuse rights.
 
-A record or artifact does not become a Governed Organizational Asset merely because Arvectum OS generated, stored or processed it.
+Persistence alone does not imply asset status.
 
-RFC-0001 does not define Governed Organizational Asset as a sixth Kernel primitive; the detailed designation model remains for later architecture.
-
-Canonical sources: Constitution Article XVI; RFC-0001 Sections 7.2 and 10.
+Canonical sources: Constitution Article XVI; RFC-0001 Section 7.2; RFC-0002 Section 13.
 
 ### Transient Output
 
@@ -192,37 +226,35 @@ A **Transient Output** is a temporary result that has not been promoted into aut
 
 Transient and experimental outputs may use lighter versioning, observability and retention when their status, scope, owner, risk, retention and promotion or deletion path are explicit. They do not automatically become validated knowledge, organizational memory or permanent organizational assets.
 
-Canonical sources: Constitution Articles XV and XVI; RFC-0001 Section 7.3.
+Canonical sources: Constitution Articles XV and XVI; RFC-0001 Section 7.3; RFC-0002 Section 13.4.
 
 ### Typed Relationship
 
-A **Typed Relationship** is a governed connection between identities or record versions with explicit semantics and provenance.
+A **Typed Relationship** is a Canonical Record specialization representing one governed semantic relationship assertion instance from a source reference to a target reference.
 
-Operationally relevant relationships are explicit, directionally meaningful, attributable and traceable, and version-aware where required. The relationship graph supports context resolution, explainability, impact analysis, governance, search, dependency resolution and reconstruction; it does not require a graph database.
+It has its own stable Relationship Identity and immutable versions. Endpoints explicitly distinguish Subject Identity references from Version Identity references. Relationship Identity represents an assertion instance and is not derived solely from the source/type/target tuple.
 
-Whether Typed Relationship has independent identity and versioning is provisional until RFC-0002 is Accepted.
+A Typed Relationship expresses governed semantics; its existence or resolvability does not itself grant access, delegated authority, approval power or cross-organization visibility.
 
-Canonical source: RFC-0001 Sections 7.4, 10.2 and 10.3.
+Canonical source: RFC-0002 Section 9.
 
 ### Event
 
-An **Event** is an append-only observation that something meaningful occurred.
+An **Event** is a Canonical Record specialization representing an append-only observation that something meaningful occurred.
 
-Events form part of operational history. Corrections, reversals and compensations create additional linked objects rather than mutating history.
+An Event has one stable Event Identity and normally exactly one immutable canonical version. Corrections, reversals, compensations and invalidations create additional linked Events rather than mutating prior history.
 
-Whether Event is a Canonical Record subtype or is represented by one is provisional until RFC-0002 is Accepted.
-
-Canonical sources: Constitution Article XI; RFC-0001 Sections 7.1, 10.2 and 10.3.
+Canonical sources: Constitution Article XI; RFC-0001 Sections 7.1 and 10.2; RFC-0002 Section 10.
 
 ### Execution Context
 
-An **Execution Context** is the governed execution envelope binding an operation to its organization, actor, authority, product, workflow, inputs, controls, components and outputs.
+An **Execution Context** is a Canonical Record specialization representing one governed execution instance.
 
-For consequential operations it provides the context needed to identify relevant versions, sources, standards and policies, validation and approvals, emitted events, correlation and causation, classification, retention and reproducibility constraints.
+One governed execution has one stable Execution Identity and immutable versions for governance-significant state transitions. For Arvectum OS Governed Execution, the Execution Context uses `Native` authority mode for its governance envelope even when external systems remain authoritative for underlying inputs.
 
-Whether Execution Context is a Canonical Record subtype, a governed envelope or a related record set is provisional until RFC-0002 is Accepted.
+Consequential reliance on changeable governed inputs pins the exact Version Identities materially used. Terminal execution state is sealed; required history is preserved subject to applicable retention, deletion, privacy, legal and contractual constraints.
 
-Canonical source: RFC-0001 Sections 7.5, 10.2 and 10.3.
+Canonical sources: RFC-0001 Section 7.5; RFC-0002 Section 11.
 
 ### Governed Execution
 
@@ -234,23 +266,23 @@ RFC-0001 may require governed context for other consequential behavior through a
 
 Technical ability to perform an action does not itself grant organizational authority to an AI system, product or service.
 
-Canonical source: RFC-0001 Section 7.5.
+Canonical sources: RFC-0001 Section 7.5; RFC-0002 Section 11.
 
 ### Provenance
 
 **Provenance** is traceable origin and lineage information that allows governed records, relationships, events, artifacts and executions to be attributed to relevant sources, actors, versions and transformations.
 
-RFC-0001 requires provenance throughout Canonical Records, Typed Relationships, Governed Execution, learning and governed export, but leaves the detailed Event, Provenance and Observability model to a later RFC.
+RFC-0001 requires provenance throughout Canonical Records, Typed Relationships, Governed Execution, learning and governed export. RFC-0002 requires provenance within the Kernel metamodel but leaves detailed Event, Provenance and Observability mechanics to RFC-0006.
 
-Canonical sources: Constitution Articles V, XII and XVI; RFC-0001 Sections 7, 8, 18 and 29.
+Canonical sources: Constitution Articles V, XII and XVI; RFC-0001 Sections 7, 8, 18 and 29; RFC-0002 Sections 8–12.
 
 ### Observation
 
 **Observation** is a term used by the governed learning loop for an observed operational result, pattern or fact carried forward for evaluation.
 
-RFC-0001 does not finalize Observation as a Kernel primitive or detailed record type. An observation is not automatically validated knowledge; promotion requires applicable provenance, rights, classification, validation and approval.
+Observation is not a separate Kernel primitive under RFC-0002. An observation is not automatically validated knowledge; promotion requires applicable provenance, rights, classification, validation and approval.
 
-Canonical sources: Constitution Article XXI; RFC-0001 Section 8.
+Canonical sources: Constitution Article XXI; RFC-0001 Section 8; RFC-0002 Section 6.
 
 ## 5. Product and platform terms
 
@@ -274,9 +306,9 @@ RFC-0001 requires a Product Experiment to have an owner, scope, effort or budget
 
 A fully product-local experiment that does not consume platform capabilities, emit events into shared platform history, or read or change canonical platform state may operate without a Product Contract. Once it interacts with those platform responsibilities, it uses a minimal `Provisional` Product Contract proportionate to the interaction.
 
-Success does not automatically promote an experiment into a Platform Capability; promotion is a separate governed decision.
+RFC-0002 does not require Kernel conformance merely because a fully product-local reversible experiment exists. Success also does not automatically promote an experiment into a Platform Capability; promotion is a separate governed decision.
 
-Canonical sources: Constitution Articles II, XVII and XVIII; RFC-0001 Section 11.1.
+Canonical sources: Constitution Articles II, XVII and XVIII; RFC-0001 Section 11.1; RFC-0002 Sections 17.8 and 18.
 
 ### Product Contract
 
@@ -328,7 +360,9 @@ An **Active** capability is a Platform Capability that has passed applicable adm
 
 `Active` is a capability lifecycle state. It must not be confused with an operational environment such as `Production`.
 
-Canonical source: RFC-0001 Sections 11.2–11.4 and 24.
+RFC-0002 conformance alone does not make a capability `Active` and does not establish production readiness, an SLA or a support guarantee.
+
+Canonical sources: RFC-0001 Sections 11.2–11.4 and 24; RFC-0002 Section 18.2.
 
 ### Deprecated
 
@@ -452,7 +486,9 @@ A Product Experiment, `Candidate` or `Incubating` capability must not be represe
 
 Bounded pilots and Product Experiments may be described commercially when their lifecycle, limitations, support expectations and provisional or non-production status are represented accurately.
 
-Canonical source: RFC-0001 Section 14.
+RFC-0002 conformance is only a scoped metamodel claim and does not itself establish production readiness or an external support commitment.
+
+Canonical sources: RFC-0001 Section 14; RFC-0002 Section 18.2.
 
 ### Security, Privacy and Isolation
 
@@ -460,9 +496,11 @@ Canonical source: RFC-0001 Section 14.
 
 Accepted requirements include deny-by-default access, least privilege, organization scoping, data minimization, classification- and rights-aware handling, applicable retention and deletion rules, attributable consequential access and change, and failure behavior that does not silently broaden access or cross tenant boundaries.
 
-The exact identity, authorization, cryptography, isolation and privacy mechanisms are intentionally not finalized by this glossary and remain subject to later Accepted architecture and subordinate decisions.
+RFC-0002 adds metamodel-level guardrails: possession of an Identity or existence of a Typed Relationship does not itself grant access or authority, and physical Canonical Record representation must not require unnecessary sensitive-data duplication.
 
-Canonical sources: Constitution Article VIII; RFC-0001 Sections 17 and 19.
+The exact identity, authorization, cryptography, isolation and privacy mechanisms remain subject to later Accepted architecture and subordinate decisions.
+
+Canonical sources: Constitution Article VIII; RFC-0001 Sections 17 and 19; RFC-0002 Sections 7.5, 8.8 and 9.7.
 
 ### AI Authority
 
@@ -486,7 +524,9 @@ A conformance claim separates three different axes:
 
 A limited pilot, experiment or capability must not be described as fully platform-conformant merely because its bounded scope satisfies applicable requirements.
 
-Canonical source: RFC-0001 Section 24.
+RFC-0002 additionally defines scoped conformance to the Kernel metamodel; that claim is not equivalent to `Active` lifecycle, production readiness, SLA/support or full-platform conformance.
+
+Canonical sources: RFC-0001 Section 24; RFC-0002 Section 18.
 
 ### Conformance Statement
 
@@ -546,9 +586,11 @@ Canonical source: RFC-0001 Section 24.
 
 **Provisional** is a qualifier indicating that a definition, implementation, contract or conformance control is intentionally not yet final or stable within its relevant context.
 
-In RFC-0001 it is used in several distinct but related contexts, including the unresolved Kernel metamodel, Provisional Product Contracts, provisional capability contracts during incubation, and `Provisional` conformance maturity. The exact meaning must therefore be read from the lifecycle or artifact being qualified rather than treated as a single global status.
+The Kernel metamodel itself is no longer provisional after acceptance of RFC-0002 `1.0.0`. The qualifier remains valid in other distinct contexts, including Provisional Product Contracts, provisional capability contracts during incubation, provisional implementation choices in unresolved areas, and `Provisional` conformance maturity.
 
-Canonical sources: RFC-0001 Sections 10.3, 11, 13 and 24.
+The exact meaning must therefore be read from the lifecycle or artifact being qualified rather than treated as a single global status.
+
+Canonical sources: RFC-0001 Sections 11, 13 and 24; RFC-0002 `1.0.0`.
 
 ## 9. Normative language
 
@@ -564,21 +606,21 @@ Canonical source: RFC-0001 Section 2.1.
 
 ## 10. Terms intentionally not finalized here
 
-The following areas are deliberately not finalized by this glossary because RFC-0001 reserves them for later Accepted RFCs:
+RFC-0002 finalizes the Kernel metamodel questions previously listed here: Identity and version semantics, Typed Relationship identity/versioning, Event placement, Execution Context placement/lifecycle and product-neutral migration semantics are now governed by Accepted RFC-0002 `1.0.0`.
 
-- exact identity and version semantics for every Kernel primitive;
-- whether Event is a Canonical Record subtype or is represented by one;
-- whether Execution Context is a Canonical Record subtype, governed envelope or related record set;
-- whether Typed Relationship has independent identity and versioning;
-- preservation and lifecycle requirements for completed Execution Contexts;
+The following areas remain deliberately not finalized by this glossary because they are reserved for later Accepted RFCs or subordinate decisions:
+
 - exact Organization/Tenant mapping and tenancy metamodel;
-- detailed identity, security, privacy and tenant-sovereignty mechanisms;
+- identity administration, authentication, authorization, security, privacy and tenant-sovereignty mechanisms;
+- global identifier wire encoding;
 - detailed Product Contract and extension model beyond RFC-0001;
 - detailed Governed Execution and Workflow model;
-- detailed Event, Provenance and Observability model;
-- detailed Memory, Knowledge and Governed Learning lifecycle.
+- detailed Event, Provenance and Observability taxonomy/mechanics;
+- detailed Memory, Knowledge and Governed Learning lifecycle;
+- physical persistence topology, database schema and identifier encoding;
+- relationship-type catalogs and reusable record schemas beyond the metamodel invariants accepted in RFC-0002.
 
-These areas remain subject to the follow-up RFC sequence established by RFC-0001 and coordinated by the [Canonical Roadmap](../roadmap/ROADMAP.md).
+These areas remain subject to the follow-up RFC sequence coordinated by the [Canonical Roadmap](../roadmap/ROADMAP.md).
 
 ## 11. Quick source map
 
@@ -586,23 +628,26 @@ These areas remain subject to the follow-up RFC sequence established by RFC-0001
 |---|---|
 | Organizational Intelligence | Constitution Article 0; RFC-0001 §6.1 |
 | Executable Organizational Model | RFC-0001 §6.2 |
-| Architectural Responsibility | RFC-0001 §6.5 |
+| Architectural Responsibility | RFC-0001 §6.5; RFC-0002 §8.1 |
 | Organizational Control / Portability | Constitution Article VII; RFC-0001 §§18–19 |
-| Proportionality | Constitution Articles VIII, XIII, XVII; RFC-0001 cross-cutting |
-| Canonical Record and Authority Modes | RFC-0001 §7.1 |
-| Governed Organizational Asset | Constitution Article XVI; RFC-0001 §7.2 |
-| Transient Output | RFC-0001 §7.3 |
-| Typed Relationship | RFC-0001 §§7.4, 10.2 |
-| Governed Execution / Execution Context | RFC-0001 §§7.5, 10.2 |
-| Kernel primitives | RFC-0001 §10 |
-| Product Experiment | RFC-0001 §11.1 |
+| Proportionality | Constitution Articles VIII, XIII, XVII; RFC-0001 cross-cutting; RFC-0002 §§8.8, 17.8 |
+| Kernel metamodel | RFC-0002 §6 |
+| Identity / Subject Identity / Version Identity | RFC-0002 §7 |
+| Canonical Record / Lineage / Head / Effective Version | RFC-0002 §8 |
+| Authority Modes / transitions | RFC-0001 §7.1; RFC-0002 §12 |
+| Governed Organizational Asset | Constitution Article XVI; RFC-0001 §7.2; RFC-0002 §13 |
+| Transient Output | RFC-0001 §7.3; RFC-0002 §13.4 |
+| Typed Relationship | RFC-0002 §9 |
+| Event | Constitution Article XI; RFC-0002 §10 |
+| Governed Execution / Execution Context | RFC-0001 §7.5; RFC-0002 §11 |
+| Product Experiment | RFC-0001 §11.1; RFC-0002 §§17.8, 18 |
 | Platform Capability lifecycle | RFC-0001 §§11.2–11.4 |
 | Platform Service | RFC-0001 §11.5 |
 | Product boundary | Constitution Articles II, III, XX; RFC-0001 §12 |
 | Product Contract | RFC-0001 §13 |
-| Commercial Commitment Integrity | RFC-0001 §14 |
+| Commercial Commitment Integrity | RFC-0001 §14; RFC-0002 §18.2 |
 | Decision Authority / Exceptions | RFC-0001 §16 |
-| Security / Privacy / Isolation | Constitution Article VIII; RFC-0001 §17 |
+| Security / Privacy / Isolation | Constitution Article VIII; RFC-0001 §17; RFC-0002 §§7.5, 8.8, 9.7 |
 | Sovereignty / cross-organization rules | RFC-0001 §19 |
 | Extensions | RFC-0001 §20 |
 | AI authority | Constitution Article XIII; RFC-0001 §21 |
@@ -611,13 +656,13 @@ These areas remain subject to the follow-up RFC sequence established by RFC-0001
 | Workflow | Constitution Article X |
 | Memory | Constitution Article V; RFC-0001 §8 |
 | Knowledge | Constitution Article VI; RFC-0001 §8 |
-| Conformance | RFC-0001 §§24–25 |
+| Conformance | RFC-0001 §§24–25; RFC-0002 §18 |
 
 ## 12. Maintenance note
 
 This glossary is a navigation and language artifact, not a substitute for Accepted architecture.
 
-When a later Accepted RFC refines a term that is provisional here, the glossary should be updated to:
+When a later Accepted RFC refines a term, the glossary should be updated to:
 
 1. preserve the established term where still valid;
 2. point to the new accepted source;
