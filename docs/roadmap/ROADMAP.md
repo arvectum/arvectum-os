@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `1.1.11`
+Version: `1.2.0`
 Created: `2026-08-07`
 Updated: `2026-08-07`
 Owner: `ООО «Арвектум»`
@@ -414,62 +414,67 @@ Reference implementation readiness is not operational readiness. This block does
 
 ## 13. Current post-Phase-0 work map
 
-The current work map is:
+The reference implementation delivery track remains ready:
 
 ```text
-Constitution 1.2.0                      ✅
-        ↓
-RFC-0001 Architecture                   ✅ ACCEPTED 1.0.0
-        ↓
-RFC-0002 Kernel Metamodel               ✅ ACCEPTED 1.0.0
-        ↓
-RFC-0003 Identity / Security / Privacy  ✅ ACCEPTED 1.0.0
-        ↓
-RFC-0004 Product Contract / Extensions  ✅ ACCEPTED 1.0.0
-        ↓
-RFC-0005 Governed Execution / Workflow  ✅ ACCEPTED 1.0.0
-        ↓
-RFC-0006 Event / Provenance / Observability  ✅ ACCEPTED 1.0.0
-        ↓
-RFC-0007 Memory / Knowledge / Learning  ✅ ACCEPTED 1.0.0
-        ↓
 Roadmap Block 0H — Reference implementation readiness
 (non-RFC milestone)                     ✅ COMPLETE + OWNER CONFIRMED
         ↓
-First bounded executable slice          🟦 NEXT
+First bounded executable slice          🟦 READY / MAY PROCEED
 ```
 
-Separately, the RFC namespace continues as:
+The architecture RFC track is now:
 
 ```text
 RFC-0007 — Memory, Knowledge and Governed Learning Lifecycle  ✅ ACCEPTED 1.0.0
         ↓
-RFC-0008 — Document and Artifact Architecture                ⬜ NOT YET CREATED / PLANNED RFC SCOPE
+RFC-0008 — Document and Artifact Architecture                🟨 PROPOSED 0.2.0 / OWNER REVIEW
 ```
 
-These views are intentionally separate. Roadmap delivery milestones may be inserted between RFCs without renumbering the RFC sequence.
+RFC-0008 preparation is allowed in parallel with the bounded executable slice. The Proposed RFC has no normative force and does not become a prerequisite for the first slice unless that implementation begins relying on unresolved shared Document/Artifact semantics.
 
-RFC-0001 §29 provides a **recommended follow-up RFC sequence** and explicitly leaves its informative guidance non-normative through the RFC-0001 acceptance boundary. The roadmap may therefore schedule bounded implementation/readiness work between RFCs without changing the identity or title of RFC-0008.
+### RFC-0008 progress
 
-RFC-0008 should begin when shared Document/Artifact semantics become the highest-value unresolved architectural dependency. It is not a prerequisite for the already bounded first executable slice unless that slice starts to rely on unresolved shared Document/Artifact semantics.
+- 🟩 Constitution `1.2.0`, RFC Index and Accepted RFC-0001 through RFC-0007 re-verified;
+- 🟩 RFC-0008 `0.1.0` working draft published;
+- 🟩 functional cross-review completed after 4 of maximum 7 iterations;
+- 🟩 review result: `Pass after bounded reconciliation`;
+- 🟩 review evidence published in [`docs/reviews/RFC-0008-functional-cross-review.md`](../reviews/RFC-0008-functional-cross-review.md);
+- 🟩 all bounded reconciliation items incorporated;
+- 🟩 [`RFC-0008 — Document and Artifact Architecture`](../rfc/RFC-0008-document-artifact-architecture.md) published as `Proposed 0.2.0`;
+- 🟩 RFC Index synchronized to `Proposed 0.2.0` with explicit non-acceptance status;
+- 🟨 owner approval/decision pending;
+- ⬜ acceptance publication, RFC Index acceptance evidence, glossary synchronization and post-acceptance roadmap closure pending owner approval.
+
+### Proposed boundary
+
+RFC-0008 `0.2.0` currently proposes, but does not yet normatively establish, the domain-neutral architecture for logical Document identity, immutable Document Versions, Artifact representations, mutable Working Copies, governed content resolution/manifests, renditions, external authority, generation/admission, transformations/redaction, signatures/approval evidence, exact-version reliance, security/privacy propagation, packages, portability/export and migration.
+
+It introduces no new Kernel primitive and selects no DMS, object store, format, OCR engine, signing provider, database, search engine or service topology.
 
 ## 14. Next canonical action
 
-The current architecture/delivery work item is:
+The current architecture-governance action is:
 
-> **Implement the first bounded reference implementation executable slice defined by `docs/implementation/REFERENCE-IMPLEMENTATION-READINESS.md`: prove stable identities, immutable canonical versions, explicit Organization/authority gates, Governed Execution mutation, canonical Event evidence, provenance and Observation non-promotion with executable tests before adding infrastructure.**
+> **Owner review and explicit decision on RFC-0008 `0.2.0 Proposed`.**
 
-For the first code slice:
+The reference implementation delivery action remains independently ready in parallel:
 
-- prefer the simplest reversible implementation;
-- keep product-domain semantics out of shared modules;
-- use an ADR before a concrete choice crosses the readiness document's ADR gate;
-- do not treat working code as an `Active` Platform Capability or production-readiness evidence by itself.
+> **Implement the first bounded reference implementation executable slice defined by `docs/implementation/REFERENCE-IMPLEMENTATION-READINESS.md` unless the slice begins to rely on unresolved shared Document/Artifact semantics.**
+
+If RFC-0008 is approved, the same working cycle must create the canonical approval decision, publish `Accepted 1.0.0`, synchronize the RFC Index and roadmap, synchronize the Architecture Glossary to the Accepted semantics, and perform read-after-write consistency verification before characterizing RFC-0008 as binding.
+
+Until that transition is complete:
+
+- RFC-0008 remains non-normative `Proposed`;
+- no document/artifact implementation capability becomes `Active`;
+- no production, SLA, legal-signature, archival or support commitment is implied;
+- product-domain document taxonomies, templates and workflows remain product-owned.
 
 Naming rule for future work communication:
 
 - call the completed readiness work `Block 0H` or `Reference implementation readiness`;
-- call the future document/artifact architecture work `RFC-0008` or `RFC-0008 — Document and Artifact Architecture`;
+- call this architecture work `RFC-0008` or `RFC-0008 — Document and Artifact Architecture`;
 - never use `RFC-0008` as a label for Block 0H.
 
 ## 15. Roadmap maintenance rule
