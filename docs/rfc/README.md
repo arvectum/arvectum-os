@@ -49,7 +49,7 @@ It also requires operational-readiness approval before a capability becomes `Act
 
 Current proposed policy:
 
-- [`Decision Authority Policy`](../governance/DECISION-AUTHORITY-POLICY.md) — `Proposed` v0.2.0.
+- [`Decision Authority Policy`](../governance/DECISION-AUTHORITY-POLICY.md) — `Proposed` v0.2.1.
 
 Until that policy or a replacement is approved, the owner of Arvectum OS retains residual decision authority.
 
