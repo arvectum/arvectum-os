@@ -1,14 +1,14 @@
 # RFC-0003: Identity, Security, Privacy, Tenant Sovereignty and Portability
 
-Status: `Proposed`
-Version: `0.2.0`
+Status: `Accepted`
+Version: `1.0.0`
 Created: `2026-08-07`
 Updated: `2026-08-07`
 Authors: `ООО «Арвектум»`
 Category: `platform`
 Constitution: `1.2.0`
 Depends on: `RFC-0001 v1.0.0`; `RFC-0002 v1.0.0`
-Supersedes: `RFC-0003 v0.1.0` working draft
+Supersedes: `RFC-0003 v0.2.0` approved proposal
 Superseded by: `None`
 Decision owner: `ООО «Арвектум»`
 
@@ -1023,7 +1023,7 @@ The RFC mitigates these through proportionality, domain-neutral semantics, expli
 
 ## 32. Required Follow-up Decisions
 
-Acceptance of this RFC would not eliminate the need for subordinate decisions.
+Acceptance of this RFC does not eliminate the need for subordinate decisions.
 
 Likely follow-up artifacts include, when implementation requires them:
 
@@ -1091,7 +1091,7 @@ RFC-0003 `0.1.0` was prepared as the initial complete working draft and then sub
 - Product / product-platform separation;
 - Engineering / migration, enforceability and testability.
 
-The review produced material changes incorporated into this `0.2.0` proposal, including:
+The review produced material changes incorporated into the approved `0.2.0` proposal, including:
 
 1. separating authentication, technical authorization, organizational authority and data-governance decisions explicitly;
 2. preventing platform/tenant administrators from receiving implicit unrestricted content access;
@@ -1110,18 +1110,14 @@ The review produced material changes incorporated into this `0.2.0` proposal, in
 
 The detailed review record is maintained in `docs/reviews/RFC-0003-functional-cross-review.md`.
 
-## 36. Acceptance Requirements
+## 36. Acceptance Record
 
-This RFC is currently `Proposed` and has no normative force until validly accepted.
+RFC-0003 `0.2.0` was explicitly approved by the owner of Arvectum OS on `2026-08-07` for publication as `Accepted 1.0.0`.
 
-Acceptance requires:
+Canonical approval evidence:
 
-1. confirmation that the proposal is consistent with Constitution `1.2.0`, Accepted RFC-0001 `1.0.0` and Accepted RFC-0002 `1.0.0`;
-2. explicit owner approval recorded independently before publication as `Accepted`;
-3. an Approval Record that identifies the approved proposal version;
-4. update of this RFC to `Accepted 1.0.0` without silently changing the owner-approved normative substance;
-5. consistent update of the RFC Index;
-6. preservation of repository evidence according to the Acceptance Integrity rules in the RFC Index;
-7. roadmap synchronization after acceptance.
+- [`DECISION-2026-08-07-RFC-0003-ACCEPTANCE`](../governance/decisions/DECISION-2026-08-07-RFC-0003-ACCEPTANCE.md) — `Approved`.
 
-Until those steps occur, this document is a complete reviewed proposal, not binding architecture.
+The approval record was committed independently before this acceptance publication, satisfying the repository Acceptance Integrity requirement that owner approval exist independently of the acceptance commit.
+
+This `1.0.0` publication changes status/version metadata and acceptance-record wording only; it does not silently change the owner-approved normative substance of RFC-0003 `0.2.0`.
