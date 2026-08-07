@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `1.0.4`
+Version: `1.0.5`
 Created: `2026-08-07`
 Updated: `2026-08-07`
 Owner: `ООО «Арвектум»`
@@ -73,7 +73,7 @@ The phase does **not** require the entire future platform to be fully specified 
 |---|---|---:|---:|
 | 🟪 0A | Governance baseline | 🟩 | `██████████ 100%` |
 | 🟦 0B | Architecture language baseline | 🟩 | `██████████ 100%` |
-| 🟪 0C | RFC-0002 — Kernel metamodel | 🟨 | `██████░░░░ 60%` |
+| 🟪 0C | RFC-0002 — Kernel metamodel | 🟨 | `████████░░ 80%` |
 | 🟢 0D | RFC-0003 — Identity, security, privacy, sovereignty | ⬜ | `░░░░░░░░░░ 0%` |
 | 🟠 0E | RFC-0004 — Product Contract and extension model | ⬜ | `░░░░░░░░░░ 0%` |
 | 🔵 0F | RFC-0005/0006 — Governed execution, events and provenance | ⬜ | `░░░░░░░░░░ 0%` |
@@ -152,14 +152,14 @@ The glossary is a language and navigation artifact. It summarizes terms from hig
 
 ## 7. Block 0C — RFC-0002: Kernel metamodel
 
-**Status:** 🟨 In progress  
-**Progress:** `██████░░░░ 60%`
+**Status:** 🟨 In progress — proposal awaiting owner review  
+**Progress:** `████████░░ 80%`
 
 ### Canonical scope
 
 RFC-0001 explicitly reserves the precise Kernel metamodel for RFC-0002.
 
-RFC-0002 is currently expected to be:
+RFC-0002 is:
 
 `Canonical Record, Kernel Metamodel, Authority, Relationship and Organizational Asset Model`
 
@@ -174,16 +174,18 @@ It must define, at minimum, the items required by RFC-0001:
 
 ### Current work
 
-- 🟨 RFC-0002 Draft `0.3.0` is maintained on PR #4 (`rfc-0002-kernel-metamodel`);
-- 🟩 the first structured draft review is complete;
+- 🟨 RFC-0002 `0.9.0` is `Proposed` on PR #4 (`rfc-0002-kernel-metamodel`);
+- 🟩 structured draft review is complete;
 - 🟩 domain-neutral scenario validation is complete;
+- 🟩 cross-section consistency validation against Constitution `1.2.0`, Accepted RFC-0001, the RFC Index, Architecture Glossary and roadmap is complete;
 - 🟩 Canonical Head is distinguished from Effective Version resolution;
 - 🟩 consequential Subject Identity resolution pins the Version Identity materially used;
 - 🟩 Relationship Identity is an assertion-instance identity rather than a tuple-derived identity;
 - 🟩 Execution Context versioning has a governance-significant transition test;
 - 🟩 authority cutover and organizational-asset designation semantics are strengthened;
 - 🟩 delayed or out-of-order `Governed Replica` updates cannot replace the canonical replica head merely because they arrived later;
-- 🟦 the next review step is cross-section consistency validation before any transition to `Proposed`.
+- 🟩 no material conflict with Constitution `1.2.0` or Accepted RFC-0001 was found;
+- 🟦 the next governance step is explicit owner review and decision; no acceptance may be recorded before independent approval evidence exists.
 
 ### Constraint before acceptance
 
@@ -300,7 +302,7 @@ Canonical Roadmap                       ✅
         ↓
 Architecture Glossary                   ✅
         ↓
-RFC-0002 Kernel Metamodel               IN PROGRESS
+RFC-0002 Kernel Metamodel               PROPOSED — OWNER REVIEW
         ↓
 RFC-0003 Identity / Security / Privacy
         ↓
@@ -325,9 +327,9 @@ Parallel work is permitted when the work is bounded and reversible and does not 
 
 The current architecture work item is:
 
-> **Perform cross-section consistency validation of RFC-0002 Draft `0.3.0` against Constitution `1.2.0`, Accepted RFC-0001, the RFC Index and the Architecture Glossary, then determine whether it is ready to move to `Proposed`.**
+> **Owner review of RFC-0002 Proposed `0.9.0`. If approved without substantive architectural change, create the independent approval record first, then publish RFC-0002 `1.0.0` as `Accepted` together with the synchronized RFC Index and roadmap update.**
 
-RFC-0002 must refine the provisional Kernel metamodel without contradicting Constitution `1.2.0` or Accepted RFC-0001.
+Until that approval exists, RFC-0002 has no normative force and the Kernel metamodel remains provisional.
 
 ## 15. Roadmap maintenance rule
 
