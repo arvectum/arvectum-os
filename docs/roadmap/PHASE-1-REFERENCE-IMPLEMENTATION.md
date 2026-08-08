@@ -13,17 +13,29 @@ Readiness baseline: [`docs/implementation/REFERENCE-IMPLEMENTATION-READINESS.md`
 
 This document is the canonical work-breakdown view for **Phase 1 — Reference Implementation** of Arvectum OS.
 
-It decomposes the first bounded executable slice into stable `P1.*` work identifiers. It is subordinate to the Constitution, Accepted RFCs, Accepted ADRs, approved governance artifacts and the parent Canonical Roadmap; it does not create new architecture or change Accepted RFC semantics.
+It decomposes the parent roadmap work item `First bounded executable slice` into stable roadmap-level task identifiers so that implementation work, project chats, commits and status updates can refer to the same ordered items without inventing local names.
+
+This document is subordinate to the Constitution, Accepted RFCs, Accepted ADRs, approved governance artifacts and the parent Canonical Roadmap. It does not create new architecture or change Accepted RFC semantics.
 
 ## 2. Identifier rule
 
-Phase 1 work items use the roadmap namespace `P1.<number>`. These identifiers are not RFC, ADR, issue, capability or conformance identifiers. A task keeps its identifier when wording is refined; a materially different task receives a new identifier.
+Phase 1 work items use the namespace `P1.<number>`.
+
+Examples:
+
+- `P1.01` — Organization scope and attributable Actor;
+- `P1.02` — first Native Canonical Record version;
+- `P1.03` — versioned Workflow baseline.
+
+These identifiers are roadmap/work identifiers only. They are not RFC, ADR, issue, capability or conformance identifiers.
+
+A task keeps its identifier even if its implementation wording is refined. A materially different task receives a new identifier rather than reusing an old one.
 
 ## 3. Phase 1 objective
 
 Prove the smallest domain-neutral executable architectural spine of Arvectum OS using reversible implementation techniques before adding infrastructure.
 
-The slice must demonstrate stable identity, immutable canonical versions, explicit Organization and authority gates, Governed Execution, canonical Event evidence, provenance/reconstruction, Observation non-promotion and implementation-neutral export semantics with executable fitness tests.
+The slice must demonstrate stable identity, immutable canonical versions, explicit Organization and authority gates, Governed Execution, canonical Event evidence, provenance, Observation non-promotion and implementation-neutral export semantics with executable fitness tests.
 
 ## 4. Phase 1 overview
 
@@ -50,15 +62,28 @@ Progress bars are planning indicators, not conformance or capability-lifecycle c
 
 **Status:** 🟩 Complete
 
-Proves explicit Organization scope and attributable Actor/Principal semantics without ambient tenant context or anonymous consequential execution.
+Prove explicit Organization scope and attributable Actor/Principal semantics without ambient tenant context or anonymous consequential execution.
 
-Repository evidence: `reference/python` and executable fitness tests.
+Current repository evidence: implemented in `reference/python` with executable fitness tests.
 
 ### P1.02 — Native subject + first immutable Canonical Record version
 
 **Status:** 🟩 Complete
 
-Implements one bounded domain-neutral `Native` subject with stable Subject Identity, distinct immutable Version Identity, explicit Organization/authority scope, accountable owner, attributable creation Actor/time, bounded provenance, proportional in-memory integrity metadata and no predecessor. External authority modes, durable persistence, Canonical Head resolution, public wire format and cryptographic sealing remain outside this work item.
+Implemented one bounded domain-neutral `Native` canonical subject with:
+
+- stable Subject Identity;
+- first distinct immutable Version Identity;
+- explicit Organization scope;
+- explicit `Native` authority mode and authority scope;
+- accountable architectural owner reference;
+- attributable creation Actor and timezone-aware creation time;
+- bounded provenance references;
+- proportional integrity metadata for the in-memory reference representation;
+- immutable in-memory payload and lifecycle state;
+- no predecessor for the first admitted version.
+
+The implementation intentionally rejects `External Reference` and `Governed Replica` in P1.02 because their required external-authority contracts are outside this work item. It does not introduce a database, durable persistence, Canonical Head resolver, public wire format or cryptographic integrity mechanism.
 
 Repository evidence: `reference/python/arvectum_os_ref/canonical.py` and `reference/python/tests/test_p1_02_native_canonical_record.py`.
 
@@ -66,49 +91,121 @@ Repository evidence: `reference/python/arvectum_os_ref/canonical.py` and `refere
 
 **Status:** 🟩 Complete
 
-Implements one immutable domain-neutral Workflow version with stable Workflow Identity, explicit lifecycle/provenance and one scoped `CanonicalMutation` operation. Workflow declaration does not imply authorization, Organizational Authority or approval and introduces no workflow engine, queue, scheduler or durable registry.
+Implemented one bounded domain-neutral governed Workflow definition with:
 
-Repository evidence: `reference/python/arvectum_os_ref/workflow.py` and `reference/python/tests/test_p1_03_versioned_workflow.py`.
+- stable Workflow Subject Identity;
+- distinct immutable Workflow Version Identity;
+- a `Native` Canonical Record envelope for the Workflow version;
+- explicit Organization scope, accountable owner, lifecycle and provenance;
+- one immutable semantic operation targeting the exact P1.02 reference Subject Identity and semantic type;
+- RFC-0005 `CanonicalMutation` side-effect classification;
+- fail-closed Organization-scope validation;
+- explicit non-equivalence between Workflow operation declaration and authorization, Organizational Authority or consequential approval.
+
+P1.03 does not start an Execution Context and does not mutate canonical state. It introduces no workflow engine, scheduler, queue, public protocol or durable workflow registry.
+
+Repository evidence: `reference/python/arvectum_os_ref/workflow.py`, package exports in `reference/python/arvectum_os_ref/__init__.py`, and `reference/python/tests/test_p1_03_versioned_workflow.py`.
 
 ### P1.04 — Execution Context + exact version pinning
 
 **Status:** 🟩 Complete
 
-Implements one immutable initial `AwaitingGate` Execution Context with stable Execution Identity, exact Workflow/material-input version pins and attributable Actor/Organization context. Later versions under the same Subject Identities do not alter already-pinned reliance.
+Implemented one bounded domain-neutral initial Execution Context with:
 
-Repository evidence: `reference/python/arvectum_os_ref/execution.py` and `reference/python/tests/test_p1_04_execution_context.py`.
+- stable Execution Subject Identity and a distinct immutable initial Execution Version Identity;
+- a `Native` `platform.execution-context` Canonical Record envelope, consistent with RFC-0002;
+- explicit Organization scope and attributable initiating Actor;
+- initial `AwaitingGate` lifecycle state so unresolved P1.05 governance gates remain explicit and fail closed rather than being treated as passed;
+- an exact immutable pin to the Workflow Subject Identity and the supplied effective Workflow Version Identity;
+- an exact immutable pin to the materially relied-upon P1.02 Canonical Record Subject Identity and Version Identity;
+- explicit attribution to the single scoped `CanonicalMutation` operation declared by the pinned Workflow version;
+- provenance references containing the exact Workflow and material input versions;
+- fail-closed validation for Organization mismatch, operation mismatch, malformed version pins and duplicate material input Version Identities.
 
-Canonical validation through P1.04 remains the previously recorded `31`-test baseline.
+Executable evidence proves that a later Workflow or material-input version under the same Subject Identity does not change the Version Identity already pinned by the started execution. P1.04 therefore records exact governed reliance rather than depending on a mutable `current` lookup.
+
+P1.04 does not evaluate authorization, Organizational Authority or consequential approval; does not perform the P1.06 canonical mutation; and does not introduce a Canonical Head/effective-version resolver, Event, workflow engine, durable persistence or public protocol.
+
+Repository evidence: `reference/python/arvectum_os_ref/execution.py`, package exports in `reference/python/arvectum_os_ref/__init__.py`, and `reference/python/tests/test_p1_04_execution_context.py`.
+
+Canonical validation through P1.04 remains the previously recorded `31` unit-test baseline, including `10` P1.04 tests.
 
 ### P1.05 — Authorization and Organizational Authority gates
 
 **Status:** 🟩 Complete
 
-Implements two separate immutable governed decisions for `Authorization` and `OrganizationalAuthority`. Missing/denied evidence fails closed; neither gate implies the other; only two exact scoped `Allow` decisions create the next immutable `Ready` Execution Context version. Decision builders record supplied fixture evidence and do not issue real permission, delegation or organizational authority.
+Implemented two independent domain-neutral governed gate boundaries for the exact P1.04 execution attempt:
 
-Repository evidence: `reference/python/arvectum_os_ref/gates.py`, `reference/python/arvectum_os_ref/execution.py`, and `reference/python/tests/test_p1_05_authorization_authority_gates.py`.
+- `Authorization` and `OrganizationalAuthority` are separate gate kinds and passing one does not imply passing the other;
+- authentication/Actor attribution alone leaves both gates unresolved;
+- each gate decision is an immutable `Native` Canonical Record carrying explicit `Allow` or `Deny` outcome rather than ambient permission state;
+- absent required gate evidence fails closed;
+- explicit `Deny` blocks the bounded transition even when the other gate allows;
+- each gate decision is bound to the exact Organization, initiating Principal, `AwaitingGate` Execution Subject/Version Identity, pinned Workflow Version Identity, operation and material target Subject/Version Identity;
+- each decision preserves an explicit governed basis reference in provenance without defining a production IAM provider, policy engine, role matrix or delegation catalog;
+- only two independently valid explicit `Allow` decisions admit a new immutable `Ready` Execution Context version under the same Execution Subject Identity;
+- the `Ready` version preserves predecessor lineage, exact Workflow/material-input pins and exact gate-decision Version Identities;
+- gate pins retain the explicit `Allow` state so a forged `Ready` context containing a `Deny` decision pin fails validation;
+- no target Canonical Record mutation occurs in P1.05.
 
-P1.05 adds `12` focused executable fitness tests.
+`Ready` is scoped to the two gates exercised by this bounded first-slice scenario. It does not collapse RFC-0005 data-governance, validation, consequential-approval or product-specific gates into Authorization/Organizational Authority and does not imply they are globally unnecessary or satisfied.
+
+The fixture builder records already-supplied governed decision evidence. It does not issue real permissions, create delegation or establish Organizational Authority. The Proposed Decision Authority Policy remains non-normative and is not implemented as an approved authority model.
+
+Repository evidence: `reference/python/arvectum_os_ref/gates.py`, the P1.05 extensions in `reference/python/arvectum_os_ref/execution.py`, package exports in `reference/python/arvectum_os_ref/__init__.py`, and `reference/python/tests/test_p1_05_authorization_authority_gates.py`.
+
+P1.05 adds `12` executable fitness tests covering gate independence, deny-by-default behavior, explicit deny, exact decision scope, governed basis provenance, immutable explicit-Allow pins, Ready-version lineage, forged Ready rejection and target non-mutation.
 
 ### P1.06 — Governed Canonical Mutation + second immutable version
 
 **Status:** 🟩 Complete
 
-Executes the bounded `CanonicalMutation` only through the exact immutable `Ready` execution. It consumes exact Workflow/material-input/gate versions, rejects stale-current conflict instead of overwriting newer state, creates immutable target v2 with v1 as predecessor, preserves v1 unchanged, and records the exact canonical effect in a new immutable terminal `Succeeded` Execution Context version.
+Implemented one bounded domain-neutral `CanonicalMutation` through the exact immutable `Ready` Governed Execution admitted by P1.05:
 
-Repository evidence: `reference/python/arvectum_os_ref/mutation.py`, `reference/python/arvectum_os_ref/execution.py`, and `reference/python/tests/test_p1_06_governed_canonical_mutation.py`.
+- direct consequential canonical mutation without an explicit Execution Context fails closed;
+- an `AwaitingGate` execution cannot perform the mutation;
+- the mutation consumes the exact Workflow Subject/Version pin established by P1.04 and verifies that the pinned Workflow version declares the exact scoped `CanonicalMutation` operation;
+- the mutation consumes the exact immutable Authorization and Organizational Authority `Allow` decision versions already pinned by the `Ready` execution rather than re-resolving or replacing them;
+- the caller-supplied admitted current target must still equal the exact material-input Version Identity pinned before consequential reliance;
+- if another current target version is supplied under the same Subject Identity, the mutation raises an explicit canonical conflict instead of silently overwriting newer state;
+- the resulting target version preserves the stable P1.02 Subject Identity, receives a distinct immutable Version Identity and names P1.02 v1 as its exact predecessor;
+- P1.02 v1 remains unchanged and immutable;
+- result provenance preserves the exact input version, `Ready` execution version, Workflow version and both gate-decision versions relied upon;
+- because canonical state change is governance-significant under RFC-0005, successful mutation creates a new immutable terminal `Succeeded` Execution Context version under the same Execution Subject Identity;
+- the `Succeeded` execution preserves predecessor lineage, exact Workflow/material-input/gate pins and adds one exact canonical-effect Version pin;
+- canonical Event admission is deliberately not performed in P1.06 and remains P1.07 scope.
 
-P1.06 adds `13` focused executable fitness tests.
+The bounded `current_record` argument is conflict-check evidence supplied by the in-memory harness. It is not a Canonical Head resolver, projection authority, public API or persistence contract.
+
+Repository evidence: `reference/python/arvectum_os_ref/mutation.py`, the P1.06 extensions in `reference/python/arvectum_os_ref/execution.py`, package exports in `reference/python/arvectum_os_ref/__init__.py`, and `reference/python/tests/test_p1_06_governed_canonical_mutation.py`.
+
+P1.06 adds `13` executable fitness tests covering governed-entry enforcement, immutable-version lineage, exact pinned Workflow/gate evidence, conflict detection, Organization/version constraints, provenance, terminal execution effect pinning and explicit non-preemption of P1.07 Event admission.
 
 ### P1.07 — Canonical Event admission and execution linkage
 
 **Status:** 🟩 Complete
 
-Distinguishes transient Event receipt from canonical admission; admits one immutable append-only `Native` Event linked to the exact terminal P1.06 execution and result; preserves event type/schema/source/time/actor/classification/provenance/integrity context; handles duplicate delivery idempotently; rejects conflicting Event Identity/Version Identity reuse; and fails closed on wrong execution/result or Organization linkage. Correlation uses the stable Execution Identity and causation the exact terminal Execution Context version.
+Implemented one bounded domain-neutral canonical Event admission boundary for the completed P1.06 mutation:
 
-Repository evidence: `reference/python/arvectum_os_ref/events.py` and `reference/python/tests/test_p1_07_canonical_event_admission.py`.
+- transient Event receipt is distinct from canonical Event admission;
+- the admitted Event is an RFC-0002 Canonical Record specialization with stable Event Identity and one immutable Version Identity;
+- the Event has no predecessor and therefore preserves the normal single-version append-only Event model;
+- the bounded Event uses `Native` authority for the Arvectum OS governed observation and preserves explicit event type/schema, source, occurrence/admission times, producer/initiation attribution, classification/access, provenance and integrity metadata;
+- admission consumes the exact P1.06 `CanonicalMutationResult` and does not re-resolve mutable execution or target state;
+- the Event links to the exact terminal `Succeeded` Execution Subject/Version Identity and exact resulting target Subject/Version Identity;
+- the terminal P1.06 Execution Context remains sealed and is not mutated after success merely to add Event state;
+- duplicate delivery of the same immutable Event representation is idempotent and returns the already-admitted occurrence;
+- duplicate delivery does not repeat the canonical mutation or create a second Event occurrence;
+- reuse of an admitted Event Identity with materially different immutable content is rejected without rewriting history;
+- reuse of an immutable Event Version Identity by another Event is rejected;
+- wrong terminal-execution linkage, wrong resulting-version linkage and cross-Organization linkage fail closed;
+- broader provenance graph and reconstruction evidence remain P1.08 scope.
 
-P1.07 adds `14` focused executable fitness tests.
+The bounded `admitted_events` tuple is caller-supplied immutable history for the reference harness. It is not a broker, event store, outbox/inbox mechanism, schema registry, public Event API or transport guarantee.
+
+Repository evidence: `reference/python/arvectum_os_ref/events.py`, package exports in `reference/python/arvectum_os_ref/__init__.py`, and `reference/python/tests/test_p1_07_canonical_event_admission.py`.
+
+P1.07 adds `14` focused architecture-fitness tests for receipt/admission separation, immutable Event semantics, exact execution/result linkage, duplicate/conflict handling, Organization scope and preservation of sealed execution/result evidence.
 
 ### P1.08 — Provenance, causation and reconstruction evidence
 
@@ -148,7 +245,7 @@ Export the bounded governed state into a documented implementation-neutral seman
 
 **Status:** 🟨 In progress
 
-This cross-cutting task progresses alongside `P1.01`–`P1.10`.
+This is a cross-cutting task and progresses alongside `P1.01`–`P1.10`.
 
 The bounded slice must include applicable executable tests proving at least:
 
@@ -163,15 +260,15 @@ The bounded slice must include applicable executable tests proving at least:
 - Observation cannot be consumed as validated Knowledge without promotion;
 - projection/index results cannot substitute for exact governed Version Identity reliance.
 
-`P1.01` through `P1.08` now contribute executable negative-path and architecture-fitness coverage. P1.08 adds exact reconstruction checks for actor continuity, Workflow/input/gate/execution/result/Event version linkage, provenance completeness and explicit correlation-versus-causation semantics while proving the reconstruction view itself does not mutate sealed history. Replay, Observation/Knowledge and projection portions remain incomplete.
+`P1.01` through `P1.08` now contribute executable negative-path and architecture-fitness coverage. P1.05 adds explicit authentication ≠ authorization, authorization ≠ Organizational Authority, authority ≠ authorization, unresolved/denied fail-closed behavior, exact gate scope and version attribution, explicit-Allow pin validation and immutable gate evidence. P1.06 adds direct-mutation rejection outside the required `Ready` Execution Context, preservation of the immutable first target version, exact Workflow/gate version consumption, stale-current canonical conflict detection and proof that successful canonical state change is represented by a new immutable target version plus a governance-significant terminal Execution Context version. P1.07 adds receipt/admission separation, duplicate-delivery idempotency, conflicting Event Identity/Version Identity rejection, exact execution/result linkage, cross-Organization fail-closed behavior and proof that Event admission does not mutate the sealed terminal execution or repeat the canonical effect. P1.08 adds exact reconstruction checks for actor continuity, Workflow/input/gate/execution/result/Event version linkage, provenance completeness and explicit correlation-versus-causation semantics while proving the reconstruction view itself does not mutate sealed history. Replay, Observation/Knowledge and projection portions of the matrix remain incomplete.
 
 ### P1.12 — Phase 1 bounded-slice closure review
 
 **Status:** ⬜ Planned
 
-Close the bounded slice only after:
+Close the first bounded executable slice only after:
 
-1. `P1.01`–`P1.10` are complete within declared scope;
+1. `P1.01`–`P1.10` are complete within the declared slice scope;
 2. the applicable `P1.11` fitness matrix passes;
 3. no product-domain semantics have leaked into shared reference modules;
 4. no technology choice has crossed an ADR gate without the required ADR;
@@ -180,6 +277,8 @@ Close the bounded slice only after:
 7. the Canonical Roadmap is synchronized to the completed milestone.
 
 ## 6. Default order and parallelism
+
+Default dependency-aware order:
 
 ```text
 P1.01 ✅ Organization / Actor
@@ -200,22 +299,26 @@ P1.08 ✅ Provenance / reconstruction
    ↓
 P1.09 🟦 Observation ≠ Knowledge
    ↓
-P1.10 ⬜ Portable semantic fixture
+P1.10 Portable semantic fixture
    ↓
-P1.12 ⬜ Closure review
+P1.12 Closure review
 ```
 
-`P1.11` fitness tests run continuously. Bounded parallel work is permitted when dependencies remain explicit and no unresolved architecture or technology decision is prejudged.
+`P1.11` fitness tests run continuously across the sequence rather than waiting until the end.
+
+Bounded parallel work is permitted when dependencies remain explicit and the work does not prejudge unresolved architecture or technology choices.
 
 ## 7. ADR boundary
 
-No new ADR is required merely because Phase 1 has begun. An ADR becomes required before relying on a materially constraining cross-module, durable, public, security/isolation or vendor/infrastructure choice under `REFERENCE-IMPLEMENTATION-READINESS.md`.
+No new ADR is required merely because Phase 1 has begun.
 
-P1.05 remains below the ADR gate because it selects no production IAM/policy/authority-administration mechanism.
+An ADR becomes required before relying on a choice that crosses the ADR triggers established in `REFERENCE-IMPLEMENTATION-READINESS.md`, including material cross-module constraints, durable migration cost, stable public/cross-product interfaces, security/isolation enforcement choices or durable vendor/infrastructure dependencies.
 
-P1.06 remains below the ADR gate because it selects no durable persistence, Canonical Head resolver, transaction/concurrency technology, public mutation protocol or durable evidence-integrity mechanism.
+P1.05 remains below that gate: its decision records and evaluator are bounded, reversible, in-memory, domain-neutral and non-public. They do not select an IAM provider, policy engine, durable authorization-enforcement mechanism, tenant-isolation technology or production authority-administration model. A real enforcement choice that materially constrains those concerns will require the applicable ADR/governance evidence before reliance.
 
-P1.07 remains below the ADR gate because it uses caller-supplied immutable in-memory Event history and selects no durable Event store, broker, outbox/inbox, schema registry, delivery protocol or public Event contract.
+P1.06 also remains below the ADR gate. Its mutation boundary and conflict check are bounded, deterministic, in-memory, domain-neutral and non-public. It does not select durable persistence, a Canonical Head/effective-version resolver, transaction/concurrency technology, public mutation protocol or evidence-integrity mechanism. A later durable choice that materially constrains those concerns must cross the applicable ADR gate before reliance.
+
+P1.07 remains below the ADR gate for the same reason: Event admission uses only caller-supplied immutable in-memory history and no durable event store, broker, outbox/inbox, schema registry, delivery protocol or public Event contract. Selecting any of those as a durable cross-module dependency remains a later ADR decision if and when the readiness triggers are crossed.
 
 P1.08 remains below the ADR gate because its reconstruction manifest is derived, immutable, in-memory and non-public. It introduces no durable lineage store, graph database, provenance service, projection technology, public serialization contract or evidence-integrity mechanism and therefore does not create a constraining cross-module dependency.
 
@@ -225,7 +328,11 @@ Before updating Phase 1 status:
 
 1. synchronize with the canonical repository;
 2. verify the Constitution and RFC Index;
-3. inspect actual implementation/tests for the affected `P1.*` item;
+3. inspect the actual implementation/tests for the affected `P1.*` work item;
 4. update this work breakdown and the parent Roadmap when the milestone materially changes overall delivery state.
 
-Project chats and implementation commits SHOULD use the stable `P1.*` identifier together with the task name. This prevents neighboring chats from inventing competing task names or ambiguous ordering.
+Project chats and implementation commits SHOULD refer to the stable `P1.*` identifier together with the task name, for example:
+
+> `P1.02 — Native subject + first immutable Canonical Record version`
+
+This prevents neighboring chats from inventing competing task names or ambiguous ordering.
