@@ -1,9 +1,9 @@
 # Arvectum OS Phase 1 — Reference Implementation
 
 Status: `Active`
-Version: `1.0.2`
+Version: `1.0.3`
 Created: `2026-08-07`
-Updated: `2026-08-07`
+Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
 Task classification: `platform`
 Parent roadmap: [`docs/roadmap/ROADMAP.md`](ROADMAP.md)
@@ -44,14 +44,14 @@ The slice must demonstrate stable identity, immutable canonical versions, explic
 | `P1.01` | Organization scope and attributable Actor / Principal | 🟩 | `██████████ 100%` |
 | `P1.02` | Native subject + first immutable Canonical Record version | 🟩 | `██████████ 100%` |
 | `P1.03` | Versioned Workflow baseline | 🟩 | `██████████ 100%` |
-| `P1.04` | Execution Context + exact version pinning | 🟦 | `░░░░░░░░░░ 0%` |
-| `P1.05` | Authorization and Organizational Authority gates | ⬜ | `░░░░░░░░░░ 0%` |
+| `P1.04` | Execution Context + exact version pinning | 🟩 | `██████████ 100%` |
+| `P1.05` | Authorization and Organizational Authority gates | 🟦 | `░░░░░░░░░░ 0%` |
 | `P1.06` | Governed Canonical Mutation + second immutable version | ⬜ | `░░░░░░░░░░ 0%` |
 | `P1.07` | Canonical Event admission and execution linkage | ⬜ | `░░░░░░░░░░ 0%` |
 | `P1.08` | Provenance, causation and reconstruction evidence | ⬜ | `░░░░░░░░░░ 0%` |
 | `P1.09` | Observation creation without Knowledge promotion | ⬜ | `░░░░░░░░░░ 0%` |
 | `P1.10` | Portable semantic fixture export | ⬜ | `░░░░░░░░░░ 0%` |
-| `P1.11` | Negative-path and architecture fitness tests | 🟨 | `███░░░░░░░ 30%` |
+| `P1.11` | Negative-path and architecture fitness tests | 🟨 | `████░░░░░░ 40%` |
 | `P1.12` | Phase 1 bounded-slice closure review | ⬜ | `░░░░░░░░░░ 0%` |
 
 Progress bars are planning indicators, not conformance or capability-lifecycle claims.
@@ -106,23 +106,41 @@ P1.03 does not start an Execution Context and does not mutate canonical state. I
 
 Repository evidence: `reference/python/arvectum_os_ref/workflow.py`, package exports in `reference/python/arvectum_os_ref/__init__.py`, and `reference/python/tests/test_p1_03_versioned_workflow.py`.
 
-Executable validation across P1.01–P1.03: `21` unit tests passed, including `7` P1.03 tests.
-
 ### P1.04 — Execution Context + exact version pinning
 
-**Status:** 🟦 Next
+**Status:** 🟩 Complete
 
-Start one Execution Context and pin the effective Workflow version and materially relied-upon input Version Identity.
+Implemented one bounded domain-neutral initial Execution Context with:
+
+- stable Execution Subject Identity and a distinct immutable initial Execution Version Identity;
+- a `Native` `platform.execution-context` Canonical Record envelope, consistent with RFC-0002;
+- explicit Organization scope and attributable initiating Actor;
+- initial `AwaitingGate` lifecycle state so unresolved P1.05 governance gates remain explicit and fail closed rather than being treated as passed;
+- an exact immutable pin to the Workflow Subject Identity and the supplied effective Workflow Version Identity;
+- an exact immutable pin to the materially relied-upon P1.02 Canonical Record Subject Identity and Version Identity;
+- explicit attribution to the single scoped `CanonicalMutation` operation declared by the pinned Workflow version;
+- provenance references containing the exact Workflow and material input versions;
+- fail-closed validation for Organization mismatch, operation mismatch, malformed version pins and duplicate material input Version Identities.
+
+Executable evidence proves that a later Workflow or material-input version under the same Subject Identity does not change the Version Identity already pinned by the started execution. P1.04 therefore records exact governed reliance rather than depending on a mutable `current` lookup.
+
+P1.04 does not evaluate authorization, Organizational Authority or consequential approval; does not perform the P1.06 canonical mutation; and does not introduce a Canonical Head/effective-version resolver, Event, workflow engine, durable persistence or public protocol.
+
+Repository evidence: `reference/python/arvectum_os_ref/execution.py`, package exports in `reference/python/arvectum_os_ref/__init__.py`, and `reference/python/tests/test_p1_04_execution_context.py`.
+
+Executable validation across P1.01–P1.04: `31` unit tests passed, including `10` P1.04 tests.
 
 ### P1.05 — Authorization and Organizational Authority gates
 
-**Status:** ⬜ Planned
+**Status:** 🟦 Next
 
 Prove separately that:
 
 - authentication/actor attribution does not imply authorization;
 - authorization does not imply Organizational Authority;
 - required unresolved gates fail closed.
+
+P1.05 must preserve the exact Workflow and material input version attribution established by P1.04 and must not yet perform the P1.06 canonical mutation.
 
 ### P1.06 — Governed Canonical Mutation + second immutable version
 
@@ -175,7 +193,7 @@ The bounded slice must include applicable executable tests proving at least:
 - Observation cannot be consumed as validated Knowledge without promotion;
 - projection/index results cannot substitute for exact governed Version Identity reliance.
 
-`P1.01`, `P1.02` and `P1.03` now contribute executable negative-path and architecture-fitness coverage, including unresolved Organization scope, authentication non-authority, immutable identity/record/workflow values, Organization-consistent attribution, required Canonical Record envelope validation, fail-closed rejection of unsupported authority modes, exact Workflow Subject/Version identity separation, scoped operation targets and proof that a Workflow declaration does not itself grant authorization or Organizational Authority. The full matrix remains incomplete.
+`P1.01` through `P1.04` now contribute executable negative-path and architecture-fitness coverage. P1.04 adds explicit Execution Context specialization evidence, exact Workflow/material-input Version Identity pinning, proof that later versions under the same Subject Identities do not alter historical reliance, fail-closed Organization/operation/pin validation, immutable execution/pin values, and proof that starting an Execution Context does not imply authorization, Organizational Authority, approval or canonical mutation. The full matrix remains incomplete.
 
 ### P1.12 — Phase 1 bounded-slice closure review
 
@@ -202,9 +220,9 @@ P1.02 ✅ Native subject + Canonical Record v1
    ↓
 P1.03 ✅ Versioned Workflow
    ↓
-P1.04 🟦 Execution Context + version pinning
+P1.04 ✅ Execution Context + version pinning
    ↓
-P1.05 Authorization + Organizational Authority gates
+P1.05 🟦 Authorization + Organizational Authority gates
    ↓
 P1.06 Canonical Mutation → immutable v2
    ↓
@@ -228,6 +246,8 @@ Bounded parallel work is permitted when dependencies remain explicit and the wor
 No new ADR is required merely because Phase 1 has begun.
 
 An ADR becomes required before relying on a choice that crosses the ADR triggers established in `REFERENCE-IMPLEMENTATION-READINESS.md`, including material cross-module constraints, durable migration cost, stable public/cross-product interfaces, security/isolation enforcement choices or durable vendor/infrastructure dependencies.
+
+P1.04 remains below that gate: its in-memory representation is bounded, reversible, domain-neutral and non-public, and it introduces no durable technology dependency or cross-product interface.
 
 ## 8. Maintenance rule
 

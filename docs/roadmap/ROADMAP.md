@@ -1,9 +1,9 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `1.3.2`
+Version: `1.3.3`
 Created: `2026-08-07`
-Updated: `2026-08-07`
+Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
 Task classification: `governance`
 
@@ -124,7 +124,7 @@ RFC-0008 — Document and Artifact Architecture — was accepted after Phase 0 r
 
 Canonical detailed work breakdown:
 
-- [`docs/roadmap/PHASE-1-REFERENCE-IMPLEMENTATION.md`](PHASE-1-REFERENCE-IMPLEMENTATION.md) — `Active 1.0.2`.
+- [`docs/roadmap/PHASE-1-REFERENCE-IMPLEMENTATION.md`](PHASE-1-REFERENCE-IMPLEMENTATION.md) — `Active 1.0.3`.
 
 ### Phase 1 overview
 
@@ -133,14 +133,14 @@ Canonical detailed work breakdown:
 | `P1.01` | Organization scope and attributable Actor / Principal | 🟩 | `██████████ 100%` |
 | `P1.02` | Native subject + first immutable Canonical Record version | 🟩 | `██████████ 100%` |
 | `P1.03` | Versioned Workflow baseline | 🟩 | `██████████ 100%` |
-| `P1.04` | Execution Context + exact version pinning | 🟦 | `░░░░░░░░░░ 0%` |
-| `P1.05` | Authorization and Organizational Authority gates | ⬜ | `░░░░░░░░░░ 0%` |
+| `P1.04` | Execution Context + exact version pinning | 🟩 | `██████████ 100%` |
+| `P1.05` | Authorization and Organizational Authority gates | 🟦 | `░░░░░░░░░░ 0%` |
 | `P1.06` | Governed Canonical Mutation + second immutable version | ⬜ | `░░░░░░░░░░ 0%` |
 | `P1.07` | Canonical Event admission and execution linkage | ⬜ | `░░░░░░░░░░ 0%` |
 | `P1.08` | Provenance, causation and reconstruction evidence | ⬜ | `░░░░░░░░░░ 0%` |
 | `P1.09` | Observation creation without Knowledge promotion | ⬜ | `░░░░░░░░░░ 0%` |
 | `P1.10` | Portable semantic fixture export | ⬜ | `░░░░░░░░░░ 0%` |
-| `P1.11` | Negative-path and architecture fitness tests | 🟨 | `███░░░░░░░ 30%` |
+| `P1.11` | Negative-path and architecture fitness tests | 🟨 | `████░░░░░░ 40%` |
 | `P1.12` | Phase 1 bounded-slice closure review | ⬜ | `░░░░░░░░░░ 0%` |
 
 ### Current implementation evidence
@@ -151,15 +151,17 @@ Canonical detailed work breakdown:
 
 `P1.03` is implemented with one domain-neutral governed Workflow definition represented by an immutable `Native` Canonical Record version. It preserves stable Workflow Subject Identity, distinct Workflow Version Identity, explicit Organization scope, accountable owner, lifecycle/provenance and one scoped `CanonicalMutation` operation declaration targeting the exact reference subject. The declaration intentionally grants no authorization, Organizational Authority or consequential approval.
 
-Executable validation across `P1.01`–`P1.03`: `21` unit tests passed, including `7` P1.03 Workflow tests.
+`P1.04` is implemented with one initial domain-neutral `Native` Execution Context represented as a Canonical Record specialization. It preserves stable Execution Subject Identity, a distinct immutable initial Execution Version Identity, explicit Organization/Actor attribution, `AwaitingGate` lifecycle state, the exact supplied Workflow Subject and Version Identity, the exact materially relied-upon P1.02 Subject and Version Identity, and the matching scoped operation declaration. Tests prove that later Workflow or input versions under the same Subject Identity do not alter the execution's historical pins and that malformed/scope-mismatched reliance fails closed.
 
-`P1.11` is cross-cutting and now includes negative-path/fitness evidence from `P1.01`, `P1.02` and `P1.03`. The complete Phase 1 fitness matrix remains unfinished.
+Executable validation across `P1.01`–`P1.04`: `31` unit tests passed, including `10` P1.04 Execution Context/version-pinning tests.
+
+`P1.11` is cross-cutting and now includes negative-path/fitness evidence from `P1.01` through `P1.04`. The complete Phase 1 fitness matrix remains unfinished.
 
 ### Current canonical action
 
-> **`P1.04 — Execution Context + exact version pinning`: start one Execution Context and pin the exact effective Workflow Version Identity together with the materially relied-upon P1.02 Canonical Record Version Identity.**
+> **`P1.05 — Authorization and Organizational Authority gates`: prove separately that authentication/actor attribution does not imply authorization, authorization does not imply Organizational Authority, and unresolved required gates fail closed.**
 
-P1.04 must preserve the RFC-0005 distinction between the Workflow definition and the governed execution attempt. It does not yet evaluate the P1.05 authorization or Organizational Authority gates and does not perform the P1.06 canonical mutation.
+P1.05 must preserve the exact Workflow/material input version attribution established by P1.04. It does not yet perform the P1.06 canonical mutation.
 
 ## 7. Phase 1 dependency-aware sequence
 
@@ -170,9 +172,9 @@ P1.02 ✅ Native subject + Canonical Record v1
    ↓
 P1.03 ✅ Versioned Workflow
    ↓
-P1.04 🟦 Execution Context + version pinning
+P1.04 ✅ Execution Context + version pinning
    ↓
-P1.05 ⬜ Authorization + Organizational Authority gates
+P1.05 🟦 Authorization + Organizational Authority gates
    ↓
 P1.06 ⬜ Canonical Mutation → immutable v2
    ↓
@@ -218,6 +220,8 @@ Create an ADR before relying on an implementation choice when the choice becomes
 4. materially determines tenant isolation, authorization enforcement, evidence integrity or external authority behavior;
 5. creates a durable dependency on a database, broker, orchestration runtime, identity provider, schema registry, retrieval engine or vendor-specific format;
 6. has materially different portability, security, reliability or operational consequences compared with plausible alternatives.
+
+P1.04 remains below this gate because its representation is bounded, reversible, in-memory, domain-neutral and non-public. No durable technology or enforcement choice is made by completing the work item.
 
 ## 10. Phase 1 exit criterion
 
