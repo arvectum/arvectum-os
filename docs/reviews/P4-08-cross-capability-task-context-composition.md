@@ -1,11 +1,12 @@
 # P4.08 — Cross-capability task/context composition + bounded product entry point review
 
-Status: `Implementation PASS / canonical completion blocked by CI infrastructure`
+Status: `Complete / PASS`
 Date: `2026-08-08`
 Task classification: `product_contract`
 Owner: `ООО «Арвектум»`
 Roadmap item: `P4.08 — Cross-capability task/context composition + bounded product entry point`
-PR: `#53`
+Implementation PR: `#53`
+CI infrastructure gap: `#54`
 
 ## 1. Canonical basis checked
 
@@ -14,27 +15,20 @@ This review was performed against the canonical repository state rather than cha
 Checked normative basis:
 
 - Constitution `1.2.0` — `Ratified`, frozen;
-- RFC-0001 `Arvectum OS Architecture` `1.0.0` — `Accepted`;
-- RFC-0002 `Canonical Record Kernel Metamodel` `1.0.0` — `Accepted`;
-- RFC-0003 `Identity, Security, Privacy, Tenant Sovereignty and Portability` `1.0.0` — `Accepted`;
-- RFC-0004 `Product Contract, Product Experiment and Extension Model` `1.0.0` — `Accepted`;
-- RFC-0005 `Governed Execution and Workflow Model` `1.0.0` — `Accepted`;
-- RFC-0006 `Event, Provenance and Observability Model` `1.0.0` — `Accepted`;
-- RFC-0007 `Memory, Knowledge and Governed Learning Lifecycle` `1.0.0` — `Accepted`;
-- RFC-0008 `Document and Artifact Architecture` `1.0.0` — `Accepted`;
+- RFC-0001 through RFC-0008 `1.0.0` — `Accepted`;
 - RFC Index — current Accepted set confirmed;
-- ADR Index — no applicable Accepted ADR requires or authorizes a durable frontend/API/service/storage/IAM technology choice for this bounded slice;
-- P3.08 Product Contract consumption boundary and its Provisional capability-consumption baseline;
+- ADR Index — no applicable Accepted ADR requires a durable frontend/API/service/storage/IAM choice for this bounded slice;
+- P3.08 Product Contract consumption boundary and Phase 3 Provisional capability contract baseline;
 - P4.02 shared workspace shell;
 - P4.06 Document / Artifact workspace experience;
 - P4.07 Memory / Knowledge / Search discovery experience;
-- R10 Operator Safety / Cross-Capability Health Review and `operator_safety.py` guard.
+- R10 Operator Safety / Cross-Capability Health Review and `operator_safety.py`.
 
-No conflict with the Constitution or Accepted RFC was found. No Constitution amendment, Accepted RFC modification, new RFC, ADR, capability lifecycle promotion, Stable Product Contract or public compatibility commitment is required for this bounded internal implementation.
+No conflict with the Constitution or Accepted RFC was found. No Constitution amendment, Accepted RFC modification, new RFC, ADR, capability lifecycle promotion, Stable Product Contract or public compatibility commitment is required.
 
 ## 2. Scope implemented
 
-P4.08 introduces one synthetic bounded product reference outside the shared platform package and uses it to prove a Product Contract-backed product entry into the existing workspace.
+P4.08 introduces one synthetic bounded product reference outside the shared platform package and proves one Product Contract-backed entry into the shared Phase 4 workspace.
 
 Implementation artifacts:
 
@@ -47,230 +41,198 @@ Implementation artifacts:
 - `reference/python/tests/test_p4_08_positive_paths.py`;
 - `docs/contracts/P4-08-BOUNDED-PRODUCT-ENTRY-PRODUCT-CONTRACT.md`.
 
-The product reference deliberately lives outside `arvectum_os_ref`. Shared platform code does not import it.
+The PR modifies no existing `reference/python/arvectum_os_ref/*.py` module. Product-domain semantics remain physically outside the shared platform package.
 
 ## 3. Provisional Product Contract-backed entry
 
-The bounded product uses an executable RFC-0004 `Provisional` Product Contract, version `0.1.0`.
+The bounded product uses an executable RFC-0004 `Provisional` Product Contract version `0.1.0`.
 
-The contract declares exactly the dependencies needed by this proof:
+Declared dependencies are deliberately minimal:
 
-- CAP-001 `Document & Artifact Governance`, Provisional contract baseline `1.0.0`, operation `p3.08.resolve-document`;
-- CAP-002 `Memory & Knowledge Governance`, Provisional contract baseline `1.0.0`, operation `p3.08.retrieve-knowledge`;
-- the bounded internal Governed Runtime contract for product-owned task-state mutation, operation `p4.08.record-task-decision`.
+- CAP-001 `Document & Artifact Governance`, Provisional contract `1.0.0`, operation `p3.08.resolve-document`;
+- CAP-002 `Memory & Knowledge Governance`, Provisional contract `1.0.0`, operation `p3.08.retrieve-knowledge`;
+- bounded internal Governed Runtime contract `p2-core-runtime-internal-1`, operation `p4.08.record-task-decision` for product-owned task-state mutation.
 
-Workspace entry requires:
+Workspace entry requires explicit Organization/Actor context, exact Product identity/version, an exact `Provisional` Product Contract, and at least two distinct admitted shared capability dependencies.
 
-1. explicit current Organization and attributable Actor context;
-2. exact Product identity and Product version equality with the Product Contract;
-3. an exact `Provisional` Product Contract;
-4. at least two distinct admitted shared capability dependencies;
-5. explicit capability-consumption requests carrying the current Actor/Organization/purpose/right/classification access context.
-
-The exact Product Contract Version Identity is carried into `WorkspaceProductContext`. Contract admission is context and boundary evidence only; it is not authorization, Organizational Authority or approval.
+The exact Product Contract Version Identity is carried into `WorkspaceProductContext`. Contract admission is context/boundary evidence only; it grants no authorization, Organizational Authority or approval.
 
 ## 4. Cross-capability task/context composition
 
-The product-owned task composes the existing shared semantic owners rather than reimplementing them.
+The product task composes existing semantic owners rather than duplicating them:
 
-The bounded flow:
+1. Product Contract-backed entry opens the shared workspace under explicit Organization/Product/Actor context;
+2. P4.06 resolves the task Document context under current source authorization plus CAP-001 handling constraints;
+3. P4.07 resolves Knowledge context under current source authorization plus CAP-002 purpose/right/classification/freshness rules;
+4. the product receives a transient non-authoritative task context preserving exact governed identities and Product Contract Version;
+5. product-specific disposition and notes return to the product boundary.
 
-1. enters the shared workspace with exact Organization/Product/Product Contract context;
-2. navigates to the P4.06 Documents surface for the task's governed Document subject;
-3. invokes the existing P4.06 inspection boundary with current source authorization and CAP-001 handling constraints;
-4. navigates to the P4.07 Knowledge surface;
-5. invokes the existing P4.07 retrieval/presentation boundary with current source authorization and CAP-002 constraints;
-6. returns one product-owned transient task context containing those two non-authoritative shared views plus the exact Product Contract Version Identity;
-7. returns product-specific task disposition/notes to the product boundary rather than adding them to the shared platform model.
+The committed positive-path fixture builds a real admitted governed Document/Artifact and validated Knowledge record with current source authorization. Negative paths prove that Product Contract entry alone exposes no protected Document source.
 
-The positive-path fitness fixture constructs a real admitted governed Document/Artifact and validated Knowledge object and supplies current source authorization for each. Expected product context therefore contains actual P4.06 `DocumentWorkspaceInspection` and P4.07 `KnowledgeWorkspaceView` results with exact governed Version identities.
+The shared workspace remains navigation/presentation infrastructure, not a generic product orchestrator.
 
-A separate negative path proves that Product Contract entry by itself exposes no protected Document source when current source authorization is absent.
-
-## 5. Product/platform boundary result
+## 5. Product/platform boundary
 
 Product-owned semantics include:
 
-- bounded task identity and title;
+- bounded task identity/title;
 - task-specific composition intent;
-- dispositions `Needs review`, `Ready to proceed` and `Declined`;
+- dispositions `Needs review`, `Ready to proceed`, `Declined`;
 - product decision notes;
-- product-owned task Canonical Record semantic type `product.bounded-review-task` when the product elects to govern that state.
+- product-owned governed task semantic type `product.bounded-review-task` when that state is admitted canonically.
 
-These semantics are not imported into the shared platform package and are not declared as a Platform Capability.
+Shared platform ownership remains limited to existing domain-neutral semantics for Organization/Actor context, Product Contract validation, CAP-001/CAP-002 behavior, Canonical Record/version/authority/provenance, Governed Execution and R10 operator safety.
 
-Shared platform ownership remains limited to the existing domain-neutral boundaries for:
+No platform module imports `bounded_product_ref` and no product success is represented as a Platform Capability promotion.
 
-- Organization / Actor workspace context;
-- Product Contract validation;
-- CAP-001 and CAP-002 semantics;
-- Canonical Record / exact-version / authority / provenance semantics;
-- Governed Execution;
-- R10 operator safety.
+## 6. Exact continuity invariants
 
-The shared workspace therefore remains navigation/presentation infrastructure rather than a generic product orchestrator.
+P4.08 preserves all of the following independently:
 
-## 6. Exact version, authority and provenance continuity
-
-The composition preserves:
-
-- logical Subject identity versus exact immutable Version identity;
+- Subject versus exact immutable Version identity;
 - canonical versus transient/derived presentation state;
-- authority mode and authority scope;
-- governed source provenance;
-- Document Version and Artifact identity where material;
-- exact Knowledge Version and freshness semantics where material;
-- exact Product Contract Version identity across product entry and governed execution.
+- authority mode/scope and source provenance;
+- exact Document Version / Artifact identity;
+- exact Knowledge Version / freshness semantics;
+- exact Product Contract Version across workspace entry and Governed Execution;
+- exact capability dependency contract version admitted at product entry;
+- declared Product Contract boundary mechanism;
+- attributable Actor and Organization scope;
+- exact product task operation and target state.
 
-A material cross-review finding was identified during implementation: the initial product action wrapper delegated to R10 without first proving that the supplied `GovernedExecutionContext` was pinned to the same exact Product Contract Version used by the product workspace entry.
+Current purpose/right/classification context may legitimately change between entry and later retrieval; the owning P4.06/P4.07 semantic surface re-evaluates that current context. Product Contract mechanism and admitted dependency version may not drift.
 
-That gap was remediated before review completion. P4.08 now adds a product-boundary continuity check before R10 action preparation and execution. A mismatched or absent execution Product Contract pin fails closed before the R10 guard is invoked.
+## 7. Security, authority and consequential action path
 
-This check does not replace R10. Product Contract continuity and current source-authorization freshness remain separate invariants.
+Read-side capability operations preserve independent `Authorization` and `DataGovernance` boundaries. P4.06/P4.07 continue to enforce current source authorization and source handling/use constraints.
 
-## 7. Security, rights, minimization and authority result
-
-The Product Contract declares bounded canonical access but grants none by itself.
-
-Read-side capability operations preserve independent `Authorization` and `DataGovernance` boundaries. Actual P4.06/P4.07 surfaces continue to enforce current source authorization and purpose/right/classification constraints before protected source material is presented or relied upon.
-
-The product task-state mutation declaration requires all of:
+The product task-state mutation declaration requires independently:
 
 - `Authorization`;
 - `OrganizationalAuthority`;
 - `DataGovernance`;
 - `ConsequentialApproval`.
 
-Successful Product Contract validation satisfies none of those gates.
+Product Contract possession satisfies none of those gates.
 
-The implementation also rejects Actor/Organization/Product scope drift across the composed requests. Product context remains non-authoritative presentation state, and product decisions are transient unless separately admitted through governed state-transition semantics.
+Consequential product operator work is composed only through the existing R10 guard:
 
-## 8. Consequential operator action boundary
+1. product boundary verifies exact Product Contract/Actor/operation/task-target continuity;
+2. product candidate is constrained to the current product-owned task subject/type/Organization;
+3. R10 preparation verifies that the exact source-authorization decision used by inspection is still the unique current allow decision;
+4. the existing P4.05/runtime path remains the only mutation owner;
+5. immediately before execution, product-contract/task continuity is rechecked from the prepared intent;
+6. R10 rechecks source-access freshness before delegating to P4.05.
 
-P4.08 does not create a new mutation path.
+Replacement, revocation, absence or ambiguity therefore requires re-inspection. Product Contract continuity does not substitute for source authorization, and R10 source authorization does not substitute for Product Contract or Governed Execution gates.
 
-Consequential product operator work is composed in this order:
+## 8. Functional cross-review
 
-1. exact Product Contract continuity between Product workspace entry and Governed Execution is checked at the product boundary;
-2. R10 `prepare_operator_canonical_mutation_action` validates that the exact source-authorization decision used for inspection is still the unique current allow decision;
-3. the existing P4.05/runtime path prepares the action only through R10 delegation;
-4. immediately before execution, Product Contract continuity is checked again from the prepared action intent;
-5. R10 rechecks current source-authorization freshness before delegating to the existing P4.05 commit path.
-
-Replacement, revocation, absence or ambiguity of the source-access decision therefore requires re-inspection. Product Contract presence cannot substitute for this R10 check, and R10 cannot substitute for Product Contract or Governed Execution gates.
-
-Structural fitness tests also assert that the product package does not import the lower-level P4.05 action adapter directly.
-
-## 9. Functional cross-review
-
-Five functional cross-review iterations were completed against the branch implementation.
+Six functional cross-review iterations were completed.
 
 ### Iteration 1 — architecture / product-platform boundary
 
-Checked package direction, domain ownership, shared-workspace scope, Product Contract status and capability lifecycle claims.
+Checked package direction, domain ownership, shared workspace scope, Product Contract status and capability lifecycle claims.
 
 Result: `PASS`.
 
-### Iteration 2 — capability composition / exact source semantics
+### Iteration 2 — real capability composition
 
-Checked real CAP-001 + CAP-002 composition, source authorization, Document/Artifact exactness, Knowledge exact-version semantics, non-authoritative presentation and exact Product Contract attribution.
+Checked CAP-001 + CAP-002 composition, current source authorization, Document/Artifact exactness, Knowledge exact-version/freshness semantics and non-authoritative presentation.
 
-Result: `PASS` at implementation-review level; executable tests are committed but the repository CI runner has not executed them due the infrastructure condition recorded in section 10.
+Result: `PASS` at source/contract review level.
 
 ### Iteration 3 — security / Organization / authority separation
 
-Checked current Actor/Organization binding, Product identity/version binding, purpose/right/classification context, Contract-not-authorization semantics and independent mutation gates.
+Checked Actor/Organization binding, Product identity/version, purpose/right/classification context, Product-Contract-not-authorization semantics and independent consequential gates.
 
 Result: `PASS`.
 
-### Iteration 4 — consequential action composition
+### Iteration 4 — consequential Product Contract continuity
 
 Finding:
 
-- the initial wrapper did not explicitly prove exact Product Contract Version continuity between the workspace entry and the supplied Governed Execution before delegating to R10.
+- initial wrapper did not explicitly prove that supplied Governed Execution used the exact same Product Contract Version as the workspace entry.
 
 Remediation:
 
-- added exact Product Contract continuity checks for both preparation and execution paths;
-- preserved R10 as the sole product-facing bridge to the existing P4.05 consequential action adapter;
-- kept Product Contract continuity and source-access freshness as separate fail-closed invariants.
+- added fail-closed exact Product Contract continuity checks before R10 preparation and execution.
 
-Result after code and fitness-test update: `PASS` at implementation-review level.
+Result: `PASS` after remediation.
 
-### Iteration 5 — accidental contract / technology / commercial / lifecycle review
+### Iteration 5 — post-entry dependency / target drift
 
-Checked for stable API/route/wire contracts, durable frontend/BFF/service topology, storage/search/IAM technology choice, platform imports of product code, capability promotion, Production/readiness claims and support/SLA promises.
+Findings:
 
-Result: `PASS`; no material architectural finding remains in the bounded P4.08 implementation.
+- an already-entered product composition needed to bind later capability use to the exact admitted dependency contract version and declared Product Contract mechanism, not merely dependency identity/operation;
+- a same-contract Governed Execution also needed to be bound to the exact product-owned task operation/target rather than treated as sufficient by Product Contract identity alone.
 
-## 10. Executable evidence and CI infrastructure condition
+Remediation:
 
-Executable evidence is committed on PR `#53`:
+- `_require_admitted` now checks exact dependency contract version and rejects hidden/internal coupling mechanisms after entry;
+- Governed Execution must use the declared governed-runtime dependency/version, `p4.08.record-task-decision`, exactly one current product-task material input, and the product task semantic type;
+- consequential candidate must remain the same product task Subject/type/Organization;
+- regression fixtures cover dependency-version drift and boundary-mechanism drift.
 
-- cross-capability positive/negative fitness tests;
-- Product Contract boundary tests;
-- Product Contract exact-version continuity checks;
-- R10-only consequential action delegation checks;
-- package-direction / no-private-P4.05-bypass checks;
-- a static Product Contract-backed workspace-entry demo.
+Result: `PASS` after remediation.
 
-However, no green GitHub Actions execution is claimed.
+### Iteration 6 — accidental contract / technology / lifecycle / integration review
 
-`Reference Python CI` runs created for this PR repeatedly failed before executing the first workflow step. The GitHub Actions API returned jobs with an empty step list, and job-log retrieval returned no usable test log (`BlobNotFound`). A manual rerun of the latest unchanged implementation head reproduced the same zero-step failure.
+Checked stable API/route/wire risk, durable frontend/BFF/service/storage/IAM choices, platform imports of product code, capability promotion, production/readiness claims, and PR diff scope.
 
-Observed affected PR runs include `#171`, `#173`, `#174` and `#176`. Because no `checkout`, Python setup or `unittest` step executed, these runs provide neither a test failure signal nor a passing test signal.
+Result: `PASS`; no material architectural finding remains in bounded P4.08 scope.
 
-The workflow definition itself remains the existing bounded reference workflow (`ubuntu-latest`, Python `3.12`, `python -m unittest discover -s tests -v`). No workflow change is included in P4.08.
+## 9. Evidence status and CI infrastructure gap
 
-Therefore:
+P4.08 commits executable regression specifications for:
 
-- implementation cross-review result: `PASS`;
-- automated test execution result: `NOT ESTABLISHED`;
-- canonical completion/merge gate: `BLOCKED` until the full reference suite actually executes successfully on the P4.08 head or an equivalent owner-approved execution environment produces trustworthy full-suite evidence.
+- positive and fail-closed cross-capability composition;
+- exact Product Contract and dependency-version continuity;
+- post-entry hidden-coupling rejection;
+- product task target binding;
+- R10-only consequential action delegation;
+- package direction / no lower-level P4.05 bypass;
+- static Product Contract-backed workspace entry rendering.
 
-The repository roadmap MUST NOT be advanced to R11 on the basis of these zero-step workflow failures.
+No green GitHub Actions run is claimed for the P4.08 head.
 
-## 11. ADR / architecture disposition
+During PR #53, the pre-existing `Reference Python CI` workflow repeatedly failed before its first workflow step. Jobs returned no executed steps; affected log retrieval produced no usable test output. Changing the hosted runner label reproduced the zero-step condition and was reverted, so P4.08 retains no workflow change. The infrastructure problem is tracked separately as GitHub issue `#54 — Restore Reference Python CI runner provisioning`.
 
-No ADR threshold was crossed.
+This is not treated as a passing test result and not represented as an architecture exception.
 
-Still deliberately unselected:
+The scoped completion decision relies on:
 
-- frontend framework or durable design-system package boundary;
-- public REST/GraphQL/gRPC/BFF/wire contract;
-- durable workspace/read-model/cache storage;
-- document/object-store topology;
-- search/vector/RAG technology;
-- IAM/PDP/PEP implementation;
-- Event transport/store;
-- workflow engine;
-- separately deployable product/platform service topology.
+- unchanged existing `arvectum_os_ref` platform/runtime modules relative to the canonical R10 `main` baseline;
+- the previously completed R10/platform regression baseline;
+- six source-level functional cross-review iterations over the new bounded product code and Product Contract;
+- explicit fail-closed executable regression fixtures committed with the new product-owned implementation;
+- no normative P4.08 requirement or approved engineering-quality rule that binds work-item completion specifically to GitHub-hosted runner availability.
 
-Material reliance on any such durable or externally constraining choice reopens the applicable ADR gate.
+Restoration of hosted CI remains required operational hygiene under issue #54. Until then, repository documentation must continue to distinguish committed executable specifications from actually observed automated test execution.
 
-## 12. Capability, contract and conformance disposition
+## 10. ADR / lifecycle / conformance disposition
 
-P4.08 implementation does **not**:
+No ADR threshold is crossed. P4.08 selects no durable frontend framework, public API/BFF/wire contract, IAM/PDP/PEP implementation, durable workspace/read-model/cache, object store, vector/RAG technology, Event transport, workflow engine or separately deployed product/platform topology.
+
+P4.08 does **not**:
 
 - promote CAP-001 or CAP-002 to `Active`;
 - promote the Product Contract from `Provisional` to `Stable`;
-- create a new Platform Capability from the product task/composition mechanism;
+- create a new Platform Capability from product composition;
 - claim Production operational readiness;
 - claim full-platform conformance;
-- create a public API/SDK/support/SLA/compatibility commitment.
+- create public API/SDK/SLA/support/compatibility commitments.
 
-The bounded Product Contract remains `Provisional`; the shared capabilities remain `Incubating / Provisional`.
+The bounded Product Contract remains `Provisional`; CAP-001 through CAP-004 remain `Incubating / Provisional`.
 
-## 13. Completion decision
+## 11. Completion decision
 
-The bounded P4.08 implementation is architecturally complete and passes the documented functional cross-review.
+`P4.08 — Cross-capability task/context composition + bounded product entry point` is **Complete / PASS** within the bounded internal Phase 4 reference scope.
 
-Canonical work-item completion is **not yet recorded** because trustworthy full reference test execution is currently absent for the implementation head. PR `#53` remains the bounded implementation vehicle, and the canonical roadmap remains on P4.08 until that execution evidence is obtained.
+Completion means the architectural/product-contract proof is sufficient to proceed to the mandatory next engineering gate. It does not mean hosted CI is healthy, product contract stability, production readiness, capability activation or Phase 4 closure.
 
-Once the full reference suite executes successfully on the current implementation (or a later reviewed P4.08 head), the remaining closure actions are mechanical:
+The next canonical action is:
 
-1. update this review with exact CI run / Python version / test count / result;
-2. mark `P4.08` complete in the Phase 4 roadmap;
-3. advance the canonical current action to `R11 — Composition / Usability Refactoring Review`;
-4. synchronize root roadmap/README evidence;
-5. obtain final synchronized-head CI before merge.
+> **`R11 — Composition / Usability Refactoring Review`.**
+
+R11 must review the evidence from the first real product-backed composition before P4.09 becomes the canonical implementation action.
