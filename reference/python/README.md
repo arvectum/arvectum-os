@@ -1,9 +1,9 @@
 # Bounded Reference Implementation — Phase 1
 
 Status: `Provisional implementation harness`
-Scope: `Phase 1 / P1.01–P1.08`
-Architecture baseline: Constitution `1.2.0`; Accepted RFC-0001, RFC-0002, RFC-0003, RFC-0005 and RFC-0006 `1.0.0`
-Roadmap baseline: `2.0.4`
+Scope: `Phase 1 / P1.01–P1.09`
+Architecture baseline: Constitution `1.2.0`; Accepted RFC-0001, RFC-0002, RFC-0003, RFC-0005, RFC-0006 and RFC-0007 `1.0.0`
+Roadmap baseline: `2.0.5`
 
 This directory contains the bounded executable reference implementation defined by `docs/implementation/REFERENCE-IMPLEMENTATION-READINESS.md`.
 
@@ -159,6 +159,24 @@ Repository evidence: `reference/python/arvectum_os_ref/provenance.py`, package e
 
 P1.08 adds `15` focused architecture-fitness tests. It deliberately does **not** define replay execution semantics, a portable serialization/fixture contract, Observation/Knowledge promotion, a projection/index authority model, durable lineage persistence or a public provenance API.
 
+## P1.09 — Observation creation without Knowledge promotion
+
+This work item creates one significant, domain-neutral RFC-0007 Observation from exact already-governed P1.06–P1.08 evidence:
+
+- Observation is a semantic role represented through the existing RFC-0002 `CanonicalRecord` envelope rather than a new Kernel primitive;
+- the Observation has stable Subject Identity, distinct immutable initial Version Identity, explicit Organization scope, `Native` authority limited to the recorded observation, accountable owner, attributable Actor and `Captured` lifecycle state;
+- exact source pins identify the admitted P1.07 Event, terminal `Succeeded` P1.06 Execution Context and resulting canonical-effect versions verified by P1.08;
+- reconstruction provenance and initiating-Principal attribution are preserved in the Observation evidence rather than replaced with an inferred current-state lookup;
+- epistemic status is explicitly `Unvalidated`, and integrity metadata records that Knowledge promotion was not performed;
+- `require_explicit_knowledge_promotion` is intentionally a fail-closed negative-path guard, not a promotion API: the P1.09 harness provides no successful path that can reinterpret an Observation as validated Knowledge;
+- creating the Observation does not mutate the Workflow, original/result Canonical Record versions, sealed terminal Execution Context or admitted Event and does not change an approved standard, policy, Workflow or production behavior;
+- wrong Event, terminal Execution or effect versions, changed Event semantics and incomplete reconstruction provenance fail closed;
+- Organizational Memory, Knowledge Candidate/Proposal, Knowledge admission, Improvement Proposal, promotion approval and self-modifying production behavior remain outside P1.09.
+
+Repository evidence: `reference/python/arvectum_os_ref/observation.py`, package exports in `reference/python/arvectum_os_ref/__init__.py`, and `reference/python/tests/test_p1_09_observation_non_promotion.py`.
+
+P1.09 adds `14` focused architecture-fitness tests. PR-time `Reference Python CI` passes the complete bounded suite: `99` tests, `OK`.
+
 ## Deliberately not decided
 
 This harness does **not** establish a permanent package layout, programming-language contract, database, API, event broker, durable event store, outbox/inbox strategy, delivery protocol, schema registry, IAM provider, policy engine, deployment topology, persistent lineage store, Canonical Head/effective-version resolver, workflow engine, Product Contract, production role matrix or durable authorization-enforcement mechanism.
@@ -168,6 +186,8 @@ The P1.06 `current_record` argument is a bounded caller-supplied admitted-curren
 The P1.07 `admitted_events` argument is a bounded caller-supplied immutable Event-history fixture used only to exercise admission, duplicate and conflict semantics. It is not a durable Event repository or transport contract.
 
 The P1.08 reconstruction manifest is an immutable derived view of already-governed references. It does not create canonical state, grant authority, provide a mutable projection, establish durable evidence storage, or pre-empt P1.09/P1.10 semantics.
+
+The P1.09 Observation is bounded significant governed learning evidence with explicit `Unvalidated` epistemic status. It is authoritative only for the fact that the Observation was captured in its declared scope; it is not validated Knowledge, Organizational Memory, an approved standard, a production rule or an implementation of the RFC-0007 promotion lifecycle. Its negative guard does not pre-empt P1.10 fixture semantics or a later governed Knowledge implementation.
 
 Python and `unittest` are used only as a reversible, zero-dependency vehicle for executable architecture fitness evidence. No Platform Capability becomes `Active`, and no production-readiness or full-platform conformance claim is created by these tests.
 
@@ -180,4 +200,4 @@ python -m unittest discover -s tests -v
 
 ## Next roadmap work item
 
-After P1.08 is completed and roadmap evidence is synchronized, the next dependency-ordered item is `P1.09 — Observation creation without Knowledge promotion`.
+After P1.09 is completed and roadmap evidence is synchronized, the next dependency-ordered item is `P1.10 — Portable semantic fixture export`.
