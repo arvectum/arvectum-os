@@ -19,7 +19,6 @@ from typing import Any
 
 from arvectum_os_ref.canonical import CanonicalRecord
 from arvectum_os_ref.canonical_inspection import CurrentSourceAuthorization
-from arvectum_os_ref.cross_capability_enforcement import AccessRequest
 from arvectum_os_ref.document_artifact_experience import (
     DocumentWorkspaceResult,
     DocumentWorkspaceSourceSet,
@@ -99,11 +98,12 @@ class BoundedProductTask:
         ):
             if not isinstance(value, Identity):
                 raise ValueError(f"{label} must be an Identity")
-        if self.product_id.scope != self.organization.organization_id.value:
+        organization_scope = self.organization.organization_id.value
+        if self.product_id.scope != organization_scope:
             raise ValueError("product identity must share the task Organization scope")
-        if self.task_id.scope != self.organization.organization_id.value:
+        if self.task_id.scope != organization_scope:
             raise ValueError("task identity must share the task Organization scope")
-        if self.document_subject_id.scope != self.organization.organization_id.value:
+        if self.document_subject_id.scope != organization_scope:
             raise ValueError("document identity must share the task Organization scope")
         if not isinstance(self.product_version, str) or not self.product_version.strip():
             raise ValueError("product_version must be explicit")
@@ -124,6 +124,18 @@ class ProductWorkspaceEntry:
             raise ValueError("entry requires a product-owned task")
         if not isinstance(self.workspace, WorkspaceShellState):
             raise ValueError("entry requires an open shared workspace")
+        if self.workspace.organization != self.task.organization:
+            raise ValueError("workspace and product task must share Organization scope")
+        product_context = self.workspace.product_context
+        if (
+            product_context is None
+            or product_context.organization != self.task.organization
+            or product_context.product_id != self.task.product_id
+            or product_context.product_contract_version_id is None
+        ):
+            raise ValueError(
+                "workspace entry must preserve exact Product/Organization/Product Contract context"
+            )
         if (
             not isinstance(self.capability_admissions, tuple)
             or len(self.capability_admissions) < 2
@@ -133,6 +145,17 @@ class ProductWorkspaceEntry:
             )
         ):
             raise ValueError("entry requires at least two explicit capability admissions")
+        if len({value.dependency_id for value in self.capability_admissions}) < 2:
+            raise ValueError("entry requires at least two distinct shared capability admissions")
+        if any(
+            value.product_id != self.task.product_id
+            or value.product_contract_version_id
+            != product_context.product_contract_version_id
+            for value in self.capability_admissions
+        ):
+            raise ValueError(
+                "capability admissions must preserve the same exact Product Contract entry"
+            )
 
 
 @dataclass(frozen=True, slots=True)
@@ -149,6 +172,8 @@ class ProductTaskContextView:
     def __post_init__(self) -> None:
         if self.presentation_authority is not PresentationAuthority.NON_AUTHORITATIVE:
             raise ValueError("product task context presentation cannot become authoritative")
+        if not isinstance(self.product_contract_version_id, Identity):
+            raise ValueError("product task context must preserve exact Product Contract version")
         if len(set(self.capability_dependencies)) < 2:
             raise ValueError("task context must compose at least two shared capability surfaces")
 
@@ -191,6 +216,48 @@ def _require_task_boundary(
         raise ProductContractScopeError("Product Contract and product task must share Organization scope")
     if contract.product_id != task.product_id or contract.product_version != task.product_version:
         raise ProductContractScopeError("Product Contract does not govern this product task version")
+
+
+def _entry_contract_version_id(entry: ProductWorkspaceEntry) -> Identity:
+    if not isinstance(entry, ProductWorkspaceEntry):
+        raise TypeError("exact Product Contract continuity requires ProductWorkspaceEntry")
+    product_context = entry.workspace.product_context
+    if product_context is None or product_context.product_contract_version_id is None:
+        raise ProductCompositionError("exact Product Contract version context is missing")
+    return product_context.product_contract_version_id
+
+
+def _require_execution_contract(
+    *,
+    entry: ProductWorkspaceEntry,
+    execution: GovernedExecutionContext,
+) -> None:
+    """Preserve the exact Product Contract version across product entry and execution."""
+
+    if not isinstance(execution, GovernedExecutionContext):
+        raise TypeError("product consequential action requires GovernedExecutionContext")
+    if execution.record.organization != entry.workspace.organization:
+        raise ProductContractScopeError(
+            "Governed Execution and product workspace must share Organization scope"
+        )
+    expected = _entry_contract_version_id(entry)
+    if execution.product_contract is None or execution.product_contract.version_id != expected:
+        raise ProductCompositionError(
+            "Governed Execution is not pinned to the exact Product Contract Version used by the workspace entry"
+        )
+
+
+def _require_action_intent_contract(
+    *,
+    entry: ProductWorkspaceEntry,
+    intent: OperatorCanonicalMutationIntent,
+) -> None:
+    if not isinstance(intent, OperatorCanonicalMutationIntent):
+        raise ValueError("product action execution requires OperatorCanonicalMutationIntent")
+    _require_execution_contract(
+        entry=entry,
+        execution=intent.action_intent.execution,
+    )
 
 
 def _request_key(request: CapabilityConsumptionRequest) -> tuple[Identity, str]:
@@ -275,17 +342,25 @@ def _require_admitted(
         raise ProductContractScopeError(
             "composed capability request must match the current workspace context"
         )
+    if request.product_id != entry.task.product_id or request.product_version != entry.task.product_version:
+        raise ProductContractScopeError(
+            "composed capability request must remain inside the product task boundary"
+        )
     if request.dependency_id != dependency_id or request.operation_name != operation_name:
         raise ProductCompositionError(
             "wrong Product Contract capability operation for this composed surface"
         )
     key = _request_key(request)
+    contract_version_id = _entry_contract_version_id(entry)
     if not any(
-        admission.dependency_id == key[0] and admission.operation_name == key[1]
+        admission.dependency_id == key[0]
+        and admission.operation_name == key[1]
+        and admission.product_id == request.product_id
+        and admission.product_contract_version_id == contract_version_id
         for admission in entry.capability_admissions
     ):
         raise ProductCompositionError(
-            "capability operation was not admitted at the Product Contract entry point"
+            "capability operation was not admitted under the exact Product Contract entry"
         )
 
 
@@ -342,15 +417,11 @@ def compose_product_task_context(
         access_request=knowledge_request.access,
     )
 
-    product_context = entry.workspace.product_context
-    if product_context is None or product_context.product_contract_version_id is None:
-        raise ProductCompositionError("exact Product Contract version context is missing")
-
     return ProductTaskContextView(
         task=entry.task,
         document=document_view,
         knowledge=knowledge_view,
-        product_contract_version_id=product_context.product_contract_version_id,
+        product_contract_version_id=_entry_contract_version_id(entry),
         capability_dependencies=(
             document_request.dependency_id,
             knowledge_request.dependency_id,
@@ -390,13 +461,14 @@ def start_product_task_execution(
 
     _require_task_boundary(contract=contract, task=task, actor=actor)
     if (
-        interaction.product_id != task.product_id
+        interaction.organization != task.organization
+        or interaction.product_id != task.product_id
         or interaction.product_version != task.product_version
     ):
         raise ProductContractScopeError(
             "governed interaction must stay inside the product task boundary"
         )
-    return start_product_governed_execution(
+    execution = start_product_governed_execution(
         contract=contract,
         interaction=interaction,
         actor=actor,
@@ -404,6 +476,11 @@ def start_product_task_execution(
         version_id=version_id,
         created_at=created_at,
     )
+    if execution.product_contract is None or execution.product_contract.version_id != contract.record.version_id:
+        raise ProductCompositionError(
+            "Governed Execution failed to preserve the exact Product Contract Version"
+        )
+    return execution
 
 
 def prepare_product_task_action(
@@ -420,6 +497,7 @@ def prepare_product_task_action(
 ) -> OperatorCanonicalMutationIntent:
     """Prepare consequential product work only through the R10 operator-safety guard."""
 
+    _require_execution_contract(entry=entry, execution=execution)
     return prepare_operator_canonical_mutation_action(
         workspace=entry.workspace,
         inspection=inspection,
@@ -440,8 +518,9 @@ def execute_product_task_action(
     runtime_state: RuntimeConsistencyState,
     source_authorizations: tuple[CurrentSourceAuthorization, ...],
 ) -> Any:
-    """Recheck current source access in R10 before any existing P4.05 commit path."""
+    """Preserve Product Contract continuity, then recheck current source access in R10."""
 
+    _require_action_intent_contract(entry=entry, intent=intent)
     return execute_operator_canonical_mutation_action(
         workspace=entry.workspace,
         intent=intent,
