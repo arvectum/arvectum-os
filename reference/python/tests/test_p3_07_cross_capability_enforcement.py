@@ -77,7 +77,7 @@ class P307CrossCapabilityEnforcementTests(unittest.TestCase):
             organization=self.org_a, execution_subject_id=execution_subject, initiating_actor_id=self.actor.actual_principal.principal_id, operation_name="review",
             workflow=workflow, material_inputs=(material,), gate_decisions=(), execution_versions=(execution,), results=(result,), events=(event,), event_types=(("example.event", "1"),),
             correlation_refs=(execution_subject,), causation_refs=(execution.version_id,),
-            provenance_refs=(self.actor.actual_principal.principal_id, execution_subject, workflow.subject_id, workflow.version_id, material.subject_id, material.version_id, execution.subject_id, execution.version_id, result.subject_id, result.version_id, event.subject_id, event.version_id),
+            provenance_refs=tuple(dict.fromkeys((self.actor.actual_principal.principal_id, execution_subject, workflow.subject_id, workflow.version_id, material.subject_id, material.version_id, execution.subject_id, execution.version_id, result.subject_id, result.version_id, event.subject_id, event.version_id))),
         )
         constraints = tuple((pin.version_id, "review", ("read",), "internal") for pin in (workflow, material, execution, event)) + ((result.version_id, "review", ("export",), "internal"),)
         view = reconstruct_audit_for_access(manifest=manifest, request=self.request, evidence_constraints=constraints)
