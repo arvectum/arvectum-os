@@ -295,23 +295,122 @@ class SemanticPortabilityPackage:
 
 
 @dataclass(frozen=True, slots=True)
+class ReconstructedCanonicalRecordSemantics:
+    """Derived imported record meaning; deliberately not a CanonicalRecord authority object."""
+
+    subject_id: Identity
+    version_id: Identity
+    semantic_type: str
+    schema_version: str
+    organization_id: Identity
+    authority_mode: AuthorityMode
+    authority_scope: str
+    accountable_owner_id: Identity
+    creation_actor: ActorContext
+    created_at: datetime
+    provenance_refs: tuple[Identity, ...]
+    integrity_metadata: tuple[tuple[str, str], ...]
+    payload: tuple[tuple[str, str], ...]
+    lifecycle_status: str | None
+    predecessor_version_id: Identity | None
+    effective_from: datetime | None
+    effective_until: datetime | None
+    canonical_authority: bool = False
+
+    def __post_init__(self) -> None:
+        _require(isinstance(self.subject_id, Identity) and isinstance(self.version_id, Identity), "reconstructed record identities must be explicit")
+        _require(self.subject_id != self.version_id, "reconstructed Subject/Version roles must remain distinct")
+        _require(isinstance(self.authority_mode, AuthorityMode), "reconstructed authority mode must be explicit")
+        if self.canonical_authority is not False:
+            raise ProjectionAuthorityBoundaryError("imported record semantics cannot claim canonical authority")
+
+
+@dataclass(frozen=True, slots=True)
+class ReconstructedRelationshipSemantics:
+    record_version_id: Identity
+    relationship_type: RelationshipTypeReference
+    source: RelationshipEndpoint
+    target: RelationshipEndpoint
+    canonical_authority: bool = False
+
+    def __post_init__(self) -> None:
+        _require(isinstance(self.record_version_id, Identity), "reconstructed relationship version must be explicit")
+        _require(isinstance(self.relationship_type, RelationshipTypeReference), "reconstructed relationship type must be explicit")
+        _require(isinstance(self.source, RelationshipEndpoint) and isinstance(self.target, RelationshipEndpoint), "reconstructed relationship endpoints must be explicit")
+        if self.canonical_authority is not False:
+            raise ProjectionAuthorityBoundaryError("imported relationship semantics cannot claim canonical authority")
+
+
+@dataclass(frozen=True, slots=True)
+class ReconstructedEventSemantics:
+    record_version_id: Identity
+    event_type: str
+    event_schema_version: str
+    authoritative_source: str
+    occurred_at: datetime
+    recorded_at: datetime
+    producer_id: Identity
+    initiating_actor_id: Identity
+    execution_subject_id: Identity
+    execution_version_id: Identity
+    related_subject_ids: tuple[Identity, ...]
+    related_version_ids: tuple[Identity, ...]
+    correlation_refs: tuple[Identity, ...]
+    causation_refs: tuple[Identity, ...]
+    classification: str
+    access_scope: str
+    canonical_authority: bool = False
+
+    def __post_init__(self) -> None:
+        _require(isinstance(self.record_version_id, Identity), "reconstructed Event version must be explicit")
+        if self.canonical_authority is not False:
+            raise ProjectionAuthorityBoundaryError("imported Event semantics cannot claim canonical authority")
+
+
+def _derived_record(value: CanonicalRecord) -> ReconstructedCanonicalRecordSemantics:
+    return ReconstructedCanonicalRecordSemantics(
+        value.subject_id, value.version_id, value.semantic_type, value.schema_version,
+        value.organization.organization_id, value.authority_mode, value.authority_scope,
+        value.accountable_owner_id, value.creation_actor, value.created_at, value.provenance_refs,
+        value.integrity_metadata, value.payload, value.lifecycle_status, value.predecessor_version_id,
+        value.effective_from, value.effective_until,
+    )
+
+
+def _derived_relationship(value: TypedRelationship) -> ReconstructedRelationshipSemantics:
+    return ReconstructedRelationshipSemantics(
+        value.record.version_id, value.relationship_type, value.source, value.target
+    )
+
+
+def _derived_event(value: CanonicalEvent) -> ReconstructedEventSemantics:
+    return ReconstructedEventSemantics(
+        value.record.version_id, value.event_type, value.event_schema_version,
+        value.authoritative_source, value.occurred_at, value.recorded_at, value.producer_id,
+        value.initiating_actor_id, value.execution_subject_id, value.execution_version_id,
+        value.related_subject_ids, value.related_version_ids, value.correlation_refs,
+        value.causation_refs, value.classification, value.access_scope,
+    )
+
+
+@dataclass(frozen=True, slots=True)
 class ReconstructedRuntimeSemantics:
     scenario_id: str
     organization: OrganizationScope
-    records: tuple[CanonicalRecord, ...]
-    relationships: tuple[TypedRelationship, ...]
-    events: tuple[CanonicalEvent, ...]
+    records: tuple[ReconstructedCanonicalRecordSemantics, ...]
+    relationships: tuple[ReconstructedRelationshipSemantics, ...]
+    events: tuple[ReconstructedEventSemantics, ...]
     canonical_authority: bool = False
 
     def __post_init__(self) -> None:
         _require(isinstance(self.scenario_id, str) and self.scenario_id.strip(), "scenario_id must be explicit")
         _require(isinstance(self.organization, OrganizationScope), "Organization scope must be explicit")
         _require(isinstance(self.records, tuple) and self.records, "reconstruction requires records")
-        _require(all(isinstance(item, CanonicalRecord) and item.organization == self.organization for item in self.records), "reconstructed records must share one Organization")
+        _require(all(isinstance(item, ReconstructedCanonicalRecordSemantics) and item.organization_id == self.organization.organization_id for item in self.records), "reconstructed records must share one Organization")
         _require(len({item.version_id for item in self.records}) == len(self.records), "reconstructed Version Identities must remain distinct")
         versions = {item.version_id for item in self.records}
-        _require(all(isinstance(item, TypedRelationship) and item.record.version_id in versions for item in self.relationships), "relationship canonical versions must remain in records")
-        _require(all(isinstance(item, CanonicalEvent) and item.record.version_id in versions for item in self.events), "Event canonical versions must remain in records")
+        _require(all(isinstance(item, ReconstructedRelationshipSemantics) and item.record_version_id in versions for item in self.relationships), "relationship versions must remain in reconstructed records")
+        _require(all(isinstance(item, ReconstructedEventSemantics) and item.record_version_id in versions for item in self.events), "Event versions must remain in reconstructed records")
         if self.canonical_authority is not False:
             raise ProjectionAuthorityBoundaryError("reconstructed package is not independent authority")
 
@@ -450,14 +549,19 @@ def reconstruct_runtime_semantics(*, package: SemanticPortabilityPackage) -> Rec
     _require(manifest.get("event_count") == len(events), "Event manifest count mismatch")
     _require(tuple(item.record.version_id for item in relationships) == _identities_from(manifest.get("relationship_versions"), "manifest.relationship_versions"), "relationship Version Identity manifest drift detected")
     _require(tuple(item.record.version_id for item in events) == _identities_from(manifest.get("event_versions"), "manifest.event_versions"), "Event Version Identity manifest drift detected")
-    return ReconstructedRuntimeSemantics(scenario["scenario_id"], organization, records, relationships, events)
+    return ReconstructedRuntimeSemantics(
+        scenario["scenario_id"], organization,
+        tuple(_derived_record(item) for item in records),
+        tuple(_derived_relationship(item) for item in relationships),
+        tuple(_derived_event(item) for item in events),
+    )
 
 
 def rebuild_non_authoritative_projection(*, package: SemanticPortabilityPackage) -> RuntimeProjectionSnapshot:
     """Replay a package only into a derived read model; no side-effect adapter exists."""
     reconstructed = reconstruct_runtime_semantics(package=package)
-    relationship_versions = {item.record.version_id for item in reconstructed.relationships}
-    event_versions = {item.record.version_id for item in reconstructed.events}
+    relationship_versions = {item.record_version_id for item in reconstructed.relationships}
+    event_versions = {item.record_version_id for item in reconstructed.events}
     entries = tuple(
         RuntimeProjectionEntry(
             "typed-relationship" if item.version_id in relationship_versions else "event" if item.version_id in event_versions else "canonical-record",
