@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.8.6`
+Version: `2.8.7`
 Created: `2026-08-07`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -15,13 +15,17 @@ The Strategic Roadmap beyond completed work is a planning hypothesis, not an arc
 
 ## 2. Version note
 
-Version `2.8.6` records completion of **P3.08 — Product Contract consumption boundary + bounded consumer proof**.
+Version `2.8.7` records completion of **P3.09 — Shared-capability reuse and composition proof** and engineering gate **R7 PASS**.
 
-P3.08 adds one RFC-0004 `Provisional` Product Contract and a bounded synthetic Product Experiment that consumes CAP-001 through CAP-004 through exact capability dependency/version/operation declarations while retaining the P3.07 Organization/purpose/right/classification access boundary. Hidden internal table/import/endpoint/private-stream/shared-state coupling fails closed; canonical source reads remain explicit; discovery does not create source access; Product Contract admission does not create permission, approval, delegation or Organizational Authority.
+P3.09 adds a second RFC-0004 `Provisional` Product Contract and proves that two materially distinct bounded Product Experiments can reuse CAP-001 through CAP-004 through separate Product Contract and exact Workflow Version identities while preserving the same existing Provisional capability contract baseline.
 
-The proof remains read-only, domain-neutral and internal. It creates no stable public/cross-product API or SDK, no product-domain platform semantics, no durable implementation decision and no capability lifecycle promotion. `Reference Python CI #90` passed the complete validation suite; the validation merge ref ran 359 tests including one branch-only trigger, representing 358 canonical tests on `main`.
+The first proof composition is document-led and the second is discovery-led. Both reuse the same shared capability semantics without changing the platform contract for the second consumer. CAP-003 is additionally exercised over a governed Document source in the second consumer while remaining derived, source-type-neutral and non-authoritative; the Product Contract separately declares the exact canonical source read required for reliance.
 
-P3.09 is now the current canonical action and P3.10 fitness evidence continues to accumulate.
+The proof rejects Product Contract borrowing, missing or duplicated shared operations, identical composition as insufficient reuse evidence, consumer-specific canonical-read leakage and capability-contract version broadening. Composition remains consumer-owned: no generic platform composition framework, stable public/cross-product API or SDK, product-domain platform semantics, durable implementation decision or capability lifecycle promotion is introduced.
+
+`Reference Python CI #92` passed the complete validation suite with Python `3.12.13`: `366` tests, result `OK`.
+
+P3.10 is now the current canonical action.
 
 ## 3. Verified architecture baseline
 
@@ -39,6 +43,8 @@ P3.09 is now the current canonical action and P3.10 fitness evidence continues t
 - [`P3.07 review`](../reviews/P3-07-cross-capability-security-rights-organization-scope-enforcement-review.md) / R6 — `PASS`;
 - [`P3.08 Product Contract`](../contracts/P3-08-BOUNDED-CONSUMER-PRODUCT-CONTRACT.md) — `Provisional 0.1.0`;
 - [`P3.08 review`](../reviews/P3-08-product-contract-consumption-boundary-bounded-consumer-proof-review.md) — `PASS`;
+- [`P3.09 Product Contract`](../contracts/P3-09-DISTINCT-BOUNDED-CONSUMER-PRODUCT-CONTRACT.md) — `Provisional 0.1.0`;
+- [`P3.09 review`](../reviews/P3-09-shared-capability-reuse-composition-proof-review.md) / R7 — `PASS`;
 - Decision Authority Policy remains `Proposed 0.2.1`; residual authority remains with the owner;
 - no Platform Capability is `Active`.
 
@@ -76,8 +82,8 @@ Phase status, capability lifecycle, operational environment and conformance matu
 | `P3.06` | Audit / Reconstruction Support candidate slice | 🟩 Complete | `██████████ 100%` |
 | `P3.07` | Cross-capability security, rights and Organization-scope enforcement | 🟩 Complete / R6 PASS | `██████████ 100%` |
 | `P3.08` | Product Contract consumption boundary + bounded consumer proof | 🟩 Complete | `██████████ 100%` |
-| `P3.09` | Shared-capability reuse and composition proof | ⬜ | `░░░░░░░░░░ 0%` |
-| `P3.10` | Phase 3 architecture fitness matrix | ⬜ cross-cutting | `░░░░░░░░░░ 0%` |
+| `P3.09` | Shared-capability reuse and composition proof | 🟩 Complete / R7 PASS | `██████████ 100%` |
+| `P3.10` | Phase 3 architecture fitness matrix | 🟨 Current | `░░░░░░░░░░ 0%` |
 | `P3.11` | Capability admission / ADR / refactoring hardening review | ⬜ | `░░░░░░░░░░ 0%` |
 | `P3.12` | Phase 3 / M3 closure review | ⬜ | `░░░░░░░░░░ 0%` |
 
@@ -87,9 +93,9 @@ A small set of domain-neutral shared capabilities has demonstrated governed reus
 
 ## 6. Current canonical action
 
-> **P3.09 — Shared-capability reuse and composition proof; P3.10 evidence continuous.**
+> **P3.10 — Phase 3 architecture fitness matrix.**
 
-P3.03 through P3.08 are complete. Continue with materially distinct bounded reuse/composition evidence without promoting any capability, stabilizing public/cross-product interfaces, importing product-domain semantics or selecting durable cross-cutting mechanisms without re-opening the ADR gate.
+P3.03 through P3.09 are complete and R5–R7 pass. Consolidate the accumulated evidence without promoting any capability, stabilizing public/cross-product interfaces, importing product-domain semantics or selecting durable cross-cutting mechanisms without re-opening the ADR gate.
 
 ## 7. ADR and Product Contract gate
 
@@ -125,8 +131,9 @@ P3.05 Non-authoritative Search / Index Projection ✓
 P3.06 Audit / Reconstruction Support ✓
 P3.07 Cross-capability security/rights/Organization enforcement ✓ R6 PASS
 P3.08 Product Contract consumption boundary ✓
+P3.09 shared-capability reuse/composition proof ✓ R7 PASS
         ↓
-P3.09 shared-capability reuse/composition proof ← current
+P3.10 Phase 3 architecture fitness matrix ← current
         ↓
-P3.10–P3.12 fitness / hardening / M3 closure
+P3.11–P3.12 hardening / M3 closure
 ```
