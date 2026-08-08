@@ -55,9 +55,13 @@ Canonical Phase 3 closure evidence:
 - [R8 milestone hardening review](docs/reviews/R8-phase-3-milestone-hardening.md)
 - [P3.11 capability admission / ADR / refactoring hardening review](docs/reviews/P3-11-capability-admission-adr-refactoring-hardening-review.md)
 
-`Phase 4 — Workspace / Operator Experience` is **Active**. `P4.01 — Operator journeys, workspace boundary and information architecture` and `P4.02 — Organization context, identity and scoped navigation shell` are complete with `PASS`; the current canonical action is the mandatory `R9 — Workspace Boundary Review` engineering gate.
+`Phase 4 — Workspace / Operator Experience` is **Active**. `P4.01 — Operator journeys, workspace boundary and information architecture`, `P4.02 — Organization context, identity and scoped navigation shell` and the mandatory `R9 — Workspace Boundary Review` gate are complete with `PASS`; the current canonical action is `P4.03 — Canonical Record / Relationship inspection experience`.
 
 P4.02 provides the first bounded visible workspace shell: explicit Organization and attributable Actor context, `Discover / Records / Executions / Evidence / Documents / Knowledge` navigation, distinct Subject and exact-Version references, fail-closed unresolved/mismatched Organization state and non-authoritative presentation semantics. A zero-dependency static HTML demo makes the shell inspectable without selecting a frontend framework, route schema, public API/BFF, IAM/session provider or durable read-model topology.
+
+R9 revalidated that boundary before richer record/provenance/execution surfaces expand. It found no material blocker, no accidental stable public/frontend/IAM boundary and no reason for a new RFC, ADR, Product Contract or Platform Capability. Structural R9 regression guards now protect the internal package surface, dependency direction, semantic navigation-reference shape, context-only product entry and absence of mutation/gate bypass. `Reference Python CI #114` passed all `415` tests on the R9 branch before roadmap synchronization.
+
+R9 also leaves one explicit P4.03 handoff: actual governed source dereference must independently enforce Organization/platform scope and current authorization rather than trusting presentation context, an `Identity.scope` string or identifier syntax as access/authority proof.
 
 Canonical Phase 4 planning/current evidence:
 
@@ -65,8 +69,9 @@ Canonical Phase 4 planning/current evidence:
 - [Active Phase 4 workstream](docs/roadmap/PHASE-4-WORKSPACE-OPERATOR-EXPERIENCE.md)
 - [P4.01 operator journeys / workspace boundary / IA review](docs/reviews/P4-01-operator-journeys-workspace-boundary-information-architecture.md)
 - [P4.02 Organization context / identity / scoped navigation shell review](docs/reviews/P4-02-organization-context-identity-scoped-navigation-shell.md)
+- [R9 Workspace Boundary Review](docs/reviews/R9-workspace-boundary-review.md)
 
-P4.01 and P4.02 establish a domain-neutral workspace boundary and reversible shell only. They do not create a new Platform Capability, change CAP-001 through CAP-004 lifecycle, create a Stable Product Contract/public interface or establish production readiness.
+P4.01, P4.02 and R9 establish and harden a domain-neutral workspace boundary and reversible shell only. They do not create a new Platform Capability, change CAP-001 through CAP-004 lifecycle, create a Stable Product Contract/public interface or establish production readiness.
 
 RFC-0001 through RFC-0008 are `Accepted 1.0.0` and remain binding within their declared scopes.
 

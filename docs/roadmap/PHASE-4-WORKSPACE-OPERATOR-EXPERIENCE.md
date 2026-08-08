@@ -1,7 +1,7 @@
 # Arvectum OS Phase 4 — Workspace / Operator Experience
 
 Status: `Active`
-Version: `1.2.0`
+Version: `1.3.0`
 Created: `2026-08-08`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -13,15 +13,18 @@ Predecessor: `Phase 3 — Shared Platform Capabilities`, `M3` achieved
 
 ## Version note
 
-Version `1.2.0` completes `P4.02 — Organization context, identity and scoped navigation shell` and advances the current canonical action to the mandatory `R9 — Workspace Boundary Review` engineering gate.
+Version `1.3.0` completes the mandatory `R9 — Workspace Boundary Review` engineering gate with `PASS` and advances the current canonical action to `P4.03 — Canonical Record / Relationship inspection experience`.
 
-P4.02 makes the P4.01 workspace boundary executable through a bounded zero-dependency internal shell with explicit Organization and attributable Actor context, domain-neutral navigation, Subject-versus-exact-Version reference semantics, fail-closed unresolved/mismatched scope, non-authoritative presentation state and an inert standalone HTML demo. It selects no frontend/API/IAM/durable-read-model technology, creates no new Platform Capability and changes no capability lifecycle.
+R9 revalidated the combined P4.01 design and P4.02 executable shell before richer workspace surfaces expand. Organization/Actor scope remains explicit and fail-closed; presentation/navigation state creates neither authorization nor Organizational Authority; Subject and exact-Version references remain distinct; optional product context remains context-only; the workspace remains product-domain neutral; and no frontend/API/route/wire/IAM/session/durable-read-model boundary has stabilized.
+
+R9 also records one bounded P4.03 handoff: actual governed source resolution must independently enforce the applicable Organization/platform scope and current authorization rather than treating presentation context, a navigation wrapper, `Identity.scope` text or identifier syntax as sufficient proof of access, authority or canonical Organization membership.
 
 Canonical completion evidence:
 
 - [`P4.01 operator journeys / workspace boundary / IA review`](../reviews/P4-01-operator-journeys-workspace-boundary-information-architecture.md) — `PASS`;
 - [`P4.02 Organization context / identity / scoped navigation shell review`](../reviews/P4-02-organization-context-identity-scoped-navigation-shell.md) — `PASS`;
-- GitHub Actions `Reference Python CI #109` — `PASS` on the P4.02 implementation branch before roadmap synchronization.
+- [`R9 Workspace Boundary Review`](../reviews/R9-workspace-boundary-review.md) — `PASS`;
+- GitHub Actions `Reference Python CI #114` — `PASS`, Python `3.12.13`, `415` tests, `OK` on the R9 implementation branch before roadmap synchronization.
 
 ## 1. Purpose
 
@@ -110,7 +113,8 @@ Required behavior:
 - typed relationship direction and endpoint-role visibility;
 - lifecycle/validation state and owner/scope visibility;
 - immutable historical versions remain inspectable;
-- ambiguity or missing effective version is surfaced rather than silently resolved.
+- ambiguity or missing effective version is surfaced rather than silently resolved;
+- actual source dereference independently enforces governed Organization/platform scope and current authorization rather than trusting presentation wrapper or identifier syntax.
 
 ### P4.04 — Version, Event, provenance and reconstruction experience
 
@@ -252,7 +256,7 @@ The closure review MUST distinguish:
 
 | Gate | Trigger | Purpose |
 |---|---|---|
-| `R9 — Workspace Boundary Review` | after P4.02 | confirm shell/navigation does not create authority, product leakage or accidental public boundary |
+| `R9 — Workspace Boundary Review` | after P4.02 | **Complete / PASS** — shell/navigation does not create authority, product leakage or accidental public boundary; P4.03 source-resolution handoff recorded |
 | `R10 — Operator Safety / Cross-Capability Health Review` | after P4.07 | review security, rights, derived-state honesty, repeated UX patterns and code health |
 | `R11 — Composition / Usability Refactoring Review` | after P4.08 / meaningful usability evidence | allow evidence-backed shared UX refactoring only after real composition is demonstrated |
 | `R12 — M4 Workspace Hardening` | after P4.10 | final dependency, authority-bypass, accessibility, deterministic-state and ADR-gate hardening |
@@ -268,12 +272,14 @@ P4.01 Operator journeys + IA ✅
         ↓
 P4.02 Organization/identity navigation shell ✅
         ↓
-R9 Workspace Boundary Review ← current
+R9 Workspace Boundary Review ✅
         ↓
  ┌──────┼───────────────┐
  ↓      ↓               ↓
 P4.03  P4.04           P4.05
 Records Provenance     Execution
+  ↑
+current
  └──────┼───────────────┘
         ↓
  ┌──────┴──────┐
@@ -357,6 +363,16 @@ A reversible internal reference implementation may proceed without an ADR when t
 
 ## 10. Current canonical action
 
-> **`R9 — Workspace Boundary Review`.**
+> **`P4.03 — Canonical Record / Relationship inspection experience`.**
 
-Review the combined P4.01 + P4.02 workspace boundary before expanding into P4.03–P4.05. Confirm that Organization/Actor scope remains explicit and fail-closed, navigation/presentation state cannot create authority, Subject/exact-Version semantics remain intact, product-entry context has not become hidden product/platform coupling, and the zero-dependency reference adapter has not accidentally stabilized a frontend/API/route/IAM boundary. Resolve material findings before beginning the next workspace surface work.
+Implement a bounded internal inspection experience over Canonical Records and Typed Relationships without widening the workspace shell into an authorization engine, resolver protocol or public UI contract.
+
+Required immediate constraints from R9:
+
+- preserve Subject Identity versus exact Version Identity semantics;
+- make Canonical Head versus Effective Version distinction explicit where material;
+- expose authority mode / authoritative source and relationship direction/reference role without treating them as permissions;
+- surface ambiguous/missing resolution instead of silently choosing a version;
+- independently enforce governed Organization/platform scope and current authorization at source dereference;
+- do not treat presentation context, `Identity.scope` text or identifier syntax as access/authority proof;
+- keep the surface internal/reversible and avoid stabilizing route/API/wire/frontend/IAM boundaries.

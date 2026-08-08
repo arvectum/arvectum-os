@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.12.0`
+Version: `2.13.0`
 Created: `2026-08-07`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -15,18 +15,21 @@ The Strategic Roadmap beyond completed work is a planning hypothesis, not an arc
 
 ## 2. Version note
 
-Version `2.12.0` records completion of **P4.02 — Organization context, identity and scoped navigation shell** and advances the current canonical action to the mandatory `R9 — Workspace Boundary Review` engineering gate.
+Version `2.13.0` records completion of **R9 — Workspace Boundary Review** with `PASS` and advances the current canonical action to **P4.03 — Canonical Record / Relationship inspection experience**.
 
-P4.02 implements the smallest reversible internal shell defined by P4.01: explicit Organization and attributable Actor context, the domain-neutral `Discover / Records / Executions / Evidence / Documents / Knowledge` navigation set, distinct Subject and exact-Version references, fail-closed unresolved/mismatched scope, non-authoritative presentation state and a standalone static HTML demo. It selects no frontend framework, route/deep-link contract, public API/BFF, IAM/session provider or durable read-model topology, creates no new Platform Capability and changes no capability lifecycle.
+R9 reviewed the combined P4.01 design and P4.02 implementation before richer workspace surfaces expand. It confirmed that Organization/Actor context remains explicit and fail-closed, presentation/navigation cannot create authorization or Organizational Authority, Subject and exact-Version references remain distinct, optional product context is context-only, and the zero-dependency shell has not stabilized a frontend, route, public API/BFF, IAM/session, serialization or durable read-model boundary.
+
+R9 adds executable structural regression guards for package/public-surface isolation, dependency direction, non-selection of public transport/frontend/storage stacks, semantic reference shape, context-only product entry and absence of governed mutation/gate bypass. The review also records a bounded P4.03 handoff: actual governed source resolution must independently validate Organization/platform scope and current authorization rather than treating a presentation wrapper or identifier syntax as authority/access proof.
 
 Canonical evidence:
 
+- [`R9 Workspace Boundary Review`](../reviews/R9-workspace-boundary-review.md) — `PASS`;
 - [`P4.02 Organization context / identity / scoped navigation shell review`](../reviews/P4-02-organization-context-identity-scoped-navigation-shell.md) — `PASS`;
 - [`P4.01 operator journeys / workspace boundary / IA review`](../reviews/P4-01-operator-journeys-workspace-boundary-information-architecture.md) — `PASS`;
-- [`PHASE-4-WORKSPACE-OPERATOR-EXPERIENCE.md`](PHASE-4-WORKSPACE-OPERATOR-EXPERIENCE.md) — `Active 1.2.0`;
-- GitHub Actions `Reference Python CI #109` — `PASS` on the P4.02 implementation branch before roadmap synchronization.
+- [`PHASE-4-WORKSPACE-OPERATOR-EXPERIENCE.md`](PHASE-4-WORKSPACE-OPERATOR-EXPERIENCE.md) — Phase 4 remains `Active`;
+- GitHub Actions `Reference Python CI #114` — `PASS`, Python `3.12.13`, `415` tests, `OK` on the R9 implementation branch before roadmap synchronization.
 
-Phase 3 remains closed with `M3 — Validated shared capability baseline` achieved. CAP-001 through CAP-004 remain lifecycle `Incubating / Provisional`; Phase 4 progress does not promote them to `Active`.
+Phase 3 remains closed with `M3 — Validated shared capability baseline` achieved. CAP-001 through CAP-004 remain lifecycle `Incubating / Provisional`; R9 creates no new Platform Capability and promotes none to `Active`.
 
 Phase 4 remains operator-experience first and UI-technology neutral. It proves coherent human interaction with governed organizational state and shared capability slices without turning presentation state into canonical authority or prematurely selecting a frontend/API/service topology.
 
@@ -41,10 +44,12 @@ Phase 4 remains operator-experience first and UI-technology neutral. It proves c
 - [`P3.12 closure review`](../reviews/P3-12-phase-3-m3-closure-review.md) — `PASS`;
 - CAP-001 through CAP-004 remain `Incubating / Provisional`;
 - no Platform Capability is `Active` merely because Phase 3 closed or Phase 4 is in progress;
-- Phase 4 detailed roadmap is `Active 1.2.0`;
+- Phase 4 detailed roadmap remains `Active`;
 - [`P4.01 review`](../reviews/P4-01-operator-journeys-workspace-boundary-information-architecture.md) — `PASS`;
 - [`P4.02 review`](../reviews/P4-02-organization-context-identity-scoped-navigation-shell.md) — `PASS`;
-- no frontend framework, public route/API/BFF, IAM provider, durable workspace/read-model store or service topology is selected by P4.02.
+- [`R9 review`](../reviews/R9-workspace-boundary-review.md) — `PASS`;
+- no frontend framework, public route/API/BFF, IAM provider, durable workspace/read-model store or service topology is selected by P4.02/R9;
+- R9 introduces no new RFC, ADR, Product Contract or capability lifecycle change.
 
 ## 4. Strategic roadmap
 
@@ -79,7 +84,7 @@ M3 does not imply lifecycle `Active`, operational readiness, Stable Product Cont
 
 Canonical detailed plan:
 
-- [`PHASE-4-WORKSPACE-OPERATOR-EXPERIENCE.md`](PHASE-4-WORKSPACE-OPERATOR-EXPERIENCE.md) — `Active 1.2.0`.
+- [`PHASE-4-WORKSPACE-OPERATOR-EXPERIENCE.md`](PHASE-4-WORKSPACE-OPERATOR-EXPERIENCE.md) — `Active`.
 
 | ID | Work item | Status | Progress |
 |---|---|---:|---:|
@@ -98,7 +103,7 @@ Canonical detailed plan:
 
 Engineering gates:
 
-- `R9 — Workspace Boundary Review` after P4.02 — **current**;
+- `R9 — Workspace Boundary Review` after P4.02 — **Complete / PASS**;
 - `R10 — Operator Safety / Cross-Capability Health Review` after P4.07;
 - `R11 — Composition / Usability Refactoring Review` after P4.08 / meaningful usability evidence;
 - `R12 — M4 Workspace Hardening` after P4.10.
@@ -122,9 +127,13 @@ M4 is a bounded workspace milestone. It is not production readiness, full-platfo
 
 ## 8. Current canonical action
 
-> **`R9 — Workspace Boundary Review`.**
+> **`P4.03 — Canonical Record / Relationship inspection experience`.**
 
-Review the combined P4.01 + P4.02 workspace boundary before P4.03–P4.05 expand the shell. Confirm that Organization/Actor scope remains explicit and fail-closed, navigation/presentation state cannot create authorization or Organizational Authority, Subject-versus-exact-Version semantics remain intact, optional product context remains context-only, and the zero-dependency HTML/reference adapter has not become an accidental stable frontend/API/route/IAM boundary.
+Implement the smallest bounded operator inspection surface for Canonical Records and Typed Relationships while preserving RFC-0002 semantics and the R9 workspace boundary. The surface must keep Subject Identity distinct from exact Version Identity, expose Head versus Effective Version and authority/source meaning where material, preserve relationship direction/reference roles, and surface ambiguity instead of silently resolving it.
+
+Actual governed source dereference must independently enforce the applicable Organization/platform scope and current authorization. Presentation context, a navigation wrapper, `Identity.scope` text or identifier syntax must not be treated as sufficient proof of access, authority or canonical Organization membership.
+
+P4.03 must remain an internal reversible inspection surface and must not stabilize a public route/API/wire/frontend contract or turn read-model/presentation state into canonical authority.
 
 ## 9. ADR and Product Contract gate
 
@@ -160,7 +169,9 @@ P4.01 Operator journeys + workspace boundary + IA ✓
         ↓
 P4.02 Organization context + identity + scoped navigation shell ✓
         ↓
-R9 Workspace Boundary Review ← current
+R9 Workspace Boundary Review ✓
+        ↓
+P4.03 Canonical Record / Relationship inspection ← current
         ↓
 M4 Coherent governed workspace baseline
 ```
