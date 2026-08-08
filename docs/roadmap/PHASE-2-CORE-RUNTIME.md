@@ -1,7 +1,7 @@
 # Arvectum OS Phase 2 — Core Runtime
 
 Status: `Active`
-Version: `1.1.0`
+Version: `1.1.1`
 Created: `2026-08-08`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -312,27 +312,37 @@ Closure review MUST verify:
 
 The canonical gate decision is [`DECISION-2026-08-08-ENGINEERING-QUALITY-REFACTORING-GATES`](../governance/decisions/DECISION-2026-08-08-ENGINEERING-QUALITY-REFACTORING-GATES.md).
 
-| Gate | Trigger | Primary purpose |
-|---|---|---|
-| `R1 — Structural Review` | after P2.01, before substantive P2.02 | validate runtime/fixture/test boundaries, dependency direction and remove accidental P1 structure |
-| `R2 — Runtime Health Review` | after P2.06, before substantive P2.07 | review the accumulated semantic runtime spine, consistency/error/idempotency patterns and emerging ADR triggers |
-| `R3 — Reuse Refactoring Review` | after P2.09, before final Phase 2 hardening | refactor abstractions using evidence from two materially distinct workflows |
-| `R4 — Milestone Hardening` | after final applicable P2.10 evidence, before P2.11/P2.12 | full Phase 2 code-health remediation and evidence-backed optimization before closure reviews |
+| Gate | Trigger | Status | Primary purpose |
+|---|---|---:|---|
+| `R1 — Structural Review` | after P2.01, before substantive P2.02 | 🟩 Complete | validate runtime/fixture/test boundaries, dependency direction and remove accidental P1 structure |
+| `R2 — Runtime Health Review` | after P2.06, before substantive P2.07 | ⬜ Planned | review the accumulated semantic runtime spine, consistency/error/idempotency patterns and emerging ADR triggers |
+| `R3 — Reuse Refactoring Review` | after P2.09, before final Phase 2 hardening | ⬜ Planned | refactor abstractions using evidence from two materially distinct workflows |
+| `R4 — Milestone Hardening` | after final applicable P2.10 evidence, before P2.11/P2.12 | ⬜ Planned | full Phase 2 code-health remediation and evidence-backed optimization before closure reviews |
 
 Rules:
 
 - normal local code hygiene remains continuous and does not wait for these gates;
 - gates are engineering checkpoints, not capability-lifecycle or conformance claims;
 - performance optimization SHOULD follow reproducible benchmark/profile evidence unless an obvious correctness, resource-exhaustion or security problem requires immediate correction;
-- a gate does not replace the ADR gate; any materially constraining choice discovered by a gate must be governed before further material reliance;
-- because P2.01 was completed before this decision was canonically recorded, `R1` is now the current required gate and precedes substantive P2.02 implementation.
+- a gate does not replace the ADR gate; any materially constraining choice discovered by a gate must be governed before further material reliance.
+
+**R1 completion evidence — 2026-08-08:**
+
+- canonical review: [`R1-structural-review.md`](../reviews/R1-structural-review.md);
+- reusable `runtime.py` no longer selects the historical P1 implementation adapter set by default;
+- `reference_runtime_adapters.py` explicitly contains the bounded P1 binding;
+- the reference scenario selects that adapter set explicitly and still delegates execution through one runtime call;
+- two additional structural fitness tests prevent default adapter binding and historical P1 operation imports from returning to the runtime core;
+- GitHub Actions `Reference Python CI` run `#23` on executable code head `e0c71c1c80b658711a7420ffb7d59248ce741fb8` passed `140` tests / `OK`;
+- hard-coded P1 reference identifiers/timestamps remain intentionally contained behind the reference adapter boundary and are not generalized ahead of P2.04/P2.05;
+- no relevant ADR gate was crossed.
 
 ## 7. Dependency-aware sequence
 
 ```text
 P2.01 Runtime boundary extraction
           ↓
-R1 Structural Review
+R1 Structural Review ✓
           ↓
 P2.02 Canonical Record Head / Effective Version runtime
    ├──────────────┐
@@ -370,13 +380,11 @@ The sequence is dependency-aware rather than mechanically serial. P2.02–P2.04 
 
 ## 8. Current canonical action
 
-> **`R1 — Structural Review`.**
+> **`P2.02 — Canonical Record lineage, Head and Effective Version runtime`.**
 
-Review the completed P2.01 extraction before substantive P2.02 implementation. Confirm that reusable runtime semantics are separated from deterministic reference-scenario fixtures and tests, inspect dependency direction/cycles/duplication/accidental internal APIs, remove obsolete P1-only structure where evidence supports it, and preserve behavior through the existing fitness/test suite.
+Implement reusable, domain-neutral Canonical Record lineage operations that distinguish Canonical Head from Effective Version resolution, preserve exact Version Identity pinning for consequential reliance, fail explicitly on ambiguity or absence, and remain independent of a particular database or index technology.
 
-R1 is not a performance-optimization sprint and must not introduce a database, broker, IAM/policy provider, workflow engine, public API/SDK, stable service topology or other materially constraining choice merely to make the package structure appear cleaner.
-
-After R1 completes with material findings resolved or explicitly dispositioned, the next roadmap work item is `P2.02 — Canonical Record lineage, Head and Effective Version runtime`.
+P2.02 must build on the R1-hardened explicit runtime composition boundary without turning the provisional Python package layout or reference adapter implementation into a stable public/cross-product contract.
 
 ## 9. ADR gate
 

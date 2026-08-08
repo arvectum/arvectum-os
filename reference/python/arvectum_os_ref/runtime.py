@@ -1,41 +1,29 @@
 """P2.01 — provisional reusable Core Runtime composition boundary.
 
-This module extracts the orchestration spine proven by Phase 1 from the
-reference-scenario fixture.  It composes existing domain-neutral semantic
-operations without selecting persistence, a workflow engine, a broker, IAM,
-service topology or a public API/SDK contract.
+This module owns the orchestration spine proven by Phase 1 without selecting a
+reference-scenario implementation for its semantic operations.  Callers supply
+an explicit ``RuntimeOperations`` adapter set, keeping the composition root
+independent from bounded P1 fixture bindings and preserving package-topology
+reversibility.
 
-The default operations deliberately adapt the bounded P1 implementations.  They
-remain replaceable implementation adapters: later Phase 2 work may generalize
-individual runtime responsibilities without changing the accepted
-organizational semantics carried by the request/result boundary.
+The boundary remains internal and provisional.  It does not select persistence,
+a workflow engine, broker, IAM provider, service topology, public API/SDK or a
+durable serialization contract.
 """
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Callable
 
 from .canonical import CanonicalRecord
-from .events import (
-    CanonicalEvent,
-    EventAdmissionResult,
-    EventCandidate,
-    admit_p1_07_event,
-    build_p1_07_event_candidate,
-)
-from .execution import ExecutionContext, start_p1_04_execution
-from .gates import (
-    GateDecision,
-    GateKind,
-    GateOutcome,
-    admit_p1_05_ready_execution,
-    build_p1_05_gate_decision,
-)
+from .events import CanonicalEvent, EventAdmissionResult, EventCandidate
+from .execution import ExecutionContext
+from .gates import GateDecision, GateKind, GateOutcome
 from .identity import Identity
-from .mutation import CanonicalMutationResult, execute_p1_06_canonical_mutation
-from .observation import Observation, build_p1_09_observation
-from .provenance import ReconstructionEvidence, build_p1_08_reconstruction_evidence
+from .mutation import CanonicalMutationResult
+from .observation import Observation
+from .provenance import ReconstructionEvidence
 from .security import ActorContext, OrganizationScope
 from .workflow import WorkflowDefinition
 
@@ -55,8 +43,8 @@ class RuntimeOperations:
     """Replaceable semantic adapters used by one runtime composition.
 
     The callables are an internal composition seam, not a stable SDK or public
-    plugin interface.  They let P2.01 separate reusable runtime ownership from
-    deterministic scenario setup while keeping every current adapter reversible.
+    plugin interface.  P2.01 keeps the already-proven semantic operations
+    replaceable without treating their current module layout as architecture.
     """
 
     start_execution: StartExecution
@@ -67,21 +55,6 @@ class RuntimeOperations:
     admit_event: AdmitEvent
     build_reconstruction_evidence: BuildReconstructionEvidence
     build_observation: BuildObservation
-
-
-def default_runtime_operations() -> RuntimeOperations:
-    """Bind the current bounded P1 semantic implementations to the runtime."""
-
-    return RuntimeOperations(
-        start_execution=start_p1_04_execution,
-        build_gate_decision=build_p1_05_gate_decision,
-        admit_ready_execution=admit_p1_05_ready_execution,
-        execute_canonical_mutation=execute_p1_06_canonical_mutation,
-        build_event_candidate=build_p1_07_event_candidate,
-        admit_event=admit_p1_07_event,
-        build_reconstruction_evidence=build_p1_08_reconstruction_evidence,
-        build_observation=build_p1_09_observation,
-    )
 
 
 @dataclass(frozen=True, slots=True)
@@ -196,12 +169,17 @@ class RuntimeExecutionResult:
 class RuntimeComposition:
     """Minimal P2.01 composition root for the proven governed runtime spine.
 
-    This owns orchestration of the already-proven P1.04–P1.09 semantic steps.
-    It intentionally does not generalize workflow/gate/event lifecycle semantics
-    beyond the current evidence; P2.04 and P2.05 remain responsible for that.
+    The caller must select an explicit ``RuntimeOperations`` adapter set.  The
+    reusable composition therefore owns orchestration but not historical P1
+    fixture binding.  P2.04 and P2.05 remain responsible for generalizing the
+    Governed Execution/gate and Event/provenance runtime semantics themselves.
     """
 
-    operations: RuntimeOperations = field(default_factory=default_runtime_operations)
+    operations: RuntimeOperations
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.operations, RuntimeOperations):
+            raise TypeError("runtime composition requires explicit RuntimeOperations")
 
     def execute(self, request: RuntimeExecutionRequest) -> RuntimeExecutionResult:
         if not isinstance(request, RuntimeExecutionRequest):

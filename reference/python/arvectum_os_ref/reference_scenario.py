@@ -1,9 +1,8 @@
 """Deterministic Phase 1 fixture wired through the P2.01 runtime boundary.
 
-This module owns only bounded reference-scenario setup: deterministic identities,
-actors, the initial Canonical Record, the Workflow fixture, governed basis
-references and the requested successor payload.  Runtime orchestration belongs
-to ``RuntimeComposition`` and is invoked once through that boundary.
+This module owns bounded reference-scenario setup and explicitly selects the
+reference-only adapter set used to execute it.  Reusable runtime orchestration
+belongs to ``RuntimeComposition`` and is invoked once through that boundary.
 """
 
 from __future__ import annotations
@@ -13,6 +12,7 @@ from dataclasses import dataclass
 from .canonical import CanonicalRecord, build_p1_02_native_record
 from .identity import Identity
 from .portability import PortableSemanticFixture, export_p1_10_semantic_fixture
+from .reference_runtime_adapters import reference_runtime_operations
 from .runtime import RuntimeComposition, RuntimeExecutionRequest, RuntimeExecutionResult
 from .security import ActorContext, OrganizationScope, Principal
 from .workflow import WorkflowDefinition, build_p1_03_workflow
@@ -98,7 +98,9 @@ def build_p1_reference_scenario(
         ),
         new_payload=(("label", "domain-neutral reference subject updated"),),
     )
-    composition = runtime if runtime is not None else RuntimeComposition()
+    composition = runtime
+    if composition is None:
+        composition = RuntimeComposition(operations=reference_runtime_operations())
     result = composition.execute(request)
     return Phase1ReferenceScenario(
         organization=organization,

@@ -4,15 +4,14 @@ import json
 import unittest
 
 import arvectum_os_ref.reference_scenario as reference_scenario_module
+import arvectum_os_ref.runtime as runtime_module
 from arvectum_os_ref.execution import ExecutionLifecycle, GovernedVersionPin
 from arvectum_os_ref.gates import GateKind, GateOutcome
 from arvectum_os_ref.identity import Identity
 from arvectum_os_ref.observation import ObservationEpistemicStatus
+from arvectum_os_ref.reference_runtime_adapters import reference_runtime_operations
 from arvectum_os_ref.reference_scenario import build_p1_reference_scenario
-from arvectum_os_ref.runtime import (
-    RuntimeComposition,
-    default_runtime_operations,
-)
+from arvectum_os_ref.runtime import RuntimeComposition
 from arvectum_os_ref.security import ActorContext, OrganizationScope, Principal
 
 
@@ -25,7 +24,9 @@ class P201RuntimeCompositionTests(unittest.TestCase):
         class TrackingRuntime:
             def __init__(self) -> None:
                 self.requests = []
-                self.delegate = RuntimeComposition()
+                self.delegate = RuntimeComposition(
+                    operations=reference_runtime_operations()
+                )
 
             def execute(self, request):
                 self.requests.append(request)
@@ -54,6 +55,28 @@ class P201RuntimeCompositionTests(unittest.TestCase):
         ):
             self.assertNotIn(forbidden_import, source)
         self.assertIn("from .runtime import", source)
+        self.assertIn("from .reference_runtime_adapters import", source)
+
+    def test_runtime_core_requires_explicit_adapter_binding(self) -> None:
+        with self.assertRaises(TypeError):
+            RuntimeComposition()  # type: ignore[call-arg]
+
+    def test_runtime_core_does_not_bind_historical_p1_operations(self) -> None:
+        source = inspect.getsource(runtime_module)
+
+        for forbidden in (
+            "start_p1_04_execution",
+            "build_p1_05_gate_decision",
+            "admit_p1_05_ready_execution",
+            "execute_p1_06_canonical_mutation",
+            "build_p1_07_event_candidate",
+            "admit_p1_07_event",
+            "build_p1_08_reconstruction_evidence",
+            "build_p1_09_observation",
+            "reference_runtime_adapters",
+            "reference_scenario",
+        ):
+            self.assertNotIn(forbidden, source)
 
     def test_runtime_preserves_execution_lineage_and_exact_version_pins(self) -> None:
         awaiting = self.result.awaiting_execution
@@ -158,7 +181,7 @@ class P201RuntimeCompositionTests(unittest.TestCase):
 
     def test_runtime_operations_are_replaceable_without_changing_fixture_setup(self) -> None:
         calls = []
-        defaults = default_runtime_operations()
+        defaults = reference_runtime_operations()
 
         def tracking_start_execution(**kwargs):
             calls.append((kwargs["workflow"].workflow_version_id, kwargs["material_input"].version_id))
@@ -185,7 +208,9 @@ class P201RuntimeCompositionTests(unittest.TestCase):
         )
 
         with self.assertRaises(PermissionError):
-            RuntimeComposition().execute(denied)
+            RuntimeComposition(
+                operations=reference_runtime_operations()
+            ).execute(denied)
 
     def test_cross_organization_decision_actor_is_rejected_before_execution(self) -> None:
         other_organization = OrganizationScope(

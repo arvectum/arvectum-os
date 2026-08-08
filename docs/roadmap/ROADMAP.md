@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.3.0`
+Version: `2.3.1`
 Created: `2026-08-07`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -45,7 +45,7 @@ This roadmap uses semantic versioning:
 - `MINOR` — sequencing, milestone scope, work breakdown, phase transition or strategic-horizon changes that do not restructure the planning model;
 - `MAJOR` — restructuring of the roadmap lifecycle or planning model.
 
-Version `2.0.0` introduced the two-horizon planning model. Version `2.1.0` recorded Phase 1 / `M1` completion and Phase 2 decomposition as the next action. Version `2.2.0` activates the decomposed Phase 2 Core Runtime plan. Version `2.2.1` records P2.01 completion and advances the active execution sequence to P2.02. Version `2.3.0` establishes evidence-backed engineering quality/refactoring gates, inserts R1 after completed P2.01 before substantive P2.02 work, and defines milestone/stable-boundary Code Health Gate rules.
+Version `2.0.0` introduced the two-horizon planning model. Version `2.1.0` recorded Phase 1 / `M1` completion and Phase 2 decomposition as the next action. Version `2.2.0` activates the decomposed Phase 2 Core Runtime plan. Version `2.2.1` records P2.01 completion and advances the active execution sequence to P2.02. Version `2.3.0` establishes evidence-backed engineering quality/refactoring gates, inserts R1 after completed P2.01 before substantive P2.02 work, and defines milestone/stable-boundary Code Health Gate rules. Version `2.3.1` records R1 completion and advances the current canonical action to P2.02.
 
 Roadmap identifiers, engineering-gate identifiers, RFC identifiers and ADR identifiers are independent namespaces.
 
@@ -98,8 +98,9 @@ Current verified canonical baseline:
 - [`P1.12 closure review`](../reviews/P1-12-phase-1-bounded-slice-closure-review.md) records `PASS — M1 achieved for the declared bounded reference scope`;
 - Phase 2 `P2.01` completed a provisional reusable runtime composition boundary while keeping deterministic reference-scenario fixtures outside runtime orchestration ownership;
 - P2.01 executable evidence: GitHub Actions `Reference Python CI` run `#18` passed `138` tests on executable code head `5f56f0bf36e58efe5249b93e9df6ca4437d5621e`;
-- [`DECISION-2026-08-08-ENGINEERING-QUALITY-REFACTORING-GATES`](../governance/decisions/DECISION-2026-08-08-ENGINEERING-QUALITY-REFACTORING-GATES.md) is `Approved` and makes `R1 — Structural Review` the current required engineering gate after P2.01 and before substantive P2.02 implementation;
-- no relevant Accepted ADR currently constrains the bounded runtime choices carried from Phase 1 or introduced by P2.01.
+- [`DECISION-2026-08-08-ENGINEERING-QUALITY-REFACTORING-GATES`](../governance/decisions/DECISION-2026-08-08-ENGINEERING-QUALITY-REFACTORING-GATES.md) is `Approved`;
+- [`R1 — Structural Review`](../reviews/R1-structural-review.md) is complete: reusable runtime composition no longer selects historical P1 adapters by default, the bounded P1 binding is explicit in `reference_runtime_adapters.py`, and CI run `#23` passed `140` tests on executable code head `e0c71c1c80b658711a7420ffb7d59248ce741fb8`;
+- no relevant Accepted ADR currently constrains the bounded runtime choices carried from Phase 1, P2.01 or R1.
 
 The RFC Index remains the canonical source for RFC status and acceptance evidence.
 
@@ -145,7 +146,7 @@ M1 intentionally did **not** claim reusable Typed Relationship lifecycle, reusab
 
 Canonical detailed work breakdown:
 
-- [`PHASE-2-CORE-RUNTIME.md`](PHASE-2-CORE-RUNTIME.md) — `Active 1.1.0`.
+- [`PHASE-2-CORE-RUNTIME.md`](PHASE-2-CORE-RUNTIME.md) — `Active 1.1.1`.
 
 **Milestone `M2`:** more than one materially distinct bounded workflow reuses the same governed runtime semantics without copying the Phase 1 harness, with architecture fitness evidence, completed Phase 2 engineering quality gates and all crossed ADR gates governed.
 
@@ -202,7 +203,7 @@ Provisional intent: demonstrate safe compounding organizational intelligence thr
 ## 6. Active Roadmap — Phase 2 Core Runtime
 
 **Status:** 🟨 In progress  
-**Phase progress:** `█░░░░░░░░░ 8%` — P2.01 complete; R1 current; P2.02 follows R1
+**Phase progress:** `█░░░░░░░░░ 8%` — P2.01 complete; R1 complete; P2.02 next
 
 | ID | Work item | Status | Progress |
 |---|---|---:|---:|
@@ -223,7 +224,7 @@ Provisional intent: demonstrate safe compounding organizational intelligence thr
 
 | Gate | Trigger | Status |
 |---|---|---:|
-| `R1 — Structural Review` | after P2.01, before substantive P2.02 | 🟦 Current |
+| `R1 — Structural Review` | after P2.01, before substantive P2.02 | 🟩 Complete |
 | `R2 — Runtime Health Review` | after P2.06, before substantive P2.07 | ⬜ Planned |
 | `R3 — Reuse Refactoring Review` | after P2.09, before final Phase 2 hardening | ⬜ Planned |
 | `R4 — Milestone Hardening` | after final applicable P2.10 evidence, before P2.11/P2.12 | ⬜ Planned |
@@ -232,18 +233,18 @@ Engineering gates are checkpoints rather than `P2.xx` work items and therefore d
 
 ### Current canonical action
 
-> **`R1 — Structural Review`.**
+> **`P2.02 — Canonical Record lineage, Head and Effective Version runtime`.**
 
-Review the completed P2.01 extraction before substantive P2.02 implementation. Validate runtime/fixture/test boundaries, dependency direction, duplication and accidental internal APIs; remove obsolete P1-specific structure where justified; preserve behavior through the existing test/fitness suite; do not introduce materially constraining technology merely to clean up package structure.
+Implement reusable resolution operations over immutable Canonical Record lineage, explicitly distinguish Canonical Head from Effective Version selection, preserve exact Version Identity reliance for consequential execution, and fail explicitly on ambiguity or missing resolution.
 
-After R1 completes with material findings resolved or explicitly dispositioned, proceed to `P2.02 — Canonical Record lineage, Head and Effective Version runtime`.
+Do not introduce a database/index dependency or reinterpret a derived projection as canonical resolution authority merely to complete P2.02. Build on the R1-hardened explicit runtime composition boundary without turning the provisional Python package layout or reference adapter set into a stable public/cross-product contract.
 
 ### Dependency-aware sequence
 
 ```text
 P2.01 Runtime boundary extraction
           ↓
-R1 Structural Review
+R1 Structural Review ✓
           ↓
 P2.02 Canonical Record Head / Effective Version runtime
    ├──────────────┐

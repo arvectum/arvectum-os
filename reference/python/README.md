@@ -1,12 +1,13 @@
 # Bounded Reference Implementation — Phase 1 + Core Runtime extraction
 
-Status: `Provisional implementation harness — Phase 1 complete; P2.01 complete`
-Executable scope: `P1.01–P1.11; P2.01`
+Status: `Provisional implementation harness — Phase 1 complete; P2.01 complete; R1 complete`
+Executable scope: `P1.01–P1.11; P2.01; R1 structural fitness`
 Closure: `P1.12 complete; M1 achieved`
 Architecture baseline: Constitution `1.2.0`; Accepted RFC-0001 through RFC-0008 `1.0.0`
-Roadmap baseline: `2.2.1`
+Roadmap baseline: `2.3.1`
 Phase 1 closure review: `docs/reviews/P1-12-phase-1-bounded-slice-closure-review.md`
-Phase 2 plan: `docs/roadmap/PHASE-2-CORE-RUNTIME.md` `1.0.1`
+R1 review: `docs/reviews/R1-structural-review.md`
+Phase 2 plan: `docs/roadmap/PHASE-2-CORE-RUNTIME.md` `1.1.1`
 
 This directory contains the bounded executable reference implementation used to prove Roadmap milestone `M1` and the provisional Phase 2 extraction work that begins turning those semantics into reusable Core Runtime boundaries.
 
@@ -183,7 +184,36 @@ P2.01 executable checkpoint:
 - result: `Ran 138 tests` / `OK`;
 - workflow conclusion: `success`.
 
-This is a provisional internal composition seam, not a stable platform API. P2.04 and P2.05 remain responsible for generalizing Governed Execution/gate and Event/provenance runtime semantics beyond the bounded P1 adapters.
+P2.01 established the first composition seam but still selected the bounded P1 adapter set by default. R1 subsequently hardened that boundary without changing P2.01 semantics.
+
+## R1 — Structural Review
+
+R1 reviewed the P2.01 runtime / fixture / test split, dependency direction, scenario leakage, duplicated orchestration, accidental APIs and reversibility before substantive P2.02 work.
+
+Canonical review:
+
+- `../../docs/reviews/R1-structural-review.md`.
+
+Structural remediation:
+
+- `arvectum_os_ref/reference_runtime_adapters.py` now explicitly owns the bounded P1 operation binding;
+- `RuntimeComposition` requires explicit `RuntimeOperations` and no longer imports or selects historical `*_p1_*` operation functions by default;
+- the deterministic reference scenario explicitly selects `reference_runtime_operations()` when using the reference fixture;
+- no duplicated P1.04–P1.09 orchestration was introduced;
+- P1-specific deterministic IDs/timestamps remain contained inside reference adapters rather than being prematurely generalized ahead of P2.04/P2.05;
+- package-root P1 re-exports remain provisional/non-public and are not treated as a stable SDK/cross-product contract;
+- no ADR gate was crossed.
+
+R1 executable checkpoint:
+
+- GitHub Actions workflow: `Reference Python CI`;
+- run: `#23`;
+- executable code head: `e0c71c1c80b658711a7420ffb7d59248ce741fb8`;
+- command: `python -m unittest discover -s tests -v`;
+- result: `Ran 140 tests` / `OK`;
+- workflow conclusion: `success`.
+
+Result: **`PASS — R1 completed for the P2.01 structural scope.`**
 
 ## Deliberately not decided or claimed
 
@@ -217,7 +247,7 @@ P1.10 JSON is a bounded semantic fixture, not a stable public wire format.
 
 P1.11 projection is a derived read model and cannot become canonical authority.
 
-P2.01 `RuntimeComposition` is an internal bounded composition root and its Python call surface is not a stable public/cross-product contract.
+P2.01/R1 `RuntimeComposition` is an internal bounded composition root; its Python call surface and the reference adapter set are not stable public/cross-product contracts.
 
 ## Run
 
@@ -228,6 +258,6 @@ python -m unittest discover -s tests -v
 
 ## Next canonical action
 
-Phase 1 remains complete and `P2.01` is complete within its bounded runtime-extraction scope.
+Phase 1 remains complete, `P2.01` is complete within its bounded runtime-extraction scope, and `R1` is complete.
 
-The Canonical Roadmap current action is **`P2.02 — Canonical Record lineage, Head and Effective Version runtime`**. P2.02 must preserve exact Version Identity reliance and distinguish Canonical Head from Effective Version resolution without selecting a database/index technology merely for implementation convenience.
+The Canonical Roadmap current action is **`P2.02 — Canonical Record lineage, Head and Effective Version runtime`**. P2.02 must preserve exact Version Identity reliance and distinguish Canonical Head from Effective Version resolution without selecting a database/index technology merely for implementation convenience, and must not turn the R1-hardened provisional Python composition boundary into a stable public contract.
