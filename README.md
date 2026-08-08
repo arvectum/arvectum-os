@@ -55,7 +55,7 @@ Canonical Phase 3 closure evidence:
 - [R8 milestone hardening review](docs/reviews/R8-phase-3-milestone-hardening.md)
 - [P3.11 capability admission / ADR / refactoring hardening review](docs/reviews/P3-11-capability-admission-adr-refactoring-hardening-review.md)
 
-`Phase 4 — Workspace / Operator Experience` is **Active**. `P4.01` through `P4.08`, `R9 — Workspace Boundary Review` and `R10 — Operator Safety / Cross-Capability Health Review` are complete with `PASS`. The current canonical action is **`R11 — Composition / Usability Refactoring Review`**.
+`Phase 4 — Workspace / Operator Experience` is **Active**. `P4.01` through `P4.08`, `R9 — Workspace Boundary Review`, `R10 — Operator Safety / Cross-Capability Health Review` and `R11 — Composition / Usability Refactoring Review` are complete with `PASS`. The current canonical action is **`P4.09 — Security, rights, minimization and authority-safe UX`**.
 
 P4.02 provides the first bounded visible workspace shell: explicit Organization and attributable Actor context, `Discover / Records / Executions / Evidence / Documents / Knowledge` navigation, distinct Subject and exact-Version references, fail-closed unresolved/mismatched Organization state and non-authoritative presentation semantics. A zero-dependency static HTML demo makes the shell inspectable without selecting a frontend framework, route schema, public API/BFF, IAM/session provider or durable read-model topology.
 
@@ -109,6 +109,10 @@ The final composition preserves exact Product Contract and capability dependency
 
 Six functional cross-review iterations found and remediated exact Product Contract continuity and post-entry dependency/mechanism/task-target drift before P4.08 completion. P4.08 changes no existing platform runtime module, creates no Stable/public interface, selects no durable technology and promotes no capability. GitHub-hosted Reference Python CI was unavailable before workflow step execution during PR #53; no green P4.08 CI run is claimed, and the tooling gap is tracked separately in issue #54.
 
+R11 reviews the complete P4.02–P4.08 composition and closes with `PASS`. It confirms that product-domain semantics remain product-owned; the composed task context keeps the existing Document/Artifact and Memory/Knowledge semantic owners rather than flattening exact Version, authority, provenance, freshness, validation or approval meaning; exact Product Contract/dependency/Actor/Organization/task-target continuity remains fail-closed; and consequential product actions have no reviewed path around R10/Governed Execution.
+
+R11 also confirms that repeated current source-authorization matching is genuine but not yet evidence for a new shared IAM/policy/presentation framework. The duplication remains bounded through P4.09/P4.10 so those tasks can determine whether a narrow internal decision-consumption helper is justified without weakening capability-specific handling/freshness/exact-reliance checks. The P4.08 Product Contract satisfies its R11 review condition and remains `Provisional 0.1.0`. No ADR threshold is crossed. Hosted CI issue #54 remains separately tracked; R11 claims no green hosted run.
+
 Canonical Phase 4 planning/current evidence:
 
 - [Canonical roadmap](docs/roadmap/ROADMAP.md)
@@ -124,8 +128,9 @@ Canonical Phase 4 planning/current evidence:
 - [R10 Operator Safety / Cross-Capability Health Review](docs/reviews/R10-operator-safety-cross-capability-health-review.md)
 - [P4.08 cross-capability task/context composition review](docs/reviews/P4-08-cross-capability-task-context-composition.md)
 - [P4.08 bounded Product Contract](docs/contracts/P4-08-BOUNDED-PRODUCT-ENTRY-PRODUCT-CONTRACT.md)
+- [R11 Composition / Usability Refactoring Review](docs/reviews/R11-composition-usability-refactoring-review.md)
 
-P4.01 through P4.08 plus R9/R10 establish, harden and compose a domain-neutral workspace boundary while retaining product-domain meaning on the product side. They do not create a new Platform Capability, change CAP-001 through CAP-004 lifecycle, stabilize the P4.08 Product Contract, create a public interface or establish production readiness. **R11 — Composition / Usability Refactoring Review** is now the current engineering gate before substantive P4.09 work.
+P4.01 through P4.08 plus R9/R10/R11 establish, harden, compose and refactoring-review a domain-neutral workspace boundary while retaining product-domain meaning on the product side. They do not create a new Platform Capability, change CAP-001 through CAP-004 lifecycle, stabilize the P4.08 Product Contract, create a public interface or establish production readiness. **P4.09 — Security, rights, minimization and authority-safe UX** is now the current canonical action.
 
 RFC-0001 through RFC-0008 are `Accepted 1.0.0` and remain binding within their declared scopes.
 
