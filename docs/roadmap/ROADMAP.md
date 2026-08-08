@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.3.4`
+Version: `2.3.5`
 Created: `2026-08-07`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -45,7 +45,7 @@ This roadmap uses semantic versioning:
 - `MINOR` — sequencing, milestone scope, work breakdown, phase transition or strategic-horizon changes that do not restructure the planning model;
 - `MAJOR` — restructuring of the roadmap lifecycle or planning model.
 
-Version `2.0.0` introduced the two-horizon planning model. Version `2.1.0` recorded Phase 1 / `M1` completion and Phase 2 decomposition as the next action. Version `2.2.0` activates the decomposed Phase 2 Core Runtime plan. Version `2.2.1` records P2.01 completion and advances the active execution sequence to P2.02. Version `2.3.0` establishes evidence-backed engineering quality/refactoring gates, inserts R1 after completed P2.01 before substantive P2.02 work, and defines milestone/stable-boundary Code Health Gate rules. Version `2.3.1` records R1 completion and advances the current canonical action to P2.02. Version `2.3.2` records P2.02 completion and advances the current canonical action to P2.03. Version `2.3.3` records P2.03 completion and advances the current canonical action to P2.04. Version `2.3.4` records P2.04 completion and advances the current canonical action to P2.05.
+Version `2.0.0` introduced the two-horizon planning model. Version `2.1.0` recorded Phase 1 / `M1` completion and Phase 2 decomposition as the next action. Version `2.2.0` activates the decomposed Phase 2 Core Runtime plan. Version `2.2.1` records P2.01 completion and advances the active execution sequence to P2.02. Version `2.3.0` establishes evidence-backed engineering quality/refactoring gates, inserts R1 after completed P2.01 before substantive P2.02 work, and defines milestone/stable-boundary Code Health Gate rules. Version `2.3.1` records R1 completion and advances the current canonical action to P2.02. Version `2.3.2` records P2.02 completion and advances the current canonical action to P2.03. Version `2.3.3` records P2.03 completion and advances the current canonical action to P2.04. Version `2.3.4` records P2.04 completion and advances the current canonical action to P2.05. Version `2.3.5` records P2.05 completion and advances the current canonical action to P2.06.
 
 Roadmap identifiers, engineering-gate identifiers, RFC identifiers and ADR identifiers are independent namespaces.
 
@@ -106,7 +106,9 @@ Current verified canonical baseline:
 - P2.03 executable evidence: GitHub Actions `Reference Python CI` run `#31` for PR `#21` passed `180` tests on executable code head `4b3420e85fdc0b09ebe9714259d3e837bdfc3b6e`;
 - Phase 2 `P2.04` implements reusable immutable Governed Execution lifecycle and exact gate-decision orchestration, including exact Workflow/material-input/applicable Product Contract attribution, fail-closed required gates, stale-gate re-evaluation, terminal sealing and explicit consequential-operation admission;
 - P2.04 executable evidence: GitHub Actions `Reference Python CI` run `#34` for PR `#22` passed `199` tests on executable code head `2287a35fe73eb6f849cdd03be2c984a9c9cad476`;
-- no relevant Accepted ADR currently constrains the bounded runtime choices carried from Phase 1, P2.01, R1, P2.02, P2.03 or P2.04.
+- Phase 2 `P2.05` implements reusable receipt/canonical-admission separation, immutable Event identity/content conflict handling, exact execution/result attribution, correlation/causation preservation and read-only exact-reference reconstruction over the reusable Governed Execution runtime;
+- P2.05 executable evidence: GitHub Actions `Reference Python CI` run `#37` for PR `#23` passed `220` tests on executable code head `e95bcfa5647fd7d1c73dfee8bc2bb912ee681f9c`;
+- no relevant Accepted ADR currently constrains the bounded runtime choices carried from Phase 1, P2.01, R1, P2.02, P2.03, P2.04 or P2.05.
 
 The RFC Index remains the canonical source for RFC status and acceptance evidence.
 
@@ -152,7 +154,7 @@ M1 intentionally did **not** claim reusable Typed Relationship lifecycle, reusab
 
 Canonical detailed work breakdown:
 
-- [`PHASE-2-CORE-RUNTIME.md`](PHASE-2-CORE-RUNTIME.md) — `Active 1.1.4`.
+- [`PHASE-2-CORE-RUNTIME.md`](PHASE-2-CORE-RUNTIME.md) — `Active 1.1.5`.
 
 **Milestone `M2`:** more than one materially distinct bounded workflow reuses the same governed runtime semantics without copying the Phase 1 harness, with architecture fitness evidence, completed Phase 2 engineering quality gates and all crossed ADR gates governed.
 
@@ -209,7 +211,7 @@ Provisional intent: demonstrate safe compounding organizational intelligence thr
 ## 6. Active Roadmap — Phase 2 Core Runtime
 
 **Status:** 🟨 In progress  
-**Phase progress:** `███░░░░░░░ 33%` — P2.01 through P2.04 complete; R1 complete; P2.05 next
+**Phase progress:** `████░░░░░░ 42%` — P2.01 through P2.05 complete; R1 complete; P2.06 next
 
 | ID | Work item | Status | Progress |
 |---|---|---:|---:|
@@ -217,8 +219,8 @@ Provisional intent: demonstrate safe compounding organizational intelligence thr
 | `P2.02` | Canonical Record lineage, Head and Effective Version runtime | 🟩 | `██████████ 100%` |
 | `P2.03` | Typed Relationship runtime | 🟩 | `██████████ 100%` |
 | `P2.04` | Governed Execution lifecycle and gate orchestration runtime | 🟩 | `██████████ 100%` |
-| `P2.05` | Event admission, provenance and reconstruction runtime | 🟦 | `░░░░░░░░░░ 0%` |
-| `P2.06` | Runtime consistency, idempotency and conflict semantics | ⬜ | `░░░░░░░░░░ 0%` |
+| `P2.05` | Event admission, provenance and reconstruction runtime | 🟩 | `██████████ 100%` |
+| `P2.06` | Runtime consistency, idempotency and conflict semantics | 🟦 | `░░░░░░░░░░ 0%` |
 | `P2.07` | Product Contract runtime validation boundary | ⬜ | `░░░░░░░░░░ 0%` |
 | `P2.08` | Portability, replay and non-authoritative projection runtime | ⬜ | `░░░░░░░░░░ 0%` |
 | `P2.09` | Second bounded workflow reuse proof | ⬜ | `░░░░░░░░░░ 0%` |
@@ -239,11 +241,11 @@ Engineering gates are checkpoints rather than `P2.xx` work items and therefore d
 
 ### Current canonical action
 
-> **`P2.05 — Event admission, provenance and reconstruction runtime`.**
+> **`P2.06 — Runtime consistency, idempotency and conflict semantics`.**
 
-Generalize the P1 Event admission and reconstruction proof into reusable, domain-neutral runtime behavior while preserving receipt/admission separation, immutable Event identity/content, exact execution/result references, correlation/causation and reconstructable actor/Workflow/material-input/gate evidence.
+Generalize the already-exercised stale-version, duplicate Event delivery and governed-execution safety evidence into reusable logical consistency rules, including explicit stale-head/current-version conflict behavior, deterministic repeat invocation semantics where idempotency is required, uncertainty/failure states and bounded logical atomicity boundaries.
 
-Do not select a broker, durable Event store, delivery topology or telemetry backend merely to complete P2.05, and do not preempt P2.06 transaction/concurrency/idempotency decisions beyond the bounded duplicate/conflict semantics necessary for Event admission evidence.
+Do not select a durable transaction, database-locking, distributed-coordination, outbox/inbox or concurrency technology merely to complete P2.06. If a concrete durable persistence/transaction/concurrency mechanism becomes materially relied upon, stop at the ADR gate and govern that choice before further reliance.
 
 ### Dependency-aware sequence
 
@@ -259,7 +261,7 @@ P2.03 Relationships ✓    P2.04 Governed Execution runtime ✓
    │              │
    └──────┬───────┘
           ↓
-P2.05 Event / provenance runtime
+P2.05 Event / provenance runtime ✓
           ↓
 P2.06 Consistency / idempotency / conflict semantics
           ↓
