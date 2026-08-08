@@ -1,9 +1,9 @@
 # Bounded Reference Implementation — Phase 1
 
 Status: `Provisional implementation harness`
-Scope: `Phase 1 / P1.01–P1.10`
+Scope: `Phase 1 / P1.01–P1.11`
 Architecture baseline: Constitution `1.2.0`; Accepted RFC-0001, RFC-0002, RFC-0003, RFC-0005, RFC-0006, RFC-0007 and RFC-0008 `1.0.0`
-Roadmap baseline: `2.0.6`
+Roadmap baseline: `2.0.7`
 
 This directory contains the bounded executable reference implementation defined by `docs/implementation/REFERENCE-IMPLEMENTATION-READINESS.md`.
 
@@ -202,6 +202,26 @@ Repository evidence: `reference/python/arvectum_os_ref/portability.py`, `referen
 
 P1.10 adds `16` focused portability/negative-path fitness tests. `Reference Python CI` run `#9` completed successfully; the complete bounded suite now contains `115` passing tests.
 
+## P1.11 — Negative-path and architecture fitness tests
+
+P1.11 closes the remaining replay side-effect-safety and projection/index non-authority evidence in the Phase 1 matrix:
+
+- `rebuild_p1_11_projection` accepts only the P1.10 `PortableSemanticFixture` and rebuilds an immutable derived `ProjectionSnapshot`;
+- replay has no Governed Execution, canonical mutation, Event-admission, callback or external-effect path and therefore cannot silently repeat the historical consequential operation;
+- the snapshot records `replay_mode = projection-rebuild`, `canonical_authority = false` and `consequential_side_effects_created = 0`;
+- replay validates the exact source record-count/Version-Identity manifest and rejects manifest drift or duplicate immutable Version Identities;
+- derived semantic links must remain explicitly non-canonical and cannot be replayed as fabricated RFC-0002 Typed Relationship records;
+- each `ProjectionEntry` remains attributable to one exact source Subject/Version Identity, semantic type, authority scope and lifecycle state while explicitly refusing canonical-authority status;
+- projection lookup intentionally returns all matching source versions rather than resolving an implicit canonical/effective head;
+- a projection entry cannot satisfy the `ExecutionContext` requirement for a `GovernedVersionPin` and cannot mint one itself;
+- `pin_p1_11_projection_source` requires an independently supplied exact `CanonicalRecord`, validates exact identity/version/semantic/authority/lifecycle agreement and creates the governed pin from the canonical source rather than projection data;
+- stale canonical source versions fail closed when compared with a newer projection entry;
+- replay is deterministic and observational and does not mutate the P1.10 fixture or any P1.02–P1.09 governed source object.
+
+Repository evidence: `reference/python/arvectum_os_ref/fitness.py`, package exports in `reference/python/arvectum_os_ref/__init__.py`, and `reference/python/tests/test_p1_11_architecture_fitness.py`.
+
+P1.11 adds `13` focused replay/projection negative-path tests. `Reference Python CI` run `#13` completed successfully; the complete bounded suite now contains `128` passing tests.
+
 ## Deliberately not decided
 
 This harness does **not** establish a permanent package layout, programming-language contract, database, API, event broker, durable event store, outbox/inbox strategy, delivery protocol, schema registry, IAM provider, policy engine, deployment topology, persistent lineage store, Canonical Head/effective-version resolver, workflow engine, Product Contract, production role matrix or durable authorization-enforcement mechanism.
@@ -216,6 +236,8 @@ The P1.09 Observation is bounded significant governed learning evidence with exp
 
 The P1.10 JSON fixture is a derived portability representation rather than canonical state, a public wire contract or a production export endpoint. `semantic_links` are non-canonical export aids, not governed Typed Relationship records. The exporter proves bounded semantic portability only for the synthetic reference scenario and does not by itself implement RFC-0003 authorization for real-data disclosure, full service-termination portability, production migration or a supported compatibility promise.
 
+The P1.11 projection is an immutable derived test read model, not canonical state, a Canonical Head/effective-version resolver, search/index product, replay engine, durable projection store or public retrieval contract. Its explicit source-version attribution proves only the bounded architecture-fitness rule that projections remain non-authoritative and cannot replace exact canonical version reliance.
+
 Python and `unittest` are used only as a reversible, zero-dependency vehicle for executable architecture fitness evidence. No Platform Capability becomes `Active`, and no production-readiness or full-platform conformance claim is created by these tests.
 
 ## Run
@@ -227,4 +249,4 @@ python -m unittest discover -s tests -v
 
 ## Next roadmap work item
 
-With P1.10 complete, the next Phase 1 closure dependency is the remaining `P1.11 — Negative-path and architecture fitness tests` matrix work for replay side-effect safety and projection/index non-authority, followed by `P1.12 — Phase 1 bounded-slice closure review`.
+With P1.11 complete, the next Phase 1 work item is `P1.12 — Phase 1 bounded-slice closure review`.

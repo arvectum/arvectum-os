@@ -18,6 +18,14 @@ from .execution import (
     GovernedVersionPin,
     start_p1_04_execution,
 )
+from .fitness import (
+    ProjectionAuthorityError,
+    ProjectionEntry,
+    ProjectionSnapshot,
+    ReplayProjectionError,
+    pin_p1_11_projection_source,
+    rebuild_p1_11_projection,
+)
 from .gates import (
     GateDecision,
     GateEvaluation,
@@ -87,8 +95,12 @@ __all__ = [
     "PortableFixtureExportError",
     "PortableSemanticFixture",
     "Principal",
+    "ProjectionAuthorityError",
+    "ProjectionEntry",
+    "ProjectionSnapshot",
     "ReconstructionEvidence",
     "ReconstructionEvidenceError",
+    "ReplayProjectionError",
     "WorkflowDefinition",
     "WorkflowLifecycle",
     "WorkflowOperation",
@@ -103,6 +115,8 @@ __all__ = [
     "evaluate_p1_05_gates",
     "execute_p1_06_canonical_mutation",
     "export_p1_10_semantic_fixture",
+    "pin_p1_11_projection_source",
+    "rebuild_p1_11_projection",
     "require_explicit_knowledge_promotion",
     "start_p1_04_execution",
 ]
