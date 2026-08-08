@@ -5,14 +5,12 @@ from pathlib import Path
 import unittest
 from unittest.mock import patch
 
-from arvectum_os_ref.canonical import AuthorityMode, CanonicalRecord
 from arvectum_os_ref.cross_capability_enforcement import AccessRequest
 from arvectum_os_ref.document_artifact_experience import (
     DocumentWorkspaceBlockCode,
     DocumentWorkspaceBlockedState,
     DocumentWorkspaceSourceSet,
 )
-from arvectum_os_ref.governed_execution import GovernedGateKind
 from arvectum_os_ref.identity import Identity
 from arvectum_os_ref.memory_knowledge_search_experience import (
     KnowledgeWorkspaceView,
@@ -27,17 +25,20 @@ from arvectum_os_ref.product_capability_consumption import (
     CapabilityConsumptionRequest,
 )
 from arvectum_os_ref.product_contract import (
-    PRODUCT_CONTRACT_AUTHORITY_SCOPE,
-    PRODUCT_CONTRACT_SEMANTIC_TYPE,
-    PlatformDependencyDeclaration,
-    ProductContract,
+    CanonicalAccessMode,
     ProductContractLifecycle,
     ProductContractScopeError,
-    ProductOperationDeclaration,
 )
 from arvectum_os_ref.security import ActorContext, OrganizationScope, Principal
-from arvectum_os_ref.workflow import OperationSideEffectClass
 from arvectum_os_ref.workspace_shell import PresentationAuthority, WorkspaceShellState
+from bounded_product_ref.contract import (
+    GOVERNED_RUNTIME_DEPENDENCY,
+    OP_RECORD_TASK_DECISION,
+    PRODUCT_TASK_SEMANTIC_TYPE,
+    PRODUCT_VERSION,
+    build_p4_08_product_contract,
+    product_id_for,
+)
 from bounded_product_ref.task_composition import (
     BoundedProductTask,
     ProductCompositionError,
@@ -50,21 +51,27 @@ from bounded_product_ref.task_composition import (
 )
 
 
+UTC = timezone.utc
+
+
 class P408BoundedProductCompositionTests(unittest.TestCase):
     def setUp(self) -> None:
         self.org = OrganizationScope(Identity("organization", "org-a", "platform"))
         self.principal = Principal(Identity("principal", "operator-1", "platform"))
         self.actor = ActorContext(self.principal, self.org)
-        self.product_id = Identity("product", "bounded-review-product", "org-a")
+        self.product_id = product_id_for(self.actor)
         self.task = BoundedProductTask(
             organization=self.org,
             product_id=self.product_id,
-            product_version="0.1.0",
+            product_version=PRODUCT_VERSION,
             task_id=Identity("product-task", "task-1", "org-a"),
             document_subject_id=Identity("document", "doc-1", "org-a"),
             title="Review governed task context",
         )
-        self.contract = self._contract()
+        self.contract = build_p4_08_product_contract(
+            actor=self.actor,
+            created_at=datetime(2026, 8, 8, 19, 30, tzinfo=UTC),
+        )
         self.access = AccessRequest(
             actor=self.actor,
             purpose="bounded-product-review",
@@ -74,7 +81,7 @@ class P408BoundedProductCompositionTests(unittest.TestCase):
         self.document_request = CapabilityConsumptionRequest(
             organization=self.org,
             product_id=self.product_id,
-            product_version="0.1.0",
+            product_version=PRODUCT_VERSION,
             dependency_id=CAP_001_DOCUMENT_ARTIFACT,
             dependency_contract_version=CAPABILITY_CONTRACT_VERSION,
             operation_name=OP_RESOLVE_DOCUMENT,
@@ -83,102 +90,11 @@ class P408BoundedProductCompositionTests(unittest.TestCase):
         self.knowledge_request = CapabilityConsumptionRequest(
             organization=self.org,
             product_id=self.product_id,
-            product_version="0.1.0",
+            product_version=PRODUCT_VERSION,
             dependency_id=CAP_002_MEMORY_KNOWLEDGE,
             dependency_contract_version=CAPABILITY_CONTRACT_VERSION,
             operation_name=OP_RETRIEVE_KNOWLEDGE,
             access=self.access,
-        )
-
-    def _contract(self) -> ProductContract:
-        now = datetime(2026, 8, 8, 19, 30, tzinfo=timezone.utc)
-        record = CanonicalRecord(
-            subject_id=Identity("product-contract", "pc-bounded-review", "org-a"),
-            version_id=Identity(
-                "product-contract-version", "pc-bounded-review-v1", "org-a"
-            ),
-            semantic_type=PRODUCT_CONTRACT_SEMANTIC_TYPE,
-            schema_version="0.1.0",
-            organization=self.org,
-            authority_mode=AuthorityMode.NATIVE,
-            authority_scope=PRODUCT_CONTRACT_AUTHORITY_SCOPE,
-            accountable_owner_id=self.principal.principal_id,
-            creation_actor=self.actor,
-            created_at=now,
-            provenance_refs=(self.product_id, self.principal.principal_id),
-            integrity_metadata=(("representation", "bounded-p4.08-reference"),),
-            lifecycle_status=ProductContractLifecycle.PROVISIONAL.value,
-        )
-        dependencies = (
-            PlatformDependencyDeclaration(
-                dependency_id=CAP_001_DOCUMENT_ARTIFACT,
-                contract_version=CAPABILITY_CONTRACT_VERSION,
-                allowed_operations=(OP_RESOLVE_DOCUMENT,),
-                provider_responsibility=(
-                    "Preserve RFC-0008 governed Document/Artifact semantics."
-                ),
-                consumer_responsibility=(
-                    "Use only current scoped workspace access."
-                ),
-                failure_behavior=(
-                    "Fail closed without product-side fallback to platform internals."
-                ),
-                provisional=True,
-            ),
-            PlatformDependencyDeclaration(
-                dependency_id=CAP_002_MEMORY_KNOWLEDGE,
-                contract_version=CAPABILITY_CONTRACT_VERSION,
-                allowed_operations=(OP_RETRIEVE_KNOWLEDGE,),
-                provider_responsibility=(
-                    "Preserve RFC-0007 Memory/Knowledge semantics."
-                ),
-                consumer_responsibility=(
-                    "Treat retrieval as context, never authority."
-                ),
-                failure_behavior=(
-                    "Fail closed or continue without protected Knowledge context."
-                ),
-                provisional=True,
-            ),
-        )
-        operations = tuple(
-            ProductOperationDeclaration(
-                operation_name=name,
-                dependency_id=dependency,
-                side_effect_classes=(OperationSideEffectClass.READ_ONLY,),
-                required_gates=(
-                    GovernedGateKind.AUTHORIZATION,
-                    GovernedGateKind.DATA_GOVERNANCE,
-                ),
-                canonical_accesses=(),
-                failure_behavior="No hidden fallback or authority widening.",
-            )
-            for dependency, name in (
-                (CAP_001_DOCUMENT_ARTIFACT, OP_RESOLVE_DOCUMENT),
-                (CAP_002_MEMORY_KNOWLEDGE, OP_RETRIEVE_KNOWLEDGE),
-            )
-        )
-        return ProductContract(
-            record=record,
-            product_id=self.product_id,
-            product_version="0.1.0",
-            bounded_scope="P4.08 bounded product task/context composition.",
-            compatibility_assumptions=(
-                "CAP-001 and CAP-002 remain Incubating/Provisional reference dependencies.",
-                "No public API or Stable Product Contract compatibility is implied.",
-            ),
-            dependencies=dependencies,
-            operations=operations,
-            portability_responsibility=(
-                "Preserve governed identities/references; product task state remains product-owned."
-            ),
-            retention_deletion_responsibility=(
-                "Apply source handling rules; do not duplicate protected content."
-            ),
-            review_condition="Review at R11 or on material boundary change.",
-            exit_path=(
-                "Revise, contain, replace or retire; stabilize only by separate RFC-0004 governance."
-            ),
         )
 
     def _entry(self):
@@ -187,6 +103,34 @@ class P408BoundedProductCompositionTests(unittest.TestCase):
             task=self.task,
             actor=self.actor,
             capability_requests=(self.document_request, self.knowledge_request),
+        )
+
+    def test_executable_contract_is_provisional_and_declares_real_boundaries(self) -> None:
+        self.assertEqual(self.contract.lifecycle, ProductContractLifecycle.PROVISIONAL)
+        self.assertEqual(self.contract.product_id, self.product_id)
+        self.assertEqual(self.contract.product_version, PRODUCT_VERSION)
+        self.assertEqual(
+            {dependency.dependency_id for dependency in self.contract.dependencies},
+            {
+                CAP_001_DOCUMENT_ARTIFACT,
+                CAP_002_MEMORY_KNOWLEDGE,
+                GOVERNED_RUNTIME_DEPENDENCY,
+            },
+        )
+
+        operations = {item.operation_name: item for item in self.contract.operations}
+        document_access = operations[OP_RESOLVE_DOCUMENT].canonical_accesses
+        knowledge_access = operations[OP_RETRIEVE_KNOWLEDGE].canonical_accesses
+        mutation_access = operations[OP_RECORD_TASK_DECISION].canonical_accesses
+
+        self.assertEqual(document_access[0].semantic_type, "platform.document")
+        self.assertEqual(document_access[0].access_modes, (CanonicalAccessMode.READ,))
+        self.assertEqual(knowledge_access[0].semantic_type, "platform.knowledge")
+        self.assertEqual(knowledge_access[0].access_modes, (CanonicalAccessMode.READ,))
+        self.assertEqual(mutation_access[0].semantic_type, PRODUCT_TASK_SEMANTIC_TYPE)
+        self.assertEqual(
+            set(mutation_access[0].access_modes),
+            {CanonicalAccessMode.READ, CanonicalAccessMode.WRITE},
         )
 
     def test_entry_requires_exact_provisional_contract_and_two_distinct_capabilities(self) -> None:
@@ -254,7 +198,7 @@ class P408BoundedProductCompositionTests(unittest.TestCase):
         drifted = CapabilityConsumptionRequest(
             organization=self.org,
             product_id=self.product_id,
-            product_version="0.1.0",
+            product_version=PRODUCT_VERSION,
             dependency_id=CAP_002_MEMORY_KNOWLEDGE,
             dependency_contract_version=CAPABILITY_CONTRACT_VERSION,
             operation_name=OP_RETRIEVE_KNOWLEDGE,
@@ -359,9 +303,10 @@ class P408BoundedProductCompositionTests(unittest.TestCase):
         platform_source = "\n".join(
             path.read_text(encoding="utf-8") for path in platform_root.glob("*.py")
         )
-        product_source = (
-            reference_root / "bounded_product_ref" / "task_composition.py"
-        ).read_text(encoding="utf-8")
+        product_root = reference_root / "bounded_product_ref"
+        product_source = "\n".join(
+            path.read_text(encoding="utf-8") for path in product_root.glob("*.py")
+        )
 
         self.assertNotIn("bounded_product_ref", platform_source)
         self.assertNotIn("prepare_canonical_mutation_action", product_source)
