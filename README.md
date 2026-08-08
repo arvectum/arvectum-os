@@ -55,15 +55,18 @@ Canonical Phase 3 closure evidence:
 - [R8 milestone hardening review](docs/reviews/R8-phase-3-milestone-hardening.md)
 - [P3.11 capability admission / ADR / refactoring hardening review](docs/reviews/P3-11-capability-admission-adr-refactoring-hardening-review.md)
 
-`Phase 4 — Workspace / Operator Experience` is **Active**. `P4.01 — Operator journeys, workspace boundary and information architecture` is complete with `PASS`; the current canonical action is `P4.02 — Organization context, identity and scoped navigation shell`.
+`Phase 4 — Workspace / Operator Experience` is **Active**. `P4.01 — Operator journeys, workspace boundary and information architecture` and `P4.02 — Organization context, identity and scoped navigation shell` are complete with `PASS`; the current canonical action is the mandatory `R9 — Workspace Boundary Review` engineering gate.
+
+P4.02 provides the first bounded visible workspace shell: explicit Organization and attributable Actor context, `Discover / Records / Executions / Evidence / Documents / Knowledge` navigation, distinct Subject and exact-Version references, fail-closed unresolved/mismatched Organization state and non-authoritative presentation semantics. A zero-dependency static HTML demo makes the shell inspectable without selecting a frontend framework, route schema, public API/BFF, IAM/session provider or durable read-model topology.
 
 Canonical Phase 4 planning/current evidence:
 
 - [Canonical roadmap](docs/roadmap/ROADMAP.md)
 - [Active Phase 4 workstream](docs/roadmap/PHASE-4-WORKSPACE-OPERATOR-EXPERIENCE.md)
 - [P4.01 operator journeys / workspace boundary / IA review](docs/reviews/P4-01-operator-journeys-workspace-boundary-information-architecture.md)
+- [P4.02 Organization context / identity / scoped navigation shell review](docs/reviews/P4-02-organization-context-identity-scoped-navigation-shell.md)
 
-P4.01 establishes a domain-neutral workspace boundary and information architecture only. It does not create a new Platform Capability, change CAP-001 through CAP-004 lifecycle, select a frontend/API/runtime technology, create a Stable Product Contract/public interface or establish production readiness.
+P4.01 and P4.02 establish a domain-neutral workspace boundary and reversible shell only. They do not create a new Platform Capability, change CAP-001 through CAP-004 lifecycle, create a Stable Product Contract/public interface or establish production readiness.
 
 RFC-0001 through RFC-0008 are `Accepted 1.0.0` and remain binding within their declared scopes.
 

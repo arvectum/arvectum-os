@@ -11,7 +11,7 @@ CAPABILITY_IDS = ("CAP-001", "CAP-002", "CAP-003", "CAP-004")
 
 
 class P312Phase3M3ClosureTests(unittest.TestCase):
-    """Guards the bounded Phase 3 / M3 closure state without changing runtime semantics."""
+    """Guards the bounded Phase 3 / M3 closure state without freezing later phases."""
 
     def test_canonical_closure_review_records_bounded_m3_pass(self) -> None:
         review = (
@@ -41,23 +41,22 @@ class P312Phase3M3ClosureTests(unittest.TestCase):
         for capability_id in CAPABILITY_IDS:
             self.assertNotIn(f"{capability_id} | `Active`", roadmap)
 
-    def test_canonical_roadmap_advances_only_to_phase_4_revalidation(self) -> None:
+    def test_canonical_roadmap_preserves_m3_scope_as_later_phases_progress(self) -> None:
         roadmap = (DOCS_ROOT / "roadmap" / "ROADMAP.md").read_text(encoding="utf-8")
 
-        self.assertIn("Version: `2.9.0`", roadmap)
         self.assertIn(
             "| `Phase 3` | Shared Platform Capabilities | Executed | 🟩 Complete | `M3` Validated shared capability baseline |",
             roadmap,
         )
+        self.assertIn("| `Phase 4` | Workspace / Operator Experience |", roadmap)
         self.assertIn(
-            "| `Phase 4` | Workspace / Operator Experience | Near-term | ⬜ Draft | `M4` Coherent governed workspace baseline |",
+            "Phase status, capability lifecycle, operational environment and conformance maturity remain distinct.",
             roadmap,
         )
         self.assertIn(
-            "Phase 4 boundary revalidation and decomposition — Workspace / Operator Experience.",
+            "M3 does not imply lifecycle `Active`, operational readiness, Stable Product Contracts, public API compatibility, production deployment or customer-facing SLA/support commitments.",
             roadmap,
         )
-        self.assertNotIn("Phase 4` | Workspace / Operator Experience | Active", roadmap)
 
     def test_capability_catalog_preserves_exact_incubating_provisional_set(self) -> None:
         catalog = (
@@ -75,13 +74,20 @@ class P312Phase3M3ClosureTests(unittest.TestCase):
             self.assertIn("M3 achieved", rows[0])
             self.assertNotIn("| `Active` |", rows[0])
 
-    def test_root_readme_distinguishes_m3_from_active_and_phase_4_activation(self) -> None:
+    def test_root_readme_preserves_m3_scope_as_phase_4_progresses(self) -> None:
         readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
 
         self.assertIn("`Phase 3 — Shared Platform Capabilities` is complete", readme)
         self.assertIn("`M3 — Validated shared capability baseline` is achieved", readme)
-        self.assertIn("`Phase 4 — Workspace / Operator Experience` remains **Draft**", readme)
-        self.assertIn("`M3 Achieved` does not mean any Platform Capability is lifecycle `Active`", readme)
+        self.assertIn("`Phase 4 — Workspace / Operator Experience`", readme)
+        self.assertIn(
+            "M3 closure does not promote any capability to `Active`",
+            readme,
+        )
+        self.assertIn(
+            "Phase status, capability lifecycle, operational environment and conformance maturity remain distinct.",
+            readme,
+        )
 
 
 if __name__ == "__main__":

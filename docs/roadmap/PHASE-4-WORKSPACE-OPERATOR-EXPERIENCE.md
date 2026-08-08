@@ -1,7 +1,7 @@
 # Arvectum OS Phase 4 — Workspace / Operator Experience
 
 Status: `Active`
-Version: `1.1.0`
+Version: `1.2.0`
 Created: `2026-08-08`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -13,13 +13,15 @@ Predecessor: `Phase 3 — Shared Platform Capabilities`, `M3` achieved
 
 ## Version note
 
-Version `1.1.0` completes `P4.01 — Operator journeys, workspace boundary and information architecture` and advances the current canonical action to P4.02.
+Version `1.2.0` completes `P4.02 — Organization context, identity and scoped navigation shell` and advances the current canonical action to the mandatory `R9 — Workspace Boundary Review` engineering gate.
 
-P4.01 establishes the domain-neutral operator journey model, workspace/product UX boundary, `Discover / Records / Executions / Evidence / Documents / Knowledge` information-architecture hypothesis, presentation/read-model authority classification, fail-closed/uncertainty states and P4.02 shell handoff without selecting a frontend/API/runtime technology or creating a new Platform Capability.
+P4.02 makes the P4.01 workspace boundary executable through a bounded zero-dependency internal shell with explicit Organization and attributable Actor context, domain-neutral navigation, Subject-versus-exact-Version reference semantics, fail-closed unresolved/mismatched scope, non-authoritative presentation state and an inert standalone HTML demo. It selects no frontend/API/IAM/durable-read-model technology, creates no new Platform Capability and changes no capability lifecycle.
 
 Canonical completion evidence:
 
-- [`P4.01 operator journeys / workspace boundary / IA review`](../reviews/P4-01-operator-journeys-workspace-boundary-information-architecture.md) — `PASS`.
+- [`P4.01 operator journeys / workspace boundary / IA review`](../reviews/P4-01-operator-journeys-workspace-boundary-information-architecture.md) — `PASS`;
+- [`P4.02 Organization context / identity / scoped navigation shell review`](../reviews/P4-02-organization-context-identity-scoped-navigation-shell.md) — `PASS`;
+- GitHub Actions `Reference Python CI #109` — `PASS` on the P4.02 implementation branch before roadmap synchronization.
 
 ## 1. Purpose
 
@@ -48,7 +50,7 @@ The workspace remains a platform interaction capability under development. Activ
 | ID | Work item | Status | Progress |
 |---|---|---:|---:|
 | `P4.01` | Operator journeys, workspace boundary and information architecture | 🟩 Complete | `██████████ 100%` |
-| `P4.02` | Organization context, identity and scoped navigation shell | 🟦 NEXT | `░░░░░░░░░░ 0%` |
+| `P4.02` | Organization context, identity and scoped navigation shell | 🟩 Complete | `██████████ 100%` |
 | `P4.03` | Canonical Record / Relationship inspection experience | ⬜ | `░░░░░░░░░░ 0%` |
 | `P4.04` | Version, Event, provenance and reconstruction experience | ⬜ | `░░░░░░░░░░ 0%` |
 | `P4.05` | Governed Execution, gate and approval/action experience | ⬜ | `░░░░░░░░░░ 0%` |
@@ -93,6 +95,8 @@ Required behavior:
 - presentation state remains non-authoritative.
 
 No SSO/IAM vendor choice is implied.
+
+Completion evidence: [`P4.02 Organization context / identity / scoped navigation shell review`](../reviews/P4-02-organization-context-identity-scoped-navigation-shell.md) — `PASS`, four functional cross-review iterations and green full reference CI.
 
 ### P4.03 — Canonical Record / Relationship inspection experience
 
@@ -262,9 +266,9 @@ M3 ✅ Shared Capability baseline
         ↓
 P4.01 Operator journeys + IA ✅
         ↓
-P4.02 Organization/identity navigation shell ← current
+P4.02 Organization/identity navigation shell ✅
         ↓
-R9 Workspace Boundary Review
+R9 Workspace Boundary Review ← current
         ↓
  ┌──────┼───────────────┐
  ↓      ↓               ↓
@@ -353,6 +357,6 @@ A reversible internal reference implementation may proceed without an ADR when t
 
 ## 10. Current canonical action
 
-> **`P4.02 — Organization context, identity and scoped navigation shell`.**
+> **`R9 — Workspace Boundary Review`.**
 
-Implement the smallest internal reversible shell defined by the P4.01 handoff: explicit Organization/Actor context, domain-neutral navigation, exact-versus-subject reference distinction, fail-closed unresolved scope and non-authoritative presentation state. Do not select or stabilize a frontend/API/runtime technology boundary merely to implement the shell.
+Review the combined P4.01 + P4.02 workspace boundary before expanding into P4.03–P4.05. Confirm that Organization/Actor scope remains explicit and fail-closed, navigation/presentation state cannot create authority, Subject/exact-Version semantics remain intact, product-entry context has not become hidden product/platform coupling, and the zero-dependency reference adapter has not accidentally stabilized a frontend/API/route/IAM boundary. Resolve material findings before beginning the next workspace surface work.
