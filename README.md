@@ -11,7 +11,7 @@ Every human contributor, AI agent and connected product must begin with:
 3. [RFC Index](docs/rfc/README.md) and relevant Accepted RFCs/ADRs
 4. [Architecture Glossary](docs/architecture/GLOSSARY.md) for canonical terminology and source navigation
 5. [Canonical Roadmap](docs/roadmap/ROADMAP.md) when determining sequence, next work, milestones or implementation readiness
-6. [Reference Implementation Readiness Baseline](docs/implementation/REFERENCE-IMPLEMENTATION-READINESS.md) before beginning the first shared reference implementation slice
+6. [Reference Implementation Readiness Baseline](docs/implementation/REFERENCE-IMPLEMENTATION-READINESS.md) for the implementation-readiness constraints that shaped the first shared reference slice
 
 The Constitution has the highest architectural authority in this repository. The current ratified version is `1.2.0`.
 
@@ -31,22 +31,29 @@ Domain products such as procurement, marketing, finance or legal agents live out
 
 `Phase 0 — Foundation / Architecture Bootstrap` is complete.
 
-RFC-0001 through RFC-0008 are now `Accepted 1.0.0`. [`RFC-0008 — Document and Artifact Architecture`](docs/rfc/RFC-0008-document-artifact-architecture-v1.0.0.md) is binding architecture within its declared scope following explicit owner approval and canonical acceptance publication.
+`Phase 1 — Reference Implementation` is also complete. The bounded executable slice closed through `P1.12 — Phase 1 bounded-slice closure review`, and milestone `M1 — First executable architectural spine proven` is achieved for its declared scope.
 
-RFC-0008 establishes domain-neutral Document and Artifact semantics without adding a Kernel primitive or selecting a DMS, object store, database, file format, OCR engine, signing provider, search technology or service topology. Acceptance does not itself make a document/artifact Platform Capability `Active` or establish production, operational, SLA, support, archival, legal-signature or product-specific commitments.
+Canonical Phase 1 evidence:
 
-The reference implementation delivery track remains independently ready: the first bounded executable reference implementation slice is defined in [Reference Implementation Readiness Baseline](docs/implementation/REFERENCE-IMPLEMENTATION-READINESS.md).
+- [Phase 1 work breakdown and completion record](docs/roadmap/PHASE-1-REFERENCE-IMPLEMENTATION.md)
+- [P1.12 bounded-slice closure review](docs/reviews/P1-12-phase-1-bounded-slice-closure-review.md)
+- [Bounded Python reference harness](reference/python/README.md)
 
-That first slice is intentionally reversible and does not yet canonically select a programming language, database, public API protocol, event broker, workflow engine, IAM provider, retrieval engine, model provider or permanent service topology. Concrete choices should use an ADR only when they become sufficiently constraining under the readiness baseline.
+The final executable Phase 1 harness contains `128` passing architecture-fitness tests in the recorded GitHub Actions baseline. That result is scoped reference evidence only: it does not make a Platform Capability `Active`, make the Python harness a production runtime, create a public compatibility contract or establish full-platform conformance.
 
-Working reference code does not by itself make a Platform Capability `Active`, establish operational readiness, create an SLA/support commitment or authorize a full-platform production conformance claim.
+`Phase 2 — Core Runtime` is **not Active yet**. The current canonical action is to revalidate and decompose Phase 2 against Phase 1 evidence, Accepted architecture and relevant product/workflow evidence before substantive implementation. The detailed `P2.xx` work breakdown and any necessary ADRs must be established through the phase-transition rule in the Canonical Roadmap.
+
+RFC-0001 through RFC-0008 are `Accepted 1.0.0`. Accepted architecture remains binding within the scope of each RFC and is not changed by Phase 1 completion.
+
+The Phase 1 reference harness intentionally avoided selecting a permanent programming language contract, database, public API protocol, event broker, workflow engine, IAM provider, retrieval engine, model provider or service topology. Concrete Phase 2 choices should use an ADR only when they become sufficiently constraining under the existing ADR gate.
 
 ## Roadmap blocks and RFC identifiers
 
 Roadmap blocks and RFCs use separate identifier namespaces.
 
 - `Block 0H` = `Reference implementation readiness` — completed non-RFC roadmap milestone.
-- `RFC-0008` = `Document and Artifact Architecture` — separate architecture RFC, now `Accepted 1.0.0`.
+- `RFC-0008` = `Document and Artifact Architecture` — separate architecture RFC, `Accepted 1.0.0`.
+- `P1.12` = Phase 1 roadmap work item closing the bounded executable slice; it is not an RFC or ADR.
 
 Do not call Block 0H `RFC-0008 readiness`. A roadmap milestone may occur between RFCs without consuming or renumbering an RFC identifier.
 
