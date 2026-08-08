@@ -1,7 +1,7 @@
 # Arvectum OS Phase 2 — Core Runtime
 
 Status: `Active`
-Version: `1.0.1`
+Version: `1.1.0`
 Created: `2026-08-08`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -9,6 +9,7 @@ Task classification: `platform`
 Parent roadmap: [`ROADMAP.md`](ROADMAP.md)
 Milestone: `M2 — Reusable governed runtime baseline`
 Architecture baseline: Constitution `1.2.0`; RFC-0001 through RFC-0008 `1.0.0` (`Accepted`)
+Engineering quality decision: [`DECISION-2026-08-08-ENGINEERING-QUALITY-REFACTORING-GATES`](../governance/decisions/DECISION-2026-08-08-ENGINEERING-QUALITY-REFACTORING-GATES.md)
 Predecessor: `Phase 1 — Reference Implementation`, `M1` achieved
 
 ## 1. Purpose
@@ -57,7 +58,8 @@ Phase 2 MUST:
 7. remain migration-friendly until concrete technology choices are justified;
 8. trigger ADR work before a materially constraining implementation choice is relied upon;
 9. use RFC-0004 Product Contract semantics before a real Product relies on platform capabilities, canonical platform state or shared platform history;
-10. avoid representing working runtime code as an `Active` Platform Capability or production readiness.
+10. avoid representing working runtime code as an `Active` Platform Capability or production readiness;
+11. use evidence-backed engineering review and refactoring gates so implementation structure is hardened at meaningful boundaries rather than by arbitrary cadence.
 
 ## 4. Status and progress legend
 
@@ -88,6 +90,8 @@ Progress bars are planning indicators only.
 | `P2.10` | Core Runtime architecture fitness matrix | ⬜ | `░░░░░░░░░░ 0%` |
 | `P2.11` | ADR-gate and runtime-boundary hardening review | ⬜ | `░░░░░░░░░░ 0%` |
 | `P2.12` | Phase 2 / M2 closure review | ⬜ | `░░░░░░░░░░ 0%` |
+
+Engineering gates `R1`–`R4` are cross-cutting checkpoints and intentionally do not consume `P2.xx` work-item identifiers.
 
 ## 6. Detailed work items
 
@@ -294,20 +298,42 @@ Closure review MUST verify:
 1. P2.01–P2.09 complete within declared scope;
 2. P2.10 final fitness matrix passes;
 3. P2.11 finds no missing ADR gate;
-4. at least two materially distinct bounded workflows reuse the same runtime semantics rather than copying the P1 harness;
-5. no product-domain logic leaked into shared Core Runtime;
-6. exact authority/version/provenance semantics remain aligned with Accepted RFCs;
-7. portability/replay/projection remain bounded and non-authoritative as declared;
-8. no capability activation, production readiness, SLA or full-conformance claim is implied;
-9. strategic Roadmap is revalidated before Phase 3 is activated.
+4. R1–R4 engineering gates are complete within their declared scope and material findings are resolved or explicitly dispositioned;
+5. at least two materially distinct bounded workflows reuse the same runtime semantics rather than copying the P1 harness;
+6. no product-domain logic leaked into shared Core Runtime;
+7. exact authority/version/provenance semantics remain aligned with Accepted RFCs;
+8. portability/replay/projection remain bounded and non-authoritative as declared;
+9. no capability activation, production readiness, SLA or full-conformance claim is implied;
+10. strategic Roadmap is revalidated before Phase 3 is activated.
 
 **Exit:** `M2 — Reusable governed runtime baseline` is recorded as achieved, or the review returns a bounded list of blocking reconciliation items.
+
+### Cross-cutting engineering quality and refactoring gates
+
+The canonical gate decision is [`DECISION-2026-08-08-ENGINEERING-QUALITY-REFACTORING-GATES`](../governance/decisions/DECISION-2026-08-08-ENGINEERING-QUALITY-REFACTORING-GATES.md).
+
+| Gate | Trigger | Primary purpose |
+|---|---|---|
+| `R1 — Structural Review` | after P2.01, before substantive P2.02 | validate runtime/fixture/test boundaries, dependency direction and remove accidental P1 structure |
+| `R2 — Runtime Health Review` | after P2.06, before substantive P2.07 | review the accumulated semantic runtime spine, consistency/error/idempotency patterns and emerging ADR triggers |
+| `R3 — Reuse Refactoring Review` | after P2.09, before final Phase 2 hardening | refactor abstractions using evidence from two materially distinct workflows |
+| `R4 — Milestone Hardening` | after final applicable P2.10 evidence, before P2.11/P2.12 | full Phase 2 code-health remediation and evidence-backed optimization before closure reviews |
+
+Rules:
+
+- normal local code hygiene remains continuous and does not wait for these gates;
+- gates are engineering checkpoints, not capability-lifecycle or conformance claims;
+- performance optimization SHOULD follow reproducible benchmark/profile evidence unless an obvious correctness, resource-exhaustion or security problem requires immediate correction;
+- a gate does not replace the ADR gate; any materially constraining choice discovered by a gate must be governed before further material reliance;
+- because P2.01 was completed before this decision was canonically recorded, `R1` is now the current required gate and precedes substantive P2.02 implementation.
 
 ## 7. Dependency-aware sequence
 
 ```text
 P2.01 Runtime boundary extraction
-   ↓
+          ↓
+R1 Structural Review
+          ↓
 P2.02 Canonical Record Head / Effective Version runtime
    ├──────────────┐
    ↓              ↓
@@ -319,32 +345,42 @@ P2.05 Event / provenance runtime
           ↓
 P2.06 Consistency / idempotency / conflict semantics
           ↓
+R2 Runtime Health Review
+          ↓
 P2.07 Product Contract runtime boundary
           ↓
 P2.08 Portability / replay / projection runtime
           ↓
 P2.09 Second workflow reuse proof
           ↓
+R3 Reuse Refactoring Review
+          ↓
+P2.10 final applicable fitness evidence
+          ↓
+R4 Milestone Hardening
+          ↓
 P2.11 ADR / boundary review
           ↓
 P2.12 Closure review
 ```
 
-`P2.10` architecture fitness tests run continuously across the phase.
+`P2.10` architecture fitness tests run continuously across the phase; the diagram shows only its final applicable evidence point before R4.
 
-The sequence is dependency-aware rather than mechanically serial. P2.02–P2.04 MAY proceed in bounded parallel where interfaces are explicit and no unresolved decision is prejudged.
+The sequence is dependency-aware rather than mechanically serial. P2.02–P2.04 MAY proceed in bounded parallel where interfaces are explicit and no unresolved decision is prejudged, but declared engineering gates remain ordering constraints for the work that follows them.
 
 ## 8. Current canonical action
 
-> **`P2.02 — Canonical Record lineage, Head and Effective Version runtime`.**
+> **`R1 — Structural Review`.**
 
-Implement reusable, domain-neutral Canonical Record lineage operations that distinguish Canonical Head from Effective Version resolution, preserve exact Version Identity pinning for consequential reliance, fail explicitly on ambiguity or absence, and remain independent of a particular database or index technology.
+Review the completed P2.01 extraction before substantive P2.02 implementation. Confirm that reusable runtime semantics are separated from deterministic reference-scenario fixtures and tests, inspect dependency direction/cycles/duplication/accidental internal APIs, remove obsolete P1-only structure where evidence supports it, and preserve behavior through the existing fitness/test suite.
 
-P2.02 must build on the P2.01 composition boundary without turning the provisional Python package layout into a stable public or cross-product contract.
+R1 is not a performance-optimization sprint and must not introduce a database, broker, IAM/policy provider, workflow engine, public API/SDK, stable service topology or other materially constraining choice merely to make the package structure appear cleaner.
+
+After R1 completes with material findings resolved or explicitly dispositioned, the next roadmap work item is `P2.02 — Canonical Record lineage, Head and Effective Version runtime`.
 
 ## 9. ADR gate
 
-No new ADR is required merely because Phase 2 is now Active.
+No new ADR is required merely because Phase 2 is Active or because an engineering gate is performed.
 
 An ADR is required before relying on a concrete implementation choice when it becomes materially constraining under the parent Roadmap gate, including cross-module/product coupling, material migration cost, stable public/cross-product interfaces, security/authority enforcement technology, durable data/event/runtime dependencies or materially different portability/reliability consequences.
 
@@ -361,20 +397,22 @@ Phase 2 is complete when:
 5. two materially distinct bounded workflows reuse the same runtime;
 6. portability/replay/projection behavior remains migration-friendly and non-authoritative;
 7. architecture fitness evidence passes;
-8. all crossed ADR gates are governed;
-9. no product-domain leakage or unsupported production/capability claim exists;
-10. `P2.12` closure review passes and records `M2` achieved.
+8. R1–R4 engineering quality/refactoring gates have completed proportionately and their material findings are resolved or explicitly dispositioned;
+9. all crossed ADR gates are governed;
+10. no product-domain leakage or unsupported production/capability claim exists;
+11. `P2.12` closure review passes and records `M2` achieved.
 
 Completion of Phase 2 does not automatically make any runtime element an `Active` Platform Capability or production-ready service.
 
 ## 11. Roadmap maintenance
 
-Before changing any P2 task status, synchronize with the canonical repository and inspect implementation/tests that support the claimed progress.
+Before changing any P2 task or engineering-gate status, synchronize with the canonical repository and inspect implementation/tests that support the claimed progress.
 
-After each meaningful P2 milestone:
+After each meaningful P2 milestone or engineering gate:
 
 - update this file and the parent `ROADMAP.md`;
 - increment versions according to the roadmap rules;
 - keep task identifiers stable unless scope materially changes;
+- keep engineering-gate identifiers distinct from roadmap/RFC/ADR namespaces;
 - record any required ADR/RFC/policy/Product Contract dependency explicitly;
 - do not maintain a competing Phase 2 plan only in chat.
