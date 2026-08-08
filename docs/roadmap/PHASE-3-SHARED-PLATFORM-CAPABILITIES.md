@@ -1,7 +1,7 @@
 # Arvectum OS Phase 3 — Shared Platform Capabilities
 
 Status: `Active`
-Version: `1.1.3`
+Version: `1.1.4`
 Created: `2026-08-08`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -17,14 +17,14 @@ Phase 3 proves that a small justified set of domain-neutral shared responsibilit
 
 The RFC-0001 capability lifecycle is `Candidate → Incubating → Active → Deprecated → Retired`.
 
-P3.01 admitted four Candidates. P3.02 established bounded incubation envelopes and Provisional domain-neutral capability contracts. R5 passed the pre-implementation boundary review. P3.03 through P3.05 now complete bounded executable slices for CAP-001 through CAP-003 while all retained capabilities remain `Incubating`.
+P3.01 admitted four Candidates. P3.02 established bounded incubation envelopes and Provisional domain-neutral capability contracts. R5 passed the pre-implementation boundary review. P3.03 through P3.06 now complete the four initial bounded executable capability slices while all retained capabilities remain `Incubating`.
 
 ## 2. Current bounded capability set
 
 1. `CAP-001 — Document & Artifact Governance` — `Incubating`, Provisional contract; P3.03 bounded slice complete;
 2. `CAP-002 — Memory & Knowledge Governance` — `Incubating`, Provisional contract; P3.04 bounded slice complete;
 3. `CAP-003 — Search / Index Projection` — `Incubating`, Provisional contract, strictly non-authoritative; P3.05 bounded slice complete;
-4. `CAP-004 — Audit / Reconstruction Support` — `Incubating`, Provisional contract, derived/read-oriented.
+4. `CAP-004 — Audit / Reconstruction Support` — `Incubating`, Provisional contract, derived/read-oriented; P3.06 bounded slice complete.
 
 Canonical lifecycle catalog: [`PLATFORM-CAPABILITY-CANDIDATE-CATALOG.md`](../catalogs/PLATFORM-CAPABILITY-CANDIDATE-CATALOG.md).
 Canonical P3.02 contract baseline: [`PHASE-3-PROVISIONAL-CAPABILITY-CONTRACTS.md`](../contracts/PHASE-3-PROVISIONAL-CAPABILITY-CONTRACTS.md).
@@ -42,7 +42,7 @@ Generic notification/scheduler/connector marketplace, public SDK/API, product-do
 | `P3.03` | Document & Artifact Governance candidate slice | 🟩 Complete | `██████████ 100%` |
 | `P3.04` | Memory & Knowledge Governance candidate slice | 🟩 Complete | `██████████ 100%` |
 | `P3.05` | Non-authoritative Search / Index Projection candidate slice | 🟩 Complete | `██████████ 100%` |
-| `P3.06` | Audit / Reconstruction Support candidate slice | ⬜ | `░░░░░░░░░░ 0%` |
+| `P3.06` | Audit / Reconstruction Support candidate slice | 🟩 Complete | `██████████ 100%` |
 | `P3.07` | Cross-capability security, rights and Organization-scope enforcement | ⬜ | `░░░░░░░░░░ 0%` |
 | `P3.08` | Product Contract consumption boundary + bounded consumer proof | ⬜ | `░░░░░░░░░░ 0%` |
 | `P3.09` | Shared-capability reuse and composition proof | ⬜ | `░░░░░░░░░░ 0%` |
@@ -78,15 +78,23 @@ Implementation/evidence: `reference/python/arvectum_os_ref/search_index_projecti
 
 The bounded CAP-003 slice proves disposable derived discovery, exact governed source/version attribution, explicit `Current`/`Stale`/`Missing`/`Ambiguous` reconciliation state, fail-closed ordinary discovery for unresolved projection state, current Organization/purpose/right/classification filtering, separate source-access resolution and complete rebuildability. It deliberately defines no shared relevance/ranking contract and selects no durable search/vector/index technology or stable interface.
 
-## 7. Remaining bounded slice
+### P3.06 — CAP-004
 
-P3.06 proves read-oriented Audit / Reconstruction Support over governed evidence.
+Canonical review: [`P3-06-audit-reconstruction-support-candidate-slice-review.md`](../reviews/P3-06-audit-reconstruction-support-candidate-slice-review.md) — `PASS`.
 
-P3.10 fitness evidence continues to accumulate from completed bounded slices.
+Implementation/evidence: `reference/python/arvectum_os_ref/audit_reconstruction_support.py`; `reference/python/tests/test_p3_06_audit_reconstruction_support.py`.
+
+The bounded CAP-004 slice proves derived read-oriented reconstruction over exact governed Workflow/input/Product Contract/gate/execution/result/Event references, explicit `Available`/`Redacted`/`Deleted`/`Unavailable`/`Missing` evidence state, Organization fail-closed behavior, non-leaking restricted evidence and portable reference/status export without replay, mutation, approval or authority creation. It selects no durable observability/SIEM/evidence technology or stable interface.
+
+P3.10 fitness evidence continues to accumulate from all four completed bounded slices.
+
+## 7. Next composition/enforcement work
+
+P3.07 now proves cross-capability security/rights/Organization enforcement across the retained Incubating capabilities. P3.08 then proves consumption through an RFC-0004 Provisional Product Contract and P3.09 proves reuse across materially distinct bounded consumers/workflows.
 
 ## 8. Later Phase 3 work
 
-P3.07 proves cross-capability security/rights/Organization enforcement. P3.08 proves consumption through an RFC-0004 Provisional Product Contract. P3.09 proves reuse across materially distinct bounded consumers/workflows. P3.10 consolidates fitness evidence. P3.11 independently dispositions each Incubating capability and re-checks ADR/refactoring boundaries. P3.12 decides M3 closure.
+P3.10 consolidates fitness evidence. P3.11 independently dispositions each Incubating capability and re-checks ADR/refactoring boundaries. P3.12 decides M3 closure.
 
 ## 9. Engineering review gates
 
@@ -104,6 +112,6 @@ M3 may be declared achieved only when retained capabilities have explicit lifecy
 
 ## 12. Current canonical action
 
-> **P3.06 — final initial bounded capability slice; P3.10 evidence continuous.**
+> **P3.07 — cross-capability security, rights and Organization-scope enforcement; P3.10 evidence continuous.**
 
-P3.03 through P3.05 are complete. Continue CAP-004 without expanding capability identity, stabilizing public/cross-product interfaces, importing product-domain semantics or selecting durable cross-cutting mechanisms without re-opening the ADR gate.
+P3.03 through P3.06 are complete. Continue with bounded composition enforcement without promoting any capability, stabilizing public/cross-product interfaces, importing product-domain semantics or selecting durable cross-cutting mechanisms without re-opening the ADR gate.
