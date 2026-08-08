@@ -175,6 +175,7 @@ class SearchDiscoveryView:
     access_purpose: str
     required_right: str
     allowed_classifications: tuple[str, ...]
+    projection_status_text: str
     discovery_authority: DiscoveryAuthority = DiscoveryAuthority.DERIVED
     presentation_authority: PresentationAuthority = PresentationAuthority.NON_AUTHORITATIVE
 
@@ -464,7 +465,11 @@ def discover_search(
         raise ValueError("search requires an open WorkspaceShellState")
     if not isinstance(sources, MemoryKnowledgeSearchSources):
         raise ValueError("sources must be MemoryKnowledgeSearchSources")
-    if not isinstance(access_request, AccessRequest) or not query_text.strip():
+    if (
+        not isinstance(access_request, AccessRequest)
+        or not isinstance(query_text, str)
+        or not query_text.strip()
+    ):
         raise ValueError("access_request and query_text must be explicit")
     if not isinstance(source_authorizations, tuple) or any(
         not isinstance(value, CurrentSourceAuthorization) for value in source_authorizations
@@ -487,6 +492,7 @@ def discover_search(
             workspace.organization, workspace.actor, query_text, (),
             access_request.purpose, access_request.required_right,
             access_request.allowed_classifications,
+            "Derived search projection unavailable; no inference is made about canonical source absence.",
         )
 
     hits: list[SearchHitView] = []
@@ -514,7 +520,7 @@ def discover_search(
         reliance = ExactRelianceState.NOT_APPLICABLE
         if hit.source_semantic_type == KNOWLEDGE_SEMANTIC_TYPE:
             knowledge = _knowledge_exact(sources, hit.source_subject_id, hit.source_version_id)
-            if knowledge is None:
+            if knowledge is None or knowledge.canonical_record != record:
                 continue
             eligible = retrieve_knowledge_for_access(
                 knowledge=(knowledge,), request=access_request, allow_stale=True
@@ -560,6 +566,7 @@ def discover_search(
         access_request.purpose,
         access_request.required_right,
         access_request.allowed_classifications,
+        "Derived projection was re-evaluated against current exact governed sources and access context.",
     )
 
 
@@ -660,6 +667,8 @@ def resolve_exact_knowledge_from_search(
         raise KnowledgeRelianceError("discovered source is not eligible validated Knowledge")
     if selected_version_id != hit.source_version_id:
         raise KnowledgeRelianceError("operator must select the exact discovered Knowledge Version")
+    if not _request_matches(workspace, access_request):
+        raise KnowledgeRelianceError("current access context does not match the workspace")
     _require_authorized(workspace, hit.source_subject_id, source_authorizations)
     try:
         record = resolve_search_hit_for_access(
@@ -779,6 +788,7 @@ def render_search_discovery_html(result: SearchDiscoveryResult) -> str:
         '<section data-p4-07-surface="discover" data-presentation-authority="non-authoritative">'
         f'<h2>Discover</h2><p>Query: {escape(result.query_text)}</p>'
         f'<p>Discovery state: {escape(result.discovery_authority.value)}.</p>'
+        f'<p>Projection status: {escape(result.projection_status_text)}</p>'
         f'<p>Purpose: {escape(result.access_purpose)} / right: {escape(result.required_right)} / '
         f'classifications: {escape(", ".join(result.allowed_classifications))}</p>'
         '<p>Unauthorized, wrong-Organization, stale, missing, ambiguous or handling-ineligible '
