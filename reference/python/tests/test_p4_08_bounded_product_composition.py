@@ -254,19 +254,23 @@ class P408BoundedProductCompositionTests(unittest.TestCase):
             with self.subTest(attribute=forbidden):
                 self.assertFalse(hasattr(decision, forbidden))
 
-    def test_consequential_action_wrappers_delegate_only_to_r10_operator_safety(self) -> None:
+    def test_consequential_action_wrappers_preserve_contract_guard_then_delegate_to_r10(self) -> None:
         entry = self._entry()
         prepared = object()
         result = object()
+        execution = object()
+        intent = object()
 
         with patch(
+            "bounded_product_ref.task_composition._require_execution_contract"
+        ) as contract_guard, patch(
             "bounded_product_ref.task_composition.prepare_operator_canonical_mutation_action",
             return_value=prepared,
         ) as prepare_guard:
             actual_prepared = prepare_product_task_action(
                 entry=entry,
                 inspection=object(),
-                execution=object(),
+                execution=execution,
                 runtime_state=object(),
                 candidate=object(),
                 event_receipt=object(),
@@ -275,6 +279,7 @@ class P408BoundedProductCompositionTests(unittest.TestCase):
                 retry_token="retry-1",
             )
         self.assertIs(actual_prepared, prepared)
+        contract_guard.assert_called_once_with(entry=entry, execution=execution)
         self.assertEqual(
             prepare_guard.call_args.kwargs["workspace"], entry.workspace
         )
@@ -283,16 +288,19 @@ class P408BoundedProductCompositionTests(unittest.TestCase):
         )
 
         with patch(
+            "bounded_product_ref.task_composition._require_action_intent_contract"
+        ) as intent_contract_guard, patch(
             "bounded_product_ref.task_composition.execute_operator_canonical_mutation_action",
             return_value=result,
         ) as execute_guard:
             actual_result = execute_product_task_action(
                 entry=entry,
-                intent=object(),
+                intent=intent,
                 runtime_state=object(),
                 source_authorizations=(),
             )
         self.assertIs(actual_result, result)
+        intent_contract_guard.assert_called_once_with(entry=entry, intent=intent)
         self.assertEqual(
             execute_guard.call_args.kwargs["workspace"], entry.workspace
         )
