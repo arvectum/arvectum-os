@@ -1,7 +1,7 @@
 # Arvectum OS Phase 2 — Core Runtime
 
 Status: `Active`
-Version: `1.1.6`
+Version: `1.1.7`
 Created: `2026-08-08`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -84,7 +84,7 @@ Progress bars are planning indicators only.
 | `P2.04` | Governed Execution lifecycle and gate orchestration runtime | 🟩 | `██████████ 100%` |
 | `P2.05` | Event admission, provenance and reconstruction runtime | 🟩 | `██████████ 100%` |
 | `P2.06` | Runtime consistency, idempotency and conflict semantics | 🟩 | `██████████ 100%` |
-| `P2.07` | Product Contract runtime validation boundary | ⬜ | `░░░░░░░░░░ 0%` |
+| `P2.07` | Product Contract runtime validation boundary | 🟦 | `░░░░░░░░░░ 0%` |
 | `P2.08` | Portability, replay and non-authoritative projection runtime | ⬜ | `░░░░░░░░░░ 0%` |
 | `P2.09` | Second bounded workflow reuse proof | ⬜ | `░░░░░░░░░░ 0%` |
 | `P2.10` | Core Runtime architecture fitness matrix | ⬜ | `░░░░░░░░░░ 0%` |
@@ -277,7 +277,7 @@ Minimum evidence:
 - GitHub Actions `Reference Python CI` run `#40` for PR `#24` on executable code head `c90b5b0d581e6a4ac9e99c20670c192f59cdcda3` completed successfully: `Ran 241 tests in 0.334s` / `OK`; the prior 220-test P2.05 baseline remains green;
 - no Accepted RFC is modified and the durable persistence/transaction/concurrency ADR gate is not crossed: the implementation remains bounded, in-memory, internal/provisional and reversible, with no database transaction model, locking/CAS mechanism, durable idempotency store, outbox/inbox mechanism, broker, distributed coordinator or stable public API/SDK selected.
 
-P2.06 completion makes the exercised RFC-0002/RFC-0005/RFC-0006 conflict, retry/idempotency, uncertainty and local logical-commit semantics reusable only within the bounded Core Runtime evidence. It does not establish durable concurrency control, cross-system atomicity, exactly-once delivery/processing, production readiness, full RFC conformance or an `Active` Platform Capability. Per the approved engineering-quality decision, `R2 — Runtime Health Review` is the next mandatory gate before substantive P2.07 work.
+P2.06 completion makes the exercised RFC-0002/RFC-0005/RFC-0006 conflict, retry/idempotency, uncertainty and local logical-commit semantics reusable only within the bounded Core Runtime evidence. It does not establish durable concurrency control, cross-system atomicity, exactly-once delivery/processing, production readiness, full RFC conformance or an `Active` Platform Capability. Per the approved engineering-quality decision, P2.06 triggered the mandatory `R2 — Runtime Health Review` before substantive P2.07 work.
 
 ### P2.07 — Product Contract runtime validation boundary
 
@@ -396,7 +396,7 @@ The canonical gate decision is [`DECISION-2026-08-08-ENGINEERING-QUALITY-REFACTO
 | Gate | Trigger | Status | Primary purpose |
 |---|---|---:|---|
 | `R1 — Structural Review` | after P2.01, before substantive P2.02 | 🟩 Complete | validate runtime/fixture/test boundaries, dependency direction and remove accidental P1 structure |
-| `R2 — Runtime Health Review` | after P2.06, before substantive P2.07 | 🟦 Ready | review the accumulated semantic runtime spine, consistency/error/idempotency patterns and emerging ADR triggers |
+| `R2 — Runtime Health Review` | after P2.06, before substantive P2.07 | 🟩 Complete | review the accumulated semantic runtime spine, consistency/error/idempotency patterns and emerging ADR triggers |
 | `R3 — Reuse Refactoring Review` | after P2.09, before final Phase 2 hardening | ⬜ Planned | refactor abstractions using evidence from two materially distinct workflows |
 | `R4 — Milestone Hardening` | after final applicable P2.10 evidence, before P2.11/P2.12 | ⬜ Planned | full Phase 2 code-health remediation and evidence-backed optimization before closure reviews |
 
@@ -418,6 +418,17 @@ Rules:
 - hard-coded P1 reference identifiers/timestamps remain intentionally contained behind the reference adapter boundary and are not generalized ahead of P2.04/P2.05;
 - no relevant ADR gate was crossed.
 
+**R2 completion evidence — 2026-08-08:**
+
+- canonical review: [`R2-runtime-health-review.md`](../reviews/R2-runtime-health-review.md) — `Complete`, result `Pass with bounded debt`;
+- accumulated semantic ownership remains coherent: Canonical lineage owns Head/exact/effective resolution, Relationships own relationship semantic drift, Governed Execution owns lifecycle/gate admission, Event/provenance owns Event admission/identity conflict/reconstruction, and Runtime Consistency owns stale-head/retry/idempotency/uncertainty/logical-commit conflict semantics;
+- no competing lineage, execution-transition, Event-admission or retry/idempotency engine was introduced;
+- small repeated validation helpers remain local because their semantic constraints and failure contexts differ; R2 explicitly rejects a speculative shared validation/error abstraction before reuse evidence or a stable public boundary justifies one;
+- bounded debt is recorded for exact-resolution error-taxonomy inconsistency, one broad P2.06 Event-conflict assertion and the fact that arbitrary/deserialized `RuntimeConsistencyState` construction is not a durable aggregate-integrity admission boundary;
+- `reference/python/tests/test_r2_runtime_health.py` adds 6 cross-cutting semantic-owner, dependency, fail-closed lineage and technology-neutrality checks;
+- GitHub Actions `Reference Python CI` run `#43` for PR `#25` on executable head `c519e6fb3fe9d9b333382786740a37c3a477c06b` passed `247` tests in `0.415s` / `OK`;
+- no material performance issue justifies profiling/optimization work and no durable persistence, transaction/concurrency, Event-delivery, IAM/enforcement or public-interface ADR gate is crossed.
+
 ## 7. Dependency-aware sequence
 
 ```text
@@ -436,7 +447,7 @@ P2.05 Event / provenance runtime ✓
           ↓
 P2.06 Consistency / idempotency / conflict semantics ✓
           ↓
-R2 Runtime Health Review
+R2 Runtime Health Review ✓
           ↓
 P2.07 Product Contract runtime boundary
           ↓
@@ -461,11 +472,11 @@ The sequence is dependency-aware rather than mechanically serial. P2.03–P2.04 
 
 ## 8. Current canonical action
 
-> **`R2 — Runtime Health Review`.**
+> **`P2.07 — Product Contract runtime validation boundary`.**
 
-Review the accumulated Core Runtime semantic spine across lineage/version resolution, relationships, Governed Execution, Events/provenance and P2.06 consistency semantics. Reconcile duplicated validation, state-transition, error, idempotency and conflict logic; review module cohesion/dependency structure and cross-cutting test quality; identify any concrete ADR triggers that have emerged.
+Make RFC-0004 enforceable at the first reusable runtime entry boundary without inventing product-domain semantics. Represent and validate only the Product Contract identity/version/lifecycle and declared platform interaction needed by the bounded runtime evidence; preserve RFC-0003 security/authority separation and RFC-0005 exact Product Contract attribution, and reject hidden reliance on internal tables/imports/streams or undeclared shared state.
 
-Do not introduce performance abstractions or durable infrastructure speculatively. Establish profiling/benchmark evidence only where performance has become materially relevant, and stop at the ADR gate before materially relying on a concrete durable persistence, transaction/concurrency, Event-delivery, IAM/enforcement, public-interface or other constraining runtime choice. Substantive P2.07 work remains gated on R2 completion.
+Use a domain-neutral synthetic product fixture unless a real product interaction is canonically ready. Do not treat Product Contract registration or possession as authorization, Organizational Authority or capability activation. Keep the validation boundary internal/provisional and migration-friendly unless a stable public/cross-product contract is separately governed.
 
 ## 9. ADR gate
 
