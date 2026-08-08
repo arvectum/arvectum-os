@@ -1,7 +1,7 @@
 # Arvectum OS Phase 2 — Core Runtime
 
 Status: `Active`
-Version: `1.1.9`
+Version: `1.1.10`
 Created: `2026-08-08`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -86,7 +86,7 @@ Progress bars are planning indicators only.
 | `P2.06` | Runtime consistency, idempotency and conflict semantics | 🟩 | `██████████ 100%` |
 | `P2.07` | Product Contract runtime validation boundary | 🟩 | `██████████ 100%` |
 | `P2.08` | Portability, replay and non-authoritative projection runtime | 🟩 | `██████████ 100%` |
-| `P2.09` | Second bounded workflow reuse proof | 🟦 | `░░░░░░░░░░ 0%` |
+| `P2.09` | Second bounded workflow reuse proof | 🟩 | `██████████ 100%` |
 | `P2.10` | Core Runtime architecture fitness matrix | ⬜ | `░░░░░░░░░░ 0%` |
 | `P2.11` | ADR-gate and runtime-boundary hardening review | ⬜ | `░░░░░░░░░░ 0%` |
 | `P2.12` | Phase 2 / M2 closure review | ⬜ | `░░░░░░░░░░ 0%` |
@@ -358,6 +358,21 @@ Minimum evidence:
 
 **Exit:** two bounded workflows execute through the same Core Runtime and pass shared fitness tests.
 
+**Completion evidence — 2026-08-08:**
+
+- `reference/python/tests/test_p2_09_second_workflow_reuse.py` adds 8 cross-cutting reuse fitness tests over two complete domain-neutral workflow configurations while deliberately adding no new stable runtime abstraction before the mandatory R3 evidence review;
+- both workflows enter through the existing P2.07 `start_product_governed_execution` boundary and reuse one shared fixture-local Governed Execution path (`start → AwaitingGate → exact gate decisions → Ready → Running`) backed by the same P2.04 runtime operations; the fitness test also verifies that the proof imports neither the P1 `reference_scenario`/`reference_runtime_adapters` path nor the historical P2.01 `RuntimeComposition` orchestration;
+- workflow A is a direct `CanonicalMutation` against one exact current canonical version with Authorization, Organizational Authority, Data Governance and Validation gates; P2.06 commits one immutable successor plus one canonical Event and an exact keyed retry returns the already-committed evidence without appending another record, Event or consequential attempt;
+- workflow B is materially distinct: P2.02 resolves an Effective Version that intentionally differs from a future-effective Canonical Head; P2.03 supplies a Typed Relationship whose source endpoint is explicitly pinned to that exact `VersionIdentity`; the resolved record, context record and exact relationship record version are all pinned as material inputs before consequential reliance;
+- workflow B uses Actor Assurance, Authorization, Data Governance and Consequential Approval rather than workflow A's gate set, and declares `ExternalMutation` plus `Commitment` rather than canonical mutation; P2.06 records explicit external-consequence outcome/idempotency evidence without publishing a canonical successor or Event;
+- relationship existence remains non-authoritative: the proof explicitly verifies that the Typed Relationship grants neither Authorization nor Organizational Authority and that the required execution gates remain separately satisfied;
+- both synthetic consumers cross the same P2.07 Product Contract boundary with exact Provisional Product Contract Version Identity attribution, declared platform dependency/version/operation, exact canonical Read/Write scopes appropriate to each workflow and fail-closed responsibilities;
+- [`P2-09-second-bounded-workflow-reuse-proof-cross-review.md`](../reviews/P2-09-second-bounded-workflow-reuse-proof-cross-review.md) records a functional architecture/engineering/security/governance review with result `Pass`; the observed fixture/configuration duplication pressure is explicitly carried into mandatory R3 rather than prematurely standardized into a new platform abstraction;
+- GitHub Actions `Reference Python CI` run `#56` for PR `#28` on executable code head `403e6385091fdb94ff0c6ca59df80b311afdd594` completed successfully: `Ran 289 tests in 0.359s` / `OK`;
+- no Accepted RFC is modified and no new ADR gate is crossed: the proof remains bounded, internal/provisional and reversible, and does not select durable persistence, transaction/concurrency technology, Event delivery, external connector behavior, IAM/policy enforcement, stable public API/SDK, serialization contract or service topology.
+
+P2.09 completion establishes the second-workflow reuse evidence required before R3, but it does not complete R3, P2.10–P2.12 or milestone M2, does not activate a Platform Capability and does not claim production readiness or full RFC conformance.
+
 ### P2.10 — Core Runtime architecture fitness matrix
 
 **Objective:** accumulate cross-cutting executable evidence for M2.
@@ -430,7 +445,7 @@ The canonical gate decision is [`DECISION-2026-08-08-ENGINEERING-QUALITY-REFACTO
 |---|---|---:|---|
 | `R1 — Structural Review` | after P2.01, before substantive P2.02 | 🟩 Complete | validate runtime/fixture/test boundaries, dependency direction and remove accidental P1 structure |
 | `R2 — Runtime Health Review` | after P2.06, before substantive P2.07 | 🟩 Complete | review the accumulated semantic runtime spine, consistency/error/idempotency patterns and emerging ADR triggers |
-| `R3 — Reuse Refactoring Review` | after P2.09, before final Phase 2 hardening | ⬜ Planned | refactor abstractions using evidence from two materially distinct workflows |
+| `R3 — Reuse Refactoring Review` | after P2.09, before final Phase 2 hardening | 🟦 Ready | refactor abstractions using evidence from two materially distinct workflows |
 | `R4 — Milestone Hardening` | after final applicable P2.10 evidence, before P2.11/P2.12 | ⬜ Planned | full Phase 2 code-health remediation and evidence-backed optimization before closure reviews |
 
 Rules:
@@ -486,7 +501,7 @@ P2.07 Product Contract runtime boundary ✓
           ↓
 P2.08 Portability / replay / projection runtime ✓
           ↓
-P2.09 Second workflow reuse proof
+P2.09 Second workflow reuse proof ✓
           ↓
 R3 Reuse Refactoring Review
           ↓
@@ -505,11 +520,11 @@ The sequence is dependency-aware rather than mechanically serial. P2.03–P2.04 
 
 ## 8. Current canonical action
 
-> **`P2.09 — Second bounded workflow reuse proof`.**
+> **`R3 — Reuse Refactoring Review`.**
 
-Prove the M2 reuse claim with a second materially distinct domain-neutral workflow that reuses the same Core Runtime boundaries rather than cloning the P1 path. Exercise sufficiently different relationship/version-resolution/gate/effect paths to test reuse while preserving exact-version reliance and governance invariants.
+Review the accumulated Core Runtime and the two materially distinct P2.09 workflow configurations using actual reuse evidence. Refactor only where the observed duplication, ownership or dependency pressure justifies a clearer shared abstraction; preserve domain-neutral semantics, exact-version/gate/authority boundaries and reversibility.
 
-Keep differences in workflow/configuration semantics rather than forks of shared platform behavior. Use the resulting evidence as the input to the mandatory `R3 — Reuse Refactoring Review` after P2.09.
+Do not advance substantive final hardening beyond R3 until the review is complete. Any materially constraining implementation choice discovered by R3 must still pass the existing ADR gate before further reliance.
 
 ## 9. ADR gate
 
