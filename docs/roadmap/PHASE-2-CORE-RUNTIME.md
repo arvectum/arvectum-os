@@ -1,7 +1,7 @@
 # Arvectum OS Phase 2 — Core Runtime
 
 Status: `Active`
-Version: `1.1.8`
+Version: `1.1.9`
 Created: `2026-08-08`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -85,8 +85,8 @@ Progress bars are planning indicators only.
 | `P2.05` | Event admission, provenance and reconstruction runtime | 🟩 | `██████████ 100%` |
 | `P2.06` | Runtime consistency, idempotency and conflict semantics | 🟩 | `██████████ 100%` |
 | `P2.07` | Product Contract runtime validation boundary | 🟩 | `██████████ 100%` |
-| `P2.08` | Portability, replay and non-authoritative projection runtime | 🟦 | `░░░░░░░░░░ 0%` |
-| `P2.09` | Second bounded workflow reuse proof | ⬜ | `░░░░░░░░░░ 0%` |
+| `P2.08` | Portability, replay and non-authoritative projection runtime | 🟩 | `██████████ 100%` |
+| `P2.09` | Second bounded workflow reuse proof | 🟦 | `░░░░░░░░░░ 0%` |
 | `P2.10` | Core Runtime architecture fitness matrix | ⬜ | `░░░░░░░░░░ 0%` |
 | `P2.11` | ADR-gate and runtime-boundary hardening review | ⬜ | `░░░░░░░░░░ 0%` |
 | `P2.12` | Phase 2 / M2 closure review | ⬜ | `░░░░░░░░░░ 0%` |
@@ -325,6 +325,23 @@ Minimum evidence:
 
 **Exit:** at least two runtime scenarios can round-trip through the bounded semantic portability fixture and rebuild non-authoritative projections with zero consequential replay effects.
 
+**Completion evidence — 2026-08-08:**
+
+- `reference/python/arvectum_os_ref/portability_runtime.py` introduces a bounded domain-neutral semantic portability runtime with an explicitly `bounded-internal-provisional` JSON representation; the representation is derived, non-canonical and explicitly not a stable public/cross-product compatibility contract or production export endpoint;
+- export maps documented runtime meaning rather than Python object layout and preserves, within the exercised Native-authority scope, Organization identity, stable Subject Identity, exact immutable Version Identity, semantic/schema type, authority mode/scope, accountable owner and actor attribution, creation/effective time, provenance/integrity metadata, predecessor lineage, lifecycle and payload;
+- Typed Relationship export preserves the exact canonical relationship record version, relationship-type identity/version/name/schema and explicit source/target `SubjectIdentity` versus `VersionIdentity` endpoint roles; canonical Event export preserves exact Event record version, type/schema, authoritative source, occurrence/recording times, actor/producer attribution, exact execution Subject/Version, related Subject/Version references, correlation, causation, classification and access scope;
+- reconstruction invokes existing bounded Canonical Record / Typed Relationship / Event constructors only as validation machinery and then exposes frozen `Reconstructed*Semantics` values with `canonical_authority = False`, so imported state cannot become an independent canonical authority merely by successful reconstruction;
+- package manifests bind exact record/relationship/Event Version Identity sequences and reconstruction fails closed on manifest drift, conflicting immutable Version Identity reuse, relationship endpoint drift, Event execution-version drift, cross-Organization input or invalid semantic envelopes;
+- `rebuild_non_authoritative_projection` exposes no consequential-operation executor, external-effect callback, Event-admission adapter, canonical mutation path, database or broker binding; replay only rebuilds immutable derived projection entries and reports `consequential_side_effects_created = 0`;
+- projection lookup returns all source versions for a Subject Identity and performs no implicit Canonical Head/Effective Version inference; exact source Version Identity attribution survives both reconstruction and projection;
+- projections cannot mint governed pins: `pin_runtime_projection_source` requires an independently supplied exact `CanonicalRecord` whose Subject Identity, Version Identity, semantic type, authority mode/scope and lifecycle attribution match the projection entry; a reconstructed imported record is intentionally not a `CanonicalRecord` and is rejected as an authority substitute;
+- `reference/python/tests/test_p2_08_portability_replay_projection.py` adds 20 focused semantic round-trip, replay safety and negative-path tests, including two materially distinct scenarios: multi-version canonical state plus a Typed Relationship, and execution/result state plus a canonical Event;
+- [`P2-08-portability-replay-projection-cross-review.md`](../reviews/P2-08-portability-replay-projection-cross-review.md) records two functional review iterations: iteration 1 identified and remediated the imported-state authority-type leak; iteration 2 passed across architecture, engineering, security/privacy and governance perspectives with no unresolved material objection;
+- GitHub Actions `Reference Python CI` run `#52` for PR `#27` on executable code head `628005d5baa8abb62284067b808abc84cdf37160` completed successfully: `Ran 281 tests in 0.283s` / `OK`;
+- no Accepted RFC is modified and no serialization, replay/projection-storage or public-interface ADR gate is crossed: the implementation remains bounded, in-memory, internal/provisional and reversible, and does not select durable storage, broker, graph engine, schema registry, public API/SDK, production export authorization workflow or stable wire contract.
+
+P2.08 completion makes semantic round-trip and side-effect-safe non-authoritative projection replay reusable only within the bounded Core Runtime evidence and its current Native-authority reference scope. It does not establish production export/disclosure behavior, External Reference or Governed Replica portability support, a stable public/cross-product serialization contract, durable replay/projection infrastructure, production readiness, full RFC conformance or an `Active` Platform Capability.
+
 ### P2.09 — Second bounded workflow reuse proof
 
 **Objective:** prove the M2 reuse claim with a second domain-neutral workflow that reuses the same runtime rather than cloning the P1 path.
@@ -467,7 +484,7 @@ R2 Runtime Health Review ✓
           ↓
 P2.07 Product Contract runtime boundary ✓
           ↓
-P2.08 Portability / replay / projection runtime
+P2.08 Portability / replay / projection runtime ✓
           ↓
 P2.09 Second workflow reuse proof
           ↓
@@ -488,11 +505,11 @@ The sequence is dependency-aware rather than mechanically serial. P2.03–P2.04 
 
 ## 8. Current canonical action
 
-> **`P2.08 — Portability, replay and non-authoritative projection runtime`.**
+> **`P2.09 — Second bounded workflow reuse proof`.**
 
-Generalize the P1 fixture/projection proof into reusable runtime behavior without freezing a public wire format. Preserve implementation-neutral semantic export of exact identities, immutable versions, authority declarations and governed relationships for the exercised runtime scope; reconstruct meaning rather than Python object layout; and keep replay incapable of causing consequential side effects.
+Prove the M2 reuse claim with a second materially distinct domain-neutral workflow that reuses the same Core Runtime boundaries rather than cloning the P1 path. Exercise sufficiently different relationship/version-resolution/gate/effect paths to test reuse while preserving exact-version reliance and governance invariants.
 
-Keep projections explicitly non-authoritative: they cannot mint governed pins, become an independent source of authority or lose exact source Version Identity attribution. The format remains internal/bounded and migration-friendly unless a stable public/cross-product portability contract is separately governed.
+Keep differences in workflow/configuration semantics rather than forks of shared platform behavior. Use the resulting evidence as the input to the mandatory `R3 — Reuse Refactoring Review` after P2.09.
 
 ## 9. ADR gate
 
