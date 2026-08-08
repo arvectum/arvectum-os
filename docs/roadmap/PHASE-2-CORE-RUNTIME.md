@@ -1,7 +1,7 @@
 # Arvectum OS Phase 2 — Core Runtime
 
 Status: `Active`
-Version: `1.1.2`
+Version: `1.1.3`
 Created: `2026-08-08`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -80,8 +80,8 @@ Progress bars are planning indicators only.
 |---|---|---:|---:|
 | `P2.01` | Runtime boundary extraction and reusable composition baseline | 🟩 | `██████████ 100%` |
 | `P2.02` | Canonical Record lineage, Head and Effective Version runtime | 🟩 | `██████████ 100%` |
-| `P2.03` | Typed Relationship runtime | 🟦 | `░░░░░░░░░░ 0%` |
-| `P2.04` | Governed Execution lifecycle and gate orchestration runtime | ⬜ | `░░░░░░░░░░ 0%` |
+| `P2.03` | Typed Relationship runtime | 🟩 | `██████████ 100%` |
+| `P2.04` | Governed Execution lifecycle and gate orchestration runtime | 🟦 | `░░░░░░░░░░ 0%` |
 | `P2.05` | Event admission, provenance and reconstruction runtime | ⬜ | `░░░░░░░░░░ 0%` |
 | `P2.06` | Runtime consistency, idempotency and conflict semantics | ⬜ | `░░░░░░░░░░ 0%` |
 | `P2.07` | Product Contract runtime validation boundary | ⬜ | `░░░░░░░░░░ 0%` |
@@ -166,6 +166,24 @@ Minimum evidence:
 - no graph database assumption.
 
 **Exit:** the runtime can create, version, resolve and traverse a bounded set of canonical Typed Relationships while preserving exact endpoint semantics.
+
+**Completion evidence — 2026-08-08:**
+
+- `reference/python/arvectum_os_ref/relationships.py` introduces a bounded domain-neutral Typed Relationship runtime represented as a Canonical Record specialization through composition, preserving stable Relationship Identity as Subject Identity and immutable relationship Version Identity;
+- `RelationshipEndpoint` makes the endpoint reference role explicit as `SubjectIdentity` or `VersionIdentity`; endpoint role is never inferred from Identity syntax and exact traversal does not conflate the two roles;
+- `RelationshipTypeReference` preserves governed type identity, exact type-definition Version Identity, semantic relationship name and schema version; a compatible type-definition version may advance under the same Relationship Identity while a semantic relationship-type change is rejected and requires a new Relationship Identity;
+- `create_typed_relationship` requires caller-supplied independent Relationship Identity rather than deriving identity from the source/type/target tuple, so distinct assertion instances over the same tuple remain representable;
+- `version_typed_relationship` creates immutable predecessor-linked successor versions, preserves identity-defining source/type/target semantics and rejects source identity, endpoint-role, target or semantic relationship-type drift under the same Relationship Identity;
+- `TypedRelationshipLineage` reuses the P2.02 Canonical lineage/Head/Effective Version semantics for relationship history while preserving exact relationship Version Identity lookup;
+- lifecycle termination is represented by a new immutable relationship version; prior active history remains resolvable and is never deleted or rewritten;
+- `traverse_relationships` traverses only exact immutable relationship versions supplied by the caller, with explicit inbound/outbound direction and no silent Head/Effective selection; implementation is a bounded tuple scan and introduces no graph database/index authority assumption;
+- relationship existence explicitly carries no intrinsic Authorization or Organizational Authority grant, preserving RFC-0003 policy/enforcement separation;
+- the bounded runtime fails closed on cross-Organization endpoints and remains Native-authority-only; cross-organization/shared relationship semantics remain outside this slice and require their applicable security/governance model;
+- `reference/python/tests/test_p2_03_typed_relationships.py` adds 25 focused fitness/negative-path tests covering independent identities, exact endpoint roles, type/version attribution, compatible type evolution, identity-defining drift rejection, lineage/history, effective resolution, termination, authority separation, directed traversal, duplicate tuple assertions and absence of graph-database dependencies;
+- GitHub Actions `Reference Python CI` run `#31` for PR `#21` on executable code head `4b3420e85fdc0b09ebe9714259d3e837bdfc3b6e` completed successfully: `Ran 180 tests in 0.263s` / `OK`;
+- no Accepted RFC is modified and no ADR gate is crossed: the implementation remains bounded, in-memory, internal/provisional and reversible, with no durable datastore, graph engine, public API/SDK, stable serialization contract or capability activation.
+
+P2.03 completion makes the exercised RFC-0002 Typed Relationship semantics executable only within the bounded reference runtime. It does not establish a universal relationship-type catalog, cross-organization relationship sharing, a graph persistence contract, authorization policy semantics, production readiness, full RFC-0002/RFC-0003 conformance or an `Active` Platform Capability.
 
 ### P2.04 — Governed Execution lifecycle and gate orchestration runtime
 
@@ -361,7 +379,7 @@ R1 Structural Review ✓
 P2.02 Canonical Record Head / Effective Version runtime ✓
    ├──────────────┐
    ↓              ↓
-P2.03 Relationships     P2.04 Governed Execution runtime
+P2.03 Relationships ✓    P2.04 Governed Execution runtime
    │              │
    └──────┬───────┘
           ↓
@@ -394,11 +412,11 @@ The sequence is dependency-aware rather than mechanically serial. P2.03–P2.04 
 
 ## 8. Current canonical action
 
-> **`P2.03 — Typed Relationship runtime`.**
+> **`P2.04 — Governed Execution lifecycle and gate orchestration runtime`.**
 
-Exercise the RFC-0002 Typed Relationship model as reusable, domain-neutral governed runtime behavior with independent Relationship Identity, immutable relationship versions, explicit Subject/Version endpoint roles, Organization scope, history-preserving supersession and no implicit authorization/Organizational Authority semantics.
+Generalize the P1 Governed Execution and gate proof into reusable, domain-neutral runtime operations: preserve immutable governance-significant Execution Context versions, exact Workflow/material-input/applicable Product Contract attribution, separate Authorization and Organizational Authority concepts, fail-closed unresolved required gates and terminal sealing.
 
-Do not introduce a graph-database dependency or reinterpret the P1 derived semantic links as canonical Typed Relationship records merely to complete P2.03. Reuse the P2.02 exact-version and lineage semantics where relationship endpoints or relationship history require them, while keeping the current in-memory package topology provisional.
+Do not turn existing P1 fixture orchestration into a permanent public runtime contract, do not merge technical authorization with Organizational Authority, and do not preempt P2.05 Event/provenance generalization or P2.06 durable consistency/concurrency decisions merely to complete P2.04.
 
 ## 9. ADR gate
 

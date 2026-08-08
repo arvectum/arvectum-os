@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.3.2`
+Version: `2.3.3`
 Created: `2026-08-07`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -45,7 +45,7 @@ This roadmap uses semantic versioning:
 - `MINOR` — sequencing, milestone scope, work breakdown, phase transition or strategic-horizon changes that do not restructure the planning model;
 - `MAJOR` — restructuring of the roadmap lifecycle or planning model.
 
-Version `2.0.0` introduced the two-horizon planning model. Version `2.1.0` recorded Phase 1 / `M1` completion and Phase 2 decomposition as the next action. Version `2.2.0` activates the decomposed Phase 2 Core Runtime plan. Version `2.2.1` records P2.01 completion and advances the active execution sequence to P2.02. Version `2.3.0` establishes evidence-backed engineering quality/refactoring gates, inserts R1 after completed P2.01 before substantive P2.02 work, and defines milestone/stable-boundary Code Health Gate rules. Version `2.3.1` records R1 completion and advances the current canonical action to P2.02. Version `2.3.2` records P2.02 completion and advances the current canonical action to P2.03.
+Version `2.0.0` introduced the two-horizon planning model. Version `2.1.0` recorded Phase 1 / `M1` completion and Phase 2 decomposition as the next action. Version `2.2.0` activates the decomposed Phase 2 Core Runtime plan. Version `2.2.1` records P2.01 completion and advances the active execution sequence to P2.02. Version `2.3.0` establishes evidence-backed engineering quality/refactoring gates, inserts R1 after completed P2.01 before substantive P2.02 work, and defines milestone/stable-boundary Code Health Gate rules. Version `2.3.1` records R1 completion and advances the current canonical action to P2.02. Version `2.3.2` records P2.02 completion and advances the current canonical action to P2.03. Version `2.3.3` records P2.03 completion and advances the current canonical action to P2.04.
 
 Roadmap identifiers, engineering-gate identifiers, RFC identifiers and ADR identifiers are independent namespaces.
 
@@ -102,7 +102,9 @@ Current verified canonical baseline:
 - [`R1 — Structural Review`](../reviews/R1-structural-review.md) is complete: reusable runtime composition no longer selects historical P1 adapters by default, the bounded P1 binding is explicit in `reference_runtime_adapters.py`, and CI run `#23` passed `140` tests on executable code head `e0c71c1c80b658711a7420ffb7d59248ce741fb8`;
 - Phase 2 `P2.02` implements stable multi-version Canonical Record lineage, distinct Canonical Head and Effective Version resolution, exact Version Identity lookup/pinning and explicit ambiguity failure in a bounded domain-neutral in-memory resolver;
 - P2.02 executable evidence: GitHub Actions `Reference Python CI` run `#28` for PR `#20` passed `155` tests on executable code head `5c86f84628866a5b35a309620190022072ac0261`;
-- no relevant Accepted ADR currently constrains the bounded runtime choices carried from Phase 1, P2.01, R1 or P2.02.
+- Phase 2 `P2.03` implements bounded canonical Typed Relationship creation/versioning, explicit Subject/Version endpoint roles, version-identifiable relationship types, history-preserving relationship lineage and exact directed traversal without graph-storage assumptions or implicit authority semantics;
+- P2.03 executable evidence: GitHub Actions `Reference Python CI` run `#31` for PR `#21` passed `180` tests on executable code head `4b3420e85fdc0b09ebe9714259d3e837bdfc3b6e`;
+- no relevant Accepted ADR currently constrains the bounded runtime choices carried from Phase 1, P2.01, R1, P2.02 or P2.03.
 
 The RFC Index remains the canonical source for RFC status and acceptance evidence.
 
@@ -148,7 +150,7 @@ M1 intentionally did **not** claim reusable Typed Relationship lifecycle, reusab
 
 Canonical detailed work breakdown:
 
-- [`PHASE-2-CORE-RUNTIME.md`](PHASE-2-CORE-RUNTIME.md) — `Active 1.1.2`.
+- [`PHASE-2-CORE-RUNTIME.md`](PHASE-2-CORE-RUNTIME.md) — `Active 1.1.3`.
 
 **Milestone `M2`:** more than one materially distinct bounded workflow reuses the same governed runtime semantics without copying the Phase 1 harness, with architecture fitness evidence, completed Phase 2 engineering quality gates and all crossed ADR gates governed.
 
@@ -205,14 +207,14 @@ Provisional intent: demonstrate safe compounding organizational intelligence thr
 ## 6. Active Roadmap — Phase 2 Core Runtime
 
 **Status:** 🟨 In progress  
-**Phase progress:** `██░░░░░░░░ 17%` — P2.01 and P2.02 complete; R1 complete; P2.03 next
+**Phase progress:** `███░░░░░░░ 25%` — P2.01, P2.02 and P2.03 complete; R1 complete; P2.04 next
 
 | ID | Work item | Status | Progress |
 |---|---|---:|---:|
 | `P2.01` | Runtime boundary extraction and reusable composition baseline | 🟩 | `██████████ 100%` |
 | `P2.02` | Canonical Record lineage, Head and Effective Version runtime | 🟩 | `██████████ 100%` |
-| `P2.03` | Typed Relationship runtime | 🟦 | `░░░░░░░░░░ 0%` |
-| `P2.04` | Governed Execution lifecycle and gate orchestration runtime | ⬜ | `░░░░░░░░░░ 0%` |
+| `P2.03` | Typed Relationship runtime | 🟩 | `██████████ 100%` |
+| `P2.04` | Governed Execution lifecycle and gate orchestration runtime | 🟦 | `░░░░░░░░░░ 0%` |
 | `P2.05` | Event admission, provenance and reconstruction runtime | ⬜ | `░░░░░░░░░░ 0%` |
 | `P2.06` | Runtime consistency, idempotency and conflict semantics | ⬜ | `░░░░░░░░░░ 0%` |
 | `P2.07` | Product Contract runtime validation boundary | ⬜ | `░░░░░░░░░░ 0%` |
@@ -235,11 +237,11 @@ Engineering gates are checkpoints rather than `P2.xx` work items and therefore d
 
 ### Current canonical action
 
-> **`P2.03 — Typed Relationship runtime`.**
+> **`P2.04 — Governed Execution lifecycle and gate orchestration runtime`.**
 
-Exercise the RFC-0002 Typed Relationship model as reusable, domain-neutral governed runtime behavior with independent Relationship Identity, immutable relationship versions, explicit Subject/Version endpoint roles, Organization scope, history-preserving supersession and no implicit authorization/Organizational Authority semantics.
+Generalize the P1 Governed Execution and gate proof into reusable, domain-neutral runtime operations while preserving immutable governance-significant Execution Context versions, exact Workflow/material-input/applicable Product Contract attribution, separate Authorization and Organizational Authority concepts, fail-closed unresolved required gates and terminal sealing.
 
-Do not introduce a graph-database dependency or reinterpret the P1 derived semantic links as canonical Typed Relationship records merely to complete P2.03. Reuse the P2.02 exact-version and lineage semantics where relationship endpoints or relationship history require them, while keeping the current in-memory package topology provisional.
+Do not turn the current reference adapter/orchestration arrangement into a stable public contract, do not merge technical authorization with Organizational Authority, and do not preempt P2.05 Event/provenance or P2.06 durable consistency/concurrency decisions merely to complete P2.04.
 
 ### Dependency-aware sequence
 
@@ -251,7 +253,7 @@ R1 Structural Review ✓
 P2.02 Canonical Record Head / Effective Version runtime ✓
    ├──────────────┐
    ↓              ↓
-P2.03 Relationships     P2.04 Governed Execution runtime
+P2.03 Relationships ✓    P2.04 Governed Execution runtime
    │              │
    └──────┬───────┘
           ↓
