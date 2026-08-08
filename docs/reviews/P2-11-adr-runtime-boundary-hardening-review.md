@@ -146,7 +146,7 @@ GitHub Actions `Reference Python CI` run `#76` completed successfully on executa
 
 After canonical roadmap synchronization, `Reference Python CI` run `#78` completed successfully on synchronized PR head `22235394bf6fb510ff0c3d543c614fb2b7ac05dc`.
 
-Final review-evidence synchronization was validated successfully by subsequent PR CI before merge.
+Subsequent documentation-only synchronization commits were also validated by successful PR CI before merge.
 
 Proceed to **`P2.12 — Phase 2 / M2 closure review`**.
 
