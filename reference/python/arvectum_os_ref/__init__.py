@@ -41,6 +41,11 @@ from .observation import (
     build_p1_09_observation,
     require_explicit_knowledge_promotion,
 )
+from .portability import (
+    PortableFixtureExportError,
+    PortableSemanticFixture,
+    export_p1_10_semantic_fixture,
+)
 from .provenance import (
     ReconstructionEvidence,
     ReconstructionEvidenceError,
@@ -79,6 +84,8 @@ __all__ = [
     "ObservationEpistemicStatus",
     "OperationSideEffectClass",
     "OrganizationScope",
+    "PortableFixtureExportError",
+    "PortableSemanticFixture",
     "Principal",
     "ReconstructionEvidence",
     "ReconstructionEvidenceError",
@@ -95,6 +102,7 @@ __all__ = [
     "build_p1_09_observation",
     "evaluate_p1_05_gates",
     "execute_p1_06_canonical_mutation",
+    "export_p1_10_semantic_fixture",
     "require_explicit_knowledge_promotion",
     "start_p1_04_execution",
 ]
