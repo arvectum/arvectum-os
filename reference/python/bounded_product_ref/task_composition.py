@@ -4,8 +4,8 @@ This product-owned reference adapter proves one Product Contract-backed entry in
 the shared Arvectum OS workspace. It composes existing platform presentation and
 action boundaries without creating a product orchestrator inside the platform.
 
-The module is intentionally outside ``arvectum_os_ref``. Product-domain task and
-decision semantics stay here. Shared platform code owns only domain-neutral
+The module intentionally lives outside ``arvectum_os_ref``. Product-domain task
+and decision semantics stay here. Shared platform code owns only domain-neutral
 workspace, capability, Product Contract, Governed Execution and operator-safety
 semantics.
 """
@@ -47,6 +47,7 @@ from arvectum_os_ref.product_capability_consumption import (
     validate_capability_consumption,
 )
 from arvectum_os_ref.product_contract import (
+    ProductBoundaryMechanism,
     ProductContract,
     ProductContractScopeError,
     ProductRuntimeInteraction,
@@ -64,13 +65,20 @@ from arvectum_os_ref.workspace_shell import (
     open_workspace_shell,
 )
 
+from .contract import (
+    GOVERNED_RUNTIME_CONTRACT_VERSION,
+    GOVERNED_RUNTIME_DEPENDENCY,
+    OP_RECORD_TASK_DECISION,
+    PRODUCT_TASK_SEMANTIC_TYPE,
+)
+
 
 class ProductCompositionError(ValueError):
     """The bounded product flow cannot safely compose the requested context."""
 
 
 class ProductTaskDisposition(str, Enum):
-    """Example product-owned decision semantics; not a platform lifecycle or authority."""
+    """Example product-owned decision semantics; never platform authority."""
 
     NEEDS_REVIEW = "Needs review"
     READY_TO_PROCEED = "Ready to proceed"
@@ -79,7 +87,7 @@ class ProductTaskDisposition(str, Enum):
 
 @dataclass(frozen=True, slots=True)
 class BoundedProductTask:
-    """Product-owned task identity and the governed document context it starts from."""
+    """Product-owned task identity and governed Document context."""
 
     organization: OrganizationScope
     product_id: Identity
@@ -98,12 +106,12 @@ class BoundedProductTask:
         ):
             if not isinstance(value, Identity):
                 raise ValueError(f"{label} must be an Identity")
-        organization_scope = self.organization.organization_id.value
-        if self.product_id.scope != organization_scope:
+        scope = self.organization.organization_id.value
+        if self.product_id.scope != scope:
             raise ValueError("product identity must share the task Organization scope")
-        if self.task_id.scope != organization_scope:
+        if self.task_id.scope != scope:
             raise ValueError("task identity must share the task Organization scope")
-        if self.document_subject_id.scope != organization_scope:
+        if self.document_subject_id.scope != scope:
             raise ValueError("document identity must share the task Organization scope")
         if not isinstance(self.product_version, str) or not self.product_version.strip():
             raise ValueError("product_version must be explicit")
@@ -113,7 +121,7 @@ class BoundedProductTask:
 
 @dataclass(frozen=True, slots=True)
 class ProductWorkspaceEntry:
-    """Exact Product Contract-backed workspace entry; never permission or authority."""
+    """Exact Product Contract-backed workspace entry; never permission/authority."""
 
     task: BoundedProductTask
     workspace: WorkspaceShellState
@@ -126,6 +134,7 @@ class ProductWorkspaceEntry:
             raise ValueError("entry requires an open shared workspace")
         if self.workspace.organization != self.task.organization:
             raise ValueError("workspace and product task must share Organization scope")
+
         product_context = self.workspace.product_context
         if (
             product_context is None
@@ -136,6 +145,7 @@ class ProductWorkspaceEntry:
             raise ValueError(
                 "workspace entry must preserve exact Product/Organization/Product Contract context"
             )
+
         if (
             not isinstance(self.capability_admissions, tuple)
             or len(self.capability_admissions) < 2
@@ -160,7 +170,7 @@ class ProductWorkspaceEntry:
 
 @dataclass(frozen=True, slots=True)
 class ProductTaskContextView:
-    """Product-owned composition of two shared, non-authoritative workspace surfaces."""
+    """Product-owned composition of two shared non-authoritative surfaces."""
 
     task: BoundedProductTask
     document: DocumentWorkspaceResult
@@ -213,7 +223,9 @@ def _require_task_boundary(
     if actor.organization != task.organization:
         raise ProductContractScopeError("actor and product task must share Organization scope")
     if contract.organization != task.organization:
-        raise ProductContractScopeError("Product Contract and product task must share Organization scope")
+        raise ProductContractScopeError(
+            "Product Contract and product task must share Organization scope"
+        )
     if contract.product_id != task.product_id or contract.product_version != task.product_version:
         raise ProductContractScopeError("Product Contract does not govern this product task version")
 
@@ -232,7 +244,7 @@ def _require_execution_contract(
     entry: ProductWorkspaceEntry,
     execution: GovernedExecutionContext,
 ) -> None:
-    """Preserve the exact Product Contract version across product entry and execution."""
+    """Preserve exact Contract, Actor and product-task target across action composition."""
 
     if not isinstance(execution, GovernedExecutionContext):
         raise TypeError("product consequential action requires GovernedExecutionContext")
@@ -240,10 +252,47 @@ def _require_execution_contract(
         raise ProductContractScopeError(
             "Governed Execution and product workspace must share Organization scope"
         )
-    expected = _entry_contract_version_id(entry)
-    if execution.product_contract is None or execution.product_contract.version_id != expected:
+    if execution.initiating_actor != entry.workspace.actor:
+        raise ProductContractScopeError(
+            "Governed Execution Actor must match the Product workspace Actor"
+        )
+
+    expected_contract = _entry_contract_version_id(entry)
+    if (
+        execution.product_contract is None
+        or execution.product_contract.version_id != expected_contract
+    ):
         raise ProductCompositionError(
             "Governed Execution is not pinned to the exact Product Contract Version used by the workspace entry"
+        )
+    if execution.operation_name != OP_RECORD_TASK_DECISION:
+        raise ProductCompositionError(
+            "Governed Execution operation is outside the bounded product task-mutation operation"
+        )
+    if (
+        len(execution.material_inputs) != 1
+        or execution.material_inputs[0].subject_id != entry.task.task_id
+        or execution.material_inputs[0].semantic_type != PRODUCT_TASK_SEMANTIC_TYPE
+    ):
+        raise ProductCompositionError(
+            "Governed Execution must target exactly the current product-owned task state"
+        )
+
+
+def _require_product_task_candidate(
+    *,
+    entry: ProductWorkspaceEntry,
+    candidate: CanonicalRecord,
+) -> None:
+    if not isinstance(candidate, CanonicalRecord):
+        raise TypeError("product action candidate must be a CanonicalRecord")
+    if (
+        candidate.organization != entry.task.organization
+        or candidate.subject_id != entry.task.task_id
+        or candidate.semantic_type != PRODUCT_TASK_SEMANTIC_TYPE
+    ):
+        raise ProductCompositionError(
+            "product action candidate must remain inside the current product-owned task state"
         )
 
 
@@ -254,14 +303,8 @@ def _require_action_intent_contract(
 ) -> None:
     if not isinstance(intent, OperatorCanonicalMutationIntent):
         raise ValueError("product action execution requires OperatorCanonicalMutationIntent")
-    _require_execution_contract(
-        entry=entry,
-        execution=intent.action_intent.execution,
-    )
-
-
-def _request_key(request: CapabilityConsumptionRequest) -> tuple[Identity, str]:
-    return request.dependency_id, request.operation_name
+    _require_execution_contract(entry=entry, execution=intent.action_intent.execution)
+    _require_product_task_candidate(entry=entry, candidate=intent.action_intent.candidate)
 
 
 def enter_product_task_workspace(
@@ -271,12 +314,7 @@ def enter_product_task_workspace(
     actor: ActorContext,
     capability_requests: tuple[CapabilityConsumptionRequest, ...],
 ) -> ProductWorkspaceEntry:
-    """Validate the bounded Product Contract before opening the shared workspace.
-
-    The entry requires at least two distinct declared shared capability surfaces.
-    Contract admission is not authorization: every request still carries its
-    current Actor/Organization/purpose/right/classification access context.
-    """
+    """Validate the bounded Product Contract before opening the shared workspace."""
 
     _require_task_boundary(contract=contract, task=task, actor=actor)
     if (
@@ -301,9 +339,7 @@ def enter_product_task_workspace(
             raise ProductContractScopeError(
                 "capability request must stay inside the product task boundary"
             )
-        admissions.append(
-            validate_capability_consumption(contract=contract, request=request)
-        )
+        admissions.append(validate_capability_consumption(contract=contract, request=request))
 
     if len({admission.dependency_id for admission in admissions}) < 2:
         raise ProductCompositionError(
@@ -335,6 +371,15 @@ def _require_admitted(
     dependency_id: Identity,
     operation_name: str,
 ) -> None:
+    """Require the exact capability reliance admitted at product entry.
+
+    Current access purpose/right/classification may legitimately change and is
+    re-evaluated by the owning capability surface. Contract mechanism and exact
+    dependency contract version may not drift after admission.
+    """
+
+    if not isinstance(request, CapabilityConsumptionRequest):
+        raise TypeError("composed capability request must be explicit")
     if (
         request.access.actor != entry.workspace.actor
         or request.organization != entry.workspace.organization
@@ -346,21 +391,26 @@ def _require_admitted(
         raise ProductContractScopeError(
             "composed capability request must remain inside the product task boundary"
         )
+    if request.mechanism is not ProductBoundaryMechanism.DECLARED_PLATFORM_CONTRACT:
+        raise ProductCompositionError(
+            "composed capability request cannot switch to hidden/internal coupling"
+        )
     if request.dependency_id != dependency_id or request.operation_name != operation_name:
         raise ProductCompositionError(
             "wrong Product Contract capability operation for this composed surface"
         )
-    key = _request_key(request)
+
     contract_version_id = _entry_contract_version_id(entry)
     if not any(
-        admission.dependency_id == key[0]
-        and admission.operation_name == key[1]
+        admission.dependency_id == request.dependency_id
+        and admission.dependency_contract_version == request.dependency_contract_version
+        and admission.operation_name == request.operation_name
         and admission.product_id == request.product_id
         and admission.product_contract_version_id == contract_version_id
         for admission in entry.capability_admissions
     ):
         raise ProductCompositionError(
-            "capability operation was not admitted under the exact Product Contract entry"
+            "capability request was not admitted under the exact Product Contract/dependency version entry"
         )
 
 
@@ -435,7 +485,7 @@ def decide_product_task(
     disposition: ProductTaskDisposition,
     note: str = "",
 ) -> ProductTaskDecision:
-    """Return domain behavior to the product; do not mutate canonical platform state."""
+    """Return domain behavior to the product; do not mutate platform canonical state."""
 
     if not isinstance(context, ProductTaskContextView):
         raise TypeError("product decision requires a composed ProductTaskContextView")
@@ -457,7 +507,7 @@ def start_product_task_execution(
     version_id: Identity,
     created_at: datetime,
 ) -> GovernedExecutionContext:
-    """Enter shared Governed Execution only through the exact Product Contract boundary."""
+    """Enter Governed Execution only for the declared product-owned task mutation."""
 
     _require_task_boundary(contract=contract, task=task, actor=actor)
     if (
@@ -468,6 +518,31 @@ def start_product_task_execution(
         raise ProductContractScopeError(
             "governed interaction must stay inside the product task boundary"
         )
+    if (
+        interaction.dependency_id != GOVERNED_RUNTIME_DEPENDENCY
+        or interaction.dependency_contract_version != GOVERNED_RUNTIME_CONTRACT_VERSION
+        or interaction.operation_name != OP_RECORD_TASK_DECISION
+    ):
+        raise ProductCompositionError(
+            "product task execution may use only the declared governed-runtime task-mutation operation"
+        )
+    matching_operations = tuple(
+        operation
+        for operation in interaction.workflow.operations
+        if operation.semantic_name == OP_RECORD_TASK_DECISION
+    )
+    if (
+        len(matching_operations) != 1
+        or matching_operations[0].target_subject_id != task.task_id
+        or matching_operations[0].target_semantic_type != PRODUCT_TASK_SEMANTIC_TYPE
+        or len(interaction.material_inputs) != 1
+        or interaction.material_inputs[0].subject_id != task.task_id
+        or interaction.material_inputs[0].semantic_type != PRODUCT_TASK_SEMANTIC_TYPE
+    ):
+        raise ProductCompositionError(
+            "governed interaction must target exactly the current product-owned task state"
+        )
+
     execution = start_product_governed_execution(
         contract=contract,
         interaction=interaction,
@@ -476,9 +551,13 @@ def start_product_task_execution(
         version_id=version_id,
         created_at=created_at,
     )
-    if execution.product_contract is None or execution.product_contract.version_id != contract.record.version_id:
+    if (
+        execution.product_contract is None
+        or execution.product_contract.version_id != contract.record.version_id
+        or execution.initiating_actor != actor
+    ):
         raise ProductCompositionError(
-            "Governed Execution failed to preserve the exact Product Contract Version"
+            "Governed Execution failed to preserve exact Product Contract/Actor context"
         )
     return execution
 
@@ -495,9 +574,10 @@ def prepare_product_task_action(
     source_authorizations: tuple[CurrentSourceAuthorization, ...],
     retry_token: str | None = None,
 ) -> OperatorCanonicalMutationIntent:
-    """Prepare consequential product work only through the R10 operator-safety guard."""
+    """Prepare consequential product work only through the R10 safety guard."""
 
     _require_execution_contract(entry=entry, execution=execution)
+    _require_product_task_candidate(entry=entry, candidate=candidate)
     return prepare_operator_canonical_mutation_action(
         workspace=entry.workspace,
         inspection=inspection,
@@ -518,7 +598,7 @@ def execute_product_task_action(
     runtime_state: RuntimeConsistencyState,
     source_authorizations: tuple[CurrentSourceAuthorization, ...],
 ) -> Any:
-    """Preserve Product Contract continuity, then recheck current source access in R10."""
+    """Preserve Product Contract/task continuity, then recheck source access in R10."""
 
     _require_action_intent_contract(entry=entry, intent=intent)
     return execute_operator_canonical_mutation_action(
