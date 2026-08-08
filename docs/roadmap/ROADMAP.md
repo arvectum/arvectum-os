@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.8.2`
+Version: `2.8.3`
 Created: `2026-08-07`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -15,11 +15,11 @@ The Strategic Roadmap beyond completed work is a planning hypothesis, not an arc
 
 ## 2. Version note
 
-Version `2.8.2` records completion of **P3.04 — Memory & Knowledge Governance candidate slice**.
+Version `2.8.3` records completion of **P3.05 — Non-authoritative Search / Index Projection candidate slice**.
 
-P3.04 adds bounded executable CAP-002 evidence for Observation/Memory/Knowledge Candidate/validated Knowledge separation, explicit validation/approval promotion, governed retrieval constraints, derived retrieval non-authority and exact Knowledge Version reliance. CAP-002 remains `Incubating` with a Provisional contract; no durable vector/model/persistence choice, stable public interface, production readiness or `Active` promotion is created.
+P3.05 adds bounded executable CAP-003 evidence for disposable non-authoritative discovery, exact governed source/version attribution, explicit `Current`/`Stale`/`Missing`/`Ambiguous` projection state, fail-closed stale/missing/ambiguous ordinary discovery, current Organization/purpose/right/classification filtering, separate source-access resolution and complete rebuild from governed sources. CAP-003 remains `Incubating` with a Provisional contract; no durable search/vector/index technology, stable query/ranking/public interface, production readiness or `Active` promotion is created.
 
-P3.05–P3.06 remain available in bounded parallel and P3.10 fitness evidence continues to accumulate.
+P3.06 remains the final initial bounded capability slice and P3.10 fitness evidence continues to accumulate.
 
 ## 3. Verified architecture baseline
 
@@ -29,12 +29,13 @@ P3.05–P3.06 remain available in bounded parallel and P3.10 fitness evidence co
 - Phase 1 / `M1` — complete;
 - Phase 2 / `M2` — complete;
 - Phase 3 — `Active` planning/workstream state;
-- [`PHASE-3-SHARED-PLATFORM-CAPABILITIES.md`](PHASE-3-SHARED-PLATFORM-CAPABILITIES.md) — `Active 1.1.2`;
+- [`PHASE-3-SHARED-PLATFORM-CAPABILITIES.md`](PHASE-3-SHARED-PLATFORM-CAPABILITIES.md) — `Active 1.1.3`;
 - [`Platform Capability Catalog`](../catalogs/PLATFORM-CAPABILITY-CANDIDATE-CATALOG.md) — `Active 1.1.0`, four entries lifecycle `Incubating`;
 - [`Phase 3 Provisional Capability Contracts`](../contracts/PHASE-3-PROVISIONAL-CAPABILITY-CONTRACTS.md) — `Active 1.0.0`;
 - [`R5 Capability Boundary Review`](../reviews/R5-capability-boundary-review.md) — `PASS`;
 - [`P3.03 review`](../reviews/P3-03-document-artifact-governance-candidate-slice-review.md) — `PASS`;
 - [`P3.04 review`](../reviews/P3-04-memory-knowledge-governance-candidate-slice-review.md) — `PASS`;
+- [`P3.05 review`](../reviews/P3-05-non-authoritative-search-index-projection-candidate-slice-review.md) — `PASS`;
 - Decision Authority Policy remains `Proposed 0.2.1`; residual authority remains with the owner;
 - no Platform Capability is `Active`.
 
@@ -58,7 +59,7 @@ Phase status, capability lifecycle, operational environment and conformance matu
 
 1. `CAP-001 — Document & Artifact Governance` — `Incubating`, Provisional; P3.03 complete;
 2. `CAP-002 — Memory & Knowledge Governance` — `Incubating`, Provisional; P3.04 complete;
-3. `CAP-003 — Search / Index Projection` — `Incubating`, Provisional, non-authoritative;
+3. `CAP-003 — Search / Index Projection` — `Incubating`, Provisional, non-authoritative; P3.05 complete;
 4. `CAP-004 — Audit / Reconstruction Support` — `Incubating`, Provisional, derived/read-oriented.
 
 | ID | Work item | Status | Progress |
@@ -68,7 +69,7 @@ Phase status, capability lifecycle, operational environment and conformance matu
 | `R5` | Capability Boundary Review | 🟩 PASS | `██████████ 100%` |
 | `P3.03` | Document & Artifact Governance candidate slice | 🟩 Complete | `██████████ 100%` |
 | `P3.04` | Memory & Knowledge Governance candidate slice | 🟩 Complete | `██████████ 100%` |
-| `P3.05` | Non-authoritative Search / Index Projection candidate slice | ⬜ | `░░░░░░░░░░ 0%` |
+| `P3.05` | Non-authoritative Search / Index Projection candidate slice | 🟩 Complete | `██████████ 100%` |
 | `P3.06` | Audit / Reconstruction Support candidate slice | ⬜ | `░░░░░░░░░░ 0%` |
 | `P3.07` | Cross-capability security, rights and Organization-scope enforcement | ⬜ | `░░░░░░░░░░ 0%` |
 | `P3.08` | Product Contract consumption boundary + bounded consumer proof | ⬜ | `░░░░░░░░░░ 0%` |
@@ -83,9 +84,9 @@ A small set of domain-neutral shared capabilities has demonstrated governed reus
 
 ## 6. Current canonical action
 
-> **P3.05–P3.06 — remaining bounded capability slices; P3.10 evidence continuous.**
+> **P3.06 — final initial bounded capability slice; P3.10 evidence continuous.**
 
-P3.03 and P3.04 are complete. Continue the remaining Incubating slices without expanding capability identity, stabilizing public/cross-product interfaces, importing product-domain semantics or selecting durable cross-cutting mechanisms without re-opening the ADR gate.
+P3.03 through P3.05 are complete. Continue CAP-004's remaining bounded slice without expanding capability identity, stabilizing public/cross-product interfaces, importing product-domain semantics or selecting durable cross-cutting mechanisms without re-opening the ADR gate.
 
 ## 7. ADR and Product Contract gate
 
@@ -117,8 +118,9 @@ P3.02 Incubating lifecycle + Provisional contracts ✓
 R5 Capability Boundary Review ✓ PASS
 P3.03 Document & Artifact Governance ✓
 P3.04 Memory & Knowledge Governance ✓
+P3.05 Non-authoritative Search / Index Projection ✓
         ↓
-P3.05–P3.06 remaining bounded slices ← current
+P3.06 Audit / Reconstruction Support ← current
         ↓
 P3.07–P3.09 composition / consumer / reuse proof
         ↓

@@ -1,7 +1,7 @@
 # Arvectum OS Phase 3 — Shared Platform Capabilities
 
 Status: `Active`
-Version: `1.1.2`
+Version: `1.1.3`
 Created: `2026-08-08`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -17,13 +17,13 @@ Phase 3 proves that a small justified set of domain-neutral shared responsibilit
 
 The RFC-0001 capability lifecycle is `Candidate → Incubating → Active → Deprecated → Retired`.
 
-P3.01 admitted four Candidates. P3.02 established bounded incubation envelopes and Provisional domain-neutral capability contracts. R5 passed the pre-implementation boundary review. P3.03 and P3.04 now complete bounded executable slices for CAP-001 and CAP-002 while both remain `Incubating`.
+P3.01 admitted four Candidates. P3.02 established bounded incubation envelopes and Provisional domain-neutral capability contracts. R5 passed the pre-implementation boundary review. P3.03 through P3.05 now complete bounded executable slices for CAP-001 through CAP-003 while all retained capabilities remain `Incubating`.
 
 ## 2. Current bounded capability set
 
 1. `CAP-001 — Document & Artifact Governance` — `Incubating`, Provisional contract; P3.03 bounded slice complete;
 2. `CAP-002 — Memory & Knowledge Governance` — `Incubating`, Provisional contract; P3.04 bounded slice complete;
-3. `CAP-003 — Search / Index Projection` — `Incubating`, Provisional contract, strictly non-authoritative;
+3. `CAP-003 — Search / Index Projection` — `Incubating`, Provisional contract, strictly non-authoritative; P3.05 bounded slice complete;
 4. `CAP-004 — Audit / Reconstruction Support` — `Incubating`, Provisional contract, derived/read-oriented.
 
 Canonical lifecycle catalog: [`PLATFORM-CAPABILITY-CANDIDATE-CATALOG.md`](../catalogs/PLATFORM-CAPABILITY-CANDIDATE-CATALOG.md).
@@ -41,7 +41,7 @@ Generic notification/scheduler/connector marketplace, public SDK/API, product-do
 | `P3.02` | Capability lifecycle, ownership and Provisional contract baseline | 🟩 Complete | `██████████ 100%` |
 | `P3.03` | Document & Artifact Governance candidate slice | 🟩 Complete | `██████████ 100%` |
 | `P3.04` | Memory & Knowledge Governance candidate slice | 🟩 Complete | `██████████ 100%` |
-| `P3.05` | Non-authoritative Search / Index Projection candidate slice | ⬜ | `░░░░░░░░░░ 0%` |
+| `P3.05` | Non-authoritative Search / Index Projection candidate slice | 🟩 Complete | `██████████ 100%` |
 | `P3.06` | Audit / Reconstruction Support candidate slice | ⬜ | `░░░░░░░░░░ 0%` |
 | `P3.07` | Cross-capability security, rights and Organization-scope enforcement | ⬜ | `░░░░░░░░░░ 0%` |
 | `P3.08` | Product Contract consumption boundary + bounded consumer proof | ⬜ | `░░░░░░░░░░ 0%` |
@@ -70,11 +70,19 @@ Implementation/evidence: `reference/python/arvectum_os_ref/memory_knowledge_gove
 
 The bounded CAP-002 slice proves Observation/Memory/Candidate/Knowledge separation, epistemic-status preservation, distinct validation and approval gates, Organization/purpose/rights/freshness retrieval filtering, derived retrieval non-authority and exact Knowledge Version reliance without Head/rank inference. It selects no durable knowledge/vector/search technology or stable interface.
 
-## 7. Remaining bounded slices
+### P3.05 — CAP-003
 
-P3.05 proves non-authoritative Search / Index Projection behavior with exact source/version attribution and rebuildable derived state. P3.06 proves read-oriented Audit / Reconstruction Support over governed evidence.
+Canonical review: [`P3-05-non-authoritative-search-index-projection-candidate-slice-review.md`](../reviews/P3-05-non-authoritative-search-index-projection-candidate-slice-review.md) — `PASS`.
 
-P3.05–P3.06 may proceed in bounded parallel. P3.10 fitness evidence accumulates continuously.
+Implementation/evidence: `reference/python/arvectum_os_ref/search_index_projection.py`; `reference/python/tests/test_p3_05_search_index_projection.py`.
+
+The bounded CAP-003 slice proves disposable derived discovery, exact governed source/version attribution, explicit `Current`/`Stale`/`Missing`/`Ambiguous` reconciliation state, fail-closed ordinary discovery for unresolved projection state, current Organization/purpose/right/classification filtering, separate source-access resolution and complete rebuildability. It deliberately defines no shared relevance/ranking contract and selects no durable search/vector/index technology or stable interface.
+
+## 7. Remaining bounded slice
+
+P3.06 proves read-oriented Audit / Reconstruction Support over governed evidence.
+
+P3.10 fitness evidence continues to accumulate from completed bounded slices.
 
 ## 8. Later Phase 3 work
 
@@ -96,6 +104,6 @@ M3 may be declared achieved only when retained capabilities have explicit lifecy
 
 ## 12. Current canonical action
 
-> **P3.05–P3.06 — remaining bounded capability slices; P3.10 evidence continuous.**
+> **P3.06 — final initial bounded capability slice; P3.10 evidence continuous.**
 
-P3.03 and P3.04 are complete. Continue without expanding capability identity, stabilizing public/cross-product interfaces, importing product-domain semantics or selecting durable cross-cutting mechanisms without re-opening the ADR gate.
+P3.03 through P3.05 are complete. Continue CAP-004 without expanding capability identity, stabilizing public/cross-product interfaces, importing product-domain semantics or selecting durable cross-cutting mechanisms without re-opening the ADR gate.
