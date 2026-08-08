@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.8.5`
+Version: `2.8.6`
 Created: `2026-08-07`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -15,11 +15,13 @@ The Strategic Roadmap beyond completed work is a planning hypothesis, not an arc
 
 ## 2. Version note
 
-Version `2.8.5` records completion of **P3.07 — Cross-capability security, rights and Organization-scope enforcement** and R6 `PASS`.
+Version `2.8.6` records completion of **P3.08 — Product Contract consumption boundary + bounded consumer proof**.
 
-P3.07 adds bounded executable composition evidence across CAP-001 through CAP-004 using one explicit current Organization/purpose/right/classification access context. Protected exact access fails closed on Organization or handling mismatch; discovery/retrieval do not create source access; restricted reconstruction evidence is redacted without source-pin leakage; authorization remains distinct from Organizational Authority, approval and delegation. No durable IAM/PDP/PEP, policy language, stable public interface or production-security topology is selected.
+P3.08 adds one RFC-0004 `Provisional` Product Contract and a bounded synthetic Product Experiment that consumes CAP-001 through CAP-004 through exact capability dependency/version/operation declarations while retaining the P3.07 Organization/purpose/right/classification access boundary. Hidden internal table/import/endpoint/private-stream/shared-state coupling fails closed; canonical source reads remain explicit; discovery does not create source access; Product Contract admission does not create permission, approval, delegation or Organizational Authority.
 
-P3.08 is now the current canonical action and P3.10 fitness evidence continues to accumulate.
+The proof remains read-only, domain-neutral and internal. It creates no stable public/cross-product API or SDK, no product-domain platform semantics, no durable implementation decision and no capability lifecycle promotion. `Reference Python CI #90` passed the complete validation suite; the validation merge ref ran 359 tests including one branch-only trigger, representing 358 canonical tests on `main`.
+
+P3.09 is now the current canonical action and P3.10 fitness evidence continues to accumulate.
 
 ## 3. Verified architecture baseline
 
@@ -35,6 +37,8 @@ P3.08 is now the current canonical action and P3.10 fitness evidence continues t
 - [`R5 Capability Boundary Review`](../reviews/R5-capability-boundary-review.md) — `PASS`;
 - P3.03 through P3.06 capability-slice reviews — `PASS`;
 - [`P3.07 review`](../reviews/P3-07-cross-capability-security-rights-organization-scope-enforcement-review.md) / R6 — `PASS`;
+- [`P3.08 Product Contract`](../contracts/P3-08-BOUNDED-CONSUMER-PRODUCT-CONTRACT.md) — `Provisional 0.1.0`;
+- [`P3.08 review`](../reviews/P3-08-product-contract-consumption-boundary-bounded-consumer-proof-review.md) — `PASS`;
 - Decision Authority Policy remains `Proposed 0.2.1`; residual authority remains with the owner;
 - no Platform Capability is `Active`.
 
@@ -71,7 +75,7 @@ Phase status, capability lifecycle, operational environment and conformance matu
 | `P3.05` | Non-authoritative Search / Index Projection candidate slice | 🟩 Complete | `██████████ 100%` |
 | `P3.06` | Audit / Reconstruction Support candidate slice | 🟩 Complete | `██████████ 100%` |
 | `P3.07` | Cross-capability security, rights and Organization-scope enforcement | 🟩 Complete / R6 PASS | `██████████ 100%` |
-| `P3.08` | Product Contract consumption boundary + bounded consumer proof | ⬜ | `░░░░░░░░░░ 0%` |
+| `P3.08` | Product Contract consumption boundary + bounded consumer proof | 🟩 Complete | `██████████ 100%` |
 | `P3.09` | Shared-capability reuse and composition proof | ⬜ | `░░░░░░░░░░ 0%` |
 | `P3.10` | Phase 3 architecture fitness matrix | ⬜ cross-cutting | `░░░░░░░░░░ 0%` |
 | `P3.11` | Capability admission / ADR / refactoring hardening review | ⬜ | `░░░░░░░░░░ 0%` |
@@ -83,9 +87,9 @@ A small set of domain-neutral shared capabilities has demonstrated governed reus
 
 ## 6. Current canonical action
 
-> **P3.08 — Product Contract consumption boundary + bounded consumer proof; P3.10 evidence continuous.**
+> **P3.09 — Shared-capability reuse and composition proof; P3.10 evidence continuous.**
 
-P3.03 through P3.07 are complete. Continue with bounded RFC-0004 Product Contract consumption without promoting any capability, stabilizing public/cross-product interfaces, importing product-domain semantics or selecting durable cross-cutting mechanisms without re-opening the ADR gate.
+P3.03 through P3.08 are complete. Continue with materially distinct bounded reuse/composition evidence without promoting any capability, stabilizing public/cross-product interfaces, importing product-domain semantics or selecting durable cross-cutting mechanisms without re-opening the ADR gate.
 
 ## 7. ADR and Product Contract gate
 
@@ -120,10 +124,9 @@ P3.04 Memory & Knowledge Governance ✓
 P3.05 Non-authoritative Search / Index Projection ✓
 P3.06 Audit / Reconstruction Support ✓
 P3.07 Cross-capability security/rights/Organization enforcement ✓ R6 PASS
+P3.08 Product Contract consumption boundary ✓
         ↓
-P3.08 Product Contract consumption boundary ← current
-        ↓
-P3.09 reuse proof
+P3.09 shared-capability reuse/composition proof ← current
         ↓
 P3.10–P3.12 fitness / hardening / M3 closure
 ```
