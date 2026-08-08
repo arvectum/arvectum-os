@@ -1,9 +1,9 @@
 # Bounded Reference Implementation — Phase 1
 
 Status: `Provisional implementation harness`
-Scope: `Phase 1 / P1.01–P1.07`
+Scope: `Phase 1 / P1.01–P1.08`
 Architecture baseline: Constitution `1.2.0`; Accepted RFC-0001, RFC-0002, RFC-0003, RFC-0005 and RFC-0006 `1.0.0`
-Roadmap baseline: `2.0.3`
+Roadmap baseline: `2.0.4`
 
 This directory contains the bounded executable reference implementation defined by `docs/implementation/REFERENCE-IMPLEMENTATION-READINESS.md`.
 
@@ -143,6 +143,22 @@ Repository evidence: `reference/python/arvectum_os_ref/events.py`, package expor
 
 P1.07 adds `14` focused executable fitness tests covering receipt/admission separation, immutable single-version Event semantics, exact execution/result linkage, occurrence/admission time, explicit Event envelope semantics, duplicate-delivery idempotency, conflicting Event Identity/Version Identity handling, cross-Organization fail-closed behavior and preservation of the sealed P1.06 execution/result evidence.
 
+## P1.08 — Provenance, causation and reconstruction evidence
+
+This work item adds a read-only reconstruction boundary over the exact immutable P1.02–P1.07 evidence:
+
+- `ReconstructionEvidence` is a frozen derived manifest, not a Canonical Record and not an authority source;
+- reconstruction identifies the initiating Principal and Organization, exact Workflow version, exact material input version, both governed gate-decision versions and their basis references, all three governance-significant Execution Context versions, the exact canonical result version and the exact admitted Event version;
+- `AwaitingGate → Ready → Succeeded` predecessor lineage is verified without rewriting history;
+- exact Workflow/material-input/gate/result/Event version linkage and actor continuity are validated fail closed;
+- result, terminal execution and Event provenance are checked for the exact version-identifiable references required by the bounded operation;
+- correlation remains the stable Execution Subject Identity while causation remains the exact terminal `Succeeded` Execution Context Version Identity;
+- repeated reconstruction is deterministic and observational and does not replay the mutation, emit another Event or mutate sealed canonical/execution/Event history.
+
+Repository evidence: `reference/python/arvectum_os_ref/provenance.py`, package exports in `reference/python/arvectum_os_ref/__init__.py`, and `reference/python/tests/test_p1_08_provenance_reconstruction.py`.
+
+P1.08 adds `15` focused architecture-fitness tests. It deliberately does **not** define replay execution semantics, a portable serialization/fixture contract, Observation/Knowledge promotion, a projection/index authority model, durable lineage persistence or a public provenance API.
+
 ## Deliberately not decided
 
 This harness does **not** establish a permanent package layout, programming-language contract, database, API, event broker, durable event store, outbox/inbox strategy, delivery protocol, schema registry, IAM provider, policy engine, deployment topology, persistent lineage store, Canonical Head/effective-version resolver, workflow engine, Product Contract, production role matrix or durable authorization-enforcement mechanism.
@@ -150,6 +166,8 @@ This harness does **not** establish a permanent package layout, programming-lang
 The P1.06 `current_record` argument is a bounded caller-supplied admitted-current fixture used only to exercise conflict detection against the exact version already pinned by the execution. It is not a canonical-head service, mutable projection authority or public resolution contract.
 
 The P1.07 `admitted_events` argument is a bounded caller-supplied immutable Event-history fixture used only to exercise admission, duplicate and conflict semantics. It is not a durable Event repository or transport contract.
+
+The P1.08 reconstruction manifest is an immutable derived view of already-governed references. It does not create canonical state, grant authority, provide a mutable projection, establish durable evidence storage, or pre-empt P1.09/P1.10 semantics.
 
 Python and `unittest` are used only as a reversible, zero-dependency vehicle for executable architecture fitness evidence. No Platform Capability becomes `Active`, and no production-readiness or full-platform conformance claim is created by these tests.
 
@@ -162,4 +180,4 @@ python -m unittest discover -s tests -v
 
 ## Next roadmap work item
 
-After P1.07 is completed and roadmap evidence is synchronized, the next dependency-ordered item is `P1.08 — Provenance, causation and reconstruction evidence`.
+After P1.08 is completed and roadmap evidence is synchronized, the next dependency-ordered item is `P1.09 — Observation creation without Knowledge promotion`.

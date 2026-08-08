@@ -1,7 +1,7 @@
 # Arvectum OS Phase 1 — Reference Implementation
 
 Status: `Active`
-Version: `1.0.6`
+Version: `1.0.7`
 Created: `2026-08-07`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -48,8 +48,8 @@ The slice must demonstrate stable identity, immutable canonical versions, explic
 | `P1.05` | Authorization and Organizational Authority gates | 🟩 | `██████████ 100%` |
 | `P1.06` | Governed Canonical Mutation + second immutable version | 🟩 | `██████████ 100%` |
 | `P1.07` | Canonical Event admission and execution linkage | 🟩 | `██████████ 100%` |
-| `P1.08` | Provenance, causation and reconstruction evidence | 🟦 | `░░░░░░░░░░ 0%` |
-| `P1.09` | Observation creation without Knowledge promotion | ⬜ | `░░░░░░░░░░ 0%` |
+| `P1.08` | Provenance, causation and reconstruction evidence | 🟩 | `██████████ 100%` |
+| `P1.09` | Observation creation without Knowledge promotion | 🟦 | `░░░░░░░░░░ 0%` |
 | `P1.10` | Portable semantic fixture export | ⬜ | `░░░░░░░░░░ 0%` |
 | `P1.11` | Negative-path and architecture fitness tests | 🟨 | `███████░░░ 70%` |
 | `P1.12` | Phase 1 bounded-slice closure review | ⬜ | `░░░░░░░░░░ 0%` |
@@ -209,13 +209,29 @@ P1.07 adds `14` focused architecture-fitness tests for receipt/admission separat
 
 ### P1.08 — Provenance, causation and reconstruction evidence
 
-**Status:** 🟦 Next
+**Status:** 🟩 Complete
 
-Preserve causation, correlation and provenance references sufficient to reconstruct the bounded operation and identify the actor, workflow, inputs, execution, result and Event evidence.
+Implemented a bounded read-only reconstruction boundary over the exact immutable P1.02–P1.07 evidence:
+
+- `ReconstructionEvidence` is a frozen derived manifest and is explicitly not Canonical Record state or an authority source;
+- reconstruction identifies the initiating Principal and Organization, exact Workflow version, exact material input version, both governed gate-decision versions and governed basis references, all three governance-significant Execution Context versions, exact canonical result version and exact admitted Event version;
+- `AwaitingGate → Ready → Succeeded` Execution Context predecessor lineage is verified without rewriting history;
+- exact Workflow/material-input pins and the stable semantic operation must remain unchanged across the execution lineage;
+- both Authorization and Organizational Authority evidence must be the exact scoped explicit-`Allow` decisions evaluated against the exact `AwaitingGate` version;
+- result provenance must preserve input, `Ready` execution, Workflow and both gate-decision versions;
+- terminal execution provenance must preserve the exact input, Workflow, gate decisions and result version;
+- Event provenance must preserve the initiating actor, exact terminal execution and exact result version;
+- correlation remains the stable Execution Subject Identity while causation remains the exact terminal Execution Context Version Identity; one is not treated as the other or as authority;
+- wrong Workflow/input/execution/gate/Event versions, broken predecessor lineage, incomplete provenance, actor drift and incorrect Event correlation/causation/result linkage fail closed;
+- repeated reconstruction is deterministic and observational: it does not replay the mutation, create a new Event or mutate sealed execution/result/Event history.
+
+Repository evidence: `reference/python/arvectum_os_ref/provenance.py`, package exports in `reference/python/arvectum_os_ref/__init__.py`, and `reference/python/tests/test_p1_08_provenance_reconstruction.py`.
+
+P1.08 adds `15` focused architecture-fitness tests. It does not define durable provenance storage, a public provenance API, projection authority, replay-triggered consequential execution, Observation/Knowledge semantics or the P1.10 portable fixture representation.
 
 ### P1.09 — Observation creation without Knowledge promotion
 
-**Status:** ⬜ Planned
+**Status:** 🟦 Next
 
 Create an Observation from the execution outcome while proving that it does not become validated Knowledge, an approved standard or production behavior automatically.
 
@@ -244,7 +260,7 @@ The bounded slice must include applicable executable tests proving at least:
 - Observation cannot be consumed as validated Knowledge without promotion;
 - projection/index results cannot substitute for exact governed Version Identity reliance.
 
-`P1.01` through `P1.07` now contribute executable negative-path and architecture-fitness coverage. P1.05 adds explicit authentication ≠ authorization, authorization ≠ Organizational Authority, authority ≠ authorization, unresolved/denied fail-closed behavior, exact gate scope and version attribution, explicit-Allow pin validation and immutable gate evidence. P1.06 adds direct-mutation rejection outside the required `Ready` Execution Context, preservation of the immutable first target version, exact Workflow/gate version consumption, stale-current canonical conflict detection and proof that successful canonical state change is represented by a new immutable target version plus a governance-significant terminal Execution Context version. P1.07 adds receipt/admission separation, duplicate-delivery idempotency, conflicting Event Identity/Version Identity rejection, exact execution/result linkage, cross-Organization fail-closed behavior and proof that Event admission does not mutate the sealed terminal execution or repeat the canonical effect. Replay, Observation/Knowledge and projection portions of the matrix remain incomplete.
+`P1.01` through `P1.08` now contribute executable negative-path and architecture-fitness coverage. P1.05 adds explicit authentication ≠ authorization, authorization ≠ Organizational Authority, authority ≠ authorization, unresolved/denied fail-closed behavior, exact gate scope and version attribution, explicit-Allow pin validation and immutable gate evidence. P1.06 adds direct-mutation rejection outside the required `Ready` Execution Context, preservation of the immutable first target version, exact Workflow/gate version consumption, stale-current canonical conflict detection and proof that successful canonical state change is represented by a new immutable target version plus a governance-significant terminal Execution Context version. P1.07 adds receipt/admission separation, duplicate-delivery idempotency, conflicting Event Identity/Version Identity rejection, exact execution/result linkage, cross-Organization fail-closed behavior and proof that Event admission does not mutate the sealed terminal execution or repeat the canonical effect. P1.08 adds exact reconstruction checks for actor continuity, Workflow/input/gate/execution/result/Event version linkage, provenance completeness and explicit correlation-versus-causation semantics while proving the reconstruction view itself does not mutate sealed history. Replay, Observation/Knowledge and projection portions of the matrix remain incomplete.
 
 ### P1.12 — Phase 1 bounded-slice closure review
 
@@ -279,9 +295,9 @@ P1.06 ✅ Canonical Mutation → immutable v2
    ↓
 P1.07 ✅ Canonical Event
    ↓
-P1.08 🟦 Provenance / reconstruction
+P1.08 ✅ Provenance / reconstruction
    ↓
-P1.09 Observation ≠ Knowledge
+P1.09 🟦 Observation ≠ Knowledge
    ↓
 P1.10 Portable semantic fixture
    ↓
@@ -303,6 +319,8 @@ P1.05 remains below that gate: its decision records and evaluator are bounded, r
 P1.06 also remains below the ADR gate. Its mutation boundary and conflict check are bounded, deterministic, in-memory, domain-neutral and non-public. It does not select durable persistence, a Canonical Head/effective-version resolver, transaction/concurrency technology, public mutation protocol or evidence-integrity mechanism. A later durable choice that materially constrains those concerns must cross the applicable ADR gate before reliance.
 
 P1.07 remains below the ADR gate for the same reason: Event admission uses only caller-supplied immutable in-memory history and no durable event store, broker, outbox/inbox, schema registry, delivery protocol or public Event contract. Selecting any of those as a durable cross-module dependency remains a later ADR decision if and when the readiness triggers are crossed.
+
+P1.08 remains below the ADR gate because its reconstruction manifest is derived, immutable, in-memory and non-public. It introduces no durable lineage store, graph database, provenance service, projection technology, public serialization contract or evidence-integrity mechanism and therefore does not create a constraining cross-module dependency.
 
 ## 8. Maintenance rule
 
