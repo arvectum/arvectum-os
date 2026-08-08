@@ -1,7 +1,7 @@
 # Arvectum OS Phase 1 — Reference Implementation
 
 Status: `Active`
-Version: `1.0.5`
+Version: `1.0.6`
 Created: `2026-08-07`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -47,11 +47,11 @@ The slice must demonstrate stable identity, immutable canonical versions, explic
 | `P1.04` | Execution Context + exact version pinning | 🟩 | `██████████ 100%` |
 | `P1.05` | Authorization and Organizational Authority gates | 🟩 | `██████████ 100%` |
 | `P1.06` | Governed Canonical Mutation + second immutable version | 🟩 | `██████████ 100%` |
-| `P1.07` | Canonical Event admission and execution linkage | 🟦 | `░░░░░░░░░░ 0%` |
-| `P1.08` | Provenance, causation and reconstruction evidence | ⬜ | `░░░░░░░░░░ 0%` |
+| `P1.07` | Canonical Event admission and execution linkage | 🟩 | `██████████ 100%` |
+| `P1.08` | Provenance, causation and reconstruction evidence | 🟦 | `░░░░░░░░░░ 0%` |
 | `P1.09` | Observation creation without Knowledge promotion | ⬜ | `░░░░░░░░░░ 0%` |
 | `P1.10` | Portable semantic fixture export | ⬜ | `░░░░░░░░░░ 0%` |
-| `P1.11` | Negative-path and architecture fitness tests | 🟨 | `██████░░░░ 60%` |
+| `P1.11` | Negative-path and architecture fitness tests | 🟨 | `███████░░░ 70%` |
 | `P1.12` | Phase 1 bounded-slice closure review | ⬜ | `░░░░░░░░░░ 0%` |
 
 Progress bars are planning indicators, not conformance or capability-lifecycle claims.
@@ -183,13 +183,33 @@ P1.06 adds `13` executable fitness tests covering governed-entry enforcement, im
 
 ### P1.07 — Canonical Event admission and execution linkage
 
-**Status:** 🟦 Next
+**Status:** 🟩 Complete
 
-Admit a canonical Event linked to the execution and resulting version while preserving append-only Event semantics and duplicate/conflict handling required by the readiness baseline.
+Implemented one bounded domain-neutral canonical Event admission boundary for the completed P1.06 mutation:
+
+- transient Event receipt is distinct from canonical Event admission;
+- the admitted Event is an RFC-0002 Canonical Record specialization with stable Event Identity and one immutable Version Identity;
+- the Event has no predecessor and therefore preserves the normal single-version append-only Event model;
+- the bounded Event uses `Native` authority for the Arvectum OS governed observation and preserves explicit event type/schema, source, occurrence/admission times, producer/initiation attribution, classification/access, provenance and integrity metadata;
+- admission consumes the exact P1.06 `CanonicalMutationResult` and does not re-resolve mutable execution or target state;
+- the Event links to the exact terminal `Succeeded` Execution Subject/Version Identity and exact resulting target Subject/Version Identity;
+- the terminal P1.06 Execution Context remains sealed and is not mutated after success merely to add Event state;
+- duplicate delivery of the same immutable Event representation is idempotent and returns the already-admitted occurrence;
+- duplicate delivery does not repeat the canonical mutation or create a second Event occurrence;
+- reuse of an admitted Event Identity with materially different immutable content is rejected without rewriting history;
+- reuse of an immutable Event Version Identity by another Event is rejected;
+- wrong terminal-execution linkage, wrong resulting-version linkage and cross-Organization linkage fail closed;
+- broader provenance graph and reconstruction evidence remain P1.08 scope.
+
+The bounded `admitted_events` tuple is caller-supplied immutable history for the reference harness. It is not a broker, event store, outbox/inbox mechanism, schema registry, public Event API or transport guarantee.
+
+Repository evidence: `reference/python/arvectum_os_ref/events.py`, package exports in `reference/python/arvectum_os_ref/__init__.py`, and `reference/python/tests/test_p1_07_canonical_event_admission.py`.
+
+P1.07 adds `14` focused architecture-fitness tests for receipt/admission separation, immutable Event semantics, exact execution/result linkage, duplicate/conflict handling, Organization scope and preservation of sealed execution/result evidence.
 
 ### P1.08 — Provenance, causation and reconstruction evidence
 
-**Status:** ⬜ Planned
+**Status:** 🟦 Next
 
 Preserve causation, correlation and provenance references sufficient to reconstruct the bounded operation and identify the actor, workflow, inputs, execution, result and Event evidence.
 
@@ -224,7 +244,7 @@ The bounded slice must include applicable executable tests proving at least:
 - Observation cannot be consumed as validated Knowledge without promotion;
 - projection/index results cannot substitute for exact governed Version Identity reliance.
 
-`P1.01` through `P1.06` now contribute executable negative-path and architecture-fitness coverage. P1.05 adds explicit authentication ≠ authorization, authorization ≠ Organizational Authority, authority ≠ authorization, unresolved/denied fail-closed behavior, exact gate scope and version attribution, explicit-Allow pin validation and immutable gate evidence. P1.06 adds direct-mutation rejection outside the required `Ready` Execution Context, preservation of the immutable first target version, exact Workflow/gate version consumption, stale-current canonical conflict detection and proof that successful canonical state change is represented by a new immutable target version plus a governance-significant terminal Execution Context version. The Event, replay, Observation/Knowledge and projection portions of the matrix remain incomplete.
+`P1.01` through `P1.07` now contribute executable negative-path and architecture-fitness coverage. P1.05 adds explicit authentication ≠ authorization, authorization ≠ Organizational Authority, authority ≠ authorization, unresolved/denied fail-closed behavior, exact gate scope and version attribution, explicit-Allow pin validation and immutable gate evidence. P1.06 adds direct-mutation rejection outside the required `Ready` Execution Context, preservation of the immutable first target version, exact Workflow/gate version consumption, stale-current canonical conflict detection and proof that successful canonical state change is represented by a new immutable target version plus a governance-significant terminal Execution Context version. P1.07 adds receipt/admission separation, duplicate-delivery idempotency, conflicting Event Identity/Version Identity rejection, exact execution/result linkage, cross-Organization fail-closed behavior and proof that Event admission does not mutate the sealed terminal execution or repeat the canonical effect. Replay, Observation/Knowledge and projection portions of the matrix remain incomplete.
 
 ### P1.12 — Phase 1 bounded-slice closure review
 
@@ -257,9 +277,9 @@ P1.05 ✅ Authorization + Organizational Authority gates
    ↓
 P1.06 ✅ Canonical Mutation → immutable v2
    ↓
-P1.07 🟦 Canonical Event
+P1.07 ✅ Canonical Event
    ↓
-P1.08 Provenance / reconstruction
+P1.08 🟦 Provenance / reconstruction
    ↓
 P1.09 Observation ≠ Knowledge
    ↓
@@ -281,6 +301,8 @@ An ADR becomes required before relying on a choice that crosses the ADR triggers
 P1.05 remains below that gate: its decision records and evaluator are bounded, reversible, in-memory, domain-neutral and non-public. They do not select an IAM provider, policy engine, durable authorization-enforcement mechanism, tenant-isolation technology or production authority-administration model. A real enforcement choice that materially constrains those concerns will require the applicable ADR/governance evidence before reliance.
 
 P1.06 also remains below the ADR gate. Its mutation boundary and conflict check are bounded, deterministic, in-memory, domain-neutral and non-public. It does not select durable persistence, a Canonical Head/effective-version resolver, transaction/concurrency technology, public mutation protocol or evidence-integrity mechanism. A later durable choice that materially constrains those concerns must cross the applicable ADR gate before reliance.
+
+P1.07 remains below the ADR gate for the same reason: Event admission uses only caller-supplied immutable in-memory history and no durable event store, broker, outbox/inbox, schema registry, delivery protocol or public Event contract. Selecting any of those as a durable cross-module dependency remains a later ADR decision if and when the readiness triggers are crossed.
 
 ## 8. Maintenance rule
 

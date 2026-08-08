@@ -1,9 +1,9 @@
 # Bounded Reference Implementation — Phase 1
 
 Status: `Provisional implementation harness`
-Scope: `Phase 1 / P1.01–P1.06`
-Architecture baseline: Constitution `1.2.0`; Accepted RFC-0001, RFC-0002, RFC-0003 and RFC-0005 `1.0.0`
-Roadmap baseline: `2.0.2`
+Scope: `Phase 1 / P1.01–P1.07`
+Architecture baseline: Constitution `1.2.0`; Accepted RFC-0001, RFC-0002, RFC-0003, RFC-0005 and RFC-0006 `1.0.0`
+Roadmap baseline: `2.0.3`
 
 This directory contains the bounded executable reference implementation defined by `docs/implementation/REFERENCE-IMPLEMENTATION-READINESS.md`.
 
@@ -119,11 +119,37 @@ Repository evidence: `reference/python/arvectum_os_ref/mutation.py`, P1.06 exten
 
 P1.06 adds `13` executable fitness tests covering governed-entry enforcement, immutable-version lineage, exact pinned Workflow/gate evidence, stale-current conflict detection, Organization/version constraints, provenance, terminal execution effect pinning and explicit non-preemption of P1.07 Event admission.
 
+## P1.07 — Canonical Event admission and execution linkage
+
+This work item admits one bounded domain-neutral canonical Event for the completed P1.06 mutation under RFC-0002/RFC-0006 semantics:
+
+- receipt is represented by a transient immutable `EventCandidate` and is explicitly distinct from canonical Event admission;
+- only the admission boundary creates the `platform.event` Canonical Record specialization;
+- the admitted Event uses stable Event Identity plus one distinct immutable Event Version Identity and has no predecessor, preserving the normal single-version append-only Event model;
+- the Event uses `Native` authority for the governed observation produced by Arvectum OS and preserves explicit event type/schema, source, occurrence/admission time, producer/initiation attribution, classification/access scope, provenance and integrity metadata;
+- admission consumes the exact P1.06 `CanonicalMutationResult` rather than re-resolving mutable state;
+- the Event links to the exact terminal `Succeeded` Execution Subject/Version Identity and to the exact resulting target Subject/Version Identity;
+- correlation preserves the stable Execution Subject Identity while causation preserves the exact terminal Execution Context Version Identity used by this bounded scenario;
+- the sealed terminal Execution Context is not mutated or extended after success merely to add an Event reference;
+- repeated delivery of the same immutable Event representation returns the already-admitted Event and does not create a second occurrence or repeat the canonical mutation;
+- reuse of an admitted Event Identity with materially different immutable content raises an explicit `EventIdentityConflictError` without rewriting history;
+- reuse of an immutable Event Version Identity for another Event is rejected;
+- wrong execution linkage, wrong resulting-version linkage and cross-Organization linkage fail closed;
+- broader provenance graph/reconstruction semantics remain P1.08 scope.
+
+The caller-supplied `admitted_events` tuple is bounded immutable history for the in-memory harness. It is not an event store, topic, broker, outbox/inbox mechanism, delivery guarantee or public persistence contract.
+
+Repository evidence: `reference/python/arvectum_os_ref/events.py`, package exports in `reference/python/arvectum_os_ref/__init__.py`, and `reference/python/tests/test_p1_07_canonical_event_admission.py`.
+
+P1.07 adds `14` focused executable fitness tests covering receipt/admission separation, immutable single-version Event semantics, exact execution/result linkage, occurrence/admission time, explicit Event envelope semantics, duplicate-delivery idempotency, conflicting Event Identity/Version Identity handling, cross-Organization fail-closed behavior and preservation of the sealed P1.06 execution/result evidence.
+
 ## Deliberately not decided
 
-This harness does **not** establish a permanent package layout, programming-language contract, database, API, event broker, IAM provider, policy engine, deployment topology, persistent lineage store, Canonical Head/effective-version resolver, workflow engine, Product Contract, production role matrix or durable authorization-enforcement mechanism.
+This harness does **not** establish a permanent package layout, programming-language contract, database, API, event broker, durable event store, outbox/inbox strategy, delivery protocol, schema registry, IAM provider, policy engine, deployment topology, persistent lineage store, Canonical Head/effective-version resolver, workflow engine, Product Contract, production role matrix or durable authorization-enforcement mechanism.
 
 The P1.06 `current_record` argument is a bounded caller-supplied admitted-current fixture used only to exercise conflict detection against the exact version already pinned by the execution. It is not a canonical-head service, mutable projection authority or public resolution contract.
+
+The P1.07 `admitted_events` argument is a bounded caller-supplied immutable Event-history fixture used only to exercise admission, duplicate and conflict semantics. It is not a durable Event repository or transport contract.
 
 Python and `unittest` are used only as a reversible, zero-dependency vehicle for executable architecture fitness evidence. No Platform Capability becomes `Active`, and no production-readiness or full-platform conformance claim is created by these tests.
 
@@ -136,4 +162,4 @@ python -m unittest discover -s tests -v
 
 ## Next roadmap work item
 
-After P1.06 is completed and roadmap evidence is synchronized, the next dependency-ordered item is `P1.07 — Canonical Event admission and execution linkage`.
+After P1.07 is completed and roadmap evidence is synchronized, the next dependency-ordered item is `P1.08 — Provenance, causation and reconstruction evidence`.
