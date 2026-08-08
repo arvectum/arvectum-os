@@ -144,7 +144,9 @@ P2.11 exit conditions are satisfied:
 
 GitHub Actions `Reference Python CI` run `#76` completed successfully on executable P2.11 head `82fd2ad9346a9c8b82b01704bdbe47db06311431`.
 
-After canonical roadmap synchronization, `Reference Python CI` run `#78` also completed successfully on synchronized PR head `22235394bf6fb510ff0c3d543c614fb2b7ac05dc`.
+After canonical roadmap synchronization, `Reference Python CI` run `#78` completed successfully on synchronized PR head `22235394bf6fb510ff0c3d543c614fb2b7ac05dc`.
+
+Final review-evidence synchronization was revalidated by `Reference Python CI` run `#79`, which completed successfully on PR head `569acbbb4beda105a1f79559fd26ada59ea6b2a8`.
 
 Proceed to **`P2.12 — Phase 2 / M2 closure review`**.
 
