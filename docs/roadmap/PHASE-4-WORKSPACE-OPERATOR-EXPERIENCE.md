@@ -1,7 +1,7 @@
 # Arvectum OS Phase 4 — Workspace / Operator Experience
 
 Status: `Active`
-Version: `1.9.0`
+Version: `1.10.0`
 Created: `2026-08-08`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -13,17 +13,15 @@ Predecessor: `Phase 3 — Shared Platform Capabilities`, `M3` achieved
 
 ## Version note
 
-Version `1.9.0` records completion of **R10 — Operator Safety / Cross-Capability Health Review** with `PASS` and advances the current canonical action to **P4.08 — Cross-capability task/context composition + bounded product entry point**.
+Version `1.10.0` records completion of **P4.08 — Cross-capability task/context composition + bounded product entry point** with `PASS` and advances the current canonical action to **R11 — Composition / Usability Refactoring Review**.
 
-R10 reviewed the accumulated P4.03–P4.07 workspace surfaces across Organization/Actor-bound source authorization, purpose/right/classification/minimization, exact-version reliance, canonical-versus-derived authority, stale presentation, duplicate/ambiguous sources, protected counts/previews, hidden actions and repeated presentation/access patterns.
+P4.08 proves the first bounded RFC-0004 Product Contract-backed product entry into the shared workspace. Product-owned task/disposition semantics remain outside `arvectum_os_ref`; the product composes existing P4.06 Document/Artifact and P4.07 Memory/Knowledge surfaces rather than becoming a generic platform orchestrator.
 
-One material operator-safety finding was identified in the P4.05 action composition path: a prepared operator action could outlive replacement or revocation of the source-access decision used by the inspected presentation. The defect did not bypass Governed Execution authorization, Organizational Authority or consequential approval, but it could leave a stale/hidden action viable after its presentation-access assumption changed.
+The final boundary preserves exact Organization/Actor/Product/Product Contract context, exact capability dependency contract versions, declared Product Contract mechanism, exact governed source/version semantics and product-owned task target identity. Consequential product actions remain Product Contract-backed Governed Executions and can reach the existing P4.05 mutation path only through the R10 `operator_safety.py` guard.
 
-R10 closes that gap with a bounded internal `operator_safety.py` guard. It pins the exact source-authorization decision Version Identity used by the P4.05 inspection, requires that decision to remain the unique current allow decision during action preparation, and rechecks it immediately before delegating the action. Missing, denied, ambiguous or replaced access fails closed and requires re-inspection. The guard grants no authority and creates no second canonical-mutation path; consequential mutation remains delegated through the existing P4.05 and runtime-consistency semantic owners.
+Six functional cross-review iterations closed two material composition findings before completion: exact Product Contract Version continuity between workspace entry and Governed Execution, and post-entry drift of capability dependency version/mechanism or product-task execution target. No existing `arvectum_os_ref` platform/runtime module is changed by P4.08.
 
-A structural regression prevents future package modules from directly composing the lower-level P4.05 action preparation/execution functions outside `execution_action_experience.py` and `operator_safety.py`. R10 intentionally does not generalize the repeated presentation/access patterns into a shared authorization framework because P4.08 is the first composition point capable of producing evidence for such a refactor.
-
-R10 selects no frontend framework, public API/BFF/wire contract, IAM/PDP/PEP mechanism, durable workspace/read-model/cache store, database, event broker, search/vector/RAG technology, Product Contract, new Platform Capability or capability lifecycle promotion. No ADR gate was crossed.
+GitHub-hosted `Reference Python CI` became unavailable at runner provisioning before any workflow step during PR #53. No green P4.08 Actions run is claimed. The external CI infrastructure gap is tracked in issue #54 and is explicitly separated from the scoped architectural completion decision; the workflow diagnostic change was reverted and P4.08 retains no CI workflow modification.
 
 Canonical completion evidence:
 
@@ -35,7 +33,10 @@ Canonical completion evidence:
 - [`P4.05 Governed Execution / gate / approval-action review`](../reviews/P4-05-governed-execution-gate-approval-action-experience.md) — `PASS`, four functional cross-review iterations;
 - [`P4.06 Document / Artifact workspace review`](../reviews/P4-06-document-artifact-workspace-experience.md) — `PASS`, five functional cross-review iterations including one pre-merge security finding and remediation;
 - [`P4.07 Memory / Knowledge / Search discovery review`](../reviews/P4-07-memory-knowledge-search-discovery-experience.md) — `PASS`, five functional cross-review iterations including exact-source, projection-gap, semantic-owner policy and ambiguity remediations;
-- [`R10 Operator Safety / Cross-Capability Health Review`](../reviews/R10-operator-safety-cross-capability-health-review.md) — `PASS`, five functional cross-review iterations with one material stale-source-access action finding remediated before P4.08.
+- [`R10 Operator Safety / Cross-Capability Health Review`](../reviews/R10-operator-safety-cross-capability-health-review.md) — `PASS`, five functional cross-review iterations with one material stale-source-access action finding remediated before P4.08;
+- [`P4.08 cross-capability task/context composition review`](../reviews/P4-08-cross-capability-task-context-composition.md) — `PASS`, six functional cross-review iterations with exact Product Contract/dependency/target continuity hardened;
+- [`P4.08 bounded product Product Contract`](../contracts/P4-08-BOUNDED-PRODUCT-ENTRY-PRODUCT-CONTRACT.md) — `Provisional 0.1.0`;
+- GitHub issue `#54` — tracked hosted-CI provisioning gap; not an architecture exception or green-test claim.
 
 ## 1. Purpose
 
@@ -70,13 +71,13 @@ The workspace remains a platform interaction capability under development. Activ
 | `P4.05` | Governed Execution, gate and approval/action experience | 🟩 Complete | `██████████ 100%` |
 | `P4.06` | Document / Artifact workspace experience | 🟩 Complete | `██████████ 100%` |
 | `P4.07` | Memory / Knowledge / Search discovery experience | 🟩 Complete | `██████████ 100%` |
-| `P4.08` | Cross-capability task/context composition + bounded product entry point | ⬜ Current | `░░░░░░░░░░ 0%` |
+| `P4.08` | Cross-capability task/context composition + bounded product entry point | 🟩 Complete | `██████████ 100%` |
 | `P4.09` | Security, rights, minimization and authority-safe UX | ⬜ | `░░░░░░░░░░ 0%` |
 | `P4.10` | Workspace architecture fitness + accessibility/usability baseline | ⬜ cross-cutting | `░░░░░░░░░░ 0%` |
 | `P4.11` | Workspace hardening / ADR / refactoring review | ⬜ | `░░░░░░░░░░ 0%` |
 | `P4.12` | Phase 4 / M4 closure review | ⬜ | `░░░░░░░░░░ 0%` |
 
-Phase 4 roadmap work-item completion is `7 / 12 = 58.3%`. Engineering reviews such as R9/R10 are gates and do not inflate this percentage as separate equal-weight work items.
+Phase 4 roadmap work-item completion is `8 / 12 = 66.7%`. Engineering reviews such as R9/R10/R11 are gates and do not inflate this percentage as separate equal-weight work items.
 
 ## 4. Detailed task intent
 
@@ -214,6 +215,8 @@ Reference proof should include at least one bounded Product Contract-backed prod
 
 The Product Contract remains Provisional unless separately promoted through RFC-0004 governance.
 
+Completion evidence: [`P4.08 cross-capability task/context composition review`](../reviews/P4-08-cross-capability-task-context-composition.md) — `PASS`, six functional cross-review iterations. The bounded Product Contract-backed entry composes CAP-001/P4.06 and CAP-002/P4.07 surfaces, keeps task/disposition semantics product-owned, pins exact Product Contract and admitted dependency versions/mechanism, binds Governed Execution to the exact product task operation/target, and routes consequential actions only through R10. No existing platform runtime module is changed. Hosted CI provisioning is tracked separately in issue #54; no green P4.08 Actions run is claimed.
+
 ### P4.09 — Security, rights, minimization and authority-safe UX
 
 Harden the human interaction surface so governance semantics are not technically correct but operationally misleading.
@@ -283,7 +286,7 @@ The closure review MUST distinguish:
 |---|---|---|
 | `R9 — Workspace Boundary Review` | after P4.02 | **Complete / PASS** — shell/navigation does not create authority, product leakage or accidental public boundary; P4.03 source-resolution handoff recorded |
 | `R10 — Operator Safety / Cross-Capability Health Review` | after P4.07 | **Complete / PASS** — current source-access freshness is enforced at operator action composition; cross-capability presentation/reliance health reviewed before P4.08 |
-| `R11 — Composition / Usability Refactoring Review` | after P4.08 / meaningful usability evidence | allow evidence-backed shared UX refactoring only after real composition is demonstrated |
+| `R11 — Composition / Usability Refactoring Review` | after P4.08 / meaningful usability evidence | **Current** — review first product-backed composition for evidence-backed shared UX/refactoring before P4.09 |
 | `R12 — M4 Workspace Hardening` | after P4.10 | final dependency, authority-bypass, accessibility, deterministic-state and ADR-gate hardening |
 
 Engineering gates are review/hardening gates and do not inflate roadmap completion percentages as separate equal-weight product tasks.
@@ -313,9 +316,9 @@ Docs                  Knowledge/Search
             ↓
 R10 Cross-Capability Health ✅
             ↓
-P4.08 Product-backed composition proof ← current
+P4.08 Product-backed composition proof ✅
             ↓
-R11 Composition/Usability Refactoring
+R11 Composition/Usability Refactoring ← current
             ↓
 P4.09 Security / rights / authority-safe UX
             ↓
@@ -386,18 +389,19 @@ A reversible internal reference implementation may proceed without an ADR when t
 
 ## 10. Current canonical action
 
-> **`P4.08 — Cross-capability task/context composition + bounded product entry point`.**
+> **`R11 — Composition / Usability Refactoring Review`.**
 
-Compose the proven P4.03–P4.07 workspace surfaces into one bounded task/context flow and introduce the first Product Contract-backed product entry point.
+Review the first Product Contract-backed P4.08 composition proof before beginning substantive P4.09 work.
 
-Immediate constraints:
+R11 must determine, from actual P4.02–P4.08 evidence rather than speculative generality:
 
-- preserve explicit Organization/product/Actor context across composition;
-- consume shared capability surfaces only through their established semantic owners and declared boundary;
-- preserve exact version, authority and provenance semantics;
-- keep product-domain decisions and workflow meaning on the product side of the boundary;
-- use an applicable RFC-0004 Product Contract before governed reliance on shared platform capabilities, canonical state or shared history;
-- route consequential operator actions through the R10 `operator_safety.py` guard so stale/revoked/missing/ambiguous/replaced source-access state cannot leave a viable hidden action;
-- do not treat Product Contract registration as authorization, Organizational Authority or approval;
-- do not normalize a stable public API/frontend/BFF contract or durable technology without crossing the applicable ADR gate;
-- preserve CAP-001 through CAP-004 as `Incubating / Provisional`; P4.08 is not a capability lifecycle promotion gate.
+- which repeated workspace/product-entry patterns are genuinely reusable and which remain product-owned;
+- whether any local Organization/Actor/access/presentation composition should be simplified without becoming a new authorization framework;
+- whether Product Contract-backed product entry remains bounded and domain-neutral on the platform side;
+- whether exact version/authority/provenance semantics remain understandable through composed task context;
+- whether consequential actions have any viable path that bypasses Product Contract continuity, current source authorization, R10 or Governed Execution gates;
+- whether the first real composition reveals usability ambiguity that must be fixed before P4.09 hardens security/rights/authority-safe UX;
+- whether any stable/public/durable implementation choice now crosses an ADR gate;
+- whether CI issue #54 changes only engineering tooling or exposes a broader deterministic-testability concern relevant to R11/P4.10.
+
+R11 is an engineering refactoring/usability gate. It does not promote a capability, stabilize the P4.08 Product Contract, approve production readiness, change conformance scope or create commercial commitments.
