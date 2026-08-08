@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.7.0`
+Version: `2.8.0`
 Created: `2026-08-07`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -15,11 +15,11 @@ The Strategic Roadmap beyond completed work is a planning hypothesis, not an arc
 
 ## 2. Version note
 
-Version `2.7.0` records completion of **P3.02 — Capability lifecycle, ownership and Provisional contract baseline**.
+Version `2.8.0` records completion of engineering gate **R5 — Capability Boundary Review**.
 
-CAP-001 through CAP-004 have moved from `Candidate` to bounded `Incubating` for Phase 3 validation, each with an explicit owner and Provisional domain-neutral capability contract. This does not establish `Active`, production, stable public compatibility, operational readiness or commercial support.
+R5 confirmed that the four P3.02 `Incubating` / `Provisional` capability boundaries remain bounded, domain-neutral and reversible, with no accidental service-catalog growth, lifecycle inflation, product-domain leakage, stable-interface leakage, hidden durable implementation coupling or already-crossed ADR commitment.
 
-The current canonical action advances to engineering gate **R5 — Capability Boundary Review** before P3.03–P3.06 implementation expands.
+P3.03–P3.06 may now proceed in bounded parallel. P3.10 fitness evidence must accumulate continuously and the ADR gate remains armed before material durable/cross-cutting implementation commitments.
 
 ## 3. Verified architecture baseline
 
@@ -35,6 +35,7 @@ The current canonical action advances to engineering gate **R5 — Capability Bo
 - [`Phase 3 Provisional Capability Contracts`](../contracts/PHASE-3-PROVISIONAL-CAPABILITY-CONTRACTS.md) — `Active 1.0.0`;
 - [`P3.01 review`](../reviews/P3-01-capability-boundary-revalidation-review.md) — `PASS`;
 - [`P3.02 review`](../reviews/P3-02-capability-lifecycle-ownership-provisional-contract-review.md) — `PASS`;
+- [`R5 Capability Boundary Review`](../reviews/R5-capability-boundary-review.md) — `PASS`;
 - Decision Authority Policy remains `Proposed 0.2.1`; residual authority remains with the owner;
 - no Platform Capability is `Active`.
 
@@ -73,6 +74,7 @@ Current bounded capability set:
 |---|---|---:|---:|
 | `P3.01` | Capability boundary revalidation + Candidate catalog | 🟩 Complete | `██████████ 100%` |
 | `P3.02` | Capability lifecycle, ownership and Provisional contract baseline | 🟩 Complete | `██████████ 100%` |
+| `R5` | Capability Boundary Review | 🟩 PASS | `██████████ 100%` |
 | `P3.03` | Document & Artifact Governance candidate slice | ⬜ | `░░░░░░░░░░ 0%` |
 | `P3.04` | Memory & Knowledge Governance candidate slice | ⬜ | `░░░░░░░░░░ 0%` |
 | `P3.05` | Non-authoritative Search / Index Projection candidate slice | ⬜ | `░░░░░░░░░░ 0%` |
@@ -92,11 +94,11 @@ M3 does not itself require or imply lifecycle `Active` capability promotion.
 
 ## 7. Current canonical action
 
-> **R5 — Capability Boundary Review.**
+> **P3.03–P3.06 — bounded capability slices.**
 
-Review the P3.02 Incubating/Provisional boundaries for accidental service-catalog growth, lifecycle inflation, product-domain leakage, stable-interface leakage, hidden implementation coupling and ADR-triggering commitments before broad P3.03–P3.06 implementation proceeds.
+R5 has passed. Implement the four bounded Incubating capability slices without expanding capability identity, stabilizing public/cross-product interfaces, importing product-domain semantics or selecting durable cross-cutting mechanisms without re-opening the ADR gate.
 
-After R5 passes, P3.03–P3.06 may proceed in bounded parallel subject to P3.10 continuous fitness evidence.
+P3.03–P3.06 may proceed in bounded parallel. P3.10 fitness evidence is continuous from the start of implementation.
 
 ## 8. ADR and Product Contract gate
 
@@ -105,6 +107,8 @@ P2.11's bounded no-ADR disposition remains in force only while no material durab
 Re-open the ADR gate before material reliance on concrete persistence/database/object-store/search topology, transactions/concurrency, Event transport/store, IAM/policy enforcement, evidence-integrity technology, stable API/serialization contracts, durable projection/replay storage or deployable service/process topology.
 
 A real Product relying on Incubating capabilities, canonical platform state or shared platform history must use the applicable RFC-0004 Product Contract before governed reliance. P3.02 capability contracts are not substitutes for Product Contracts and do not grant permission or authority.
+
+R5 additionally requires that implementation modules/services must not be inferred to be Platform Capabilities merely because they exist; newly observed shared responsibilities remain exploratory until separately admitted.
 
 ## 9. Phase transition rule
 
@@ -139,9 +143,9 @@ P3.01 Candidate admission ✓
         ↓
 P3.02 Incubating lifecycle + Provisional capability contracts ✓
         ↓
-R5 Capability Boundary Review ← current
+R5 Capability Boundary Review ✓ PASS
         ↓
-P3.03–P3.06 bounded capability slices
+P3.03–P3.06 bounded capability slices ← current
         ↓
 P3.07–P3.09 composition / consumer / reuse proof
         ↓
