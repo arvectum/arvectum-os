@@ -33,6 +33,14 @@ from .mutation import (
     CanonicalMutationResult,
     execute_p1_06_canonical_mutation,
 )
+from .observation import (
+    KnowledgePromotionRequiredError,
+    Observation,
+    ObservationCreationError,
+    ObservationEpistemicStatus,
+    build_p1_09_observation,
+    require_explicit_knowledge_promotion,
+)
 from .provenance import (
     ReconstructionEvidence,
     ReconstructionEvidenceError,
@@ -65,6 +73,10 @@ __all__ = [
     "GateOutcome",
     "GovernedVersionPin",
     "Identity",
+    "KnowledgePromotionRequiredError",
+    "Observation",
+    "ObservationCreationError",
+    "ObservationEpistemicStatus",
     "OperationSideEffectClass",
     "OrganizationScope",
     "Principal",
@@ -80,7 +92,9 @@ __all__ = [
     "build_p1_05_gate_decision",
     "build_p1_07_event_candidate",
     "build_p1_08_reconstruction_evidence",
+    "build_p1_09_observation",
     "evaluate_p1_05_gates",
     "execute_p1_06_canonical_mutation",
+    "require_explicit_knowledge_promotion",
     "start_p1_04_execution",
 ]
