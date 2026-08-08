@@ -1,9 +1,9 @@
 # Bounded Reference Implementation — Phase 1
 
 Status: `Provisional implementation harness`
-Scope: `Phase 1 / P1.01–P1.05`
+Scope: `Phase 1 / P1.01–P1.06`
 Architecture baseline: Constitution `1.2.0`; Accepted RFC-0001, RFC-0002, RFC-0003 and RFC-0005 `1.0.0`
-Roadmap baseline: `2.0.1`
+Roadmap baseline: `2.0.2`
 
 This directory contains the bounded executable reference implementation defined by `docs/implementation/REFERENCE-IMPLEMENTATION-READINESS.md`.
 
@@ -96,11 +96,34 @@ The `Ready` label is scoped to this bounded scenario: it proves the two P1.05 ga
 
 Repository evidence: `reference/python/arvectum_os_ref/gates.py`, the P1.05 extensions in `reference/python/arvectum_os_ref/execution.py`, package exports in `reference/python/arvectum_os_ref/__init__.py`, and `reference/python/tests/test_p1_05_authorization_authority_gates.py`.
 
-P1.05 adds `12` executable fitness tests covering independent gate semantics, deny-by-default behavior, exact scoped decision evidence, governed basis provenance, immutable gate pins, Ready-version lineage, forged Ready rejection and non-mutation of the target. A bounded current-state P1.05 smoke validation also passes these core transition invariants.
+P1.05 adds `12` executable fitness tests covering independent gate semantics, deny-by-default behavior, exact scoped decision evidence, governed basis provenance, immutable gate pins, Ready-version lineage, forged Ready rejection and non-mutation of the target.
+
+## P1.06 — Governed Canonical Mutation + second immutable version
+
+This work item executes the already-declared `CanonicalMutation` only through the exact immutable `Ready` Execution Context admitted by P1.05:
+
+- direct consequential mutation without an explicit Execution Context fails closed;
+- an `AwaitingGate` execution cannot mutate canonical state;
+- the mutation consumes the exact Workflow Subject/Version pin established by P1.04 rather than re-resolving a mutable current Workflow;
+- the mutation consumes the exact P1.05 Authorization and Organizational Authority decision versions already pinned by the `Ready` execution;
+- the caller-supplied admitted current target version must still equal the exact material-input Version Identity pinned before consequential reliance;
+- a different current target version raises an explicit canonical conflict instead of silently overwriting newer state;
+- the resulting target record preserves the original stable Subject Identity and creates a distinct immutable Version Identity;
+- the second target version names P1.02 v1 as its exact predecessor while P1.02 v1 remains unchanged and immutable;
+- result provenance preserves the exact input, `Ready` execution, Workflow and gate-decision version references used for the mutation;
+- the canonical-state change creates a governance-significant terminal `Succeeded` Execution Context version under the same Execution Subject Identity;
+- that terminal execution version preserves the exact Workflow/material-input/gate pins and adds one exact canonical-effect Version pin;
+- P1.06 does not emit or admit a canonical Event; Event admission remains P1.07.
+
+Repository evidence: `reference/python/arvectum_os_ref/mutation.py`, P1.06 extensions in `reference/python/arvectum_os_ref/execution.py`, package exports in `reference/python/arvectum_os_ref/__init__.py`, and `reference/python/tests/test_p1_06_governed_canonical_mutation.py`.
+
+P1.06 adds `13` executable fitness tests covering governed-entry enforcement, immutable-version lineage, exact pinned Workflow/gate evidence, stale-current conflict detection, Organization/version constraints, provenance, terminal execution effect pinning and explicit non-preemption of P1.07 Event admission.
 
 ## Deliberately not decided
 
-This harness does **not** establish a permanent package layout, programming-language contract, database, API, event broker, IAM provider, policy engine, deployment topology, persistent lineage store, Canonical Head resolver, workflow engine, Product Contract, production role matrix or durable authorization-enforcement mechanism.
+This harness does **not** establish a permanent package layout, programming-language contract, database, API, event broker, IAM provider, policy engine, deployment topology, persistent lineage store, Canonical Head/effective-version resolver, workflow engine, Product Contract, production role matrix or durable authorization-enforcement mechanism.
+
+The P1.06 `current_record` argument is a bounded caller-supplied admitted-current fixture used only to exercise conflict detection against the exact version already pinned by the execution. It is not a canonical-head service, mutable projection authority or public resolution contract.
 
 Python and `unittest` are used only as a reversible, zero-dependency vehicle for executable architecture fitness evidence. No Platform Capability becomes `Active`, and no production-readiness or full-platform conformance claim is created by these tests.
 
@@ -113,4 +136,4 @@ python -m unittest discover -s tests -v
 
 ## Next roadmap work item
 
-After P1.05 is completed and roadmap evidence is synchronized, the next dependency-ordered item is `P1.06 — Governed Canonical Mutation + second immutable version`.
+After P1.06 is completed and roadmap evidence is synchronized, the next dependency-ordered item is `P1.07 — Canonical Event admission and execution linkage`.

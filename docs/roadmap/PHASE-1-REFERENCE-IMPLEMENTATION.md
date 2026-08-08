@@ -1,7 +1,7 @@
 # Arvectum OS Phase 1 — Reference Implementation
 
 Status: `Active`
-Version: `1.0.4`
+Version: `1.0.5`
 Created: `2026-08-07`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -46,12 +46,12 @@ The slice must demonstrate stable identity, immutable canonical versions, explic
 | `P1.03` | Versioned Workflow baseline | 🟩 | `██████████ 100%` |
 | `P1.04` | Execution Context + exact version pinning | 🟩 | `██████████ 100%` |
 | `P1.05` | Authorization and Organizational Authority gates | 🟩 | `██████████ 100%` |
-| `P1.06` | Governed Canonical Mutation + second immutable version | 🟦 | `░░░░░░░░░░ 0%` |
-| `P1.07` | Canonical Event admission and execution linkage | ⬜ | `░░░░░░░░░░ 0%` |
+| `P1.06` | Governed Canonical Mutation + second immutable version | 🟩 | `██████████ 100%` |
+| `P1.07` | Canonical Event admission and execution linkage | 🟦 | `░░░░░░░░░░ 0%` |
 | `P1.08` | Provenance, causation and reconstruction evidence | ⬜ | `░░░░░░░░░░ 0%` |
 | `P1.09` | Observation creation without Knowledge promotion | ⬜ | `░░░░░░░░░░ 0%` |
 | `P1.10` | Portable semantic fixture export | ⬜ | `░░░░░░░░░░ 0%` |
-| `P1.11` | Negative-path and architecture fitness tests | 🟨 | `█████░░░░░ 50%` |
+| `P1.11` | Negative-path and architecture fitness tests | 🟨 | `██████░░░░ 60%` |
 | `P1.12` | Phase 1 bounded-slice closure review | ⬜ | `░░░░░░░░░░ 0%` |
 
 Progress bars are planning indicators, not conformance or capability-lifecycle claims.
@@ -154,19 +154,36 @@ The fixture builder records already-supplied governed decision evidence. It does
 
 Repository evidence: `reference/python/arvectum_os_ref/gates.py`, the P1.05 extensions in `reference/python/arvectum_os_ref/execution.py`, package exports in `reference/python/arvectum_os_ref/__init__.py`, and `reference/python/tests/test_p1_05_authorization_authority_gates.py`.
 
-P1.05 adds `12` executable fitness tests covering gate independence, deny-by-default behavior, explicit deny, exact decision scope, governed basis provenance, immutable explicit-Allow pins, Ready-version lineage, forged Ready rejection and target non-mutation. A bounded current-state smoke validation passes the core P1.05 transition invariants.
+P1.05 adds `12` executable fitness tests covering gate independence, deny-by-default behavior, explicit deny, exact decision scope, governed basis provenance, immutable explicit-Allow pins, Ready-version lineage, forged Ready rejection and target non-mutation.
 
 ### P1.06 — Governed Canonical Mutation + second immutable version
 
-**Status:** 🟦 Next
+**Status:** 🟩 Complete
 
-Perform one `CanonicalMutation` through the `Ready` Governed Execution and create a second immutable Canonical Record version without mutating the first.
+Implemented one bounded domain-neutral `CanonicalMutation` through the exact immutable `Ready` Governed Execution admitted by P1.05:
 
-Direct consequential canonical mutation outside the required Execution Context must be rejected. P1.06 must consume the exact P1.04 Workflow/material-input pins and the P1.05 gate-decision evidence rather than silently re-resolving or bypassing them.
+- direct consequential canonical mutation without an explicit Execution Context fails closed;
+- an `AwaitingGate` execution cannot perform the mutation;
+- the mutation consumes the exact Workflow Subject/Version pin established by P1.04 and verifies that the pinned Workflow version declares the exact scoped `CanonicalMutation` operation;
+- the mutation consumes the exact immutable Authorization and Organizational Authority `Allow` decision versions already pinned by the `Ready` execution rather than re-resolving or replacing them;
+- the caller-supplied admitted current target must still equal the exact material-input Version Identity pinned before consequential reliance;
+- if another current target version is supplied under the same Subject Identity, the mutation raises an explicit canonical conflict instead of silently overwriting newer state;
+- the resulting target version preserves the stable P1.02 Subject Identity, receives a distinct immutable Version Identity and names P1.02 v1 as its exact predecessor;
+- P1.02 v1 remains unchanged and immutable;
+- result provenance preserves the exact input version, `Ready` execution version, Workflow version and both gate-decision versions relied upon;
+- because canonical state change is governance-significant under RFC-0005, successful mutation creates a new immutable terminal `Succeeded` Execution Context version under the same Execution Subject Identity;
+- the `Succeeded` execution preserves predecessor lineage, exact Workflow/material-input/gate pins and adds one exact canonical-effect Version pin;
+- canonical Event admission is deliberately not performed in P1.06 and remains P1.07 scope.
+
+The bounded `current_record` argument is conflict-check evidence supplied by the in-memory harness. It is not a Canonical Head resolver, projection authority, public API or persistence contract.
+
+Repository evidence: `reference/python/arvectum_os_ref/mutation.py`, the P1.06 extensions in `reference/python/arvectum_os_ref/execution.py`, package exports in `reference/python/arvectum_os_ref/__init__.py`, and `reference/python/tests/test_p1_06_governed_canonical_mutation.py`.
+
+P1.06 adds `13` executable fitness tests covering governed-entry enforcement, immutable-version lineage, exact pinned Workflow/gate evidence, conflict detection, Organization/version constraints, provenance, terminal execution effect pinning and explicit non-preemption of P1.07 Event admission.
 
 ### P1.07 — Canonical Event admission and execution linkage
 
-**Status:** ⬜ Planned
+**Status:** 🟦 Next
 
 Admit a canonical Event linked to the execution and resulting version while preserving append-only Event semantics and duplicate/conflict handling required by the readiness baseline.
 
@@ -207,7 +224,7 @@ The bounded slice must include applicable executable tests proving at least:
 - Observation cannot be consumed as validated Knowledge without promotion;
 - projection/index results cannot substitute for exact governed Version Identity reliance.
 
-`P1.01` through `P1.05` now contribute executable negative-path and architecture-fitness coverage. P1.05 adds explicit authentication ≠ authorization, authorization ≠ Organizational Authority, authority ≠ authorization, unresolved/denied fail-closed behavior, exact gate scope and version attribution, explicit-Allow pin validation, immutable gate evidence, Execution Context governance-significant versioning and proof that passing P1.05 gates still does not mutate the P1.02 target. The full matrix remains incomplete.
+`P1.01` through `P1.06` now contribute executable negative-path and architecture-fitness coverage. P1.05 adds explicit authentication ≠ authorization, authorization ≠ Organizational Authority, authority ≠ authorization, unresolved/denied fail-closed behavior, exact gate scope and version attribution, explicit-Allow pin validation and immutable gate evidence. P1.06 adds direct-mutation rejection outside the required `Ready` Execution Context, preservation of the immutable first target version, exact Workflow/gate version consumption, stale-current canonical conflict detection and proof that successful canonical state change is represented by a new immutable target version plus a governance-significant terminal Execution Context version. The Event, replay, Observation/Knowledge and projection portions of the matrix remain incomplete.
 
 ### P1.12 — Phase 1 bounded-slice closure review
 
@@ -238,9 +255,9 @@ P1.04 ✅ Execution Context + version pinning
    ↓
 P1.05 ✅ Authorization + Organizational Authority gates
    ↓
-P1.06 🟦 Canonical Mutation → immutable v2
+P1.06 ✅ Canonical Mutation → immutable v2
    ↓
-P1.07 Canonical Event
+P1.07 🟦 Canonical Event
    ↓
 P1.08 Provenance / reconstruction
    ↓
@@ -262,6 +279,8 @@ No new ADR is required merely because Phase 1 has begun.
 An ADR becomes required before relying on a choice that crosses the ADR triggers established in `REFERENCE-IMPLEMENTATION-READINESS.md`, including material cross-module constraints, durable migration cost, stable public/cross-product interfaces, security/isolation enforcement choices or durable vendor/infrastructure dependencies.
 
 P1.05 remains below that gate: its decision records and evaluator are bounded, reversible, in-memory, domain-neutral and non-public. They do not select an IAM provider, policy engine, durable authorization-enforcement mechanism, tenant-isolation technology or production authority-administration model. A real enforcement choice that materially constrains those concerns will require the applicable ADR/governance evidence before reliance.
+
+P1.06 also remains below the ADR gate. Its mutation boundary and conflict check are bounded, deterministic, in-memory, domain-neutral and non-public. It does not select durable persistence, a Canonical Head/effective-version resolver, transaction/concurrency technology, public mutation protocol or evidence-integrity mechanism. A later durable choice that materially constrains those concerns must cross the applicable ADR gate before reliance.
 
 ## 8. Maintenance rule
 

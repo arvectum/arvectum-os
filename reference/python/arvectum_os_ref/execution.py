@@ -1,11 +1,12 @@
-"""P1.04/P1.05 — Execution Context, exact pins and gate-state transitions.
+"""P1.04–P1.06 — Execution Context, exact pins and governed transitions.
 
 The representation remains in-memory and domain-neutral. P1.04 starts one
 Execution Context in ``AwaitingGate`` with exact governed version pins. P1.05
 may advance the same Execution Identity to a new immutable ``Ready`` version
 only after separate authorization and Organizational Authority decisions have
-both explicitly allowed the exact scoped operation. Canonical mutation remains
-outside this module until P1.06.
+both explicitly allowed the exact scoped operation. P1.06 may then create one
+immutable ``Succeeded`` version only after the governed canonical mutation has
+created and pinned its exact canonical effect.
 """
 
 from __future__ import annotations
@@ -21,10 +22,11 @@ from .workflow import OperationSideEffectClass, WorkflowDefinition
 
 
 class ExecutionLifecycle(str, Enum):
-    """RFC-0005 execution conditions exercised by P1.04–P1.05."""
+    """RFC-0005 execution conditions exercised by P1.04–P1.06."""
 
     AWAITING_GATE = "AwaitingGate"
     READY = "Ready"
+    SUCCEEDED = "Succeeded"
 
 
 @dataclass(frozen=True, slots=True)
@@ -77,6 +79,7 @@ class ExecutionContext:
     operation_name: str
     material_inputs: tuple[GovernedVersionPin, ...]
     gate_decisions: tuple[GovernedVersionPin, ...] = ()
+    canonical_effects: tuple[GovernedVersionPin, ...] = ()
 
     def __post_init__(self) -> None:
         if not isinstance(self.record, CanonicalRecord):
@@ -103,6 +106,10 @@ class ExecutionContext:
             not isinstance(item, GovernedVersionPin) for item in self.gate_decisions
         ):
             raise ValueError("gate_decisions must contain GovernedVersionPin values")
+        if not isinstance(self.canonical_effects, tuple) or any(
+            not isinstance(item, GovernedVersionPin) for item in self.canonical_effects
+        ):
+            raise ValueError("canonical_effects must contain GovernedVersionPin values")
 
         organization_scope = self.record.organization.organization_id.value
         identities = (
@@ -112,6 +119,7 @@ class ExecutionContext:
             self.workflow.version_id,
             *(identity for pin in self.material_inputs for identity in (pin.subject_id, pin.version_id)),
             *(identity for pin in self.gate_decisions for identity in (pin.subject_id, pin.version_id)),
+            *(identity for pin in self.canonical_effects for identity in (pin.subject_id, pin.version_id)),
         )
         if any(identity.scope != organization_scope for identity in identities):
             raise ValueError("Execution Context and all pinned governed versions must share Organization scope")
@@ -128,13 +136,45 @@ class ExecutionContext:
         actual_gate_states = {
             (pin.semantic_type, pin.lifecycle_status) for pin in self.gate_decisions
         }
-        if lifecycle is ExecutionLifecycle.AWAITING_GATE and self.gate_decisions:
-            raise ValueError("AwaitingGate execution must not claim resolved P1.05 gate decisions")
-        if lifecycle is ExecutionLifecycle.READY:
+        if lifecycle is ExecutionLifecycle.AWAITING_GATE:
+            if self.gate_decisions:
+                raise ValueError("AwaitingGate execution must not claim resolved P1.05 gate decisions")
+            if self.canonical_effects:
+                raise ValueError("AwaitingGate execution must not claim canonical effects")
+        if lifecycle in (ExecutionLifecycle.READY, ExecutionLifecycle.SUCCEEDED):
             if len(self.gate_decisions) != 2 or actual_gate_states != expected_gate_states:
-                raise ValueError("Ready execution requires exact explicit-Allow authorization and Organizational Authority pins")
+                raise ValueError(
+                    "post-gate execution requires exact explicit-Allow authorization and Organizational Authority pins"
+                )
             if self.record.predecessor_version_id is None:
-                raise ValueError("Ready execution version must preserve predecessor lineage")
+                raise ValueError("post-gate execution version must preserve predecessor lineage")
+            gate_version_ids = {pin.version_id for pin in self.gate_decisions}
+            if not gate_version_ids.issubset(set(self.record.provenance_refs)):
+                raise ValueError(
+                    "post-gate execution provenance must preserve exact gate decision Version Identities"
+                )
+        if lifecycle is ExecutionLifecycle.READY and self.canonical_effects:
+            raise ValueError("Ready execution must not claim canonical effects before P1.06 mutation")
+        if lifecycle is ExecutionLifecycle.SUCCEEDED:
+            if len(self.canonical_effects) != 1:
+                raise ValueError("Succeeded P1.06 execution must pin exactly one canonical effect")
+            if len(self.material_inputs) != 1:
+                raise ValueError("P1.06 bounded execution requires exactly one material input")
+            material = self.material_inputs[0]
+            effect = self.canonical_effects[0]
+            if effect.subject_id != material.subject_id:
+                raise ValueError("canonical effect must continue the pinned material Subject Identity")
+            if effect.version_id == material.version_id:
+                raise ValueError("canonical effect must be a distinct immutable Version Identity")
+            if (
+                effect.semantic_type != material.semantic_type
+                or effect.authority_scope != material.authority_scope
+            ):
+                raise ValueError("canonical effect must preserve target semantic type and authority scope")
+            if effect.version_id not in self.record.provenance_refs:
+                raise ValueError(
+                    "Succeeded execution provenance must preserve the exact canonical effect Version Identity"
+                )
 
     @property
     def execution_subject_id(self) -> Identity:
@@ -221,4 +261,5 @@ def start_p1_04_execution(
         operation_name=operation.semantic_name,
         material_inputs=(input_pin,),
         gate_decisions=(),
+        canonical_effects=(),
     )

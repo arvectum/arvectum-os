@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.0.1`
+Version: `2.0.2`
 Created: `2026-08-07`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -302,27 +302,29 @@ Canonical detailed work breakdown:
 | `P1.03` | Versioned Workflow baseline | 🟩 | `██████████ 100%` |
 | `P1.04` | Execution Context + exact version pinning | 🟩 | `██████████ 100%` |
 | `P1.05` | Authorization and Organizational Authority gates | 🟩 | `██████████ 100%` |
-| `P1.06` | Governed Canonical Mutation + second immutable version | 🟦 | `░░░░░░░░░░ 0%` |
-| `P1.07` | Canonical Event admission and execution linkage | ⬜ | `░░░░░░░░░░ 0%` |
+| `P1.06` | Governed Canonical Mutation + second immutable version | 🟩 | `██████████ 100%` |
+| `P1.07` | Canonical Event admission and execution linkage | 🟦 | `░░░░░░░░░░ 0%` |
 | `P1.08` | Provenance, causation and reconstruction evidence | ⬜ | `░░░░░░░░░░ 0%` |
 | `P1.09` | Observation creation without Knowledge promotion | ⬜ | `░░░░░░░░░░ 0%` |
 | `P1.10` | Portable semantic fixture export | ⬜ | `░░░░░░░░░░ 0%` |
-| `P1.11` | Negative-path and architecture fitness tests | 🟨 | `█████░░░░░ 50%` |
+| `P1.11` | Negative-path and architecture fitness tests | 🟨 | `██████░░░░ 60%` |
 | `P1.12` | Phase 1 bounded-slice closure review | ⬜ | `░░░░░░░░░░ 0%` |
 
 ### Current implementation evidence
 
 `P1.01` through `P1.04` remain implemented in [`reference/python`](../../reference/python/README.md) with the previously recorded `31`-test validation baseline.
 
-`P1.05` adds separate immutable Authorization and Organizational Authority gate decisions for the exact P1.04 execution attempt. Missing/denied evidence fails closed; neither gate implies the other; two explicit scoped `Allow` decisions are required to create the next immutable `Ready` Execution Context version. The Ready version preserves predecessor lineage, exact Workflow/material-input pins and both explicit-Allow gate decision pins; no target Canonical Record mutation occurs yet. P1.05 adds `12` executable fitness tests and a bounded current-state smoke validation of the core transition invariants.
+`P1.05` adds separate immutable Authorization and Organizational Authority gate decisions for the exact P1.04 execution attempt. Missing/denied evidence fails closed; neither gate implies the other; two explicit scoped `Allow` decisions are required to create the next immutable `Ready` Execution Context version. The Ready version preserves predecessor lineage, exact Workflow/material-input pins and both explicit-Allow gate decision pins; no target Canonical Record mutation occurs yet. P1.05 adds `12` executable fitness tests.
 
-`P1.11` is cross-cutting and now accumulates negative-path evidence through P1.05.
+`P1.06` executes the declared `CanonicalMutation` only through that exact immutable `Ready` execution. It consumes the exact Workflow/material-input and explicit-Allow gate-decision versions, creates a distinct immutable target v2 under the same Subject Identity with P1.02 v1 as predecessor, rejects stale-current conflicts instead of overwriting newer state, preserves v1 unchanged, and records the canonical effect in a new immutable terminal `Succeeded` Execution Context version. P1.06 adds `13` focused executable fitness tests and deliberately leaves canonical Event admission to P1.07.
+
+`P1.11` is cross-cutting and now accumulates negative-path evidence through P1.06, including direct-mutation rejection, immutable-history preservation and canonical conflict detection.
 
 ### Current canonical action
 
-> **`P1.06 — Governed Canonical Mutation + second immutable version`: execute the already-declared `CanonicalMutation` through the `Ready` governed execution and create a second immutable target version without modifying P1.02 v1.**
+> **`P1.07 — Canonical Event admission and execution linkage`: admit one immutable canonical Event for the completed P1.06 mutation, link it to the governed execution and resulting target version, and enforce duplicate/conflicting Event admission semantics without rewriting history.**
 
-P1.06 must preserve and consume the exact Workflow/material-input version attribution established by P1.04 and the exact Authorization/Organizational Authority decision evidence established by P1.05. Direct consequential mutation outside the required Execution Context must fail closed.
+P1.07 must consume the exact execution/result evidence produced by P1.06, preserve append-only Event semantics under Accepted RFC-0006, and remain bounded from the broader P1.08 provenance/reconstruction work except for the minimum references required by Event admission.
 
 ## 7. Phase 1 dependency-aware sequence
 
@@ -337,9 +339,9 @@ P1.04 ✅ Execution Context + version pinning
    ↓
 P1.05 ✅ Authorization + Organizational Authority gates
    ↓
-P1.06 🟦 Canonical Mutation → immutable v2
+P1.06 ✅ Canonical Mutation → immutable v2
    ↓
-P1.07 ⬜ Canonical Event
+P1.07 🟦 Canonical Event
    ↓
 P1.08 ⬜ Provenance / reconstruction
    ↓
@@ -384,6 +386,8 @@ Create an ADR before relying on an implementation choice when the choice becomes
 6. has materially different portability, security, reliability or operational consequences compared with plausible alternatives.
 
 P1.05 remains below this ADR gate because it does not select a durable authorization-enforcement mechanism, IAM provider, policy engine, tenant-isolation technology or production Organizational Authority administration model.
+
+P1.06 remains below this ADR gate because its mutation boundary, exact-version checks and conflict detection are bounded, reversible, in-memory and non-public. It does not select durable persistence, a Canonical Head/effective-version resolver, concurrency/transaction technology, a public mutation interface or a durable evidence-integrity mechanism.
 
 ## 10. Roadmap maintenance rule
 
