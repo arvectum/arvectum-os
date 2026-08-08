@@ -70,7 +70,7 @@ The reference test proves that a later version under the same Workflow or input 
 
 P1.04 deliberately does **not** add authorization decisions, Organizational Authority, approval evaluation, a Canonical Head/effective-version resolver, actual canonical mutation, an Event, durable persistence or a workflow engine. Those remain later Phase 1 work items.
 
-Executable validation across P1.01–P1.04: `31` unit tests are expected to pass, including `10` P1.04 tests. The P1.04 test module was also executed independently against the current bounded module semantics: `10` tests passed.
+Executable validation across P1.01–P1.04: `31` unit tests passed, including `10` P1.04 tests.
 
 ## Deliberately not decided
 
