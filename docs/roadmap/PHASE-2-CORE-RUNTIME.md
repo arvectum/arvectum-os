@@ -1,7 +1,7 @@
 # Arvectum OS Phase 2 — Core Runtime
 
 Status: `Active`
-Version: `1.1.3`
+Version: `1.1.4`
 Created: `2026-08-08`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -81,8 +81,8 @@ Progress bars are planning indicators only.
 | `P2.01` | Runtime boundary extraction and reusable composition baseline | 🟩 | `██████████ 100%` |
 | `P2.02` | Canonical Record lineage, Head and Effective Version runtime | 🟩 | `██████████ 100%` |
 | `P2.03` | Typed Relationship runtime | 🟩 | `██████████ 100%` |
-| `P2.04` | Governed Execution lifecycle and gate orchestration runtime | 🟦 | `░░░░░░░░░░ 0%` |
-| `P2.05` | Event admission, provenance and reconstruction runtime | ⬜ | `░░░░░░░░░░ 0%` |
+| `P2.04` | Governed Execution lifecycle and gate orchestration runtime | 🟩 | `██████████ 100%` |
+| `P2.05` | Event admission, provenance and reconstruction runtime | 🟦 | `░░░░░░░░░░ 0%` |
 | `P2.06` | Runtime consistency, idempotency and conflict semantics | ⬜ | `░░░░░░░░░░ 0%` |
 | `P2.07` | Product Contract runtime validation boundary | ⬜ | `░░░░░░░░░░ 0%` |
 | `P2.08` | Portability, replay and non-authoritative projection runtime | ⬜ | `░░░░░░░░░░ 0%` |
@@ -199,6 +199,22 @@ Minimum evidence:
 - direct consequential canonical mutation outside admitted Governed Execution remains rejected.
 
 **Exit:** more than one workflow shape can use the same execution/gate runtime without copying P1-specific gate orchestration.
+
+**Completion evidence — 2026-08-08:**
+
+- `reference/python/arvectum_os_ref/governed_execution.py` introduces a bounded domain-neutral in-memory Governed Execution runtime over immutable `platform.execution-context` Canonical Record versions with one stable Execution Identity and explicit `Created`, `AwaitingGate`, `Ready`, `Running`, `Waiting`, `Suspended`, `Compensating` and sealed terminal conditions;
+- the runtime pins the exact Approved Workflow Version Identity, every material-input Version Identity and, when supplied, the exact applicable Product Contract Version Identity before consequential reliance; Product Contract presence does not satisfy authorization, Organizational Authority or another gate by itself;
+- `ActorAssurance`, `Authorization`, `OrganizationalAuthority`, `DataGovernance`, `Validation` and `ConsequentialApproval` are represented as separate required-gate concepts, and each immutable gate decision is attributed to the exact AwaitingGate execution version, Workflow version, material-input versions and applicable Product Contract version evaluated;
+- unresolved or denied required gates fail closed; duplicate gate kinds are rejected; generic lifecycle transitions cannot bypass `AwaitingGate`/`Ready` orchestration;
+- Waiting/Suspended resumption requires the caller to state whether prior gate assumptions remain valid; stale assumptions return the execution to a new immutable `AwaitingGate` version and invalidate prior decisions for admission rather than silently reusing them;
+- terminal `Succeeded`, `Failed`, `Cancelled`, `Compensated` and `PartiallyCompensated` history is sealed, and `GovernedExecutionLineage` reuses P2.02 canonical-lineage validation for exact immutable history/head resolution;
+- `require_consequential_operation_admission` rejects `CanonicalMutation`, `ExternalMutation` and `Commitment` effects outside an admitted `Ready`/`Running` execution, when the exact Workflow operation did not declare the effect, or when required gates are not satisfied; the existing P1 mutation guard remains unchanged and green;
+- the same runtime is exercised by two materially different workflow shapes within the P2.04 fitness slice: a canonical-mutation workflow with Authorization/Organizational Authority/Data Governance/Validation/Consequential Approval and an ExternalMutation+Commitment workflow with Actor Assurance/Authorization/Data Governance/Consequential Approval;
+- `reference/python/tests/test_p2_04_governed_execution.py` adds 19 focused lifecycle, attribution, fail-closed, stale-gate, sealing, boundary and second-workflow tests;
+- GitHub Actions `Reference Python CI` run `#34` for PR `#22` on executable code head `2287a35fe73eb6f849cdd03be2c984a9c9cad476` completed successfully: `Ran 199 tests in 0.341s` / `OK`; the prior 180-test P2.03 baseline remains green;
+- no Accepted RFC is modified and no ADR gate is crossed: the implementation remains internal/provisional, bounded, in-memory and reversible, with no workflow engine, durable datastore, IAM/policy provider, Event/provenance backend, broker, transaction/concurrency mechanism, public API/SDK or Product Contract schema/validator selected.
+
+P2.04 completion makes the exercised RFC-0005 lifecycle/gate semantics reusable only within the bounded Core Runtime evidence. It does not establish production readiness, an `Active` Platform Capability, full RFC-0005 conformance, a public orchestration contract, durable execution consistency, generalized Event/provenance behavior or Product Contract validation. P2.05, P2.06 and P2.07 retain those responsibilities respectively.
 
 ### P2.05 — Event admission, provenance and reconstruction runtime
 
@@ -379,7 +395,7 @@ R1 Structural Review ✓
 P2.02 Canonical Record Head / Effective Version runtime ✓
    ├──────────────┐
    ↓              ↓
-P2.03 Relationships ✓    P2.04 Governed Execution runtime
+P2.03 Relationships ✓    P2.04 Governed Execution runtime ✓
    │              │
    └──────┬───────┘
           ↓
@@ -412,11 +428,11 @@ The sequence is dependency-aware rather than mechanically serial. P2.03–P2.04 
 
 ## 8. Current canonical action
 
-> **`P2.04 — Governed Execution lifecycle and gate orchestration runtime`.**
+> **`P2.05 — Event admission, provenance and reconstruction runtime`.**
 
-Generalize the P1 Governed Execution and gate proof into reusable, domain-neutral runtime operations: preserve immutable governance-significant Execution Context versions, exact Workflow/material-input/applicable Product Contract attribution, separate Authorization and Organizational Authority concepts, fail-closed unresolved required gates and terminal sealing.
+Generalize the P1 Event admission and reconstruction proof into reusable, domain-neutral runtime behavior while preserving receipt/admission separation, immutable Event identity/content, exact execution/result references, correlation/causation and reconstructable actor/Workflow/material-input/gate evidence.
 
-Do not turn existing P1 fixture orchestration into a permanent public runtime contract, do not merge technical authorization with Organizational Authority, and do not preempt P2.05 Event/provenance generalization or P2.06 durable consistency/concurrency decisions merely to complete P2.04.
+Do not select a broker, durable Event store, delivery topology or telemetry backend merely to complete P2.05, and do not preempt P2.06 transaction/concurrency/idempotency decisions beyond the bounded duplicate/conflict semantics necessary for Event admission evidence.
 
 ## 9. ADR gate
 
