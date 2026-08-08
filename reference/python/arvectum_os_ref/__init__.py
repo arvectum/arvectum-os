@@ -4,6 +4,12 @@ This package is intentionally provisional and is not a public platform contract.
 """
 
 from .canonical import AuthorityMode, CanonicalRecord, build_p1_02_native_record
+from .execution import (
+    ExecutionContext,
+    ExecutionLifecycle,
+    GovernedVersionPin,
+    start_p1_04_execution,
+)
 from .identity import Identity
 from .security import ActorContext, OrganizationScope, Principal
 from .workflow import (
@@ -18,6 +24,9 @@ __all__ = [
     "ActorContext",
     "AuthorityMode",
     "CanonicalRecord",
+    "ExecutionContext",
+    "ExecutionLifecycle",
+    "GovernedVersionPin",
     "Identity",
     "OperationSideEffectClass",
     "OrganizationScope",
@@ -27,4 +36,5 @@ __all__ = [
     "WorkflowOperation",
     "build_p1_02_native_record",
     "build_p1_03_workflow",
+    "start_p1_04_execution",
 ]
