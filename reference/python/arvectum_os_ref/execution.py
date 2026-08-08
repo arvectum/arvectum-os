@@ -1,9 +1,11 @@
-"""P1.04 — Execution Context and exact version pinning for the reference slice.
+"""P1.04/P1.05 — Execution Context, exact pins and gate-state transitions.
 
-The representation is intentionally in-memory and domain-neutral. It starts one
-RFC-0002/RFC-0005 Execution Context and preserves exact immutable versions that
-materially govern the bounded attempt. Authorization, Organizational Authority,
-approval evaluation and canonical mutation remain outside P1.04.
+The representation remains in-memory and domain-neutral. P1.04 starts one
+Execution Context in ``AwaitingGate`` with exact governed version pins. P1.05
+may advance the same Execution Identity to a new immutable ``Ready`` version
+only after separate authorization and Organizational Authority decisions have
+both explicitly allowed the exact scoped operation. Canonical mutation remains
+outside this module until P1.06.
 """
 
 from __future__ import annotations
@@ -19,9 +21,10 @@ from .workflow import OperationSideEffectClass, WorkflowDefinition
 
 
 class ExecutionLifecycle(str, Enum):
-    """Initial RFC-0005 execution condition exercised by P1.04."""
+    """RFC-0005 execution conditions exercised by P1.04–P1.05."""
 
     AWAITING_GATE = "AwaitingGate"
+    READY = "Ready"
 
 
 @dataclass(frozen=True, slots=True)
@@ -32,6 +35,7 @@ class GovernedVersionPin:
     version_id: Identity
     semantic_type: str
     authority_scope: str
+    lifecycle_status: str | None = None
 
     def __post_init__(self) -> None:
         if not isinstance(self.subject_id, Identity):
@@ -46,27 +50,33 @@ class GovernedVersionPin:
             raise ValueError("pin semantic_type must be a non-empty string")
         if not isinstance(self.authority_scope, str) or not self.authority_scope.strip():
             raise ValueError("pin authority_scope must be explicit")
+        if self.lifecycle_status is not None and (
+            not isinstance(self.lifecycle_status, str) or not self.lifecycle_status.strip()
+        ):
+            raise ValueError("pin lifecycle_status must be non-empty when supplied")
 
     @classmethod
     def from_record(cls, record: CanonicalRecord) -> "GovernedVersionPin":
         if not isinstance(record, CanonicalRecord):
-            raise ValueError("only CanonicalRecord versions can be pinned by P1.04")
+            raise ValueError("only CanonicalRecord versions can be pinned")
         return cls(
             subject_id=record.subject_id,
             version_id=record.version_id,
             semantic_type=record.semantic_type,
             authority_scope=record.authority_scope,
+            lifecycle_status=record.lifecycle_status,
         )
 
 
 @dataclass(frozen=True, slots=True)
 class ExecutionContext:
-    """Initial immutable Execution Context version for one governed attempt."""
+    """Immutable Execution Context version for one governed attempt."""
 
     record: CanonicalRecord
     workflow: GovernedVersionPin
     operation_name: str
     material_inputs: tuple[GovernedVersionPin, ...]
+    gate_decisions: tuple[GovernedVersionPin, ...] = ()
 
     def __post_init__(self) -> None:
         if not isinstance(self.record, CanonicalRecord):
@@ -75,8 +85,10 @@ class ExecutionContext:
             raise ValueError("Execution Context Canonical Record semantic_type must be platform.execution-context")
         if self.record.authority_mode is not AuthorityMode.NATIVE:
             raise ValueError("Arvectum OS Execution Context must use Native authority")
-        if self.record.lifecycle_status != ExecutionLifecycle.AWAITING_GATE.value:
-            raise ValueError("P1.04 initial Execution Context must await unresolved governance gates")
+        try:
+            lifecycle = ExecutionLifecycle(self.record.lifecycle_status)
+        except (TypeError, ValueError) as exc:
+            raise ValueError("Execution Context lifecycle_status must be a supported RFC-0005 condition") from exc
         if not isinstance(self.workflow, GovernedVersionPin):
             raise ValueError("effective Workflow version pin must be explicit")
         if self.workflow.semantic_type != "platform.workflow":
@@ -87,6 +99,11 @@ class ExecutionContext:
             raise ValueError("at least one material input version must be pinned")
         if any(not isinstance(item, GovernedVersionPin) for item in self.material_inputs):
             raise ValueError("material_inputs must contain GovernedVersionPin values")
+        if not isinstance(self.gate_decisions, tuple) or any(
+            not isinstance(item, GovernedVersionPin) for item in self.gate_decisions
+        ):
+            raise ValueError("gate_decisions must contain GovernedVersionPin values")
+
         organization_scope = self.record.organization.organization_id.value
         identities = (
             self.record.subject_id,
@@ -94,6 +111,7 @@ class ExecutionContext:
             self.workflow.subject_id,
             self.workflow.version_id,
             *(identity for pin in self.material_inputs for identity in (pin.subject_id, pin.version_id)),
+            *(identity for pin in self.gate_decisions for identity in (pin.subject_id, pin.version_id)),
         )
         if any(identity.scope != organization_scope for identity in identities):
             raise ValueError("Execution Context and all pinned governed versions must share Organization scope")
@@ -102,6 +120,21 @@ class ExecutionContext:
         version_ids = tuple(pin.version_id for pin in self.material_inputs)
         if len(set(version_ids)) != len(version_ids):
             raise ValueError("material input Version Identities must not be duplicated")
+
+        expected_gate_states = {
+            ("platform.authorization-decision", "Allow"),
+            ("platform.organizational-authority-decision", "Allow"),
+        }
+        actual_gate_states = {
+            (pin.semantic_type, pin.lifecycle_status) for pin in self.gate_decisions
+        }
+        if lifecycle is ExecutionLifecycle.AWAITING_GATE and self.gate_decisions:
+            raise ValueError("AwaitingGate execution must not claim resolved P1.05 gate decisions")
+        if lifecycle is ExecutionLifecycle.READY:
+            if len(self.gate_decisions) != 2 or actual_gate_states != expected_gate_states:
+                raise ValueError("Ready execution requires exact explicit-Allow authorization and Organizational Authority pins")
+            if self.record.predecessor_version_id is None:
+                raise ValueError("Ready execution version must preserve predecessor lineage")
 
     @property
     def execution_subject_id(self) -> Identity:
@@ -187,4 +220,5 @@ def start_p1_04_execution(
         workflow=workflow_pin,
         operation_name=operation.semantic_name,
         material_inputs=(input_pin,),
+        gate_decisions=(),
     )
