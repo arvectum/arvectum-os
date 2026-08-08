@@ -20,6 +20,11 @@ from .gates import (
     evaluate_p1_05_gates,
 )
 from .identity import Identity
+from .mutation import (
+    CanonicalConflictError,
+    CanonicalMutationResult,
+    execute_p1_06_canonical_mutation,
+)
 from .security import ActorContext, OrganizationScope, Principal
 from .workflow import (
     OperationSideEffectClass,
@@ -32,6 +37,8 @@ from .workflow import (
 __all__ = [
     "ActorContext",
     "AuthorityMode",
+    "CanonicalConflictError",
+    "CanonicalMutationResult",
     "CanonicalRecord",
     "ExecutionContext",
     "ExecutionLifecycle",
@@ -52,5 +59,6 @@ __all__ = [
     "build_p1_03_workflow",
     "build_p1_05_gate_decision",
     "evaluate_p1_05_gates",
+    "execute_p1_06_canonical_mutation",
     "start_p1_04_execution",
 ]
