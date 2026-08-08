@@ -25,6 +25,7 @@ from .cross_capability_enforcement import (
 from .identity import Identity
 from .memory_knowledge_governance import (
     KNOWLEDGE_SEMANTIC_TYPE,
+    MEMORY_SEMANTIC_TYPE,
     ExactKnowledgeReliance,
     KnowledgeCandidate,
     KnowledgeConstraints,
@@ -255,6 +256,26 @@ def _payload(record: CanonicalRecord, key: str) -> str:
     return next((value for _, value in record.payload if value), "(content referenced outside bounded payload)")
 
 
+def _memory_exact(
+    sources: MemoryKnowledgeSearchSources,
+    record: CanonicalRecord,
+) -> MemoryItem | None:
+    matches = tuple(value for value in sources.memories if value.canonical_record == record)
+    return matches[0] if len(matches) == 1 else None
+
+
+def _knowledge_exact(
+    sources: MemoryKnowledgeSearchSources,
+    subject_id: Identity,
+    version_id: Identity,
+) -> ValidatedKnowledge | None:
+    matches = tuple(
+        value for value in sources.knowledge
+        if value.subject_id == subject_id and value.version_id == version_id
+    )
+    return matches[0] if len(matches) == 1 else None
+
+
 def _item(
     *,
     role: LearningRole,
@@ -333,6 +354,8 @@ def inspect_knowledge_workspace(
 
     for value in sources.memories:
         record = value.canonical_record
+        if _memory_exact(sources, record) is not value:
+            continue
         if _allowed(workspace, record.subject_id, source_authorizations) and _constraints_allow(
             record.organization, value.constraints, access_request, allow_stale=True
         ):
@@ -383,6 +406,8 @@ def inspect_knowledge_workspace(
     }
     for value in sources.knowledge:
         record = value.canonical_record
+        if _knowledge_exact(sources, value.subject_id, value.version_id) is not value:
+            continue
         if (value.subject_id, value.version_id) not in eligible:
             continue
         if not _allowed(workspace, value.subject_id, source_authorizations):
@@ -430,18 +455,6 @@ def _source_for_hit(
         and source.subject_id == hit.source_subject_id
         and source.version_id == hit.source_version_id
         and source.canonical_record.semantic_type == hit.source_semantic_type
-    )
-    return matches[0] if len(matches) == 1 else None
-
-
-def _knowledge_exact(
-    sources: MemoryKnowledgeSearchSources,
-    subject_id: Identity,
-    version_id: Identity,
-) -> ValidatedKnowledge | None:
-    matches = tuple(
-        value for value in sources.knowledge
-        if value.subject_id == subject_id and value.version_id == version_id
     )
     return matches[0] if len(matches) == 1 else None
 
@@ -532,11 +545,19 @@ def discover_search(
             role_text = LearningRole.KNOWLEDGE.value
             freshness = knowledge.constraints.freshness_state
             reliance = ExactRelianceState.AVAILABLE
-        else:
-            memories = tuple(v for v in sources.memories if v.canonical_record == record)
-            if len(memories) == 1:
-                role_text = LearningRole.MEMORY.value
-                freshness = memories[0].constraints.freshness_state
+        elif hit.source_semantic_type == MEMORY_SEMANTIC_TYPE:
+            memory = _memory_exact(sources, record)
+            if memory is None or not _constraints_allow(
+                record.organization,
+                memory.constraints,
+                access_request,
+                allow_stale=True,
+            ):
+                # CAP-003 discovery constraints may narrow visibility but must not
+                # broaden the CAP-002 semantic owner's Memory handling constraints.
+                continue
+            role_text = LearningRole.MEMORY.value
+            freshness = memory.constraints.freshness_state
 
         hits.append(SearchHitView(
             hit.source_subject_id,
@@ -745,7 +766,7 @@ def render_knowledge_workspace_html(result: KnowledgeWorkspaceResult) -> str:
         'are not interchangeable.</p>'
         f'<p>Purpose: {escape(result.access_purpose)} / right: {escape(result.required_right)} / '
         f'classifications: {escape(", ".join(result.allowed_classifications))}</p>'
-        '<p>Unauthorized or handling-ineligible items are omitted without protected counts.</p>'
+        '<p>Unauthorized, ambiguous or handling-ineligible items are omitted without protected counts.</p>'
         + "".join(cards)
         + '<p data-authority-note="true">Browsing, AI output and displayed evidence do not '
         'promote a candidate or create Knowledge authority.</p></section>'
