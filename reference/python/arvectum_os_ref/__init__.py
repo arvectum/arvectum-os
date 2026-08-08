@@ -33,6 +33,11 @@ from .mutation import (
     CanonicalMutationResult,
     execute_p1_06_canonical_mutation,
 )
+from .provenance import (
+    ReconstructionEvidence,
+    ReconstructionEvidenceError,
+    build_p1_08_reconstruction_evidence,
+)
 from .security import ActorContext, OrganizationScope, Principal
 from .workflow import (
     OperationSideEffectClass,
@@ -63,6 +68,8 @@ __all__ = [
     "OperationSideEffectClass",
     "OrganizationScope",
     "Principal",
+    "ReconstructionEvidence",
+    "ReconstructionEvidenceError",
     "WorkflowDefinition",
     "WorkflowLifecycle",
     "WorkflowOperation",
@@ -72,6 +79,7 @@ __all__ = [
     "build_p1_03_workflow",
     "build_p1_05_gate_decision",
     "build_p1_07_event_candidate",
+    "build_p1_08_reconstruction_evidence",
     "evaluate_p1_05_gates",
     "execute_p1_06_canonical_mutation",
     "start_p1_04_execution",
