@@ -1,7 +1,7 @@
 # Arvectum OS Phase 3 — Shared Platform Capabilities
 
 Status: `Active`
-Version: `1.1.8`
+Version: `1.1.9`
 Created: `2026-08-08`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -17,7 +17,7 @@ Phase 3 proves that a small justified set of domain-neutral shared responsibilit
 
 The RFC-0001 capability lifecycle is `Candidate → Incubating → Active → Deprecated → Retired`.
 
-P3.01 admitted four Candidates. P3.02 established bounded incubation envelopes and Provisional domain-neutral capability contracts. R5 passed the pre-implementation boundary review. P3.03 through P3.06 completed the four initial bounded executable capability slices. P3.07 completed bounded cross-capability Organization/security/rights enforcement composition and R6 passed. P3.08 completed the RFC-0004 Product Contract consumption boundary and one bounded consumer proof. P3.09 completed materially distinct shared-capability reuse/composition evidence and R7 passed. P3.10 now completes the executable Phase 3 architecture fitness matrix across the accumulated P3.01–P3.09 evidence. All retained capabilities remain `Incubating`, both bounded Product Contracts remain `Provisional`, and `R8` is now the required current milestone-hardening gate.
+P3.01 admitted four Candidates. P3.02 established bounded incubation envelopes and Provisional domain-neutral capability contracts. R5 passed the pre-implementation boundary review. P3.03 through P3.06 completed the four initial bounded executable capability slices. P3.07 completed bounded cross-capability Organization/security/rights enforcement composition and R6 passed. P3.08 completed the RFC-0004 Product Contract consumption boundary and one bounded consumer proof. P3.09 completed materially distinct shared-capability reuse/composition evidence and R7 passed. P3.10 completed the executable Phase 3 architecture fitness matrix. R8 then performed the mandatory milestone code-health review, remediated one material fail-open CAP-004 security-handoff defect and added cross-cutting code-health guards without broadening capability responsibilities or selecting durable mechanisms. All retained capabilities remain `Incubating`, both bounded Product Contracts remain `Provisional`, and `P3.11` is now the current canonical action.
 
 ## 2. Current bounded capability set
 
@@ -47,8 +47,8 @@ Generic notification/scheduler/connector marketplace, public SDK/API, product-do
 | `P3.08` | Product Contract consumption boundary + bounded consumer proof | 🟩 Complete | `██████████ 100%` |
 | `P3.09` | Shared-capability reuse and composition proof | 🟩 Complete / R7 PASS | `██████████ 100%` |
 | `P3.10` | Phase 3 architecture fitness matrix | 🟩 Complete / PASS | `██████████ 100%` |
-| `R8` | Phase 3 milestone hardening / code-health gate | 🟨 Current | `░░░░░░░░░░ 0%` |
-| `P3.11` | Capability admission / ADR / refactoring hardening review | ⬜ | `░░░░░░░░░░ 0%` |
+| `R8` | Phase 3 milestone hardening / code-health gate | 🟩 Complete / PASS | `██████████ 100%` |
+| `P3.11` | Capability admission / ADR / refactoring hardening review | 🟨 Current | `░░░░░░░░░░ 0%` |
 | `P3.12` | Phase 3 / M3 closure review | ⬜ | `░░░░░░░░░░ 0%` |
 
 ## 5. Completed boundary and capability work
@@ -74,6 +74,8 @@ Implementation/evidence:
 - `reference/python/tests/test_p3_07_cross_capability_enforcement.py`.
 
 The bounded slice composes one explicit attributable `AccessRequest` across CAP-001..CAP-004. Organization, purpose, required permitted-use right and allowed classification context are evaluated at protected capability boundaries. CAP-003 discovery does not grant source access; CAP-004 restricted evidence becomes explicit redaction without source-pin leakage; access context creates no approval, delegation or Organizational Authority.
+
+R8 hardened the CAP-004 handoff so every exact governed evidence Version Identity in a `ReconstructionManifest` must now have exactly one well-formed current purpose/right/classification constraint before any evidence is disclosed. Missing, unknown, duplicate or malformed constraint sets fail closed instead of allowing an omitted row to inherit CAP-004's lower-level default-available disposition.
 
 The slice deliberately selects no durable IAM/PDP/PEP technology, policy language, entitlement store, stable API/serialization or deployable security service topology. Those choices continue to re-open the ADR gate before material reliance.
 
@@ -128,26 +130,44 @@ The matrix validates exact evidence anchors rather than duplicating detailed cap
 
 P3.10 changes no capability runtime contract and does not promote CAP-001 through CAP-004 to `Active`, create a Stable Product Contract, select durable infrastructure, establish production readiness or make a full-platform conformance/SLA/support claim.
 
-## 10. Later Phase 3 work
+## 10. R8 milestone hardening / code-health gate
 
-`R8` is now the current required Phase 3 milestone hardening/code-health gate. P3.11 independently dispositions each Incubating capability and re-checks ADR/refactoring boundaries only after R8. P3.12 decides M3 closure.
+Canonical review: [`R8-phase-3-milestone-hardening.md`](../reviews/R8-phase-3-milestone-hardening.md) — `PASS`.
 
-## 11. Engineering review gates
+Executable evidence:
 
-R5, R6 and R7 are `PASS`. R8 is current after P3.10 and is required before P3.11. Each gate must preserve capability boundaries, dependency direction, security/rights semantics and ADR triggers.
+- `reference/python/tests/test_r8_phase_3_milestone_hardening.py`;
+- hardened P3.07 regression evidence in `reference/python/tests/test_p3_07_cross_capability_enforcement.py`;
+- `Reference Python CI #100` — Python `3.12.13`, full validation suite `384` tests, result `OK`.
 
-## 12. ADR and Product Contract gates
+R8 found one material correctness/security issue in the bounded CAP-004 access handoff: incomplete `evidence_constraints` could omit an evidence Version Identity and thereby inherit the lower CAP-004 reconstruction layer's intentional default `Available` disposition. That made the P3.07 security composition insufficiently fail-closed.
+
+The remediation requires exact complete typed constraint coverage for every evidence Version Identity in the reconstruction manifest before disclosure. Missing, unknown, duplicate or malformed constraints fail closed. Disallowed evidence remains explicitly redacted without governed source-pin leakage.
+
+The cross-cutting hardening review also verifies Phase 3 dependency direction, provisional package-root exposure, absence of process/network/unsafe-deserialization dependencies, absence of dynamic code execution, absence of implicit authority/gate bypass helpers and continued non-selection of public framework/stable serialization technology.
+
+No justified large refactor, speculative abstraction or measured performance optimization was found. R8 does not alter capability responsibilities, Product Contract semantics, public/stable interfaces, durable infrastructure choices or lifecycle state.
+
+## 11. Later Phase 3 work
+
+`P3.11` is now the current required capability admission / ADR / refactoring hardening review. It independently dispositions each Incubating capability and re-checks ADR/refactoring boundaries using the accumulated P3.01–R8 evidence. P3.12 then decides M3 closure.
+
+## 12. Engineering review gates
+
+R5, R6, R7 and R8 are `PASS`. P3.11 is current after R8. Each gate preserves capability boundaries, dependency direction, security/rights semantics and ADR triggers unless a separate governed decision explicitly changes them.
+
+## 13. ADR and Product Contract gates
 
 Re-open the ADR gate before material reliance on concrete durable database/object-store/search/vector topology, transactions/concurrency, Event delivery/store, IAM/PDP/PEP, evidence-integrity technology, stable public/cross-product API/SDK/serialization, durable projection/replay storage or separately deployable service/process topology.
 
 A real Product or Product Experiment relying on P3 capabilities, canonical platform state or shared history must use an RFC-0004 Product Contract. Incubating capability contracts do not grant permissions or authority.
 
-## 13. M3 exit criteria
+## 14. M3 exit criteria
 
 M3 may be declared achieved only when retained capabilities have explicit lifecycle/ownership/bounded contracts, a small set is executable above M2, composition preserves scope/authority/rights/provenance, RFC-0007/RFC-0008 semantics pass in scope, derived capabilities remain non-authoritative, reuse and Product Contract consumption are proven, P3.10 fitness passes, R5–R8 are complete, crossed ADR gates are governed, and P3.12 passes without unsupported `Active`/production/SLA/public-compatibility claims.
 
-## 14. Current canonical action
+## 15. Current canonical action
 
-> **R8 — Phase 3 milestone hardening / code-health gate.**
+> **P3.11 — Capability admission / ADR / refactoring hardening review.**
 
-P3.10 is complete and the accumulated Phase 3 fitness evidence passes. Run the proportionate milestone hardening/refactoring review before P3.11, preserving capability boundaries, semantic ownership, Product Contract isolation, security/rights behavior, portability, ADR triggers and the existing `Incubating` / `Provisional` lifecycle state unless a later governed decision changes it.
+R8 is complete and passes after one bounded fail-closed security remediation. Use the accumulated Phase 3 evidence to disposition each Incubating capability and re-check ADR/refactoring requirements without treating successful reference code as automatic `Active` promotion, stable public-contract admission or production readiness.

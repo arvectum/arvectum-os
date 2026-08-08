@@ -60,7 +60,15 @@ class AccessRequest:
         return self.actor.organization
 
 
-def _require_constraints(*, organization: OrganizationScope, resource_organization: OrganizationScope, purpose: str, rights: tuple[str, ...], classification: str, request: AccessRequest) -> None:
+def _require_constraints(
+    *,
+    organization: OrganizationScope,
+    resource_organization: OrganizationScope,
+    purpose: str,
+    rights: tuple[str, ...],
+    classification: str,
+    request: AccessRequest,
+) -> None:
     if organization != request.organization or resource_organization != request.organization:
         raise CrossCapabilityEnforcementError("cross-Organization access is denied by default")
     if purpose != request.purpose:
@@ -71,7 +79,12 @@ def _require_constraints(*, organization: OrganizationScope, resource_organizati
         raise CrossCapabilityEnforcementError("resource classification is not permitted")
 
 
-def resolve_document_for_access(*, admitted: AdmittedDocumentVersion, artifact_id: Identity, request: AccessRequest) -> ExactDocumentReliance:
+def resolve_document_for_access(
+    *,
+    admitted: AdmittedDocumentVersion,
+    artifact_id: Identity,
+    request: AccessRequest,
+) -> ExactDocumentReliance:
     """Resolve CAP-001 exact governed content only after current request enforcement."""
 
     if admitted.canonical_record.organization != request.organization:
@@ -96,7 +109,12 @@ def resolve_document_for_access(*, admitted: AdmittedDocumentVersion, artifact_i
     )
 
 
-def retrieve_knowledge_for_access(*, knowledge: tuple[ValidatedKnowledge, ...], request: AccessRequest, allow_stale: bool = False) -> tuple[RetrievalProjection, ...]:
+def retrieve_knowledge_for_access(
+    *,
+    knowledge: tuple[ValidatedKnowledge, ...],
+    request: AccessRequest,
+    allow_stale: bool = False,
+) -> tuple[RetrievalProjection, ...]:
     """Apply one current access context to CAP-002 retrieval without rank authority."""
 
     results: list[RetrievalProjection] = []
@@ -117,7 +135,13 @@ def retrieve_knowledge_for_access(*, knowledge: tuple[ValidatedKnowledge, ...], 
     return tuple(results)
 
 
-def search_for_access(*, projection: SearchProjection, current_sources: tuple[GovernedSearchSource, ...], query_text: str, request: AccessRequest) -> tuple[SearchHit, ...]:
+def search_for_access(
+    *,
+    projection: SearchProjection,
+    current_sources: tuple[GovernedSearchSource, ...],
+    query_text: str,
+    request: AccessRequest,
+) -> tuple[SearchHit, ...]:
     """Compose CAP-003 discovery with the same Organization/purpose/right/classification context."""
 
     return query_projection(
@@ -131,11 +155,17 @@ def search_for_access(*, projection: SearchProjection, current_sources: tuple[Go
     )
 
 
-def resolve_search_hit_for_access(*, hit: SearchHit, current_sources: tuple[GovernedSearchSource, ...], request: AccessRequest):
+def resolve_search_hit_for_access(
+    *,
+    hit: SearchHit,
+    current_sources: tuple[GovernedSearchSource, ...],
+    request: AccessRequest,
+):
     """Re-evaluate source constraints before exiting CAP-003; discovery never grants source access."""
 
     matches = tuple(
-        source for source in current_sources
+        source
+        for source in current_sources
         if source.organization == request.organization
         and source.subject_id == hit.source_subject_id
         and source.version_id == hit.source_version_id
@@ -160,37 +190,120 @@ def resolve_search_hit_for_access(*, hit: SearchHit, current_sources: tuple[Gove
     )
 
 
-def reconstruct_audit_for_access(*, manifest: ReconstructionManifest, request: AccessRequest, evidence_constraints: tuple[tuple[Identity, str, tuple[str, ...], str], ...]) -> AuditReconstructionView:
-    """Build CAP-004 view while redacting evidence that the current request may not inspect.
+def _manifest_evidence_version_ids(manifest: ReconstructionManifest) -> tuple[Identity, ...]:
+    """Return the exact evidence set whose disclosure must be evaluated."""
+
+    version_ids: list[Identity] = [manifest.workflow.version_id]
+    version_ids.extend(pin.version_id for pin in manifest.material_inputs)
+    if manifest.product_contract is not None:
+        version_ids.append(manifest.product_contract.version_id)
+    version_ids.extend(pin.version_id for pin in manifest.gate_decisions)
+    version_ids.extend(pin.version_id for pin in manifest.execution_versions)
+    version_ids.extend(pin.version_id for pin in manifest.results)
+    version_ids.extend(pin.version_id for pin in manifest.events)
+    if len(set(version_ids)) != len(version_ids):
+        raise CrossCapabilityEnforcementError(
+            "governed reconstruction contains ambiguous reused Version Identities"
+        )
+    return tuple(version_ids)
+
+
+def _validate_evidence_constraints(
+    *,
+    manifest: ReconstructionManifest,
+    evidence_constraints: tuple[tuple[Identity, str, tuple[str, ...], str], ...],
+) -> tuple[tuple[Identity, str, tuple[str, ...], str], ...]:
+    """Require one typed current access constraint for every exact evidence version."""
+
+    if not isinstance(evidence_constraints, tuple):
+        raise CrossCapabilityEnforcementError("evidence constraints must be an immutable tuple")
+
+    normalized: list[tuple[Identity, str, tuple[str, ...], str]] = []
+    for row in evidence_constraints:
+        if not isinstance(row, tuple) or len(row) != 4:
+            raise CrossCapabilityEnforcementError(
+                "each evidence constraint must be (version_id, purpose, rights, classification)"
+            )
+        version_id, purpose, rights, classification = row
+        if not isinstance(version_id, Identity):
+            raise CrossCapabilityEnforcementError(
+                "evidence constraint requires exact Version Identity"
+            )
+        if not isinstance(purpose, str) or not purpose.strip():
+            raise CrossCapabilityEnforcementError("evidence constraint purpose must be explicit")
+        if not isinstance(rights, tuple) or not rights or any(
+            not isinstance(right, str) or not right.strip() for right in rights
+        ):
+            raise CrossCapabilityEnforcementError(
+                "evidence constraint rights must be an immutable tuple of explicit permitted-use references"
+            )
+        if not isinstance(classification, str) or not classification.strip():
+            raise CrossCapabilityEnforcementError(
+                "evidence constraint classification must be explicit"
+            )
+        normalized.append((version_id, purpose, rights, classification))
+
+    actual_ids = tuple(row[0] for row in normalized)
+    if len(set(actual_ids)) != len(actual_ids):
+        raise CrossCapabilityEnforcementError(
+            "evidence constraints must be unique by Version Identity"
+        )
+
+    expected_ids = _manifest_evidence_version_ids(manifest)
+    if set(actual_ids) != set(expected_ids):
+        raise CrossCapabilityEnforcementError(
+            "evidence constraints must cover every governed reconstruction Version Identity exactly once"
+        )
+    return tuple(normalized)
+
+
+def reconstruct_audit_for_access(
+    *,
+    manifest: ReconstructionManifest,
+    request: AccessRequest,
+    evidence_constraints: tuple[tuple[Identity, str, tuple[str, ...], str], ...],
+) -> AuditReconstructionView:
+    """Build CAP-004 view while redacting evidence the current request may not inspect.
 
     Evidence constraints are a bounded test-harness handoff from the owning source
-    controls: (version_id, purpose, rights, classification). Unknown or duplicate
-    references fail closed. This is not a policy store or entitlement schema.
+    controls: (version_id, purpose, rights, classification). The handoff is
+    fail-closed: every exact governed evidence Version Identity in the manifest
+    must have exactly one well-formed current constraint before any evidence can
+    be disclosed. This is not a policy store or entitlement schema.
     """
 
+    if not isinstance(manifest, ReconstructionManifest):
+        raise CrossCapabilityEnforcementError(
+            "audit access requires an explicit governed ReconstructionManifest"
+        )
+    if not isinstance(request, AccessRequest):
+        raise CrossCapabilityEnforcementError("audit access requires an explicit AccessRequest")
     if manifest.organization != request.organization:
         raise CrossCapabilityEnforcementError("cross-Organization reconstruction is denied")
-    if not isinstance(evidence_constraints, tuple):
-        raise CrossCapabilityEnforcementError("evidence constraints must be explicit")
-    ids = [row[0] for row in evidence_constraints]
-    if len(set(ids)) != len(ids):
-        raise CrossCapabilityEnforcementError("evidence constraints must be unique by Version Identity")
+
+    constraints = _validate_evidence_constraints(
+        manifest=manifest,
+        evidence_constraints=evidence_constraints,
+    )
 
     dispositions: list[EvidenceDisposition] = []
-    for version_id, purpose, rights, classification in evidence_constraints:
-        if not isinstance(version_id, Identity):
-            raise CrossCapabilityEnforcementError("evidence constraint requires exact Version Identity")
+    for version_id, purpose, rights, classification in constraints:
         permitted = (
             purpose == request.purpose
             and request.required_right in rights
             and classification in request.allowed_classifications
         )
         if not permitted:
-            dispositions.append(EvidenceDisposition(
-                version_id=version_id,
-                availability=EvidenceAvailability.REDACTED,
-                reason="current Organization/purpose/right/classification access context does not permit evidence disclosure",
-            ))
+            dispositions.append(
+                EvidenceDisposition(
+                    version_id=version_id,
+                    availability=EvidenceAvailability.REDACTED,
+                    reason=(
+                        "current Organization/purpose/right/classification access context "
+                        "does not permit evidence disclosure"
+                    ),
+                )
+            )
     try:
         return reconstruct_audit_view(
             manifest=manifest,

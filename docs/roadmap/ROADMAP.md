@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.8.8`
+Version: `2.8.9`
 Created: `2026-08-07`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -15,15 +15,17 @@ The Strategic Roadmap beyond completed work is a planning hypothesis, not an arc
 
 ## 2. Version note
 
-Version `2.8.8` records completion of **P3.10 — Phase 3 architecture fitness matrix**.
+Version `2.8.9` records completion of **R8 — Phase 3 milestone hardening / code-health gate**.
 
-P3.10 consolidates the accumulated P3.03–P3.09 semantic-owner evidence into one executable 16-row Phase 3 architecture fitness index. The matrix exactly covers capability boundaries, lifecycle/ownership, authority/provenance, security/rights/Organization scope, Product Contract isolation, non-authoritative projections, materially distinct reuse, portability, ADR triggers and commercial/conformance restraint.
+R8 reviewed the accumulated P3.03–P3.10 implementation for dependency direction, semantic ownership, Product Contract isolation, correctness, security/Organization scope/authority behavior, maintainability, reversibility, public-surface pressure, test evidence, performance evidence and ADR-trigger pressure.
 
-The matrix uses exact executable test anchors rather than duplicating detailed capability semantics. Narrow cross-cutting guards additionally verify domain neutrality of shared Phase 3 modules, absence of concrete durable-infrastructure selection, continuing `Incubating` / `Provisional` lifecycle state and ownership, explicit P3.02 ADR triggers, and restraint against implicit capability promotion or conformance/commercial overclaim.
+The hardening review found one material correctness/security defect in the bounded P3.07/CAP-004 reconstruction access handoff: an evidence Version Identity omitted from current `evidence_constraints` could inherit the lower reconstruction layer's intentional default `Available` disposition. R8 remediates that boundary by requiring exact complete typed constraint coverage for every governed reconstruction evidence Version Identity before disclosure. Missing, unknown, duplicate or malformed constraint sets now fail closed.
 
-`Reference Python CI #96` passed the complete validation suite with Python `3.12.13`: `375` tests, result `OK`.
+R8 also adds seven executable code-health guards preserving Phase 3 dependency direction, provisional package-root exposure, absence of process/network/unsafe-deserialization dependencies, absence of dynamic code execution or implicit authority/gate bypass helpers, and continued non-selection of public framework/stable serialization technology.
 
-P3.10 does not change any capability runtime contract, promote CAP-001 through CAP-004 to `Active`, stabilize a Product Contract/public API, establish production readiness or select durable infrastructure. `R8 — Phase 3 milestone hardening / code-health gate` is now the current canonical action before P3.11.
+`Reference Python CI #100` passed the hardened implementation with Python `3.12.13`: `384` tests, result `OK`.
+
+R8 does not promote CAP-001 through CAP-004 to `Active`, stabilize either bounded Product Contract, create a public API/SDK, select durable infrastructure, establish production readiness or create SLA/support/full-conformance claims. `P3.11 — Capability admission / ADR / refactoring hardening review` is now the current canonical action.
 
 ## 3. Verified architecture baseline
 
@@ -44,6 +46,7 @@ P3.10 does not change any capability runtime contract, promote CAP-001 through C
 - [`P3.09 Product Contract`](../contracts/P3-09-DISTINCT-BOUNDED-CONSUMER-PRODUCT-CONTRACT.md) — `Provisional 0.1.0`;
 - [`P3.09 review`](../reviews/P3-09-shared-capability-reuse-composition-proof-review.md) / R7 — `PASS`;
 - [`P3.10 architecture fitness matrix`](../reviews/P3-10-phase-3-architecture-fitness-matrix.md) — `PASS`;
+- [`R8 milestone hardening review`](../reviews/R8-phase-3-milestone-hardening.md) — `PASS`;
 - Decision Authority Policy remains `Proposed 0.2.1`; residual authority remains with the owner;
 - no Platform Capability is `Active`.
 
@@ -83,8 +86,8 @@ Phase status, capability lifecycle, operational environment and conformance matu
 | `P3.08` | Product Contract consumption boundary + bounded consumer proof | 🟩 Complete | `██████████ 100%` |
 | `P3.09` | Shared-capability reuse and composition proof | 🟩 Complete / R7 PASS | `██████████ 100%` |
 | `P3.10` | Phase 3 architecture fitness matrix | 🟩 Complete / PASS | `██████████ 100%` |
-| `R8` | Phase 3 milestone hardening / code-health gate | 🟨 Current | `░░░░░░░░░░ 0%` |
-| `P3.11` | Capability admission / ADR / refactoring hardening review | ⬜ | `░░░░░░░░░░ 0%` |
+| `R8` | Phase 3 milestone hardening / code-health gate | 🟩 Complete / PASS | `██████████ 100%` |
+| `P3.11` | Capability admission / ADR / refactoring hardening review | 🟨 Current | `░░░░░░░░░░ 0%` |
 | `P3.12` | Phase 3 / M3 closure review | ⬜ | `░░░░░░░░░░ 0%` |
 
 ### M3 target
@@ -93,9 +96,9 @@ A small set of domain-neutral shared capabilities has demonstrated governed reus
 
 ## 6. Current canonical action
 
-> **R8 — Phase 3 milestone hardening / code-health gate.**
+> **P3.11 — Capability admission / ADR / refactoring hardening review.**
 
-P3.10 is complete and the accumulated Phase 3 architecture fitness evidence passes. Before P3.11, perform the required proportionate code-health/refactoring review while preserving capability boundaries, semantic ownership, Product Contract isolation, security/rights behavior, portability, ADR triggers and the current `Incubating` / `Provisional` lifecycle state unless a later governed decision changes it.
+R8 is complete and passes after one bounded fail-closed security remediation. Use the accumulated P3.01–R8 evidence to disposition each Incubating capability and re-check ADR/refactoring requirements. Do not infer `Active` lifecycle, Stable Product Contract/public API or production readiness from successful reference implementation alone.
 
 ## 7. ADR and Product Contract gate
 
@@ -133,8 +136,9 @@ P3.07 Cross-capability security/rights/Organization enforcement ✓ R6 PASS
 P3.08 Product Contract consumption boundary ✓
 P3.09 shared-capability reuse/composition proof ✓ R7 PASS
 P3.10 Phase 3 architecture fitness matrix ✓ PASS
+R8 Phase 3 milestone hardening / code-health gate ✓ PASS
         ↓
-R8 Phase 3 milestone hardening / code-health gate ← current
+P3.11 Capability admission / ADR / refactoring hardening review ← current
         ↓
-P3.11–P3.12 lifecycle review / M3 closure
+P3.12 Phase 3 / M3 closure review
 ```
