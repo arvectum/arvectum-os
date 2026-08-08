@@ -108,10 +108,12 @@ P3.11 reviewed every capability independently using P3.03–P3.09 semantic/reuse
 
 | Capability | P3.11 decision | Retention rationale | Required future gate before `Active` |
 |---|---|---|---|
-| `CAP-001` | `Retain Incubating` | Domain-neutral Document/Artifact governance reused across two bounded consumers without product-schema or storage leakage. | Stable supported contract, compatibility/migration, operational support/readiness and external reliance evidence. |
-| `CAP-002` | `Retain Incubating` | Domain-neutral Memory/Knowledge lifecycle and retrieval semantics reused without promoting product truth, prompts, ontologies or vector state into authority. | Stable supported contract, operational support/readiness, durable mechanism decisions as needed and external reliance evidence. |
-| `CAP-003` | `Retain Incubating` | Governed discovery semantics reused over materially distinct Document and Knowledge sources while projection stays non-authoritative and rebuildable. | Stable supported discovery contract, operational freshness/support model, governed durable topology if selected and external reliance evidence. |
-| `CAP-004` | `Retain Incubating` | Cross-cutting reconstruction semantics reused across bounded consumers; R8 fail-closed defect is remediated with negative-path evidence. | Stable supported reconstruction contract, operational evidence/support/retention readiness, integrity/topology decisions if selected and external reliance evidence. |
+| CAP-001 | `Retain Incubating` | Domain-neutral Document/Artifact governance reused across two bounded consumers without product-schema or storage leakage. | Stable supported contract, compatibility/migration, operational support/readiness and external reliance evidence. |
+| CAP-002 | `Retain Incubating` | Domain-neutral Memory/Knowledge lifecycle and retrieval semantics reused without promoting product truth, prompts, ontologies or vector state into authority. | Stable supported contract, operational support/readiness, durable mechanism decisions as needed and external reliance evidence. |
+| CAP-003 | `Retain Incubating` | Governed discovery semantics reused over materially distinct Document and Knowledge sources while projection stays non-authoritative and rebuildable. | Stable supported discovery contract, operational freshness/support model, governed durable topology if selected and external reliance evidence. |
+| CAP-004 | `Retain Incubating` | Cross-cutting reconstruction semantics reused across bounded consumers; R8 fail-closed defect is remediated with negative-path evidence. | Stable supported reconstruction contract, operational evidence/support/retention readiness, integrity/topology decisions if selected and external reliance evidence. |
+
+The P3.11 disposition table intentionally does not repeat the canonical backticked catalog-row syntax used by the current capability summary; the summary remains the unique machine-readable current-state row set consumed by the Phase 3 fitness evidence.
 
 No capability is returned to product scope, replaced or retired at P3.11. No fifth capability is admitted from the reuse/composition harnesses.
 
