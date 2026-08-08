@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.9.0`
+Version: `2.10.0`
 Created: `2026-08-07`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -15,15 +15,13 @@ The Strategic Roadmap beyond completed work is a planning hypothesis, not an arc
 
 ## 2. Version note
 
-Version `2.9.0` records completion of **P3.12 — Phase 3 / M3 closure review** and achievement of **`M3 — Validated shared capability baseline`** for the declared bounded shared-capability reference scope.
+Version `2.10.0` activates **Phase 4 — Workspace / Operator Experience** after verified completion of Phase 3 / `M3` and canonical boundary revalidation/decomposition.
 
-P3.12 closes Phase 3 on the accumulated P3.01–P3.11 and R5–R8 evidence. The validated retained set is exactly CAP-001 through CAP-004. All four remain lifecycle `Incubating` with `Provisional` capability contracts; M3 closure is not an RFC-0001 `Active` admission decision.
+Phase 3 remains closed with `M3 — Validated shared capability baseline` achieved. CAP-001 through CAP-004 remain lifecycle `Incubating / Provisional`; Phase 4 activation does not promote them to `Active`.
 
-The closure preserves the P3.11 disposition: no new Platform Capability is admitted, no Stable Product Contract/public API is created, no durable infrastructure mechanism crosses the current ADR threshold, and no material shared refactor is justified. The P3.08 and P3.09 Product Contracts remain `Provisional 0.1.0` validation evidence.
+The detailed Active Phase 4 work breakdown is maintained in [`PHASE-4-WORKSPACE-OPERATOR-EXPERIENCE.md`](PHASE-4-WORKSPACE-OPERATOR-EXPERIENCE.md).
 
-`Reference Python CI #105` validated the final hardened P3.11 head on Python `3.12.13` with `390` tests, result `OK`. P3.12 itself is a closure/governance change over that already hardened code head and does not expand runtime behavior.
-
-Phase 4 is not automatically activated by M3 closure. **Phase 4 boundary revalidation and decomposition — Workspace / Operator Experience** is now the current canonical action.
+Phase 4 is operator-experience first and UI-technology neutral. It proves coherent human interaction with governed organizational state and shared capability slices without turning presentation state into canonical authority or prematurely selecting a frontend/API/service topology.
 
 ## 3. Verified architecture baseline
 
@@ -33,22 +31,11 @@ Phase 4 is not automatically activated by M3 closure. **Phase 4 boundary revalid
 - Phase 1 / `M1` — complete;
 - Phase 2 / `M2` — complete;
 - Phase 3 / `M3` — complete / achieved for the bounded shared-capability reference scope;
-- [`PHASE-3-SHARED-PLATFORM-CAPABILITIES.md`](PHASE-3-SHARED-PLATFORM-CAPABILITIES.md) — `Complete`;
 - [`P3.12 closure review`](../reviews/P3-12-phase-3-m3-closure-review.md) — `PASS`;
-- [`Platform Capability Catalog`](../catalogs/PLATFORM-CAPABILITY-CANDIDATE-CATALOG.md) — four retained entries lifecycle `Incubating`;
-- [`Phase 3 Provisional Capability Contracts`](../contracts/PHASE-3-PROVISIONAL-CAPABILITY-CONTRACTS.md) — `Active 1.0.0` subordinate incubation baseline;
-- [`R5 Capability Boundary Review`](../reviews/R5-capability-boundary-review.md) — `PASS`;
-- P3.03 through P3.06 capability-slice reviews — `PASS`;
-- [`P3.07 review`](../reviews/P3-07-cross-capability-security-rights-organization-scope-enforcement-review.md) / R6 — `PASS`;
-- [`P3.08 Product Contract`](../contracts/P3-08-BOUNDED-CONSUMER-PRODUCT-CONTRACT.md) — `Provisional 0.1.0`;
-- [`P3.08 review`](../reviews/P3-08-product-contract-consumption-boundary-bounded-consumer-proof-review.md) — `PASS`;
-- [`P3.09 Product Contract`](../contracts/P3-09-DISTINCT-BOUNDED-CONSUMER-PRODUCT-CONTRACT.md) — `Provisional 0.1.0`;
-- [`P3.09 review`](../reviews/P3-09-shared-capability-reuse-composition-proof-review.md) / R7 — `PASS`;
-- [`P3.10 architecture fitness matrix`](../reviews/P3-10-phase-3-architecture-fitness-matrix.md) — `PASS`;
-- [`R8 milestone hardening review`](../reviews/R8-phase-3-milestone-hardening.md) — `PASS` after recorded CAP-004 fail-closed remediation;
-- [`P3.11 capability admission / ADR / refactoring hardening review`](../reviews/P3-11-capability-admission-adr-refactoring-hardening-review.md) — `PASS`;
-- Decision Authority Policy remains `Proposed 0.2.1`; residual authority remains with the owner;
-- no Platform Capability is `Active`.
+- CAP-001 through CAP-004 remain `Incubating / Provisional`;
+- no Platform Capability is `Active` merely because Phase 3 closed;
+- Phase 4 detailed roadmap is now `Active`;
+- no frontend framework, public API, BFF, IAM provider, durable read-model store or service topology is selected by roadmap activation.
 
 ## 4. Strategic roadmap
 
@@ -58,8 +45,8 @@ Phase 4 is not automatically activated by M3 closure. **Phase 4 boundary revalid
 | `Phase 1` | Reference Implementation | Executed | 🟩 Complete | `M1` First executable architectural spine proven |
 | `Phase 2` | Core Runtime | Executed | 🟩 Complete | `M2` Reusable governed runtime baseline |
 | `Phase 3` | Shared Platform Capabilities | Executed | 🟩 Complete | `M3` Validated shared capability baseline |
-| `Phase 4` | Workspace / Operator Experience | Near-term | ⬜ Draft | `M4` Coherent governed workspace baseline |
-| `Phase 5` | SDK, Contracts and Extension Experience | Exploratory | ⬜ Draft | `M5` Repeatable product/extension integration |
+| `Phase 4` | Workspace / Operator Experience | Active | 🟨 In progress | `M4` Coherent governed workspace baseline |
+| `Phase 5` | SDK, Contracts and Extension Experience | Near-term | ⬜ Draft | `M5` Repeatable product/extension integration |
 | `Phase 6` | Product-driven Platform Validation | Exploratory | ⬜ Draft | `M6` Platform validated through real products and reuse evidence |
 | `Phase 7` | Operational / Enterprise Readiness | Exploratory | ⬜ Draft | `M7` Scoped production-grade operating baseline |
 | `Phase 8` | Ecosystem and External Integration | Exploratory | ⬜ Draft | `M8` Governed external ecosystem baseline |
@@ -68,74 +55,85 @@ Phase status, capability lifecycle, operational environment and conformance matu
 
 ## 5. Completed Phase 3 — Shared Platform Capabilities
 
-1. `CAP-001 — Document & Artifact Governance` — `Incubating`, Provisional; retained by P3.11/M3;
-2. `CAP-002 — Memory & Knowledge Governance` — `Incubating`, Provisional; retained by P3.11/M3;
-3. `CAP-003 — Search / Index Projection` — `Incubating`, Provisional, non-authoritative governed discovery/projection semantics; retained by P3.11/M3;
-4. `CAP-004 — Audit / Reconstruction Support` — `Incubating`, Provisional, derived/read-oriented; retained by P3.11/M3.
+Phase 3 closed at 100% with `P3.12 = PASS` and `M3 = Achieved` for the declared bounded reference scope.
+
+Retained shared capabilities:
+
+1. `CAP-001 — Document & Artifact Governance` — `Incubating`, Provisional;
+2. `CAP-002 — Memory & Knowledge Governance` — `Incubating`, Provisional;
+3. `CAP-003 — Search / Index Projection` — `Incubating`, Provisional, non-authoritative;
+4. `CAP-004 — Audit / Reconstruction Support` — `Incubating`, Provisional, derived/read-oriented.
+
+M3 does not imply lifecycle `Active`, operational readiness, Stable Product Contracts, public API compatibility, production deployment or customer-facing SLA/support commitments.
+
+## 6. Active Phase 4 — Workspace / Operator Experience
+
+Canonical detailed plan:
+
+- [`PHASE-4-WORKSPACE-OPERATOR-EXPERIENCE.md`](PHASE-4-WORKSPACE-OPERATOR-EXPERIENCE.md) — `Active 1.0.0`.
 
 | ID | Work item | Status | Progress |
 |---|---|---:|---:|
-| `P3.01` | Capability boundary revalidation + Candidate catalog | 🟩 Complete | `██████████ 100%` |
-| `P3.02` | Capability lifecycle, ownership and Provisional contract baseline | 🟩 Complete | `██████████ 100%` |
-| `R5` | Capability Boundary Review | 🟩 PASS | `██████████ 100%` |
-| `P3.03` | Document & Artifact Governance candidate slice | 🟩 Complete | `██████████ 100%` |
-| `P3.04` | Memory & Knowledge Governance candidate slice | 🟩 Complete | `██████████ 100%` |
-| `P3.05` | Non-authoritative Search / Index Projection candidate slice | 🟩 Complete | `██████████ 100%` |
-| `P3.06` | Audit / Reconstruction Support candidate slice | 🟩 Complete | `██████████ 100%` |
-| `P3.07` | Cross-capability security, rights and Organization-scope enforcement | 🟩 Complete / R6 PASS | `██████████ 100%` |
-| `P3.08` | Product Contract consumption boundary + bounded consumer proof | 🟩 Complete | `██████████ 100%` |
-| `P3.09` | Shared-capability reuse and composition proof | 🟩 Complete / R7 PASS | `██████████ 100%` |
-| `P3.10` | Phase 3 architecture fitness matrix | 🟩 Complete / PASS | `██████████ 100%` |
-| `R8` | Phase 3 milestone hardening / code-health gate | 🟩 Complete / PASS | `██████████ 100%` |
-| `P3.11` | Capability admission / ADR / refactoring hardening review | 🟩 Complete / PASS | `██████████ 100%` |
-| `P3.12` | Phase 3 / M3 closure review | 🟩 Complete / PASS | `██████████ 100%` |
+| `P4.01` | Operator journeys, workspace boundary and information architecture | 🟦 NEXT | `░░░░░░░░░░ 0%` |
+| `P4.02` | Organization context, identity and scoped navigation shell | ⬜ | `░░░░░░░░░░ 0%` |
+| `P4.03` | Canonical Record / Relationship inspection experience | ⬜ | `░░░░░░░░░░ 0%` |
+| `P4.04` | Version, Event, provenance and reconstruction experience | ⬜ | `░░░░░░░░░░ 0%` |
+| `P4.05` | Governed Execution, gate and approval/action experience | ⬜ | `░░░░░░░░░░ 0%` |
+| `P4.06` | Document / Artifact workspace experience | ⬜ | `░░░░░░░░░░ 0%` |
+| `P4.07` | Memory / Knowledge / Search discovery experience | ⬜ | `░░░░░░░░░░ 0%` |
+| `P4.08` | Cross-capability task/context composition + bounded product entry point | ⬜ | `░░░░░░░░░░ 0%` |
+| `P4.09` | Security, rights, minimization and authority-safe UX | ⬜ | `░░░░░░░░░░ 0%` |
+| `P4.10` | Workspace architecture fitness + accessibility/usability baseline | ⬜ cross-cutting | `░░░░░░░░░░ 0%` |
+| `P4.11` | Workspace hardening / ADR / refactoring review | ⬜ | `░░░░░░░░░░ 0%` |
+| `P4.12` | Phase 4 / M4 closure review | ⬜ | `░░░░░░░░░░ 0%` |
 
-### M3 closure
+Engineering gates:
 
-`P3.12` records **`PASS — M3 achieved for the declared bounded shared-capability reference scope.`**
+- `R9 — Workspace Boundary Review` after P4.02;
+- `R10 — Operator Safety / Cross-Capability Health Review` after P4.07;
+- `R11 — Composition / Usability Refactoring Review` after P4.08 / meaningful usability evidence;
+- `R12 — M4 Workspace Hardening` after P4.10.
 
-The milestone demonstrates governed shared-capability reuse above Core Runtime with explicit lifecycle/ownership/contracts, no product-domain leakage, preserved authority/provenance/security/portability semantics, derived-state non-authority, bounded Product Contract consumption and materially distinct reuse.
+## 7. M4 target
 
-M3 does not itself imply lifecycle `Active` promotion, operational readiness, Stable Product Contracts, public API compatibility, production deployment or customer-facing support/SLA commitments.
+`M4 — Coherent governed workspace baseline` requires evidence that, within the bounded reference scope:
 
-## 6. Current canonical action
+1. an operator can navigate governed organizational state under explicit Organization/identity scope;
+2. Canonical Records, immutable versions, relationships, Events and provenance remain semantically understandable;
+3. consequential actions pass through Governed Execution with separate Authorization and Organizational Authority gates;
+4. Document/Artifact and Memory/Knowledge/Search surfaces preserve their Accepted authority and lifecycle distinctions;
+5. derived presentation/reconstruction/search state remains non-authoritative;
+6. at least one Product Contract-backed bounded product entry point composes shared workspace surfaces without private platform coupling;
+7. cross-capability rights, minimization and isolation pass fitness checks;
+8. core operator journeys meet the declared accessibility/usability baseline;
+9. any crossed ADR gates have canonical dispositions;
+10. R9–R12 and P4.12 pass.
 
-> **Phase 4 boundary revalidation and decomposition — Workspace / Operator Experience.**
+M4 is a bounded workspace milestone. It is not production readiness, full-platform conformance, Stable Product Contract/public API status, capability lifecycle `Active`, SLA/support or final commercial UX.
 
-Before Phase 4 becomes `Active`, revalidate its draft scope against actual M3 evidence and current product/operator needs. Then create a bounded detailed Phase 4 work breakdown and exit criteria, identify required governance/architecture dependencies, and synchronize this roadmap.
+## 8. Current canonical action
 
-Do not treat Phase 4's current Draft roadmap row as a delivery promise or as already activated work.
+> **`P4.01 — Operator journeys, workspace boundary and information architecture`.**
 
-## 7. Phase 3 closure disposition carried forward
+Start with the smallest governed operator journeys and presentation/read-model authority classification. Do not begin by selecting a frontend framework or by designing product-domain screens.
 
-P3.12 preserves these independent states:
+## 9. ADR and Product Contract gate
 
-1. **Roadmap phase:** Phase 3 `Complete`; M3 `Achieved`.
-2. **Capability lifecycle:** CAP-001 through CAP-004 remain `Incubating / Provisional`; no `Active` promotion.
-3. **Product Contracts:** P3.08 and P3.09 remain `Provisional 0.1.0` validation evidence; neither is `Stable`.
-4. **ADR gate:** no current durable/cross-cutting implementation mechanism has crossed the threshold; future material reliance re-opens the gate.
-5. **Operational environment/readiness:** no production or operational-readiness claim is created.
-6. **Conformance/commercial state:** no full-platform conformance, SLA/support/HA or public compatibility commitment is created.
+Re-open the ADR gate before material reliance on concrete durable or externally constraining choices including frontend/runtime framework as a stable cross-product boundary, BFF/API topology, stable wire/serialization contracts, IAM/session enforcement, durable workspace/read-model/cache storage, search/index technology beyond replaceable projection semantics, document/object storage topology, stable design-system/package compatibility or separately deployable UI/API service topology.
 
-CAP-003 remains a governed discovery/projection responsibility, not a commitment to operate a particular commodity search/vector technology. Consumer composition remains product-owned; no generic orchestration capability is admitted.
+A real Product relying on Incubating capabilities, canonical platform state or shared platform history must use the applicable RFC-0004 Product Contract before governed reliance.
 
-## 8. ADR and Product Contract gate
+## 10. Phase transition rule
 
-Re-open the ADR gate before material reliance on concrete persistence/database/object-store/search/vector topology, transactions/concurrency, Event transport/store, IAM/policy enforcement, evidence-integrity technology, stable API/serialization contracts, durable projection/replay/reconstruction storage or deployable service/process topology.
+Before Phase 5 becomes Active, revalidate its draft scope against M4 evidence and actual product/extension demand, then create a bounded `P5.xx` work breakdown and exit criteria.
 
-A real Product relying on Incubating capabilities, canonical platform state or shared platform history must use the applicable RFC-0004 Product Contract before governed reliance. P3.02 capability contracts are not substitutes for Product Contracts and do not grant permission or authority.
+A roadmap phase transition does not by itself change any Platform Capability lifecycle, operational environment, Product Contract stability or conformance state.
 
-## 9. Phase transition rule
-
-Phase 4 remains `Draft` until its boundary is revalidated and decomposed against M3 evidence and actual product/operator demand.
-
-A later decision to activate Phase 4 must preserve the current architecture hierarchy, identify the bounded work breakdown and exit criteria, and synchronize this roadmap. Activation of a roadmap phase does not itself change any Platform Capability lifecycle.
-
-## 10. Roadmap maintenance rule
+## 11. Roadmap maintenance rule
 
 Every roadmap update begins with repository synchronization rather than chat-memory reconstruction. After every meaningful canonical milestone, synchronize the roadmap, record evidence, keep lifecycle/environment/conformance distinct, do not inflate Draft/Proposed/exploratory status, and preserve repository history rather than fabricating approvals.
 
-## 11. Current state summary
+## 12. Current state summary
 
 ```text
 Constitution 1.2.0 ✓
@@ -143,11 +141,13 @@ RFC-0001 … RFC-0008 Accepted ✓
 Phase 0 / M0 ✓
 Phase 1 / M1 ✓
 Phase 2 / M2 ✓
-Phase 3 / M3 ✓  COMPLETE / ACHIEVED
+Phase 3 / M3 ✓
         ↓
 CAP-001..CAP-004 remain Incubating / Provisional
         ↓
-Phase 4 — Workspace / Operator Experience remains DRAFT
+Phase 4 — Workspace / Operator Experience ACTIVE
         ↓
-Boundary revalidation + decomposition ← current canonical action
+P4.01 Operator journeys + workspace boundary + IA ← current
+        ↓
+M4 Coherent governed workspace baseline
 ```
