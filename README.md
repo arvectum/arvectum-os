@@ -55,7 +55,7 @@ Canonical Phase 3 closure evidence:
 - [R8 milestone hardening review](docs/reviews/R8-phase-3-milestone-hardening.md)
 - [P3.11 capability admission / ADR / refactoring hardening review](docs/reviews/P3-11-capability-admission-adr-refactoring-hardening-review.md)
 
-`Phase 4 — Workspace / Operator Experience` is **Active**. `P4.01 — Operator journeys, workspace boundary and information architecture`, `P4.02 — Organization context, identity and scoped navigation shell`, `R9 — Workspace Boundary Review`, `P4.03 — Canonical Record / Relationship inspection experience`, `P4.04 — Version, Event, provenance and reconstruction experience`, `P4.05 — Governed Execution, gate and approval/action experience`, `P4.06 — Document / Artifact workspace experience`, `P4.07 — Memory / Knowledge / Search discovery experience` and the mandatory `R10 — Operator Safety / Cross-Capability Health Review` gate are complete with `PASS`. The current canonical action is **`P4.08 — Cross-capability task/context composition + bounded product entry point`**.
+`Phase 4 — Workspace / Operator Experience` is **Active**. `P4.01` through `P4.08`, `R9 — Workspace Boundary Review` and `R10 — Operator Safety / Cross-Capability Health Review` are complete with `PASS`. The current canonical action is **`R11 — Composition / Usability Refactoring Review`**.
 
 P4.02 provides the first bounded visible workspace shell: explicit Organization and attributable Actor context, `Discover / Records / Executions / Evidence / Documents / Knowledge` navigation, distinct Subject and exact-Version references, fail-closed unresolved/mismatched Organization state and non-authoritative presentation semantics. A zero-dependency static HTML demo makes the shell inspectable without selecting a frontend framework, route schema, public API/BFF, IAM/session provider or durable read-model topology.
 
@@ -103,6 +103,12 @@ The R10 remediation adds the internal `operator_safety.py` composition guard. It
 
 R10 intentionally does not extract a broad shared authorization/presentation framework. The repeated local patterns are visible, but P4.08 is the first real cross-capability composition point that can provide evidence for a stable shared abstraction. R10 creates no new RFC, ADR, Product Contract or Platform Capability, changes no capability lifecycle state and makes no operational/commercial readiness claim.
 
+P4.08 adds the first bounded Product Contract-backed product entry point. The synthetic product reference lives outside `arvectum_os_ref`, validates an exact RFC-0004 `Provisional` Product Contract, enters the shared workspace with explicit Organization/Product/Actor context and composes the existing P4.06 Document/Artifact and P4.07 Memory/Knowledge surfaces without private platform state or product-domain leakage into the platform.
+
+The final composition preserves exact Product Contract and capability dependency contract versions, declared boundary mechanism, exact governed source/version semantics, current source authorization and product-owned task target identity. Product dispositions remain transient/product-owned. A product task-state mutation must use the declared Product Contract-backed Governed Execution operation and can reach P4.05 only through R10; Product Contract continuity and R10 source-access freshness remain independent fail-closed invariants.
+
+Six functional cross-review iterations found and remediated exact Product Contract continuity and post-entry dependency/mechanism/task-target drift before P4.08 completion. P4.08 changes no existing platform runtime module, creates no Stable/public interface, selects no durable technology and promotes no capability. GitHub-hosted Reference Python CI was unavailable before workflow step execution during PR #53; no green P4.08 CI run is claimed, and the tooling gap is tracked separately in issue #54.
+
 Canonical Phase 4 planning/current evidence:
 
 - [Canonical roadmap](docs/roadmap/ROADMAP.md)
@@ -116,8 +122,10 @@ Canonical Phase 4 planning/current evidence:
 - [P4.06 Document / Artifact workspace review](docs/reviews/P4-06-document-artifact-workspace-experience.md)
 - [P4.07 Memory / Knowledge / Search discovery review](docs/reviews/P4-07-memory-knowledge-search-discovery-experience.md)
 - [R10 Operator Safety / Cross-Capability Health Review](docs/reviews/R10-operator-safety-cross-capability-health-review.md)
+- [P4.08 cross-capability task/context composition review](docs/reviews/P4-08-cross-capability-task-context-composition.md)
+- [P4.08 bounded Product Contract](docs/contracts/P4-08-BOUNDED-PRODUCT-ENTRY-PRODUCT-CONTRACT.md)
 
-P4.01 through P4.07 plus R9/R10 establish, harden and exercise a domain-neutral workspace boundary only. They do not create a new Platform Capability, change CAP-001 through CAP-004 lifecycle, create a Stable Product Contract/public interface or establish production readiness. P4.08 is now the current composition proof and must use the applicable RFC-0004 Product Contract before governed product reliance on shared platform state/history/capabilities.
+P4.01 through P4.08 plus R9/R10 establish, harden and compose a domain-neutral workspace boundary while retaining product-domain meaning on the product side. They do not create a new Platform Capability, change CAP-001 through CAP-004 lifecycle, stabilize the P4.08 Product Contract, create a public interface or establish production readiness. **R11 — Composition / Usability Refactoring Review** is now the current engineering gate before substantive P4.09 work.
 
 RFC-0001 through RFC-0008 are `Accepted 1.0.0` and remain binding within their declared scopes.
 
