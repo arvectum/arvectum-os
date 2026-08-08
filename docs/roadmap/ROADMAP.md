@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.8.9`
+Version: `2.8.10`
 Created: `2026-08-07`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -15,17 +15,15 @@ The Strategic Roadmap beyond completed work is a planning hypothesis, not an arc
 
 ## 2. Version note
 
-Version `2.8.9` records completion of **R8 — Phase 3 milestone hardening / code-health gate**.
+Version `2.8.10` records completion of **P3.11 — Capability admission / ADR / refactoring hardening review**.
 
-R8 reviewed the accumulated P3.03–P3.10 implementation for dependency direction, semantic ownership, Product Contract isolation, correctness, security/Organization scope/authority behavior, maintainability, reversibility, public-surface pressure, test evidence, performance evidence and ADR-trigger pressure.
+P3.11 independently dispositioned all four Incubating Phase 3 capabilities after P3.03–P3.10 and R8 evidence. CAP-001 through CAP-004 remain the retained bounded shared-capability set at lifecycle `Incubating` with `Provisional` capability contracts. The evidence justifies their shared platform identity for the bounded M3 baseline, but does not satisfy RFC-0001 `Active` requirements.
 
-The hardening review found one material correctness/security defect in the bounded P3.07/CAP-004 reconstruction access handoff: an evidence Version Identity omitted from current `evidence_constraints` could inherit the lower reconstruction layer's intentional default `Available` disposition. R8 remediates that boundary by requiring exact complete typed constraint coverage for every governed reconstruction evidence Version Identity before disclosure. Missing, unknown, duplicate or malformed constraint sets now fail closed.
+P3.11 also re-opened the ADR gate over durable persistence/object/search topology, transaction/concurrency, Event transport/store, IAM/PDP/PEP, evidence integrity, stable API/serialization, durable projection/replay and deployable service/process topology. No concrete mechanism is materially selected or relied upon, so no new ADR is required. R8 hardening plus the P3.11 admission evidence also provides no basis for a material shared refactor or new generic composition abstraction.
 
-R8 also adds seven executable code-health guards preserving Phase 3 dependency direction, provisional package-root exposure, absence of process/network/unsafe-deserialization dependencies, absence of dynamic code execution or implicit authority/gate bypass helpers, and continued non-selection of public framework/stable serialization technology.
+A minor lower-authority root README phase-status drift was identified and synchronized as documentation hardening. No Constitution, Accepted RFC, capability contract or lifecycle authority changed.
 
-`Reference Python CI #100` passed the hardened implementation with Python `3.12.13`: `384` tests, result `OK`.
-
-R8 does not promote CAP-001 through CAP-004 to `Active`, stabilize either bounded Product Contract, create a public API/SDK, select durable infrastructure, establish production readiness or create SLA/support/full-conformance claims. `P3.11 — Capability admission / ADR / refactoring hardening review` is now the current canonical action.
+`P3.12 — Phase 3 / M3 closure review` is now the current canonical action.
 
 ## 3. Verified architecture baseline
 
@@ -36,7 +34,7 @@ R8 does not promote CAP-001 through CAP-004 to `Active`, stabilize either bounde
 - Phase 2 / `M2` — complete;
 - Phase 3 — `Active` planning/workstream state;
 - [`PHASE-3-SHARED-PLATFORM-CAPABILITIES.md`](PHASE-3-SHARED-PLATFORM-CAPABILITIES.md) — `Active`;
-- [`Platform Capability Catalog`](../catalogs/PLATFORM-CAPABILITY-CANDIDATE-CATALOG.md) — four entries lifecycle `Incubating`;
+- [`Platform Capability Catalog`](../catalogs/PLATFORM-CAPABILITY-CANDIDATE-CATALOG.md) — four retained entries lifecycle `Incubating`;
 - [`Phase 3 Provisional Capability Contracts`](../contracts/PHASE-3-PROVISIONAL-CAPABILITY-CONTRACTS.md) — `Active 1.0.0`;
 - [`R5 Capability Boundary Review`](../reviews/R5-capability-boundary-review.md) — `PASS`;
 - P3.03 through P3.06 capability-slice reviews — `PASS`;
@@ -47,6 +45,7 @@ R8 does not promote CAP-001 through CAP-004 to `Active`, stabilize either bounde
 - [`P3.09 review`](../reviews/P3-09-shared-capability-reuse-composition-proof-review.md) / R7 — `PASS`;
 - [`P3.10 architecture fitness matrix`](../reviews/P3-10-phase-3-architecture-fitness-matrix.md) — `PASS`;
 - [`R8 milestone hardening review`](../reviews/R8-phase-3-milestone-hardening.md) — `PASS`;
+- [`P3.11 capability admission / ADR / refactoring hardening review`](../reviews/P3-11-capability-admission-adr-refactoring-hardening-review.md) — `PASS`;
 - Decision Authority Policy remains `Proposed 0.2.1`; residual authority remains with the owner;
 - no Platform Capability is `Active`.
 
@@ -68,10 +67,10 @@ Phase status, capability lifecycle, operational environment and conformance matu
 
 ## 5. Active Phase 3 — Shared Platform Capabilities
 
-1. `CAP-001 — Document & Artifact Governance` — `Incubating`, Provisional; P3.03 complete;
-2. `CAP-002 — Memory & Knowledge Governance` — `Incubating`, Provisional; P3.04 complete;
-3. `CAP-003 — Search / Index Projection` — `Incubating`, Provisional, non-authoritative; P3.05 complete;
-4. `CAP-004 — Audit / Reconstruction Support` — `Incubating`, Provisional, derived/read-oriented; P3.06 complete.
+1. `CAP-001 — Document & Artifact Governance` — `Incubating`, Provisional; P3.03 complete; P3.11 retain;
+2. `CAP-002 — Memory & Knowledge Governance` — `Incubating`, Provisional; P3.04 complete; P3.11 retain;
+3. `CAP-003 — Search / Index Projection` — `Incubating`, Provisional, non-authoritative; P3.05 complete; P3.11 retain;
+4. `CAP-004 — Audit / Reconstruction Support` — `Incubating`, Provisional, derived/read-oriented; P3.06 complete; P3.11 retain.
 
 | ID | Work item | Status | Progress |
 |---|---|---:|---:|
@@ -87,34 +86,48 @@ Phase status, capability lifecycle, operational environment and conformance matu
 | `P3.09` | Shared-capability reuse and composition proof | 🟩 Complete / R7 PASS | `██████████ 100%` |
 | `P3.10` | Phase 3 architecture fitness matrix | 🟩 Complete / PASS | `██████████ 100%` |
 | `R8` | Phase 3 milestone hardening / code-health gate | 🟩 Complete / PASS | `██████████ 100%` |
-| `P3.11` | Capability admission / ADR / refactoring hardening review | 🟨 Current | `░░░░░░░░░░ 0%` |
-| `P3.12` | Phase 3 / M3 closure review | ⬜ | `░░░░░░░░░░ 0%` |
+| `P3.11` | Capability admission / ADR / refactoring hardening review | 🟩 Complete / PASS | `██████████ 100%` |
+| `P3.12` | Phase 3 / M3 closure review | 🟨 Current | `░░░░░░░░░░ 0%` |
 
 ### M3 target
 
 A small set of domain-neutral shared capabilities has demonstrated governed reuse above the Core Runtime with explicit lifecycle/ownership/contracts, no product-domain leakage, preserved authority/provenance/portability semantics and no unsupported production/public-contract claims. M3 does not itself imply lifecycle `Active` promotion.
 
+P3.11 confirms that the small retained set is exactly CAP-001 through CAP-004 for the bounded M3 baseline. It does not add a fifth capability and does not promote any retained capability to `Active`.
+
 ## 6. Current canonical action
 
-> **P3.11 — Capability admission / ADR / refactoring hardening review.**
+> **P3.12 — Phase 3 / M3 closure review.**
 
-R8 is complete and passes after one bounded fail-closed security remediation. Use the accumulated P3.01–R8 evidence to disposition each Incubating capability and re-check ADR/refactoring requirements. Do not infer `Active` lifecycle, Stable Product Contract/public API or production readiness from successful reference implementation alone.
+P3.11 is complete and passes. Use the accumulated P3.01–P3.11 and R5–R8 evidence to decide whether M3 can be closed for the declared bounded scope. Do not infer `Active` lifecycle, Stable Product Contract/public API, production readiness, SLA/support or full-platform conformance from M3 closure.
 
-## 7. ADR and Product Contract gate
+## 7. P3.11 admission / ADR / refactoring disposition
+
+P3.11 made three independent decisions:
+
+1. **Capability admission:** retain CAP-001 through CAP-004 as `Incubating / Provisional`; shared capability identity is sufficiently evidenced for the bounded M3 baseline, but RFC-0001 `Active` conditions are not met.
+2. **ADR gate:** no concrete durable/cross-cutting implementation mechanism has crossed the threshold; no new ADR is justified now.
+3. **Refactoring gate:** no material shared refactor is justified after R8; semantic owners stay separate and consumer composition remains product-owned.
+
+CAP-003 remains admitted only as governed discovery/projection semantics. Generic search/vector infrastructure, ranking and product query UX are not part of the capability identity.
+
+The P3.08 and P3.09 Product Contracts remain `Provisional 0.1.0` bounded validation evidence. They are not stabilized by P3.11 or by successful reuse.
+
+## 8. ADR and Product Contract gate
 
 Re-open the ADR gate before material reliance on concrete persistence/database/object-store/search/vector topology, transactions/concurrency, Event transport/store, IAM/policy enforcement, evidence-integrity technology, stable API/serialization contracts, durable projection/replay storage or deployable service/process topology.
 
 A real Product relying on Incubating capabilities, canonical platform state or shared platform history must use the applicable RFC-0004 Product Contract before governed reliance. P3.02 capability contracts are not substitutes for Product Contracts and do not grant permission or authority.
 
-## 8. Phase transition rule
+## 9. Phase transition rule
 
 Before Phase 4 becomes Active, complete P3.12/M3 closure, revalidate Phase 4 against actual M3 evidence and product/operator needs, create a detailed P4 work breakdown, identify required governance artifacts and synchronize this roadmap.
 
-## 9. Roadmap maintenance rule
+## 10. Roadmap maintenance rule
 
 Every roadmap update begins with repository synchronization rather than chat-memory reconstruction. After every meaningful canonical milestone, synchronize the roadmap, record evidence, keep lifecycle/environment/conformance distinct, do not inflate Draft/Proposed/exploratory status, and preserve repository history rather than fabricating approvals.
 
-## 10. Current state summary
+## 11. Current state summary
 
 ```text
 Constitution 1.2.0 ✓
@@ -137,8 +150,7 @@ P3.08 Product Contract consumption boundary ✓
 P3.09 shared-capability reuse/composition proof ✓ R7 PASS
 P3.10 Phase 3 architecture fitness matrix ✓ PASS
 R8 Phase 3 milestone hardening / code-health gate ✓ PASS
+P3.11 capability admission / ADR / refactoring hardening ✓ PASS
         ↓
-P3.11 Capability admission / ADR / refactoring hardening review ← current
-        ↓
-P3.12 Phase 3 / M3 closure review
+P3.12 Phase 3 / M3 closure review ← current
 ```

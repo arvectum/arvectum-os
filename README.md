@@ -29,23 +29,36 @@ Domain products such as procurement, marketing, finance or legal agents live out
 
 ## Current phase
 
-`Phase 0 — Foundation / Architecture Bootstrap` is complete.
+`Phase 0 — Foundation / Architecture Bootstrap` is complete and milestone `M0` is achieved.
 
-`Phase 1 — Reference Implementation` is also complete. The bounded executable slice closed through `P1.12 — Phase 1 bounded-slice closure review`, and milestone `M1 — First executable architectural spine proven` is achieved for its declared scope.
+`Phase 1 — Reference Implementation` is complete. The bounded executable slice closed through `P1.12 — Phase 1 bounded-slice closure review`, and milestone `M1 — First executable architectural spine proven` is achieved for its declared scope.
 
-Canonical Phase 1 evidence:
+`Phase 2 — Core Runtime` is complete. The reusable bounded runtime closed through `P2.12 — Phase 2 / M2 closure review`, and milestone `M2 — Reusable governed runtime baseline` is achieved for its declared scope.
 
-- [Phase 1 work breakdown and completion record](docs/roadmap/PHASE-1-REFERENCE-IMPLEMENTATION.md)
-- [P1.12 bounded-slice closure review](docs/reviews/P1-12-phase-1-bounded-slice-closure-review.md)
-- [Bounded Python reference harness](reference/python/README.md)
+`Phase 3 — Shared Platform Capabilities` is **Active** as a roadmap/workstream phase. P3.01 through P3.11 plus engineering gates R5–R8 are complete. `P3.12 — Phase 3 / M3 closure review` is the current canonical action.
 
-The final executable Phase 1 harness contains `128` passing architecture-fitness tests in the recorded GitHub Actions baseline. That result is scoped reference evidence only: it does not make a Platform Capability `Active`, make the Python harness a production runtime, create a public compatibility contract or establish full-platform conformance.
+The retained Phase 3 capability set is:
 
-`Phase 2 — Core Runtime` is **not Active yet**. The current canonical action is to revalidate and decompose Phase 2 against Phase 1 evidence, Accepted architecture and relevant product/workflow evidence before substantive implementation. The detailed `P2.xx` work breakdown and any necessary ADRs must be established through the phase-transition rule in the Canonical Roadmap.
+- `CAP-001 — Document & Artifact Governance` — `Incubating / Provisional`;
+- `CAP-002 — Memory & Knowledge Governance` — `Incubating / Provisional`;
+- `CAP-003 — Search / Index Projection` — `Incubating / Provisional`, non-authoritative;
+- `CAP-004 — Audit / Reconstruction Support` — `Incubating / Provisional`, derived/read-oriented.
 
-RFC-0001 through RFC-0008 are `Accepted 1.0.0`. Accepted architecture remains binding within the scope of each RFC and is not changed by Phase 1 completion.
+P3.11 confirmed the four capability identities as the bounded retained set for M3 evidence, but did not promote any capability to `Active`, create a Stable Product Contract/public API, select durable infrastructure, establish operational or production readiness, or create SLA/support/full-conformance commitments. P3.11 also found no current need for a new ADR or material shared refactor.
 
-The Phase 1 reference harness intentionally avoided selecting a permanent programming language contract, database, public API protocol, event broker, workflow engine, IAM provider, retrieval engine, model provider or service topology. Concrete Phase 2 choices should use an ADR only when they become sufficiently constraining under the existing ADR gate.
+Canonical Phase 3 evidence:
+
+- [Phase 3 work breakdown and current state](docs/roadmap/PHASE-3-SHARED-PLATFORM-CAPABILITIES.md)
+- [Platform Capability Catalog](docs/catalogs/PLATFORM-CAPABILITY-CANDIDATE-CATALOG.md)
+- [P3.10 architecture fitness matrix](docs/reviews/P3-10-phase-3-architecture-fitness-matrix.md)
+- [R8 milestone hardening review](docs/reviews/R8-phase-3-milestone-hardening.md)
+- [P3.11 capability admission / ADR / refactoring hardening review](docs/reviews/P3-11-capability-admission-adr-refactoring-hardening-review.md)
+
+RFC-0001 through RFC-0008 are `Accepted 1.0.0` and remain binding within their declared scopes.
+
+The reference implementation remains bounded and intentionally avoids establishing a permanent programming-language contract, durable database/object-store/search topology, public API/SDK/wire format, Event broker/store, IAM provider, workflow engine, evidence-integrity technology or deployable service topology. Such choices must pass the applicable ADR/stable-boundary gates before material reliance.
+
+Phase status, capability lifecycle, operational environment and conformance maturity remain distinct. `Phase 3 Active` does not mean any Platform Capability is lifecycle `Active` or production-ready.
 
 ## Roadmap blocks and RFC identifiers
 
