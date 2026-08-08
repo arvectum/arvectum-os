@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.8.4`
+Version: `2.8.5`
 Created: `2026-08-07`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -15,11 +15,11 @@ The Strategic Roadmap beyond completed work is a planning hypothesis, not an arc
 
 ## 2. Version note
 
-Version `2.8.4` records completion of **P3.06 — Audit / Reconstruction Support candidate slice**.
+Version `2.8.5` records completion of **P3.07 — Cross-capability security, rights and Organization-scope enforcement** and R6 `PASS`.
 
-P3.06 adds bounded executable CAP-004 evidence for derived read-oriented reconstruction over exact governed Workflow/input/Product Contract/gate/execution/result/Event references, explicit `Available`/`Redacted`/`Deleted`/`Unavailable`/`Missing` evidence state, Organization fail-closed behavior, non-leaking restricted evidence and portable reference/status export without replay, mutation, approval or authority creation. CAP-004 remains `Incubating` with a Provisional contract; no durable observability/SIEM/evidence technology, stable view/public interface, production readiness or `Active` promotion is created.
+P3.07 adds bounded executable composition evidence across CAP-001 through CAP-004 using one explicit current Organization/purpose/right/classification access context. Protected exact access fails closed on Organization or handling mismatch; discovery/retrieval do not create source access; restricted reconstruction evidence is redacted without source-pin leakage; authorization remains distinct from Organizational Authority, approval and delegation. No durable IAM/PDP/PEP, policy language, stable public interface or production-security topology is selected.
 
-All four initial bounded Incubating capability slices P3.03–P3.06 are now complete. P3.07 is the current canonical action and P3.10 fitness evidence continues to accumulate.
+P3.08 is now the current canonical action and P3.10 fitness evidence continues to accumulate.
 
 ## 3. Verified architecture baseline
 
@@ -29,14 +29,12 @@ All four initial bounded Incubating capability slices P3.03–P3.06 are now comp
 - Phase 1 / `M1` — complete;
 - Phase 2 / `M2` — complete;
 - Phase 3 — `Active` planning/workstream state;
-- [`PHASE-3-SHARED-PLATFORM-CAPABILITIES.md`](PHASE-3-SHARED-PLATFORM-CAPABILITIES.md) — `Active 1.1.4`;
-- [`Platform Capability Catalog`](../catalogs/PLATFORM-CAPABILITY-CANDIDATE-CATALOG.md) — `Active 1.1.0`, four entries lifecycle `Incubating`;
+- [`PHASE-3-SHARED-PLATFORM-CAPABILITIES.md`](PHASE-3-SHARED-PLATFORM-CAPABILITIES.md) — `Active`;
+- [`Platform Capability Catalog`](../catalogs/PLATFORM-CAPABILITY-CANDIDATE-CATALOG.md) — four entries lifecycle `Incubating`;
 - [`Phase 3 Provisional Capability Contracts`](../contracts/PHASE-3-PROVISIONAL-CAPABILITY-CONTRACTS.md) — `Active 1.0.0`;
 - [`R5 Capability Boundary Review`](../reviews/R5-capability-boundary-review.md) — `PASS`;
-- [`P3.03 review`](../reviews/P3-03-document-artifact-governance-candidate-slice-review.md) — `PASS`;
-- [`P3.04 review`](../reviews/P3-04-memory-knowledge-governance-candidate-slice-review.md) — `PASS`;
-- [`P3.05 review`](../reviews/P3-05-non-authoritative-search-index-projection-candidate-slice-review.md) — `PASS`;
-- [`P3.06 review`](../reviews/P3-06-audit-reconstruction-support-candidate-slice-review.md) — `PASS`;
+- P3.03 through P3.06 capability-slice reviews — `PASS`;
+- [`P3.07 review`](../reviews/P3-07-cross-capability-security-rights-organization-scope-enforcement-review.md) / R6 — `PASS`;
 - Decision Authority Policy remains `Proposed 0.2.1`; residual authority remains with the owner;
 - no Platform Capability is `Active`.
 
@@ -72,7 +70,7 @@ Phase status, capability lifecycle, operational environment and conformance matu
 | `P3.04` | Memory & Knowledge Governance candidate slice | 🟩 Complete | `██████████ 100%` |
 | `P3.05` | Non-authoritative Search / Index Projection candidate slice | 🟩 Complete | `██████████ 100%` |
 | `P3.06` | Audit / Reconstruction Support candidate slice | 🟩 Complete | `██████████ 100%` |
-| `P3.07` | Cross-capability security, rights and Organization-scope enforcement | ⬜ | `░░░░░░░░░░ 0%` |
+| `P3.07` | Cross-capability security, rights and Organization-scope enforcement | 🟩 Complete / R6 PASS | `██████████ 100%` |
 | `P3.08` | Product Contract consumption boundary + bounded consumer proof | ⬜ | `░░░░░░░░░░ 0%` |
 | `P3.09` | Shared-capability reuse and composition proof | ⬜ | `░░░░░░░░░░ 0%` |
 | `P3.10` | Phase 3 architecture fitness matrix | ⬜ cross-cutting | `░░░░░░░░░░ 0%` |
@@ -85,9 +83,9 @@ A small set of domain-neutral shared capabilities has demonstrated governed reus
 
 ## 6. Current canonical action
 
-> **P3.07 — cross-capability security, rights and Organization-scope enforcement; P3.10 evidence continuous.**
+> **P3.08 — Product Contract consumption boundary + bounded consumer proof; P3.10 evidence continuous.**
 
-P3.03 through P3.06 are complete. Continue bounded cross-capability enforcement without expanding capability identity, stabilizing public/cross-product interfaces, importing product-domain semantics or selecting durable cross-cutting mechanisms without re-opening the ADR gate.
+P3.03 through P3.07 are complete. Continue with bounded RFC-0004 Product Contract consumption without promoting any capability, stabilizing public/cross-product interfaces, importing product-domain semantics or selecting durable cross-cutting mechanisms without re-opening the ADR gate.
 
 ## 7. ADR and Product Contract gate
 
@@ -121,10 +119,11 @@ P3.03 Document & Artifact Governance ✓
 P3.04 Memory & Knowledge Governance ✓
 P3.05 Non-authoritative Search / Index Projection ✓
 P3.06 Audit / Reconstruction Support ✓
+P3.07 Cross-capability security/rights/Organization enforcement ✓ R6 PASS
         ↓
-P3.07 Cross-capability security/rights/Organization enforcement ← current
+P3.08 Product Contract consumption boundary ← current
         ↓
-P3.08–P3.09 consumer / reuse proof
+P3.09 reuse proof
         ↓
 P3.10–P3.12 fitness / hardening / M3 closure
 ```
