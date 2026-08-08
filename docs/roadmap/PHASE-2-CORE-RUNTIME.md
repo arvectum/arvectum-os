@@ -1,7 +1,7 @@
 # Arvectum OS Phase 2 — Core Runtime
 
 Status: `Active`
-Version: `1.1.4`
+Version: `1.1.5`
 Created: `2026-08-08`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -82,8 +82,8 @@ Progress bars are planning indicators only.
 | `P2.02` | Canonical Record lineage, Head and Effective Version runtime | 🟩 | `██████████ 100%` |
 | `P2.03` | Typed Relationship runtime | 🟩 | `██████████ 100%` |
 | `P2.04` | Governed Execution lifecycle and gate orchestration runtime | 🟩 | `██████████ 100%` |
-| `P2.05` | Event admission, provenance and reconstruction runtime | 🟦 | `░░░░░░░░░░ 0%` |
-| `P2.06` | Runtime consistency, idempotency and conflict semantics | ⬜ | `░░░░░░░░░░ 0%` |
+| `P2.05` | Event admission, provenance and reconstruction runtime | 🟩 | `██████████ 100%` |
+| `P2.06` | Runtime consistency, idempotency and conflict semantics | 🟦 | `░░░░░░░░░░ 0%` |
 | `P2.07` | Product Contract runtime validation boundary | ⬜ | `░░░░░░░░░░ 0%` |
 | `P2.08` | Portability, replay and non-authoritative projection runtime | ⬜ | `░░░░░░░░░░ 0%` |
 | `P2.09` | Second bounded workflow reuse proof | ⬜ | `░░░░░░░░░░ 0%` |
@@ -230,6 +230,22 @@ Minimum evidence:
 - Event semantics remain distinct from telemetry and no broker/event-store technology is assumed.
 
 **Exit:** multiple executions can share the same Event/provenance runtime and reconstruct their exact bounded histories.
+
+**Completion evidence — 2026-08-08:**
+
+- `reference/python/arvectum_os_ref/event_provenance.py` introduces a bounded domain-neutral in-memory Event/provenance runtime over the reusable P2.04 Governed Execution model without modifying the P1.07/P1.08 scenario-specific evidence modules;
+- `EventReceipt` is an immutable transient received representation and remains explicitly distinct from canonical history; only `admit_event` creates an admitted `platform.event` Canonical Record specialization;
+- canonical admission preserves exact Event Identity and Version Identity, type/schema version, Organization/Native authority scope, authoritative source, occurrence/recording times, producer/initiation attribution, exact Execution Identity/Version, related governed Subject/Version references, correlation, causation, classification/access metadata, provenance, integrity metadata and immutable payload;
+- duplicate delivery of the exact same immutable occurrence returns the previously admitted canonical Event without appending another occurrence; materially different immutable content under the same Event Identity and reuse of one Event Version Identity by another Event are rejected explicitly;
+- occurrence and recording/admission timestamps remain independently attributable and are not treated as a universal ordering guarantee, preserving RFC-0006 clock/late-arrival semantics rather than carrying forward the narrower P1 fixture assumption;
+- `build_reconstruction_manifest` validates one immutable P2.04 Execution lineage through a sealed terminal head and identifies the initiating actor, exact Workflow version, every material-input version, each terminal gate-decision version, every Execution Context version, governed result versions and admitted Event versions, while preserving correlation/causation and optional Product Contract attribution;
+- reconstruction is a frozen derived manifest, not Canonical State; it performs no replay, mutation, Event emission/admission or projection authority resolution;
+- the same Event/provenance runtime reconstructs both the canonical-mutation workflow and a materially distinct `ExternalMutation`+`Commitment` workflow with a different gate set;
+- `reference/python/tests/test_p2_05_event_provenance.py` adds 21 focused admission, conflict, provenance, reconstruction, negative-path, timestamp and reuse tests;
+- GitHub Actions `Reference Python CI` run `#37` for PR `#23` on executable code head `e95bcfa5647fd7d1c73dfee8bc2bb912ee681f9c` completed successfully: `Ran 220 tests in 0.318s` / `OK`; the prior 199-test P2.04 baseline remains green;
+- no Accepted RFC is modified and no ADR gate is crossed: the implementation remains bounded, in-memory, internal/provisional and reversible, with no broker, durable Event store, delivery topology, schema registry, telemetry backend, transaction/outbox/inbox mechanism, public API/SDK or Product Contract validator selected.
+
+P2.05 completion makes the exercised RFC-0002/RFC-0006 Event admission and reconstruction semantics reusable only within the bounded Core Runtime evidence. It does not establish a durable Event store, delivery guarantee, universal ordering, exactly-once processing, external-authority Event contract, production observability stack, production readiness, full RFC-0006 conformance or an `Active` Platform Capability. P2.06 retains broader runtime consistency, retry/idempotency, uncertainty and concurrency responsibilities.
 
 ### P2.06 — Runtime consistency, idempotency and conflict semantics
 
@@ -399,7 +415,7 @@ P2.03 Relationships ✓    P2.04 Governed Execution runtime ✓
    │              │
    └──────┬───────┘
           ↓
-P2.05 Event / provenance runtime
+P2.05 Event / provenance runtime ✓
           ↓
 P2.06 Consistency / idempotency / conflict semantics
           ↓
@@ -428,11 +444,11 @@ The sequence is dependency-aware rather than mechanically serial. P2.03–P2.04 
 
 ## 8. Current canonical action
 
-> **`P2.05 — Event admission, provenance and reconstruction runtime`.**
+> **`P2.06 — Runtime consistency, idempotency and conflict semantics`.**
 
-Generalize the P1 Event admission and reconstruction proof into reusable, domain-neutral runtime behavior while preserving receipt/admission separation, immutable Event identity/content, exact execution/result references, correlation/causation and reconstructable actor/Workflow/material-input/gate evidence.
+Generalize the already-exercised stale-version, duplicate Event delivery and governed-execution safety evidence into reusable logical consistency rules, including explicit stale-head/current-version conflict behavior, deterministic repeat invocation semantics where idempotency is required, uncertainty/failure states and bounded logical atomicity boundaries.
 
-Do not select a broker, durable Event store, delivery topology or telemetry backend merely to complete P2.05, and do not preempt P2.06 transaction/concurrency/idempotency decisions beyond the bounded duplicate/conflict semantics necessary for Event admission evidence.
+Do not select a durable transaction, database-locking, distributed-coordination, outbox/inbox or concurrency technology merely to complete P2.06. If a concrete durable persistence/transaction/concurrency mechanism becomes materially relied upon, stop at the ADR gate and govern that choice before further reliance.
 
 ## 9. ADR gate
 
