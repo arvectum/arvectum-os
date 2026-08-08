@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.0.6`
+Version: `2.0.7`
 Created: `2026-08-07`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -307,7 +307,7 @@ Canonical detailed work breakdown:
 | `P1.08` | Provenance, causation and reconstruction evidence | 🟩 | `██████████ 100%` |
 | `P1.09` | Observation creation without Knowledge promotion | 🟩 | `██████████ 100%` |
 | `P1.10` | Portable semantic fixture export | 🟩 | `██████████ 100%` |
-| `P1.11` | Negative-path and architecture fitness tests | 🟨 | `████████░░ 80%` |
+| `P1.11` | Negative-path and architecture fitness tests | 🟩 | `██████████ 100%` |
 | `P1.12` | Phase 1 bounded-slice closure review | ⬜ | `░░░░░░░░░░ 0%` |
 
 ### Current implementation evidence
@@ -326,13 +326,13 @@ Canonical detailed work breakdown:
 
 `P1.10` exports the exact bounded P1.02–P1.09 governed state as deterministic, documented UTF-8 JSON using an explicit semantic mapping rather than Python object layout. It preserves the Organization and Actors, all ten Canonical Record versions, stable Subject/immutable Version Identity roles, authority/schema/lifecycle/predecessor data, exact Workflow/input/gate/effect pins, Event source/type/schema/correlation/causation, derived reconstruction evidence and the Observation's explicit `Unvalidated` / `knowledge_promotion = not-performed` state. Derived `semantic_links` preserve existing relationship/reference meaning while explicitly remaining non-canonical rather than fabricating Typed Relationship records. The fixture itself declares non-authority, non-public and non-production scope, records explicit omissions, and re-validates exact P1.08/P1.09 evidence before export. P1.10 adds `16` focused tests; `Reference Python CI` run `#9` passes the full `115`-test reference suite.
 
-`P1.11` is cross-cutting and now accumulates negative-path evidence through P1.10, including direct-mutation rejection, immutable-history preservation, canonical conflict detection, receipt/admission separation, duplicate/conflicting Event handling, fail-closed provenance/reconstruction validation, explicit Observation ≠ Knowledge enforcement, implementation-neutral semantic export, exact exported version/reference roles and stale-evidence export rejection. Replay side-effect-safety and projection/index non-authority portions remain incomplete.
+`P1.11` closes the remaining replay/projection architecture-fitness matrix. Historical fixture replay can only rebuild an immutable non-authoritative projection and has no Governed Execution, canonical mutation, Event-admission callback or external-effect path. Replay preserves the exact source Version Identity manifest, rejects manifest drift and derived-link reinterpretation as canonical Typed Relationships, and reports zero consequential side effects. Projection lookup exposes all matching source versions without resolving a canonical/effective head. Projection entries cannot become canonical authority, cannot satisfy a `GovernedVersionPin`, and cannot mint one: consequential reliance requires an independently supplied exact `CanonicalRecord`, with stale or mismatched versions rejected fail closed before the pin is derived from the canonical source. P1.11 adds `13` focused tests; `Reference Python CI` run `#13` passes the full `128`-test reference suite.
 
 ### Current canonical action
 
-> **`P1.11 — Negative-path and architecture fitness tests`: close the remaining replay side-effect-safety and projection/index non-authority evidence required by the Phase 1 matrix before the bounded-slice closure review.**
+> **`P1.12 — Phase 1 bounded-slice closure review`: verify the completed P1.01–P1.11 evidence against the declared slice exit criteria, architecture boundaries and ADR gates, then close M1 only if the scoped review passes.**
 
-P1.10 portability is complete within its bounded reference scope. P1.12 remains blocked until the applicable P1.11 matrix passes; no `Active` capability, production-readiness or public compatibility claim follows from the passing reference fixture.
+P1.11 is complete within its bounded reference scope. P1.12 is now the next Phase 1 closure dependency; no `Active` capability, production-readiness, SLA, durable replay/projection commitment or public compatibility claim follows from the passing reference suite.
 
 ## 7. Phase 1 dependency-aware sequence
 
@@ -357,10 +357,12 @@ P1.09 ✅ Observation ≠ Knowledge
    ↓
 P1.10 ✅ Portable semantic fixture
    ↓
+P1.11 ✅ Cross-cutting fitness matrix
+   ↓
 P1.12 ⬜ Closure review
 ```
 
-`P1.11` fitness tests run continuously across the sequence. After P1.10, the remaining replay/projection matrix evidence is the next closure dependency before P1.12.
+`P1.11` fitness tests ran continuously across the sequence. The final replay/projection matrix evidence is now complete, making P1.12 the next closure dependency.
 
 Bounded parallel work is permitted when dependencies remain explicit and the work does not prejudge unresolved architecture or technology choices.
 
@@ -404,6 +406,8 @@ P1.08 remains below this ADR gate because its reconstruction manifest is derived
 P1.09 remains below this ADR gate because its Observation representation reuses existing bounded Canonical Record semantics and adds no durable Memory/Knowledge store, promotion engine, public learning API, serialization contract, retrieval/index technology or vendor dependency.
 
 P1.10 remains below this ADR gate because its documented JSON representation is a deterministic bounded reference fixture only. It creates no supported public/cross-product wire contract, durable migration commitment, persistence layout, vendor dependency, production export service or customer compatibility obligation. If a serialization format later becomes a stable cross-product/public interface, durable portability-package standard or compatibility commitment, the applicable ADR/standard/governance gate must be crossed before reliance.
+
+P1.11 remains below this ADR gate because the new replay/projection evidence is bounded, immutable, in-memory, domain-neutral and non-public. It selects no durable projection/index store, search engine, event-replay runtime, Canonical Head resolver, public retrieval interface or vendor/infrastructure dependency. If a later replay/projection mechanism materially constrains cross-module behavior, authority resolution, portability, migration or public contracts, the applicable ADR gate must be crossed before reliance.
 
 ## 10. Roadmap maintenance rule
 
