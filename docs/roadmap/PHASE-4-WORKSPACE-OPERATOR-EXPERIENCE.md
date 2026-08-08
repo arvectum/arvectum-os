@@ -1,7 +1,7 @@
 # Arvectum OS Phase 4 — Workspace / Operator Experience
 
 Status: `Active`
-Version: `1.8.0`
+Version: `1.9.0`
 Created: `2026-08-08`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -13,15 +13,17 @@ Predecessor: `Phase 3 — Shared Platform Capabilities`, `M3` achieved
 
 ## Version note
 
-Version `1.8.0` records completion of **P4.07 — Memory / Knowledge / Search discovery experience** with `PASS` and advances the current canonical action to the required engineering gate **R10 — Operator Safety / Cross-Capability Health Review**.
+Version `1.9.0` records completion of **R10 — Operator Safety / Cross-Capability Health Review** with `PASS` and advances the current canonical action to **P4.08 — Cross-capability task/context composition + bounded product entry point**.
 
-P4.07 adds a bounded internal presentation/resolution adapter over existing CAP-002 / RFC-0007 knowledge semantics, CAP-003 derived search/index projection semantics, P3.07 current access enforcement and the P4.02 workspace shell. Observation, Organizational Memory, Knowledge Candidate and validated Knowledge remain distinct; browsing, search results, AI-like discovery, validation text or approval-looking evidence cannot itself perform Knowledge promotion.
+R10 reviewed the accumulated P4.03–P4.07 workspace surfaces across Organization/Actor-bound source authorization, purpose/right/classification/minimization, exact-version reliance, canonical-versus-derived authority, stale presentation, duplicate/ambiguous sources, protected counts/previews, hidden actions and repeated presentation/access patterns.
 
-Validated Knowledge preserves exact Subject/Version identity. Consequential reliance requires explicit exact Version selection, current freshness, current Actor/Organization-bound source authorization, matching purpose/right/classification context and final delegation to the existing CAP-002 exact-reliance semantic owner. Stale/review-required Knowledge remains inspectable as stale but is not reliance-eligible.
+One material operator-safety finding was identified in the P4.05 action composition path: a prepared operator action could outlive replacement or revocation of the source-access decision used by the inspected presentation. The defect did not bypass Governed Execution authorization, Organizational Authority or consequential approval, but it could leave a stale/hidden action viable after its presentation-access assumption changed.
 
-Search results are explicitly derived/non-authoritative, retain exact governed source Subject/Version attribution and re-resolve current exact governed sources before protected metadata is shown. A synchronized projection cannot make stale Knowledge current. CAP-003 discovery constraints cannot widen CAP-002 Memory constraints, duplicate exact Memory/Knowledge representations fail closed, and a missing projection is reported as a projection gap rather than evidence that canonical sources do not exist. Unauthorized, ambiguous or handling-ineligible items are omitted without protected counts; previews are minimized.
+R10 closes that gap with a bounded internal `operator_safety.py` guard. It pins the exact source-authorization decision Version Identity used by the P4.05 inspection, requires that decision to remain the unique current allow decision during action preparation, and rechecks it immediately before delegating the action. Missing, denied, ambiguous or replaced access fails closed and requires re-inspection. The guard grants no authority and creates no second canonical-mutation path; consequential mutation remains delegated through the existing P4.05 and runtime-consistency semantic owners.
 
-The bounded adapter does not select durable search/index/vector technology, embeddings or LLM provider, ranking model, RAG runtime, durable read-model/cache storage, frontend framework, public API/route/wire contract, IAM/PDP/PEP mechanism, Product Contract, new Platform Capability or capability lifecycle promotion.
+A structural regression prevents future package modules from directly composing the lower-level P4.05 action preparation/execution functions outside `execution_action_experience.py` and `operator_safety.py`. R10 intentionally does not generalize the repeated presentation/access patterns into a shared authorization framework because P4.08 is the first composition point capable of producing evidence for such a refactor.
+
+R10 selects no frontend framework, public API/BFF/wire contract, IAM/PDP/PEP mechanism, durable workspace/read-model/cache store, database, event broker, search/vector/RAG technology, Product Contract, new Platform Capability or capability lifecycle promotion. No ADR gate was crossed.
 
 Canonical completion evidence:
 
@@ -33,7 +35,7 @@ Canonical completion evidence:
 - [`P4.05 Governed Execution / gate / approval-action review`](../reviews/P4-05-governed-execution-gate-approval-action-experience.md) — `PASS`, four functional cross-review iterations;
 - [`P4.06 Document / Artifact workspace review`](../reviews/P4-06-document-artifact-workspace-experience.md) — `PASS`, five functional cross-review iterations including one pre-merge security finding and remediation;
 - [`P4.07 Memory / Knowledge / Search discovery review`](../reviews/P4-07-memory-knowledge-search-discovery-experience.md) — `PASS`, five functional cross-review iterations including exact-source, projection-gap, semantic-owner policy and ambiguity remediations;
-- GitHub Actions `Reference Python CI #164` — `PASS`, Python `3.12.13`, `521` tests, `OK` on the implementation head before canonical roadmap synchronization.
+- [`R10 Operator Safety / Cross-Capability Health Review`](../reviews/R10-operator-safety-cross-capability-health-review.md) — `PASS`, five functional cross-review iterations with one material stale-source-access action finding remediated before P4.08.
 
 ## 1. Purpose
 
@@ -68,7 +70,7 @@ The workspace remains a platform interaction capability under development. Activ
 | `P4.05` | Governed Execution, gate and approval/action experience | 🟩 Complete | `██████████ 100%` |
 | `P4.06` | Document / Artifact workspace experience | 🟩 Complete | `██████████ 100%` |
 | `P4.07` | Memory / Knowledge / Search discovery experience | 🟩 Complete | `██████████ 100%` |
-| `P4.08` | Cross-capability task/context composition + bounded product entry point | ⬜ | `░░░░░░░░░░ 0%` |
+| `P4.08` | Cross-capability task/context composition + bounded product entry point | ⬜ Current | `░░░░░░░░░░ 0%` |
 | `P4.09` | Security, rights, minimization and authority-safe UX | ⬜ | `░░░░░░░░░░ 0%` |
 | `P4.10` | Workspace architecture fitness + accessibility/usability baseline | ⬜ cross-cutting | `░░░░░░░░░░ 0%` |
 | `P4.11` | Workspace hardening / ADR / refactoring review | ⬜ | `░░░░░░░░░░ 0%` |
@@ -206,7 +208,9 @@ Reference proof should include at least one bounded Product Contract-backed prod
 - does not reach into private platform implementation state;
 - preserves exact version/authority/provenance semantics;
 - returns product-domain decisions/behavior to the product boundary;
-- demonstrates that shared workspace navigation does not become a generic product orchestrator.
+- demonstrates that shared workspace navigation does not become a generic product orchestrator;
+- composes consequential operator actions through the R10 `operator_safety.py` guard rather than directly through the lower-level P4.05 action adapter;
+- treats any source-access decision replacement, revocation, absence or ambiguity as requiring current re-inspection before consequential action can continue.
 
 The Product Contract remains Provisional unless separately promoted through RFC-0004 governance.
 
@@ -278,7 +282,7 @@ The closure review MUST distinguish:
 | Gate | Trigger | Purpose |
 |---|---|---|
 | `R9 — Workspace Boundary Review` | after P4.02 | **Complete / PASS** — shell/navigation does not create authority, product leakage or accidental public boundary; P4.03 source-resolution handoff recorded |
-| `R10 — Operator Safety / Cross-Capability Health Review` | after P4.07 | **Current** — review security, rights, derived-state honesty, repeated UX patterns and code health before P4.08 |
+| `R10 — Operator Safety / Cross-Capability Health Review` | after P4.07 | **Complete / PASS** — current source-access freshness is enforced at operator action composition; cross-capability presentation/reliance health reviewed before P4.08 |
 | `R11 — Composition / Usability Refactoring Review` | after P4.08 / meaningful usability evidence | allow evidence-backed shared UX refactoring only after real composition is demonstrated |
 | `R12 — M4 Workspace Hardening` | after P4.10 | final dependency, authority-bypass, accessibility, deterministic-state and ADR-gate hardening |
 
@@ -307,9 +311,9 @@ P4.06 ✅              P4.07 ✅
 Docs                  Knowledge/Search
  └──────────┬─────────┘
             ↓
-R10 Cross-Capability Health ← current
+R10 Cross-Capability Health ✅
             ↓
-P4.08 Product-backed composition proof
+P4.08 Product-backed composition proof ← current
             ↓
 R11 Composition/Usability Refactoring
             ↓
@@ -382,19 +386,18 @@ A reversible internal reference implementation may proceed without an ADR when t
 
 ## 10. Current canonical action
 
-> **`R10 — Operator Safety / Cross-Capability Health Review`.**
+> **`P4.08 — Cross-capability task/context composition + bounded product entry point`.**
 
-Review the accumulated P4.03–P4.07 operator surfaces before P4.08 composes them with a bounded Product Contract-backed product entry point.
+Compose the proven P4.03–P4.07 workspace surfaces into one bounded task/context flow and introduce the first Product Contract-backed product entry point.
 
-Immediate review scope:
+Immediate constraints:
 
-- verify Organization isolation and current Actor-bound authorization consistently precede protected metadata/source dereference across Records, provenance, Governed Execution, Documents/Artifacts and Memory/Knowledge/Search;
-- test that derived reconstruction, previews and search projections cannot become canonical authority or bypass semantic-owner constraints;
-- inspect repeated exact-version selection/reliance patterns for evidence-backed reuse without prematurely normalizing a public API/frontend contract;
-- inspect hidden-action, stale-presentation, duplicate-source and ambiguous-evidence paths for fail-closed behavior;
-- verify Authorization remains distinct from Organizational Authority and approval-looking UI evidence does not create authority;
-- review minimization, protected-count and preview leakage across capability boundaries;
-- review code health and duplicated presentation/access patterns only for changes justified by accumulated evidence;
-- reopen an ADR gate only if the review establishes a durable or externally constraining technology/interface decision;
-- preserve CAP-001 through CAP-004 as `Incubating / Provisional`; R10 is not a lifecycle promotion gate;
-- do not start P4.08 as the canonical current action until R10 records its disposition and material findings are resolved or explicitly bounded.
+- preserve explicit Organization/product/Actor context across composition;
+- consume shared capability surfaces only through their established semantic owners and declared boundary;
+- preserve exact version, authority and provenance semantics;
+- keep product-domain decisions and workflow meaning on the product side of the boundary;
+- use an applicable RFC-0004 Product Contract before governed reliance on shared platform capabilities, canonical state or shared history;
+- route consequential operator actions through the R10 `operator_safety.py` guard so stale/revoked/missing/ambiguous/replaced source-access state cannot leave a viable hidden action;
+- do not treat Product Contract registration as authorization, Organizational Authority or approval;
+- do not normalize a stable public API/frontend/BFF contract or durable technology without crossing the applicable ADR gate;
+- preserve CAP-001 through CAP-004 as `Incubating / Provisional`; P4.08 is not a capability lifecycle promotion gate.
