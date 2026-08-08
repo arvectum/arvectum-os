@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.3.7`
+Version: `2.3.8`
 Created: `2026-08-07`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -45,7 +45,7 @@ This roadmap uses semantic versioning:
 - `MINOR` — sequencing, milestone scope, work breakdown, phase transition or strategic-horizon changes that do not restructure the planning model;
 - `MAJOR` — restructuring of the roadmap lifecycle or planning model.
 
-Version `2.0.0` introduced the two-horizon planning model. Version `2.1.0` recorded Phase 1 / `M1` completion and Phase 2 decomposition as the next action. Version `2.2.0` activates the decomposed Phase 2 Core Runtime plan. Version `2.2.1` records P2.01 completion and advances the active execution sequence to P2.02. Version `2.3.0` establishes evidence-backed engineering quality/refactoring gates, inserts R1 after completed P2.01 before substantive P2.02 work, and defines milestone/stable-boundary Code Health Gate rules. Version `2.3.1` records R1 completion and advances the current canonical action to P2.02. Version `2.3.2` records P2.02 completion and advances the current canonical action to P2.03. Version `2.3.3` records P2.03 completion and advances the current canonical action to P2.04. Version `2.3.4` records P2.04 completion and advances the current canonical action to P2.05. Version `2.3.5` records P2.05 completion and advances the current canonical action to P2.06. Version `2.3.6` records P2.06 completion and advances the current canonical action to the mandatory R2 Runtime Health Review before substantive P2.07 work. Version `2.3.7` records R2 completion with bounded debt and advances the current canonical action to P2.07.
+Version `2.0.0` introduced the two-horizon planning model. Version `2.1.0` recorded Phase 1 / `M1` completion and Phase 2 decomposition as the next action. Version `2.2.0` activates the decomposed Phase 2 Core Runtime plan. Version `2.2.1` records P2.01 completion and advances the active execution sequence to P2.02. Version `2.3.0` establishes evidence-backed engineering quality/refactoring gates, inserts R1 after completed P2.01 before substantive P2.02 work, and defines milestone/stable-boundary Code Health Gate rules. Version `2.3.1` records R1 completion and advances the current canonical action to P2.02. Version `2.3.2` records P2.02 completion and advances the current canonical action to P2.03. Version `2.3.3` records P2.03 completion and advances the current canonical action to P2.04. Version `2.3.4` records P2.04 completion and advances the current canonical action to P2.05. Version `2.3.5` records P2.05 completion and advances the current canonical action to P2.06. Version `2.3.6` records P2.06 completion and advances the current canonical action to the mandatory R2 Runtime Health Review before substantive P2.07 work. Version `2.3.7` records R2 completion with bounded debt and advances the current canonical action to P2.07. Version `2.3.8` records P2.07 completion and advances the current canonical action to P2.08.
 
 Roadmap identifiers, engineering-gate identifiers, RFC identifiers and ADR identifiers are independent namespaces.
 
@@ -112,7 +112,9 @@ Current verified canonical baseline:
 - P2.06 executable evidence: GitHub Actions `Reference Python CI` run `#40` for PR `#24` passed `241` tests on executable code head `c90b5b0d581e6a4ac9e99c20670c192f59cdcda3`;
 - [`R2 — Runtime Health Review`](../reviews/R2-runtime-health-review.md) is complete with result `Pass with bounded debt`: semantic ownership remains coherent, no speculative shared validation/error abstraction was introduced, bounded internal debt is explicit and 6 cross-cutting runtime-health tests were added;
 - R2 executable evidence: GitHub Actions `Reference Python CI` run `#43` for PR `#25` passed `247` tests in `0.415s` on executable head `c519e6fb3fe9d9b333382786740a37c3a477c06b`;
-- no relevant Accepted ADR currently constrains the bounded runtime choices carried from Phase 1 through R2; durable persistence/transaction/concurrency, Event-delivery, IAM/enforcement and stable public-interface ADR gates remain uncrossed.
+- Phase 2 `P2.07` implements an internal/provisional Product Contract validation boundary for one synthetic product-like consumer: exact contract/product/dependency/version/operation scope, declared canonical Read/Write authority scope, required security/authority/data-governance gates, hidden-coupling rejection and exact Product Contract version attribution into Governed Execution;
+- P2.07 executable evidence: GitHub Actions `Reference Python CI` run `#47` for PR `#26` passed `261` tests in `0.273s` on executable code head `127d99d44761d2d80c5c6bddc11096fe14fd6f87`;
+- no relevant Accepted ADR currently constrains the bounded runtime choices carried from Phase 1 through P2.07; durable persistence/transaction/concurrency, Event-delivery, IAM/enforcement and stable public-interface ADR gates remain uncrossed.
 
 The RFC Index remains the canonical source for RFC status and acceptance evidence.
 
@@ -158,7 +160,7 @@ M1 intentionally did **not** claim reusable Typed Relationship lifecycle, reusab
 
 Canonical detailed work breakdown:
 
-- [`PHASE-2-CORE-RUNTIME.md`](PHASE-2-CORE-RUNTIME.md) — `Active 1.1.7`.
+- [`PHASE-2-CORE-RUNTIME.md`](PHASE-2-CORE-RUNTIME.md) — `Active 1.1.8`.
 
 **Milestone `M2`:** more than one materially distinct bounded workflow reuses the same governed runtime semantics without copying the Phase 1 harness, with architecture fitness evidence, completed Phase 2 engineering quality gates and all crossed ADR gates governed.
 
@@ -215,7 +217,7 @@ Provisional intent: demonstrate safe compounding organizational intelligence thr
 ## 6. Active Roadmap — Phase 2 Core Runtime
 
 **Status:** 🟨 In progress  
-**Phase progress:** `█████░░░░░ 50%` — P2.01 through P2.06 complete; R1 and R2 complete; P2.07 next
+**Phase progress:** `██████░░░░ 58%` — P2.01 through P2.07 complete; R1 and R2 complete; P2.08 next
 
 | ID | Work item | Status | Progress |
 |---|---|---:|---:|
@@ -225,8 +227,8 @@ Provisional intent: demonstrate safe compounding organizational intelligence thr
 | `P2.04` | Governed Execution lifecycle and gate orchestration runtime | 🟩 | `██████████ 100%` |
 | `P2.05` | Event admission, provenance and reconstruction runtime | 🟩 | `██████████ 100%` |
 | `P2.06` | Runtime consistency, idempotency and conflict semantics | 🟩 | `██████████ 100%` |
-| `P2.07` | Product Contract runtime validation boundary | 🟦 | `░░░░░░░░░░ 0%` |
-| `P2.08` | Portability, replay and non-authoritative projection runtime | ⬜ | `░░░░░░░░░░ 0%` |
+| `P2.07` | Product Contract runtime validation boundary | 🟩 | `██████████ 100%` |
+| `P2.08` | Portability, replay and non-authoritative projection runtime | 🟦 | `░░░░░░░░░░ 0%` |
 | `P2.09` | Second bounded workflow reuse proof | ⬜ | `░░░░░░░░░░ 0%` |
 | `P2.10` | Core Runtime architecture fitness matrix | ⬜ | `░░░░░░░░░░ 0%` |
 | `P2.11` | ADR-gate and runtime-boundary hardening review | ⬜ | `░░░░░░░░░░ 0%` |
@@ -245,11 +247,11 @@ Engineering gates are checkpoints rather than `P2.xx` work items and therefore d
 
 ### Current canonical action
 
-> **`P2.07 — Product Contract runtime validation boundary`.**
+> **`P2.08 — Portability, replay and non-authoritative projection runtime`.**
 
-Make RFC-0004 enforceable at the first reusable runtime entry boundary without inventing product-domain semantics. Represent and validate only the Product Contract identity/version/lifecycle and declared platform interaction needed by the bounded runtime evidence; preserve RFC-0003 security/authority separation and RFC-0005 exact Product Contract attribution, and reject hidden reliance on internal tables/imports/streams or undeclared shared state.
+Generalize the P1 fixture/projection proof into reusable runtime behavior without freezing a public wire format. Preserve implementation-neutral semantic export of exact identities, immutable versions, authority declarations and governed relationships for the exercised runtime scope; reconstruct meaning rather than Python object layout; and keep replay incapable of causing consequential side effects.
 
-Use a domain-neutral synthetic product fixture unless a real product interaction is canonically ready. Do not treat Product Contract registration or possession as authorization, Organizational Authority or capability activation. Keep the validation boundary internal/provisional and migration-friendly unless a stable public/cross-product contract is separately governed.
+Keep projections explicitly non-authoritative: they cannot mint governed pins, become an independent source of authority or lose exact source Version Identity attribution. The format remains internal/bounded and migration-friendly unless a stable public/cross-product portability contract is separately governed.
 
 ### Dependency-aware sequence
 
@@ -271,7 +273,7 @@ P2.06 Consistency / idempotency / conflict semantics ✓
           ↓
 R2 Runtime Health Review ✓
           ↓
-P2.07 Product Contract runtime boundary
+P2.07 Product Contract runtime boundary ✓
           ↓
 P2.08 Portability / replay / projection runtime
           ↓
