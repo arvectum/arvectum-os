@@ -1,7 +1,7 @@
 # Arvectum OS Phase 3 — Shared Platform Capabilities
 
 Status: `Active`
-Version: `1.1.1`
+Version: `1.1.2`
 Created: `2026-08-08`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -17,31 +17,21 @@ Phase 3 proves that a small justified set of domain-neutral shared responsibilit
 
 The RFC-0001 capability lifecycle is `Candidate → Incubating → Active → Deprecated → Retired`.
 
-P3.01 admitted four Candidates. P3.02 established bounded incubation envelopes and Provisional domain-neutral capability contracts. R5 passed the pre-implementation boundary review. P3.03 now completes the first executable bounded slice for CAP-001 while retaining lifecycle `Incubating`.
+P3.01 admitted four Candidates. P3.02 established bounded incubation envelopes and Provisional domain-neutral capability contracts. R5 passed the pre-implementation boundary review. P3.03 and P3.04 now complete bounded executable slices for CAP-001 and CAP-002 while both remain `Incubating`.
 
 ## 2. Current bounded capability set
 
 1. `CAP-001 — Document & Artifact Governance` — `Incubating`, Provisional contract; P3.03 bounded slice complete;
-2. `CAP-002 — Memory & Knowledge Governance` — `Incubating`, Provisional contract;
+2. `CAP-002 — Memory & Knowledge Governance` — `Incubating`, Provisional contract; P3.04 bounded slice complete;
 3. `CAP-003 — Search / Index Projection` — `Incubating`, Provisional contract, strictly non-authoritative;
 4. `CAP-004 — Audit / Reconstruction Support` — `Incubating`, Provisional contract, derived/read-oriented.
 
 Canonical lifecycle catalog: [`PLATFORM-CAPABILITY-CANDIDATE-CATALOG.md`](../catalogs/PLATFORM-CAPABILITY-CANDIDATE-CATALOG.md).
-
 Canonical P3.02 contract baseline: [`PHASE-3-PROVISIONAL-CAPABILITY-CONTRACTS.md`](../contracts/PHASE-3-PROVISIONAL-CAPABILITY-CONTRACTS.md).
 
 ## 3. Explicitly deferred / outside capability identity
 
-The following remain outside the initial P3 capability set unless later evidence changes the disposition:
-
-- generic notification service;
-- generic scheduler;
-- generic connector marketplace/broad adaptor framework;
-- public SDK/API;
-- product-domain workflows, taxonomies, templates, ontologies, prompts, scoring and business rules;
-- production IAM/policy-engine product choice;
-- fixed database, object store, search engine, broker or service topology;
-- customer-facing SLA/support/HA/compliance commitments.
+Generic notification/scheduler/connector marketplace, public SDK/API, product-domain workflows/taxonomies/templates/ontologies/prompts/scoring/business rules, production IAM choice, fixed database/object store/search engine/broker/service topology and customer-facing SLA/support/HA/compliance commitments remain outside the initial capability identity.
 
 ## 4. Phase 3 work breakdown
 
@@ -50,7 +40,7 @@ The following remain outside the initial P3 capability set unless later evidence
 | `P3.01` | Capability boundary revalidation + Candidate catalog | 🟩 Complete | `██████████ 100%` |
 | `P3.02` | Capability lifecycle, ownership and Provisional contract baseline | 🟩 Complete | `██████████ 100%` |
 | `P3.03` | Document & Artifact Governance candidate slice | 🟩 Complete | `██████████ 100%` |
-| `P3.04` | Memory & Knowledge Governance candidate slice | ⬜ | `░░░░░░░░░░ 0%` |
+| `P3.04` | Memory & Knowledge Governance candidate slice | 🟩 Complete | `██████████ 100%` |
 | `P3.05` | Non-authoritative Search / Index Projection candidate slice | ⬜ | `░░░░░░░░░░ 0%` |
 | `P3.06` | Audit / Reconstruction Support candidate slice | ⬜ | `░░░░░░░░░░ 0%` |
 | `P3.07` | Cross-capability security, rights and Organization-scope enforcement | ⬜ | `░░░░░░░░░░ 0%` |
@@ -64,36 +54,27 @@ The following remain outside the initial P3 capability set unless later evidence
 
 P3.01 admitted CAP-001 through CAP-004 as bounded domain-neutral responsibilities. P3.02 moved them to `Incubating` for Phase 3 validation and established Provisional capability contracts. R5 confirmed no accidental service-catalog growth, lifecycle inflation, product-domain leakage, stable-interface leakage or already-crossed durable ADR commitment.
 
-## 6. P3.03 completion evidence
+## 6. Completed bounded slices
 
-P3.03 implements `CAP-001 — Document & Artifact Governance` in the internal reference Python harness without creating a DMS or stable interface.
+### P3.03 — CAP-001
 
 Canonical review: [`P3-03-document-artifact-governance-candidate-slice-review.md`](../reviews/P3-03-document-artifact-governance-candidate-slice-review.md) — `PASS`.
 
-Executable implementation/evidence:
+Implementation/evidence: `reference/python/arvectum_os_ref/document_artifact_governance.py`; `reference/python/tests/test_p3_03_document_artifact_governance.py`.
 
-- `reference/python/arvectum_os_ref/document_artifact_governance.py`;
-- `reference/python/tests/test_p3_03_document_artifact_governance.py`.
+### P3.04 — CAP-002
 
-The bounded slice proves stable logical Document identity, immutable Document Version identity, explicit Artifact/content identity, transient-versus-governed admission, designated rendition/manifest association, derivation provenance, handling-constraint propagation, exact Document Version + Artifact reliance and storage/hash non-authority. It composes existing `CanonicalRecord`, `CanonicalLineage` and `OrganizationScope` owners rather than creating competing runtime semantics.
+Canonical review: [`P3-04-memory-knowledge-governance-candidate-slice-review.md`](../reviews/P3-04-memory-knowledge-governance-candidate-slice-review.md) — `PASS`.
 
-P3.03 selects no durable persistence/object store, transaction mechanism, Event transport, IAM provider, evidence-integrity technology, stable serialization/API or service topology. No ADR gate is crossed. CAP-001 remains `Incubating`; P3.03 does not establish operational readiness or `Active` status.
+Implementation/evidence: `reference/python/arvectum_os_ref/memory_knowledge_governance.py`; `reference/python/tests/test_p3_04_memory_knowledge_governance.py`.
+
+The bounded CAP-002 slice proves Observation/Memory/Candidate/Knowledge separation, epistemic-status preservation, distinct validation and approval gates, Organization/purpose/rights/freshness retrieval filtering, derived retrieval non-authority and exact Knowledge Version reliance without Head/rank inference. It selects no durable knowledge/vector/search technology or stable interface.
 
 ## 7. Remaining bounded slices
 
-### P3.04 — Memory & Knowledge Governance candidate slice
+P3.05 proves non-authoritative Search / Index Projection behavior with exact source/version attribution and rebuildable derived state. P3.06 proves read-oriented Audit / Reconstruction Support over governed evidence.
 
-Implement a bounded RFC-0007 shared slice preserving Observation ≠ Memory ≠ Knowledge Candidate ≠ validated Knowledge, governed retrieval, explicit promotion, exact-version attribution, validation/authority separation, AI non-authority and non-canonical derived retrieval state.
-
-### P3.05 — Non-authoritative Search / Index Projection candidate slice
-
-Prove reusable discovery/index behavior with exact source/version attribution, visible stale/missing state, source resolution before consequential reliance, rebuild/replay and replaceable search technology.
-
-### P3.06 — Audit / Reconstruction Support candidate slice
-
-Expose bounded read-oriented reconstruction of execution, actor/authority, Product Contract, workflow/material inputs, Event causation/correlation and output versions while preserving missing/redacted/deleted evidence semantics.
-
-P3.04–P3.06 may proceed in bounded parallel. P3.10 fitness evidence accumulates continuously.
+P3.05–P3.06 may proceed in bounded parallel. P3.10 fitness evidence accumulates continuously.
 
 ## 8. Later Phase 3 work
 
@@ -101,18 +82,13 @@ P3.07 proves cross-capability security/rights/Organization enforcement. P3.08 pr
 
 ## 9. Engineering review gates
 
-| Gate | Trigger | Purpose |
-|---|---|---|
-| `R5 — Capability Boundary Review` | after P3.02 | 🟩 PASS — boundary checked before implementation expansion |
-| `R6 — Cross-Capability Health Review` | after P3.07 | review duplicate semantics, security/rights propagation, dependency direction and ADR triggers |
-| `R7 — Reuse Refactoring Review` | after P3.09 | refactor only abstractions justified by actual reuse |
-| `R8 — M3 Hardening Review` | after P3.10 | final code health, fitness, unsafe dependency, capability-status and evidence-backed optimization pass |
+R5 is PASS. R6 follows P3.07, R7 follows P3.09, and R8 follows P3.10. Each gate must preserve capability boundaries, dependency direction, security/rights semantics and ADR triggers.
 
 ## 10. ADR and Product Contract gates
 
-Re-open the ADR gate before material reliance on concrete durable database/object-store/search topology, transactions/concurrency, Event delivery/store, IAM/PDP/PEP, evidence-integrity technology, stable public/cross-product API/SDK/serialization, durable projection/replay storage or separately deployable service/process topology.
+Re-open the ADR gate before material reliance on concrete durable database/object-store/search/vector topology, transactions/concurrency, Event delivery/store, IAM/PDP/PEP, evidence-integrity technology, stable public/cross-product API/SDK/serialization, durable projection/replay storage or separately deployable service/process topology.
 
-A real Product or Product Experiment relying on P3 capabilities, canonical platform state or shared history must use an RFC-0004 Product Contract. Incubating capability contracts do not themselves grant permissions or authority.
+A real Product or Product Experiment relying on P3 capabilities, canonical platform state or shared history must use an RFC-0004 Product Contract. Incubating capability contracts do not grant permissions or authority.
 
 ## 11. M3 exit criteria
 
@@ -120,6 +96,6 @@ M3 may be declared achieved only when retained capabilities have explicit lifecy
 
 ## 12. Current canonical action
 
-> **P3.04–P3.06 — remaining bounded capability slices; P3.10 evidence continuous.**
+> **P3.05–P3.06 — remaining bounded capability slices; P3.10 evidence continuous.**
 
-P3.03 is complete. Continue the remaining bounded Incubating slices without expanding capability identity, stabilizing public/cross-product interfaces, importing product-domain semantics or selecting durable cross-cutting mechanisms without re-opening the ADR gate.
+P3.03 and P3.04 are complete. Continue without expanding capability identity, stabilizing public/cross-product interfaces, importing product-domain semantics or selecting durable cross-cutting mechanisms without re-opening the ADR gate.

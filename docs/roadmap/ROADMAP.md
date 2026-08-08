@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.8.1`
+Version: `2.8.2`
 Created: `2026-08-07`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -15,11 +15,11 @@ The Strategic Roadmap beyond completed work is a planning hypothesis, not an arc
 
 ## 2. Version note
 
-Version `2.8.1` records completion of **P3.03 — Document & Artifact Governance candidate slice**.
+Version `2.8.2` records completion of **P3.04 — Memory & Knowledge Governance candidate slice**.
 
-P3.03 adds the first bounded executable CAP-001 slice above the Core Runtime and scoped fitness evidence for logical Document identity, immutable versions, explicit Artifact/content identity, governed admission, derivation provenance, handling propagation, exact-version reliance and storage/hash non-authority. CAP-001 remains `Incubating` with a Provisional contract; no durable ADR boundary, production readiness, stable public interface or `Active` promotion is created.
+P3.04 adds bounded executable CAP-002 evidence for Observation/Memory/Knowledge Candidate/validated Knowledge separation, explicit validation/approval promotion, governed retrieval constraints, derived retrieval non-authority and exact Knowledge Version reliance. CAP-002 remains `Incubating` with a Provisional contract; no durable vector/model/persistence choice, stable public interface, production readiness or `Active` promotion is created.
 
-P3.04–P3.06 remain available in bounded parallel and P3.10 fitness evidence continues to accumulate.
+P3.05–P3.06 remain available in bounded parallel and P3.10 fitness evidence continues to accumulate.
 
 ## 3. Verified architecture baseline
 
@@ -29,13 +29,12 @@ P3.04–P3.06 remain available in bounded parallel and P3.10 fitness evidence co
 - Phase 1 / `M1` — complete;
 - Phase 2 / `M2` — complete;
 - Phase 3 — `Active` planning/workstream state;
-- [`PHASE-3-SHARED-PLATFORM-CAPABILITIES.md`](PHASE-3-SHARED-PLATFORM-CAPABILITIES.md) — `Active 1.1.1`;
+- [`PHASE-3-SHARED-PLATFORM-CAPABILITIES.md`](PHASE-3-SHARED-PLATFORM-CAPABILITIES.md) — `Active 1.1.2`;
 - [`Platform Capability Catalog`](../catalogs/PLATFORM-CAPABILITY-CANDIDATE-CATALOG.md) — `Active 1.1.0`, four entries lifecycle `Incubating`;
 - [`Phase 3 Provisional Capability Contracts`](../contracts/PHASE-3-PROVISIONAL-CAPABILITY-CONTRACTS.md) — `Active 1.0.0`;
-- [`P3.01 review`](../reviews/P3-01-capability-boundary-revalidation-review.md) — `PASS`;
-- [`P3.02 review`](../reviews/P3-02-capability-lifecycle-ownership-provisional-contract-review.md) — `PASS`;
 - [`R5 Capability Boundary Review`](../reviews/R5-capability-boundary-review.md) — `PASS`;
 - [`P3.03 review`](../reviews/P3-03-document-artifact-governance-candidate-slice-review.md) — `PASS`;
+- [`P3.04 review`](../reviews/P3-04-memory-knowledge-governance-candidate-slice-review.md) — `PASS`;
 - Decision Authority Policy remains `Proposed 0.2.1`; residual authority remains with the owner;
 - no Platform Capability is `Active`.
 
@@ -55,16 +54,10 @@ P3.04–P3.06 remain available in bounded parallel and P3.10 fitness evidence co
 
 Phase status, capability lifecycle, operational environment and conformance maturity remain distinct.
 
-## 5. Completed Phase 2 / M2
+## 5. Active Phase 3 — Shared Platform Capabilities
 
-Phase 2 is closed at 100%. M2 proves the bounded reusable Core Runtime semantics but does not establish production readiness, full RFC conformance, stable public compatibility, a supported SDK/API, durable infrastructure, SLA/support obligations or an `Active` Platform Capability.
-
-## 6. Active Phase 3 — Shared Platform Capabilities
-
-Current bounded capability set:
-
-1. `CAP-001 — Document & Artifact Governance` — `Incubating`, Provisional; P3.03 bounded slice complete;
-2. `CAP-002 — Memory & Knowledge Governance` — `Incubating`, Provisional;
+1. `CAP-001 — Document & Artifact Governance` — `Incubating`, Provisional; P3.03 complete;
+2. `CAP-002 — Memory & Knowledge Governance` — `Incubating`, Provisional; P3.04 complete;
 3. `CAP-003 — Search / Index Projection` — `Incubating`, Provisional, non-authoritative;
 4. `CAP-004 — Audit / Reconstruction Support` — `Incubating`, Provisional, derived/read-oriented.
 
@@ -74,7 +67,7 @@ Current bounded capability set:
 | `P3.02` | Capability lifecycle, ownership and Provisional contract baseline | 🟩 Complete | `██████████ 100%` |
 | `R5` | Capability Boundary Review | 🟩 PASS | `██████████ 100%` |
 | `P3.03` | Document & Artifact Governance candidate slice | 🟩 Complete | `██████████ 100%` |
-| `P3.04` | Memory & Knowledge Governance candidate slice | ⬜ | `░░░░░░░░░░ 0%` |
+| `P3.04` | Memory & Knowledge Governance candidate slice | 🟩 Complete | `██████████ 100%` |
 | `P3.05` | Non-authoritative Search / Index Projection candidate slice | ⬜ | `░░░░░░░░░░ 0%` |
 | `P3.06` | Audit / Reconstruction Support candidate slice | ⬜ | `░░░░░░░░░░ 0%` |
 | `P3.07` | Cross-capability security, rights and Organization-scope enforcement | ⬜ | `░░░░░░░░░░ 0%` |
@@ -86,33 +79,29 @@ Current bounded capability set:
 
 ### M3 target
 
-A small set of domain-neutral shared capabilities has demonstrated governed reuse above the Core Runtime with explicit lifecycle/ownership/contracts, no product-domain leakage, preserved authority/provenance/portability semantics and no unsupported production/public-contract claims.
+A small set of domain-neutral shared capabilities has demonstrated governed reuse above the Core Runtime with explicit lifecycle/ownership/contracts, no product-domain leakage, preserved authority/provenance/portability semantics and no unsupported production/public-contract claims. M3 does not itself imply lifecycle `Active` promotion.
 
-M3 does not itself require or imply lifecycle `Active` capability promotion.
+## 6. Current canonical action
 
-## 7. Current canonical action
+> **P3.05–P3.06 — remaining bounded capability slices; P3.10 evidence continuous.**
 
-> **P3.04–P3.06 — remaining bounded capability slices; P3.10 evidence continuous.**
+P3.03 and P3.04 are complete. Continue the remaining Incubating slices without expanding capability identity, stabilizing public/cross-product interfaces, importing product-domain semantics or selecting durable cross-cutting mechanisms without re-opening the ADR gate.
 
-P3.03 is complete. Continue the remaining Incubating capability slices without expanding capability identity, stabilizing public/cross-product interfaces, importing product-domain semantics or selecting durable cross-cutting mechanisms without re-opening the ADR gate.
+## 7. ADR and Product Contract gate
 
-## 8. ADR and Product Contract gate
-
-P2.11's bounded no-ADR disposition remains in force only while no material durable/external dependency has crossed the threshold.
-
-Re-open the ADR gate before material reliance on concrete persistence/database/object-store/search topology, transactions/concurrency, Event transport/store, IAM/policy enforcement, evidence-integrity technology, stable API/serialization contracts, durable projection/replay storage or deployable service/process topology.
+Re-open the ADR gate before material reliance on concrete persistence/database/object-store/search/vector topology, transactions/concurrency, Event transport/store, IAM/policy enforcement, evidence-integrity technology, stable API/serialization contracts, durable projection/replay storage or deployable service/process topology.
 
 A real Product relying on Incubating capabilities, canonical platform state or shared platform history must use the applicable RFC-0004 Product Contract before governed reliance. P3.02 capability contracts are not substitutes for Product Contracts and do not grant permission or authority.
 
-## 9. Phase transition rule
+## 8. Phase transition rule
 
 Before Phase 4 becomes Active, complete P3.12/M3 closure, revalidate Phase 4 against actual M3 evidence and product/operator needs, create a detailed P4 work breakdown, identify required governance artifacts and synchronize this roadmap.
 
-## 10. Roadmap maintenance rule
+## 9. Roadmap maintenance rule
 
 Every roadmap update begins with repository synchronization rather than chat-memory reconstruction. After every meaningful canonical milestone, synchronize the roadmap, record evidence, keep lifecycle/environment/conformance distinct, do not inflate Draft/Proposed/exploratory status, and preserve repository history rather than fabricating approvals.
 
-## 11. Current state summary
+## 10. Current state summary
 
 ```text
 Constitution 1.2.0 ✓
@@ -124,14 +113,12 @@ Phase 2 / M2 ✓
 Phase 3 — Shared Platform Capabilities ACTIVE
         ↓
 P3.01 Candidate admission ✓
-        ↓
-P3.02 Incubating lifecycle + Provisional capability contracts ✓
-        ↓
+P3.02 Incubating lifecycle + Provisional contracts ✓
 R5 Capability Boundary Review ✓ PASS
-        ↓
 P3.03 Document & Artifact Governance ✓
+P3.04 Memory & Knowledge Governance ✓
         ↓
-P3.04–P3.06 remaining bounded slices ← current
+P3.05–P3.06 remaining bounded slices ← current
         ↓
 P3.07–P3.09 composition / consumer / reuse proof
         ↓
