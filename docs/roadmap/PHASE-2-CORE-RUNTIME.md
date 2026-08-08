@@ -1,7 +1,7 @@
 # Arvectum OS Phase 2 — Core Runtime
 
 Status: `Active`
-Version: `1.1.1`
+Version: `1.1.2`
 Created: `2026-08-08`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -79,8 +79,8 @@ Progress bars are planning indicators only.
 | ID | Work item | Status | Progress |
 |---|---|---:|---:|
 | `P2.01` | Runtime boundary extraction and reusable composition baseline | 🟩 | `██████████ 100%` |
-| `P2.02` | Canonical Record lineage, Head and Effective Version runtime | 🟦 | `░░░░░░░░░░ 0%` |
-| `P2.03` | Typed Relationship runtime | ⬜ | `░░░░░░░░░░ 0%` |
+| `P2.02` | Canonical Record lineage, Head and Effective Version runtime | 🟩 | `██████████ 100%` |
+| `P2.03` | Typed Relationship runtime | 🟦 | `░░░░░░░░░░ 0%` |
 | `P2.04` | Governed Execution lifecycle and gate orchestration runtime | ⬜ | `░░░░░░░░░░ 0%` |
 | `P2.05` | Event admission, provenance and reconstruction runtime | ⬜ | `░░░░░░░░░░ 0%` |
 | `P2.06` | Runtime consistency, idempotency and conflict semantics | ⬜ | `░░░░░░░░░░ 0%` |
@@ -137,6 +137,20 @@ Minimum evidence:
 - runtime resolver remains independent of a particular database/index technology.
 
 **Exit:** two or more record lineages can be resolved correctly for head and effective-version cases with deterministic tests including future-effective and stale/conflict cases.
+
+**Completion evidence — 2026-08-08:**
+
+- `reference/python/arvectum_os_ref/canonical.py` extends the provisional immutable Canonical Record envelope with optional timezone-aware `effective_from` / `effective_until` applicability bounds; prior versions remain immutable and missing bounds remain unbounded on that side;
+- `reference/python/arvectum_os_ref/canonical_lineage.py` introduces a domain-neutral in-memory `CanonicalLineage` resolver over already-admitted versions without selecting persistence, database/index, public API or current-state-pointer technology;
+- lineage validation preserves one Subject Identity, Organization scope, authority scope/mode and semantic type while requiring distinct Version Identities, exactly one root, known predecessors, one unambiguous successor chain and one Canonical Head;
+- Canonical Head is derived from predecessor lineage rather than collection order, creation timestamp or mutable projection state;
+- Effective Version resolution requires an explicit timezone-aware evaluation time and uses immutable half-open applicability intervals; zero applicable versions and overlapping applicable versions fail explicitly instead of applying a last-write-wins guess;
+- exact immutable Version Identity lookup remains available independently of Head/Effective resolution and is proven compatible with `GovernedVersionPin` consequential pinning;
+- `reference/python/tests/test_p2_02_canonical_lineage.py` adds 15 focused tests covering two independent multi-version subjects, future-effective Head/Effective divergence, immediate-effect boundary, historical resolution, exact stale-version pinning, fork/missing-predecessor/mixed-scope conflicts, overlap/gap failures and timezone-aware evaluation;
+- GitHub Actions `Reference Python CI` run `#28` for PR `#20` on executable code head `5c86f84628866a5b35a309620190022072ac0261` completed successfully: `Ran 155 tests in 0.303s` / `OK`; the prior 140-test R1 baseline remains green;
+- no Accepted RFC is modified; no ADR is required because the implementation remains bounded, in-memory, internal/provisional and reversible, and does not establish a durable datastore, public interface or cross-product compatibility contract.
+
+P2.02 completion makes the exercised RFC-0002 lineage/Head/Effective Version semantics executable within the bounded reference runtime only. It does not create a Governed Execution current-state pointer, solve durable concurrency/branch admission, activate a Platform Capability, establish production readiness or create a full RFC-0002 conformance claim. P2.06 remains responsible for broader runtime consistency/concurrency semantics, while P2.04 remains responsible for reusable Governed Execution lifecycle state.
 
 ### P2.03 — Typed Relationship runtime
 
@@ -344,7 +358,7 @@ P2.01 Runtime boundary extraction
           ↓
 R1 Structural Review ✓
           ↓
-P2.02 Canonical Record Head / Effective Version runtime
+P2.02 Canonical Record Head / Effective Version runtime ✓
    ├──────────────┐
    ↓              ↓
 P2.03 Relationships     P2.04 Governed Execution runtime
@@ -376,15 +390,15 @@ P2.12 Closure review
 
 `P2.10` architecture fitness tests run continuously across the phase; the diagram shows only its final applicable evidence point before R4.
 
-The sequence is dependency-aware rather than mechanically serial. P2.02–P2.04 MAY proceed in bounded parallel where interfaces are explicit and no unresolved decision is prejudged, but declared engineering gates remain ordering constraints for the work that follows them.
+The sequence is dependency-aware rather than mechanically serial. P2.03–P2.04 MAY proceed in bounded parallel where interfaces are explicit and no unresolved decision is prejudged, but declared engineering gates remain ordering constraints for the work that follows them.
 
 ## 8. Current canonical action
 
-> **`P2.02 — Canonical Record lineage, Head and Effective Version runtime`.**
+> **`P2.03 — Typed Relationship runtime`.**
 
-Implement reusable, domain-neutral Canonical Record lineage operations that distinguish Canonical Head from Effective Version resolution, preserve exact Version Identity pinning for consequential reliance, fail explicitly on ambiguity or absence, and remain independent of a particular database or index technology.
+Exercise the RFC-0002 Typed Relationship model as reusable, domain-neutral governed runtime behavior with independent Relationship Identity, immutable relationship versions, explicit Subject/Version endpoint roles, Organization scope, history-preserving supersession and no implicit authorization/Organizational Authority semantics.
 
-P2.02 must build on the R1-hardened explicit runtime composition boundary without turning the provisional Python package layout or reference adapter implementation into a stable public/cross-product contract.
+Do not introduce a graph-database dependency or reinterpret the P1 derived semantic links as canonical Typed Relationship records merely to complete P2.03. Reuse the P2.02 exact-version and lineage semantics where relationship endpoints or relationship history require them, while keeping the current in-memory package topology provisional.
 
 ## 9. ADR gate
 
