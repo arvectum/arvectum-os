@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.0.7`
+Version: `2.1.0`
 Created: `2026-08-07`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -14,9 +14,9 @@ This document is the canonical planning source for the development sequence of A
 It has two planning horizons:
 
 1. **Strategic Roadmap** — approximate long-range direction across all currently envisioned phases;
-2. **Active Roadmap** — detailed, evidence-backed work breakdown for the current phase.
+2. **Active planning horizon** — evidence-backed work breakdown for the current execution phase or, at a phase boundary, the canonical action required before the next phase may become Active.
 
-The Strategic Roadmap is intentionally provisional beyond the active phase. It is a planning hypothesis, not an architectural contract, delivery promise, capability-lifecycle claim, SLA or commitment to build every listed item.
+The Strategic Roadmap is intentionally provisional beyond the completed/current phase. It is a planning hypothesis, not an architectural contract, delivery promise, capability-lifecycle claim, SLA or commitment to build every listed item.
 
 The roadmap coordinates work. It does **not** override architectural or governance authority.
 
@@ -39,11 +39,11 @@ Detailed RFC approval/publication evidence is maintained in [`docs/rfc/README.md
 
 This roadmap uses semantic versioning:
 
-- `PATCH` — progress, status, links and wording clarifications;
-- `MINOR` — sequencing, milestone scope, work breakdown or strategic-horizon changes that do not restructure the planning model;
+- `PATCH` — progress, status, links and wording clarifications within the current sequencing model;
+- `MINOR` — sequencing, milestone scope, work breakdown, phase transition or strategic-horizon changes that do not restructure the planning model;
 - `MAJOR` — restructuring of the roadmap lifecycle or planning model.
 
-Version `2.0.0` introduces the two-horizon planning model: Strategic Roadmap + Active Roadmap.
+Version `2.0.0` introduced the two-horizon planning model. Version `2.1.0` records completion of Phase 1 / `M1` and the required transition into Phase 2 decomposition without prematurely activating Phase 2.
 
 ### 2.1 Planning confidence
 
@@ -105,7 +105,8 @@ Current verified canonical baseline:
 - Constitution `1.2.0` — `Ratified`;
 - RFC-0001 through RFC-0008 — `Accepted 1.0.0`;
 - Architecture Glossary aligned through Accepted RFC-0008;
-- Phase 0 reference implementation readiness completed and owner-confirmed.
+- Phase 0 reference implementation readiness completed and owner-confirmed;
+- Phase 1 bounded executable reference slice completed through `P1.12`, with `M1` closure evidence recorded in [`docs/reviews/P1-12-phase-1-bounded-slice-closure-review.md`](../reviews/P1-12-phase-1-bounded-slice-closure-review.md).
 
 The RFC Index remains the canonical source for RFC status and acceptance evidence.
 
@@ -116,8 +117,8 @@ The strategic horizon estimates the current scale of work without pretending tha
 | Phase | Strategic scope | Confidence | Status | Milestone |
 |---|---|---|---|---|
 | `Phase 0` | Foundation / Architecture Bootstrap | Executed | 🟩 Complete | `M0` Architecture baseline established |
-| `Phase 1` | Reference Implementation | Active | 🟨 In progress | `M1` First executable architectural spine proven |
-| `Phase 2` | Core Runtime | Near-term | ⬜ Draft | `M2` Reusable governed runtime baseline |
+| `Phase 1` | Reference Implementation | Executed | 🟩 Complete | `M1` First executable architectural spine proven |
+| `Phase 2` | Core Runtime | Near-term | 🟦 Ready for decomposition | `M2` Reusable governed runtime baseline |
 | `Phase 3` | Shared Platform Capabilities | Exploratory | ⬜ Draft | `M3` Validated shared capability baseline |
 | `Phase 4` | Workspace / Operator Experience | Exploratory | ⬜ Draft | `M4` Coherent governed workspace baseline |
 | `Phase 5` | SDK, Contracts and Extension Experience | Exploratory | ⬜ Draft | `M5` Repeatable product/extension integration |
@@ -138,26 +139,37 @@ Completed scope includes Constitution/RFC governance, architecture language, Ker
 
 **Intent:** prove that the Accepted architecture can execute as one minimal, domain-neutral, reversible slice before infrastructure is selected prematurely.
 
-Current detailed work includes Organization/Actor attribution, Canonical Records and immutable versions, Workflow versioning, Execution Context exact-version pinning, authorization and Organizational Authority gates, governed mutation, canonical Event, provenance, Observation non-promotion, portable fixtures and architecture fitness tests.
+Completed bounded scope includes Organization/Actor attribution, immutable Native Canonical Record versions, versioned Workflow semantics, Execution Context exact-version pinning, separate Authorization and Organizational Authority gates, governed canonical mutation, canonical Event admission, provenance/reconstruction evidence, Observation non-promotion, portable semantic fixtures and replay/projection architecture-fitness evidence.
 
-**Milestone `M1`:** first bounded executable architectural spine passes its closure review and portability/fitness criteria.
+`P1.12` closure explicitly reconciles the broader readiness inventory with the bounded M1 proof. M1 does not claim full Accepted-RFC conformance, a real Product Contract interaction, complete Typed Relationship lifecycle, reusable Canonical Head/Effective Version resolution, complete Memory/Knowledge lifecycle, production portability or operational readiness.
+
+Canonical Phase 1 completion record:
+
+- [`docs/roadmap/PHASE-1-REFERENCE-IMPLEMENTATION.md`](PHASE-1-REFERENCE-IMPLEMENTATION.md);
+- [`docs/reviews/P1-12-phase-1-bounded-slice-closure-review.md`](../reviews/P1-12-phase-1-bounded-slice-closure-review.md).
+
+**Milestone `M1`:** 🟩 achieved.
 
 ### 5.3 Phase 2 — Core Runtime
 
 **Provisional intent:** turn the proven Phase 1 semantics into a reusable runtime baseline without allowing the current reference harness to become permanent architecture accidentally.
 
-Likely scope to evaluate and decompose after Phase 1:
+Likely scope to evaluate during decomposition:
 
 - stable runtime boundaries for the five Kernel primitives;
-- reusable Canonical Record/version and Relationship operations;
+- reusable Canonical Record/version and Typed Relationship operations;
+- Canonical Head / Effective Version resolution semantics where the reusable runtime requires them;
 - Governed Execution lifecycle and enforcement interfaces;
 - Event admission and provenance reconstruction interfaces;
 - identity, authorization and Organizational Authority enforcement boundaries;
+- the role of Product Contract validation in the first real product/platform runtime interaction;
 - persistence/transaction/concurrency requirements only where evidence requires them;
 - runtime portability and migration fixtures;
-- ADRs for technology choices that actually cross an ADR gate.
+- ADRs for technology choices that actually cross the existing ADR gate.
 
 **Not assumed yet:** microservices, PostgreSQL, FastAPI, broker, policy engine, cloud topology or any specific implementation technology.
+
+Phase 2 is **not Active yet**. Its strategic intent must be revalidated and decomposed into a canonical `PHASE-2-...` work breakdown before substantive execution.
 
 **Milestone `M2`:** more than one bounded workflow can reuse the same governed runtime semantics without copying the Phase 1 harness.
 
@@ -287,13 +299,13 @@ The descriptive term `Organizational Twin` remains informative as defined by Acc
 
 **Milestone `M9`:** repeated governed learning demonstrably improves future organizational work while preserving authority, provenance, security, rights and portability.
 
-## 6. Active Roadmap — Phase 1 Reference Implementation
+## 6. Completed Phase 1 delivery record
 
-**Status:** 🟨 In progress
+**Status:** 🟩 Complete
 
 Canonical detailed work breakdown:
 
-- [`docs/roadmap/PHASE-1-REFERENCE-IMPLEMENTATION.md`](PHASE-1-REFERENCE-IMPLEMENTATION.md) — current Active Phase 1 plan.
+- [`docs/roadmap/PHASE-1-REFERENCE-IMPLEMENTATION.md`](PHASE-1-REFERENCE-IMPLEMENTATION.md).
 
 | ID | Work item | Status | Progress |
 |---|---|---:|---:|
@@ -308,63 +320,49 @@ Canonical detailed work breakdown:
 | `P1.09` | Observation creation without Knowledge promotion | 🟩 | `██████████ 100%` |
 | `P1.10` | Portable semantic fixture export | 🟩 | `██████████ 100%` |
 | `P1.11` | Negative-path and architecture fitness tests | 🟩 | `██████████ 100%` |
-| `P1.12` | Phase 1 bounded-slice closure review | ⬜ | `░░░░░░░░░░ 0%` |
+| `P1.12` | Phase 1 bounded-slice closure review | 🟩 | `██████████ 100%` |
 
-### Current implementation evidence
+### Final executable evidence
 
-`P1.01` through `P1.04` remain implemented in [`reference/python`](../../reference/python/README.md) with the previously recorded `31`-test validation baseline.
+`P1.11` final executable code head `ac96593478d132e88be5807afa5b3af82adce6ec` passed GitHub Actions `Reference Python CI` run `#13`:
 
-`P1.05` adds separate immutable Authorization and Organizational Authority gate decisions for the exact P1.04 execution attempt. Missing/denied evidence fails closed; neither gate implies the other; two explicit scoped `Allow` decisions are required to create the next immutable `Ready` Execution Context version. The Ready version preserves predecessor lineage, exact Workflow/material-input pins and both explicit-Allow gate decision pins; no target Canonical Record mutation occurs yet. P1.05 adds `12` executable fitness tests.
+- job: `Full reference test suite`;
+- command: `python -m unittest discover -s tests -v`;
+- result: `Ran 128 tests`;
+- conclusion: `OK` / workflow `success`.
 
-`P1.06` executes the declared `CanonicalMutation` only through that exact immutable `Ready` execution. It consumes the exact Workflow/material-input and explicit-Allow gate-decision versions, creates a distinct immutable target v2 under the same Subject Identity with P1.02 v1 as predecessor, rejects stale-current conflicts instead of overwriting newer state, preserves v1 unchanged, and records the canonical effect in a new immutable terminal `Succeeded` Execution Context version. P1.06 adds `13` focused executable fitness tests.
+### P1.12 closure evidence
 
-`P1.07` distinguishes transient Event receipt from canonical admission, admits one immutable `Native` Event linked to the exact terminal P1.06 Execution Context and resulting target v2, preserves event type/schema/source/time/actor/classification/provenance/integrity context, treats duplicate delivery idempotently, rejects conflicting Event Identity/Version Identity reuse without rewriting history, and fails closed on wrong execution/result or cross-Organization linkage. P1.07 adds `14` focused executable fitness tests.
+[`docs/reviews/P1-12-phase-1-bounded-slice-closure-review.md`](../reviews/P1-12-phase-1-bounded-slice-closure-review.md) confirms all seven declared closure conditions pass:
 
-`P1.08` adds an immutable non-canonical reconstruction manifest over the exact P1.02–P1.07 evidence. It verifies the `AwaitingGate → Ready → Succeeded` execution lineage, exact Workflow/material-input/gate/result/Event versions, actor continuity, provenance completeness, explicit Event type/schema, stable Execution-Identity correlation and exact terminal-version causation. Wrong versions, broken lineage, incomplete provenance, actor drift or incorrect Event linkage fail closed. Reconstruction is observational and does not replay the mutation, emit a new Event, mutate sealed history, establish projection authority, or pre-empt P1.09/P1.10 semantics. P1.08 adds `15` focused executable fitness tests.
+1. P1.01–P1.10 complete within the declared slice scope;
+2. P1.11 matrix passes;
+3. no product-domain leakage;
+4. no missed ADR gate;
+5. implementation remains reversible/migration-friendly;
+6. no `Active`/production implication;
+7. roadmap synchronized.
 
-`P1.09` adds one significant, explicitly unvalidated Observation represented through the existing RFC-0002 Canonical Record envelope. It pins the exact P1.07 Event, terminal P1.06 Execution Context and canonical-effect versions verified by P1.08, preserves Organization/provenance/actor attribution, and fails closed on source-version or provenance drift. A dedicated guard rejects any attempt to consume the Observation as validated Knowledge without an explicit RFC-0007 promotion lifecycle. Observation capture does not mutate the Workflow, prior canonical versions, sealed execution/Event history or approved production behavior. P1.09 adds `14` focused tests; PR-time `Reference Python CI` passes the full `99`-test suite.
+**Milestone `M1`: 🟩 achieved.**
 
-`P1.10` exports the exact bounded P1.02–P1.09 governed state as deterministic, documented UTF-8 JSON using an explicit semantic mapping rather than Python object layout. It preserves the Organization and Actors, all ten Canonical Record versions, stable Subject/immutable Version Identity roles, authority/schema/lifecycle/predecessor data, exact Workflow/input/gate/effect pins, Event source/type/schema/correlation/causation, derived reconstruction evidence and the Observation's explicit `Unvalidated` / `knowledge_promotion = not-performed` state. Derived `semantic_links` preserve existing relationship/reference meaning while explicitly remaining non-canonical rather than fabricating Typed Relationship records. The fixture itself declares non-authority, non-public and non-production scope, records explicit omissions, and re-validates exact P1.08/P1.09 evidence before export. P1.10 adds `16` focused tests; `Reference Python CI` run `#9` passes the full `115`-test reference suite.
+## 7. Current canonical action — Phase 2 decomposition
 
-`P1.11` closes the remaining replay/projection architecture-fitness matrix. Historical fixture replay can only rebuild an immutable non-authoritative projection and has no Governed Execution, canonical mutation, Event-admission callback or external-effect path. Replay preserves the exact source Version Identity manifest, rejects manifest drift and derived-link reinterpretation as canonical Typed Relationships, and reports zero consequential side effects. Projection lookup exposes all matching source versions without resolving a canonical/effective head. Projection entries cannot become canonical authority, cannot satisfy a `GovernedVersionPin`, and cannot mint one: consequential reliance requires an independently supplied exact `CanonicalRecord`, with stale or mismatched versions rejected fail closed before the pin is derived from the canonical source. P1.11 adds `13` focused tests; `Reference Python CI` run `#13` passes the full `128`-test reference suite.
+> **Revalidate and decompose `Phase 2 — Core Runtime` before any substantive Phase 2 implementation.**
 
-### Current canonical action
+Phase 2 remains `Near-term / Ready for decomposition`, not `Active`.
 
-> **`P1.12 — Phase 1 bounded-slice closure review`: verify the completed P1.01–P1.11 evidence against the declared slice exit criteria, architecture boundaries and ADR gates, then close M1 only if the scoped review passes.**
+The decomposition must use Phase 1 evidence rather than merely converting every readiness-baseline inventory item into a build task. In particular it should decide which reusable runtime boundaries are now justified for:
 
-P1.11 is complete within its bounded reference scope. P1.12 is now the next Phase 1 closure dependency; no `Active` capability, production-readiness, SLA, durable replay/projection commitment or public compatibility claim follows from the passing reference suite.
+- Canonical Record version operations;
+- Typed Relationship operations;
+- Canonical Head / Effective Version resolution;
+- Governed Execution and gate enforcement;
+- Event/provenance handling;
+- Product Contract validation at the first real product/platform boundary;
+- persistence, transactions and concurrency;
+- portability and projection semantics.
 
-## 7. Phase 1 dependency-aware sequence
-
-```text
-P1.01 ✅ Organization scope + Actor / Principal
-   ↓
-P1.02 ✅ Native subject + Canonical Record v1
-   ↓
-P1.03 ✅ Versioned Workflow
-   ↓
-P1.04 ✅ Execution Context + version pinning
-   ↓
-P1.05 ✅ Authorization + Organizational Authority gates
-   ↓
-P1.06 ✅ Canonical Mutation → immutable v2
-   ↓
-P1.07 ✅ Canonical Event
-   ↓
-P1.08 ✅ Provenance / reconstruction
-   ↓
-P1.09 ✅ Observation ≠ Knowledge
-   ↓
-P1.10 ✅ Portable semantic fixture
-   ↓
-P1.11 ✅ Cross-cutting fitness matrix
-   ↓
-P1.12 ⬜ Closure review
-```
-
-`P1.11` fitness tests ran continuously across the sequence. The final replay/projection matrix evidence is now complete, making P1.12 the next closure dependency.
-
-Bounded parallel work is permitted when dependencies remain explicit and the work does not prejudge unresolved architecture or technology choices.
+Technology choices must stay undecided until a concrete requirement crosses the ADR gate.
 
 ## 8. Phase transition rule
 
@@ -395,19 +393,11 @@ Create an ADR before relying on an implementation choice when the choice becomes
 5. creates a durable dependency on a database, broker, orchestration runtime, identity provider, schema registry, retrieval engine or vendor-specific format;
 6. has materially different portability, security, reliability or operational consequences compared with plausible alternatives.
 
-P1.05 remains below this ADR gate because it does not select a durable authorization-enforcement mechanism, IAM provider, policy engine, tenant-isolation technology or production Organizational Authority administration model.
+Phase 1 remained below this gate because its in-memory domain-neutral harness selected no durable persistence, transaction/concurrency mechanism, broker/event store, workflow runtime, IAM/policy engine, tenant-isolation technology, provenance/search store, public API/SDK, stable wire format or production replay/projection runtime.
 
-P1.06 remains below this ADR gate because its mutation boundary, exact-version checks and conflict detection are bounded, reversible, in-memory and non-public. It does not select durable persistence, a Canonical Head/effective-version resolver, concurrency/transaction technology, a public mutation interface or a durable evidence-integrity mechanism.
+The P1.10 JSON representation remains a bounded semantic fixture, not a stable public compatibility contract. Python remains a reference implementation language, not a platform contract.
 
-P1.07 remains below this ADR gate because its Event admission history is caller-supplied, immutable, in-memory and non-public. It does not select a durable Event store, broker, outbox/inbox mechanism, delivery protocol, schema registry, public Event interface or observability backend.
-
-P1.08 remains below this ADR gate because its reconstruction manifest is derived, immutable, in-memory and non-public. It selects no durable lineage/provenance store, graph database, projection technology, public provenance serialization/API or evidence-integrity mechanism.
-
-P1.09 remains below this ADR gate because its Observation representation reuses existing bounded Canonical Record semantics and adds no durable Memory/Knowledge store, promotion engine, public learning API, serialization contract, retrieval/index technology or vendor dependency.
-
-P1.10 remains below this ADR gate because its documented JSON representation is a deterministic bounded reference fixture only. It creates no supported public/cross-product wire contract, durable migration commitment, persistence layout, vendor dependency, production export service or customer compatibility obligation. If a serialization format later becomes a stable cross-product/public interface, durable portability-package standard or compatibility commitment, the applicable ADR/standard/governance gate must be crossed before reliance.
-
-P1.11 remains below this ADR gate because the new replay/projection evidence is bounded, immutable, in-memory, domain-neutral and non-public. It selects no durable projection/index store, search engine, event-replay runtime, Canonical Head resolver, public retrieval interface or vendor/infrastructure dependency. If a later replay/projection mechanism materially constrains cross-module behavior, authority resolution, portability, migration or public contracts, the applicable ADR gate must be crossed before reliance.
+Phase 2 decomposition must identify which concrete decisions, if any, now cross this gate before implementation relies on them.
 
 ## 10. Roadmap maintenance rule
 
