@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.3.13`
+Version: `2.3.14`
 Created: `2026-08-07`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -45,7 +45,7 @@ This roadmap uses semantic versioning:
 - `MINOR` — sequencing, milestone scope, work breakdown, phase transition or strategic-horizon changes that do not restructure the planning model;
 - `MAJOR` — restructuring of the roadmap lifecycle or planning model.
 
-Version `2.0.0` introduced the two-horizon planning model. Version `2.1.0` recorded Phase 1 / `M1` completion and Phase 2 decomposition as the next action. Version `2.2.0` activates the decomposed Phase 2 Core Runtime plan. Version `2.2.1` records P2.01 completion and advances the active execution sequence to P2.02. Version `2.3.0` establishes evidence-backed engineering quality/refactoring gates, inserts R1 after completed P2.01 before substantive P2.02 work, and defines milestone/stable-boundary Code Health Gate rules. Version `2.3.1` records R1 completion and advances the current canonical action to P2.02. Version `2.3.2` records P2.02 completion and advances the current canonical action to P2.03. Version `2.3.3` records P2.03 completion and advances the current canonical action to P2.04. Version `2.3.4` records P2.04 completion and advances the current canonical action to P2.05. Version `2.3.5` records P2.05 completion and advances the current canonical action to P2.06. Version `2.3.6` records P2.06 completion and advances the current canonical action to the mandatory R2 Runtime Health Review before substantive P2.07 work. Version `2.3.7` records R2 completion with bounded debt and advances the current canonical action to P2.07. Version `2.3.8` records P2.07 completion and advances the current canonical action to P2.08. Version `2.3.9` records P2.08 completion and advances the current canonical action to P2.09. Version `2.3.10` records P2.09 completion with executable second-workflow reuse evidence and advances the current canonical action to the mandatory R3 Reuse Refactoring Review. Version `2.3.11` records R3 completion, contains the historical P2.01 composition as compatibility evidence, and advances the current canonical action to P2.10. Version `2.3.12` records P2.10 completion with a 14-dimension executable Core Runtime architecture-fitness matrix and advances the current canonical action to the mandatory R4 Milestone Hardening gate. Version `2.3.13` records R4 completion with final Phase 2 code-health/stable-boundary guards and advances the current canonical action to `P2.11 — ADR-gate and runtime-boundary hardening review`.
+Version `2.0.0` introduced the two-horizon planning model. Version `2.1.0` recorded Phase 1 / `M1` completion and Phase 2 decomposition as the next action. Version `2.2.0` activates the decomposed Phase 2 Core Runtime plan. Version `2.2.1` records P2.01 completion and advances the active execution sequence to P2.02. Version `2.3.0` establishes evidence-backed engineering quality/refactoring gates, inserts R1 after completed P2.01 before substantive P2.02 work, and defines milestone/stable-boundary Code Health Gate rules. Version `2.3.1` records R1 completion and advances the current canonical action to P2.02. Version `2.3.2` records P2.02 completion and advances the current canonical action to P2.03. Version `2.3.3` records P2.03 completion and advances the current canonical action to P2.04. Version `2.3.4` records P2.04 completion and advances the current canonical action to P2.05. Version `2.3.5` records P2.05 completion and advances the current canonical action to P2.06. Version `2.3.6` records P2.06 completion and advances the current canonical action to the mandatory R2 Runtime Health Review before substantive P2.07 work. Version `2.3.7` records R2 completion with bounded debt and advances the current canonical action to P2.07. Version `2.3.8` records P2.07 completion and advances the current canonical action to P2.08. Version `2.3.9` records P2.08 completion and advances the current canonical action to P2.09. Version `2.3.10` records P2.09 completion with executable second-workflow reuse evidence and advances the current canonical action to the mandatory R3 Reuse Refactoring Review. Version `2.3.11` records R3 completion, contains the historical P2.01 composition as compatibility evidence, and advances the current canonical action to P2.10. Version `2.3.12` records P2.10 completion with a 14-dimension executable Core Runtime architecture-fitness matrix and advances the current canonical action to the mandatory R4 Milestone Hardening gate. Version `2.3.13` records R4 completion with final Phase 2 code-health/stable-boundary guards and advances the current canonical action to `P2.11 — ADR-gate and runtime-boundary hardening review`. Version `2.3.14` records P2.11 completion with an explicit no-ADR runtime-boundary decision, adds targeted drift guards and advances the current canonical action to `P2.12 — Phase 2 / M2 closure review`.
 
 Roadmap identifiers, engineering-gate identifiers, RFC identifiers and ADR identifiers are independent namespaces.
 
@@ -130,7 +130,11 @@ Current verified canonical baseline:
 - [`R4 — Milestone Hardening`](../reviews/R4-milestone-hardening.md) is complete with result `PASS — Phase 2 semantic-owner runtime is hardened for the declared M2 reference scope; no material defect or new ADR trigger remains open`;
 - R4 adds 7 final executable code-health guards covering dependency direction away from the historical P2.01 composition, package-root public-surface pressure, unsafe process/network/deserialization dependencies, dynamic code execution, internal `RuntimeConsistencyState` scope, implicit gate-bypass APIs and accidental stable public-framework/serialization selection;
 - R4 executable evidence: GitHub Actions `Reference Python CI` run `#73` succeeded on executable R4 head `080dc29bbba1252cf23822bc7cebd1e8124720d1`;
-- no relevant Accepted ADR currently constrains the bounded runtime choices carried from Phase 1 through R4; durable persistence/transaction/concurrency, Event-delivery, IAM/enforcement, durable replay/projection storage and stable public-interface/serialization ADR gates remain uncrossed pending explicit P2.11 review.
+- [`P2.11 — ADR-gate and runtime-boundary hardening review`](../reviews/P2-11-adr-runtime-boundary-hardening-review.md) is complete with final decision `PASS — ADR not required at the current runtime boundary`;
+- P2.11 explicitly assessed all declared runtime-boundary categories and found no current choice selecting durable persistence/database, transaction/concurrency, Event delivery/store, IAM/policy enforcement, evidence-integrity technology, stable public/cross-product API or serialization, durable replay/projection storage or service/process topology;
+- P2.11 adds targeted executable drift guards in `reference/python/tests/test_p2_11_adr_runtime_boundary_hardening.py`; any future concrete durable or externally relied-upon mechanism must re-open the ADR gate before material reliance;
+- P2.11 executable evidence: GitHub Actions `Reference Python CI` run `#76` succeeded on executable P2.11 head `82fd2ad9346a9c8b82b01704bdbe47db06311431`;
+- no relevant Accepted ADR currently constrains the bounded M2 runtime because P2.11 found no implementation choice that has crossed the ADR threshold.
 
 The RFC Index remains the canonical source for RFC status and acceptance evidence.
 
@@ -176,7 +180,7 @@ M1 intentionally did **not** claim reusable Typed Relationship lifecycle, reusab
 
 Canonical detailed work breakdown:
 
-- [`PHASE-2-CORE-RUNTIME.md`](PHASE-2-CORE-RUNTIME.md) — `Active 1.1.13`.
+- [`PHASE-2-CORE-RUNTIME.md`](PHASE-2-CORE-RUNTIME.md) — `Active 1.1.14`.
 
 **Milestone `M2`:** more than one materially distinct bounded workflow reuses the same governed runtime semantics without copying the Phase 1 harness, with architecture fitness evidence, completed Phase 2 engineering quality gates and all crossed ADR gates governed.
 
@@ -233,7 +237,7 @@ Provisional intent: demonstrate safe compounding organizational intelligence thr
 ## 6. Active Roadmap — Phase 2 Core Runtime
 
 **Status:** 🟨 In progress  
-**Phase progress:** `████████░░ 83%` — P2.01 through P2.10 complete; R1–R4 complete; P2.11 next
+**Phase progress:** `█████████░ 92%` — P2.01 through P2.11 complete; R1–R4 complete; P2.12 next
 
 | ID | Work item | Status | Progress |
 |---|---|---:|---:|
@@ -247,8 +251,8 @@ Provisional intent: demonstrate safe compounding organizational intelligence thr
 | `P2.08` | Portability, replay and non-authoritative projection runtime | 🟩 | `██████████ 100%` |
 | `P2.09` | Second bounded workflow reuse proof | 🟩 | `██████████ 100%` |
 | `P2.10` | Core Runtime architecture fitness matrix | 🟩 | `██████████ 100%` |
-| `P2.11` | ADR-gate and runtime-boundary hardening review | 🟦 | `░░░░░░░░░░ 0%` |
-| `P2.12` | Phase 2 / M2 closure review | ⬜ | `░░░░░░░░░░ 0%` |
+| `P2.11` | ADR-gate and runtime-boundary hardening review | 🟩 | `██████████ 100%` |
+| `P2.12` | Phase 2 / M2 closure review | 🟦 | `░░░░░░░░░░ 0%` |
 
 ### Phase 2 engineering gates
 
@@ -263,11 +267,11 @@ Engineering gates are checkpoints rather than `P2.xx` work items and therefore d
 
 ### Current canonical action
 
-> **`P2.11 — ADR-gate and runtime-boundary hardening review`.**
+> **`P2.12 — Phase 2 / M2 closure review`.**
 
-Review the R4-hardened runtime for materially constraining choices around package structure, persistence, transaction/concurrency, Event persistence/delivery, IAM/policy enforcement, evidence integrity, public/cross-product API or serialization, replay/projection storage and service/process topology. If a concrete choice has crossed the ADR gate, govern it before further material reliance; otherwise record why each boundary remains bounded and replaceable.
+Determine whether `M2 — Reusable governed runtime baseline` is genuinely achieved within the declared bounded reference scope. Verify the complete P2.01–P2.11 evidence chain, R1–R4, two-workflow reuse, domain neutrality, exact authority/version/provenance semantics, portability/projection non-authority, P2.11 ADR-gate closure and absence of unsupported production/capability/full-conformance claims.
 
-P2.11 is a focused decision/review over an already hardened code head, not an uncontrolled refactoring phase. It must preserve the R3/R4 disposition, avoid accidental stable/public contracts and make no production, capability-lifecycle or full-conformance claim.
+P2.12 is a focused closure decision, not an implementation-expansion phase. Revalidate the strategic Roadmap before Phase 3 is activated.
 
 ### Dependency-aware sequence
 
@@ -301,12 +305,12 @@ P2.10 final applicable fitness evidence ✓
           ↓
 R4 Milestone Hardening ✓
           ↓
-P2.11 ADR / boundary review ← current
+P2.11 ADR / boundary review ✓
           ↓
-P2.12 Closure review
+P2.12 Closure review ← current
 ```
 
-`P2.10` architecture fitness tests run continuously across the phase; R4 is complete and the mandatory engineering sequence advances to P2.11.
+`P2.10` architecture fitness tests run continuously across the phase; R4 and P2.11 are complete and the mandatory engineering sequence advances to P2.12.
 
 ## 7. Engineering quality and refactoring rule
 
@@ -368,7 +372,7 @@ Create an ADR before relying on an implementation choice when the choice becomes
 5. creates a durable dependency on a database, broker, orchestration runtime, identity provider, schema registry, retrieval engine or vendor-specific format;
 6. has materially different portability, security, reliability or operational consequences compared with plausible alternatives.
 
-Phase 2 is expected to be the first phase in which one or more ADR gates may realistically be crossed. No technology is pre-approved by this roadmap.
+P2.11 completed the explicit Phase 2 ADR/runtime-boundary assessment and found no current implementation choice that has crossed this threshold. No technology is pre-approved by this roadmap; the no-ADR disposition applies only to the bounded internal M2 reference runtime and must be revisited before future durable or externally relied-upon mechanisms are materially adopted.
 
 ## 10. Roadmap maintenance rule
 

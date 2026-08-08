@@ -1,7 +1,7 @@
 # Arvectum OS Phase 2 — Core Runtime
 
 Status: `Active`
-Version: `1.1.13`
+Version: `1.1.14`
 Created: `2026-08-08`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -88,8 +88,8 @@ Progress bars are planning indicators only.
 | `P2.08` | Portability, replay and non-authoritative projection runtime | 🟩 | `██████████ 100%` |
 | `P2.09` | Second bounded workflow reuse proof | 🟩 | `██████████ 100%` |
 | `P2.10` | Core Runtime architecture fitness matrix | 🟩 | `██████████ 100%` |
-| `P2.11` | ADR-gate and runtime-boundary hardening review | 🟦 | `░░░░░░░░░░ 0%` |
-| `P2.12` | Phase 2 / M2 closure review | ⬜ | `░░░░░░░░░░ 0%` |
+| `P2.11` | ADR-gate and runtime-boundary hardening review | 🟩 | `██████████ 100%` |
+| `P2.12` | Phase 2 / M2 closure review | 🟦 | `░░░░░░░░░░ 0%` |
 
 Engineering gates `R1`–`R4` are cross-cutting checkpoints and intentionally do not consume `P2.xx` work-item identifiers.
 
@@ -431,6 +431,18 @@ If a choice crosses the existing ADR gate, the ADR MUST be created and accepted 
 
 **Exit:** all materially constraining runtime choices have either accepted ADR coverage or explicit evidence that they remain bounded and replaceable.
 
+**Completion evidence — 2026-08-08:**
+
+- canonical review [`P2-11-adr-runtime-boundary-hardening-review.md`](../reviews/P2-11-adr-runtime-boundary-hardening-review.md) records `PASS — no current Phase 2 runtime choice has crossed the ADR threshold; the bounded runtime remains internal, reversible and technology-neutral`;
+- the review explicitly assesses repository/runtime package structure, persistence/database, transaction/concurrency, Event persistence/delivery, IAM/policy enforcement, evidence integrity, public/cross-product API or serialization, replay/projection storage and service/process topology and records `No ADR now` for every boundary with a concrete future trigger;
+- `RuntimeConsistencyState` remains explicitly bounded/non-durable; any future durable/deserialized aggregate reliance re-opens the persistence/repository, transaction and integrity ADR gates before use;
+- Event admission remains semantically distinct from transport/delivery, and portability/projection remains one-way derived/non-authoritative rather than sharing a hidden mutation/repository boundary;
+- `reference/python/tests/test_p2_11_adr_runtime_boundary_hardening.py` adds targeted guards preventing silent selection of durable repository/Event-transport technology and accidental coupling among consistency, portability/projection, Product Contract and historical P2.01 composition paths;
+- GitHub Actions `Reference Python CI` run `#76` on executable P2.11 head `82fd2ad9346a9c8b82b01704bdbe47db06311431` completed successfully;
+- no Accepted RFC is modified, no ADR is fabricated, and P2.11 does not authorize runtime expansion or claim production/capability/public-contract status.
+
+P2.11 completion closes the explicit ADR/runtime-boundary gate for the current bounded M2 code head only. Any later concrete durable or externally relied-upon mechanism must undergo a fresh ADR assessment before material reliance.
+
 ### P2.12 — Phase 2 / M2 closure review
 
 **Objective:** determine whether the Core Runtime milestone is genuinely achieved within scope.
@@ -514,6 +526,15 @@ Rules:
 - GitHub Actions `Reference Python CI` run `#73` on R4 executable head `080dc29bbba1252cf23822bc7cebd1e8124720d1` completed successfully;
 - no Accepted RFC is modified and no new ADR gate is crossed.
 
+**P2.11 completion evidence — 2026-08-08:**
+
+- canonical review: [`P2-11-adr-runtime-boundary-hardening-review.md`](../reviews/P2-11-adr-runtime-boundary-hardening-review.md) — `Complete`, final decision `PASS — ADR not required at the current runtime boundary`;
+- all nine declared ADR/runtime-boundary categories were assessed explicitly and remain bounded/replaceable on the current M2 reference head;
+- no durable persistence/database, transaction/concurrency, Event delivery/store, IAM/policy engine, evidence-integrity technology, stable API/serialization, durable projection/replay store or service/process topology is selected;
+- `reference/python/tests/test_p2_11_adr_runtime_boundary_hardening.py` adds executable drift guards so a future concrete mechanism must be accompanied by a fresh ADR-gate decision rather than silently normalized into the runtime;
+- GitHub Actions `Reference Python CI` run `#76` completed successfully on P2.11 executable head `82fd2ad9346a9c8b82b01704bdbe47db06311431`;
+- no Accepted RFC was modified and no ADR was required or fabricated.
+
 ## 7. Dependency-aware sequence
 
 ```text
@@ -546,22 +567,22 @@ P2.10 final applicable fitness evidence ✓
           ↓
 R4 Milestone Hardening ✓
           ↓
-P2.11 ADR / boundary review ← current
+P2.11 ADR / boundary review ✓
           ↓
-P2.12 Closure review
+P2.12 Closure review ← current
 ```
 
-`P2.10` architecture fitness tests run continuously across the phase; final applicable evidence and R4 hardening are complete, so the mandatory engineering sequence advances to P2.11.
+`P2.10` architecture fitness tests run continuously across the phase; R4 and P2.11 are complete, so the mandatory engineering sequence advances to P2.12.
 
 The sequence is dependency-aware rather than mechanically serial. P2.03–P2.04 MAY proceed in bounded parallel where interfaces are explicit and no unresolved decision is prejudged, but declared engineering gates remain ordering constraints for the work that follows them.
 
 ## 8. Current canonical action
 
-> **`P2.11 — ADR-gate and runtime-boundary hardening review`.**
+> **`P2.12 — Phase 2 / M2 closure review`.**
 
-Review the R4-hardened runtime for materially constraining choices around repository/runtime package structure, persistence, transaction/concurrency, Event persistence/delivery, IAM/policy enforcement, evidence integrity, public/cross-product API or serialization, replay/projection storage and service/process topology.
+Determine whether `M2 — Reusable governed runtime baseline` is genuinely achieved within the declared bounded reference scope. Verify completion and evidence for P2.01–P2.11, R1–R4, two-workflow reuse, domain neutrality, exact authority/version/provenance alignment, portability/projection non-authority, ADR-gate closure and absence of unsupported production/capability/full-conformance claims.
 
-If a concrete choice has crossed the existing ADR gate, the applicable ADR MUST be created and accepted before further material reliance. If no gate is crossed, P2.11 must record explicit evidence that the corresponding boundaries remain bounded and replaceable. P2.11 must not use the review as an uncontrolled refactoring phase or infer production/capability/public-contract status from the hardened reference runtime.
+P2.12 is a closure/review slice, not a runtime expansion. Revalidate the strategic Roadmap before activating Phase 3 and do not add durable persistence, Event delivery, IAM, public serialization/API, projection storage or service topology merely to make M2 look more complete.
 
 ## 9. ADR gate
 
@@ -569,7 +590,7 @@ No new ADR is required merely because Phase 2 is Active or because an engineerin
 
 An ADR is required before relying on a concrete implementation choice when it becomes materially constraining under the parent Roadmap gate, including cross-module/product coupling, material migration cost, stable public/cross-product interfaces, security/authority enforcement technology, durable data/event/runtime dependencies or materially different portability/reliability consequences.
 
-Phase 2 is expected to be the first phase in which one or more ADR gates may realistically be crossed. This document does not pre-approve any particular ADR or technology. R4 did not cross a new ADR gate; P2.11 now performs the explicit final ADR/runtime-boundary review before M2 closure.
+P2.11 completed the explicit Phase 2 ADR/runtime-boundary assessment and found that no current implementation choice has crossed that threshold. This no-ADR disposition is bounded to the current internal, in-memory, provisional M2 reference runtime; any later durable or externally relied-upon mechanism must undergo a fresh ADR-gate assessment before material reliance.
 
 ## 10. Phase 2 exit criterion
 
