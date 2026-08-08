@@ -1,7 +1,7 @@
 # Arvectum OS Phase 1 — Reference Implementation
 
 Status: `Active`
-Version: `1.0.9`
+Version: `1.0.10`
 Created: `2026-08-07`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -51,7 +51,7 @@ The slice must demonstrate stable identity, immutable canonical versions, explic
 | `P1.08` | Provenance, causation and reconstruction evidence | 🟩 | `██████████ 100%` |
 | `P1.09` | Observation creation without Knowledge promotion | 🟩 | `██████████ 100%` |
 | `P1.10` | Portable semantic fixture export | 🟩 | `██████████ 100%` |
-| `P1.11` | Negative-path and architecture fitness tests | 🟨 | `████████░░ 80%` |
+| `P1.11` | Negative-path and architecture fitness tests | 🟩 | `██████████ 100%` |
 | `P1.12` | Phase 1 bounded-slice closure review | ⬜ | `░░░░░░░░░░ 0%` |
 
 Progress bars are planning indicators, not conformance or capability-lifecycle claims.
@@ -275,11 +275,11 @@ P1.10 remains a bounded reference fixture rather than a full RFC-0003 production
 
 ### P1.11 — Negative-path and architecture fitness tests
 
-**Status:** 🟨 In progress
+**Status:** 🟩 Complete
 
-This is a cross-cutting task and progresses alongside `P1.01`–`P1.10`.
+This is a cross-cutting task whose matrix is now complete across `P1.01`–`P1.11` for the bounded first executable slice.
 
-The bounded slice must include applicable executable tests proving at least:
+The bounded slice includes executable tests proving at least:
 
 - unresolved Organization scope fails closed;
 - authentication alone does not authorize mutation;
@@ -292,7 +292,24 @@ The bounded slice must include applicable executable tests proving at least:
 - Observation cannot be consumed as validated Knowledge without promotion;
 - projection/index results cannot substitute for exact governed Version Identity reliance.
 
-`P1.01` through `P1.10` now contribute executable negative-path and architecture-fitness coverage. P1.05 adds explicit authentication ≠ authorization, authorization ≠ Organizational Authority, authority ≠ authorization, unresolved/denied fail-closed behavior, exact gate scope and version attribution, explicit-Allow pin validation and immutable gate evidence. P1.06 adds direct-mutation rejection outside the required `Ready` Execution Context, preservation of the immutable first target version, exact Workflow/gate version consumption, stale-current canonical conflict detection and proof that successful canonical state change is represented by a new immutable target version plus a governance-significant terminal Execution Context version. P1.07 adds receipt/admission separation, duplicate-delivery idempotency, conflicting Event Identity/Version Identity rejection, exact execution/result linkage, cross-Organization fail-closed behavior and proof that Event admission does not mutate the sealed terminal execution or repeat the canonical effect. P1.08 adds exact reconstruction checks for actor continuity, Workflow/input/gate/execution/result/Event version linkage, provenance completeness and explicit correlation-versus-causation semantics while proving the reconstruction view itself does not mutate sealed history. P1.09 adds explicit Observation ≠ Knowledge enforcement, exact source-version pinning, provenance validation, immutability and proof that Observation capture does not alter standards, Workflows or prior governed outcomes. P1.10 adds implementation-neutral JSON parsing, exact exported Version-Identity coverage, explicit subject/version reference roles, non-authoritative derived links/reconstruction, Observation non-promotion preservation, deterministic export and fail-closed rejection of stale reconstruction/Observation state. Replay side-effect-safety and projection/index non-authority portions of the matrix remain incomplete.
+`P1.01` through `P1.10` contribute the previously accumulated negative-path and architecture-fitness coverage. P1.05 proves authentication ≠ authorization, authorization ≠ Organizational Authority, authority ≠ authorization, unresolved/denied fail-closed behavior, exact gate scope/version attribution and immutable explicit-Allow evidence. P1.06 proves direct-mutation rejection outside the required `Ready` Execution Context, immutable first-version preservation, exact Workflow/gate reliance and stale-current conflict rejection. P1.07 proves receipt/admission separation, duplicate-delivery idempotency, conflicting Event Identity/Version Identity rejection, exact execution/result linkage and no repeated canonical effect. P1.08 proves exact reconstruction of actor, Workflow/input/gate/execution/result/Event versions and derived non-authority. P1.09 proves Observation ≠ Knowledge with exact source-version pins and no silent production-behavior change. P1.10 proves implementation-neutral export with explicit reference roles, derived non-authority and stale-evidence rejection.
+
+P1.11 closes the two remaining matrix obligations with a bounded replay/projection fitness boundary:
+
+- `rebuild_p1_11_projection` consumes the already-derived P1.10 fixture and can only create an immutable `ProjectionSnapshot`; it has no Governed Execution, canonical mutation, Event-admission, callback or external-effect path;
+- replay preserves the exact source Version Identity manifest, rejects manifest drift and rejects reinterpretation of derived semantic links as canonical Typed Relationship records;
+- the projection and every entry are explicitly non-authoritative and cannot be relabelled as canonical authority;
+- subject lookup returns all matching source versions and intentionally does not resolve a Canonical Head or Effective Version;
+- a projection entry cannot satisfy an Execution Context `GovernedVersionPin` contract and cannot mint a governed pin by itself;
+- `pin_p1_11_projection_source` requires an independently supplied exact `CanonicalRecord`, verifies Subject Identity, Version Identity, semantic type, authority scope and lifecycle attribution, then creates the pin from that canonical source rather than from projection data;
+- stale canonical source versions fail closed against newer projection entries;
+- repeated replay is deterministic and observational and explicitly creates zero consequential side effects.
+
+Repository evidence: `reference/python/arvectum_os_ref/fitness.py`, package exports in `reference/python/arvectum_os_ref/__init__.py`, and `reference/python/tests/test_p1_11_architecture_fitness.py`.
+
+P1.11 adds `13` focused replay/projection negative-path tests. PR-time `Reference Python CI` run `#13` completed successfully with the full reference suite: `128` tests, `OK`.
+
+P1.11 remains bounded architecture-fitness evidence. It does not select or implement a production replay engine, event store, index/search technology, durable projection store, Canonical Head/effective-version resolver, public retrieval interface or `Active` Platform Capability.
 
 ### P1.12 — Phase 1 bounded-slice closure review
 
@@ -333,10 +350,12 @@ P1.09 ✅ Observation ≠ Knowledge
    ↓
 P1.10 ✅ Portable semantic fixture
    ↓
+P1.11 ✅ Cross-cutting fitness matrix complete
+   ↓
 P1.12 Closure review
 ```
 
-`P1.11` fitness tests run continuously across the sequence rather than waiting until the end. After P1.10, the remaining P1.11 replay/projection fitness evidence is the next closure dependency before P1.12.
+`P1.11` fitness tests ran continuously across the sequence rather than waiting until the end. After P1.10, the final replay/projection evidence closed the applicable matrix; P1.12 is now the next Phase 1 closure dependency.
 
 Bounded parallel work is permitted when dependencies remain explicit and the work does not prejudge unresolved architecture or technology choices.
 
@@ -357,6 +376,8 @@ P1.08 remains below the ADR gate because its reconstruction manifest is derived,
 P1.09 remains below the ADR gate because its significant Observation representation reuses the existing in-memory Canonical Record semantics, adds no durable Memory/Knowledge store or promotion engine, introduces no public learning API or serialization contract, and makes no technology/vendor choice. Any later durable Knowledge lifecycle, retrieval/index technology or cross-module/public interface must cross the applicable ADR gate when the readiness triggers are met.
 
 P1.10 remains below the ADR gate because its JSON representation is a documented, deterministic, bounded reference fixture only. It creates no supported public/cross-product wire contract, durable migration commitment, vendor dependency, persistence layout or production export service. If a serialization format later becomes a stable cross-product/public interface, durable portability package standard or customer compatibility commitment, the applicable ADR/standard/governance gate must be crossed before reliance.
+
+P1.11 remains below the ADR gate because its replay/projection evidence is bounded, immutable, in-memory, domain-neutral and non-public. It does not select a durable projection/index store, search engine, event-replay runtime, Canonical Head resolver, public retrieval contract or vendor/infrastructure dependency. A later durable projection or replay mechanism that materially constrains cross-module behavior, authority resolution, portability or migration must cross the applicable ADR gate before reliance.
 
 ## 8. Maintenance rule
 
