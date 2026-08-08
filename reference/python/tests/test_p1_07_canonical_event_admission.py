@@ -184,9 +184,18 @@ class P107CanonicalEventAdmissionTests(unittest.TestCase):
 
     def test_same_event_identity_with_conflicting_execution_link_is_rejected(self) -> None:
         first = self._admit()
+        conflicting_version = Identity("execution-version", "conflicting-v1", "org-a")
         conflicting = replace(
             self.candidate,
-            execution_version_id=Identity("execution-version", "conflicting-v1", "org-a"),
+            execution_version_id=conflicting_version,
+            causation_refs=(conflicting_version,),
+            provenance_refs=(
+                self.candidate.producer_id,
+                self.candidate.execution_subject_id,
+                conflicting_version,
+                self.mutation.resulting_record.subject_id,
+                self.mutation.resulting_record.version_id,
+            ),
         )
 
         with self.assertRaises(EventIdentityConflictError):
