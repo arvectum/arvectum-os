@@ -1,7 +1,7 @@
 # Arvectum OS Phase 4 — Workspace / Operator Experience
 
 Status: `Active`
-Version: `1.5.0`
+Version: `1.6.0`
 Created: `2026-08-08`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -13,13 +13,13 @@ Predecessor: `Phase 3 — Shared Platform Capabilities`, `M3` achieved
 
 ## Version note
 
-Version `1.5.0` records completion of **P4.04 — Version, Event, provenance and reconstruction experience** with `PASS` and advances the current canonical action to **P4.05 — Governed Execution, gate and approval/action experience**.
+Version `1.6.0` records completion of **P4.05 — Governed Execution, gate and approval/action experience** with `PASS` and advances the current canonical action to **P4.06 — Document / Artifact workspace experience**.
 
-P4.04 adds a bounded internal read-only inspection boundary over existing RFC-0006 Event/provenance semantics, CAP-004 Audit/Reconstruction Support and P3.07 evidence-level access enforcement. Canonical Event history remains distinct from raw telemetry; exact Event and Execution versions, Event type/schema, occurrence versus recording/admission time, producer/initiating actor, authority/source, related versions, correlation/causation and provenance references remain explicit where authorized governed evidence carries them.
+P4.05 adds a bounded internal operator adapter over existing RFC-0005 Governed Execution and P2.06 runtime-consistency semantic owners. Execution Head versus exact historical Version remains explicit; exact Workflow, material-input and Product Contract pins remain visible where carried by the governed Execution; Authorization, Organizational Authority and Consequential Approval remain separate gate evidence rather than one synthetic approval state.
 
-Reconstruction remains derived, read-only and non-authoritative. Replay is described only as side-effect-free rebuilding of a derived projection and is not executed by the P4.04 surface. Missing, unavailable, redacted or lawfully deleted evidence is represented as a limitation rather than inferred or fabricated. Current source authorization and P3.07 purpose/right/classification enforcement occur before exact protected Execution-Version existence disclosure.
+Action intent remains transient and non-authoritative. Unresolved/denied gates and historical versions fail closed for action; a read-authorized different Actor cannot invoke the bounded existing Execution action. Consequential canonical mutation occurs only by delegation to the existing `commit_canonical_mutation` path. Retry/idempotency, stale/conflict and uncertain/reconciliation states are exposed without revealing retry-token values or creating a second mutation authority.
 
-P4.04 does not create an Event store, telemetry backend, replay executor, IAM/PDP/PEP, durable read model, public API/route/wire contract, frontend framework, Product Contract, new Platform Capability or lifecycle promotion.
+P4.05 does not create a workflow engine, decision-authority policy, IAM/PDP/PEP, external-effect executor, durable runtime/Event store, public API/route/wire contract, frontend framework, Product Contract, new Platform Capability or lifecycle promotion.
 
 Canonical completion evidence:
 
@@ -27,8 +27,10 @@ Canonical completion evidence:
 - [`P4.02 Organization context / identity / scoped navigation shell review`](../reviews/P4-02-organization-context-identity-scoped-navigation-shell.md) — `PASS`;
 - [`R9 Workspace Boundary Review`](../reviews/R9-workspace-boundary-review.md) — `PASS`;
 - [`P4.03 Canonical Record / Relationship inspection review`](../reviews/P4-03-canonical-record-relationship-inspection-experience.md) — `PASS`;
-- [`P4.04 Version / Event / provenance / reconstruction review`](../reviews/P4-04-version-event-provenance-reconstruction-experience.md) — `PASS`, four functional cross-review iterations;
-- GitHub Actions `Reference Python CI #132` — `PASS`, Python `3.12.13`, `456` tests, `OK` on the P4.04 executable implementation branch before roadmap synchronization.
+- [`P4.04 Version / Event / provenance / reconstruction review`](../reviews/P4-04-version-event-provenance-reconstruction-experience.md) — `PASS`;
+- [`P4.05 Governed Execution / gate / approval-action review`](../reviews/P4-05-governed-execution-gate-approval-action-experience.md) — `PASS`, four functional cross-review iterations;
+- GitHub Actions `Reference Python CI #137` — `PASS`, Python `3.12.13`, `472` tests, `OK` on the first P4.05 executable implementation head;
+- GitHub Actions `Reference Python CI #139` — `PASS` after the executable static demonstration and smoke test.
 
 ## 1. Purpose
 
@@ -60,7 +62,7 @@ The workspace remains a platform interaction capability under development. Activ
 | `P4.02` | Organization context, identity and scoped navigation shell | 🟩 Complete | `██████████ 100%` |
 | `P4.03` | Canonical Record / Relationship inspection experience | 🟩 Complete | `██████████ 100%` |
 | `P4.04` | Version, Event, provenance and reconstruction experience | 🟩 Complete | `██████████ 100%` |
-| `P4.05` | Governed Execution, gate and approval/action experience | ⬜ | `░░░░░░░░░░ 0%` |
+| `P4.05` | Governed Execution, gate and approval/action experience | 🟩 Complete | `██████████ 100%` |
 | `P4.06` | Document / Artifact workspace experience | ⬜ | `░░░░░░░░░░ 0%` |
 | `P4.07` | Memory / Knowledge / Search discovery experience | ⬜ | `░░░░░░░░░░ 0%` |
 | `P4.08` | Cross-capability task/context composition + bounded product entry point | ⬜ | `░░░░░░░░░░ 0%` |
@@ -69,7 +71,7 @@ The workspace remains a platform interaction capability under development. Activ
 | `P4.11` | Workspace hardening / ADR / refactoring review | ⬜ | `░░░░░░░░░░ 0%` |
 | `P4.12` | Phase 4 / M4 closure review | ⬜ | `░░░░░░░░░░ 0%` |
 
-Phase 4 roadmap work-item completion is `4 / 12 = 33.3%`. Engineering reviews such as R9 are gates and do not inflate this percentage as separate equal-weight work items.
+Phase 4 roadmap work-item completion is `5 / 12 = 41.7%`. Engineering reviews such as R9 are gates and do not inflate this percentage as separate equal-weight work items.
 
 ## 4. Detailed task intent
 
@@ -153,6 +155,8 @@ Required behavior:
 - unresolved required gates fail closed;
 - retry/idempotency/conflict/uncertainty states are understandable;
 - consequential mutation occurs only through existing governed runtime paths.
+
+Completion evidence: [`P4.05 Governed Execution / gate / approval-action review`](../reviews/P4-05-governed-execution-gate-approval-action-experience.md) — `PASS`, four functional cross-review iterations, executable static demo and green full reference CI.
 
 ### P4.06 — Document / Artifact workspace experience
 
@@ -286,15 +290,13 @@ R9 Workspace Boundary Review ✅
         ↓
  ┌──────────┼───────────────┐
  ↓          ↓               ↓
-P4.03 ✅   P4.04 ✅        P4.05
+P4.03 ✅   P4.04 ✅        P4.05 ✅
 Records     Provenance      Execution
-                              ↑
-                           current
  └──────────┼───────────────┘
             ↓
  ┌──────────┴─────────┐
  ↓                    ↓
-P4.06                P4.07
+P4.06 ← current      P4.07
 Docs                  Knowledge/Search
  └──────────┬─────────┘
             ↓
@@ -373,18 +375,17 @@ A reversible internal reference implementation may proceed without an ADR when t
 
 ## 10. Current canonical action
 
-> **`P4.05 — Governed Execution, gate and approval/action experience`.**
+> **`P4.06 — Document / Artifact workspace experience`.**
 
-Implement the smallest bounded operator experience for consequential work through existing Governed Execution semantics without turning presentation state into Authorization or Organizational Authority and without bypassing existing runtime mutation paths.
+Implement the smallest bounded operator experience over existing CAP-001 / RFC-0008 Document and Artifact semantics without collapsing logical Document identity into file/rendition/storage identity or silently promoting transient/generated artifacts.
 
 Immediate constraints:
 
-- keep action intent distinct from committed canonical mutation;
-- show exact Workflow/material input/Product Contract versions where material;
-- keep Authorization and Organizational Authority visibly and semantically distinct;
-- show approval/gate requirements without inferring authority from UI role/title;
-- unresolved required gates fail closed;
-- make retry/idempotency/conflict/uncertainty states understandable where the governed runtime exposes them;
-- preserve P4.02–P4.04 Organization, identity, source-resolution, exact-version and non-authoritative presentation boundaries;
-- consequential mutation occurs only through existing Governed Execution/runtime paths;
-- do not stabilize a public route/API/wire/frontend/storage choice unless an ADR/Product Contract gate is actually crossed.
+- preserve P4.02 Organization/Actor scope and current source-access boundaries;
+- preserve P4.03 exact Subject/Version and authority/source meaning;
+- preserve P4.04 provenance/reconstruction honesty;
+- preserve P4.05 distinction between inspection, intent, gates and consequential runtime mutation;
+- distinguish logical Document, exact Document Version, Artifact and storage/rendition locator roles;
+- distinguish working/draft/transient candidates from admitted governed versions;
+- make authority mode/source, derivation provenance, classification/rights/retention meaning visible where material;
+- do not select a DMS, object store, OCR/signing provider, stable public API/wire contract or durable workspace storage unless the applicable ADR/Product Contract gate is crossed.

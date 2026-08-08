@@ -55,7 +55,7 @@ Canonical Phase 3 closure evidence:
 - [R8 milestone hardening review](docs/reviews/R8-phase-3-milestone-hardening.md)
 - [P3.11 capability admission / ADR / refactoring hardening review](docs/reviews/P3-11-capability-admission-adr-refactoring-hardening-review.md)
 
-`Phase 4 — Workspace / Operator Experience` is **Active**. `P4.01 — Operator journeys, workspace boundary and information architecture`, `P4.02 — Organization context, identity and scoped navigation shell`, the mandatory `R9 — Workspace Boundary Review` gate, `P4.03 — Canonical Record / Relationship inspection experience` and `P4.04 — Version, Event, provenance and reconstruction experience` are complete with `PASS`. The current canonical action is `P4.05 — Governed Execution, gate and approval/action experience`.
+`Phase 4 — Workspace / Operator Experience` is **Active**. `P4.01 — Operator journeys, workspace boundary and information architecture`, `P4.02 — Organization context, identity and scoped navigation shell`, the mandatory `R9 — Workspace Boundary Review` gate, `P4.03 — Canonical Record / Relationship inspection experience`, `P4.04 — Version, Event, provenance and reconstruction experience` and `P4.05 — Governed Execution, gate and approval/action experience` are complete with `PASS`. The current canonical action is `P4.06 — Document / Artifact workspace experience`.
 
 P4.02 provides the first bounded visible workspace shell: explicit Organization and attributable Actor context, `Discover / Records / Executions / Evidence / Documents / Knowledge` navigation, distinct Subject and exact-Version references, fail-closed unresolved/mismatched Organization state and non-authoritative presentation semantics. A zero-dependency static HTML demo makes the shell inspectable without selecting a frontend framework, route schema, public API/BFF, IAM/session provider or durable read-model topology.
 
@@ -71,6 +71,12 @@ P4.04 reconstruction is explicitly derived, read-only and non-authoritative. Rep
 
 P4.04 creates no Event store, telemetry backend, replay executor, IAM/PDP/PEP, durable read model, public API/route/wire contract, Product Contract, new Platform Capability or lifecycle promotion. `Reference Python CI #132` passed all `456` tests on Python `3.12.13` on the executable P4.04 implementation branch before roadmap synchronization.
 
+P4.05 adds the bounded Governed Execution / gate / approval-action experience over the existing RFC-0005 and P2.06 runtime semantics. The operator can inspect one stable Execution Identity at its Head or an exact historical Version, see exact Workflow/material-input/Product Contract pins where present, and inspect Authorization, Organizational Authority and Consequential Approval as separate gate decisions with exact evidence rather than one synthetic `approved` flag.
+
+P4.05 keeps source-read access distinct from consequential authority. Unresolved or denied required gates and historical Execution Versions fail closed for action; a different read-authorized Actor cannot invoke the bounded existing Execution action merely because the Execution is visible. Action intent is immutable, transient and non-authoritative, and consequential canonical mutation is delegated only to the existing `runtime_consistency.commit_canonical_mutation` path. Keyed retry/duplicate suppression, stale/conflict state and uncertain/reconciliation meaning are exposed without publishing retry-token values or creating a second canonical-state owner.
+
+P4.05 selects no workflow engine, decision-authority policy, IAM/PDP/PEP, durable runtime/Event store, external-effect executor, frontend framework, public route/API/wire contract or Product Contract. It creates no new Platform Capability and promotes none to `Active`. Initial implementation CI `#137` passed `472` tests on Python `3.12.13`; CI `#139` also passed after the executable static demo and smoke test were added.
+
 Canonical Phase 4 planning/current evidence:
 
 - [Canonical roadmap](docs/roadmap/ROADMAP.md)
@@ -80,8 +86,9 @@ Canonical Phase 4 planning/current evidence:
 - [R9 Workspace Boundary Review](docs/reviews/R9-workspace-boundary-review.md)
 - [P4.03 Canonical Record / Relationship inspection review](docs/reviews/P4-03-canonical-record-relationship-inspection-experience.md)
 - [P4.04 Version / Event / provenance / reconstruction review](docs/reviews/P4-04-version-event-provenance-reconstruction-experience.md)
+- [P4.05 Governed Execution / gate / approval-action review](docs/reviews/P4-05-governed-execution-gate-approval-action-experience.md)
 
-P4.01 through P4.04 and R9 establish, harden and exercise a domain-neutral workspace boundary only. They do not create a new Platform Capability, change CAP-001 through CAP-004 lifecycle, create a Stable Product Contract/public interface or establish production readiness.
+P4.01 through P4.05 and R9 establish, harden and exercise a domain-neutral workspace boundary only. They do not create a new Platform Capability, change CAP-001 through CAP-004 lifecycle, create a Stable Product Contract/public interface or establish production readiness.
 
 RFC-0001 through RFC-0008 are `Accepted 1.0.0` and remain binding within their declared scopes.
 
