@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.5.0`
+Version: `2.6.0`
 Created: `2026-08-07`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -26,9 +26,9 @@ The Strategic Roadmap beyond completed work is a planning hypothesis, not an arc
 
 ## 2. Version note
 
-Version `2.5.0` records canonical Phase 3 boundary revalidation and decomposition, activates **Phase 3 — Shared Platform Capabilities**, links its detailed work breakdown, and sets `P3.01` as the current canonical action.
+Version `2.6.0` records completion of **P3.01 — Capability boundary revalidation + Candidate catalog**, links the canonical four-entry Platform Capability Candidate catalog and P3.01 review, and advances the current canonical action to `P3.02` without promoting any capability beyond RFC-0001 `Candidate` lifecycle state.
 
-Phase 2 / M2 remains closed and unchanged. Phase 3 activation is a planning/workstream state only: it does not promote any Platform Capability to RFC-0001 `Active` lifecycle status.
+Phase 2 / M2 remains closed and unchanged. Phase 3 remains an active planning/workstream state only; Candidate admission does not establish `Incubating`, `Active`, production, public-contract or commercial status.
 
 ## 3. Verified architecture baseline
 
@@ -39,8 +39,10 @@ Phase 2 / M2 remains closed and unchanged. Phase 3 activation is a planning/work
 - Phase 2 / `M2` — complete;
 - [`P2.12 closure review`](../reviews/P2-12-phase-2-m2-closure-review.md) — `PASS — M2 achieved for the declared bounded reusable-runtime reference scope`;
 - Phase 3 boundary revalidation/decomposition — complete;
-- [`PHASE-3-SHARED-PLATFORM-CAPABILITIES.md`](PHASE-3-SHARED-PLATFORM-CAPABILITIES.md) — `Active 1.0.0`;
-- no Platform Capability becomes lifecycle `Active` merely because Phase 3 is active or implementation exists.
+- [`PHASE-3-SHARED-PLATFORM-CAPABILITIES.md`](PHASE-3-SHARED-PLATFORM-CAPABILITIES.md) — `Active 1.0.1`;
+- [`Platform Capability Candidate Catalog`](../catalogs/PLATFORM-CAPABILITY-CANDIDATE-CATALOG.md) — `Active 1.0.0`, four entries at lifecycle `Candidate`;
+- [`P3.01 capability boundary revalidation review`](../reviews/P3-01-capability-boundary-revalidation-review.md) — `PASS`;
+- no Platform Capability becomes lifecycle `Incubating` or `Active` merely because it is cataloged or Phase 3 is active.
 
 ## 4. Strategic roadmap
 
@@ -87,21 +89,21 @@ M2 does not establish production readiness, full RFC conformance, stable public 
 
 Detailed canonical plan:
 
-- [`PHASE-3-SHARED-PLATFORM-CAPABILITIES.md`](PHASE-3-SHARED-PLATFORM-CAPABILITIES.md) — `Active 1.0.0`.
+- [`PHASE-3-SHARED-PLATFORM-CAPABILITIES.md`](PHASE-3-SHARED-PLATFORM-CAPABILITIES.md) — `Active 1.0.1`.
 
-Phase 3 evaluates a deliberately small initial candidate set grounded in Accepted architecture and M2 evidence:
+P3.01 has admitted a deliberately small initial set as RFC-0001 lifecycle `Candidate` entries:
 
-1. Document & Artifact Governance;
-2. Memory & Knowledge Governance;
-3. non-authoritative Search / Index Projection;
-4. Audit / Reconstruction Support.
+1. `CAP-001 — Document & Artifact Governance`;
+2. `CAP-002 — Memory & Knowledge Governance`;
+3. `CAP-003 — Search / Index Projection`;
+4. `CAP-004 — Audit / Reconstruction Support`.
 
-These are **capability candidates**, not automatically lifecycle `Active` capabilities. P3.01/P3.02 must record explicit RFC-0001 Candidate/Incubating metadata, ownership and Provisional contracts before broad implementation proceeds.
+Canonical Candidate metadata and explicit product/commodity/deferred boundaries are recorded in [`PLATFORM-CAPABILITY-CANDIDATE-CATALOG.md`](../catalogs/PLATFORM-CAPABILITY-CANDIDATE-CATALOG.md). P3.01 records no lifecycle inflation: all four entries remain `Candidate` and P3.02 must establish any additional incubation envelope before broad implementation proceeds.
 
 | ID | Work item | Status | Progress |
 |---|---|---:|---:|
-| `P3.01` | Capability boundary revalidation + Candidate catalog | 🟦 Next | `░░░░░░░░░░ 0%` |
-| `P3.02` | Capability lifecycle, ownership and Provisional contract baseline | ⬜ | `░░░░░░░░░░ 0%` |
+| `P3.01` | Capability boundary revalidation + Candidate catalog | 🟩 Complete | `██████████ 100%` |
+| `P3.02` | Capability lifecycle, ownership and Provisional contract baseline | 🟦 Next | `░░░░░░░░░░ 0%` |
 | `P3.03` | Document & Artifact Governance candidate slice | ⬜ | `░░░░░░░░░░ 0%` |
 | `P3.04` | Memory & Knowledge Governance candidate slice | ⬜ | `░░░░░░░░░░ 0%` |
 | `P3.05` | Non-authoritative Search / Index Projection candidate slice | ⬜ | `░░░░░░░░░░ 0%` |
@@ -123,11 +125,11 @@ M3 does not itself require or imply lifecycle `Active` capability promotion.
 
 ## 7. Current canonical action
 
-> **P3.01 — Capability boundary revalidation + Candidate catalog.**
+> **P3.02 — Capability lifecycle, ownership and Provisional contract baseline.**
 
-Record the initial candidate set and the RFC-0001-required Candidate metadata: organizational outcome, owner, rationale/sponsor, domain-neutral boundary, expected consumers/strategic need, reuse hypothesis, review date and incubation/containment/rejection criteria.
+For any retained Candidate considered for incubation, record the RFC-0001-required source need, sponsoring consumers, bounded scope/budget, Provisional domain-neutral capability contract, Canonical Record/authority responsibilities, dependencies/events, security/data handling, portability/migration and exit criteria.
 
-Do not begin broad capability implementation, promote candidates to lifecycle `Active`, or select durable infrastructure merely because Phase 3 is active.
+Do not begin broad P3.03–P3.06 implementation, promote candidates to lifecycle `Active`, create stable public interfaces, or select durable infrastructure merely because P3.01 admitted Candidate entries.
 
 ## 8. ADR and Product Contract gate
 
@@ -172,9 +174,9 @@ Phase 2 / M2 ✓
         ↓
 Phase 3 — Shared Platform Capabilities ACTIVE
         ↓
-P3.01 Candidate catalog / boundary revalidation ← current
+P3.01 Candidate catalog / boundary revalidation ✓
         ↓
-P3.02 lifecycle + Provisional contracts
+P3.02 lifecycle + Provisional contracts ← current
         ↓
 P3.03–P3.06 bounded capability slices
         ↓

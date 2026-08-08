@@ -1,7 +1,7 @@
 # Arvectum OS Phase 3 — Shared Platform Capabilities
 
 Status: `Active`
-Version: `1.0.0`
+Version: `1.0.1`
 Created: `2026-08-08`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -45,14 +45,16 @@ Therefore Phase 3 will evaluate a bounded capability set around responsibilities
 
 ### 2.1 Initial bounded capability candidates
 
-The initial Phase 3 candidate set is:
+P3.01 has admitted the following entries to the RFC-0001 lifecycle state `Candidate`:
 
-1. **Document & Artifact Governance** — bounded RFC-0008 semantics above Core Runtime;
-2. **Memory & Knowledge Governance** — bounded RFC-0007 retrieval/promotion lifecycle semantics above Core Runtime;
-3. **Search / Index Projection** — non-authoritative discovery over governed source versions;
-4. **Audit / Reconstruction Support** — reusable operator-facing reconstruction/evidence access over existing Event/provenance semantics.
+1. `CAP-001 — Document & Artifact Governance` — bounded RFC-0008 semantics above Core Runtime;
+2. `CAP-002 — Memory & Knowledge Governance` — bounded RFC-0007 retrieval/promotion lifecycle semantics above Core Runtime;
+3. `CAP-003 — Search / Index Projection` — non-authoritative discovery over governed source versions;
+4. `CAP-004 — Audit / Reconstruction Support` — reusable operator-facing reconstruction/evidence access over existing Event/provenance semantics.
 
-These are planning candidates only. Their capability lifecycle state must be recorded explicitly during P3.01/P3.02. No candidate is `Active` by declaration in this roadmap.
+Canonical Candidate metadata, review dates, incubation/containment/rejection criteria and explicit product/commodity boundaries are recorded in [`PLATFORM-CAPABILITY-CANDIDATE-CATALOG.md`](../catalogs/PLATFORM-CAPABILITY-CANDIDATE-CATALOG.md).
+
+All four entries remain lifecycle `Candidate`. P3.01 does not promote any entry to `Incubating` or `Active` and creates no implementation commitment.
 
 ### 2.2 Explicitly deferred from the initial bounded set
 
@@ -73,8 +75,8 @@ Shared connector/adaptor patterns may be studied at P3.09 only if actual capabil
 
 | ID | Work item | Status | Progress |
 |---|---|---:|---:|
-| `P3.01` | Capability boundary revalidation + Candidate catalog | 🟦 Next | `░░░░░░░░░░ 0%` |
-| `P3.02` | Capability lifecycle, ownership and Provisional contract baseline | ⬜ | `░░░░░░░░░░ 0%` |
+| `P3.01` | Capability boundary revalidation + Candidate catalog | 🟩 Complete | `██████████ 100%` |
+| `P3.02` | Capability lifecycle, ownership and Provisional contract baseline | 🟦 Next | `░░░░░░░░░░ 0%` |
 | `P3.03` | Document & Artifact Governance candidate slice | ⬜ | `░░░░░░░░░░ 0%` |
 | `P3.04` | Memory & Knowledge Governance candidate slice | ⬜ | `░░░░░░░░░░ 0%` |
 | `P3.05` | Non-authoritative Search / Index Projection candidate slice | ⬜ | `░░░░░░░░░░ 0%` |
@@ -105,6 +107,16 @@ Required output for every retained candidate:
 - explicit statement of what remains product-owned or commodity infrastructure.
 
 **Exit:** canonical Candidate catalog exists; initial scope is bounded; rejected/deferred items are explicit; no lifecycle inflation occurs.
+
+**Completion evidence — 2026-08-08:**
+
+- [`Platform Capability Candidate Catalog`](../catalogs/PLATFORM-CAPABILITY-CANDIDATE-CATALOG.md) records four retained entries (`CAP-001` through `CAP-004`) at lifecycle `Candidate` with every RFC-0001-required Candidate metadata field;
+- [`P3.01 Capability Boundary Revalidation Review`](../reviews/P3-01-capability-boundary-revalidation-review.md) records `PASS — four bounded domain-neutral responsibilities are admitted as RFC-0001 Candidates; product-domain behavior and commodity infrastructure remain outside the capability boundary`;
+- product-specific document/knowledge/search/audit semantics remain product-owned and concrete storage/search/IAM/observability/deployment technology remains outside capability identity;
+- generic notifications, scheduler, broad connector framework, public SDK/API and operational/commercial commitments are explicitly deferred/not admitted;
+- all four retained entries have review date `2026-09-08` with earlier review at P3.11;
+- no Candidate is promoted to `Incubating` or `Active`;
+- no Accepted RFC is changed and no ADR is fabricated or prematurely created.
 
 ### P3.02 — Capability lifecycle, ownership and Provisional contract baseline
 
@@ -258,10 +270,10 @@ Review:
 M2 ✅
  │
  ▼
-P3.01 Candidate catalog / boundary revalidation
+P3.01 Candidate catalog / boundary revalidation ✅
  │
  ▼
-P3.02 Lifecycle + Provisional contracts
+P3.02 Lifecycle + Provisional contracts ← current
  │
  ├──────────────┬──────────────┬──────────────┐
  ▼              ▼              ▼              ▼
@@ -350,6 +362,8 @@ M3 may be declared achieved only when all applicable conditions pass:
 
 ## 10. Current canonical action
 
-> **P3.01 — Capability boundary revalidation + Candidate catalog.**
+> **P3.02 — Capability lifecycle, ownership and Provisional contract baseline.**
 
-Start by recording the initial candidate set and its RFC-0001 Candidate metadata. Do not begin broad capability implementation or select durable infrastructure before this admission boundary is explicit.
+For any retained Candidate considered for incubation, record the RFC-0001-required source need, sponsoring consumers, bounded scope/budget, Provisional domain-neutral capability contract, Canonical Record/authority responsibilities, dependencies/events, security/data handling, portability/migration and exit criteria.
+
+Do not begin broad P3.03–P3.06 implementation, create stable public interfaces or select durable infrastructure before the incubation boundary is explicit.
