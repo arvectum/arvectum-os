@@ -1,7 +1,7 @@
 # Arvectum OS Phase 2 — Core Runtime
 
 Status: `Active`
-Version: `1.1.5`
+Version: `1.1.6`
 Created: `2026-08-08`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -83,7 +83,7 @@ Progress bars are planning indicators only.
 | `P2.03` | Typed Relationship runtime | 🟩 | `██████████ 100%` |
 | `P2.04` | Governed Execution lifecycle and gate orchestration runtime | 🟩 | `██████████ 100%` |
 | `P2.05` | Event admission, provenance and reconstruction runtime | 🟩 | `██████████ 100%` |
-| `P2.06` | Runtime consistency, idempotency and conflict semantics | 🟦 | `░░░░░░░░░░ 0%` |
+| `P2.06` | Runtime consistency, idempotency and conflict semantics | 🟩 | `██████████ 100%` |
 | `P2.07` | Product Contract runtime validation boundary | ⬜ | `░░░░░░░░░░ 0%` |
 | `P2.08` | Portability, replay and non-authoritative projection runtime | ⬜ | `░░░░░░░░░░ 0%` |
 | `P2.09` | Second bounded workflow reuse proof | ⬜ | `░░░░░░░░░░ 0%` |
@@ -262,6 +262,23 @@ Minimum evidence:
 
 **Exit:** concurrency/conflict/idempotency fitness scenarios are executable at the semantic/runtime-contract level, with any technology decision either still demonstrably reversible or governed by an ADR before reliance.
 
+**Completion evidence — 2026-08-08:**
+
+- `reference/python/arvectum_os_ref/runtime_consistency.py` introduces an immutable, domain-neutral `RuntimeConsistencyState` over one bounded canonical target lineage, admitted Events and consequential invocation-attempt evidence while reusing P2.02 Canonical lineage, P2.04 Governed Execution admission and P2.05 Event admission semantics;
+- canonical mutation requires an explicit expected Canonical Head Version Identity and the admitted Governed Execution must pin that exact target version; a stale current head raises an explicit conflict and an execution prepared against a different target version cannot silently commit against newer state;
+- the proposed successor must preserve Subject Identity, Organization, authority scope/mode and semantic type, use a new immutable Version Identity and identify the exact expected current head as predecessor before it can extend canonical lineage;
+- retry semantics are explicit as `NaturallyIdempotent`, `KeyedIdempotent` or `NonIdempotent`; keyed/non-idempotent attempts require a duplicate-protection token, and reuse of one token for materially different immutable invocation content fails as an idempotency conflict;
+- an exact already-committed invocation returns the previously committed record/Event evidence without appending another canonical version, Event or consequential-attempt record; natural idempotency can likewise recognize the already-published exact successor without treating transport delivery as a universal exactly-once guarantee;
+- `ExternalMutation`/`Commitment` attempt semantics keep `Succeeded`, `Failed` and `Uncertain` explicit; an uncertain prior outcome blocks blind retry and requires reconciliation, while a definite failure remains a failure and may be retried only under the declared retry semantics;
+- the external-consequence boundary records semantic outcome evidence only and does not itself perform an external effect, choose a remote idempotency protocol or imply cross-system atomicity;
+- the bounded local logical commit boundary validates expected head, exact execution target pin, successor lineage and required Event admission before returning one immutable next runtime snapshot containing the new record, Event and succeeded attempt; Event-admission failure leaves the caller's prior immutable state unchanged;
+- the logical atomicity declaration explicitly excludes durable storage transactions, database locking/CAS implementation, external-system mutation, transport acknowledgement/delivery, outbox/inbox persistence and distributed coordination, so P2.06 does not claim durable ACID or exactly-once processing;
+- `reference/python/tests/test_p2_06_runtime_consistency.py` adds 21 focused stale-head/current-version, exact-pin, successor, idempotency-key, natural/keyed retry, duplicate Event, failure, uncertainty/reconciliation, logical-atomicity and second-effect-shape tests;
+- GitHub Actions `Reference Python CI` run `#40` for PR `#24` on executable code head `c90b5b0d581e6a4ac9e99c20670c192f59cdcda3` completed successfully: `Ran 241 tests in 0.334s` / `OK`; the prior 220-test P2.05 baseline remains green;
+- no Accepted RFC is modified and the durable persistence/transaction/concurrency ADR gate is not crossed: the implementation remains bounded, in-memory, internal/provisional and reversible, with no database transaction model, locking/CAS mechanism, durable idempotency store, outbox/inbox mechanism, broker, distributed coordinator or stable public API/SDK selected.
+
+P2.06 completion makes the exercised RFC-0002/RFC-0005/RFC-0006 conflict, retry/idempotency, uncertainty and local logical-commit semantics reusable only within the bounded Core Runtime evidence. It does not establish durable concurrency control, cross-system atomicity, exactly-once delivery/processing, production readiness, full RFC conformance or an `Active` Platform Capability. Per the approved engineering-quality decision, `R2 — Runtime Health Review` is the next mandatory gate before substantive P2.07 work.
+
 ### P2.07 — Product Contract runtime validation boundary
 
 **Objective:** make RFC-0004 enforceable at the first reusable runtime entry boundary without inventing product-domain semantics.
@@ -379,7 +396,7 @@ The canonical gate decision is [`DECISION-2026-08-08-ENGINEERING-QUALITY-REFACTO
 | Gate | Trigger | Status | Primary purpose |
 |---|---|---:|---|
 | `R1 — Structural Review` | after P2.01, before substantive P2.02 | 🟩 Complete | validate runtime/fixture/test boundaries, dependency direction and remove accidental P1 structure |
-| `R2 — Runtime Health Review` | after P2.06, before substantive P2.07 | ⬜ Planned | review the accumulated semantic runtime spine, consistency/error/idempotency patterns and emerging ADR triggers |
+| `R2 — Runtime Health Review` | after P2.06, before substantive P2.07 | 🟦 Ready | review the accumulated semantic runtime spine, consistency/error/idempotency patterns and emerging ADR triggers |
 | `R3 — Reuse Refactoring Review` | after P2.09, before final Phase 2 hardening | ⬜ Planned | refactor abstractions using evidence from two materially distinct workflows |
 | `R4 — Milestone Hardening` | after final applicable P2.10 evidence, before P2.11/P2.12 | ⬜ Planned | full Phase 2 code-health remediation and evidence-backed optimization before closure reviews |
 
@@ -417,7 +434,7 @@ P2.03 Relationships ✓    P2.04 Governed Execution runtime ✓
           ↓
 P2.05 Event / provenance runtime ✓
           ↓
-P2.06 Consistency / idempotency / conflict semantics
+P2.06 Consistency / idempotency / conflict semantics ✓
           ↓
 R2 Runtime Health Review
           ↓
@@ -444,11 +461,11 @@ The sequence is dependency-aware rather than mechanically serial. P2.03–P2.04 
 
 ## 8. Current canonical action
 
-> **`P2.06 — Runtime consistency, idempotency and conflict semantics`.**
+> **`R2 — Runtime Health Review`.**
 
-Generalize the already-exercised stale-version, duplicate Event delivery and governed-execution safety evidence into reusable logical consistency rules, including explicit stale-head/current-version conflict behavior, deterministic repeat invocation semantics where idempotency is required, uncertainty/failure states and bounded logical atomicity boundaries.
+Review the accumulated Core Runtime semantic spine across lineage/version resolution, relationships, Governed Execution, Events/provenance and P2.06 consistency semantics. Reconcile duplicated validation, state-transition, error, idempotency and conflict logic; review module cohesion/dependency structure and cross-cutting test quality; identify any concrete ADR triggers that have emerged.
 
-Do not select a durable transaction, database-locking, distributed-coordination, outbox/inbox or concurrency technology merely to complete P2.06. If a concrete durable persistence/transaction/concurrency mechanism becomes materially relied upon, stop at the ADR gate and govern that choice before further reliance.
+Do not introduce performance abstractions or durable infrastructure speculatively. Establish profiling/benchmark evidence only where performance has become materially relevant, and stop at the ADR gate before materially relying on a concrete durable persistence, transaction/concurrency, Event-delivery, IAM/enforcement, public-interface or other constraining runtime choice. Substantive P2.07 work remains gated on R2 completion.
 
 ## 9. ADR gate
 
