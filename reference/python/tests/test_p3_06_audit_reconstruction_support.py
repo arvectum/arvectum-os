@@ -43,7 +43,7 @@ class P306AuditReconstructionSupportTests(unittest.TestCase):
             event_types=(("platform.operation.succeeded", "1"),),
             correlation_refs=self.correlation,
             causation_refs=self.causation,
-            provenance_refs=(
+            provenance_refs=tuple(dict.fromkeys((
                 self.actor_id,
                 self.execution_id,
                 self.workflow.subject_id,
@@ -61,7 +61,7 @@ class P306AuditReconstructionSupportTests(unittest.TestCase):
                 self.result.version_id,
                 self.event.subject_id,
                 self.event.version_id,
-            ),
+            ))),
             product_contract=self.contract,
         )
 
