@@ -1,7 +1,7 @@
 # Arvectum OS Phase 2 — Core Runtime
 
 Status: `Active`
-Version: `1.1.12`
+Version: `1.1.13`
 Created: `2026-08-08`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -88,7 +88,7 @@ Progress bars are planning indicators only.
 | `P2.08` | Portability, replay and non-authoritative projection runtime | 🟩 | `██████████ 100%` |
 | `P2.09` | Second bounded workflow reuse proof | 🟩 | `██████████ 100%` |
 | `P2.10` | Core Runtime architecture fitness matrix | 🟩 | `██████████ 100%` |
-| `P2.11` | ADR-gate and runtime-boundary hardening review | ⬜ | `░░░░░░░░░░ 0%` |
+| `P2.11` | ADR-gate and runtime-boundary hardening review | 🟦 | `░░░░░░░░░░ 0%` |
 | `P2.12` | Phase 2 / M2 closure review | ⬜ | `░░░░░░░░░░ 0%` |
 
 Engineering gates `R1`–`R4` are cross-cutting checkpoints and intentionally do not consume `P2.xx` work-item identifiers.
@@ -459,7 +459,7 @@ The canonical gate decision is [`DECISION-2026-08-08-ENGINEERING-QUALITY-REFACTO
 | `R1 — Structural Review` | after P2.01, before substantive P2.02 | 🟩 Complete | validate runtime/fixture/test boundaries, dependency direction and remove accidental P1 structure |
 | `R2 — Runtime Health Review` | after P2.06, before substantive P2.07 | 🟩 Complete | review the accumulated semantic runtime spine, consistency/error/idempotency patterns and emerging ADR triggers |
 | `R3 — Reuse Refactoring Review` | after P2.09, before final Phase 2 hardening | 🟩 Complete | refactor abstractions using evidence from two materially distinct workflows |
-| `R4 — Milestone Hardening` | after final applicable P2.10 evidence, before P2.11/P2.12 | 🟦 Ready | full Phase 2 code-health remediation and evidence-backed optimization before closure reviews |
+| `R4 — Milestone Hardening` | after final applicable P2.10 evidence, before P2.11/P2.12 | 🟩 Complete | full Phase 2 code-health remediation and evidence-backed optimization before closure reviews |
 
 Rules:
 
@@ -503,6 +503,17 @@ Rules:
 - GitHub Actions `Reference Python CI` run `#63` on executable branch head `72c97b8b24e86369d00c5932a3723743577b0c21` completed successfully: `Ran 293 tests in 0.312s` / `OK`;
 - no new ADR gate was crossed and no Accepted RFC was modified.
 
+**R4 completion evidence — 2026-08-08:**
+
+- canonical review: [`R4-milestone-hardening.md`](../reviews/R4-milestone-hardening.md) — `Complete`, result `PASS — Phase 2 semantic-owner runtime is hardened for the declared M2 reference scope; no material defect or new ADR trigger remains open`;
+- `reference/python/tests/test_r4_milestone_hardening.py` adds 7 final code-health guards over dependency direction, package-root public-surface pressure, unsafe process/network/deserialization dependencies, dynamic code execution, internal `RuntimeConsistencyState` scope, gate-bypass APIs and stable public-framework/serialization selection;
+- the R3 disposition remains intact: P2.02–P2.08 semantic owners do not depend on the historical P2.01 composition path, and no universal orchestrator/plugin contract is introduced;
+- package-root P1 convenience exports remain explicitly provisional and are not widened to export the P2 semantic-owner surface; no stable public/cross-product API claim is created;
+- the carried `RuntimeConsistencyState` aggregate-admission limitation remains bounded because no durable persistence/deserialization/public-state boundary exists; R4 deliberately does not invent such a boundary before P2.11/ADR review;
+- performance optimization is not performed because no reproducible bottleneck, resource-exhaustion or security evidence justifies it;
+- GitHub Actions `Reference Python CI` run `#73` on R4 executable head `080dc29bbba1252cf23822bc7cebd1e8124720d1` completed successfully;
+- no Accepted RFC is modified and no new ADR gate is crossed.
+
 ## 7. Dependency-aware sequence
 
 ```text
@@ -533,24 +544,24 @@ R3 Reuse Refactoring Review ✓
           ↓
 P2.10 final applicable fitness evidence ✓
           ↓
-R4 Milestone Hardening ← current
+R4 Milestone Hardening ✓
           ↓
-P2.11 ADR / boundary review
+P2.11 ADR / boundary review ← current
           ↓
 P2.12 Closure review
 ```
 
-`P2.10` architecture fitness tests run continuously across the phase; the diagram marks its final applicable evidence point as complete and advances the mandatory engineering sequence to R4.
+`P2.10` architecture fitness tests run continuously across the phase; final applicable evidence and R4 hardening are complete, so the mandatory engineering sequence advances to P2.11.
 
 The sequence is dependency-aware rather than mechanically serial. P2.03–P2.04 MAY proceed in bounded parallel where interfaces are explicit and no unresolved decision is prejudged, but declared engineering gates remain ordering constraints for the work that follows them.
 
 ## 8. Current canonical action
 
-> **`R4 — Milestone Hardening`.**
+> **`P2.11 — ADR-gate and runtime-boundary hardening review`.**
 
-Perform the final full Phase 2 code-health review over the hardened semantic-owner runtime and P2.10 fitness evidence before P2.11/P2.12. Review material architecture/dependency, correctness, security/privacy/isolation/authority, maintainability, evidence and migration/reversibility gaps; remediate material findings proportionately and perform performance optimization only where reproducible evidence justifies it.
+Review the R4-hardened runtime for materially constraining choices around repository/runtime package structure, persistence, transaction/concurrency, Event persistence/delivery, IAM/policy enforcement, evidence integrity, public/cross-product API or serialization, replay/projection storage and service/process topology.
 
-R4 must preserve the R3 reuse disposition: do not turn the historical P2.01 compatibility composition into a universal Core Runtime API, and do not introduce speculative shared abstractions merely to make the final code head look more uniform. Any materially constraining choice discovered during hardening remains subject to the existing ADR gate before further reliance.
+If a concrete choice has crossed the existing ADR gate, the applicable ADR MUST be created and accepted before further material reliance. If no gate is crossed, P2.11 must record explicit evidence that the corresponding boundaries remain bounded and replaceable. P2.11 must not use the review as an uncontrolled refactoring phase or infer production/capability/public-contract status from the hardened reference runtime.
 
 ## 9. ADR gate
 
@@ -558,7 +569,7 @@ No new ADR is required merely because Phase 2 is Active or because an engineerin
 
 An ADR is required before relying on a concrete implementation choice when it becomes materially constraining under the parent Roadmap gate, including cross-module/product coupling, material migration cost, stable public/cross-product interfaces, security/authority enforcement technology, durable data/event/runtime dependencies or materially different portability/reliability consequences.
 
-Phase 2 is expected to be the first phase in which one or more ADR gates may realistically be crossed. This document does not pre-approve any particular ADR or technology. P2.10 did not cross a new ADR gate.
+Phase 2 is expected to be the first phase in which one or more ADR gates may realistically be crossed. This document does not pre-approve any particular ADR or technology. R4 did not cross a new ADR gate; P2.11 now performs the explicit final ADR/runtime-boundary review before M2 closure.
 
 ## 10. Phase 2 exit criterion
 
