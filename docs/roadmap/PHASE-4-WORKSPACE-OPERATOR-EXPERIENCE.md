@@ -1,7 +1,7 @@
 # Arvectum OS Phase 4 — Workspace / Operator Experience
 
 Status: `Active`
-Version: `1.0.0`
+Version: `1.1.0`
 Created: `2026-08-08`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -10,6 +10,16 @@ Parent roadmap: [`ROADMAP.md`](ROADMAP.md)
 Milestone: `M4 — Coherent governed workspace baseline`
 Architecture baseline: Constitution `1.2.0`; RFC-0001 through RFC-0008 `1.0.0` (`Accepted`)
 Predecessor: `Phase 3 — Shared Platform Capabilities`, `M3` achieved
+
+## Version note
+
+Version `1.1.0` completes `P4.01 — Operator journeys, workspace boundary and information architecture` and advances the current canonical action to P4.02.
+
+P4.01 establishes the domain-neutral operator journey model, workspace/product UX boundary, `Discover / Records / Executions / Evidence / Documents / Knowledge` information-architecture hypothesis, presentation/read-model authority classification, fail-closed/uncertainty states and P4.02 shell handoff without selecting a frontend/API/runtime technology or creating a new Platform Capability.
+
+Canonical completion evidence:
+
+- [`P4.01 operator journeys / workspace boundary / IA review`](../reviews/P4-01-operator-journeys-workspace-boundary-information-architecture.md) — `PASS`.
 
 ## 1. Purpose
 
@@ -37,8 +47,8 @@ The workspace remains a platform interaction capability under development. Activ
 
 | ID | Work item | Status | Progress |
 |---|---|---:|---:|
-| `P4.01` | Operator journeys, workspace boundary and information architecture | 🟦 NEXT | `░░░░░░░░░░ 0%` |
-| `P4.02` | Organization context, identity and scoped navigation shell | ⬜ | `░░░░░░░░░░ 0%` |
+| `P4.01` | Operator journeys, workspace boundary and information architecture | 🟩 Complete | `██████████ 100%` |
+| `P4.02` | Organization context, identity and scoped navigation shell | 🟦 NEXT | `░░░░░░░░░░ 0%` |
 | `P4.03` | Canonical Record / Relationship inspection experience | ⬜ | `░░░░░░░░░░ 0%` |
 | `P4.04` | Version, Event, provenance and reconstruction experience | ⬜ | `░░░░░░░░░░ 0%` |
 | `P4.05` | Governed Execution, gate and approval/action experience | ⬜ | `░░░░░░░░░░ 0%` |
@@ -66,6 +76,8 @@ Required outputs:
 - explicit list of UX states that must fail closed or show uncertainty/insufficient authority.
 
 Exit criterion: the operator journeys cover the minimum M4 proof and do not introduce product-domain business behavior or a competing canonical state model.
+
+Completion evidence: [`P4.01 operator journeys / workspace boundary / IA review`](../reviews/P4-01-operator-journeys-workspace-boundary-information-architecture.md) — `PASS`, four functional cross-review iterations.
 
 ### P4.02 — Organization context, identity and scoped navigation shell
 
@@ -248,9 +260,9 @@ Engineering gates are review/hardening gates and do not inflate roadmap completi
 ```text
 M3 ✅ Shared Capability baseline
         ↓
-P4.01 Operator journeys + IA
+P4.01 Operator journeys + IA ✅
         ↓
-P4.02 Organization/identity navigation shell
+P4.02 Organization/identity navigation shell ← current
         ↓
 R9 Workspace Boundary Review
         ↓
@@ -341,6 +353,6 @@ A reversible internal reference implementation may proceed without an ADR when t
 
 ## 10. Current canonical action
 
-> **`P4.01 — Operator journeys, workspace boundary and information architecture`.**
+> **`P4.02 — Organization context, identity and scoped navigation shell`.**
 
-Start with the governed operator model and minimum journeys. Do not begin by selecting a frontend framework or drawing product-domain screens.
+Implement the smallest internal reversible shell defined by the P4.01 handoff: explicit Organization/Actor context, domain-neutral navigation, exact-versus-subject reference distinction, fail-closed unresolved scope and non-authoritative presentation state. Do not select or stabilize a frontend/API/runtime technology boundary merely to implement the shell.

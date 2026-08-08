@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.10.0`
+Version: `2.11.0`
 Created: `2026-08-07`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -15,13 +15,18 @@ The Strategic Roadmap beyond completed work is a planning hypothesis, not an arc
 
 ## 2. Version note
 
-Version `2.10.0` activates **Phase 4 — Workspace / Operator Experience** after verified completion of Phase 3 / `M3` and canonical boundary revalidation/decomposition.
+Version `2.11.0` records completion of **P4.01 — Operator journeys, workspace boundary and information architecture** and advances the current canonical action to P4.02.
 
-Phase 3 remains closed with `M3 — Validated shared capability baseline` achieved. CAP-001 through CAP-004 remain lifecycle `Incubating / Provisional`; Phase 4 activation does not promote them to `Active`.
+P4.01 defines the bounded domain-neutral operator journey model, shared-workspace versus product-UX boundary, information architecture, presentation/read-model authority classification, fail-closed/uncertainty states and the implementation handoff for the Organization/identity shell. It selects no frontend/API/runtime technology, creates no new Platform Capability and changes no capability lifecycle.
 
-The detailed Active Phase 4 work breakdown is maintained in [`PHASE-4-WORKSPACE-OPERATOR-EXPERIENCE.md`](PHASE-4-WORKSPACE-OPERATOR-EXPERIENCE.md).
+Canonical evidence:
 
-Phase 4 is operator-experience first and UI-technology neutral. It proves coherent human interaction with governed organizational state and shared capability slices without turning presentation state into canonical authority or prematurely selecting a frontend/API/service topology.
+- [`P4.01 operator journeys / workspace boundary / IA review`](../reviews/P4-01-operator-journeys-workspace-boundary-information-architecture.md) — `PASS`;
+- [`PHASE-4-WORKSPACE-OPERATOR-EXPERIENCE.md`](PHASE-4-WORKSPACE-OPERATOR-EXPERIENCE.md) — `Active 1.1.0`.
+
+Phase 3 remains closed with `M3 — Validated shared capability baseline` achieved. CAP-001 through CAP-004 remain lifecycle `Incubating / Provisional`; Phase 4 progress does not promote them to `Active`.
+
+Phase 4 remains operator-experience first and UI-technology neutral. It proves coherent human interaction with governed organizational state and shared capability slices without turning presentation state into canonical authority or prematurely selecting a frontend/API/service topology.
 
 ## 3. Verified architecture baseline
 
@@ -33,9 +38,10 @@ Phase 4 is operator-experience first and UI-technology neutral. It proves cohere
 - Phase 3 / `M3` — complete / achieved for the bounded shared-capability reference scope;
 - [`P3.12 closure review`](../reviews/P3-12-phase-3-m3-closure-review.md) — `PASS`;
 - CAP-001 through CAP-004 remain `Incubating / Provisional`;
-- no Platform Capability is `Active` merely because Phase 3 closed;
-- Phase 4 detailed roadmap is now `Active`;
-- no frontend framework, public API, BFF, IAM provider, durable read-model store or service topology is selected by roadmap activation.
+- no Platform Capability is `Active` merely because Phase 3 closed or Phase 4 is in progress;
+- Phase 4 detailed roadmap is `Active 1.1.0`;
+- [`P4.01 review`](../reviews/P4-01-operator-journeys-workspace-boundary-information-architecture.md) — `PASS`;
+- no frontend framework, public API, BFF, IAM provider, durable read-model store or service topology is selected by P4.01.
 
 ## 4. Strategic roadmap
 
@@ -70,12 +76,12 @@ M3 does not imply lifecycle `Active`, operational readiness, Stable Product Cont
 
 Canonical detailed plan:
 
-- [`PHASE-4-WORKSPACE-OPERATOR-EXPERIENCE.md`](PHASE-4-WORKSPACE-OPERATOR-EXPERIENCE.md) — `Active 1.0.0`.
+- [`PHASE-4-WORKSPACE-OPERATOR-EXPERIENCE.md`](PHASE-4-WORKSPACE-OPERATOR-EXPERIENCE.md) — `Active 1.1.0`.
 
 | ID | Work item | Status | Progress |
 |---|---|---:|---:|
-| `P4.01` | Operator journeys, workspace boundary and information architecture | 🟦 NEXT | `░░░░░░░░░░ 0%` |
-| `P4.02` | Organization context, identity and scoped navigation shell | ⬜ | `░░░░░░░░░░ 0%` |
+| `P4.01` | Operator journeys, workspace boundary and information architecture | 🟩 Complete | `██████████ 100%` |
+| `P4.02` | Organization context, identity and scoped navigation shell | 🟦 NEXT | `░░░░░░░░░░ 0%` |
 | `P4.03` | Canonical Record / Relationship inspection experience | ⬜ | `░░░░░░░░░░ 0%` |
 | `P4.04` | Version, Event, provenance and reconstruction experience | ⬜ | `░░░░░░░░░░ 0%` |
 | `P4.05` | Governed Execution, gate and approval/action experience | ⬜ | `░░░░░░░░░░ 0%` |
@@ -113,9 +119,9 @@ M4 is a bounded workspace milestone. It is not production readiness, full-platfo
 
 ## 8. Current canonical action
 
-> **`P4.01 — Operator journeys, workspace boundary and information architecture`.**
+> **`P4.02 — Organization context, identity and scoped navigation shell`.**
 
-Start with the smallest governed operator journeys and presentation/read-model authority classification. Do not begin by selecting a frontend framework or by designing product-domain screens.
+Implement the smallest internal reversible shell defined by P4.01: explicit Organization and attributable Actor context, domain-neutral navigation, Subject-versus-exact-Version distinction, fail-closed unresolved scope and non-authoritative presentation state. Do not select or stabilize a frontend framework, public route schema, BFF/API or durable read-model topology merely to make the shell visible.
 
 ## 9. ADR and Product Contract gate
 
@@ -147,7 +153,9 @@ CAP-001..CAP-004 remain Incubating / Provisional
         ↓
 Phase 4 — Workspace / Operator Experience ACTIVE
         ↓
-P4.01 Operator journeys + workspace boundary + IA ← current
+P4.01 Operator journeys + workspace boundary + IA ✓
+        ↓
+P4.02 Organization context + identity + scoped navigation shell ← current
         ↓
 M4 Coherent governed workspace baseline
 ```

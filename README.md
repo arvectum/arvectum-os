@@ -55,13 +55,21 @@ Canonical Phase 3 closure evidence:
 - [R8 milestone hardening review](docs/reviews/R8-phase-3-milestone-hardening.md)
 - [P3.11 capability admission / ADR / refactoring hardening review](docs/reviews/P3-11-capability-admission-adr-refactoring-hardening-review.md)
 
-`Phase 4 — Workspace / Operator Experience` remains **Draft**. The current canonical action is Phase 4 boundary revalidation and decomposition against actual M3 evidence and current product/operator needs. Phase 4 is not automatically activated by M3 closure.
+`Phase 4 — Workspace / Operator Experience` is **Active**. `P4.01 — Operator journeys, workspace boundary and information architecture` is complete with `PASS`; the current canonical action is `P4.02 — Organization context, identity and scoped navigation shell`.
+
+Canonical Phase 4 planning/current evidence:
+
+- [Canonical roadmap](docs/roadmap/ROADMAP.md)
+- [Active Phase 4 workstream](docs/roadmap/PHASE-4-WORKSPACE-OPERATOR-EXPERIENCE.md)
+- [P4.01 operator journeys / workspace boundary / IA review](docs/reviews/P4-01-operator-journeys-workspace-boundary-information-architecture.md)
+
+P4.01 establishes a domain-neutral workspace boundary and information architecture only. It does not create a new Platform Capability, change CAP-001 through CAP-004 lifecycle, select a frontend/API/runtime technology, create a Stable Product Contract/public interface or establish production readiness.
 
 RFC-0001 through RFC-0008 are `Accepted 1.0.0` and remain binding within their declared scopes.
 
 The reference implementation remains bounded and intentionally avoids establishing a permanent programming-language contract, durable database/object-store/search topology, public API/SDK/wire format, Event broker/store, IAM provider, workflow engine, evidence-integrity technology or deployable service topology. Such choices must pass the applicable ADR/stable-boundary gates before material reliance.
 
-Phase status, capability lifecycle, operational environment and conformance maturity remain distinct. `M3 Achieved` does not mean any Platform Capability is lifecycle `Active` or production-ready.
+Phase status, capability lifecycle, operational environment and conformance maturity remain distinct. `M3 Achieved` and Phase 4 progress do not mean any Platform Capability is lifecycle `Active` or production-ready.
 
 ## Roadmap blocks and RFC identifiers
 
