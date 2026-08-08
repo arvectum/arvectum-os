@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.0.5`
+Version: `2.0.6`
 Created: `2026-08-07`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -306,7 +306,7 @@ Canonical detailed work breakdown:
 | `P1.07` | Canonical Event admission and execution linkage | 🟩 | `██████████ 100%` |
 | `P1.08` | Provenance, causation and reconstruction evidence | 🟩 | `██████████ 100%` |
 | `P1.09` | Observation creation without Knowledge promotion | 🟩 | `██████████ 100%` |
-| `P1.10` | Portable semantic fixture export | 🟦 | `░░░░░░░░░░ 0%` |
+| `P1.10` | Portable semantic fixture export | 🟩 | `██████████ 100%` |
 | `P1.11` | Negative-path and architecture fitness tests | 🟨 | `████████░░ 80%` |
 | `P1.12` | Phase 1 bounded-slice closure review | ⬜ | `░░░░░░░░░░ 0%` |
 
@@ -324,13 +324,15 @@ Canonical detailed work breakdown:
 
 `P1.09` adds one significant, explicitly unvalidated Observation represented through the existing RFC-0002 Canonical Record envelope. It pins the exact P1.07 Event, terminal P1.06 Execution Context and canonical-effect versions verified by P1.08, preserves Organization/provenance/actor attribution, and fails closed on source-version or provenance drift. A dedicated guard rejects any attempt to consume the Observation as validated Knowledge without an explicit RFC-0007 promotion lifecycle. Observation capture does not mutate the Workflow, prior canonical versions, sealed execution/Event history or approved production behavior. P1.09 adds `14` focused tests; PR-time `Reference Python CI` passes the full `99`-test suite.
 
-`P1.11` is cross-cutting and now accumulates negative-path evidence through P1.09, including direct-mutation rejection, immutable-history preservation, canonical conflict detection, receipt/admission separation, duplicate/conflicting Event handling, fail-closed provenance/reconstruction validation and explicit Observation ≠ Knowledge enforcement. Replay and projection portions remain incomplete.
+`P1.10` exports the exact bounded P1.02–P1.09 governed state as deterministic, documented UTF-8 JSON using an explicit semantic mapping rather than Python object layout. It preserves the Organization and Actors, all ten Canonical Record versions, stable Subject/immutable Version Identity roles, authority/schema/lifecycle/predecessor data, exact Workflow/input/gate/effect pins, Event source/type/schema/correlation/causation, derived reconstruction evidence and the Observation's explicit `Unvalidated` / `knowledge_promotion = not-performed` state. Derived `semantic_links` preserve existing relationship/reference meaning while explicitly remaining non-canonical rather than fabricating Typed Relationship records. The fixture itself declares non-authority, non-public and non-production scope, records explicit omissions, and re-validates exact P1.08/P1.09 evidence before export. P1.10 adds `16` focused tests; `Reference Python CI` run `#9` passes the full `115`-test reference suite.
+
+`P1.11` is cross-cutting and now accumulates negative-path evidence through P1.10, including direct-mutation rejection, immutable-history preservation, canonical conflict detection, receipt/admission separation, duplicate/conflicting Event handling, fail-closed provenance/reconstruction validation, explicit Observation ≠ Knowledge enforcement, implementation-neutral semantic export, exact exported version/reference roles and stale-evidence export rejection. Replay side-effect-safety and projection/index non-authority portions remain incomplete.
 
 ### Current canonical action
 
-> **`P1.10 — Portable semantic fixture export`: export the bounded governed state through P1.09 into a documented implementation-neutral semantic fixture while preserving identities, immutable versions, Organization scope, authority, source/version relationships and Observation non-promotion semantics.**
+> **`P1.11 — Negative-path and architecture fitness tests`: close the remaining replay side-effect-safety and projection/index non-authority evidence required by the Phase 1 matrix before the bounded-slice closure review.**
 
-P1.10 must serialize governed semantic meaning rather than Python object layout, preserve exact version/reference roles, remain a bounded portability fixture rather than an independent authority source, and avoid creating a public compatibility promise beyond the declared Phase 1 reference scope.
+P1.10 portability is complete within its bounded reference scope. P1.12 remains blocked until the applicable P1.11 matrix passes; no `Active` capability, production-readiness or public compatibility claim follows from the passing reference fixture.
 
 ## 7. Phase 1 dependency-aware sequence
 
@@ -353,12 +355,12 @@ P1.08 ✅ Provenance / reconstruction
    ↓
 P1.09 ✅ Observation ≠ Knowledge
    ↓
-P1.10 🟦 Portable semantic fixture
+P1.10 ✅ Portable semantic fixture
    ↓
 P1.12 ⬜ Closure review
 ```
 
-`P1.11` fitness tests run continuously across the sequence.
+`P1.11` fitness tests run continuously across the sequence. After P1.10, the remaining replay/projection matrix evidence is the next closure dependency before P1.12.
 
 Bounded parallel work is permitted when dependencies remain explicit and the work does not prejudge unresolved architecture or technology choices.
 
@@ -400,6 +402,8 @@ P1.07 remains below this ADR gate because its Event admission history is caller-
 P1.08 remains below this ADR gate because its reconstruction manifest is derived, immutable, in-memory and non-public. It selects no durable lineage/provenance store, graph database, projection technology, public provenance serialization/API or evidence-integrity mechanism.
 
 P1.09 remains below this ADR gate because its Observation representation reuses existing bounded Canonical Record semantics and adds no durable Memory/Knowledge store, promotion engine, public learning API, serialization contract, retrieval/index technology or vendor dependency.
+
+P1.10 remains below this ADR gate because its documented JSON representation is a deterministic bounded reference fixture only. It creates no supported public/cross-product wire contract, durable migration commitment, persistence layout, vendor dependency, production export service or customer compatibility obligation. If a serialization format later becomes a stable cross-product/public interface, durable portability-package standard or compatibility commitment, the applicable ADR/standard/governance gate must be crossed before reliance.
 
 ## 10. Roadmap maintenance rule
 

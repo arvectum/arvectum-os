@@ -1,7 +1,7 @@
 # Arvectum OS Phase 1 — Reference Implementation
 
 Status: `Active`
-Version: `1.0.8`
+Version: `1.0.9`
 Created: `2026-08-07`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -50,7 +50,7 @@ The slice must demonstrate stable identity, immutable canonical versions, explic
 | `P1.07` | Canonical Event admission and execution linkage | 🟩 | `██████████ 100%` |
 | `P1.08` | Provenance, causation and reconstruction evidence | 🟩 | `██████████ 100%` |
 | `P1.09` | Observation creation without Knowledge promotion | 🟩 | `██████████ 100%` |
-| `P1.10` | Portable semantic fixture export | 🟦 | `░░░░░░░░░░ 0%` |
+| `P1.10` | Portable semantic fixture export | 🟩 | `██████████ 100%` |
 | `P1.11` | Negative-path and architecture fitness tests | 🟨 | `████████░░ 80%` |
 | `P1.12` | Phase 1 bounded-slice closure review | ⬜ | `░░░░░░░░░░ 0%` |
 
@@ -251,9 +251,27 @@ P1.09 adds `14` focused architecture-fitness tests. PR-time `Reference Python CI
 
 ### P1.10 — Portable semantic fixture export
 
-**Status:** 🟦 Next
+**Status:** 🟩 Complete
 
-Export the bounded governed state into a documented implementation-neutral semantic fixture that preserves relevant identities, versions, Organization scope, authority and relationships independently of the in-memory representation.
+Implemented one bounded implementation-neutral portability representation over the exact P1.02–P1.09 governed state:
+
+- the exporter emits deterministic, human-readable UTF-8 JSON through an explicit semantic mapping rather than Python `repr`, pickle, dataclass field dumping or object-graph layout;
+- every Identity preserves `namespace`, `value` and `scope` independently, while materially significant references explicitly distinguish stable `subject`, exact immutable `version` and bounded `governed-identity` roles;
+- the fixture preserves the explicit Organization and attributable Actor context plus all ten Canonical Record versions in the bounded slice: material input v1, Workflow v1, two gate decisions, three Execution Context versions, target v2, admitted Event and captured Observation;
+- each exported Canonical Record envelope preserves semantic/schema version, Organization, Native authority mode/scope, accountable owner, creation Actor/time, provenance, integrity metadata, payload, lifecycle and predecessor Version Identity where present;
+- type-specific sections preserve Workflow operation semantics, separate Authorization/Organizational Authority outcomes and basis references, exact Execution workflow/input/gate/effect pins, Event type/schema/source/times/classification/access plus execution/result/correlation/causation references, and Observation source/effect pins;
+- `semantic_links` preserve already-existing relationship/reference meaning such as predecessor lineage, exact version reliance, Event correlation/causation and Observation sources while explicitly declaring `canonical_typed_relationship = false`; P1.10 does not fabricate `platform.relationship` Canonical Records;
+- the P1.08 reconstruction manifest remains explicitly `derived-non-canonical` and the fixture itself declares `canonical_authority = false`, `public_compatibility_contract = false` and `production_export_endpoint = false`;
+- the P1.09 Observation remains `Unvalidated` with `knowledge_promotion = not-performed`; export creates no `platform.knowledge` record and no promotion path;
+- the portability section records explicit omissions, no non-exportable dependencies for the synthetic fixture, and that the reference exporter is not a real-data export authorization mechanism;
+- export re-validates the exact P1.08 reconstruction and exact P1.09 Observation before serialization and fails closed on mixed/stale evidence or duplicate exported Version Identities;
+- repeated export is deterministic and observational: it does not replay the mutation, create canonical state, issue authority or mutate sealed source objects.
+
+Repository evidence: `reference/python/arvectum_os_ref/portability.py`, `reference/python/PORTABLE-SEMANTIC-FIXTURE.md`, package exports in `reference/python/arvectum_os_ref/__init__.py`, and `reference/python/tests/test_p1_10_portable_semantic_fixture.py`.
+
+P1.10 adds `16` focused portability and negative-path fitness tests. PR-time `Reference Python CI` run `#9` completed successfully; together with the prior `99` tests, the full reference suite now contains `115` passing tests.
+
+P1.10 remains a bounded reference fixture rather than a full RFC-0003 production portability/conformance claim, service-termination package, public wire format, stable organization-wide portability standard or `Active` Platform Capability.
 
 ### P1.11 — Negative-path and architecture fitness tests
 
@@ -274,7 +292,7 @@ The bounded slice must include applicable executable tests proving at least:
 - Observation cannot be consumed as validated Knowledge without promotion;
 - projection/index results cannot substitute for exact governed Version Identity reliance.
 
-`P1.01` through `P1.09` now contribute executable negative-path and architecture-fitness coverage. P1.05 adds explicit authentication ≠ authorization, authorization ≠ Organizational Authority, authority ≠ authorization, unresolved/denied fail-closed behavior, exact gate scope and version attribution, explicit-Allow pin validation and immutable gate evidence. P1.06 adds direct-mutation rejection outside the required `Ready` Execution Context, preservation of the immutable first target version, exact Workflow/gate version consumption, stale-current canonical conflict detection and proof that successful canonical state change is represented by a new immutable target version plus a governance-significant terminal Execution Context version. P1.07 adds receipt/admission separation, duplicate-delivery idempotency, conflicting Event Identity/Version Identity rejection, exact execution/result linkage, cross-Organization fail-closed behavior and proof that Event admission does not mutate the sealed terminal execution or repeat the canonical effect. P1.08 adds exact reconstruction checks for actor continuity, Workflow/input/gate/execution/result/Event version linkage, provenance completeness and explicit correlation-versus-causation semantics while proving the reconstruction view itself does not mutate sealed history. P1.09 adds explicit Observation ≠ Knowledge enforcement, exact source-version pinning, provenance validation, immutability and proof that Observation capture does not alter standards, Workflows or prior governed outcomes. Replay and projection portions of the matrix remain incomplete.
+`P1.01` through `P1.10` now contribute executable negative-path and architecture-fitness coverage. P1.05 adds explicit authentication ≠ authorization, authorization ≠ Organizational Authority, authority ≠ authorization, unresolved/denied fail-closed behavior, exact gate scope and version attribution, explicit-Allow pin validation and immutable gate evidence. P1.06 adds direct-mutation rejection outside the required `Ready` Execution Context, preservation of the immutable first target version, exact Workflow/gate version consumption, stale-current canonical conflict detection and proof that successful canonical state change is represented by a new immutable target version plus a governance-significant terminal Execution Context version. P1.07 adds receipt/admission separation, duplicate-delivery idempotency, conflicting Event Identity/Version Identity rejection, exact execution/result linkage, cross-Organization fail-closed behavior and proof that Event admission does not mutate the sealed terminal execution or repeat the canonical effect. P1.08 adds exact reconstruction checks for actor continuity, Workflow/input/gate/execution/result/Event version linkage, provenance completeness and explicit correlation-versus-causation semantics while proving the reconstruction view itself does not mutate sealed history. P1.09 adds explicit Observation ≠ Knowledge enforcement, exact source-version pinning, provenance validation, immutability and proof that Observation capture does not alter standards, Workflows or prior governed outcomes. P1.10 adds implementation-neutral JSON parsing, exact exported Version-Identity coverage, explicit subject/version reference roles, non-authoritative derived links/reconstruction, Observation non-promotion preservation, deterministic export and fail-closed rejection of stale reconstruction/Observation state. Replay side-effect-safety and projection/index non-authority portions of the matrix remain incomplete.
 
 ### P1.12 — Phase 1 bounded-slice closure review
 
@@ -313,12 +331,12 @@ P1.08 ✅ Provenance / reconstruction
    ↓
 P1.09 ✅ Observation ≠ Knowledge
    ↓
-P1.10 🟦 Portable semantic fixture
+P1.10 ✅ Portable semantic fixture
    ↓
 P1.12 Closure review
 ```
 
-`P1.11` fitness tests run continuously across the sequence rather than waiting until the end.
+`P1.11` fitness tests run continuously across the sequence rather than waiting until the end. After P1.10, the remaining P1.11 replay/projection fitness evidence is the next closure dependency before P1.12.
 
 Bounded parallel work is permitted when dependencies remain explicit and the work does not prejudge unresolved architecture or technology choices.
 
@@ -337,6 +355,8 @@ P1.07 remains below the ADR gate for the same reason: Event admission uses only 
 P1.08 remains below the ADR gate because its reconstruction manifest is derived, immutable, in-memory and non-public. It introduces no durable lineage store, graph database, provenance service, projection technology, public serialization contract or evidence-integrity mechanism and therefore does not create a constraining cross-module dependency.
 
 P1.09 remains below the ADR gate because its significant Observation representation reuses the existing in-memory Canonical Record semantics, adds no durable Memory/Knowledge store or promotion engine, introduces no public learning API or serialization contract, and makes no technology/vendor choice. Any later durable Knowledge lifecycle, retrieval/index technology or cross-module/public interface must cross the applicable ADR gate when the readiness triggers are met.
+
+P1.10 remains below the ADR gate because its JSON representation is a documented, deterministic, bounded reference fixture only. It creates no supported public/cross-product wire contract, durable migration commitment, vendor dependency, persistence layout or production export service. If a serialization format later becomes a stable cross-product/public interface, durable portability package standard or customer compatibility commitment, the applicable ADR/standard/governance gate must be crossed before reliance.
 
 ## 8. Maintenance rule
 

@@ -1,9 +1,9 @@
 # Bounded Reference Implementation — Phase 1
 
 Status: `Provisional implementation harness`
-Scope: `Phase 1 / P1.01–P1.09`
-Architecture baseline: Constitution `1.2.0`; Accepted RFC-0001, RFC-0002, RFC-0003, RFC-0005, RFC-0006 and RFC-0007 `1.0.0`
-Roadmap baseline: `2.0.5`
+Scope: `Phase 1 / P1.01–P1.10`
+Architecture baseline: Constitution `1.2.0`; Accepted RFC-0001, RFC-0002, RFC-0003, RFC-0005, RFC-0006, RFC-0007 and RFC-0008 `1.0.0`
+Roadmap baseline: `2.0.6`
 
 This directory contains the bounded executable reference implementation defined by `docs/implementation/REFERENCE-IMPLEMENTATION-READINESS.md`.
 
@@ -177,6 +177,31 @@ Repository evidence: `reference/python/arvectum_os_ref/observation.py`, package 
 
 P1.09 adds `14` focused architecture-fitness tests. PR-time `Reference Python CI` passes the complete bounded suite: `99` tests, `OK`.
 
+## P1.10 — Portable semantic fixture export
+
+This work item exports the exact bounded P1.02–P1.09 governed state through a documented implementation-neutral JSON representation:
+
+- the exporter maps semantic fields explicitly rather than serializing Python `repr`, dataclass layout, pickle state or module/class names;
+- Identity values retain separate `namespace`, `value` and `scope` components;
+- materially significant references retain explicit `subject`, exact immutable `version` or bounded `governed-identity` roles rather than collapsing those roles into one identifier string;
+- the fixture includes the explicit Organization and attributable initiating/gate-decision Actors plus all ten Canonical Record versions exercised by the bounded slice;
+- every Canonical Record envelope retains Subject/Version Identities, semantic/schema version, Organization, Native authority mode/scope, accountable owner, creation Actor/time, provenance, integrity metadata, bounded payload, lifecycle and predecessor Version Identity where applicable;
+- Workflow, gate, Execution, Event and Observation type-specific semantics are exported separately from the common Canonical Record envelope;
+- exact Workflow/material-input/gate/canonical-effect pins remain Version Identity references in the exported Execution semantics;
+- Event source/type/schema/timing/classification/access plus exact execution/result, correlation and causation references are preserved;
+- P1.08 reconstruction evidence is carried as an explicitly `derived-non-canonical` section;
+- P1.09 Observation remains `Unvalidated`, keeps its exact source/effect pins and records `knowledge_promotion = not-performed`; export creates no validated Knowledge record;
+- derived `semantic_links` preserve existing predecessor/reliance/Event/Observation reference meaning while declaring `canonical_typed_relationship = false` so the fixture does not fabricate RFC-0002 Typed Relationship Canonical Records;
+- fixture metadata explicitly declares `canonical_authority = false`, `public_compatibility_contract = false` and `production_export_endpoint = false`;
+- the portability section declares explicit omissions, no non-exportable dependencies for the synthetic scenario, and that this harness is not a real organizational-data export authorization mechanism;
+- export re-runs the P1.08 reconstruction and P1.09 Observation validation, rejects mixed/stale evidence and duplicate exported Version Identities, and produces deterministic human-readable UTF-8 JSON without mutating source governed state.
+
+The bounded format is documented in `reference/python/PORTABLE-SEMANTIC-FIXTURE.md`. A later stable public/cross-product serialization contract, durable migration package or organization-wide portability standard remains a separate ADR/standard/governance decision if and when the readiness triggers are crossed.
+
+Repository evidence: `reference/python/arvectum_os_ref/portability.py`, `reference/python/PORTABLE-SEMANTIC-FIXTURE.md`, package exports in `reference/python/arvectum_os_ref/__init__.py`, and `reference/python/tests/test_p1_10_portable_semantic_fixture.py`.
+
+P1.10 adds `16` focused portability/negative-path fitness tests. `Reference Python CI` run `#9` completed successfully; the complete bounded suite now contains `115` passing tests.
+
 ## Deliberately not decided
 
 This harness does **not** establish a permanent package layout, programming-language contract, database, API, event broker, durable event store, outbox/inbox strategy, delivery protocol, schema registry, IAM provider, policy engine, deployment topology, persistent lineage store, Canonical Head/effective-version resolver, workflow engine, Product Contract, production role matrix or durable authorization-enforcement mechanism.
@@ -185,9 +210,11 @@ The P1.06 `current_record` argument is a bounded caller-supplied admitted-curren
 
 The P1.07 `admitted_events` argument is a bounded caller-supplied immutable Event-history fixture used only to exercise admission, duplicate and conflict semantics. It is not a durable Event repository or transport contract.
 
-The P1.08 reconstruction manifest is an immutable derived view of already-governed references. It does not create canonical state, grant authority, provide a mutable projection, establish durable evidence storage, or pre-empt P1.09/P1.10 semantics.
+The P1.08 reconstruction manifest is an immutable derived view of already-governed references. It does not create canonical state, grant authority, provide a mutable projection, establish durable evidence storage, or pre-empt later replay/projection fitness semantics.
 
-The P1.09 Observation is bounded significant governed learning evidence with explicit `Unvalidated` epistemic status. It is authoritative only for the fact that the Observation was captured in its declared scope; it is not validated Knowledge, Organizational Memory, an approved standard, a production rule or an implementation of the RFC-0007 promotion lifecycle. Its negative guard does not pre-empt P1.10 fixture semantics or a later governed Knowledge implementation.
+The P1.09 Observation is bounded significant governed learning evidence with explicit `Unvalidated` epistemic status. It is authoritative only for the fact that the Observation was captured in its declared scope; it is not validated Knowledge, Organizational Memory, an approved standard, a production rule or an implementation of the RFC-0007 promotion lifecycle. Its negative guard does not create a promotion path.
+
+The P1.10 JSON fixture is a derived portability representation rather than canonical state, a public wire contract or a production export endpoint. `semantic_links` are non-canonical export aids, not governed Typed Relationship records. The exporter proves bounded semantic portability only for the synthetic reference scenario and does not by itself implement RFC-0003 authorization for real-data disclosure, full service-termination portability, production migration or a supported compatibility promise.
 
 Python and `unittest` are used only as a reversible, zero-dependency vehicle for executable architecture fitness evidence. No Platform Capability becomes `Active`, and no production-readiness or full-platform conformance claim is created by these tests.
 
@@ -200,4 +227,4 @@ python -m unittest discover -s tests -v
 
 ## Next roadmap work item
 
-After P1.09 is completed and roadmap evidence is synchronized, the next dependency-ordered item is `P1.10 — Portable semantic fixture export`.
+With P1.10 complete, the next Phase 1 closure dependency is the remaining `P1.11 — Negative-path and architecture fitness tests` matrix work for replay side-effect safety and projection/index non-authority, followed by `P1.12 — Phase 1 bounded-slice closure review`.
