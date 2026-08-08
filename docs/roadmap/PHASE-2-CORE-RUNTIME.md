@@ -1,7 +1,7 @@
 # Arvectum OS Phase 2 — Core Runtime
 
 Status: `Active`
-Version: `1.1.11`
+Version: `1.1.12`
 Created: `2026-08-08`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -87,7 +87,7 @@ Progress bars are planning indicators only.
 | `P2.07` | Product Contract runtime validation boundary | 🟩 | `██████████ 100%` |
 | `P2.08` | Portability, replay and non-authoritative projection runtime | 🟩 | `██████████ 100%` |
 | `P2.09` | Second bounded workflow reuse proof | 🟩 | `██████████ 100%` |
-| `P2.10` | Core Runtime architecture fitness matrix | 🟦 | `░░░░░░░░░░ 0%` |
+| `P2.10` | Core Runtime architecture fitness matrix | 🟩 | `██████████ 100%` |
 | `P2.11` | ADR-gate and runtime-boundary hardening review | ⬜ | `░░░░░░░░░░ 0%` |
 | `P2.12` | Phase 2 / M2 closure review | ⬜ | `░░░░░░░░░░ 0%` |
 
@@ -336,7 +336,7 @@ Minimum evidence:
 - projection lookup returns all source versions for a Subject Identity and performs no implicit Canonical Head/Effective Version inference; exact source Version Identity attribution survives both reconstruction and projection;
 - projections cannot mint governed pins: `pin_runtime_projection_source` requires an independently supplied exact `CanonicalRecord` whose Subject Identity, Version Identity, semantic type, authority mode/scope and lifecycle attribution match the projection entry; a reconstructed imported record is intentionally not a `CanonicalRecord` and is rejected as an authority substitute;
 - `reference/python/tests/test_p2_08_portability_replay_projection.py` adds 20 focused semantic round-trip, replay safety and negative-path tests, including two materially distinct scenarios: multi-version canonical state plus a Typed Relationship, and execution/result state plus a canonical Event;
-- [`P2-08-portability-replay-projection-cross-review.md`](../reviews/P2-08-portability-replay-projection-cross-review.md) records two functional review iterations: iteration 1 identified and remediated the imported-state authority-type leak; iteration 2 passed across architecture, engineering, security/privacy and governance perspectives with no unresolved material objection;
+- [`P2-08-portability-replay-projection-cross-review.md`](../reviews/P2-08-portability-replay-projection-cross-review.md) records two functional review iterations: iteration 1 identified and remediated an imported-state authority-type leak; iteration 2 passed across architecture, engineering, security/privacy and governance perspectives with no unresolved material objection;
 - GitHub Actions `Reference Python CI` run `#52` for PR `#27` on executable code head `628005d5baa8abb62284067b808abc84cdf37160` completed successfully: `Ran 281 tests in 0.283s` / `OK`;
 - no Accepted RFC is modified and no serialization, replay/projection-storage or public-interface ADR gate is crossed: the implementation remains bounded, in-memory, internal/provisional and reversible, and does not select durable storage, broker, graph engine, schema registry, public API/SDK, production export authorization workflow or stable wire contract.
 
@@ -398,6 +398,19 @@ This work item is cross-cutting and MAY progress in parallel with P2.01–P2.09.
 
 **Exit:** the applicable matrix passes on the final P2 runtime code head in CI or equivalent repository evidence.
 
+**Completion evidence — 2026-08-08:**
+
+- canonical review [`P2-10-core-runtime-architecture-fitness-matrix.md`](../reviews/P2-10-core-runtime-architecture-fitness-matrix.md) records `PASS — all applicable M2 Core Runtime fitness dimensions have executable evidence`;
+- `reference/python/tests/test_p2_10_architecture_fitness_matrix.py` defines `FIT-01` through `FIT-14` exactly against the roadmap dimensions and binds every row to named executable semantic-owner evidence rather than duplicating the underlying architecture tests;
+- the matrix spans P2.02–P2.09 semantic-owner tests plus R2/R3 evidence and explicitly excludes the historical P2.01 `RuntimeComposition` as the demonstrated reusable Core Runtime seam, preserving the R3 disposition;
+- six new cross-cutting tests verify exact matrix coverage, evidence-anchor existence, semantic-owner span, product-domain neutrality, absence of durable infrastructure dependencies and explicit exclusion of unexercised Memory/Knowledge and Document/Artifact architecture from the M2 claim;
+- the product-domain leakage scan covers the shared Core Runtime semantic-owner modules and finds no procurement/tender/supplier/RFQ/purchase-order/bid-submission business-domain coupling;
+- the migration/reversibility scan finds no selected SQL/database driver, broker/queue, Redis, graph-database or graph-library dependency in the shared runtime modules, extending the earlier R2 evidence through P2.07/P2.08 owners;
+- GitHub Actions `Reference Python CI` run `#68` for PR `#30` on executable code head `b950109031d7b6cc8e9437cb6a4278264d43eab0` completed successfully: `Ran 299 tests in 0.701s` / `OK`;
+- no Accepted RFC is modified and no new ADR gate is crossed: P2.10 adds test-side evidence consolidation only and selects no durable persistence, transaction/concurrency, Event-delivery, IAM/enforcement, workflow-engine, graph, replay/projection-storage, stable serialization/public-interface or service-topology contract.
+
+P2.10 completion is scoped M2 architecture-fitness evidence only. It does not claim full RFC-0001–RFC-0008 conformance, RFC-0007 Memory/Knowledge implementation, RFC-0008 Document/Artifact implementation, production/operational readiness, `Active` Platform Capability status, a `Stable` Product Contract, a stable public API/SDK or SLA/support commitments. Per the approved engineering-quality decision, P2.10 now triggers mandatory `R4 — Milestone Hardening` before P2.11/P2.12.
+
 ### P2.11 — ADR-gate and runtime-boundary hardening review
 
 **Objective:** ensure that reuse has not converted provisional implementation convenience into undeclared durable architecture.
@@ -446,7 +459,7 @@ The canonical gate decision is [`DECISION-2026-08-08-ENGINEERING-QUALITY-REFACTO
 | `R1 — Structural Review` | after P2.01, before substantive P2.02 | 🟩 Complete | validate runtime/fixture/test boundaries, dependency direction and remove accidental P1 structure |
 | `R2 — Runtime Health Review` | after P2.06, before substantive P2.07 | 🟩 Complete | review the accumulated semantic runtime spine, consistency/error/idempotency patterns and emerging ADR triggers |
 | `R3 — Reuse Refactoring Review` | after P2.09, before final Phase 2 hardening | 🟩 Complete | refactor abstractions using evidence from two materially distinct workflows |
-| `R4 — Milestone Hardening` | after final applicable P2.10 evidence, before P2.11/P2.12 | ⬜ Planned | full Phase 2 code-health remediation and evidence-backed optimization before closure reviews |
+| `R4 — Milestone Hardening` | after final applicable P2.10 evidence, before P2.11/P2.12 | 🟦 Ready | full Phase 2 code-health remediation and evidence-backed optimization before closure reviews |
 
 Rules:
 
@@ -518,26 +531,26 @@ P2.09 Second workflow reuse proof ✓
           ↓
 R3 Reuse Refactoring Review ✓
           ↓
-P2.10 final applicable fitness evidence
+P2.10 final applicable fitness evidence ✓
           ↓
-R4 Milestone Hardening
+R4 Milestone Hardening ← current
           ↓
 P2.11 ADR / boundary review
           ↓
 P2.12 Closure review
 ```
 
-`P2.10` architecture fitness tests run continuously across the phase; the diagram shows only its final applicable evidence point before R4.
+`P2.10` architecture fitness tests run continuously across the phase; the diagram marks its final applicable evidence point as complete and advances the mandatory engineering sequence to R4.
 
 The sequence is dependency-aware rather than mechanically serial. P2.03–P2.04 MAY proceed in bounded parallel where interfaces are explicit and no unresolved decision is prejudged, but declared engineering gates remain ordering constraints for the work that follows them.
 
 ## 8. Current canonical action
 
-> **`P2.10 — Core Runtime architecture fitness matrix`.**
+> **`R4 — Milestone Hardening`.**
 
-Consolidate final applicable M2 architecture-fitness evidence over the semantic owners proven through P2.09 and hardened by R3. Cover identity/Organization isolation, immutable canonical/relationship history, Head versus Effective Version resolution, exact consequential version pinning, separate authority/gate semantics, direct consequential-operation rejection, idempotency/retry/conflict behavior, Event duplicate/conflict admission, reconstruction, Product Contract enforcement, projection/replay non-authority, semantic portability, product-domain leakage and migration/reversibility constraints where applicable.
+Perform the final full Phase 2 code-health review over the hardened semantic-owner runtime and P2.10 fitness evidence before P2.11/P2.12. Review material architecture/dependency, correctness, security/privacy/isolation/authority, maintainability, evidence and migration/reversibility gaps; remediate material findings proportionately and perform performance optimization only where reproducible evidence justifies it.
 
-Do not reopen the rejected idea of generalizing the historical P2.01 compatibility composition merely to obtain one universal orchestration API. Any materially constraining implementation choice discovered by P2.10 must still pass the existing ADR gate before further reliance.
+R4 must preserve the R3 reuse disposition: do not turn the historical P2.01 compatibility composition into a universal Core Runtime API, and do not introduce speculative shared abstractions merely to make the final code head look more uniform. Any materially constraining choice discovered during hardening remains subject to the existing ADR gate before further reliance.
 
 ## 9. ADR gate
 
@@ -545,7 +558,7 @@ No new ADR is required merely because Phase 2 is Active or because an engineerin
 
 An ADR is required before relying on a concrete implementation choice when it becomes materially constraining under the parent Roadmap gate, including cross-module/product coupling, material migration cost, stable public/cross-product interfaces, security/authority enforcement technology, durable data/event/runtime dependencies or materially different portability/reliability consequences.
 
-Phase 2 is expected to be the first phase in which one or more ADR gates may realistically be crossed. This document does not pre-approve any particular ADR or technology. R3 did not cross a new ADR gate.
+Phase 2 is expected to be the first phase in which one or more ADR gates may realistically be crossed. This document does not pre-approve any particular ADR or technology. P2.10 did not cross a new ADR gate.
 
 ## 10. Phase 2 exit criterion
 
