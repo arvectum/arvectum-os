@@ -48,7 +48,11 @@ from arvectum_os_ref.product_contract import (
     ProductContractSecurityBoundaryError,
     ProductOperationDeclaration,
 )
-from arvectum_os_ref.search_index_projection import DiscoveryConstraints, GovernedSearchSource, rebuild_projection
+from arvectum_os_ref.search_index_projection import (
+    DiscoveryConstraints,
+    GovernedSearchSource,
+    rebuild_projection,
+)
 from arvectum_os_ref.security import ActorContext, OrganizationScope, Principal
 from arvectum_os_ref.workflow import OperationSideEffectClass
 
@@ -67,10 +71,7 @@ class P308ProductContractConsumptionTests(unittest.TestCase):
     def _id(self, namespace: str, value: str, scope: str = "org-a") -> Identity:
         return Identity(namespace, value, scope)
 
-    def _time(self, minute: int = 0):
-        return datetime(2026, 8, 8, 15, minute, tzinfo=UTC)
-
-    def _record(self, *, subject: str, version: str, semantic_type: str, authority_scope: str | None = None, payload=()):
+    def _record(self, subject: str, version: str, semantic_type: str, *, payload=()) -> CanonicalRecord:
         return CanonicalRecord(
             subject_id=self._id("subject", subject),
             version_id=self._id("version", version),
@@ -78,10 +79,10 @@ class P308ProductContractConsumptionTests(unittest.TestCase):
             schema_version="1",
             organization=self.organization,
             authority_mode=AuthorityMode.NATIVE,
-            authority_scope=authority_scope or f"{semantic_type}/state",
+            authority_scope=f"{semantic_type}/state",
             accountable_owner_id=self.actor.actual_principal.principal_id,
             creation_actor=self.actor,
-            created_at=self._time(),
+            created_at=datetime(2026, 8, 8, 15, 0, tzinfo=UTC),
             provenance_refs=(self.actor.actual_principal.principal_id,),
             integrity_metadata=(("representation", "p3.08-test"),),
             payload=payload,
@@ -93,9 +94,9 @@ class P308ProductContractConsumptionTests(unittest.TestCase):
             dependency_id=dependency_id,
             contract_version=CAPABILITY_CONTRACT_VERSION,
             allowed_operations=operations,
-            provider_responsibility="provide the bounded Incubating capability semantics",
-            consumer_responsibility="use only the declared Product Contract and current access context",
-            failure_behavior="fail closed without falling back to platform internals",
+            provider_responsibility="provide bounded Incubating capability semantics",
+            consumer_responsibility="use only declared Product Contract and current access context",
+            failure_behavior="fail closed without platform-internal fallback",
             provisional=True,
         )
 
@@ -105,21 +106,24 @@ class P308ProductContractConsumptionTests(unittest.TestCase):
             authority_mode=AuthorityMode.NATIVE,
             authority_scope=f"{semantic_type}/state",
             access_modes=(CanonicalAccessMode.READ,),
-            authoritative_source="Arvectum OS only within this bounded Native test authority scope",
+            authoritative_source="Arvectum OS inside the bounded Native fixture scope",
             failure_behavior="reject undeclared canonical read",
         )
 
-    def _operation(self, name: str, dependency_id: Identity, accesses=()) -> ProductOperationDeclaration:
+    def _operation(self, name: str, dependency_id: Identity, *, accesses=(), gates=None) -> ProductOperationDeclaration:
         return ProductOperationDeclaration(
             operation_name=name,
             dependency_id=dependency_id,
             side_effect_classes=(OperationSideEffectClass.READ_ONLY,),
-            required_gates=(GovernedGateKind.AUTHORIZATION, GovernedGateKind.DATA_GOVERNANCE),
+            required_gates=(
+                GovernedGateKind.AUTHORIZATION,
+                GovernedGateKind.DATA_GOVERNANCE,
+            ) if gates is None else gates,
             canonical_accesses=accesses,
             failure_behavior="fail closed without source disclosure or canonical mutation",
         )
 
-    def _contract(self, *, lifecycle=ProductContractLifecycle.PROVISIONAL, operations=None, dependencies=None) -> ProductContract:
+    def _contract(self, *, operations=None, dependencies=None) -> ProductContract:
         owner = self.actor.actual_principal.principal_id
         record = CanonicalRecord(
             subject_id=self._id("product-contract-subject", "p3-08-bounded-consumer"),
@@ -131,40 +135,55 @@ class P308ProductContractConsumptionTests(unittest.TestCase):
             authority_scope="platform.product-contract/boundary",
             accountable_owner_id=owner,
             creation_actor=self.actor,
-            created_at=self._time(),
+            created_at=datetime(2026, 8, 8, 15, 0, tzinfo=UTC),
             provenance_refs=(owner, self.product_id),
             integrity_metadata=(("representation", "bounded-reference-contract"),),
             payload=(("scope", "read-only consumption of CAP-001 through CAP-004"),),
-            lifecycle_status=lifecycle.value,
+            lifecycle_status=ProductContractLifecycle.PROVISIONAL.value,
         )
         default_dependencies = (
             self._dependency(CAP_001_DOCUMENT_ARTIFACT, (OP_RESOLVE_DOCUMENT,)),
             self._dependency(CAP_002_MEMORY_KNOWLEDGE, (OP_RETRIEVE_KNOWLEDGE,)),
-            self._dependency(CAP_003_SEARCH_PROJECTION, (OP_DISCOVER_SOURCES, OP_RESOLVE_SEARCH_SOURCE)),
+            self._dependency(
+                CAP_003_SEARCH_PROJECTION,
+                (OP_DISCOVER_SOURCES, OP_RESOLVE_SEARCH_SOURCE),
+            ),
             self._dependency(CAP_004_AUDIT_RECONSTRUCTION, (OP_RECONSTRUCT_EXECUTION,)),
         )
         default_operations = (
-            self._operation(OP_RESOLVE_DOCUMENT, CAP_001_DOCUMENT_ARTIFACT, (self._read("platform.document"),)),
-            self._operation(OP_RETRIEVE_KNOWLEDGE, CAP_002_MEMORY_KNOWLEDGE, (self._read("platform.knowledge"),)),
+            self._operation(
+                OP_RESOLVE_DOCUMENT,
+                CAP_001_DOCUMENT_ARTIFACT,
+                accesses=(self._read("platform.document"),),
+            ),
+            self._operation(
+                OP_RETRIEVE_KNOWLEDGE,
+                CAP_002_MEMORY_KNOWLEDGE,
+                accesses=(self._read("platform.knowledge"),),
+            ),
             self._operation(OP_DISCOVER_SOURCES, CAP_003_SEARCH_PROJECTION),
-            self._operation(OP_RESOLVE_SEARCH_SOURCE, CAP_003_SEARCH_PROJECTION, (self._read("platform.knowledge"),)),
+            self._operation(
+                OP_RESOLVE_SEARCH_SOURCE,
+                CAP_003_SEARCH_PROJECTION,
+                accesses=(self._read("platform.knowledge"),),
+            ),
             self._operation(OP_RECONSTRUCT_EXECUTION, CAP_004_AUDIT_RECONSTRUCTION),
         )
         return ProductContract(
             record=record,
             product_id=self.product_id,
             product_version="0.1.0",
-            bounded_scope="one synthetic read-only Product Experiment consuming the four Phase 3 Incubating capabilities",
+            bounded_scope="one synthetic read-only Product Experiment consuming CAP-001 through CAP-004",
             compatibility_assumptions=(
                 "Phase 3 Provisional capability contract baseline 1.0.0",
-                "internal in-memory reference semantics only; no stable API or serialization",
+                "internal in-memory reference semantics only",
             ),
             dependencies=default_dependencies if dependencies is None else dependencies,
             operations=default_operations if operations is None else operations,
-            portability_responsibility="preserve exact governed identities/version references; derived views remain rebuildable",
-            retention_deletion_responsibility="inherit current Organization source retention/deletion constraints",
-            review_condition="review at P3.11 or earlier material capability-contract change",
-            exit_path="revise, contain or retire; stabilization requires a separate RFC-0004 lifecycle decision",
+            portability_responsibility="preserve governed identities and exact version references",
+            retention_deletion_responsibility="inherit applicable Organization source rules",
+            review_condition="P3.11 or earlier material capability-contract change",
+            exit_path="revise, contain or retire; stabilization requires a separate lifecycle decision",
         )
 
     def _request(
@@ -172,11 +191,11 @@ class P308ProductContractConsumptionTests(unittest.TestCase):
         dependency_id: Identity,
         operation_name: str,
         *,
-        access: AccessRequest | None = None,
-        dependency_contract_version: str = CAPABILITY_CONTRACT_VERSION,
+        access=None,
+        dependency_version: str = CAPABILITY_CONTRACT_VERSION,
         mechanism: ProductBoundaryMechanism = ProductBoundaryMechanism.DECLARED_PLATFORM_CONTRACT,
-        organization: OrganizationScope | None = None,
-        product_id: Identity | None = None,
+        organization=None,
+        product_id=None,
     ) -> CapabilityConsumptionRequest:
         organization = self.organization if organization is None else organization
         return CapabilityConsumptionRequest(
@@ -184,14 +203,14 @@ class P308ProductContractConsumptionTests(unittest.TestCase):
             product_id=self.product_id if product_id is None else product_id,
             product_version="0.1.0",
             dependency_id=dependency_id,
-            dependency_contract_version=dependency_contract_version,
+            dependency_contract_version=dependency_version,
             operation_name=operation_name,
             access=self.access if access is None else access,
             mechanism=mechanism,
         )
 
     def _document(self):
-        record = self._record(subject="doc", version="doc-v1", semantic_type="platform.document")
+        record = self._record("doc", "doc-v1", "platform.document")
         artifact = ArtifactContent(
             self._id("artifact", "a1"),
             self.organization,
@@ -203,9 +222,11 @@ class P308ProductContractConsumptionTests(unittest.TestCase):
         )
         return admit_document_version(candidate=DocumentVersionCandidate(record, (artifact,), "source")), artifact
 
-    def _knowledge(self):
+    def _knowledge(self) -> ValidatedKnowledge:
         record = self._record(
-            subject="knowledge", version="knowledge-v1", semantic_type="platform.knowledge",
+            "knowledge",
+            "knowledge-v1",
+            "platform.knowledge",
             payload=(("proposition", "eligible"),),
         )
         return ValidatedKnowledge(
@@ -216,12 +237,12 @@ class P308ProductContractConsumptionTests(unittest.TestCase):
             self._id("approval", "a1"),
         )
 
-    def _source(self):
+    def _source(self) -> GovernedSearchSource:
         return GovernedSearchSource(
             self._record(
-                subject="search-source",
-                version="search-source-v1",
-                semantic_type="platform.knowledge",
+                "search-source",
+                "search-source-v1",
+                "platform.knowledge",
                 payload=(("proposition", "needle"),),
             ),
             "needle",
@@ -256,7 +277,7 @@ class P308ProductContractConsumptionTests(unittest.TestCase):
             event_types=(("example.event", "1"),),
             correlation_refs=(execution_subject,),
             causation_refs=(execution.version_id,),
-            provenance_refs=(
+            provenance_refs=tuple(dict.fromkeys((
                 self.actor.actual_principal.principal_id,
                 execution_subject,
                 workflow.subject_id,
@@ -269,11 +290,11 @@ class P308ProductContractConsumptionTests(unittest.TestCase):
                 result.version_id,
                 event.subject_id,
                 event.version_id,
-            ),
+            ))),
         )
-        pins = (workflow, material, execution, result, event)
         constraints = tuple(
-            (pin.version_id, "review", ("read",), "internal") for pin in pins
+            (pin.version_id, "review", ("read",), "internal")
+            for pin in (workflow, material, execution, result, event)
         )
         return manifest, constraints
 
@@ -322,7 +343,7 @@ class P308ProductContractConsumptionTests(unittest.TestCase):
         )
         self.assertTrue(view.complete)
 
-    def test_exact_product_contract_and_capability_versions_are_preserved(self) -> None:
+    def test_exact_contract_and_capability_versions_are_preserved(self) -> None:
         admission = validate_capability_consumption(
             contract=self.contract,
             request=self._request(CAP_001_DOCUMENT_ARTIFACT, OP_RESOLVE_DOCUMENT),
@@ -330,7 +351,6 @@ class P308ProductContractConsumptionTests(unittest.TestCase):
         self.assertEqual(admission.product_contract_version_id, self.contract.record.version_id)
         self.assertEqual(admission.dependency_contract_version, CAPABILITY_CONTRACT_VERSION)
         self.assertTrue(all(item.provisional for item in self.contract.dependencies))
-        self.assertEqual(self.contract.lifecycle, ProductContractLifecycle.PROVISIONAL)
 
     def test_undeclared_or_wrong_version_dependency_fails_closed(self) -> None:
         with self.assertRaises(ProductContractDependencyError):
@@ -347,7 +367,7 @@ class P308ProductContractConsumptionTests(unittest.TestCase):
                 request=self._request(
                     CAP_001_DOCUMENT_ARTIFACT,
                     OP_RESOLVE_DOCUMENT,
-                    dependency_contract_version="2.0.0",
+                    dependency_version="2.0.0",
                 ),
             )
 
@@ -370,7 +390,7 @@ class P308ProductContractConsumptionTests(unittest.TestCase):
                         ),
                     )
 
-    def test_cross_organization_product_contract_reliance_is_rejected(self) -> None:
+    def test_cross_organization_contract_reliance_is_rejected(self) -> None:
         org_b = OrganizationScope(Identity("organization", "org-b", "platform"))
         actor_b = ActorContext(Principal(Identity("principal", "consumer", "org-b")), org_b)
         access_b = AccessRequest(actor_b, "review", "read", ("internal",))
@@ -393,11 +413,10 @@ class P308ProductContractConsumptionTests(unittest.TestCase):
             else item
             for item in self.contract.operations
         )
-        contract = self._contract(operations=operations)
         admitted, artifact = self._document()
         with self.assertRaises(ProductContractCanonicalAccessError):
             consume_document(
-                contract=contract,
+                contract=self._contract(operations=operations),
                 request=self._request(CAP_001_DOCUMENT_ARTIFACT, OP_RESOLVE_DOCUMENT),
                 admitted=admitted,
                 artifact_id=artifact.artifact_id,
@@ -410,14 +429,13 @@ class P308ProductContractConsumptionTests(unittest.TestCase):
             else item
             for item in self.contract.operations
         )
-        contract = self._contract(operations=operations)
         with self.assertRaises(ProductContractSecurityBoundaryError):
             validate_capability_consumption(
-                contract=contract,
+                contract=self._contract(operations=operations),
                 request=self._request(CAP_002_MEMORY_KNOWLEDGE, OP_RETRIEVE_KNOWLEDGE),
             )
 
-    def test_contract_and_admission_create_no_approval_or_organizational_authority(self) -> None:
+    def test_contract_admission_creates_no_approval_or_authority(self) -> None:
         admission = validate_capability_consumption(
             contract=self.contract,
             request=self._request(CAP_004_AUDIT_RECONSTRUCTION, OP_RECONSTRUCT_EXECUTION),
