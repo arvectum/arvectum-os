@@ -8,7 +8,7 @@ to ``RuntimeComposition`` and is invoked once through that boundary.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 from .canonical import CanonicalRecord, build_p1_02_native_record
 from .identity import Identity
