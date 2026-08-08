@@ -76,7 +76,10 @@ class P208PortabilityReplayProjectionRuntimeTests(unittest.TestCase):
     def _relationship_scenario(self):
         subject_a_v1 = self._record("subject-a", "subject-a-v1", minute=0)
         subject_a_v2 = self._record(
-            "subject-a", "subject-a-v2", predecessor=subject_a_v1.version_id, minute=1
+            "subject-a",
+            "subject-a-v2",
+            predecessor=subject_a_v1.version_id,
+            minute=1,
         )
         subject_b_v1 = self._record("subject-b", "subject-b-v1", minute=0)
         relationship_type = RelationshipTypeReference(
@@ -90,10 +93,12 @@ class P208PortabilityReplayProjectionRuntimeTests(unittest.TestCase):
             version_id=self._id("relationship-version", "rel-a-b-v1"),
             relationship_type=relationship_type,
             source=RelationshipEndpoint(
-                EndpointReferenceRole.VERSION_IDENTITY, subject_a_v2.version_id
+                EndpointReferenceRole.VERSION_IDENTITY,
+                subject_a_v2.version_id,
             ),
             target=RelationshipEndpoint(
-                EndpointReferenceRole.SUBJECT_IDENTITY, subject_b_v1.subject_id
+                EndpointReferenceRole.SUBJECT_IDENTITY,
+                subject_b_v1.subject_id,
             ),
             organization=self.organization,
             actor=self.actor,
@@ -184,11 +189,15 @@ class P208PortabilityReplayProjectionRuntimeTests(unittest.TestCase):
         reconstructed = reconstruct_runtime_semantics(package=package)
         self.assertIsInstance(reconstructed, ReconstructedRuntimeSemantics)
         self.assertEqual(reconstructed.scenario_id, "relationship-round-trip")
-        self.assertEqual(reconstructed.records, (*records, relationship.record))
-        self.assertEqual(reconstructed.relationships, (relationship,))
+        self.assertEqual(
+            tuple(item.version_id for item in reconstructed.records),
+            tuple(item.version_id for item in (*records, relationship.record)),
+        )
         self.assertFalse(reconstructed.events)
         self.assertFalse(reconstructed.canonical_authority)
+        self.assertTrue(all(item.canonical_authority is False for item in reconstructed.records))
         restored = reconstructed.relationships[0]
+        self.assertEqual(restored.record_version_id, relationship.record.version_id)
         self.assertEqual(restored.relationship_type, relationship.relationship_type)
         self.assertEqual(restored.source, relationship.source)
         self.assertEqual(restored.target, relationship.target)
@@ -196,12 +205,18 @@ class P208PortabilityReplayProjectionRuntimeTests(unittest.TestCase):
     def test_event_scenario_round_trips_exact_event_semantics(self) -> None:
         records, event = self._event_scenario()
         package = export_runtime_semantic_package(
-            scenario_id="event-round-trip", records=records, events=(event,)
+            scenario_id="event-round-trip",
+            records=records,
+            events=(event,),
         )
         reconstructed = reconstruct_runtime_semantics(package=package)
-        self.assertEqual(reconstructed.records, (*records, event.record))
-        self.assertEqual(reconstructed.events, (event,))
+        self.assertEqual(
+            tuple(item.version_id for item in reconstructed.records),
+            tuple(item.version_id for item in (*records, event.record)),
+        )
         restored = reconstructed.events[0]
+        self.assertEqual(restored.record_version_id, event.record.version_id)
+        self.assertFalse(restored.canonical_authority)
         self.assertEqual(restored.execution_version_id, event.execution_version_id)
         self.assertEqual(restored.related_version_ids, event.related_version_ids)
         self.assertEqual(restored.correlation_refs, event.correlation_refs)
@@ -217,7 +232,9 @@ class P208PortabilityReplayProjectionRuntimeTests(unittest.TestCase):
                 relationships=(relationship,),
             ),
             export_runtime_semantic_package(
-                scenario_id="event-round-trip", records=records_b, events=(event,)
+                scenario_id="event-round-trip",
+                records=records_b,
+                events=(event,),
             ),
         )
         for package in packages:
@@ -239,7 +256,8 @@ class P208PortabilityReplayProjectionRuntimeTests(unittest.TestCase):
         expected = tuple(record.version_id for record in (*records, relationship.record))
         self.assertEqual(projection.source_record_versions, expected)
         self.assertEqual(
-            tuple(entry.source_version_id for entry in projection.entries), expected
+            tuple(entry.source_version_id for entry in projection.entries),
+            expected,
         )
 
     def test_projection_lookup_returns_all_versions_without_head_inference(self) -> None:
@@ -263,21 +281,42 @@ class P208PortabilityReplayProjectionRuntimeTests(unittest.TestCase):
             records=records,
             relationships=(relationship,),
         )
-        entry = rebuild_non_authoritative_projection(package=package).entries[0]
+        projection = rebuild_non_authoritative_projection(package=package)
+        entry = projection.entries[0]
         with self.assertRaises(ProjectionAuthorityBoundaryError):
             pin_runtime_projection_source(
                 projection_entry=entry,
                 canonical_source={"version_id": entry.source_version_id},  # type: ignore[arg-type]
             )
 
+    def test_reconstructed_record_cannot_substitute_for_independent_canonical_source(self) -> None:
+        records, relationship = self._relationship_scenario()
+        package = export_runtime_semantic_package(
+            scenario_id="reconstructed-not-authority",
+            records=records,
+            relationships=(relationship,),
+        )
+        reconstructed = reconstruct_runtime_semantics(package=package)
+        entry = rebuild_non_authoritative_projection(package=package).entries[0]
+        self.assertNotIsInstance(reconstructed.records[0], CanonicalRecord)
+        with self.assertRaises(ProjectionAuthorityBoundaryError):
+            pin_runtime_projection_source(
+                projection_entry=entry,
+                canonical_source=reconstructed.records[0],  # type: ignore[arg-type]
+            )
+
     def test_exact_canonical_source_can_create_governed_pin_after_attribution_check(self) -> None:
         records, relationship = self._relationship_scenario()
         package = export_runtime_semantic_package(
-            scenario_id="canonical-pin", records=records, relationships=(relationship,)
+            scenario_id="canonical-pin",
+            records=records,
+            relationships=(relationship,),
         )
-        entry = rebuild_non_authoritative_projection(package=package).entries[0]
+        projection = rebuild_non_authoritative_projection(package=package)
+        entry = projection.entries[0]
         pin = pin_runtime_projection_source(
-            projection_entry=entry, canonical_source=records[0]
+            projection_entry=entry,
+            canonical_source=records[0],
         )
         self.assertEqual(pin.subject_id, records[0].subject_id)
         self.assertEqual(pin.version_id, records[0].version_id)
@@ -289,32 +328,40 @@ class P208PortabilityReplayProjectionRuntimeTests(unittest.TestCase):
             records=records,
             relationships=(relationship,),
         )
-        v2_entry = rebuild_non_authoritative_projection(package=package).entries[1]
+        projection = rebuild_non_authoritative_projection(package=package)
+        v2_entry = projection.entries[1]
         with self.assertRaises(ProjectionAuthorityBoundaryError):
             pin_runtime_projection_source(
-                projection_entry=v2_entry, canonical_source=records[0]
+                projection_entry=v2_entry,
+                canonical_source=records[0],
             )
 
     def test_projection_authority_scope_mismatch_fails_closed(self) -> None:
         record = self._record("subject-a", "subject-a-v1")
         package = export_runtime_semantic_package(
-            scenario_id="authority-scope-attribution", records=(record,)
+            scenario_id="authority-scope-attribution",
+            records=(record,),
         )
         entry = rebuild_non_authoritative_projection(package=package).entries[0]
         forged = replace(entry, authority_scope="different/scope")
         with self.assertRaises(ProjectionAuthorityBoundaryError):
             pin_runtime_projection_source(
-                projection_entry=forged, canonical_source=record
+                projection_entry=forged,
+                canonical_source=record,
             )
 
     def test_manifest_drift_is_rejected_during_reconstruction(self) -> None:
         records, relationship = self._relationship_scenario()
         package = export_runtime_semantic_package(
-            scenario_id="manifest-drift", records=records, relationships=(relationship,)
+            scenario_id="manifest-drift",
+            records=records,
+            relationships=(relationship,),
         )
         document = package.to_mapping()
         document["manifest"]["record_versions"] = document["manifest"]["record_versions"][:-1]
-        tampered = SemanticPortabilityPackage(serialized=json.dumps(document, sort_keys=True))
+        tampered = SemanticPortabilityPackage(
+            serialized=json.dumps(document, sort_keys=True),
+        )
         with self.assertRaises(PortabilityRuntimeError):
             reconstruct_runtime_semantics(package=tampered)
 
@@ -334,7 +381,9 @@ class P208PortabilityReplayProjectionRuntimeTests(unittest.TestCase):
     def test_event_execution_version_semantic_drift_is_rejected(self) -> None:
         records, event = self._event_scenario()
         package = export_runtime_semantic_package(
-            scenario_id="event-drift", records=records, events=(event,)
+            scenario_id="event-drift",
+            records=records,
+            events=(event,),
         )
         document = package.to_mapping()
         document["events"][0]["execution_version_id"]["value"] = "unknown-execution-version"
@@ -363,7 +412,8 @@ class P208PortabilityReplayProjectionRuntimeTests(unittest.TestCase):
         )
         with self.assertRaises(PortabilityRuntimeError):
             export_runtime_semantic_package(
-                scenario_id="cross-org", records=(record, other)
+                scenario_id="cross-org",
+                records=(record, other),
             )
 
     def test_duplicate_version_identity_with_different_content_fails_export(self) -> None:
@@ -371,23 +421,29 @@ class P208PortabilityReplayProjectionRuntimeTests(unittest.TestCase):
         conflicting = replace(record, payload=(("value", "different"),))
         with self.assertRaises(PortabilityRuntimeError):
             export_runtime_semantic_package(
-                scenario_id="duplicate-version-conflict", records=(record, conflicting)
+                scenario_id="duplicate-version-conflict",
+                records=(record, conflicting),
             )
 
     def test_serialization_is_deterministic_for_same_semantic_inputs(self) -> None:
         records, relationship = self._relationship_scenario()
         first = export_runtime_semantic_package(
-            scenario_id="deterministic", records=records, relationships=(relationship,)
+            scenario_id="deterministic",
+            records=records,
+            relationships=(relationship,),
         )
         second = export_runtime_semantic_package(
-            scenario_id="deterministic", records=records, relationships=(relationship,)
+            scenario_id="deterministic",
+            records=records,
+            relationships=(relationship,),
         )
         self.assertEqual(first.serialized, second.serialized)
 
     def test_export_and_projection_objects_are_immutable(self) -> None:
         record = self._record("subject-a", "subject-a-v1")
         package = export_runtime_semantic_package(
-            scenario_id="immutability", records=(record,)
+            scenario_id="immutability",
+            records=(record,),
         )
         projection = rebuild_non_authoritative_projection(package=package)
         with self.assertRaises(FrozenInstanceError):
