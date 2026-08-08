@@ -1,7 +1,7 @@
 # Arvectum OS Phase 4 — Workspace / Operator Experience
 
 Status: `Active`
-Version: `1.6.0`
+Version: `1.7.0`
 Created: `2026-08-08`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -13,13 +13,15 @@ Predecessor: `Phase 3 — Shared Platform Capabilities`, `M3` achieved
 
 ## Version note
 
-Version `1.6.0` records completion of **P4.05 — Governed Execution, gate and approval/action experience** with `PASS` and advances the current canonical action to **P4.06 — Document / Artifact workspace experience**.
+Version `1.7.0` records completion of **P4.06 — Document / Artifact workspace experience** with `PASS` and advances the current canonical action to **P4.07 — Memory / Knowledge / Search discovery experience**.
 
-P4.05 adds a bounded internal operator adapter over existing RFC-0005 Governed Execution and P2.06 runtime-consistency semantic owners. Execution Head versus exact historical Version remains explicit; exact Workflow, material-input and Product Contract pins remain visible where carried by the governed Execution; Authorization, Organizational Authority and Consequential Approval remain separate gate evidence rather than one synthetic approval state.
+P4.06 adds a bounded internal operator adapter over existing CAP-001 / RFC-0008 semantics and existing P3.07 cross-capability access enforcement. Logical Document Identity, exact immutable Document Version Identity, Artifact Identity, content-integrity reference and replaceable storage locator remain distinct. Subject/Head browsing is inspection-only for consequential reliance; an operator must select an exact admitted Document Version and governed Artifact before the adapter delegates exact reliance to existing semantic owners.
 
-Action intent remains transient and non-authoritative. Unresolved/denied gates and historical versions fail closed for action; a read-authorized different Actor cannot invoke the bounded existing Execution action. Consequential canonical mutation occurs only by delegation to the existing `commit_canonical_mutation` path. Retry/idempotency, stale/conflict and uncertain/reconciliation states are exposed without revealing retry-token values or creating a second mutation authority.
+Current Actor/Organization-bound source authorization is evaluated before protected source/version resolution. Governed Artifact metadata is then independently filtered through the existing P3.07 `AccessRequest` purpose/right/classification context. Restricted Artifact metadata is omitted without protected counts; exact reliance rechecks both source authorization and Artifact handling access rather than trusting stale presentation state.
 
-P4.05 does not create a workflow engine, decision-authority policy, IAM/PDP/PEP, external-effect executor, durable runtime/Event store, public API/route/wire contract, frontend framework, Product Contract, new Platform Capability or lifecycle promotion.
+Working/draft candidates remain explicitly non-canonical and their generated/transient Artifacts are not silently promoted. Unadmitted candidate Artifact metadata is withheld. Derivation provenance plus classification/purpose/rights/retention meaning are visible only for permitted governed Artifacts, while content references/bytes and storage-locator values are withheld from the bounded presentation.
+
+The current reference Canonical Record harness implements only Native authority mode; P4.06 therefore presents a Native governed source when applicable and fails closed rather than inventing external source metadata. It does not select a DMS, object store, OCR/signing provider, content-delivery service, durable read model, frontend framework, public API/route/wire contract, Product Contract, new Platform Capability or lifecycle promotion.
 
 Canonical completion evidence:
 
@@ -29,8 +31,8 @@ Canonical completion evidence:
 - [`P4.03 Canonical Record / Relationship inspection review`](../reviews/P4-03-canonical-record-relationship-inspection-experience.md) — `PASS`;
 - [`P4.04 Version / Event / provenance / reconstruction review`](../reviews/P4-04-version-event-provenance-reconstruction-experience.md) — `PASS`;
 - [`P4.05 Governed Execution / gate / approval-action review`](../reviews/P4-05-governed-execution-gate-approval-action-experience.md) — `PASS`, four functional cross-review iterations;
-- GitHub Actions `Reference Python CI #137` — `PASS`, Python `3.12.13`, `472` tests, `OK` on the first P4.05 executable implementation head;
-- GitHub Actions `Reference Python CI #139` — `PASS` after the executable static demonstration and smoke test.
+- [`P4.06 Document / Artifact workspace review`](../reviews/P4-06-document-artifact-workspace-experience.md) — `PASS`, five functional cross-review iterations including one pre-merge security finding and remediation;
+- GitHub Actions `Reference Python CI #154` — `PASS`, Python `3.12.13`, `495` tests, `OK` after the final P3.07 handling-enforcement remediation.
 
 ## 1. Purpose
 
@@ -63,7 +65,7 @@ The workspace remains a platform interaction capability under development. Activ
 | `P4.03` | Canonical Record / Relationship inspection experience | 🟩 Complete | `██████████ 100%` |
 | `P4.04` | Version, Event, provenance and reconstruction experience | 🟩 Complete | `██████████ 100%` |
 | `P4.05` | Governed Execution, gate and approval/action experience | 🟩 Complete | `██████████ 100%` |
-| `P4.06` | Document / Artifact workspace experience | ⬜ | `░░░░░░░░░░ 0%` |
+| `P4.06` | Document / Artifact workspace experience | 🟩 Complete | `██████████ 100%` |
 | `P4.07` | Memory / Knowledge / Search discovery experience | ⬜ | `░░░░░░░░░░ 0%` |
 | `P4.08` | Cross-capability task/context composition + bounded product entry point | ⬜ | `░░░░░░░░░░ 0%` |
 | `P4.09` | Security, rights, minimization and authority-safe UX | ⬜ | `░░░░░░░░░░ 0%` |
@@ -71,7 +73,7 @@ The workspace remains a platform interaction capability under development. Activ
 | `P4.11` | Workspace hardening / ADR / refactoring review | ⬜ | `░░░░░░░░░░ 0%` |
 | `P4.12` | Phase 4 / M4 closure review | ⬜ | `░░░░░░░░░░ 0%` |
 
-Phase 4 roadmap work-item completion is `5 / 12 = 41.7%`. Engineering reviews such as R9 are gates and do not inflate this percentage as separate equal-weight work items.
+Phase 4 roadmap work-item completion is `6 / 12 = 50.0%`. Engineering reviews such as R9 are gates and do not inflate this percentage as separate equal-weight work items.
 
 ## 4. Detailed task intent
 
@@ -173,6 +175,8 @@ Required behavior:
 - generated/transient artifacts are not silently promoted.
 
 This task does not select a DMS, object store, OCR or signing provider.
+
+Completion evidence: [`P4.06 Document / Artifact workspace review`](../reviews/P4-06-document-artifact-workspace-experience.md) — `PASS`, five functional cross-review iterations, executable static demo and green full reference CI (`Reference Python CI #154`, Python `3.12.13`, `495` tests, `OK`). The final surface reuses P3.07 purpose/right/classification enforcement before governed Artifact metadata presentation and exact reliance, omits restricted Artifact metadata without protected counts, and withholds unadmitted candidate Artifact metadata.
 
 ### P4.07 — Memory / Knowledge / Search discovery experience
 
@@ -296,7 +300,7 @@ Records     Provenance      Execution
             ↓
  ┌──────────┴─────────┐
  ↓                    ↓
-P4.06 ← current      P4.07
+P4.06 ✅              P4.07 ← current
 Docs                  Knowledge/Search
  └──────────┬─────────┘
             ↓
@@ -375,17 +379,20 @@ A reversible internal reference implementation may proceed without an ADR when t
 
 ## 10. Current canonical action
 
-> **`P4.06 — Document / Artifact workspace experience`.**
+> **`P4.07 — Memory / Knowledge / Search discovery experience`.**
 
-Implement the smallest bounded operator experience over existing CAP-001 / RFC-0008 Document and Artifact semantics without collapsing logical Document identity into file/rendition/storage identity or silently promoting transient/generated artifacts.
+Implement the smallest bounded operator discovery experience over existing CAP-002 / CAP-003 semantics without conflating retrieval, ranking or derived projection with canonical authority or validated Knowledge.
 
 Immediate constraints:
 
 - preserve P4.02 Organization/Actor scope and current source-access boundaries;
 - preserve P4.03 exact Subject/Version and authority/source meaning;
 - preserve P4.04 provenance/reconstruction honesty;
-- preserve P4.05 distinction between inspection, intent, gates and consequential runtime mutation;
-- distinguish logical Document, exact Document Version, Artifact and storage/rendition locator roles;
-- distinguish working/draft/transient candidates from admitted governed versions;
-- make authority mode/source, derivation provenance, classification/rights/retention meaning visible where material;
-- do not select a DMS, object store, OCR/signing provider, stable public API/wire contract or durable workspace storage unless the applicable ADR/Product Contract gate is crossed.
+- preserve P4.05 inspection/gate/action boundaries and P4.06 exact-reliance/minimization discipline;
+- keep Observation, Memory, Knowledge Candidate and validated Knowledge epistemically distinct;
+- require exact Knowledge Version for consequential reliance rather than following a later Head implicitly;
+- label search/index/RAG-like results as derived discovery/projection and never treat ranking as truth or authority;
+- surface freshness, scope, provenance and uncertainty where material;
+- enforce purpose/classification/rights/minimization at retrieval and presentation boundaries;
+- do not automatically promote Knowledge from browsing, search results or AI output;
+- do not select a durable search/index/vector technology, embedding/LLM provider, stable public API/wire contract or durable workspace storage unless the applicable ADR/Product Contract gate is crossed.

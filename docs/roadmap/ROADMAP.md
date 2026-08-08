@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.16.0`
+Version: `2.17.0`
 Created: `2026-08-07`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -15,27 +15,29 @@ The Strategic Roadmap beyond completed work is a planning hypothesis, not an arc
 
 ## 2. Version note
 
-Version `2.16.0` records completion of **P4.05 — Governed Execution, gate and approval/action experience** with `PASS` and advances the current canonical action to **P4.06 — Document / Artifact workspace experience**.
+Version `2.17.0` records completion of **P4.06 — Document / Artifact workspace experience** with `PASS` and advances the current canonical action to **P4.07 — Memory / Knowledge / Search discovery experience**.
 
-P4.05 adds a bounded internal operator adapter over existing RFC-0005 Governed Execution and P2.06 runtime-consistency semantics. Exact Execution, Workflow, material-input and Product Contract versions remain explicit where material. Authorization, Organizational Authority and Consequential Approval remain separate gate evidence; unresolved/denied required gates and historical Execution versions fail closed for action.
+P4.06 adds a bounded internal operator adapter over existing CAP-001 / RFC-0008 semantics and existing P3.07 cross-capability access enforcement. Logical Document Identity, exact immutable Document Version Identity, Artifact Identity, integrity reference and storage locator remain separate concepts. Exact consequential reliance requires an explicit exact admitted Document Version and governed Artifact and delegates to existing semantic owners rather than following Head implicitly.
 
-Action intent remains transient and non-authoritative. It cannot commit canonical state by existing as presentation data. The exercised consequential canonical mutation path delegates only to existing `runtime_consistency.commit_canonical_mutation`, preserving its exact-head, execution-input, Event admission and idempotency protections. Retry duplicates, stale/conflict state and uncertain/reconciliation meaning remain explicit without exposing retry-token values.
+Current Actor/Organization-bound source authorization is checked before protected source/version resolution. Governed Artifact metadata is independently filtered through P3.07 purpose/right/classification enforcement; restricted Artifact metadata is omitted without protected counts, and exact reliance rechecks both current source authorization and Artifact handling access. Working/draft candidates remain visibly non-canonical, unadmitted candidate Artifact metadata is withheld, and generated/transient Artifacts are not silently promoted.
 
-P4.05 preserves the P4.02–P4.04 Organization, identity, source-resolution, exact-version and non-authoritative presentation boundaries. It creates no workflow engine, decision-authority policy, IAM/PDP/PEP, durable runtime/Event store, external-effect executor, public route/API/wire contract, frontend framework, Product Contract, new Platform Capability or lifecycle promotion.
+Transformation provenance and classification/purpose/rights/retention meaning are preserved for permitted governed Artifacts. Content references/bytes and storage-locator values are not exposed by the bounded presentation.
+
+The current reference Canonical Record harness implements only Native authority mode. P4.06 presents the Native governed source where applicable and fails closed rather than inventing external source metadata. It creates no DMS, object-store, OCR/signing provider, content-delivery service, durable workspace/read model, public route/API/wire contract, frontend framework, Product Contract, new Platform Capability or lifecycle promotion.
 
 Canonical evidence:
 
-- [`P4.05 Governed Execution / gate / approval-action review`](../reviews/P4-05-governed-execution-gate-approval-action-experience.md) — `PASS`, four functional cross-review iterations;
+- [`P4.06 Document / Artifact workspace review`](../reviews/P4-06-document-artifact-workspace-experience.md) — `PASS`, five functional cross-review iterations including one pre-merge security finding and remediation;
+- [`P4.05 Governed Execution / gate / approval-action review`](../reviews/P4-05-governed-execution-gate-approval-action-experience.md) — `PASS`;
 - [`P4.04 Version / Event / provenance / reconstruction review`](../reviews/P4-04-version-event-provenance-reconstruction-experience.md) — `PASS`;
 - [`P4.03 Canonical Record / Relationship inspection review`](../reviews/P4-03-canonical-record-relationship-inspection-experience.md) — `PASS`;
 - [`R9 Workspace Boundary Review`](../reviews/R9-workspace-boundary-review.md) — `PASS`;
 - [`P4.02 Organization context / identity / scoped navigation shell review`](../reviews/P4-02-organization-context-identity-scoped-navigation-shell.md) — `PASS`;
 - [`P4.01 operator journeys / workspace boundary / IA review`](../reviews/P4-01-operator-journeys-workspace-boundary-information-architecture.md) — `PASS`;
 - [`PHASE-4-WORKSPACE-OPERATOR-EXPERIENCE.md`](PHASE-4-WORKSPACE-OPERATOR-EXPERIENCE.md) — Phase 4 remains `Active`;
-- GitHub Actions `Reference Python CI #137` — `PASS`, Python `3.12.13`, `472` tests, `OK` on the first P4.05 executable implementation head;
-- GitHub Actions `Reference Python CI #139` — `PASS` after adding the P4.05 executable static demo and smoke test.
+- GitHub Actions `Reference Python CI #154` — `PASS`, Python `3.12.13`, `495` tests, `OK` after final P3.07 handling-enforcement remediation.
 
-Phase 3 remains closed with `M3 — Validated shared capability baseline` achieved. CAP-001 through CAP-004 remain lifecycle `Incubating / Provisional`; P4.05 creates no new Platform Capability and promotes none to `Active`.
+Phase 3 remains closed with `M3 — Validated shared capability baseline` achieved. CAP-001 through CAP-004 remain lifecycle `Incubating / Provisional`; P4.06 creates no new Platform Capability and promotes none to `Active`.
 
 Phase 4 remains operator-experience first and UI-technology neutral. It proves coherent human interaction with governed organizational state and shared capability slices without turning presentation state into canonical authority or prematurely selecting a frontend/API/service topology.
 
@@ -57,8 +59,9 @@ Phase 4 remains operator-experience first and UI-technology neutral. It proves c
 - [`P4.03 review`](../reviews/P4-03-canonical-record-relationship-inspection-experience.md) — `PASS`;
 - [`P4.04 review`](../reviews/P4-04-version-event-provenance-reconstruction-experience.md) — `PASS`;
 - [`P4.05 review`](../reviews/P4-05-governed-execution-gate-approval-action-experience.md) — `PASS`;
-- no frontend framework, public route/API/BFF, stable wire contract, IAM provider, durable workspace/runtime/Event store, external-effect executor or service topology is selected by P4.05;
-- P4.05 introduces no new RFC, ADR, Product Contract or capability lifecycle change.
+- [`P4.06 review`](../reviews/P4-06-document-artifact-workspace-experience.md) — `PASS`;
+- no frontend framework, public route/API/BFF, stable wire contract, IAM provider, durable workspace/runtime/Event store, document/object-store topology, OCR/signing provider, content-delivery service or service topology is selected by P4.06;
+- P4.06 introduces no new RFC, ADR, Product Contract or capability lifecycle change.
 
 ## 4. Strategic roadmap
 
@@ -102,7 +105,7 @@ Canonical detailed plan:
 | `P4.03` | Canonical Record / Relationship inspection experience | 🟩 Complete | `██████████ 100%` |
 | `P4.04` | Version, Event, provenance and reconstruction experience | 🟩 Complete | `██████████ 100%` |
 | `P4.05` | Governed Execution, gate and approval/action experience | 🟩 Complete | `██████████ 100%` |
-| `P4.06` | Document / Artifact workspace experience | ⬜ | `░░░░░░░░░░ 0%` |
+| `P4.06` | Document / Artifact workspace experience | 🟩 Complete | `██████████ 100%` |
 | `P4.07` | Memory / Knowledge / Search discovery experience | ⬜ | `░░░░░░░░░░ 0%` |
 | `P4.08` | Cross-capability task/context composition + bounded product entry point | ⬜ | `░░░░░░░░░░ 0%` |
 | `P4.09` | Security, rights, minimization and authority-safe UX | ⬜ | `░░░░░░░░░░ 0%` |
@@ -110,7 +113,7 @@ Canonical detailed plan:
 | `P4.11` | Workspace hardening / ADR / refactoring review | ⬜ | `░░░░░░░░░░ 0%` |
 | `P4.12` | Phase 4 / M4 closure review | ⬜ | `░░░░░░░░░░ 0%` |
 
-Phase 4 roadmap work-item completion is `5 / 12 = 41.7%`. Engineering reviews such as R9 are gates and do not inflate this percentage as separate equal-weight work items.
+Phase 4 roadmap work-item completion is `6 / 12 = 50.0%`. Engineering reviews such as R9 are gates and do not inflate this percentage as separate equal-weight work items.
 
 Engineering gates:
 
@@ -138,11 +141,13 @@ M4 is a bounded workspace milestone. It is not production readiness, full-platfo
 
 ## 8. Current canonical action
 
-> **`P4.06 — Document / Artifact workspace experience`.**
+> **`P4.07 — Memory / Knowledge / Search discovery experience`.**
 
-Implement the smallest bounded operator experience over existing CAP-001 and RFC-0008 Document/Artifact semantics. Logical Document identity must remain distinct from rendition/file/storage-locator identity; exact Document Version and material Artifact identity must remain visible where relied upon; working/draft/transient candidates must remain distinct from admitted governed versions; and generated/transformed artifacts must preserve derivation provenance without silent promotion.
+Implement the smallest bounded operator discovery experience over existing CAP-002 and CAP-003 semantics without conflating retrieval, ranking or derived projection with canonical authority or validated Knowledge.
 
-P4.06 must preserve the P4.02–P4.05 Organization, identity, source-resolution, exact-version, provenance and governed-action boundaries. It must not treat a file/storage locator as canonical identity, bypass classification/rights/retention controls, infer authority from presentation state, or stabilize a DMS/object-store/OCR/signing/public-route/API/wire/frontend boundary without crossing the applicable ADR/Product Contract gates.
+P4.07 must preserve the P4.02–P4.06 Organization, identity, source-resolution, exact-version, provenance, governed-action, exact-reliance and minimization boundaries. Observation, Memory, Knowledge Candidate and validated Knowledge must remain distinguishable; exact Knowledge Version must remain visible for consequential reliance; search/index/RAG-like results must be labeled as derived discovery/projection; freshness, scope, provenance and uncertainty must remain honest; and purpose/classification/rights/minimization controls must remain enforced at retrieval/presentation boundaries.
+
+Search ranking, retrieval or AI output must not create truth, Organizational Authority or automatic Knowledge promotion. P4.07 must not stabilize a durable search/index/vector technology, embedding/LLM provider, public route/API/wire/frontend boundary or durable workspace storage without crossing the applicable ADR/Product Contract gates.
 
 ## 9. ADR and Product Contract gate
 
@@ -186,7 +191,9 @@ P4.04 Version / Event / provenance / reconstruction ✓
         ↓
 P4.05 Governed Execution / gates / approval-actions ✓
         ↓
-P4.06 Document / Artifact workspace experience ← current
+P4.06 Document / Artifact workspace experience ✓
+        ↓
+P4.07 Memory / Knowledge / Search discovery experience ← current
         ↓
 M4 Coherent governed workspace baseline
 ```

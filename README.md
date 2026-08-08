@@ -55,7 +55,7 @@ Canonical Phase 3 closure evidence:
 - [R8 milestone hardening review](docs/reviews/R8-phase-3-milestone-hardening.md)
 - [P3.11 capability admission / ADR / refactoring hardening review](docs/reviews/P3-11-capability-admission-adr-refactoring-hardening-review.md)
 
-`Phase 4 — Workspace / Operator Experience` is **Active**. `P4.01 — Operator journeys, workspace boundary and information architecture`, `P4.02 — Organization context, identity and scoped navigation shell`, the mandatory `R9 — Workspace Boundary Review` gate, `P4.03 — Canonical Record / Relationship inspection experience`, `P4.04 — Version, Event, provenance and reconstruction experience` and `P4.05 — Governed Execution, gate and approval/action experience` are complete with `PASS`. The current canonical action is `P4.06 — Document / Artifact workspace experience`.
+`Phase 4 — Workspace / Operator Experience` is **Active**. `P4.01 — Operator journeys, workspace boundary and information architecture`, `P4.02 — Organization context, identity and scoped navigation shell`, the mandatory `R9 — Workspace Boundary Review` gate, `P4.03 — Canonical Record / Relationship inspection experience`, `P4.04 — Version, Event, provenance and reconstruction experience`, `P4.05 — Governed Execution, gate and approval/action experience` and `P4.06 — Document / Artifact workspace experience` are complete with `PASS`. The current canonical action is `P4.07 — Memory / Knowledge / Search discovery experience`.
 
 P4.02 provides the first bounded visible workspace shell: explicit Organization and attributable Actor context, `Discover / Records / Executions / Evidence / Documents / Knowledge` navigation, distinct Subject and exact-Version references, fail-closed unresolved/mismatched Organization state and non-authoritative presentation semantics. A zero-dependency static HTML demo makes the shell inspectable without selecting a frontend framework, route schema, public API/BFF, IAM/session provider or durable read-model topology.
 
@@ -77,6 +77,16 @@ P4.05 keeps source-read access distinct from consequential authority. Unresolved
 
 P4.05 selects no workflow engine, decision-authority policy, IAM/PDP/PEP, durable runtime/Event store, external-effect executor, frontend framework, public route/API/wire contract or Product Contract. It creates no new Platform Capability and promotes none to `Active`. Initial implementation CI `#137` passed `472` tests on Python `3.12.13`; CI `#139` also passed after the executable static demo and smoke test were added.
 
+P4.06 adds the bounded Document / Artifact workspace experience over existing CAP-001, RFC-0008 and P3.07 cross-capability enforcement. It keeps logical Document Subject, exact immutable Document Version, Canonical Head, Artifact, content-integrity reference, rendition role and storage locator as separate concepts. Exact historical Versions remain inspectable, while consequential Artifact reliance is available only after explicit exact Version selection and current access re-evaluation; structural exact reliance is delegated to the existing CAP-001 resolver.
+
+Current Actor/Organization-bound Document source authorization is evaluated before protected source/version resolution. Governed Artifact metadata is then independently filtered through the existing P3.07 `AccessRequest` purpose/right/classification context. Restricted Artifact metadata is omitted without protected counts. Exact reliance rechecks both source authorization and P3.07 handling access rather than trusting stale presentation state.
+
+Working/draft candidates are shown separately as non-canonical. Their generated/transient Artifacts are not silently promoted, and unadmitted candidate Artifact identities, handling metadata, content references and storage locators are withheld from the P4.06 surface. P4.06 exposes no admission/promotion control and does not call CAP-001 admission from the presentation layer. For permitted governed renditions, source-Artifact provenance, transformation, classification, purpose, rights and retention remain visible, while storage-locator values, content references and bytes are withheld.
+
+The current reference Canonical Record harness implements only Native authority mode. P4.06 therefore renders the Native governed Document source when applicable and fails closed rather than fabricating external authority/source metadata from a file path, import source or storage locator. It selects no DMS, object store, OCR/signing provider, content-delivery service, frontend framework, public route/API/wire contract or durable read model. It creates no Product Contract, new Platform Capability or lifecycle promotion.
+
+The P4.06 cross-review ran five functional iterations. One material pre-merge finding identified that Document source authorization alone was insufficient for Artifact handling constraints; the implementation was hardened to reuse P3.07 enforcement and covered with additional negative-path tests. `Reference Python CI #154` then passed all `495` tests on Python `3.12.13`.
+
 Canonical Phase 4 planning/current evidence:
 
 - [Canonical roadmap](docs/roadmap/ROADMAP.md)
@@ -87,8 +97,9 @@ Canonical Phase 4 planning/current evidence:
 - [P4.03 Canonical Record / Relationship inspection review](docs/reviews/P4-03-canonical-record-relationship-inspection-experience.md)
 - [P4.04 Version / Event / provenance / reconstruction review](docs/reviews/P4-04-version-event-provenance-reconstruction-experience.md)
 - [P4.05 Governed Execution / gate / approval-action review](docs/reviews/P4-05-governed-execution-gate-approval-action-experience.md)
+- [P4.06 Document / Artifact workspace review](docs/reviews/P4-06-document-artifact-workspace-experience.md)
 
-P4.01 through P4.05 and R9 establish, harden and exercise a domain-neutral workspace boundary only. They do not create a new Platform Capability, change CAP-001 through CAP-004 lifecycle, create a Stable Product Contract/public interface or establish production readiness.
+P4.01 through P4.06 and R9 establish, harden and exercise a domain-neutral workspace boundary only. They do not create a new Platform Capability, change CAP-001 through CAP-004 lifecycle, create a Stable Product Contract/public interface or establish production readiness.
 
 RFC-0001 through RFC-0008 are `Accepted 1.0.0` and remain binding within their declared scopes.
 
