@@ -1,7 +1,7 @@
 # Arvectum OS Phase 2 — Core Runtime
 
 Status: `Active`
-Version: `1.1.7`
+Version: `1.1.8`
 Created: `2026-08-08`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -84,8 +84,8 @@ Progress bars are planning indicators only.
 | `P2.04` | Governed Execution lifecycle and gate orchestration runtime | 🟩 | `██████████ 100%` |
 | `P2.05` | Event admission, provenance and reconstruction runtime | 🟩 | `██████████ 100%` |
 | `P2.06` | Runtime consistency, idempotency and conflict semantics | 🟩 | `██████████ 100%` |
-| `P2.07` | Product Contract runtime validation boundary | 🟦 | `░░░░░░░░░░ 0%` |
-| `P2.08` | Portability, replay and non-authoritative projection runtime | ⬜ | `░░░░░░░░░░ 0%` |
+| `P2.07` | Product Contract runtime validation boundary | 🟩 | `██████████ 100%` |
+| `P2.08` | Portability, replay and non-authoritative projection runtime | 🟦 | `░░░░░░░░░░ 0%` |
 | `P2.09` | Second bounded workflow reuse proof | ⬜ | `░░░░░░░░░░ 0%` |
 | `P2.10` | Core Runtime architecture fitness matrix | ⬜ | `░░░░░░░░░░ 0%` |
 | `P2.11` | ADR-gate and runtime-boundary hardening review | ⬜ | `░░░░░░░░░░ 0%` |
@@ -294,6 +294,22 @@ Minimum evidence:
 
 **Exit:** one bounded product-like consumer cannot perform governed platform reliance unless the applicable Product Contract version permits that interaction.
 
+**Completion evidence — 2026-08-08:**
+
+- `reference/python/arvectum_os_ref/product_contract.py` introduces an internal, in-memory and explicitly provisional Product Contract runtime boundary rather than a public manifest, registry or SDK contract;
+- the bounded `ProductContract` preserves exact Subject/Version Identity, Product identity/version, accountable owner provenance and RFC-0004 lifecycle, and requires the compatibility, platform-dependency, operation, portability, retention/deletion, review and exit declarations needed by the exercised Provisional interaction;
+- `validate_product_contract_interaction` fails closed unless the exact Provisional contract covers the product identity/version, Organization, declared platform dependency/version/operation, Workflow side-effect semantics and required Authorization/Organizational Authority/Data Governance gates;
+- canonical material-input reliance requires a declared exact semantic type, authority mode/scope and Read access, while a declared `CanonicalMutation` additionally requires Write access to the exact Workflow target;
+- the synthetic boundary rejects modeled hidden coupling through internal tables/imports, undocumented endpoints, private Event streams and implicit shared state instead of treating those paths as valid Product Contract reliance;
+- `start_product_governed_execution` is the first product-like reusable entry: it validates RFC-0004 declarations before delegating to the existing P2.04 Governed Execution runtime and passes the exact Product Contract Version Identity pin into execution provenance;
+- Product Contract possession/validation creates no Authorization, Organizational Authority, approval or capability lifecycle state; unresolved runtime gates remain unresolved and later gate decisions preserve the exact Product Contract version attribution;
+- the fixture is intentionally domain-neutral (`synthetic-product`, `example.subject`) and the implementation contains no procurement/product-domain semantics;
+- `reference/python/tests/test_p2_07_product_contract.py` adds 14 focused positive/negative-path Product Contract boundary tests;
+- GitHub Actions `Reference Python CI` run `#47` for PR `#26` on executable code head `127d99d44761d2d80c5c6bddc11096fe14fd6f87` completed successfully: `Ran 261 tests in 0.273s` / `OK`;
+- no Accepted RFC is modified and no relevant ADR gate is crossed: the boundary remains bounded, internal/provisional and reversible, with no durable contract registry, stable manifest/wire format, public API/SDK, IAM/enforcement technology, persistence topology or capability activation selected.
+
+P2.07 completion makes the exercised RFC-0004 product/platform validation boundary executable for one synthetic product-like consumer only. It does not standardize the Product Contract manifest, claim `Stable` Product Contract support, activate any Platform Capability, create a security credential, establish production readiness or make a full RFC-0004/RFC-0005 conformance claim.
+
 ### P2.08 — Portability, replay and non-authoritative projection runtime
 
 **Objective:** generalize the P1 fixture/projection proof into reusable runtime behavior without freezing a public wire format.
@@ -449,7 +465,7 @@ P2.06 Consistency / idempotency / conflict semantics ✓
           ↓
 R2 Runtime Health Review ✓
           ↓
-P2.07 Product Contract runtime boundary
+P2.07 Product Contract runtime boundary ✓
           ↓
 P2.08 Portability / replay / projection runtime
           ↓
@@ -472,11 +488,11 @@ The sequence is dependency-aware rather than mechanically serial. P2.03–P2.04 
 
 ## 8. Current canonical action
 
-> **`P2.07 — Product Contract runtime validation boundary`.**
+> **`P2.08 — Portability, replay and non-authoritative projection runtime`.**
 
-Make RFC-0004 enforceable at the first reusable runtime entry boundary without inventing product-domain semantics. Represent and validate only the Product Contract identity/version/lifecycle and declared platform interaction needed by the bounded runtime evidence; preserve RFC-0003 security/authority separation and RFC-0005 exact Product Contract attribution, and reject hidden reliance on internal tables/imports/streams or undeclared shared state.
+Generalize the P1 fixture/projection proof into reusable runtime behavior without freezing a public wire format. Preserve implementation-neutral semantic export of exact identities, immutable versions, authority declarations and governed relationships for the exercised runtime scope; reconstruct meaning rather than Python object layout; and keep replay incapable of causing consequential side effects.
 
-Use a domain-neutral synthetic product fixture unless a real product interaction is canonically ready. Do not treat Product Contract registration or possession as authorization, Organizational Authority or capability activation. Keep the validation boundary internal/provisional and migration-friendly unless a stable public/cross-product contract is separately governed.
+Keep projections explicitly non-authoritative: they cannot mint governed pins, become an independent source of authority or lose exact source Version Identity attribution. The format remains internal/bounded and migration-friendly unless a stable public/cross-product portability contract is separately governed.
 
 ## 9. ADR gate
 
