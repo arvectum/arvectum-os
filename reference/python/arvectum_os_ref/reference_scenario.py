@@ -1,8 +1,10 @@
-"""Deterministic Phase 1 fixture wired through the P2.01 runtime boundary.
+"""Deterministic Phase 1 fixture retained through the historical P2.01 seam.
 
-This module owns bounded reference-scenario setup and explicitly selects the
-reference-only adapter set used to execute it.  Reusable runtime orchestration
-belongs to ``RuntimeComposition`` and is invoked once through that boundary.
+R3 classifies ``RuntimeComposition`` and ``reference_runtime_operations()`` as
+reference-compatibility infrastructure for the original P1/P2.01 evidence, not
+as the reusable Phase 2 Core Runtime entry.  The materially distinct P2.09
+workflow reuses later domain-neutral runtime owners directly and does not depend
+on this fixture path.
 """
 
 from __future__ import annotations
@@ -20,7 +22,7 @@ from .workflow import WorkflowDefinition, build_p1_03_workflow
 
 @dataclass(frozen=True, slots=True)
 class Phase1ReferenceScenario:
-    """One complete deterministic P1 fixture around a reusable runtime result."""
+    """One complete deterministic P1 fixture around historical execution evidence."""
 
     organization: OrganizationScope
     principal: Principal
@@ -33,10 +35,10 @@ class Phase1ReferenceScenario:
     runtime_result: RuntimeExecutionResult
 
     def export_portable_fixture(self) -> PortableSemanticFixture:
-        """Reuse the existing P1.10 evidence exporter over the runtime result.
+        """Reuse the existing P1.10 evidence exporter over the reference result.
 
-        Portability remains evidence/fixture behavior for P2.01; it is not made a
-        Core Runtime contract before P2.08.
+        Portability remains evidence/fixture behavior for the historical P1 path;
+        it is not made a Core Runtime contract by this compatibility scenario.
         """
 
         result = self.runtime_result
@@ -58,7 +60,7 @@ def build_p1_reference_scenario(
     *,
     runtime: RuntimeComposition | None = None,
 ) -> Phase1ReferenceScenario:
-    """Build deterministic P1 fixtures and delegate execution to the runtime."""
+    """Build deterministic P1 fixtures and execute the compatibility composition."""
 
     organization = OrganizationScope(Identity("organization", "org-a", "platform"))
     principal = Principal(Identity("principal", "principal-1", "platform"))

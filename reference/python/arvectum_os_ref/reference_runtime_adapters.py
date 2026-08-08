@@ -1,13 +1,15 @@
-"""Reference-only adapters for the provisional Core Runtime composition.
+"""Reference-only adapters for the historical P2.01 compatibility composition.
 
-This module is the explicit boundary between the reusable P2 runtime
-composition and the bounded Phase 1 semantic implementations.  The adapter set
-is intentionally internal, reversible and non-public.  It may be replaced as
-Phase 2 generalizes individual runtime responsibilities.
+R1 moved this binding out of ``runtime.py`` so the P2.01 composition did not
+silently select the Phase 1 implementation.  R3 subsequently established, using
+the materially distinct P2.09 workflows, that this adapter bundle is not the
+reusable Phase 2 Core Runtime seam.  It remains only to preserve bounded
+Phase 1/P2.01 regression evidence.
 
-Keeping this binding outside ``runtime.py`` prevents the reusable composition
-root from selecting historical P1 fixture implementations by default while
-preserving the already-proven behavior of the reference scenario.
+New workflows MUST NOT use this module as a platform plugin or generalized
+runtime-extension interface.  Genuine Phase 2 reuse occurs through the later
+domain-neutral semantic owners such as Product Contract validation, Governed
+Execution, Event/provenance and runtime consistency.
 """
 
 from __future__ import annotations
@@ -22,10 +24,10 @@ from .runtime import RuntimeOperations
 
 
 def reference_runtime_operations() -> RuntimeOperations:
-    """Bind the bounded Phase 1 semantic implementations explicitly.
+    """Bind the bounded Phase 1 implementations for regression evidence only.
 
-    This factory is fixture/reference infrastructure, not a default platform
-    runtime, plugin interface, stable SDK surface or cross-product contract.
+    This factory is reference infrastructure, not a default platform runtime,
+    plugin interface, stable SDK surface or cross-product contract.
     """
 
     return RuntimeOperations(

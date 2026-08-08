@@ -1,14 +1,22 @@
-"""P2.01 — provisional reusable Core Runtime composition boundary.
+"""P2.01 historical reference-composition compatibility boundary.
 
-This module owns the orchestration spine proven by Phase 1 without selecting a
-reference-scenario implementation for its semantic operations.  Callers supply
-an explicit ``RuntimeOperations`` adapter set, keeping the composition root
-independent from bounded P1 fixture bindings and preserving package-topology
-reversibility.
+R3 disposition (2026-08-08): this module is retained to preserve the executable
+Phase 1/P2.01 regression evidence, but it is **not** the reusable Phase 2 Core
+Runtime entry point.  The P2.09 second-workflow proof demonstrated that genuine
+reuse occurs through the domain-neutral semantic owners introduced later in
+Phase 2, especially P2.04 Governed Execution and P2.07 Product Contract entry.
 
-The boundary remains internal and provisional.  It does not select persistence,
-a workflow engine, broker, IAM provider, service topology, public API/SDK or a
-durable serialization contract.
+The request/result shape below intentionally remains limited to the original P1
+canonical-mutation scenario: one material input, Authorization plus
+Organizational Authority decisions, one canonical successor, one Event,
+reconstruction evidence and one unvalidated Observation.  New workflows MUST
+NOT extend this compatibility shape merely to make it look general; they should
+compose the reusable semantic owners appropriate to their declared effects and
+gates.
+
+The boundary remains internal, provisional and reference-only.  It does not
+select persistence, a workflow engine, broker, IAM provider, service topology,
+public API/SDK or a durable serialization contract.
 """
 
 from __future__ import annotations
@@ -40,11 +48,11 @@ BuildObservation = Callable[..., Observation]
 
 @dataclass(frozen=True, slots=True)
 class RuntimeOperations:
-    """Replaceable semantic adapters used by one runtime composition.
+    """Reference-compatibility adapters used by the historical P2.01 composition.
 
-    The callables are an internal composition seam, not a stable SDK or public
-    plugin interface.  P2.01 keeps the already-proven semantic operations
-    replaceable without treating their current module layout as architecture.
+    R3 explicitly rejects this callable bundle as a generalized plugin or Core
+    Runtime extension contract.  It remains only so the already-proven P1/P2.01
+    scenario can keep its explicit reference binding without rewriting history.
     """
 
     start_execution: StartExecution
@@ -59,12 +67,14 @@ class RuntimeOperations:
 
 @dataclass(frozen=True, slots=True)
 class RuntimeExecutionRequest:
-    """Explicit governed inputs for the bounded reusable execution spine.
+    """Scenario-specific request retained for P1/P2.01 regression evidence.
 
     Deterministic fixture construction is intentionally outside this type.  The
-    caller supplies an exact Workflow version, exact material Canonical Record,
-    attributable actors, governed basis references and the requested immutable
-    successor content.  No mutable head/effective-version resolution is implied.
+    caller supplies the exact inputs required by the original P1 canonical
+    mutation path.  R3 intentionally does not add variable gate sets, multiple
+    material inputs, Product Contract declarations or external/commitment effect
+    semantics to this compatibility request; those belong to the reusable Phase
+    2 semantic owners already exercised by P2.09.
     """
 
     organization: OrganizationScope
@@ -117,7 +127,7 @@ class RuntimeExecutionRequest:
 
 @dataclass(frozen=True, slots=True)
 class RuntimeExecutionResult:
-    """Immutable evidence returned by one successful bounded runtime execution."""
+    """Scenario-specific evidence returned by the historical P1/P2.01 path."""
 
     awaiting_execution: ExecutionContext
     authorization: GateDecision
@@ -167,12 +177,14 @@ class RuntimeExecutionResult:
 
 @dataclass(frozen=True, slots=True)
 class RuntimeComposition:
-    """Minimal P2.01 composition root for the proven governed runtime spine.
+    """Historical P1/P2.01 reference composition retained for compatibility evidence.
 
-    The caller must select an explicit ``RuntimeOperations`` adapter set.  The
-    reusable composition therefore owns orchestration but not historical P1
-    fixture binding.  P2.04 and P2.05 remain responsible for generalizing the
-    Governed Execution/gate and Event/provenance runtime semantics themselves.
+    The caller still selects an explicit ``RuntimeOperations`` adapter set, as
+    established by R1.  R3 clarifies that this composition is not the reusable
+    Core Runtime orchestrator and MUST NOT be expanded to absorb the materially
+    different P2.09 workflow.  New reuse should occur through the semantic
+    runtime boundaries introduced by P2.02–P2.08, especially Product Contract
+    validation plus Governed Execution for product/platform interaction.
     """
 
     operations: RuntimeOperations

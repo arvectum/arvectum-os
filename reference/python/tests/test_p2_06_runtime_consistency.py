@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 import unittest
 
 from arvectum_os_ref.canonical import AuthorityMode, CanonicalRecord
-from arvectum_os_ref.event_provenance import EventReceipt, admit_event
+from arvectum_os_ref.event_provenance import EventIdentityConflictError, EventReceipt, admit_event
 from arvectum_os_ref.governed_execution import (
     ConsequentialOperationNotAdmittedError,
     GovernedExecutionContext,
@@ -423,7 +423,7 @@ class P206RuntimeConsistencyTests(unittest.TestCase):
             self.event_v2,
             payload=(("operation", "update-subject"), ("outcome", "Conflicting")),
         )
-        with self.assertRaises(RuntimeError):
+        with self.assertRaises(EventIdentityConflictError):
             self._keyed_commit(
                 state=state,
                 receipt=conflicting_receipt,
