@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.0.0`
+Version: `2.0.1`
 Created: `2026-08-07`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -301,26 +301,28 @@ Canonical detailed work breakdown:
 | `P1.02` | Native subject + first immutable Canonical Record version | 🟩 | `██████████ 100%` |
 | `P1.03` | Versioned Workflow baseline | 🟩 | `██████████ 100%` |
 | `P1.04` | Execution Context + exact version pinning | 🟩 | `██████████ 100%` |
-| `P1.05` | Authorization and Organizational Authority gates | 🟦 | `░░░░░░░░░░ 0%` |
-| `P1.06` | Governed Canonical Mutation + second immutable version | ⬜ | `░░░░░░░░░░ 0%` |
+| `P1.05` | Authorization and Organizational Authority gates | 🟩 | `██████████ 100%` |
+| `P1.06` | Governed Canonical Mutation + second immutable version | 🟦 | `░░░░░░░░░░ 0%` |
 | `P1.07` | Canonical Event admission and execution linkage | ⬜ | `░░░░░░░░░░ 0%` |
 | `P1.08` | Provenance, causation and reconstruction evidence | ⬜ | `░░░░░░░░░░ 0%` |
 | `P1.09` | Observation creation without Knowledge promotion | ⬜ | `░░░░░░░░░░ 0%` |
 | `P1.10` | Portable semantic fixture export | ⬜ | `░░░░░░░░░░ 0%` |
-| `P1.11` | Negative-path and architecture fitness tests | 🟨 | `████░░░░░░ 40%` |
+| `P1.11` | Negative-path and architecture fitness tests | 🟨 | `█████░░░░░ 50%` |
 | `P1.12` | Phase 1 bounded-slice closure review | ⬜ | `░░░░░░░░░░ 0%` |
 
 ### Current implementation evidence
 
-`P1.01` through `P1.04` are implemented in [`reference/python`](../../reference/python/README.md). The repository reports `31` passing unit tests across this bounded harness, including exact-version pinning and negative-path coverage.
+`P1.01` through `P1.04` remain implemented in [`reference/python`](../../reference/python/README.md) with the previously recorded `31`-test validation baseline.
 
-`P1.11` is cross-cutting and accumulates evidence throughout the phase.
+`P1.05` adds separate immutable Authorization and Organizational Authority gate decisions for the exact P1.04 execution attempt. Missing/denied evidence fails closed; neither gate implies the other; two explicit scoped `Allow` decisions are required to create the next immutable `Ready` Execution Context version. The Ready version preserves predecessor lineage, exact Workflow/material-input pins and both explicit-Allow gate decision pins; no target Canonical Record mutation occurs yet. P1.05 adds `12` executable fitness tests and a bounded current-state smoke validation of the core transition invariants.
+
+`P1.11` is cross-cutting and now accumulates negative-path evidence through P1.05.
 
 ### Current canonical action
 
-> **`P1.05 — Authorization and Organizational Authority gates`: prove separately that authentication/actor attribution does not imply authorization, authorization does not imply Organizational Authority, and unresolved required gates fail closed.**
+> **`P1.06 — Governed Canonical Mutation + second immutable version`: execute the already-declared `CanonicalMutation` through the `Ready` governed execution and create a second immutable target version without modifying P1.02 v1.**
 
-P1.05 must preserve the exact Workflow/material input version attribution established by P1.04 and does not yet perform the P1.06 canonical mutation.
+P1.06 must preserve and consume the exact Workflow/material-input version attribution established by P1.04 and the exact Authorization/Organizational Authority decision evidence established by P1.05. Direct consequential mutation outside the required Execution Context must fail closed.
 
 ## 7. Phase 1 dependency-aware sequence
 
@@ -333,9 +335,9 @@ P1.03 ✅ Versioned Workflow
    ↓
 P1.04 ✅ Execution Context + version pinning
    ↓
-P1.05 🟦 Authorization + Organizational Authority gates
+P1.05 ✅ Authorization + Organizational Authority gates
    ↓
-P1.06 ⬜ Canonical Mutation → immutable v2
+P1.06 🟦 Canonical Mutation → immutable v2
    ↓
 P1.07 ⬜ Canonical Event
    ↓
@@ -380,6 +382,8 @@ Create an ADR before relying on an implementation choice when the choice becomes
 4. materially determines tenant isolation, authorization enforcement, evidence integrity or external authority behavior;
 5. creates a durable dependency on a database, broker, orchestration runtime, identity provider, schema registry, retrieval engine or vendor-specific format;
 6. has materially different portability, security, reliability or operational consequences compared with plausible alternatives.
+
+P1.05 remains below this ADR gate because it does not select a durable authorization-enforcement mechanism, IAM provider, policy engine, tenant-isolation technology or production Organizational Authority administration model.
 
 ## 10. Roadmap maintenance rule
 
