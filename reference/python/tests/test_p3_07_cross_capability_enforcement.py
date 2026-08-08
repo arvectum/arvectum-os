@@ -1,21 +1,13 @@
+from datetime import datetime, timezone
 import unittest
 
 from arvectum_os_ref.canonical import AuthorityMode, CanonicalRecord
 from arvectum_os_ref.cross_capability_enforcement import (
-    AccessRequest,
-    CrossCapabilityEnforcementError,
-    reconstruct_audit_for_access,
-    resolve_document_for_access,
-    resolve_search_hit_for_access,
-    retrieve_knowledge_for_access,
-    search_for_access,
+    AccessRequest, CrossCapabilityEnforcementError, reconstruct_audit_for_access,
+    resolve_document_for_access, resolve_search_hit_for_access,
+    retrieve_knowledge_for_access, search_for_access,
 )
-from arvectum_os_ref.document_artifact_governance import (
-    ArtifactContent,
-    DocumentVersionCandidate,
-    HandlingConstraints,
-    admit_document_version,
-)
+from arvectum_os_ref.document_artifact_governance import ArtifactContent, DocumentVersionCandidate, HandlingConstraints, admit_document_version
 from arvectum_os_ref.event_provenance import ReconstructionManifest
 from arvectum_os_ref.execution import GovernedVersionPin
 from arvectum_os_ref.identity import Identity
@@ -36,33 +28,24 @@ class P307CrossCapabilityEnforcementTests(unittest.TestCase):
 
     def _record(self, *, subject: str, version: str, semantic_type: str, organization=None, payload=()):
         organization = organization or self.org_a
+        scope = organization.organization_id.value
+        creation_actor = ActorContext(Principal(self._id("principal", "creator", scope)), organization)
         return CanonicalRecord(
-            subject_id=self._id("subject", subject, organization.organization_id.value),
-            version_id=self._id("version", version, organization.organization_id.value),
-            organization=organization,
-            semantic_type=semantic_type,
-            schema_version="1",
-            authority_mode=AuthorityMode.NATIVE,
-            authoritative_source="arvectum-os",
-            accountable_owner=self._id("principal", "owner"),
-            lifecycle_status="Retained",
-            validation_status="Validated",
-            created_by=self._id("principal", "creator"),
-            created_at="2026-08-08T00:00:00Z",
-            classification="internal",
-            payload=payload,
+            subject_id=self._id("subject", subject, scope), version_id=self._id("version", version, scope),
+            semantic_type=semantic_type, schema_version="1", organization=organization,
+            authority_mode=AuthorityMode.NATIVE, authority_scope=f"{semantic_type}/state",
+            accountable_owner_id=self._id("principal", "owner", scope), creation_actor=creation_actor,
+            created_at=datetime(2026, 8, 8, tzinfo=timezone.utc),
+            provenance_refs=(creation_actor.actual_principal.principal_id,),
+            integrity_metadata=(("representation", "p3.07-test"),), payload=payload, lifecycle_status="Retained",
         )
 
     def _document(self, organization=None, *, purpose="review", rights=("read",), classification="internal"):
         organization = organization or self.org_a
         record = self._record(subject="doc", version="doc-v1", semantic_type="platform.document", organization=organization)
         artifact = ArtifactContent(
-            artifact_id=self._id("artifact", "a1", organization.organization_id.value),
-            organization=organization,
-            content_ref="content",
-            media_type="text/plain",
-            integrity_ref="sha256:x",
-            rendition_role="source",
+            artifact_id=self._id("artifact", "a1", organization.organization_id.value), organization=organization,
+            content_ref="content", media_type="text/plain", integrity_ref="sha256:x", rendition_role="source",
             handling=HandlingConstraints(classification, purpose, rights, "retain"),
         )
         return admit_document_version(candidate=DocumentVersionCandidate(record, (artifact,), "source")), artifact
@@ -81,28 +64,17 @@ class P307CrossCapabilityEnforcementTests(unittest.TestCase):
         self.assertEqual(reliance.document_version_id, local.version_id)
 
     def test_cap002_filters_organization_purpose_right_classification_and_freshness(self):
-        eligible = ValidatedKnowledge(
-            self._record(subject="k1", version="k1-v1", semantic_type="platform.knowledge", payload=(("proposition", "eligible"),)),
-            (self._id("evidence", "e1"),), KnowledgeConstraints("review", "internal", ("read",), "Current"), "valid", self._id("approval", "a1")
-        )
-        wrong_purpose = ValidatedKnowledge(
-            self._record(subject="k2", version="k2-v1", semantic_type="platform.knowledge"),
-            (self._id("evidence", "e2"),), KnowledgeConstraints("train", "internal", ("read",), "Current"), "valid", self._id("approval", "a2")
-        )
+        eligible = ValidatedKnowledge(self._record(subject="k1", version="k1-v1", semantic_type="platform.knowledge", payload=(("proposition", "eligible"),)), (self._id("evidence", "e1"),), KnowledgeConstraints("review", "internal", ("read",), "Current"), "valid", self._id("approval", "a1"))
+        wrong_purpose = ValidatedKnowledge(self._record(subject="k2", version="k2-v1", semantic_type="platform.knowledge"), (self._id("evidence", "e2"),), KnowledgeConstraints("train", "internal", ("read",), "Current"), "valid", self._id("approval", "a2"))
         hits = retrieve_knowledge_for_access(knowledge=(eligible, wrong_purpose), request=self.request)
         self.assertEqual(tuple(hit.source_version_id for hit in hits), (eligible.version_id,))
 
     def test_cap003_discovery_and_source_access_use_same_request_context(self):
-        source = GovernedSearchSource(
-            self._record(subject="s1", version="s1-v1", semantic_type="platform.knowledge"),
-            "needle",
-            DiscoveryConstraints("review", "internal", ("read",), "retain"),
-        )
+        source = GovernedSearchSource(self._record(subject="s1", version="s1-v1", semantic_type="platform.knowledge"), "needle", DiscoveryConstraints("review", "internal", ("read",), "retain"))
         projection = rebuild_projection(sources=(source,))
         hits = search_for_access(projection=projection, current_sources=(source,), query_text="needle", request=self.request)
         self.assertEqual(len(hits), 1)
-        resolved = resolve_search_hit_for_access(hit=hits[0], current_sources=(source,), request=self.request)
-        self.assertEqual(resolved.version_id, source.version_id)
+        self.assertEqual(resolve_search_hit_for_access(hit=hits[0], current_sources=(source,), request=self.request).version_id, source.version_id)
         denied = AccessRequest(self.actor, "review", "export", ("internal",))
         self.assertEqual(search_for_access(projection=projection, current_sources=(source,), query_text="needle", request=denied), ())
         with self.assertRaises(CrossCapabilityEnforcementError):
@@ -112,19 +84,11 @@ class P307CrossCapabilityEnforcementTests(unittest.TestCase):
         workflow = GovernedVersionPin(self._id("subject", "wf"), self._id("version", "wf-v1"), "platform.workflow", "workflow/state", "Retained")
         result = GovernedVersionPin(self._id("subject", "result"), self._id("version", "result-v1"), "example.result", "result/state", "Retained")
         manifest = ReconstructionManifest(
-            organization=self.org_a,
-            execution_subject_id=self._id("execution", "x"),
-            initiating_actor_id=self.actor.actual_principal.principal_id,
-            operation_name="review",
-            workflow=workflow,
-            material_inputs=(), gate_decisions=(), execution_versions=(), results=(result,), events=(), event_types=(),
+            organization=self.org_a, execution_subject_id=self._id("execution", "x"), initiating_actor_id=self.actor.actual_principal.principal_id,
+            operation_name="review", workflow=workflow, material_inputs=(), gate_decisions=(), execution_versions=(), results=(result,), events=(), event_types=(),
             correlation_refs=(), causation_refs=(), provenance_refs=(workflow.subject_id, workflow.version_id, result.subject_id, result.version_id),
         )
-        view = reconstruct_audit_for_access(
-            manifest=manifest,
-            request=self.request,
-            evidence_constraints=((workflow.version_id, "review", ("read",), "internal"), (result.version_id, "review", ("export",), "internal")),
-        )
+        view = reconstruct_audit_for_access(manifest=manifest, request=self.request, evidence_constraints=((workflow.version_id, "review", ("read",), "internal"), (result.version_id, "review", ("export",), "internal")))
         states = {item.version_id: item.availability.value for item in view.evidence}
         self.assertEqual(states[workflow.version_id], "Available")
         self.assertEqual(states[result.version_id], "Redacted")
