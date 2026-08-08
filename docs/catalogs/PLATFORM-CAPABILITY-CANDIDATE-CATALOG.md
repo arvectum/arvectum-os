@@ -1,7 +1,7 @@
 # Arvectum OS Platform Capability Catalog
 
 Status: `Active`
-Version: `1.2.0`
+Version: `1.2.1`
 Created: `2026-08-08`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -11,27 +11,28 @@ Phase source: [`PHASE-3-SHARED-PLATFORM-CAPABILITIES.md`](../roadmap/PHASE-3-SHA
 
 ## 1. Purpose and authority
 
-This catalog records the bounded initial Arvectum OS Platform Capability set admitted by P3.01 and its current lifecycle disposition after the P3.11 capability admission / ADR / refactoring hardening review.
+This catalog records the bounded initial Arvectum OS Platform Capability set admitted by P3.01 and its current lifecycle disposition after the P3.11 capability admission / ADR / refactoring hardening review and P3.12 Phase 3 / M3 closure review.
 
 It is subordinate to Constitution `1.2.0` and Accepted RFC-0001 through RFC-0008. It does not create stable public contracts, select infrastructure, authorize production use or make any capability `Active`.
 
-P3.01 admitted four entries as `Candidate`. P3.02 established the RFC-0001 incubation envelope and Provisional domain-neutral capability contracts, allowing all four to move to bounded lifecycle `Incubating` for Phase 3 validation. P3.11 independently re-reviewed each capability after P3.03–P3.10 and R8 evidence and retained exactly the same four as `Incubating / Provisional` for the bounded M3 baseline.
+P3.01 admitted four entries as `Candidate`. P3.02 established the RFC-0001 incubation envelope and Provisional domain-neutral capability contracts, allowing all four to move to bounded lifecycle `Incubating` for Phase 3 validation. P3.11 independently re-reviewed each capability after P3.03–P3.10 and R8 evidence and retained exactly the same four as `Incubating / Provisional` for the bounded M3 baseline. P3.12 then closed Phase 3 and achieved M3 without changing those lifecycle states.
 
 Canonical P3.02 contract baseline: [`PHASE-3-PROVISIONAL-CAPABILITY-CONTRACTS.md`](../contracts/PHASE-3-PROVISIONAL-CAPABILITY-CONTRACTS.md).
 Canonical P3.11 review: [`P3-11-capability-admission-adr-refactoring-hardening-review.md`](../reviews/P3-11-capability-admission-adr-refactoring-hardening-review.md).
+Canonical P3.12 closure: [`P3-12-phase-3-m3-closure-review.md`](../reviews/P3-12-phase-3-m3-closure-review.md).
 
 ## 2. Current capability summary
 
 | ID | Capability | Lifecycle | Contract | Primary architecture basis | Review |
 |---|---|---|---|---|---|
-| `CAP-001` | Document & Artifact Governance | `Incubating` | `Provisional` | RFC-0008 | P3.11 PASS; next P3.12 / `2026-09-08` |
-| `CAP-002` | Memory & Knowledge Governance | `Incubating` | `Provisional` | RFC-0007 | P3.11 PASS; next P3.12 / `2026-09-08` |
-| `CAP-003` | Search / Index Projection | `Incubating` | `Provisional` | RFC-0001; RFC-0007; RFC-0008 | P3.11 PASS; next P3.12 / `2026-09-08` |
-| `CAP-004` | Audit / Reconstruction Support | `Incubating` | `Provisional` | RFC-0006; RFC-0005 | P3.11 PASS; next P3.12 / `2026-09-08` |
+| `CAP-001` | Document & Artifact Governance | `Incubating` | `Provisional` | RFC-0008 | P3.11 PASS; M3 achieved; lifecycle review by `2026-09-08` |
+| `CAP-002` | Memory & Knowledge Governance | `Incubating` | `Provisional` | RFC-0007 | P3.11 PASS; M3 achieved; lifecycle review by `2026-09-08` |
+| `CAP-003` | Search / Index Projection | `Incubating` | `Provisional` | RFC-0001; RFC-0007; RFC-0008 | P3.11 PASS; M3 achieved; lifecycle review by `2026-09-08` |
+| `CAP-004` | Audit / Reconstruction Support | `Incubating` | `Provisional` | RFC-0006; RFC-0005 | P3.11 PASS; M3 achieved; lifecycle review by `2026-09-08` |
 
 `Incubating` authorizes bounded validation work only. It is not production, stable public compatibility, SLA/support or commercial status.
 
-P3.11 confirms that the four capability identities are justified as the retained bounded shared-capability set for M3 evidence. That is not an RFC-0001 `Active` admission decision.
+P3.11 confirms that the four capability identities are justified as the retained bounded shared-capability set for M3 evidence. P3.12 confirms M3 closure over that set. Neither is an RFC-0001 `Active` admission decision.
 
 ## 3. Retained boundaries
 
@@ -101,6 +102,7 @@ The following remain outside the initial capability set unless later evidence pr
 10. No capability may become `Active` without separate RFC-0001 admission, approved operational readiness and applicable decision authority.
 11. P3.11 admission to the bounded M3 retained set is not `Active` lifecycle promotion.
 12. Materially distinct reuse does not by itself authorize a new generic composition capability, Stable Product Contract or public cross-product interface.
+13. P3.12/M3 closure changes roadmap milestone state only; it does not alter capability lifecycle, operational environment or conformance maturity.
 
 ## 7. P3.11 capability admission disposition
 
@@ -126,9 +128,12 @@ P3.11 also concludes that no current concrete implementation mechanism crosses t
 | `2026-08-08` | P3.01 | CAP-001 through CAP-004 admitted as `Candidate`; no implementation commitment. |
 | `2026-08-08` | P3.02 | CAP-001 through CAP-004 moved to bounded `Incubating` with Provisional domain-neutral capability contracts; no `Active` promotion. |
 | `2026-08-08` | P3.11 | CAP-001 through CAP-004 independently retained as `Incubating / Provisional` for the bounded M3 baseline; no Active promotion, new capability admission, ADR or material refactor. |
+| `2026-08-08` | P3.12 | Phase 3 closed and M3 achieved for the bounded shared-capability reference scope; capability lifecycle remains unchanged at `Incubating / Provisional`. |
 
 ## 9. Next review
 
-P3.12 must decide Phase 3 / M3 closure over the already reviewed capability set. It is a closure decision, not an automatic lifecycle promotion.
+P3.12 is complete and M3 is achieved. This milestone does not promote capability lifecycle.
 
-After P3.12, re-open capability review no later than `2026-09-08` or earlier before any material `Active` admission, Stable/public contract, durable ADR-triggering mechanism, external production reliance or material capability-boundary change.
+Re-open capability review no later than `2026-09-08` or earlier before any material `Active` admission, Stable/public contract, durable ADR-triggering mechanism, external production reliance or material capability-boundary change.
+
+Any `Active` proposal must independently satisfy RFC-0001 stable-contract, compatibility/migration, accountable support, operational-readiness and applicable decision-authority requirements rather than relying on M3 closure as substitute evidence.
