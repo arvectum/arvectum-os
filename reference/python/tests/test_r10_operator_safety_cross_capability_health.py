@@ -81,7 +81,7 @@ class R10OperatorSafetyCrossCapabilityHealthTests(unittest.TestCase):
             organization=self.organization,
             actor=self.actor,
             workflow=self.workflow,
-            operation_name="r10-safe-update",
+            operation_name="update-reference-subject",
             material_inputs=(self.target,),
             required_gates=self.required_gates,
             execution_id=self._id("execution-subject", "execution-r10"),
