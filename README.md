@@ -55,7 +55,7 @@ Canonical Phase 3 closure evidence:
 - [R8 milestone hardening review](docs/reviews/R8-phase-3-milestone-hardening.md)
 - [P3.11 capability admission / ADR / refactoring hardening review](docs/reviews/P3-11-capability-admission-adr-refactoring-hardening-review.md)
 
-`Phase 4 — Workspace / Operator Experience` is **Active**. `P4.01 — Operator journeys, workspace boundary and information architecture`, `P4.02 — Organization context, identity and scoped navigation shell`, the mandatory `R9 — Workspace Boundary Review` gate, `P4.03 — Canonical Record / Relationship inspection experience`, `P4.04 — Version, Event, provenance and reconstruction experience`, `P4.05 — Governed Execution, gate and approval/action experience`, `P4.06 — Document / Artifact workspace experience` and `P4.07 — Memory / Knowledge / Search discovery experience` are complete with `PASS`. The current canonical action is the mandatory `R10 — Operator Safety / Cross-Capability Health Review` gate before P4.08.
+`Phase 4 — Workspace / Operator Experience` is **Active**. `P4.01 — Operator journeys, workspace boundary and information architecture`, `P4.02 — Organization context, identity and scoped navigation shell`, `R9 — Workspace Boundary Review`, `P4.03 — Canonical Record / Relationship inspection experience`, `P4.04 — Version, Event, provenance and reconstruction experience`, `P4.05 — Governed Execution, gate and approval/action experience`, `P4.06 — Document / Artifact workspace experience`, `P4.07 — Memory / Knowledge / Search discovery experience` and the mandatory `R10 — Operator Safety / Cross-Capability Health Review` gate are complete with `PASS`. The current canonical action is **`P4.08 — Cross-capability task/context composition + bounded product entry point`**.
 
 P4.02 provides the first bounded visible workspace shell: explicit Organization and attributable Actor context, `Discover / Records / Executions / Evidence / Documents / Knowledge` navigation, distinct Subject and exact-Version references, fail-closed unresolved/mismatched Organization state and non-authoritative presentation semantics. A zero-dependency static HTML demo makes the shell inspectable without selecting a frontend framework, route schema, public API/BFF, IAM/session provider or durable read-model topology.
 
@@ -95,6 +95,14 @@ P4.07 Discover is explicitly derived and non-authoritative. CAP-003 hits retain 
 
 P4.07 selects no durable search/index/vector technology, embedding/LLM provider, ranking model, RAG runtime, durable read-model/cache storage, frontend framework, public API/route/wire contract or IAM/PDP/PEP mechanism. It creates no new RFC, ADR, Product Contract, Platform Capability or lifecycle promotion. Five functional cross-review iterations closed exact-record binding, projection-gap, semantic-owner policy and exact-source ambiguity findings. `Reference Python CI #164` passed all `521` tests on Python `3.12.13` on the implementation head before canonical roadmap synchronization.
 
+R10 reviewed the complete P4.03–P4.07 operator surface before composition. It confirmed that protected presentation remains bound to current Organization/Actor source authorization; purpose/right/classification/minimization and exact-version reliance remain independently re-evaluated where required; search/reconstruction/presentation state stays non-authoritative; duplicate or ambiguous governed sources fail closed; protected omissions do not reveal counts; and minimized previews do not become alternate access paths.
+
+R10 found one material stale-presentation/hidden-action gap in the P4.05 operator action path. A successful P4.05 inspection already pinned the exact source-authorization decision used to reveal the Execution, but the later prepared action did not independently require that source-access decision to remain current. Thus an internal prepared action could survive access replacement or revocation even though the separate Governed Execution authorization/Organizational Authority/approval gates remained intact.
+
+The R10 remediation adds the internal `operator_safety.py` composition guard. It binds an action to the exact inspected source-authorization decision Version Identity and rechecks that it remains the unique current allow decision during preparation and immediately before the existing P4.05 action adapter is invoked. Missing, denied, duplicate/ambiguous or replaced access blocks without mutating runtime state and requires re-inspection. The guard is non-authoritative, grants no permission or Organizational Authority and delegates the only consequential commit through the existing P4.05/runtime-consistency path. A structural regression prevents future cross-capability package modules from bypassing this guard by directly composing the lower-level P4.05 action functions.
+
+R10 intentionally does not extract a broad shared authorization/presentation framework. The repeated local patterns are visible, but P4.08 is the first real cross-capability composition point that can provide evidence for a stable shared abstraction. R10 creates no new RFC, ADR, Product Contract or Platform Capability, changes no capability lifecycle state and makes no operational/commercial readiness claim.
+
 Canonical Phase 4 planning/current evidence:
 
 - [Canonical roadmap](docs/roadmap/ROADMAP.md)
@@ -107,8 +115,9 @@ Canonical Phase 4 planning/current evidence:
 - [P4.05 Governed Execution / gate / approval-action review](docs/reviews/P4-05-governed-execution-gate-approval-action-experience.md)
 - [P4.06 Document / Artifact workspace review](docs/reviews/P4-06-document-artifact-workspace-experience.md)
 - [P4.07 Memory / Knowledge / Search discovery review](docs/reviews/P4-07-memory-knowledge-search-discovery-experience.md)
+- [R10 Operator Safety / Cross-Capability Health Review](docs/reviews/R10-operator-safety-cross-capability-health-review.md)
 
-P4.01 through P4.07 and R9 establish, harden and exercise a domain-neutral workspace boundary only. They do not create a new Platform Capability, change CAP-001 through CAP-004 lifecycle, create a Stable Product Contract/public interface or establish production readiness. R10 is now the required cross-capability health gate before P4.08.
+P4.01 through P4.07 plus R9/R10 establish, harden and exercise a domain-neutral workspace boundary only. They do not create a new Platform Capability, change CAP-001 through CAP-004 lifecycle, create a Stable Product Contract/public interface or establish production readiness. P4.08 is now the current composition proof and must use the applicable RFC-0004 Product Contract before governed product reliance on shared platform state/history/capabilities.
 
 RFC-0001 through RFC-0008 are `Accepted 1.0.0` and remain binding within their declared scopes.
 
