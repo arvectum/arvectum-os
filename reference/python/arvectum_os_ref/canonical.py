@@ -1,7 +1,9 @@
-"""P1.02 — Native subject and first immutable Canonical Record version.
+"""Canonical Record reference semantics for P1.02 and P2.02.
 
-This module implements only the bounded RFC-0002 semantics required by P1.02.
-It is an in-memory reference model, not a persistence or public wire contract.
+The module remains a bounded in-memory reference model, not a persistence or
+public wire contract. P2.02 extends the immutable Canonical Record envelope with
+optional temporal applicability metadata so a lineage resolver can distinguish
+Canonical Head from Effective Version without changing historical versions.
 """
 
 from __future__ import annotations
@@ -22,12 +24,24 @@ class AuthorityMode(str, Enum):
     GOVERNED_REPLICA = "Governed Replica"
 
 
+def _require_aware_datetime(value: datetime, *, label: str) -> None:
+    if value.tzinfo is None or value.utcoffset() is None:
+        raise ValueError(f"{label} must be timezone-aware")
+
+
 @dataclass(frozen=True, slots=True)
 class CanonicalRecord:
     """Immutable governed representation of one logical subject at one version.
 
-    P1.02 intentionally admits only ``Native`` records. External Reference and
-    Governed Replica require authority contracts that are outside this work item.
+    The optional ``effective_from`` / ``effective_until`` bounds describe
+    temporal applicability where a governed schema uses time-based effective
+    version resolution. Missing bounds are unbounded on that side. P2.02 uses
+    half-open intervals ``[effective_from, effective_until)``; the resolver
+    refuses overlapping applicability instead of silently guessing.
+
+    The reference harness still admits only ``Native`` records. External
+    Reference and Governed Replica require authority contracts outside this
+    bounded implementation.
     """
 
     subject_id: Identity
@@ -45,6 +59,8 @@ class CanonicalRecord:
     payload: tuple[tuple[str, str], ...] = ()
     lifecycle_status: str | None = None
     predecessor_version_id: Identity | None = None
+    effective_from: datetime | None = None
+    effective_until: datetime | None = None
 
     def __post_init__(self) -> None:
         if not isinstance(self.subject_id, Identity):
@@ -71,12 +87,9 @@ class CanonicalRecord:
             raise ValueError("creation_actor must be attributable")
         if self.creation_actor.organization != self.organization:
             raise ValueError("creation actor and Canonical Record must share Organization scope")
-        if (
-            not isinstance(self.created_at, datetime)
-            or self.created_at.tzinfo is None
-            or self.created_at.utcoffset() is None
-        ):
+        if not isinstance(self.created_at, datetime):
             raise ValueError("created_at must be timezone-aware")
+        _require_aware_datetime(self.created_at, label="created_at")
         if not isinstance(self.provenance_refs, tuple) or not self.provenance_refs:
             raise ValueError("provenance_refs must contain attributable governed references")
         if any(not isinstance(ref, Identity) for ref in self.provenance_refs):
@@ -102,6 +115,20 @@ class CanonicalRecord:
                 raise ValueError("predecessor_version_id must be an Identity when supplied")
             if self.predecessor_version_id == self.version_id:
                 raise ValueError("a Canonical Record version cannot reference itself as predecessor")
+        for label, bound in (
+            ("effective_from", self.effective_from),
+            ("effective_until", self.effective_until),
+        ):
+            if bound is not None:
+                if not isinstance(bound, datetime):
+                    raise ValueError(f"{label} must be a datetime when supplied")
+                _require_aware_datetime(bound, label=label)
+        if (
+            self.effective_from is not None
+            and self.effective_until is not None
+            and self.effective_until <= self.effective_from
+        ):
+            raise ValueError("effective_until must be later than effective_from")
 
 
 def build_p1_02_native_record(
