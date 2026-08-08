@@ -183,14 +183,19 @@ class P109ObservationNonPromotionTests(unittest.TestCase):
         self.assertEqual(observation.record.lifecycle_status, "Captured")
 
     def test_repeated_capture_is_deterministic_and_observational(self) -> None:
+        result_before = self.mutation.resulting_record
+        terminal_before = self.mutation.execution
+        event_before = self.event
+
         first = self._build()
         second = self._build()
 
         self.assertEqual(first, second)
         self.assertEqual(first.observation_id, second.observation_id)
         self.assertEqual(first.version_id, second.version_id)
-        self.assertIs(self.event, self.event)
-        self.assertIs(self.mutation.execution, self.mutation.execution)
+        self.assertIs(self.mutation.resulting_record, result_before)
+        self.assertIs(self.mutation.execution, terminal_before)
+        self.assertIs(self.event, event_before)
 
     def test_observation_is_frozen_immutable_governed_state(self) -> None:
         observation = self._build()
@@ -201,8 +206,8 @@ class P109ObservationNonPromotionTests(unittest.TestCase):
             observation.record.payload = ()  # type: ignore[misc]
 
     def test_wrong_event_version_fails_closed(self) -> None:
-        wrong_event_pin = GovernedVersionPin(
-            subject_id=self.event.record.subject_id,
+        wrong_event_pin = replace(
+            self.evidence.events[0],
             version_id=Identity("event-version", "wrong-event-v1", "org-a"),
         )
         forged_evidence = replace(self.evidence, events=(wrong_event_pin,))
@@ -211,9 +216,8 @@ class P109ObservationNonPromotionTests(unittest.TestCase):
             self._build(evidence=forged_evidence)
 
     def test_wrong_terminal_execution_version_fails_closed(self) -> None:
-        terminal_pin = self.evidence.execution_versions[-1]
-        wrong_terminal_pin = GovernedVersionPin(
-            subject_id=terminal_pin.subject_id,
+        wrong_terminal_pin = replace(
+            self.evidence.execution_versions[-1],
             version_id=Identity("execution-version", "wrong-terminal-v1", "org-a"),
         )
         forged_evidence = replace(
@@ -229,9 +233,8 @@ class P109ObservationNonPromotionTests(unittest.TestCase):
             self._build(evidence=forged_evidence)
 
     def test_wrong_observed_effect_version_fails_closed(self) -> None:
-        effect_pin = self.evidence.canonical_effects[0]
-        wrong_effect_pin = GovernedVersionPin(
-            subject_id=effect_pin.subject_id,
+        wrong_effect_pin = replace(
+            self.evidence.canonical_effects[0],
             version_id=Identity("canonical-version", "subject-1-vX", "org-a"),
         )
         forged_evidence = replace(self.evidence, canonical_effects=(wrong_effect_pin,))
