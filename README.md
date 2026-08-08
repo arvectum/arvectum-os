@@ -55,7 +55,7 @@ Canonical Phase 3 closure evidence:
 - [R8 milestone hardening review](docs/reviews/R8-phase-3-milestone-hardening.md)
 - [P3.11 capability admission / ADR / refactoring hardening review](docs/reviews/P3-11-capability-admission-adr-refactoring-hardening-review.md)
 
-`Phase 4 — Workspace / Operator Experience` is **Active**. `P4.01 — Operator journeys, workspace boundary and information architecture`, `P4.02 — Organization context, identity and scoped navigation shell`, the mandatory `R9 — Workspace Boundary Review` gate, `P4.03 — Canonical Record / Relationship inspection experience`, `P4.04 — Version, Event, provenance and reconstruction experience`, `P4.05 — Governed Execution, gate and approval/action experience` and `P4.06 — Document / Artifact workspace experience` are complete with `PASS`. The current canonical action is `P4.07 — Memory / Knowledge / Search discovery experience`.
+`Phase 4 — Workspace / Operator Experience` is **Active**. `P4.01 — Operator journeys, workspace boundary and information architecture`, `P4.02 — Organization context, identity and scoped navigation shell`, the mandatory `R9 — Workspace Boundary Review` gate, `P4.03 — Canonical Record / Relationship inspection experience`, `P4.04 — Version, Event, provenance and reconstruction experience`, `P4.05 — Governed Execution, gate and approval/action experience`, `P4.06 — Document / Artifact workspace experience` and `P4.07 — Memory / Knowledge / Search discovery experience` are complete with `PASS`. The current canonical action is the mandatory `R10 — Operator Safety / Cross-Capability Health Review` gate before P4.08.
 
 P4.02 provides the first bounded visible workspace shell: explicit Organization and attributable Actor context, `Discover / Records / Executions / Evidence / Documents / Knowledge` navigation, distinct Subject and exact-Version references, fail-closed unresolved/mismatched Organization state and non-authoritative presentation semantics. A zero-dependency static HTML demo makes the shell inspectable without selecting a frontend framework, route schema, public API/BFF, IAM/session provider or durable read-model topology.
 
@@ -87,6 +87,14 @@ The current reference Canonical Record harness implements only Native authority 
 
 The P4.06 cross-review ran five functional iterations. One material pre-merge finding identified that Document source authorization alone was insufficient for Artifact handling constraints; the implementation was hardened to reuse P3.07 enforcement and covered with additional negative-path tests. `Reference Python CI #154` then passed all `495` tests on Python `3.12.13`.
 
+P4.07 adds the bounded Memory / Knowledge / Search discovery experience over existing CAP-002 / RFC-0007, CAP-003 and P3.07 semantics. Observation, Organizational Memory, Knowledge Candidate and validated Knowledge remain distinct. Memory preserves remembered epistemic role without becoming truth; Candidate validation or approval-looking evidence does not itself promote Knowledge; the presentation exposes no promotion path.
+
+Validated Knowledge preserves stable Subject and exact immutable Version identity. Consequential reliance requires explicit exact Version selection, current freshness, current Actor/Organization source authorization and matching purpose/right/classification context before delegating final exact reliance to the existing CAP-002 semantic owner. Stale/review-required Knowledge is inspectable as stale but not eligible for consequential reliance.
+
+P4.07 Discover is explicitly derived and non-authoritative. CAP-003 hits retain exact source Subject/Version attribution and must resolve back to the current exact governed source before protected metadata appears. Search ranking/match order is never presented as truth, validation, permission, approval or Organizational Authority. A synchronized projection cannot make stale Knowledge current, CAP-003 constraints cannot widen CAP-002 Memory handling constraints, duplicate exact Memory/Knowledge representations fail closed, missing projection state does not imply source absence, unauthorized/ambiguous/handling-ineligible results are omitted without protected counts and previews are minimized.
+
+P4.07 selects no durable search/index/vector technology, embedding/LLM provider, ranking model, RAG runtime, durable read-model/cache storage, frontend framework, public API/route/wire contract or IAM/PDP/PEP mechanism. It creates no new RFC, ADR, Product Contract, Platform Capability or lifecycle promotion. Five functional cross-review iterations closed exact-record binding, projection-gap, semantic-owner policy and exact-source ambiguity findings. `Reference Python CI #164` passed all `521` tests on Python `3.12.13` on the implementation head before canonical roadmap synchronization.
+
 Canonical Phase 4 planning/current evidence:
 
 - [Canonical roadmap](docs/roadmap/ROADMAP.md)
@@ -98,12 +106,13 @@ Canonical Phase 4 planning/current evidence:
 - [P4.04 Version / Event / provenance / reconstruction review](docs/reviews/P4-04-version-event-provenance-reconstruction-experience.md)
 - [P4.05 Governed Execution / gate / approval-action review](docs/reviews/P4-05-governed-execution-gate-approval-action-experience.md)
 - [P4.06 Document / Artifact workspace review](docs/reviews/P4-06-document-artifact-workspace-experience.md)
+- [P4.07 Memory / Knowledge / Search discovery review](docs/reviews/P4-07-memory-knowledge-search-discovery-experience.md)
 
-P4.01 through P4.06 and R9 establish, harden and exercise a domain-neutral workspace boundary only. They do not create a new Platform Capability, change CAP-001 through CAP-004 lifecycle, create a Stable Product Contract/public interface or establish production readiness.
+P4.01 through P4.07 and R9 establish, harden and exercise a domain-neutral workspace boundary only. They do not create a new Platform Capability, change CAP-001 through CAP-004 lifecycle, create a Stable Product Contract/public interface or establish production readiness. R10 is now the required cross-capability health gate before P4.08.
 
 RFC-0001 through RFC-0008 are `Accepted 1.0.0` and remain binding within their declared scopes.
 
-The reference implementation remains bounded and intentionally avoids establishing a permanent programming-language contract, durable database/object-store/search topology, public API/SDK/wire format, Event broker/store, IAM provider, workflow engine, evidence-integrity technology or deployable service topology. Such choices must pass the applicable ADR/stable-boundary gates before material reliance.
+The reference implementation remains bounded and intentionally avoids establishing a permanent programming-language contract, durable database/object-store/search/vector/RAG topology, public API/SDK/wire format, Event broker/store, IAM provider, workflow engine, evidence-integrity technology or deployable service topology. Such choices must pass the applicable ADR/stable-boundary gates before material reliance.
 
 Phase status, capability lifecycle, operational environment and conformance maturity remain distinct. `M3 Achieved` and Phase 4 progress do not mean any Platform Capability is lifecycle `Active` or production-ready.
 
