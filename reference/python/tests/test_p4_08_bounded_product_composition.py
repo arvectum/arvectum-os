@@ -26,6 +26,7 @@ from arvectum_os_ref.product_capability_consumption import (
 )
 from arvectum_os_ref.product_contract import (
     CanonicalAccessMode,
+    ProductBoundaryMechanism,
     ProductContractLifecycle,
     ProductContractScopeError,
 )
@@ -105,6 +106,17 @@ class P408BoundedProductCompositionTests(unittest.TestCase):
             capability_requests=(self.document_request, self.knowledge_request),
         )
 
+    def _compose_with_knowledge_request(self, request: CapabilityConsumptionRequest):
+        return compose_product_task_context(
+            entry=self._entry(),
+            document_request=self.document_request,
+            knowledge_request=request,
+            document_sources=DocumentWorkspaceSourceSet((), ()),
+            document_source_authorizations=(),
+            knowledge_sources=MemoryKnowledgeSearchSources(),
+            knowledge_source_authorizations=(),
+        )
+
     def test_executable_contract_is_provisional_and_declares_real_boundaries(self) -> None:
         self.assertEqual(self.contract.lifecycle, ProductContractLifecycle.PROVISIONAL)
         self.assertEqual(self.contract.product_id, self.product_id)
@@ -162,17 +174,7 @@ class P408BoundedProductCompositionTests(unittest.TestCase):
             )
 
     def test_contract_entry_does_not_grant_source_access(self) -> None:
-        entry = self._entry()
-
-        context = compose_product_task_context(
-            entry=entry,
-            document_request=self.document_request,
-            knowledge_request=self.knowledge_request,
-            document_sources=DocumentWorkspaceSourceSet((), ()),
-            document_source_authorizations=(),
-            knowledge_sources=MemoryKnowledgeSearchSources(),
-            knowledge_source_authorizations=(),
-        )
+        context = self._compose_with_knowledge_request(self.knowledge_request)
 
         self.assertIsInstance(context.document, DocumentWorkspaceBlockedState)
         self.assertEqual(context.document.code, DocumentWorkspaceBlockCode.ACCESS_DENIED)
@@ -190,7 +192,6 @@ class P408BoundedProductCompositionTests(unittest.TestCase):
         )
 
     def test_request_actor_or_product_scope_cannot_drift_after_entry(self) -> None:
-        entry = self._entry()
         other_actor = ActorContext(
             Principal(Identity("principal", "operator-2", "platform")),
             self.org,
@@ -211,26 +212,39 @@ class P408BoundedProductCompositionTests(unittest.TestCase):
         )
 
         with self.assertRaises(ProductContractScopeError):
-            compose_product_task_context(
-                entry=entry,
-                document_request=self.document_request,
-                knowledge_request=drifted,
-                document_sources=DocumentWorkspaceSourceSet((), ()),
-                document_source_authorizations=(),
-                knowledge_sources=MemoryKnowledgeSearchSources(),
-                knowledge_source_authorizations=(),
-            )
+            self._compose_with_knowledge_request(drifted)
+
+    def test_dependency_contract_version_cannot_drift_after_entry(self) -> None:
+        drifted = CapabilityConsumptionRequest(
+            organization=self.org,
+            product_id=self.product_id,
+            product_version=PRODUCT_VERSION,
+            dependency_id=CAP_002_MEMORY_KNOWLEDGE,
+            dependency_contract_version="9.9.9",
+            operation_name=OP_RETRIEVE_KNOWLEDGE,
+            access=self.access,
+        )
+
+        with self.assertRaises(ProductCompositionError):
+            self._compose_with_knowledge_request(drifted)
+
+    def test_boundary_mechanism_cannot_switch_to_hidden_coupling_after_entry(self) -> None:
+        drifted = CapabilityConsumptionRequest(
+            organization=self.org,
+            product_id=self.product_id,
+            product_version=PRODUCT_VERSION,
+            dependency_id=CAP_002_MEMORY_KNOWLEDGE,
+            dependency_contract_version=CAPABILITY_CONTRACT_VERSION,
+            operation_name=OP_RETRIEVE_KNOWLEDGE,
+            access=self.access,
+            mechanism=ProductBoundaryMechanism.INTERNAL_IMPORT,
+        )
+
+        with self.assertRaises(ProductCompositionError):
+            self._compose_with_knowledge_request(drifted)
 
     def test_product_domain_decision_remains_transient_product_owned_state(self) -> None:
-        context = compose_product_task_context(
-            entry=self._entry(),
-            document_request=self.document_request,
-            knowledge_request=self.knowledge_request,
-            document_sources=DocumentWorkspaceSourceSet((), ()),
-            document_source_authorizations=(),
-            knowledge_sources=MemoryKnowledgeSearchSources(),
-            knowledge_source_authorizations=(),
-        )
+        context = self._compose_with_knowledge_request(self.knowledge_request)
 
         decision = decide_product_task(
             context=context,
@@ -254,16 +268,19 @@ class P408BoundedProductCompositionTests(unittest.TestCase):
             with self.subTest(attribute=forbidden):
                 self.assertFalse(hasattr(decision, forbidden))
 
-    def test_consequential_action_wrappers_preserve_contract_guard_then_delegate_to_r10(self) -> None:
+    def test_consequential_action_wrappers_preserve_guards_then_delegate_to_r10(self) -> None:
         entry = self._entry()
         prepared = object()
         result = object()
         execution = object()
+        candidate = object()
         intent = object()
 
         with patch(
             "bounded_product_ref.task_composition._require_execution_contract"
         ) as contract_guard, patch(
+            "bounded_product_ref.task_composition._require_product_task_candidate"
+        ) as candidate_guard, patch(
             "bounded_product_ref.task_composition.prepare_operator_canonical_mutation_action",
             return_value=prepared,
         ) as prepare_guard:
@@ -272,7 +289,7 @@ class P408BoundedProductCompositionTests(unittest.TestCase):
                 inspection=object(),
                 execution=execution,
                 runtime_state=object(),
-                candidate=object(),
+                candidate=candidate,
                 event_receipt=object(),
                 retry_semantics=object(),
                 source_authorizations=(),
@@ -280,6 +297,7 @@ class P408BoundedProductCompositionTests(unittest.TestCase):
             )
         self.assertIs(actual_prepared, prepared)
         contract_guard.assert_called_once_with(entry=entry, execution=execution)
+        candidate_guard.assert_called_once_with(entry=entry, candidate=candidate)
         self.assertEqual(
             prepare_guard.call_args.kwargs["workspace"], entry.workspace
         )
