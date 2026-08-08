@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.2.0`
+Version: `2.2.1`
 Created: `2026-08-07`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -43,7 +43,7 @@ This roadmap uses semantic versioning:
 - `MINOR` — sequencing, milestone scope, work breakdown, phase transition or strategic-horizon changes that do not restructure the planning model;
 - `MAJOR` — restructuring of the roadmap lifecycle or planning model.
 
-Version `2.0.0` introduced the two-horizon planning model. Version `2.1.0` recorded Phase 1 / `M1` completion and Phase 2 decomposition as the next action. Version `2.2.0` activates the decomposed Phase 2 Core Runtime plan.
+Version `2.0.0` introduced the two-horizon planning model. Version `2.1.0` recorded Phase 1 / `M1` completion and Phase 2 decomposition as the next action. Version `2.2.0` activates the decomposed Phase 2 Core Runtime plan. Version `2.2.1` records P2.01 completion and advances the active execution sequence to P2.02.
 
 Roadmap identifiers, RFC identifiers and ADR identifiers are independent namespaces.
 
@@ -92,7 +92,9 @@ Current verified canonical baseline:
 - Phase 1 bounded executable reference slice completed through `P1.12`;
 - Phase 1 final executable evidence: `128` tests passed in GitHub Actions for the final P1 code head;
 - [`P1.12 closure review`](../reviews/P1-12-phase-1-bounded-slice-closure-review.md) records `PASS — M1 achieved for the declared bounded reference scope`;
-- no relevant Accepted ADR currently constrains the bounded runtime choices carried from Phase 1.
+- Phase 2 `P2.01` completed a provisional reusable runtime composition boundary while keeping deterministic reference-scenario fixtures outside runtime orchestration ownership;
+- P2.01 executable evidence: GitHub Actions `Reference Python CI` run `#18` passed `138` tests on executable code head `5f56f0bf36e58efe5249b93e9df6ca4437d5621e`;
+- no relevant Accepted ADR currently constrains the bounded runtime choices carried from Phase 1 or introduced by P2.01.
 
 The RFC Index remains the canonical source for RFC status and acceptance evidence.
 
@@ -138,7 +140,7 @@ M1 intentionally did **not** claim reusable Typed Relationship lifecycle, reusab
 
 Canonical detailed work breakdown:
 
-- [`PHASE-2-CORE-RUNTIME.md`](PHASE-2-CORE-RUNTIME.md) — `Active 1.0.0`.
+- [`PHASE-2-CORE-RUNTIME.md`](PHASE-2-CORE-RUNTIME.md) — `Active 1.0.1`.
 
 **Milestone `M2`:** more than one materially distinct bounded workflow reuses the same governed runtime semantics without copying the Phase 1 harness, with architecture fitness evidence and all crossed ADR gates governed.
 
@@ -195,12 +197,12 @@ Provisional intent: demonstrate safe compounding organizational intelligence thr
 ## 6. Active Roadmap — Phase 2 Core Runtime
 
 **Status:** 🟨 In progress  
-**Phase progress:** `░░░░░░░░░░ 0%` at activation
+**Phase progress:** `█░░░░░░░░░ 8%` — P2.01 complete, P2.02 next
 
 | ID | Work item | Status | Progress |
 |---|---|---:|---:|
-| `P2.01` | Runtime boundary extraction and reusable composition baseline | 🟦 | `░░░░░░░░░░ 0%` |
-| `P2.02` | Canonical Record lineage, Head and Effective Version runtime | ⬜ | `░░░░░░░░░░ 0%` |
+| `P2.01` | Runtime boundary extraction and reusable composition baseline | 🟩 | `██████████ 100%` |
+| `P2.02` | Canonical Record lineage, Head and Effective Version runtime | 🟦 | `░░░░░░░░░░ 0%` |
 | `P2.03` | Typed Relationship runtime | ⬜ | `░░░░░░░░░░ 0%` |
 | `P2.04` | Governed Execution lifecycle and gate orchestration runtime | ⬜ | `░░░░░░░░░░ 0%` |
 | `P2.05` | Event admission, provenance and reconstruction runtime | ⬜ | `░░░░░░░░░░ 0%` |
@@ -214,11 +216,11 @@ Provisional intent: demonstrate safe compounding organizational intelligence thr
 
 ### Current canonical action
 
-> **`P2.01 — Runtime boundary extraction and reusable composition baseline`.**
+> **`P2.02 — Canonical Record lineage, Head and Effective Version runtime`.**
 
-Identify which P1 components are reusable runtime semantics versus scenario fixtures, establish the minimum domain-neutral reusable composition boundary, and prove that the complete P1 scenario can execute through that boundary without relying on scenario-specific orchestration internals.
+Implement reusable resolution operations over immutable Canonical Record lineage, explicitly distinguish Canonical Head from Effective Version selection, preserve exact Version Identity reliance for consequential execution, and fail explicitly on ambiguity or missing resolution.
 
-Do not select a database, broker, IAM/policy provider, workflow engine, public API protocol or permanent service topology merely to complete P2.01.
+Do not introduce a database/index dependency or reinterpret a derived projection as canonical resolution authority merely to complete P2.02.
 
 ### Dependency-aware sequence
 
