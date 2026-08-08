@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `1.3.3`
+Version: `2.0.0`
 Created: `2026-08-07`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -11,11 +11,14 @@ Task classification: `governance`
 
 This document is the canonical planning source for the development sequence of Arvectum OS.
 
-It answers:
+It has two planning horizons:
 
-> What should Arvectum OS work on next, in what order, and what constitutes completion of the current phase?
+1. **Strategic Roadmap** — approximate long-range direction across all currently envisioned phases;
+2. **Active Roadmap** — detailed, evidence-backed work breakdown for the current phase.
 
-This roadmap coordinates work. It does **not** override architectural or governance authority.
+The Strategic Roadmap is intentionally provisional beyond the active phase. It is a planning hypothesis, not an architectural contract, delivery promise, capability-lifecycle claim, SLA or commitment to build every listed item.
+
+The roadmap coordinates work. It does **not** override architectural or governance authority.
 
 Authority remains, in descending order:
 
@@ -30,30 +33,40 @@ Authority remains, in descending order:
 
 If this roadmap conflicts with a higher-authority source, the higher-authority source prevails and this roadmap must be corrected.
 
-Detailed RFC approval/publication evidence is maintained in [`docs/rfc/README.md`](../rfc/README.md). This roadmap intentionally summarizes completed architecture milestones rather than duplicating their full governance history.
+Detailed RFC approval/publication evidence is maintained in [`docs/rfc/README.md`](../rfc/README.md).
 
-## 2. Versioning and update rules
+## 2. Versioning, planning horizons and update rules
 
-This roadmap is versioned in Git and uses semantic versioning:
+This roadmap uses semantic versioning:
 
-- `PATCH` — progress, status, links, wording clarifications and other non-structural updates;
-- `MINOR` — sequencing, milestone scope, work-breakdown or maintenance-process changes that do not alter an Accepted architectural contract;
+- `PATCH` — progress, status, links and wording clarifications;
+- `MINOR` — sequencing, milestone scope, work breakdown or strategic-horizon changes that do not restructure the planning model;
 - `MAJOR` — restructuring of the roadmap lifecycle or planning model.
 
-A roadmap update must never silently redefine the scope of an Accepted RFC. If an Accepted RFC must change, use the applicable architecture-governance process first, then update the roadmap.
+Version `2.0.0` introduces the two-horizon planning model: Strategic Roadmap + Active Roadmap.
 
-Git history is the canonical history of roadmap revisions.
+### 2.1 Planning confidence
 
-### 2.1 Identifier namespaces
+Strategic phases have a confidence class:
+
+- **Executed** — completed and evidenced in the repository;
+- **Active** — current detailed delivery phase;
+- **Near-term** — likely next direction, to be decomposed before execution;
+- **Exploratory** — long-range planning hypothesis subject to substantial revision, combination, splitting, resequencing or removal.
+
+A future phase MUST be revalidated against products, evidence, Accepted architecture and organizational priorities before it becomes Active.
+
+At each phase boundary, or earlier after a material product/platform learning milestone, the strategic horizon SHOULD be reviewed and the next phase MUST be decomposed before substantive execution.
+
+### 2.2 Identifier namespaces
 
 Roadmap identifiers, RFC identifiers and ADR identifiers are independent namespaces.
-
-Examples:
 
 | Identifier | Namespace | Meaning |
 |---|---|---|
 | `0H` | Roadmap block | Reference implementation readiness |
-| `P1.02` | Phase 1 work item | Native subject + first immutable Canonical Record version |
+| `P1.05` | Phase 1 work item | Authorization and Organizational Authority gates |
+| `M1` | Roadmap milestone | First executable architectural spine proven |
 | `RFC-0008` | RFC | Document and Artifact Architecture |
 
 Rules:
@@ -63,7 +76,10 @@ Rules:
 - an ADR number is assigned only to an ADR artifact;
 - a work item keeps its roadmap identifier when wording is clarified without materially changing the work;
 - a materially different work item receives a new identifier;
+- future-phase work item IDs are assigned when that phase is decomposed; the strategic roadmap does not prematurely freeze detailed task numbering;
 - project chats, commits and implementation notes SHOULD use the roadmap identifier together with the task name.
+
+Git history is the canonical history of roadmap revisions.
 
 ## 3. Status and progress legend
 
@@ -93,40 +109,191 @@ Current verified canonical baseline:
 
 The RFC Index remains the canonical source for RFC status and acceptance evidence.
 
-## 5. Phase 0 — Foundation / Architecture Bootstrap
+## 5. Strategic Roadmap — current long-range draft
 
-**Status:** 🟩 Complete  
-**Progress:** `██████████ 100%`
+The strategic horizon estimates the current scale of work without pretending that distant implementation details are already known.
 
-### Phase 0 overview
+| Phase | Strategic scope | Confidence | Status | Milestone |
+|---|---|---|---|---|
+| `Phase 0` | Foundation / Architecture Bootstrap | Executed | 🟩 Complete | `M0` Architecture baseline established |
+| `Phase 1` | Reference Implementation | Active | 🟨 In progress | `M1` First executable architectural spine proven |
+| `Phase 2` | Core Runtime | Near-term | ⬜ Draft | `M2` Reusable governed runtime baseline |
+| `Phase 3` | Shared Platform Capabilities | Exploratory | ⬜ Draft | `M3` Validated shared capability baseline |
+| `Phase 4` | Workspace / Operator Experience | Exploratory | ⬜ Draft | `M4` Coherent governed workspace baseline |
+| `Phase 5` | SDK, Contracts and Extension Experience | Exploratory | ⬜ Draft | `M5` Repeatable product/extension integration |
+| `Phase 6` | Product-driven Platform Validation | Exploratory | ⬜ Draft | `M6` Platform validated through real products and reuse evidence |
+| `Phase 7` | Operational / Enterprise Readiness | Exploratory | ⬜ Draft | `M7` Scoped production-grade operating baseline |
+| `Phase 8` | Ecosystem and External Integration | Exploratory | ⬜ Draft | `M8` Governed external ecosystem baseline |
+| `Phase 9` | Organizational Intelligence Compounding | Exploratory | ⬜ Draft | `M9` Governed learning and organizational-intelligence loop proven at scale |
 
-| Block | Scope | Status | Progress |
-|---|---|---:|---:|
-| 🟪 `0A` | Governance baseline | 🟩 | `██████████ 100%` |
-| 🟦 `0B` | Architecture language baseline | 🟩 | `██████████ 100%` |
-| 🟪 `0C` | RFC-0002 — Kernel metamodel | 🟩 | `██████████ 100%` |
-| 🟢 `0D` | RFC-0003 — Identity, security, privacy, sovereignty | 🟩 | `██████████ 100%` |
-| 🟠 `0E` | RFC-0004 — Product Contract and extension model | 🟩 | `██████████ 100%` |
-| 🔵 `0F` | RFC-0005/0006 — Governed execution, events and provenance | 🟩 | `██████████ 100%` |
-| 🟣 `0G` | RFC-0007 — Memory, knowledge and learning lifecycle | 🟩 | `██████████ 100%` |
-| 🟨 `0H` | Reference implementation readiness — non-RFC milestone | 🟩 | `██████████ 100%` |
+### 5.1 Phase 0 — Foundation / Architecture Bootstrap
 
-Phase 0 established sufficient shared language, architecture, governance and contracts to begin bounded implementation without inventing cross-cutting architecture in code.
+**Intent:** establish shared semantics, governance and contracts sufficient for bounded implementation without speculative platform lock-in.
 
-The readiness baseline is [`docs/implementation/REFERENCE-IMPLEMENTATION-READINESS.md`](../implementation/REFERENCE-IMPLEMENTATION-READINESS.md).
+Completed scope includes Constitution/RFC governance, architecture language, Kernel metamodel, identity/security/privacy/sovereignty, Product Contract and extension semantics, Governed Execution, Event/Provenance, Memory/Knowledge, implementation readiness, plus Accepted RFC-0008 Document and Artifact Architecture.
 
-RFC-0008 — Document and Artifact Architecture — was accepted after Phase 0 readiness as a parallel architecture refinement. It does not retroactively change the Phase 0 completion boundary, but it is binding whenever shared Document/Artifact semantics are implemented.
+**Milestone `M0`:** 🟩 achieved.
 
-## 6. Phase 1 — Reference Implementation
+### 5.2 Phase 1 — Reference Implementation
 
-**Status:** 🟨 In progress  
-**Purpose:** prove the smallest domain-neutral executable architectural spine of Arvectum OS using reversible implementation techniques before adding infrastructure.
+**Intent:** prove that the Accepted architecture can execute as one minimal, domain-neutral, reversible slice before infrastructure is selected prematurely.
+
+Current detailed work includes Organization/Actor attribution, Canonical Records and immutable versions, Workflow versioning, Execution Context exact-version pinning, authorization and Organizational Authority gates, governed mutation, canonical Event, provenance, Observation non-promotion, portable fixtures and architecture fitness tests.
+
+**Milestone `M1`:** first bounded executable architectural spine passes its closure review and portability/fitness criteria.
+
+### 5.3 Phase 2 — Core Runtime
+
+**Provisional intent:** turn the proven Phase 1 semantics into a reusable runtime baseline without allowing the current reference harness to become permanent architecture accidentally.
+
+Likely scope to evaluate and decompose after Phase 1:
+
+- stable runtime boundaries for the five Kernel primitives;
+- reusable Canonical Record/version and Relationship operations;
+- Governed Execution lifecycle and enforcement interfaces;
+- Event admission and provenance reconstruction interfaces;
+- identity, authorization and Organizational Authority enforcement boundaries;
+- persistence/transaction/concurrency requirements only where evidence requires them;
+- runtime portability and migration fixtures;
+- ADRs for technology choices that actually cross an ADR gate.
+
+**Not assumed yet:** microservices, PostgreSQL, FastAPI, broker, policy engine, cloud topology or any specific implementation technology.
+
+**Milestone `M2`:** more than one bounded workflow can reuse the same governed runtime semantics without copying the Phase 1 harness.
+
+### 5.4 Phase 3 — Shared Platform Capabilities
+
+**Provisional intent:** introduce shared capabilities only where validated reuse, universal governance or strategic necessity justifies platform admission.
+
+Candidate areas, subject to evidence:
+
+- governed document/artifact handling under RFC-0008;
+- memory/knowledge retrieval and governed promotion support;
+- search/index projections that remain non-authoritative;
+- workflow support above Kernel semantics;
+- notifications, scheduling or integration support where multiple products genuinely reuse them;
+- audit/reconstruction/operator tooling;
+- shared connector/adaptor patterns for external authorities.
+
+Candidate items remain `Candidate`/`Incubating` until the applicable lifecycle and operational-readiness criteria are satisfied. This phase does not promise that every candidate becomes a Platform Capability.
+
+**Milestone `M3`:** a small set of shared capabilities has demonstrated reuse and clear ownership/contracts without product-domain leakage.
+
+### 5.5 Phase 4 — Workspace / Operator Experience
+
+**Provisional intent:** provide a coherent human-facing operating surface over governed organizational state without turning UI concepts into Kernel semantics.
+
+Possible scope:
+
+- organization/workspace navigation;
+- governed record and relationship views;
+- execution/task/approval surfaces;
+- event/history/provenance inspection;
+- document/artifact interaction where required;
+- knowledge/memory navigation;
+- product entry points and scoped notifications;
+- accessibility, localization and operator safety patterns.
+
+**Milestone `M4`:** an authorized operator can understand and act on a bounded cross-capability workflow through a coherent governed workspace.
+
+### 5.6 Phase 5 — SDK, Contracts and Extension Experience
+
+**Provisional intent:** make product and extension integration repeatable without exposing unstable implementation internals as public contracts.
+
+Possible scope:
+
+- Product Contract tooling and validation;
+- SDK/API surfaces justified by real product needs;
+- extension registration and compatibility checks;
+- templates/scaffolding and local test harnesses;
+- contract/fixture conformance tooling;
+- developer documentation and examples;
+- versioning, migration and deprecation workflows.
+
+A CLI, public SDK or plugin mechanism is not assumed until product evidence demonstrates the useful boundary.
+
+**Milestone `M5`:** a second integration can be built through documented contracts and reusable tooling rather than copying internals.
+
+### 5.7 Phase 6 — Product-driven Platform Validation
+
+**Provisional intent:** validate Arvectum OS through real products, workflows and evidence rather than platform-only demonstrations.
+
+This phase does **not** require building a fixed list of Tender/Marketing/Sales/Legal/Finance modules. Product sequencing follows business value and evidence.
+
+Likely work:
+
+- onboard one or more real product workflows through Provisional/approved Product Contracts;
+- keep product-local experiments product-local;
+- measure reuse, delivery speed, quality, governance burden and operating cost;
+- identify Platform Gravity candidates from repeated product evidence;
+- remove or simplify platform mechanisms that do not create value;
+- promote capabilities only when lifecycle criteria are met.
+
+**Milestone `M6`:** at least two materially useful product/workflow contexts demonstrate validated shared reuse and expose evidence for the next platform decisions.
+
+### 5.8 Phase 7 — Operational / Enterprise Readiness
+
+**Provisional intent:** raise scoped capabilities and environments to the reliability, security and operational maturity actually required by customers and internal operations.
+
+Potential scope, driven by risk and commitments:
+
+- durable tenant isolation and IAM integration;
+- backup/restore and disaster-recovery requirements;
+- observability and incident response;
+- retention/deletion/export operations;
+- secrets/key management;
+- availability/scaling/performance requirements;
+- deployment and upgrade safety;
+- support/runbooks and operational ownership;
+- scoped conformance evidence.
+
+`Production` remains an environment designation, not a capability lifecycle state. No SLA, HA or enterprise feature is promised before its requirement and readiness are established.
+
+**Milestone `M7`:** explicitly scoped capabilities can operate in an intended production environment with proportional controls and documented ownership.
+
+### 5.9 Phase 8 — Ecosystem and External Integration
+
+**Provisional intent:** enable governed interaction with external systems, developers and partners without surrendering organizational control or creating accidental public contracts.
+
+Possible scope:
+
+- stable external APIs where justified;
+- connector/adaptor ecosystem;
+- external developer tooling;
+- extension/catalog distribution and trust controls;
+- compatibility certification/conformance profiles;
+- cross-organization sharing mechanisms under explicit rights and policy;
+- portability/import/export tooling across implementations.
+
+A marketplace is only a possible commercial/product mechanism, not an architectural requirement.
+
+**Milestone `M8`:** external integrations/extensions can participate through explicit governed contracts with isolation, provenance, compatibility and portability controls.
+
+### 5.10 Phase 9 — Organizational Intelligence Compounding
+
+**Provisional intent:** demonstrate the long-term purpose of Arvectum OS: organizational intelligence that compounds safely across governed executions and validated reuse.
+
+Possible scope:
+
+- richer organization-specific Executable Organizational Model views;
+- knowledge graph and context-resolution capabilities built from canonical Records/Relationships rather than a competing source of truth;
+- governed learning loops from outcomes to Observations, Knowledge Candidates and approved improvements;
+- cross-workflow impact analysis and decision support;
+- simulation/planning where model validity, uncertainty and authority boundaries are explicit;
+- AI-assisted optimization that proposes but does not silently acquire organizational authority;
+- measurement of organizational leverage and validated reuse.
+
+The descriptive term `Organizational Twin` remains informative as defined by Accepted RFC-0001; this roadmap does not promise a complete real-time simulation or autonomous organization.
+
+**Milestone `M9`:** repeated governed learning demonstrably improves future organizational work while preserving authority, provenance, security, rights and portability.
+
+## 6. Active Roadmap — Phase 1 Reference Implementation
+
+**Status:** 🟨 In progress
 
 Canonical detailed work breakdown:
 
-- [`docs/roadmap/PHASE-1-REFERENCE-IMPLEMENTATION.md`](PHASE-1-REFERENCE-IMPLEMENTATION.md) — `Active 1.0.3`.
-
-### Phase 1 overview
+- [`docs/roadmap/PHASE-1-REFERENCE-IMPLEMENTATION.md`](PHASE-1-REFERENCE-IMPLEMENTATION.md) — current Active Phase 1 plan.
 
 | ID | Work item | Status | Progress |
 |---|---|---:|---:|
@@ -145,23 +312,15 @@ Canonical detailed work breakdown:
 
 ### Current implementation evidence
 
-`P1.01` is implemented in [`reference/python`](../../reference/python/README.md) with executable fitness tests proving explicit Organization scope and attributable Actor/Principal semantics.
+`P1.01` through `P1.04` are implemented in [`reference/python`](../../reference/python/README.md). The repository reports `31` passing unit tests across this bounded harness, including exact-version pinning and negative-path coverage.
 
-`P1.02` is implemented in the same bounded reference harness with a domain-neutral `Native` Canonical Record carrying stable Subject Identity, distinct first Version Identity, explicit Organization and authority scope, accountable owner, attributable creation context, bounded provenance and proportional in-memory integrity metadata. External authority modes remain explicitly unsupported in this work item.
-
-`P1.03` is implemented with one domain-neutral governed Workflow definition represented by an immutable `Native` Canonical Record version. It preserves stable Workflow Subject Identity, distinct Workflow Version Identity, explicit Organization scope, accountable owner, lifecycle/provenance and one scoped `CanonicalMutation` operation declaration targeting the exact reference subject. The declaration intentionally grants no authorization, Organizational Authority or consequential approval.
-
-`P1.04` is implemented with one initial domain-neutral `Native` Execution Context represented as a Canonical Record specialization. It preserves stable Execution Subject Identity, a distinct immutable initial Execution Version Identity, explicit Organization/Actor attribution, `AwaitingGate` lifecycle state, the exact supplied Workflow Subject and Version Identity, the exact materially relied-upon P1.02 Subject and Version Identity, and the matching scoped operation declaration. Tests prove that later Workflow or input versions under the same Subject Identity do not alter the execution's historical pins and that malformed/scope-mismatched reliance fails closed.
-
-Executable validation across `P1.01`–`P1.04`: `31` unit tests passed, including `10` P1.04 Execution Context/version-pinning tests.
-
-`P1.11` is cross-cutting and now includes negative-path/fitness evidence from `P1.01` through `P1.04`. The complete Phase 1 fitness matrix remains unfinished.
+`P1.11` is cross-cutting and accumulates evidence throughout the phase.
 
 ### Current canonical action
 
 > **`P1.05 — Authorization and Organizational Authority gates`: prove separately that authentication/actor attribution does not imply authorization, authorization does not imply Organizational Authority, and unresolved required gates fail closed.**
 
-P1.05 must preserve the exact Workflow/material input version attribution established by P1.04. It does not yet perform the P1.06 canonical mutation.
+P1.05 must preserve the exact Workflow/material input version attribution established by P1.04 and does not yet perform the P1.06 canonical mutation.
 
 ## 7. Phase 1 dependency-aware sequence
 
@@ -193,24 +352,25 @@ P1.12 ⬜ Closure review
 
 Bounded parallel work is permitted when dependencies remain explicit and the work does not prejudge unresolved architecture or technology choices.
 
-## 8. Phase 1 implementation constraints
+## 8. Phase transition rule
 
-Implementation MUST remain within the Accepted architecture and readiness boundary:
+Before Phase N+1 becomes Active:
 
-- prefer the simplest reversible solution;
-- keep product-domain semantics out of shared reference modules;
-- begin with in-memory persistence and in-process interfaces where sufficient;
-- preserve explicit Organization, authorization, Organizational Authority and data-governance boundaries;
-- require Governed Execution for consequential canonical mutation;
-- preserve semantic immutability and exact version reliance;
-- keep canonical Events distinct from telemetry;
-- do not promote Observation to validated Knowledge automatically;
-- use Accepted RFC-0008 when Document/Artifact semantics enter scope;
-- do not represent working code as an `Active` Platform Capability or production-readiness evidence by itself.
+1. synchronize with the canonical repository;
+2. review evidence and unresolved debt from Phase N;
+3. revalidate the strategic intent of Phase N+1 against the Constitution and Accepted RFCs;
+4. incorporate evidence from real products/workflows where available;
+5. split, merge, reorder or remove speculative scope where evidence warrants it;
+6. create a detailed `PHASE-N-...` work breakdown with stable `PN.xx` identifiers;
+7. identify any RFC/ADR/policy/Product Contract work actually required before implementation;
+8. define scoped exit criteria and fitness evidence;
+9. update this roadmap and increment its version.
+
+The strategic phase title and milestone MAY change before activation. Distant roadmap content is deliberately easier to change than Accepted architecture.
 
 ## 9. ADR gate
 
-No new ADR is required merely because Phase 1 has begun.
+No ADR is required merely because implementation work has begun.
 
 Create an ADR before relying on an implementation choice when the choice becomes materially constraining, including when it:
 
@@ -221,23 +381,7 @@ Create an ADR before relying on an implementation choice when the choice becomes
 5. creates a durable dependency on a database, broker, orchestration runtime, identity provider, schema registry, retrieval engine or vendor-specific format;
 6. has materially different portability, security, reliability or operational consequences compared with plausible alternatives.
 
-P1.04 remains below this gate because its representation is bounded, reversible, in-memory, domain-neutral and non-public. No durable technology or enforcement choice is made by completing the work item.
-
-## 10. Phase 1 exit criterion
-
-Phase 1 first bounded executable slice is complete only when:
-
-1. `P1.01` through `P1.10` are complete within the declared slice scope;
-2. the applicable `P1.11` fitness matrix passes;
-3. `P1.12` closure review confirms no product-domain leakage into shared modules;
-4. no technology choice crossed an ADR gate without an ADR;
-5. the implementation remains reversible and migration-friendly;
-6. implementation-neutral fixture export preserves required organizational semantics;
-7. Roadmap status is synchronized with repository evidence.
-
-Completion of Phase 1 does not automatically make any Platform Capability `Active`, establish operational readiness or create SLA/support/conformance claims beyond the explicitly tested scope.
-
-## 11. Roadmap maintenance rule
+## 10. Roadmap maintenance rule
 
 Every roadmap update **MUST begin with repository synchronization**, not chat-memory reconstruction.
 
