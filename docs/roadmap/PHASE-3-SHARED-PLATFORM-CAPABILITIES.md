@@ -1,7 +1,7 @@
 # Arvectum OS Phase 3 — Shared Platform Capabilities
 
 Status: `Active`
-Version: `1.1.4`
+Version: `1.1.5`
 Created: `2026-08-08`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -17,7 +17,7 @@ Phase 3 proves that a small justified set of domain-neutral shared responsibilit
 
 The RFC-0001 capability lifecycle is `Candidate → Incubating → Active → Deprecated → Retired`.
 
-P3.01 admitted four Candidates. P3.02 established bounded incubation envelopes and Provisional domain-neutral capability contracts. R5 passed the pre-implementation boundary review. P3.03 through P3.06 now complete the four initial bounded executable capability slices while all retained capabilities remain `Incubating`.
+P3.01 admitted four Candidates. P3.02 established bounded incubation envelopes and Provisional domain-neutral capability contracts. R5 passed the pre-implementation boundary review. P3.03 through P3.06 completed the four initial bounded executable capability slices. P3.07 now completes bounded cross-capability Organization/security/rights enforcement composition and R6 passes, while all retained capabilities remain `Incubating`.
 
 ## 2. Current bounded capability set
 
@@ -43,62 +43,50 @@ Generic notification/scheduler/connector marketplace, public SDK/API, product-do
 | `P3.04` | Memory & Knowledge Governance candidate slice | 🟩 Complete | `██████████ 100%` |
 | `P3.05` | Non-authoritative Search / Index Projection candidate slice | 🟩 Complete | `██████████ 100%` |
 | `P3.06` | Audit / Reconstruction Support candidate slice | 🟩 Complete | `██████████ 100%` |
-| `P3.07` | Cross-capability security, rights and Organization-scope enforcement | ⬜ | `░░░░░░░░░░ 0%` |
+| `P3.07` | Cross-capability security, rights and Organization-scope enforcement | 🟩 Complete / R6 PASS | `██████████ 100%` |
 | `P3.08` | Product Contract consumption boundary + bounded consumer proof | ⬜ | `░░░░░░░░░░ 0%` |
 | `P3.09` | Shared-capability reuse and composition proof | ⬜ | `░░░░░░░░░░ 0%` |
 | `P3.10` | Phase 3 architecture fitness matrix | ⬜ cross-cutting | `░░░░░░░░░░ 0%` |
 | `P3.11` | Capability admission / ADR / refactoring hardening review | ⬜ | `░░░░░░░░░░ 0%` |
 | `P3.12` | Phase 3 / M3 closure review | ⬜ | `░░░░░░░░░░ 0%` |
 
-## 5. Completed boundary work
+## 5. Completed boundary and capability work
 
 P3.01 admitted CAP-001 through CAP-004 as bounded domain-neutral responsibilities. P3.02 moved them to `Incubating` for Phase 3 validation and established Provisional capability contracts. R5 confirmed no accidental service-catalog growth, lifecycle inflation, product-domain leakage, stable-interface leakage or already-crossed durable ADR commitment.
 
-## 6. Completed bounded slices
+P3.03 through P3.06 each produced an internal, in-memory, domain-neutral executable slice and a `PASS` review:
 
-### P3.03 — CAP-001
+- P3.03: `reference/python/arvectum_os_ref/document_artifact_governance.py`;
+- P3.04: `reference/python/arvectum_os_ref/memory_knowledge_governance.py`;
+- P3.05: `reference/python/arvectum_os_ref/search_index_projection.py`;
+- P3.06: `reference/python/arvectum_os_ref/audit_reconstruction_support.py`.
 
-Canonical review: [`P3-03-document-artifact-governance-candidate-slice-review.md`](../reviews/P3-03-document-artifact-governance-candidate-slice-review.md) — `PASS`.
+The canonical reviews remain under `docs/reviews/P3-03...` through `P3-06...` and constitute continuing P3.10 evidence.
 
-Implementation/evidence: `reference/python/arvectum_os_ref/document_artifact_governance.py`; `reference/python/tests/test_p3_03_document_artifact_governance.py`.
+## 6. P3.07 cross-capability enforcement
 
-### P3.04 — CAP-002
+Canonical review: [`P3-07-cross-capability-security-rights-organization-scope-enforcement-review.md`](../reviews/P3-07-cross-capability-security-rights-organization-scope-enforcement-review.md) — `PASS`, R6 `PASS`.
 
-Canonical review: [`P3-04-memory-knowledge-governance-candidate-slice-review.md`](../reviews/P3-04-memory-knowledge-governance-candidate-slice-review.md) — `PASS`.
+Implementation/evidence:
 
-Implementation/evidence: `reference/python/arvectum_os_ref/memory_knowledge_governance.py`; `reference/python/tests/test_p3_04_memory_knowledge_governance.py`.
+- `reference/python/arvectum_os_ref/cross_capability_enforcement.py`;
+- `reference/python/tests/test_p3_07_cross_capability_enforcement.py`.
 
-The bounded CAP-002 slice proves Observation/Memory/Candidate/Knowledge separation, epistemic-status preservation, distinct validation and approval gates, Organization/purpose/rights/freshness retrieval filtering, derived retrieval non-authority and exact Knowledge Version reliance without Head/rank inference. It selects no durable knowledge/vector/search technology or stable interface.
+The bounded slice composes one explicit attributable `AccessRequest` across CAP-001..CAP-004. Organization, purpose, required permitted-use right and allowed classification context are evaluated at protected capability boundaries. CAP-003 discovery does not grant source access; CAP-004 restricted evidence becomes explicit redaction without source-pin leakage; access context creates no approval, delegation or Organizational Authority.
 
-### P3.05 — CAP-003
+The slice deliberately selects no durable IAM/PDP/PEP technology, policy language, entitlement store, stable API/serialization or deployable security service topology. Those choices continue to re-open the ADR gate before material reliance.
 
-Canonical review: [`P3-05-non-authoritative-search-index-projection-candidate-slice-review.md`](../reviews/P3-05-non-authoritative-search-index-projection-candidate-slice-review.md) — `PASS`.
+## 7. Next consumption/reuse work
 
-Implementation/evidence: `reference/python/arvectum_os_ref/search_index_projection.py`; `reference/python/tests/test_p3_05_search_index_projection.py`.
-
-The bounded CAP-003 slice proves disposable derived discovery, exact governed source/version attribution, explicit `Current`/`Stale`/`Missing`/`Ambiguous` reconciliation state, fail-closed ordinary discovery for unresolved projection state, current Organization/purpose/right/classification filtering, separate source-access resolution and complete rebuildability. It deliberately defines no shared relevance/ranking contract and selects no durable search/vector/index technology or stable interface.
-
-### P3.06 — CAP-004
-
-Canonical review: [`P3-06-audit-reconstruction-support-candidate-slice-review.md`](../reviews/P3-06-audit-reconstruction-support-candidate-slice-review.md) — `PASS`.
-
-Implementation/evidence: `reference/python/arvectum_os_ref/audit_reconstruction_support.py`; `reference/python/tests/test_p3_06_audit_reconstruction_support.py`.
-
-The bounded CAP-004 slice proves derived read-oriented reconstruction over exact governed Workflow/input/Product Contract/gate/execution/result/Event references, explicit `Available`/`Redacted`/`Deleted`/`Unavailable`/`Missing` evidence state, Organization fail-closed behavior, non-leaking restricted evidence and portable reference/status export without replay, mutation, approval or authority creation. It selects no durable observability/SIEM/evidence technology or stable interface.
-
-P3.10 fitness evidence continues to accumulate from all four completed bounded slices.
-
-## 7. Next composition/enforcement work
-
-P3.07 now proves cross-capability security/rights/Organization enforcement across the retained Incubating capabilities. P3.08 then proves consumption through an RFC-0004 Provisional Product Contract and P3.09 proves reuse across materially distinct bounded consumers/workflows.
+P3.08 now proves consumption through an RFC-0004 Provisional Product Contract. P3.09 then proves reuse across materially distinct bounded consumers/workflows. P3.10 continues to consolidate fitness evidence.
 
 ## 8. Later Phase 3 work
 
-P3.10 consolidates fitness evidence. P3.11 independently dispositions each Incubating capability and re-checks ADR/refactoring boundaries. P3.12 decides M3 closure.
+P3.11 independently dispositions each Incubating capability and re-checks ADR/refactoring boundaries. P3.12 decides M3 closure.
 
 ## 9. Engineering review gates
 
-R5 is PASS. R6 follows P3.07, R7 follows P3.09, and R8 follows P3.10. Each gate must preserve capability boundaries, dependency direction, security/rights semantics and ADR triggers.
+R5 and R6 are `PASS`. R7 follows P3.09, and R8 follows P3.10. Each gate must preserve capability boundaries, dependency direction, security/rights semantics and ADR triggers.
 
 ## 10. ADR and Product Contract gates
 
@@ -112,6 +100,6 @@ M3 may be declared achieved only when retained capabilities have explicit lifecy
 
 ## 12. Current canonical action
 
-> **P3.07 — cross-capability security, rights and Organization-scope enforcement; P3.10 evidence continuous.**
+> **P3.08 — Product Contract consumption boundary + bounded consumer proof; P3.10 evidence continuous.**
 
-P3.03 through P3.06 are complete. Continue with bounded composition enforcement without promoting any capability, stabilizing public/cross-product interfaces, importing product-domain semantics or selecting durable cross-cutting mechanisms without re-opening the ADR gate.
+P3.03 through P3.07 are complete. Continue with bounded RFC-0004 Product Contract consumption without promoting any capability, stabilizing public/cross-product interfaces, importing product-domain semantics or selecting durable cross-cutting mechanisms without re-opening the ADR gate.
