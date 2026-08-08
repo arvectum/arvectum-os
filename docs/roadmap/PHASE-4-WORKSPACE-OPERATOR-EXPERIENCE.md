@@ -1,7 +1,7 @@
 # Arvectum OS Phase 4 — Workspace / Operator Experience
 
 Status: `Active`
-Version: `1.4.0`
+Version: `1.5.0`
 Created: `2026-08-08`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -13,21 +13,22 @@ Predecessor: `Phase 3 — Shared Platform Capabilities`, `M3` achieved
 
 ## Version note
 
-Version `1.4.0` records completion of **P4.03 — Canonical Record / Relationship inspection experience** with `PASS` and advances the current canonical action to **P4.04 — Version, Event, provenance and reconstruction experience**.
+Version `1.5.0` records completion of **P4.04 — Version, Event, provenance and reconstruction experience** with `PASS` and advances the current canonical action to **P4.05 — Governed Execution, gate and approval/action experience**.
 
-P4.03 adds a bounded internal read-only inspection boundary over existing Canonical Record and Typed Relationship semantic owners. Stable Subject Identity, exact immutable Version Identity, Canonical Head and Effective Version remain distinct; exact historical versions remain inspectable; missing or ambiguous Effective Version is explicit; relationship direction and SubjectIdentity/VersionIdentity endpoint roles remain visible; authority/source, owner, Organization, lifecycle and bounded structural-validation meaning are textual and non-authoritative.
+P4.04 adds a bounded internal read-only inspection boundary over existing RFC-0006 Event/provenance semantics, CAP-004 Audit/Reconstruction Support and P3.07 evidence-level access enforcement. Canonical Event history remains distinct from raw telemetry; exact Event and Execution versions, Event type/schema, occurrence versus recording/admission time, producer/initiating actor, authority/source, related versions, correlation/causation and provenance references remain explicit where authorized governed evidence carries them.
 
-The R9 source-resolution handoff is now executable. Current authorization is required before governed source existence/multiplicity or exact-Version disclosure; source membership is then independently checked from source-owned `OrganizationScope` rather than presentation wrappers, `Identity.scope` text or identifier syntax. Relationship edges require separate current relationship authorization, and omitted edges expose no protected relationship metadata/count.
+Reconstruction remains derived, read-only and non-authoritative. Replay is described only as side-effect-free rebuilding of a derived projection and is not executed by the P4.04 surface. Missing, unavailable, redacted or lawfully deleted evidence is represented as a limitation rather than inferred or fabricated. Current source authorization and P3.07 purpose/right/classification enforcement occur before exact protected Execution-Version existence disclosure.
 
-P4.03 does not create an IAM/policy engine, generic business-approval state, durable read model, graph database, public API/route/wire contract, frontend framework, Product Contract, new Platform Capability or lifecycle promotion.
+P4.04 does not create an Event store, telemetry backend, replay executor, IAM/PDP/PEP, durable read model, public API/route/wire contract, frontend framework, Product Contract, new Platform Capability or lifecycle promotion.
 
 Canonical completion evidence:
 
 - [`P4.01 operator journeys / workspace boundary / IA review`](../reviews/P4-01-operator-journeys-workspace-boundary-information-architecture.md) — `PASS`;
 - [`P4.02 Organization context / identity / scoped navigation shell review`](../reviews/P4-02-organization-context-identity-scoped-navigation-shell.md) — `PASS`;
 - [`R9 Workspace Boundary Review`](../reviews/R9-workspace-boundary-review.md) — `PASS`;
-- [`P4.03 Canonical Record / Relationship inspection review`](../reviews/P4-03-canonical-record-relationship-inspection-experience.md) — `PASS`, four functional cross-review iterations;
-- GitHub Actions `Reference Python CI #123` — `PASS`, Python `3.12.13`, `436` tests, `OK` on the P4.03 implementation branch before roadmap synchronization.
+- [`P4.03 Canonical Record / Relationship inspection review`](../reviews/P4-03-canonical-record-relationship-inspection-experience.md) — `PASS`;
+- [`P4.04 Version / Event / provenance / reconstruction review`](../reviews/P4-04-version-event-provenance-reconstruction-experience.md) — `PASS`, four functional cross-review iterations;
+- GitHub Actions `Reference Python CI #132` — `PASS`, Python `3.12.13`, `456` tests, `OK` on the P4.04 executable implementation branch before roadmap synchronization.
 
 ## 1. Purpose
 
@@ -58,7 +59,7 @@ The workspace remains a platform interaction capability under development. Activ
 | `P4.01` | Operator journeys, workspace boundary and information architecture | 🟩 Complete | `██████████ 100%` |
 | `P4.02` | Organization context, identity and scoped navigation shell | 🟩 Complete | `██████████ 100%` |
 | `P4.03` | Canonical Record / Relationship inspection experience | 🟩 Complete | `██████████ 100%` |
-| `P4.04` | Version, Event, provenance and reconstruction experience | ⬜ | `░░░░░░░░░░ 0%` |
+| `P4.04` | Version, Event, provenance and reconstruction experience | 🟩 Complete | `██████████ 100%` |
 | `P4.05` | Governed Execution, gate and approval/action experience | ⬜ | `░░░░░░░░░░ 0%` |
 | `P4.06` | Document / Artifact workspace experience | ⬜ | `░░░░░░░░░░ 0%` |
 | `P4.07` | Memory / Knowledge / Search discovery experience | ⬜ | `░░░░░░░░░░ 0%` |
@@ -67,6 +68,8 @@ The workspace remains a platform interaction capability under development. Activ
 | `P4.10` | Workspace architecture fitness + accessibility/usability baseline | ⬜ cross-cutting | `░░░░░░░░░░ 0%` |
 | `P4.11` | Workspace hardening / ADR / refactoring review | ⬜ | `░░░░░░░░░░ 0%` |
 | `P4.12` | Phase 4 / M4 closure review | ⬜ | `░░░░░░░░░░ 0%` |
+
+Phase 4 roadmap work-item completion is `4 / 12 = 33.3%`. Engineering reviews such as R9 are gates and do not inflate this percentage as separate equal-weight work items.
 
 ## 4. Detailed task intent
 
@@ -134,6 +137,8 @@ Required behavior:
 - reconstruction/replay explicitly labeled derived/non-authoritative;
 - uncertainty, missing evidence or lawful deletion gaps shown honestly;
 - no UI reconstruction becomes a source of truth.
+
+Completion evidence: [`P4.04 Version / Event / provenance / reconstruction review`](../reviews/P4-04-version-event-provenance-reconstruction-experience.md) — `PASS`, four functional cross-review iterations and green full reference CI (`Reference Python CI #132`, `456` tests).
 
 ### P4.05 — Governed Execution, gate and approval/action experience
 
@@ -281,10 +286,10 @@ R9 Workspace Boundary Review ✅
         ↓
  ┌──────────┼───────────────┐
  ↓          ↓               ↓
-P4.03 ✅   P4.04           P4.05
+P4.03 ✅   P4.04 ✅        P4.05
 Records     Provenance      Execution
-             ↑
-          current
+                              ↑
+                           current
  └──────────┼───────────────┘
             ↓
  ┌──────────┴─────────┐
@@ -368,16 +373,18 @@ A reversible internal reference implementation may proceed without an ADR when t
 
 ## 10. Current canonical action
 
-> **`P4.04 — Version, Event, provenance and reconstruction experience`.**
+> **`P4.05 — Governed Execution, gate and approval/action experience`.**
 
-Implement the smallest bounded internal history/provenance inspection experience over existing governed Event and reconstruction semantics without turning a reconstructed view into canonical state or selecting a public transport/storage/frontend boundary.
+Implement the smallest bounded operator experience for consequential work through existing Governed Execution semantics without turning presentation state into Authorization or Organizational Authority and without bypassing existing runtime mutation paths.
 
 Immediate constraints:
 
-- keep Event history distinct from raw telemetry and preserve exact Event/version identity where material;
-- expose causation/correlation and execution linkage only where the governed source actually carries them;
-- preserve exact relied-upon Workflow/input/gate/execution/result/Event version references through provenance inspection;
-- label reconstruction/replay explicitly derived and non-authoritative;
-- represent missing, unavailable, redacted or lawfully deleted evidence honestly instead of fabricating continuity;
-- carry forward the P4.03 source-resolution rule: protected source/evidence dereference must independently enforce current Organization/access constraints;
-- do not add mutation/action semantics from P4.05 or stabilize route/API/wire/frontend/storage choices.
+- keep action intent distinct from committed canonical mutation;
+- show exact Workflow/material input/Product Contract versions where material;
+- keep Authorization and Organizational Authority visibly and semantically distinct;
+- show approval/gate requirements without inferring authority from UI role/title;
+- unresolved required gates fail closed;
+- make retry/idempotency/conflict/uncertainty states understandable where the governed runtime exposes them;
+- preserve P4.02–P4.04 Organization, identity, source-resolution, exact-version and non-authoritative presentation boundaries;
+- consequential mutation occurs only through existing Governed Execution/runtime paths;
+- do not stabilize a public route/API/wire/frontend/storage choice unless an ADR/Product Contract gate is actually crossed.

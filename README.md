@@ -55,19 +55,21 @@ Canonical Phase 3 closure evidence:
 - [R8 milestone hardening review](docs/reviews/R8-phase-3-milestone-hardening.md)
 - [P3.11 capability admission / ADR / refactoring hardening review](docs/reviews/P3-11-capability-admission-adr-refactoring-hardening-review.md)
 
-`Phase 4 — Workspace / Operator Experience` is **Active**. `P4.01 — Operator journeys, workspace boundary and information architecture`, `P4.02 — Organization context, identity and scoped navigation shell`, the mandatory `R9 — Workspace Boundary Review` gate and `P4.03 — Canonical Record / Relationship inspection experience` are complete with `PASS`; the current canonical action is `P4.04 — Version, Event, provenance and reconstruction experience`.
+`Phase 4 — Workspace / Operator Experience` is **Active**. `P4.01 — Operator journeys, workspace boundary and information architecture`, `P4.02 — Organization context, identity and scoped navigation shell`, the mandatory `R9 — Workspace Boundary Review` gate, `P4.03 — Canonical Record / Relationship inspection experience` and `P4.04 — Version, Event, provenance and reconstruction experience` are complete with `PASS`. The current canonical action is `P4.05 — Governed Execution, gate and approval/action experience`.
 
 P4.02 provides the first bounded visible workspace shell: explicit Organization and attributable Actor context, `Discover / Records / Executions / Evidence / Documents / Knowledge` navigation, distinct Subject and exact-Version references, fail-closed unresolved/mismatched Organization state and non-authoritative presentation semantics. A zero-dependency static HTML demo makes the shell inspectable without selecting a frontend framework, route schema, public API/BFF, IAM/session provider or durable read-model topology.
 
 R9 revalidated that boundary before richer record/provenance/execution surfaces expanded. It found no material blocker, no accidental stable public/frontend/IAM boundary and no reason for a new RFC, ADR, Product Contract or Platform Capability. Its source-resolution handoff requires actual governed source dereference to enforce current Organization/access semantics rather than trust presentation state or identifier syntax.
 
-P4.03 now makes Canonical Record and Typed Relationship inspection executable through an internal read-only boundary. It keeps stable Subject, exact immutable Version, Canonical Head and Effective Version distinct; preserves exact historical inspection; exposes typed Relationship direction and SubjectIdentity/VersionIdentity endpoint roles; shows authority/source, owner, Organization and lifecycle meaning; and surfaces missing/ambiguous Effective Version without silent fallback.
+P4.03 makes Canonical Record and Typed Relationship inspection executable through an internal read-only boundary. It keeps stable Subject, exact immutable Version, Canonical Head and Effective Version distinct; preserves exact historical inspection; exposes typed Relationship direction and SubjectIdentity/VersionIdentity endpoint roles; shows authority/source, owner, Organization and lifecycle meaning; and surfaces missing/ambiguous Effective Version without silent fallback.
 
 The P4.03 dereference path checks one current Actor/Organization/Subject authorization decision before source existence/multiplicity or exact-Version disclosure, then independently checks source-owned `OrganizationScope` instead of treating `Identity.scope` or presentation wrappers as proof of canonical membership. Relationship edges require separate current authorization and omitted edges expose no protected relationship metadata/count. The presentation remains non-authoritative, escaped and action-free.
 
-P4.03 deliberately does not invent a generic business-approval state where the current generic Canonical Record model has none; the bounded inspector labels structural lineage validation only and explicitly separates it from business approval and Organizational Authority. It also creates no IAM/policy engine, durable read model, graph database, public API/route/wire contract, Product Contract, new Platform Capability or lifecycle promotion.
+P4.04 adds the bounded history/provenance inspection experience over existing RFC-0006 Event/provenance semantics, CAP-004 Audit/Reconstruction Support and P3.07 evidence access enforcement. Canonical Event history remains separate from raw logs/metrics/traces; Event and exact Event Version identity, type/schema, occurrence and recording/admission time, producer/initiating actor, authority/source, exact Execution linkage, related exact Version references, correlation/causation and provenance remain visible only where the governed authorized evidence carries them.
 
-`Reference Python CI #123` passed all `436` tests on the P4.03 implementation branch before roadmap synchronization.
+P4.04 reconstruction is explicitly derived, read-only and non-authoritative. Replay is described only as side-effect-free rebuilding of a derived projection and is not executed by the inspection surface. `Redacted / Deleted / Missing / Unavailable` evidence reduces the reconstruction claim rather than being inferred or fabricated. Source authorization plus P3.07 purpose/right/classification enforcement occur before protected exact Execution-Version existence is disclosed, preventing the inspection path from becoming a metadata oracle.
+
+P4.04 creates no Event store, telemetry backend, replay executor, IAM/PDP/PEP, durable read model, public API/route/wire contract, Product Contract, new Platform Capability or lifecycle promotion. `Reference Python CI #132` passed all `456` tests on Python `3.12.13` on the executable P4.04 implementation branch before roadmap synchronization.
 
 Canonical Phase 4 planning/current evidence:
 
@@ -77,8 +79,9 @@ Canonical Phase 4 planning/current evidence:
 - [P4.02 Organization context / identity / scoped navigation shell review](docs/reviews/P4-02-organization-context-identity-scoped-navigation-shell.md)
 - [R9 Workspace Boundary Review](docs/reviews/R9-workspace-boundary-review.md)
 - [P4.03 Canonical Record / Relationship inspection review](docs/reviews/P4-03-canonical-record-relationship-inspection-experience.md)
+- [P4.04 Version / Event / provenance / reconstruction review](docs/reviews/P4-04-version-event-provenance-reconstruction-experience.md)
 
-P4.01 through P4.03 and R9 establish, harden and begin exercising a domain-neutral workspace boundary only. They do not create a new Platform Capability, change CAP-001 through CAP-004 lifecycle, create a Stable Product Contract/public interface or establish production readiness.
+P4.01 through P4.04 and R9 establish, harden and exercise a domain-neutral workspace boundary only. They do not create a new Platform Capability, change CAP-001 through CAP-004 lifecycle, create a Stable Product Contract/public interface or establish production readiness.
 
 RFC-0001 through RFC-0008 are `Accepted 1.0.0` and remain binding within their declared scopes.
 
