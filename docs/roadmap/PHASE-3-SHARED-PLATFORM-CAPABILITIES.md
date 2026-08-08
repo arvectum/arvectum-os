@@ -1,7 +1,7 @@
 # Arvectum OS Phase 3 — Shared Platform Capabilities
 
 Status: `Active`
-Version: `1.1.7`
+Version: `1.1.8`
 Created: `2026-08-08`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -17,7 +17,7 @@ Phase 3 proves that a small justified set of domain-neutral shared responsibilit
 
 The RFC-0001 capability lifecycle is `Candidate → Incubating → Active → Deprecated → Retired`.
 
-P3.01 admitted four Candidates. P3.02 established bounded incubation envelopes and Provisional domain-neutral capability contracts. R5 passed the pre-implementation boundary review. P3.03 through P3.06 completed the four initial bounded executable capability slices. P3.07 completed bounded cross-capability Organization/security/rights enforcement composition and R6 passed. P3.08 completed the RFC-0004 Product Contract consumption boundary and one bounded consumer proof. P3.09 now completes materially distinct shared-capability reuse/composition evidence and R7 passes, while all retained capabilities remain `Incubating` and both bounded Product Contracts remain `Provisional`.
+P3.01 admitted four Candidates. P3.02 established bounded incubation envelopes and Provisional domain-neutral capability contracts. R5 passed the pre-implementation boundary review. P3.03 through P3.06 completed the four initial bounded executable capability slices. P3.07 completed bounded cross-capability Organization/security/rights enforcement composition and R6 passed. P3.08 completed the RFC-0004 Product Contract consumption boundary and one bounded consumer proof. P3.09 completed materially distinct shared-capability reuse/composition evidence and R7 passed. P3.10 now completes the executable Phase 3 architecture fitness matrix across the accumulated P3.01–P3.09 evidence. All retained capabilities remain `Incubating`, both bounded Product Contracts remain `Provisional`, and `R8` is now the required current milestone-hardening gate.
 
 ## 2. Current bounded capability set
 
@@ -46,7 +46,8 @@ Generic notification/scheduler/connector marketplace, public SDK/API, product-do
 | `P3.07` | Cross-capability security, rights and Organization-scope enforcement | 🟩 Complete / R6 PASS | `██████████ 100%` |
 | `P3.08` | Product Contract consumption boundary + bounded consumer proof | 🟩 Complete | `██████████ 100%` |
 | `P3.09` | Shared-capability reuse and composition proof | 🟩 Complete / R7 PASS | `██████████ 100%` |
-| `P3.10` | Phase 3 architecture fitness matrix | 🟨 Current | `░░░░░░░░░░ 0%` |
+| `P3.10` | Phase 3 architecture fitness matrix | 🟩 Complete / PASS | `██████████ 100%` |
+| `R8` | Phase 3 milestone hardening / code-health gate | 🟨 Current | `░░░░░░░░░░ 0%` |
 | `P3.11` | Capability admission / ADR / refactoring hardening review | ⬜ | `░░░░░░░░░░ 0%` |
 | `P3.12` | Phase 3 / M3 closure review | ⬜ | `░░░░░░░░░░ 0%` |
 
@@ -112,17 +113,28 @@ The reuse harness rejects Product Contract borrowing, missing/duplicated shared 
 
 CAP-001 through CAP-004 remain `Incubating`; both bounded Product Contracts remain `Provisional`.
 
-## 9. Current fitness work
+## 9. P3.10 architecture fitness matrix
 
-P3.10 now consolidates the accumulated P3.01–P3.09 evidence into the Phase 3 architecture fitness matrix. It must cover capability boundaries, lifecycle/ownership, authority/provenance, security/rights/Organization scope, Product Contract isolation, non-authoritative projections, materially distinct reuse, portability, ADR triggers and commercial/conformance restraint without using matrix completion as an implicit capability promotion.
+Canonical review: [`P3-10-phase-3-architecture-fitness-matrix.md`](../reviews/P3-10-phase-3-architecture-fitness-matrix.md) — `PASS`.
+
+Executable evidence:
+
+- `reference/python/tests/test_p3_10_phase_3_architecture_fitness_matrix.py`;
+- `Reference Python CI #96` — Python `3.12.13`, full validation suite `375` tests, result `OK`.
+
+P3.10 consolidates P3.03 through P3.09 semantic-owner evidence into an executable 16-row architecture fitness index. The index exactly covers the ten roadmap-required dimensions: capability boundaries; lifecycle/ownership; authority/provenance; security/rights/Organization scope; Product Contract isolation; non-authoritative projections; materially distinct reuse; portability; ADR triggers; and commercial/conformance restraint.
+
+The matrix validates exact evidence anchors rather than duplicating detailed capability semantics. Cross-cutting guards additionally keep shared capability modules free of known product-domain markers and concrete durable-infrastructure imports, preserve `Incubating` / `Provisional` lifecycle state and accountable ownership, keep the P3.02 ADR triggers explicit, and reject implicit capability/conformance/commercial overclaim.
+
+P3.10 changes no capability runtime contract and does not promote CAP-001 through CAP-004 to `Active`, create a Stable Product Contract, select durable infrastructure, establish production readiness or make a full-platform conformance/SLA/support claim.
 
 ## 10. Later Phase 3 work
 
-P3.11 independently dispositions each Incubating capability and re-checks ADR/refactoring boundaries. P3.12 decides M3 closure.
+`R8` is now the current required Phase 3 milestone hardening/code-health gate. P3.11 independently dispositions each Incubating capability and re-checks ADR/refactoring boundaries only after R8. P3.12 decides M3 closure.
 
 ## 11. Engineering review gates
 
-R5, R6 and R7 are `PASS`. R8 follows P3.10. Each gate must preserve capability boundaries, dependency direction, security/rights semantics and ADR triggers.
+R5, R6 and R7 are `PASS`. R8 is current after P3.10 and is required before P3.11. Each gate must preserve capability boundaries, dependency direction, security/rights semantics and ADR triggers.
 
 ## 12. ADR and Product Contract gates
 
@@ -136,6 +148,6 @@ M3 may be declared achieved only when retained capabilities have explicit lifecy
 
 ## 14. Current canonical action
 
-> **P3.10 — Phase 3 architecture fitness matrix.**
+> **R8 — Phase 3 milestone hardening / code-health gate.**
 
-P3.03 through P3.09 are complete and R5–R7 pass. Consolidate the accumulated evidence without promoting any capability, stabilizing public/cross-product interfaces, importing product-domain semantics or selecting durable cross-cutting mechanisms without re-opening the ADR gate.
+P3.10 is complete and the accumulated Phase 3 fitness evidence passes. Run the proportionate milestone hardening/refactoring review before P3.11, preserving capability boundaries, semantic ownership, Product Contract isolation, security/rights behavior, portability, ADR triggers and the existing `Incubating` / `Provisional` lifecycle state unless a later governed decision changes it.
