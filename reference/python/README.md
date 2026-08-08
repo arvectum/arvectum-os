@@ -1,10 +1,11 @@
 # Bounded Arvectum OS Reference Runtime Harness
 
-Status: `Provisional internal implementation harness — Phase 1 complete; Phase 2 through P2.09 complete; R3 complete on this branch`
+Status: `Provisional internal implementation harness — Phase 1 complete; Phase 2 through P2.10 complete; R3 complete; R4 next`
 Architecture baseline: Constitution `1.2.0`; Accepted RFC-0001 through RFC-0008 `1.0.0`
 Phase 1 closure: `P1.12 complete; M1 achieved`
 Phase 2 plan: `docs/roadmap/PHASE-2-CORE-RUNTIME.md`
 R3 review: `docs/reviews/R3-reuse-refactoring-review.md`
+P2.10 fitness review: `docs/reviews/P2-10-core-runtime-architecture-fitness-matrix.md`
 
 This directory contains the bounded executable reference implementation used to prove Arvectum OS architecture and the reusable Core Runtime semantics accumulated through Phase 2.
 
@@ -12,7 +13,7 @@ It is deliberately in-memory, domain-neutral, reversible and internal. It is **n
 
 ## Current reuse boundary
 
-P2.09 supplied the required evidence from two materially distinct workflows. R3 uses that evidence to distinguish genuine Core Runtime reuse from historical first-scenario structure.
+P2.09 supplied the required evidence from two materially distinct workflows. R3 used that evidence to distinguish genuine Core Runtime reuse from historical first-scenario structure. P2.10 now consolidates the final applicable M2 cross-cutting architecture-fitness evidence over those semantic owners without introducing another runtime abstraction.
 
 The reusable Phase 2 semantic owners are the modules that implement domain-neutral runtime responsibilities directly, including:
 
@@ -51,6 +52,16 @@ One carried R2 test-specificity debt is resolved at R3: the P2.06 Event-admissio
 
 Architecture fitness checks for the R3 reuse disposition live in `tests/test_r3_reuse_refactoring.py`.
 
+## P2.10 architecture fitness matrix
+
+`tests/test_p2_10_architecture_fitness_matrix.py` is the executable index for the final applicable M2 architecture-fitness evidence.
+
+It binds the 14 P2.10 roadmap dimensions to named semantic-owner tests across P2.02–P2.09 plus R2/R3 evidence, fails if those anchors disappear, explicitly excludes the historical P2.01 composition as the demonstrated reusable seam, scans the shared runtime for product-domain leakage and durable-infrastructure dependencies, and prevents this bounded matrix from claiming unexercised RFC-0007 Memory/Knowledge or RFC-0008 Document/Artifact architecture.
+
+GitHub Actions `Reference Python CI` run `#68` on executable head `b950109031d7b6cc8e9437cb6a4278264d43eab0` passed `299` tests in `0.701s` / `OK`.
+
+The canonical review is `docs/reviews/P2-10-core-runtime-architecture-fitness-matrix.md` with result `PASS — all applicable M2 Core Runtime fitness dimensions have executable evidence`.
+
 ## Package-root surface
 
 `arvectum_os_ref.__init__` still re-exports Phase 1 convenience symbols. This package remains explicitly provisional/non-public, and the P2.09 reuse proof does not depend on that root surface.
@@ -84,6 +95,6 @@ python -m unittest discover -s tests -v
 
 ## Next canonical action
 
-After the R3 review and roadmap synchronization merge, the next Phase 2 work item is **`P2.10 — Core Runtime architecture fitness matrix`**.
+With P2.10 complete, the next Phase 2 action is the mandatory **`R4 — Milestone Hardening`** engineering gate defined by `DECISION-2026-08-08-ENGINEERING-QUALITY-REFACTORING-GATES`.
 
-P2.10 should accumulate final applicable M2 fitness evidence over the semantic owners above without reopening the rejected idea of generalizing the historical P2.01 compatibility composition.
+R4 should review the complete Phase 2 code head for material architecture, correctness, security, maintainability and evidence gaps before P2.11/P2.12. It must not turn final hardening into an uncontrolled redesign or prematurely select durable infrastructure without evidence and the existing ADR gate.

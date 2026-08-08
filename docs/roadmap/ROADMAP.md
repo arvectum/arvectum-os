@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.3.11`
+Version: `2.3.12`
 Created: `2026-08-07`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -45,7 +45,7 @@ This roadmap uses semantic versioning:
 - `MINOR` — sequencing, milestone scope, work breakdown, phase transition or strategic-horizon changes that do not restructure the planning model;
 - `MAJOR` — restructuring of the roadmap lifecycle or planning model.
 
-Version `2.0.0` introduced the two-horizon planning model. Version `2.1.0` recorded Phase 1 / `M1` completion and Phase 2 decomposition as the next action. Version `2.2.0` activates the decomposed Phase 2 Core Runtime plan. Version `2.2.1` records P2.01 completion and advances the active execution sequence to P2.02. Version `2.3.0` establishes evidence-backed engineering quality/refactoring gates, inserts R1 after completed P2.01 before substantive P2.02 work, and defines milestone/stable-boundary Code Health Gate rules. Version `2.3.1` records R1 completion and advances the current canonical action to P2.02. Version `2.3.2` records P2.02 completion and advances the current canonical action to P2.03. Version `2.3.3` records P2.03 completion and advances the current canonical action to P2.04. Version `2.3.4` records P2.04 completion and advances the current canonical action to P2.05. Version `2.3.5` records P2.05 completion and advances the current canonical action to P2.06. Version `2.3.6` records P2.06 completion and advances the current canonical action to the mandatory R2 Runtime Health Review before substantive P2.07 work. Version `2.3.7` records R2 completion with bounded debt and advances the current canonical action to P2.07. Version `2.3.8` records P2.07 completion and advances the current canonical action to P2.08. Version `2.3.9` records P2.08 completion and advances the current canonical action to P2.09. Version `2.3.10` records P2.09 completion with executable second-workflow reuse evidence and advances the current canonical action to the mandatory R3 Reuse Refactoring Review. Version `2.3.11` records R3 completion, contains the historical P2.01 composition as compatibility evidence, and advances the current canonical action to P2.10.
+Version `2.0.0` introduced the two-horizon planning model. Version `2.1.0` recorded Phase 1 / `M1` completion and Phase 2 decomposition as the next action. Version `2.2.0` activates the decomposed Phase 2 Core Runtime plan. Version `2.2.1` records P2.01 completion and advances the active execution sequence to P2.02. Version `2.3.0` establishes evidence-backed engineering quality/refactoring gates, inserts R1 after completed P2.01 before substantive P2.02 work, and defines milestone/stable-boundary Code Health Gate rules. Version `2.3.1` records R1 completion and advances the current canonical action to P2.02. Version `2.3.2` records P2.02 completion and advances the current canonical action to P2.03. Version `2.3.3` records P2.03 completion and advances the current canonical action to P2.04. Version `2.3.4` records P2.04 completion and advances the current canonical action to P2.05. Version `2.3.5` records P2.05 completion and advances the current canonical action to P2.06. Version `2.3.6` records P2.06 completion and advances the current canonical action to the mandatory R2 Runtime Health Review before substantive P2.07 work. Version `2.3.7` records R2 completion with bounded debt and advances the current canonical action to P2.07. Version `2.3.8` records P2.07 completion and advances the current canonical action to P2.08. Version `2.3.9` records P2.08 completion and advances the current canonical action to P2.09. Version `2.3.10` records P2.09 completion with executable second-workflow reuse evidence and advances the current canonical action to the mandatory R3 Reuse Refactoring Review. Version `2.3.11` records R3 completion, contains the historical P2.01 composition as compatibility evidence, and advances the current canonical action to P2.10. Version `2.3.12` records P2.10 completion with a 14-dimension executable Core Runtime architecture-fitness matrix and advances the current canonical action to the mandatory R4 Milestone Hardening gate.
 
 Roadmap identifiers, engineering-gate identifiers, RFC identifiers and ADR identifiers are independent namespaces.
 
@@ -124,7 +124,10 @@ Current verified canonical baseline:
 - R3 confirms the reusable Phase 2 path is semantic-owner reuse, especially P2.07 Product Contract entry + P2.04 Governed Execution, while historical P2.01 `RuntimeComposition` is retained only as P1/P2.01 compatibility evidence and is not generalized into a universal workflow/plugin contract;
 - R3 resolves the carried broad P2.06 Event-conflict assertion by expecting exact `EventIdentityConflictError`, adds four dependency/reuse fitness checks, and deliberately keeps gate-approval fabrication test-local rather than moving organizational authority into runtime orchestration;
 - R3 executable evidence: GitHub Actions `Reference Python CI` run `#63` passed `293` tests in `0.312s` on executable branch head `72c97b8b24e86369d00c5932a3723743577b0c21`;
-- no relevant Accepted ADR currently constrains the bounded runtime choices carried from Phase 1 through R3; durable persistence/transaction/concurrency, Event-delivery, IAM/enforcement, durable replay/projection storage and stable public-interface/serialization ADR gates remain uncrossed.
+- [`P2.10 — Core Runtime Architecture Fitness Matrix`](../reviews/P2-10-core-runtime-architecture-fitness-matrix.md) is complete with result `PASS — all applicable M2 Core Runtime fitness dimensions have executable evidence`;
+- P2.10 adds a 14-row executable matrix over P2.02–P2.09 semantic-owner evidence plus R2/R3, explicitly excludes the historical P2.01 composition as the demonstrated reusable seam, and adds cross-cutting product-domain leakage, durable-infrastructure and scope guards;
+- P2.10 executable evidence: GitHub Actions `Reference Python CI` run `#68` for PR `#30` passed `299` tests in `0.701s` on executable code head `b950109031d7b6cc8e9437cb6a4278264d43eab0`;
+- no relevant Accepted ADR currently constrains the bounded runtime choices carried from Phase 1 through P2.10; durable persistence/transaction/concurrency, Event-delivery, IAM/enforcement, durable replay/projection storage and stable public-interface/serialization ADR gates remain uncrossed.
 
 The RFC Index remains the canonical source for RFC status and acceptance evidence.
 
@@ -170,7 +173,7 @@ M1 intentionally did **not** claim reusable Typed Relationship lifecycle, reusab
 
 Canonical detailed work breakdown:
 
-- [`PHASE-2-CORE-RUNTIME.md`](PHASE-2-CORE-RUNTIME.md) — `Active 1.1.11`.
+- [`PHASE-2-CORE-RUNTIME.md`](PHASE-2-CORE-RUNTIME.md) — `Active 1.1.12`.
 
 **Milestone `M2`:** more than one materially distinct bounded workflow reuses the same governed runtime semantics without copying the Phase 1 harness, with architecture fitness evidence, completed Phase 2 engineering quality gates and all crossed ADR gates governed.
 
@@ -227,7 +230,7 @@ Provisional intent: demonstrate safe compounding organizational intelligence thr
 ## 6. Active Roadmap — Phase 2 Core Runtime
 
 **Status:** 🟨 In progress  
-**Phase progress:** `████████░░ 75%` — P2.01 through P2.09 complete; R1–R3 complete; P2.10 next
+**Phase progress:** `████████░░ 83%` — P2.01 through P2.10 complete; R1–R3 complete; R4 next
 
 | ID | Work item | Status | Progress |
 |---|---|---:|---:|
@@ -240,7 +243,7 @@ Provisional intent: demonstrate safe compounding organizational intelligence thr
 | `P2.07` | Product Contract runtime validation boundary | 🟩 | `██████████ 100%` |
 | `P2.08` | Portability, replay and non-authoritative projection runtime | 🟩 | `██████████ 100%` |
 | `P2.09` | Second bounded workflow reuse proof | 🟩 | `██████████ 100%` |
-| `P2.10` | Core Runtime architecture fitness matrix | 🟦 | `░░░░░░░░░░ 0%` |
+| `P2.10` | Core Runtime architecture fitness matrix | 🟩 | `██████████ 100%` |
 | `P2.11` | ADR-gate and runtime-boundary hardening review | ⬜ | `░░░░░░░░░░ 0%` |
 | `P2.12` | Phase 2 / M2 closure review | ⬜ | `░░░░░░░░░░ 0%` |
 
@@ -251,17 +254,17 @@ Provisional intent: demonstrate safe compounding organizational intelligence thr
 | `R1 — Structural Review` | after P2.01, before substantive P2.02 | 🟩 Complete |
 | `R2 — Runtime Health Review` | after P2.06, before substantive P2.07 | 🟩 Complete |
 | `R3 — Reuse Refactoring Review` | after P2.09, before final Phase 2 hardening | 🟩 Complete |
-| `R4 — Milestone Hardening` | after final applicable P2.10 evidence, before P2.11/P2.12 | ⬜ Planned |
+| `R4 — Milestone Hardening` | after final applicable P2.10 evidence, before P2.11/P2.12 | 🟦 Ready |
 
 Engineering gates are checkpoints rather than `P2.xx` work items and therefore do not change the numerical Phase progress calculation by themselves.
 
 ### Current canonical action
 
-> **`P2.10 — Core Runtime architecture fitness matrix`.**
+> **`R4 — Milestone Hardening`.**
 
-Consolidate final applicable M2 architecture-fitness evidence over the semantic owners proven through P2.09 and hardened by R3. Cover identity/Organization isolation, immutable canonical/relationship history, Head versus Effective Version resolution, exact consequential version pinning, separate authority/gate semantics, direct consequential-operation rejection, idempotency/retry/conflict behavior, Event duplicate/conflict admission, reconstruction, Product Contract enforcement, projection/replay non-authority, semantic portability, product-domain leakage and migration/reversibility constraints where applicable.
+Perform the final full Phase 2 code-health review over the P2.10-backed semantic-owner runtime before P2.11/P2.12. Review material architecture/dependency, correctness, security/privacy/isolation/authority, maintainability, evidence and migration/reversibility gaps; remediate material findings proportionately and optimize performance only where reproducible evidence justifies it.
 
-Do not reopen the rejected idea of generalizing the historical P2.01 compatibility composition merely to obtain one universal orchestration API. Any materially constraining implementation choice discovered by P2.10 must still pass the existing ADR gate before further reliance.
+Preserve the R3 reuse disposition: do not turn the historical P2.01 compatibility composition into a universal Core Runtime API and do not invent shared abstractions merely to make the final code head more uniform. Any materially constraining implementation choice discovered by R4 remains subject to the existing ADR gate before further reliance.
 
 ### Dependency-aware sequence
 
@@ -291,16 +294,16 @@ P2.09 Second workflow reuse proof ✓
           ↓
 R3 Reuse Refactoring Review ✓
           ↓
-P2.10 final applicable fitness evidence
+P2.10 final applicable fitness evidence ✓
           ↓
-R4 Milestone Hardening
+R4 Milestone Hardening ← current
           ↓
 P2.11 ADR / boundary review
           ↓
 P2.12 Closure review
 ```
 
-`P2.10` architecture fitness tests run continuously across the phase; the sequence marks only the final applicable fitness evidence used by R4.
+`P2.10` architecture fitness tests run continuously across the phase; the sequence records its final applicable evidence as complete and advances the mandatory engineering sequence to R4.
 
 ## 7. Engineering quality and refactoring rule
 
