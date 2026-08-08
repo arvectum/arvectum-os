@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.0.3`
+Version: `2.0.4`
 Created: `2026-08-07`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -304,8 +304,8 @@ Canonical detailed work breakdown:
 | `P1.05` | Authorization and Organizational Authority gates | 🟩 | `██████████ 100%` |
 | `P1.06` | Governed Canonical Mutation + second immutable version | 🟩 | `██████████ 100%` |
 | `P1.07` | Canonical Event admission and execution linkage | 🟩 | `██████████ 100%` |
-| `P1.08` | Provenance, causation and reconstruction evidence | 🟦 | `░░░░░░░░░░ 0%` |
-| `P1.09` | Observation creation without Knowledge promotion | ⬜ | `░░░░░░░░░░ 0%` |
+| `P1.08` | Provenance, causation and reconstruction evidence | 🟩 | `██████████ 100%` |
+| `P1.09` | Observation creation without Knowledge promotion | 🟦 | `░░░░░░░░░░ 0%` |
 | `P1.10` | Portable semantic fixture export | ⬜ | `░░░░░░░░░░ 0%` |
 | `P1.11` | Negative-path and architecture fitness tests | 🟨 | `███████░░░ 70%` |
 | `P1.12` | Phase 1 bounded-slice closure review | ⬜ | `░░░░░░░░░░ 0%` |
@@ -316,17 +316,19 @@ Canonical detailed work breakdown:
 
 `P1.05` adds separate immutable Authorization and Organizational Authority gate decisions for the exact P1.04 execution attempt. Missing/denied evidence fails closed; neither gate implies the other; two explicit scoped `Allow` decisions are required to create the next immutable `Ready` Execution Context version. The Ready version preserves predecessor lineage, exact Workflow/material-input pins and both explicit-Allow gate decision pins; no target Canonical Record mutation occurs yet. P1.05 adds `12` executable fitness tests.
 
-`P1.06` executes the declared `CanonicalMutation` only through that exact immutable `Ready` execution. It consumes the exact Workflow/material-input and explicit-Allow gate-decision versions, creates a distinct immutable target v2 under the same Subject Identity with P1.02 v1 as predecessor, rejects stale-current conflicts instead of overwriting newer state, preserves v1 unchanged, and records the canonical effect in a new immutable terminal `Succeeded` Execution Context version. P1.06 adds `13` focused executable fitness tests and deliberately leaves canonical Event admission to P1.07.
+`P1.06` executes the declared `CanonicalMutation` only through that exact immutable `Ready` execution. It consumes the exact Workflow/material-input and explicit-Allow gate-decision versions, creates a distinct immutable target v2 under the same Subject Identity with P1.02 v1 as predecessor, rejects stale-current conflicts instead of overwriting newer state, preserves v1 unchanged, and records the canonical effect in a new immutable terminal `Succeeded` Execution Context version. P1.06 adds `13` focused executable fitness tests.
 
-`P1.07` now distinguishes transient Event receipt from canonical admission, admits one immutable `Native` Event linked to the exact terminal P1.06 Execution Context and resulting target v2, preserves event type/schema/source/time/actor/classification/provenance/integrity context, treats duplicate delivery idempotently, rejects conflicting Event Identity/Version Identity reuse without rewriting history, and fails closed on wrong execution/result or cross-Organization linkage. P1.07 adds `14` focused executable fitness tests and deliberately leaves broader provenance/reconstruction to P1.08.
+`P1.07` distinguishes transient Event receipt from canonical admission, admits one immutable `Native` Event linked to the exact terminal P1.06 Execution Context and resulting target v2, preserves event type/schema/source/time/actor/classification/provenance/integrity context, treats duplicate delivery idempotently, rejects conflicting Event Identity/Version Identity reuse without rewriting history, and fails closed on wrong execution/result or cross-Organization linkage. P1.07 adds `14` focused executable fitness tests.
 
-`P1.11` is cross-cutting and now accumulates negative-path evidence through P1.07, including direct-mutation rejection, immutable-history preservation, canonical conflict detection, receipt/admission separation and duplicate/conflicting Event handling. Replay, Observation/Knowledge and projection portions remain incomplete.
+`P1.08` adds an immutable non-canonical reconstruction manifest over the exact P1.02–P1.07 evidence. It verifies the `AwaitingGate → Ready → Succeeded` execution lineage, exact Workflow/material-input/gate/result/Event versions, actor continuity, provenance completeness, explicit Event type/schema, stable Execution-Identity correlation and exact terminal-version causation. Wrong versions, broken lineage, incomplete provenance, actor drift or incorrect Event linkage fail closed. Reconstruction is observational and does not replay the mutation, emit a new Event, mutate sealed history, establish projection authority, or pre-empt P1.09/P1.10 semantics. P1.08 adds `15` focused executable fitness tests.
+
+`P1.11` is cross-cutting and now accumulates negative-path evidence through P1.08, including direct-mutation rejection, immutable-history preservation, canonical conflict detection, receipt/admission separation, duplicate/conflicting Event handling and fail-closed provenance/reconstruction validation. Replay, Observation/Knowledge and projection portions remain incomplete.
 
 ### Current canonical action
 
-> **`P1.08 — Provenance, causation and reconstruction evidence`: preserve enough version-identifiable provenance, causation and correlation to reconstruct the bounded P1.06/P1.07 operation without mutating sealed history or turning projections into authority.**
+> **`P1.09 — Observation creation without Knowledge promotion`: create a bounded Observation from the P1.06/P1.07 outcome/evidence while proving that operational evidence does not silently become validated Knowledge, an approved standard or authoritative production behavior.**
 
-P1.08 must build on the exact immutable execution, target and Event references already produced by P1.06/P1.07, remain proportionate to the bounded scenario, and avoid pre-empting P1.09 Observation/Knowledge or P1.10 portable-fixture semantics.
+P1.09 must build on the already-governed execution/Event/provenance evidence, preserve Organization/provenance/authority distinctions, remain domain-neutral and avoid pre-empting the P1.10 portable-fixture contract.
 
 ## 7. Phase 1 dependency-aware sequence
 
@@ -345,9 +347,9 @@ P1.06 ✅ Canonical Mutation → immutable v2
    ↓
 P1.07 ✅ Canonical Event
    ↓
-P1.08 🟦 Provenance / reconstruction
+P1.08 ✅ Provenance / reconstruction
    ↓
-P1.09 ⬜ Observation ≠ Knowledge
+P1.09 🟦 Observation ≠ Knowledge
    ↓
 P1.10 ⬜ Portable semantic fixture
    ↓
@@ -392,6 +394,8 @@ P1.05 remains below this ADR gate because it does not select a durable authoriza
 P1.06 remains below this ADR gate because its mutation boundary, exact-version checks and conflict detection are bounded, reversible, in-memory and non-public. It does not select durable persistence, a Canonical Head/effective-version resolver, concurrency/transaction technology, a public mutation interface or a durable evidence-integrity mechanism.
 
 P1.07 remains below this ADR gate because its Event admission history is caller-supplied, immutable, in-memory and non-public. It does not select a durable Event store, broker, outbox/inbox mechanism, delivery protocol, schema registry, public Event interface or observability backend.
+
+P1.08 remains below this ADR gate because its reconstruction manifest is derived, immutable, in-memory and non-public. It selects no durable lineage/provenance store, graph database, projection technology, public provenance serialization/API or evidence-integrity mechanism.
 
 ## 10. Roadmap maintenance rule
 
