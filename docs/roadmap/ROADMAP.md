@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.0.4`
+Version: `2.0.5`
 Created: `2026-08-07`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -305,9 +305,9 @@ Canonical detailed work breakdown:
 | `P1.06` | Governed Canonical Mutation + second immutable version | 🟩 | `██████████ 100%` |
 | `P1.07` | Canonical Event admission and execution linkage | 🟩 | `██████████ 100%` |
 | `P1.08` | Provenance, causation and reconstruction evidence | 🟩 | `██████████ 100%` |
-| `P1.09` | Observation creation without Knowledge promotion | 🟦 | `░░░░░░░░░░ 0%` |
-| `P1.10` | Portable semantic fixture export | ⬜ | `░░░░░░░░░░ 0%` |
-| `P1.11` | Negative-path and architecture fitness tests | 🟨 | `███████░░░ 70%` |
+| `P1.09` | Observation creation without Knowledge promotion | 🟩 | `██████████ 100%` |
+| `P1.10` | Portable semantic fixture export | 🟦 | `░░░░░░░░░░ 0%` |
+| `P1.11` | Negative-path and architecture fitness tests | 🟨 | `████████░░ 80%` |
 | `P1.12` | Phase 1 bounded-slice closure review | ⬜ | `░░░░░░░░░░ 0%` |
 
 ### Current implementation evidence
@@ -322,13 +322,15 @@ Canonical detailed work breakdown:
 
 `P1.08` adds an immutable non-canonical reconstruction manifest over the exact P1.02–P1.07 evidence. It verifies the `AwaitingGate → Ready → Succeeded` execution lineage, exact Workflow/material-input/gate/result/Event versions, actor continuity, provenance completeness, explicit Event type/schema, stable Execution-Identity correlation and exact terminal-version causation. Wrong versions, broken lineage, incomplete provenance, actor drift or incorrect Event linkage fail closed. Reconstruction is observational and does not replay the mutation, emit a new Event, mutate sealed history, establish projection authority, or pre-empt P1.09/P1.10 semantics. P1.08 adds `15` focused executable fitness tests.
 
-`P1.11` is cross-cutting and now accumulates negative-path evidence through P1.08, including direct-mutation rejection, immutable-history preservation, canonical conflict detection, receipt/admission separation, duplicate/conflicting Event handling and fail-closed provenance/reconstruction validation. Replay, Observation/Knowledge and projection portions remain incomplete.
+`P1.09` adds one significant, explicitly unvalidated Observation represented through the existing RFC-0002 Canonical Record envelope. It pins the exact P1.07 Event, terminal P1.06 Execution Context and canonical-effect versions verified by P1.08, preserves Organization/provenance/actor attribution, and fails closed on source-version or provenance drift. A dedicated guard rejects any attempt to consume the Observation as validated Knowledge without an explicit RFC-0007 promotion lifecycle. Observation capture does not mutate the Workflow, prior canonical versions, sealed execution/Event history or approved production behavior. P1.09 adds `14` focused tests; PR-time `Reference Python CI` passes the full `99`-test suite.
+
+`P1.11` is cross-cutting and now accumulates negative-path evidence through P1.09, including direct-mutation rejection, immutable-history preservation, canonical conflict detection, receipt/admission separation, duplicate/conflicting Event handling, fail-closed provenance/reconstruction validation and explicit Observation ≠ Knowledge enforcement. Replay and projection portions remain incomplete.
 
 ### Current canonical action
 
-> **`P1.09 — Observation creation without Knowledge promotion`: create a bounded Observation from the P1.06/P1.07 outcome/evidence while proving that operational evidence does not silently become validated Knowledge, an approved standard or authoritative production behavior.**
+> **`P1.10 — Portable semantic fixture export`: export the bounded governed state through P1.09 into a documented implementation-neutral semantic fixture while preserving identities, immutable versions, Organization scope, authority, source/version relationships and Observation non-promotion semantics.**
 
-P1.09 must build on the already-governed execution/Event/provenance evidence, preserve Organization/provenance/authority distinctions, remain domain-neutral and avoid pre-empting the P1.10 portable-fixture contract.
+P1.10 must serialize governed semantic meaning rather than Python object layout, preserve exact version/reference roles, remain a bounded portability fixture rather than an independent authority source, and avoid creating a public compatibility promise beyond the declared Phase 1 reference scope.
 
 ## 7. Phase 1 dependency-aware sequence
 
@@ -349,9 +351,9 @@ P1.07 ✅ Canonical Event
    ↓
 P1.08 ✅ Provenance / reconstruction
    ↓
-P1.09 🟦 Observation ≠ Knowledge
+P1.09 ✅ Observation ≠ Knowledge
    ↓
-P1.10 ⬜ Portable semantic fixture
+P1.10 🟦 Portable semantic fixture
    ↓
 P1.12 ⬜ Closure review
 ```
@@ -396,6 +398,8 @@ P1.06 remains below this ADR gate because its mutation boundary, exact-version c
 P1.07 remains below this ADR gate because its Event admission history is caller-supplied, immutable, in-memory and non-public. It does not select a durable Event store, broker, outbox/inbox mechanism, delivery protocol, schema registry, public Event interface or observability backend.
 
 P1.08 remains below this ADR gate because its reconstruction manifest is derived, immutable, in-memory and non-public. It selects no durable lineage/provenance store, graph database, projection technology, public provenance serialization/API or evidence-integrity mechanism.
+
+P1.09 remains below this ADR gate because its Observation representation reuses existing bounded Canonical Record semantics and adds no durable Memory/Knowledge store, promotion engine, public learning API, serialization contract, retrieval/index technology or vendor dependency.
 
 ## 10. Roadmap maintenance rule
 
