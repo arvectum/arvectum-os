@@ -1,7 +1,7 @@
 # Arvectum OS Phase 2 — Core Runtime
 
 Status: `Active`
-Version: `1.0.0`
+Version: `1.0.1`
 Created: `2026-08-08`
 Updated: `2026-08-08`
 Owner: `ООО «Арвектум»`
@@ -76,8 +76,8 @@ Progress bars are planning indicators only.
 
 | ID | Work item | Status | Progress |
 |---|---|---:|---:|
-| `P2.01` | Runtime boundary extraction and reusable composition baseline | 🟦 | `░░░░░░░░░░ 0%` |
-| `P2.02` | Canonical Record lineage, Head and Effective Version runtime | ⬜ | `░░░░░░░░░░ 0%` |
+| `P2.01` | Runtime boundary extraction and reusable composition baseline | 🟩 | `██████████ 100%` |
+| `P2.02` | Canonical Record lineage, Head and Effective Version runtime | 🟦 | `░░░░░░░░░░ 0%` |
 | `P2.03` | Typed Relationship runtime | ⬜ | `░░░░░░░░░░ 0%` |
 | `P2.04` | Governed Execution lifecycle and gate orchestration runtime | ⬜ | `░░░░░░░░░░ 0%` |
 | `P2.05` | Event admission, provenance and reconstruction runtime | ⬜ | `░░░░░░░░░░ 0%` |
@@ -105,6 +105,19 @@ Minimum evidence:
 - no durable technology selection merely to create a cleaner package structure.
 
 **Exit:** at least the P1 scenario can execute through reusable runtime composition without directly depending on scenario-specific orchestration internals.
+
+**Completion evidence — 2026-08-08:**
+
+- `reference/python/arvectum_os_ref/runtime.py` introduces a provisional internal `RuntimeComposition`, explicit `RuntimeExecutionRequest` / `RuntimeExecutionResult` boundaries and replaceable `RuntimeOperations` adapters;
+- `reference/python/arvectum_os_ref/reference_scenario.py` owns only deterministic P1 fixture setup and delegates the governed execution spine through one runtime composition call;
+- the composition preserves exact Workflow/material-input pins, separate Authorization and Organizational Authority evidence, immutable Execution Context lineage, governed canonical mutation, canonical Event admission, reconstruction evidence and Observation non-promotion;
+- existing P1.10 portability evidence consumes the runtime result without changing its bounded, non-authoritative, non-public semantics;
+- `reference/python/tests/test_p2_01_runtime_composition.py` adds 10 focused boundary/negative-path tests;
+- GitHub Actions `Reference Python CI` run `#18` on executable code head `5f56f0bf36e58efe5249b93e9df6ca4437d5621e` completed successfully: `Ran 138 tests` / `OK`;
+- no database, broker, IAM/policy provider, workflow engine, public API/SDK, service topology or durable serialization contract was selected;
+- no new RFC or ADR is required for this bounded, replaceable, non-public composition baseline.
+
+P2.01 completion does not make the composition seam a stable public platform contract, does not generalize the P1 execution/Event implementations beyond their proven scope, and does not make any Platform Capability `Active` or production-ready. P2.04 and P2.05 remain responsible for broader reusable Governed Execution/gate and Event/provenance runtime semantics.
 
 ### P2.02 — Canonical Record lineage, Head and Effective Version runtime
 
@@ -323,11 +336,11 @@ The sequence is dependency-aware rather than mechanically serial. P2.02–P2.04 
 
 ## 8. Current canonical action
 
-> **`P2.01 — Runtime boundary extraction and reusable composition baseline`.**
+> **`P2.02 — Canonical Record lineage, Head and Effective Version runtime`.**
 
-Start by identifying which P1 components are reusable runtime semantics, which are scenario fixtures, and what minimal domain-neutral composition boundary allows the complete P1 scenario to run without depending on scenario-specific orchestration internals.
+Implement reusable, domain-neutral Canonical Record lineage operations that distinguish Canonical Head from Effective Version resolution, preserve exact Version Identity pinning for consequential reliance, fail explicitly on ambiguity or absence, and remain independent of a particular database or index technology.
 
-Do not choose a database, broker, IAM/policy provider, workflow engine, public API protocol or permanent service topology merely to complete P2.01.
+P2.02 must build on the P2.01 composition boundary without turning the provisional Python package layout into a stable public or cross-product contract.
 
 ## 9. ADR gate
 
