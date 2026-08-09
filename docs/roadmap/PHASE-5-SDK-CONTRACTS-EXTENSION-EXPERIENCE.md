@@ -1,7 +1,7 @@
 # Phase 5 — SDK, Contracts and Extension Experience
 
 Status: `Active`
-Version: `1.8.0`
+Version: `1.9.0`
 Created: `2026-08-09`
 Updated: `2026-08-09`
 Owner: `ООО «Арвектум»`
@@ -36,7 +36,8 @@ Phase 5 is bounded by:
 13. [`P5.04 integration composition facade review`](../reviews/P5-04-integration-composition-api-facade-boundary.md) — `PASS`; a bounded internal/provisional facade now composes P5.02/P5.03, capability admission, non-authoritative workspace entry and Product Contract-backed Governed Execution while delegating all authority/canonical-state decisions to their existing semantic owners;
 14. [`P5.05 scaffolding/templates + local harness review`](../reviews/P5-05-scaffolding-templates-local-integration-harness.md) — `PASS`; bounded readable scaffolding and an in-process harness consume the P5.04 facade without copying product implementation, creating a second contract source or requiring production infrastructure;
 15. [`P5.06 security/authority/rights Organization-scope integration-guard review`](../reviews/P5-06-security-authority-rights-organization-scope-integration-guards.md) — `PASS`; wrong-Organization, missing/denied Authorization/Organizational Authority, purpose/right and stale-continuity paths fail closed through existing semantic owners, with hosted `Reference Python CI #223` passing 634 tests;
-16. [`R14 Developer Safety / Contract Health Review`](../reviews/R14-developer-safety-contract-health-review.md) — `PASS` after R14-F1/R14-F2 remediation; normal facade construction is forced through P5.02/P5.03 and dependency-backed J1/J2 actions require explicit current governed provider/version evidence instead of silently reusing composition-time compatibility; hosted `Reference Python CI #232` passes the full 644-test reference suite.
+16. [`R14 Developer Safety / Contract Health Review`](../reviews/R14-developer-safety-contract-health-review.md) — `PASS` after R14-F1/R14-F2 remediation; normal facade construction is forced through P5.02/P5.03 and dependency-backed J1/J2 actions require explicit current governed provider/version evidence instead of silently reusing composition-time compatibility; hosted `Reference Python CI #232` passes the full 644-test reference suite;
+17. [`P5.07 Event/provenance/portability integration-support review`](../reviews/P5-07-event-provenance-portability-integration-support.md) — `PASS`; bounded integration evidence now preserves exact Actor/Product/Product Contract/Execution/Event attribution, delegates canonical Event semantics to P2.05, keeps telemetry non-authoritative and portable semantic fixtures non-canonical/vendor-neutral; hosted `Reference Python CI #237` passes the full 653-test reference suite.
 
 ## 3. Phase boundary
 
@@ -75,7 +76,7 @@ Phase 5 is bounded by:
 | `P5.04` | Integration composition API/facade boundary | 🟩 Complete | `██████████ 100%` |
 | `P5.05` | Scaffolding/templates + local integration harness | 🟩 Complete | `██████████ 100%` |
 | `P5.06` | Security, authority, rights + Organization-scope integration guards | 🟩 Complete | `██████████ 100%` |
-| `P5.07` | Event/provenance/portability integration support | ⬜ Planned | `░░░░░░░░░░ 0%` |
+| `P5.07` | Event/provenance/portability integration support | 🟩 Complete | `██████████ 100%` |
 | `P5.08` | Workspace/capability integration adapters without private coupling | ⬜ Planned | `░░░░░░░░░░ 0%` |
 | `P5.09` | Second materially distinct integration reuse proof | ⬜ Planned | `░░░░░░░░░░ 0%` |
 | `P5.10` | Phase 5 conformance + architecture fitness matrix | ⬜ Cross-cutting | `░░░░░░░░░░ 0%` |
@@ -173,6 +174,19 @@ R14 completion evidence:
 - `reference/python/tests/test_r14_developer_safety_contract_health_review.py` adds 10 focused regression/fitness cases;
 - hosted `Reference Python CI #232` passed the full 644-test reference suite with `OK`, including all 10 R14 regression cases and the adapted P5.04/P5.06 callers.
 
+P5.07 completion evidence:
+
+- [`P5-07-event-provenance-portability-integration-support.md`](../reviews/P5-07-event-provenance-portability-integration-support.md) — `PASS`;
+- `reference/python/arvectum_os_ref/integration_evidence.py` adds a bounded internal/provisional helper over the R14-hardened integration facade;
+- canonical Event admission, duplicate-delivery semantics and Event identity conflicts remain delegated to the P2.05 Event/provenance owner;
+- exact actual/represented Actor, Product, Product Contract Subject/Version and Execution Subject/Version attribution is preserved in Event provenance;
+- correlation preserves stable Execution Identity and causation preserves exact causal Execution Context Version;
+- derived telemetry is explicitly `derived-non-authoritative` and grants no permission, authority or approval;
+- portable semantic fixtures are explicitly `derived-non-canonical`, preserve identity roles/semantic links and never fabricate Canonical Typed Relationships;
+- no JSON/YAML/protobuf/OpenAPI, broker, Event store, tracing backend, schema registry, export endpoint, freshness registry or public SDK/API boundary is selected;
+- `reference/python/tests/test_p5_07_event_provenance_portability_integration_support.py` adds 9 focused regression/fitness cases;
+- hosted `Reference Python CI #237` passed the full 653-test reference suite with `OK`.
+
 ## 5. Engineering gates
 
 Engineering reviews are gates, not equal-weight roadmap work items.
@@ -205,9 +219,9 @@ P5.06 Security/authority/rights guards ✓
  ↓
 R14 Developer Safety / Contract Health ✓
  ↓
-P5.07 Event/provenance/portability support ← current
+P5.07 Event/provenance/portability support ✓
  ↓
-P5.08 Workspace/capability adapters
+P5.08 Workspace/capability adapters ← current
  ↓
 P5.09 Second integration reuse proof
  ↓
@@ -332,13 +346,20 @@ Exit evidence:
 
 ### P5.07 — Event/provenance/portability integration support
 
-Expose bounded helpers/fixtures for correct event attribution, provenance and portable semantic state without turning telemetry or serialization into authority.
+Status: `Complete` — [`review evidence`](../reviews/P5-07-event-provenance-portability-integration-support.md).
+
+P5.07 exposes the smallest bounded integration helper for correct Event attribution, provenance and portable semantic state through the R14-hardened composition path while preserving the existing P2.05 Event/provenance semantic owner.
 
 Exit evidence:
 
-- integration-originated governed actions remain attributable to exact actor/execution/contract/version context;
-- derived telemetry remains non-authoritative;
-- portable fixtures preserve semantic identities and relationships without requiring a specific infrastructure vendor.
+- integration-originated governed actions remain attributable to exact actor/execution/contract/version context — `PASS`;
+- represented-actor attribution is preserved without erasing the actual actor — `PASS`;
+- derived telemetry remains explicitly non-authoritative — `PASS`;
+- portable fixtures preserve semantic identities, role distinctions and relationships without fabricating Canonical Typed Relationships — `PASS`;
+- duplicate/conflicting Event delivery semantics remain owned by P2.05 — `PASS`;
+- no specific infrastructure vendor, broker/store/tracing backend or serialization/wire contract is required — `PASS`;
+- no permission, Organizational Authority, approval, capability lifecycle or Stable/public boundary is inferred — `PASS`;
+- hosted full reference CI — `PASS` (`Reference Python CI #237`, 653 tests, `OK`).
 
 ### P5.08 — Workspace/capability integration adapters without private coupling
 
@@ -430,6 +451,6 @@ M5 does not require a public SDK, Stable Product Contract or production deployme
 
 ## 9. Current canonical action
 
-> **P5.07 — Event/provenance/portability integration support.**
+> **P5.08 — Workspace/capability integration adapters without private coupling.**
 
-P5.07 should expose the smallest bounded integration support for correct Event attribution, provenance and portable semantic state through the R14-hardened integration path. It must preserve exact Actor/Execution/Product Contract/version context, keep telemetry and projections non-authoritative, and avoid selecting durable infrastructure, wire/serialization or freshness-registry mechanisms without evidence and the applicable ADR/governance decision.
+P5.08 should demonstrate consumption of M3/M4 workspace/capability surfaces through explicit integration boundaries without private imports or shared-state shortcuts. Capability-specific authority, freshness, rights and data-governance semantics must remain with their existing owners, while product-specific task/disposition semantics remain product-owned. CAP-001 through CAP-004 remain `Incubating / Provisional`; P5.08 does not promote them or create a Stable/public adapter contract merely by implementation.
