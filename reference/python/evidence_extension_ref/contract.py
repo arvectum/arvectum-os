@@ -16,14 +16,12 @@ from datetime import datetime
 from typing import Final
 
 from arvectum_os_ref.canonical import AuthorityMode, CanonicalRecord
-from arvectum_os_ref.cross_capability_enforcement import AccessRequest
 from arvectum_os_ref.governed_execution import GovernedGateKind
 from arvectum_os_ref.identity import Identity
 from arvectum_os_ref.product_capability_consumption import (
     CAP_004_AUDIT_RECONSTRUCTION,
     CAPABILITY_CONTRACT_VERSION,
     OP_RECONSTRUCT_EXECUTION,
-    CapabilityConsumptionRequest,
 )
 from arvectum_os_ref.product_contract import (
     PlatformDependencyDeclaration,
@@ -159,30 +157,4 @@ def build_p5_09_product_contract(
             "Revise with a new immutable Provisional version, contain or retire the extension; "
             "Stable status or platform promotion requires a separate governed decision."
         ),
-    )
-
-
-def build_reconstruction_request(
-    *,
-    actor: ActorContext,
-    purpose: str,
-    required_right: str,
-    allowed_classifications: tuple[str, ...],
-) -> CapabilityConsumptionRequest:
-    """Build the extension's exact CAP-004 request with current access context."""
-
-    access = AccessRequest(
-        actor=actor,
-        purpose=purpose,
-        required_right=required_right,
-        allowed_classifications=allowed_classifications,
-    )
-    return CapabilityConsumptionRequest(
-        organization=actor.organization,
-        product_id=extension_id_for(actor),
-        product_version=EXTENSION_VERSION,
-        dependency_id=CAP_004_AUDIT_RECONSTRUCTION,
-        dependency_contract_version=CAPABILITY_CONTRACT_VERSION,
-        operation_name=OP_RECONSTRUCT_EXECUTION,
-        access=access,
     )
