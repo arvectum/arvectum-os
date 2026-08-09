@@ -29,7 +29,7 @@ Domain products such as procurement, marketing, finance or legal agents live out
 
 ## Current phase
 
-The completed canonical milestone sequence is now:
+The completed canonical milestone sequence is:
 
 - `Phase 0 — Foundation / Architecture Bootstrap` — `Complete`, `M0` achieved;
 - `Phase 1 — Reference Implementation` — `Complete`, `M1 — First executable architectural spine proven` achieved for its declared scope;
@@ -37,9 +37,19 @@ The completed canonical milestone sequence is now:
 - `Phase 3 — Shared Platform Capabilities` — `Complete`, `M3 — Validated shared capability baseline` achieved for the bounded shared-capability reference scope;
 - `Phase 4 — Workspace / Operator Experience` — `Complete`, `M4 — Coherent governed workspace baseline` achieved for the bounded governed-workspace reference scope.
 
-[P4.12 — Phase 4 / M4 Closure Review](docs/reviews/P4-12-phase-4-m4-closure-review.md) records the current closure decision: **`PASS — M4 achieved for the declared bounded governed-workspace reference scope.`** The completed [Phase 4 workstream](docs/roadmap/PHASE-4-WORKSPACE-OPERATOR-EXPERIENCE.md) records P4.01–P4.12 at `100%` and R9–R12 complete.
+`Phase 5 — SDK, Contracts and Extension Experience` is now `Active`. [P5.01 — Integration Boundary Revalidation + Developer Journeys](docs/reviews/P5-01-integration-boundary-revalidation-developer-journeys.md) records **`PASS`** and advances the current canonical action to `P5.02`.
 
-The retained capability set remains unchanged by M4 closure:
+P5.01 revalidated the integration boundary from actual M4 evidence:
+
+- Product Contract remains the governed product/platform boundary authority;
+- relied-upon dependency, operation and version semantics must remain explicit and inspectable;
+- J1 = governed read/composition consumer;
+- J2 = consequential product action through exact Product Contract continuity and Governed Execution;
+- a read-only evidence/reconstruction extension is retained only as a candidate for later second-integration reuse proof;
+- current Python module/import paths, dataclass shapes, operation-token spellings and monorepo package layout remain internal/provisional executable evidence, not a Stable/public SDK contract;
+- private tables/stores/imports/routes/Event streams, implicit shared state and lower-level mutation bypasses are not valid integration boundaries.
+
+The retained capability set remains unchanged:
 
 - `CAP-001 — Document & Artifact Governance` — `Incubating / Provisional`;
 - `CAP-002 — Memory & Knowledge Governance` — `Incubating / Provisional`;
@@ -48,32 +58,25 @@ The retained capability set remains unchanged by M4 closure:
 
 The P4.08 bounded Product Contract remains `Provisional 0.1.0`.
 
-M4 closure does **not** promote any capability to `Active`, create a Stable Product Contract, create a Stable/public API/SDK/wire/frontend compatibility boundary, select durable frontend/IAM/read-model/search/document/service infrastructure, establish `Production` or operational readiness, claim formal WCAG or full-platform conformance, or create SLA/support/commercial commitments.
+P5.01 does **not** promote any capability to `Active`, create a Stable Product Contract, create a Stable/public API/SDK/wire/manifest/module compatibility boundary, select durable package/plugin/network/IAM/Event/storage infrastructure, establish `Production` or operational readiness, claim M5/full-platform conformance, or create SLA/support/commercial commitments.
 
-The final synchronized P4.11 pull-request head was validated by `Reference Python CI #200` on PR #60 with Ubuntu 24.04.4, CPython 3.12.13 and `570 tests`, `OK`. P4.12 itself introduces no runtime behavior change; it closes the already implemented and hardened bounded milestone.
+Canonical current evidence:
 
-Canonical M4 evidence:
-
+- [Canonical Roadmap](docs/roadmap/ROADMAP.md)
+- [Active Phase 5 workstream](docs/roadmap/PHASE-5-SDK-CONTRACTS-EXTENSION-EXPERIENCE.md)
+- [P5.01 integration boundary revalidation + developer journeys](docs/reviews/P5-01-integration-boundary-revalidation-developer-journeys.md)
 - [P4.12 Phase 4 / M4 closure review](docs/reviews/P4-12-phase-4-m4-closure-review.md)
-- [Completed Phase 4 workstream](docs/roadmap/PHASE-4-WORKSPACE-OPERATOR-EXPERIENCE.md)
-- [P4.11 workspace hardening / ADR / refactoring review](docs/reviews/P4-11-workspace-hardening-adr-refactoring-review.md)
-- [R12 M4 Workspace Hardening](docs/reviews/R12-m4-workspace-hardening.md)
-- [P4.10 workspace architecture fitness + accessibility/usability baseline](docs/reviews/P4-10-workspace-architecture-fitness-accessibility-usability-baseline.md)
-- [P4.10 hosted CI validation](docs/reviews/P4-10-ci-validation.md)
-- [P4.09 security, rights, minimization and authority-safe UX review](docs/reviews/P4-09-security-rights-minimization-authority-safe-ux.md)
-- [R11 Composition / Usability Refactoring Review](docs/reviews/R11-composition-usability-refactoring-review.md)
-- [P4.08 cross-capability task/context composition review](docs/reviews/P4-08-cross-capability-task-context-composition.md)
 - [P4.08 bounded Product Contract](docs/contracts/P4-08-BOUNDED-PRODUCT-ENTRY-PRODUCT-CONTRACT.md)
-- [R10 Operator Safety / Cross-Capability Health Review](docs/reviews/R10-operator-safety-cross-capability-health-review.md)
+- [R11 Composition / Usability Refactoring Review](docs/reviews/R11-composition-usability-refactoring-review.md)
 - [Platform Capability Catalog](docs/catalogs/PLATFORM-CAPABILITY-CANDIDATE-CATALOG.md)
 
-The next canonical action is:
+The current canonical action is:
 
-> **Phase 5 boundary revalidation and decomposition — SDK, Contracts and Extension Experience.**
+> **P5.02 — Product Contract declaration model + machine-checkable validation baseline.**
 
-`Phase 5` remains `Draft`. Before it becomes `Active`, its draft strategic scope must be revalidated against M4 evidence and actual product/extension demand, then decomposed into a bounded P5 work breakdown with explicit exit criteria. A planning transition does not itself stabilize Product Contracts/interfaces or change capability lifecycle, operational environment/readiness or conformance maturity.
+P5.02 must implement the smallest reversible declaration/validation representation needed by the P5.01 J1/J2 journeys and the current P4.08 boundary. It must preserve Product Contract as the governed source of boundary semantics; declaration/admission must not become permission, Organizational Authority, capability activation or an accidental public compatibility commitment.
 
-The current delivery sequence is maintained only in the [Canonical Roadmap](docs/roadmap/ROADMAP.md) and [RFC Index](docs/rfc/README.md).
+The current delivery sequence is maintained in the [Canonical Roadmap](docs/roadmap/ROADMAP.md) and [RFC Index](docs/rfc/README.md).
 
 RFC-0001 through RFC-0008 are `Accepted 1.0.0` and remain binding within their declared scopes.
 
