@@ -27,10 +27,13 @@ def ref(filename: str, class_name: str, method_name: str) -> EvidenceRef:
 
 P502 = "P502ProductContractDeclarationValidationTests"
 P503 = "P503GovernedDependencyVersionResolutionTests"
+P504 = "P504IntegrationCompositionFacadeTests"
+P505 = "P505IntegrationScaffoldingLocalHarnessTests"
 P506 = "P506SecurityAuthorityRightsIntegrationGuardsTests"
 P507 = "P507EventProvenancePortabilityIntegrationSupportTests"
 P508 = "P508WorkspaceCapabilityIntegrationAdaptersTests"
 P509 = "P509SecondMateriallyDistinctIntegrationReuseTests"
+R13 = "R13IntegrationBoundaryReviewTests"
 R14 = "R14DeveloperSafetyContractHealthReviewTests"
 R15 = "R15ReuseDeveloperExperienceRefactoringReviewTests"
 
@@ -52,6 +55,7 @@ MATRIX = (
         "Dependency/version continuity",
         (
             ref("test_p5_03_product_contract_dependency_resolution.py", P503, "test_exact_declared_versions_resolve_with_explicit_compatible_decisions"),
+            ref("test_p5_04_integration_composition_facade.py", P504, "test_facade_composes_exact_p502_and_p503_evidence"),
             ref("test_p5_08_workspace_capability_integration_adapters.py", P508, "test_adapter_composition_preserves_exact_facade_contract_context"),
         ),
         (
@@ -62,9 +66,11 @@ MATRIX = (
         "CF-03",
         "Dependency provider/consumer/failure responsibility continuity",
         (
+            ref("test_r13_integration_boundary_review.py", R13, "test_derived_dependency_evidence_preserves_rfc0004_boundary_responsibilities"),
             ref("test_p5_03_product_contract_dependency_resolution.py", P503, "test_resolution_preserves_r13_dependency_and_operation_failure_semantics"),
         ),
         (
+            ref("test_r13_integration_boundary_review.py", R13, "test_derived_evidence_fails_closed_when_boundary_responsibility_is_erased"),
             ref("test_p5_02_product_contract_declaration_validation.py", P502, "test_dependency_allowed_operation_requires_exact_operation_declaration"),
             ref("test_p5_09_second_materially_distinct_integration_reuse.py", P509, "test_second_integration_cannot_smuggle_an_undeclared_dependency"),
         ),
@@ -85,6 +91,7 @@ MATRIX = (
         "CF-05",
         "Hidden-coupling prohibition",
         (
+            ref("test_p5_05_integration_scaffolding_local_harness.py", P505, "test_template_has_one_platform_import_boundary"),
             ref("test_p5_08_workspace_capability_integration_adapters.py", P508, "test_product_adapter_journey_has_one_integration_facing_platform_import"),
             ref("test_p5_09_second_materially_distinct_integration_reuse.py", P509, "test_both_consumers_use_the_same_integration_adapter_module"),
         ),
@@ -122,6 +129,7 @@ MATRIX = (
         "Governed canonical mutation path",
         (
             ref("test_p5_02_product_contract_declaration_validation.py", P502, "test_canonical_mutation_requires_organizational_authority_declaration"),
+            ref("test_p5_04_integration_composition_facade.py", P504, "test_j2_governed_execution_preserves_exact_contract_and_unsatisfied_gates"),
             ref("test_r14_developer_safety_contract_health_review.py", R14, "test_current_supported_evidence_allows_j2_with_gates_still_unresolved"),
         ),
         (
@@ -182,6 +190,7 @@ MATRIX = (
             ref("test_p5_03_product_contract_dependency_resolution.py", P503, "test_exact_declared_versions_resolve_with_explicit_compatible_decisions"),
         ),
         (
+            ref("test_p5_04_integration_composition_facade.py", P504, "test_unsupported_dependency_fails_before_facade_composition"),
             ref("test_p5_03_product_contract_dependency_resolution.py", P503, "test_explicit_unsupported_exact_version_fails_closed"),
             ref("test_p5_03_product_contract_dependency_resolution.py", P503, "test_deprecated_exact_version_records_migration_and_rejects_reliance"),
             ref("test_p5_03_product_contract_dependency_resolution.py", P503, "test_retired_exact_version_records_migration_and_rejects_reliance"),
@@ -205,6 +214,7 @@ MATRIX = (
         "CF-15",
         "No accidental public/stable compatibility promise",
         (
+            ref("test_p5_05_integration_scaffolding_local_harness.py", P505, "test_scaffolding_module_remains_domain_neutral_and_infrastructure_free"),
             ref("test_r15_reuse_developer_experience_refactoring_review.py", R15, "test_refactoring_remains_internal_provisional_without_public_boundary_inflation"),
             ref("test_p5_08_workspace_capability_integration_adapters.py", P508, "test_adapter_module_remains_internal_provisional_and_stack_neutral"),
         ),
@@ -280,7 +290,10 @@ class P510Phase5ConformanceArchitectureFitnessMatrixTests(unittest.TestCase):
         }
         required_sources = {
             "test_p5_02_product_contract_declaration_validation.py",
+            "test_r13_integration_boundary_review.py",
             "test_p5_03_product_contract_dependency_resolution.py",
+            "test_p5_04_integration_composition_facade.py",
+            "test_p5_05_integration_scaffolding_local_harness.py",
             "test_p5_06_security_authority_rights_integration_guards.py",
             "test_p5_07_event_provenance_portability_integration_support.py",
             "test_p5_08_workspace_capability_integration_adapters.py",
