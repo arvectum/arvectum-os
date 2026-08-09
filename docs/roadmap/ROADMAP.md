@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.43.0`
+Version: `2.44.0`
 Created: `2026-08-07`
 Updated: `2026-08-09`
 Owner: `ООО «Арвектум»`
@@ -17,34 +17,30 @@ Detailed completed-phase evidence remains in the corresponding `PHASE-N-...` roa
 
 ## 2. Version note
 
-Version `2.43.0` records **P5.12 — Phase 5 / M5 closure review** with `PASS`, closes Phase 5 and marks **M5 — Repeatable product/extension integration** as `Achieved` for the declared bounded reference scope.
+Version `2.44.0` records the verified completion of **Phase 5 / M5** and activates **Phase 6 — Product-driven Platform Validation** after bounded decomposition.
 
-P5.12 re-checked all 14 M5 exit criteria against P5.01–P5.11, R13–R16, the P5.10 `CF-01` through `CF-15` matrix, P5.11 public-boundary disposition, current Product Contract/capability lifecycle state and hosted executable evidence.
+Phase 5 closure remains based on [`P5.12`](../reviews/P5-12-phase-5-m5-closure-review.md): `PASS — M5 achieved for the declared bounded repeatable product/extension integration reference scope.` The final synchronized pre-closure hosted baseline remains `Reference Python CI #269`, CPython 3.12.13, `704 tests`, `OK`.
 
-One subordinate closure-hygiene finding, P5.12-F1, was identified: root `README.md` still reflected the earlier P5.10/R16 planning state while this roadmap already pointed to P5.12. The closure synchronizes that summary. No runtime or architectural change was required.
+Phase 6 is now `Active` under [`PHASE-6-PRODUCT-DRIVEN-PLATFORM-VALIDATION.md`](PHASE-6-PRODUCT-DRIVEN-PLATFORM-VALIDATION.md). Its goal is not to build a predetermined product portfolio; it is to validate Arvectum OS through at least two materially distinct real product/workflow contexts and evidence-backed reuse.
 
-M5 closure does **not** stabilize either Product Contract, promote any capability to `Active`, establish a public SDK/API/wire/package boundary, approve Production/operational readiness, expand conformance to full-platform scope or create SLA/support/commercial commitments.
+The current canonical action is **`P6.01 — Real product/workflow validation target selection + evidence baseline`**.
 
 ## 3. Verified architecture and milestone baseline
 
 - Constitution `1.2.0` — `Ratified`, frozen;
 - RFC-0001 through RFC-0008 — `Accepted 1.0.0`;
 - Phase 0 / `M0` — complete / achieved;
-- Phase 1 / `M1` — complete / achieved for its declared scope;
+- Phase 1 / `M1` — complete / achieved;
 - Phase 2 / `M2` — complete / achieved for the bounded reusable-runtime reference scope;
 - Phase 3 / `M3` — complete / achieved for the bounded shared-capability reference scope;
 - Phase 4 / `M4` — complete / achieved for the bounded governed-workspace reference scope;
-- Phase 5 / `M5` — complete / achieved for the bounded repeatable product/extension integration reference scope;
+- Phase 5 / `M5` — complete / achieved for the bounded repeatable integration reference scope;
 - [`P5.12 closure review`](../reviews/P5-12-phase-5-m5-closure-review.md) — `PASS`;
-- [`P5.10 conformance + architecture fitness matrix`](../reviews/P5-10-phase-5-conformance-architecture-fitness-matrix.md) — `PASS`, CF-01 through CF-15;
-- [`R16 M5 Integration Hardening`](../reviews/R16-m5-integration-hardening.md) — `PASS` after R16-F1 remediation;
-- [`P5.11 compatibility / ADR / public-boundary hardening`](../reviews/P5-11-compatibility-adr-refactoring-public-boundary-hardening-review.md) — `PASS`, explicit no-ADR/no-public-boundary disposition;
-- final synchronized pre-closure hosted baseline: `Reference Python CI #269`, Ubuntu 24.04.4, CPython 3.12.13, `704 tests`, `OK`;
 - CAP-001 through CAP-004 remain `Incubating / Provisional`;
-- P4.08 bounded Product Contract remains `Provisional 0.1.0`;
-- P5.09 evidence-extension Product Contract remains `Provisional 0.1.0`;
-- no Platform Capability becomes `Active` through M5 closure;
-- no Stable/public SDK, API, wire, manifest, package, registry, facade, adapter, plugin-runtime, generated-code, service or component-system compatibility boundary is created through M5 closure.
+- P4.08 and P5.09 Product Contracts remain `Provisional 0.1.0` reference evidence;
+- no Platform Capability is `Active` merely because M3–M5 are achieved;
+- no Stable/public SDK, API, wire, package or service compatibility boundary has been created;
+- no production/operational-readiness or SLA/support commitment is implied.
 
 ## 4. Strategic roadmap
 
@@ -56,98 +52,116 @@ M5 closure does **not** stabilize either Product Contract, promote any capabilit
 | `Phase 3` | Shared Platform Capabilities | Executed | 🟩 Complete | `M3` Validated shared capability baseline |
 | `Phase 4` | Workspace / Operator Experience | Executed | 🟩 Complete | `M4` Coherent governed workspace baseline |
 | `Phase 5` | SDK, Contracts and Extension Experience | Executed | 🟩 Complete | `M5` Repeatable product/extension integration |
-| `Phase 6` | Product-driven Platform Validation | Near-term | ⬜ Draft | `M6` Platform validated through real products and reuse evidence |
-| `Phase 7` | Operational / Enterprise Readiness | Exploratory | ⬜ Draft | `M7` Scoped production-grade operating baseline |
+| `Phase 6` | Product-driven Platform Validation | Active | 🟨 Active | `M6` Platform validated through real products and reuse evidence |
+| `Phase 7` | Operational / Enterprise Readiness | Near-term | ⬜ Draft | `M7` Scoped production-grade operating baseline |
 | `Phase 8` | Ecosystem and External Integration | Exploratory | ⬜ Draft | `M8` Governed external ecosystem baseline |
 
-Phase status, capability lifecycle, Product Contract lifecycle, operational environment/readiness and conformance maturity remain distinct.
+Phase status, Platform Capability lifecycle, Product Contract lifecycle, operational environment/readiness and conformance maturity remain distinct.
 
-## 5. Completed Phase 4 — Workspace / Operator Experience
+## 5. Completed Phase 5 — SDK, Contracts and Extension Experience
 
-Canonical detailed record:
-
-- [`PHASE-4-WORKSPACE-OPERATOR-EXPERIENCE.md`](PHASE-4-WORKSPACE-OPERATOR-EXPERIENCE.md) — `Complete`, M4 `Achieved`;
-- [`P4.12 — Phase 4 / M4 Closure Review`](../reviews/P4-12-phase-4-m4-closure-review.md) — `PASS`.
-
-M4 proves a coherent governed workspace baseline over explicit Organization/Actor context, canonical records/versions/relationships, Event/provenance/reconstruction, Governed Execution, Document/Artifact and Memory/Knowledge/Search semantics, bounded Product Contract-backed composition and scoped security/accessibility fitness evidence.
-
-M4 does not imply production readiness, capability lifecycle `Active`, Stable Product Contract/public API status, formal WCAG/full-platform conformance, SLA/support or final commercial UX.
-
-## 6. Completed Phase 5 — SDK, Contracts and Extension Experience
-
-Canonical detailed record:
+Canonical detailed evidence:
 
 - [`PHASE-5-SDK-CONTRACTS-EXTENSION-EXPERIENCE.md`](PHASE-5-SDK-CONTRACTS-EXTENSION-EXPERIENCE.md) — `Complete`, M5 `Achieved`;
 - [`P5.12 — Phase 5 / M5 Closure Review`](../reviews/P5-12-phase-5-m5-closure-review.md) — `PASS`.
 
+All `P5.01` through `P5.12` work items and R13–R16 engineering gates are complete.
+
+M5 proves repeatable governed integration through explicit Product Contracts and reusable internal/provisional tooling. It does not establish a public SDK, Stable Product Contract, Active capability, production deployment or customer-facing support/compatibility promise.
+
+## 6. Active Phase 6 — Product-driven Platform Validation
+
+Canonical detailed roadmap:
+
+- [`PHASE-6-PRODUCT-DRIVEN-PLATFORM-VALIDATION.md`](PHASE-6-PRODUCT-DRIVEN-PLATFORM-VALIDATION.md) — `Active 1.0.0`.
+
 | ID | Work item | Status | Progress |
 |---|---|---:|---:|
-| `P5.01` | Integration boundary revalidation + developer journeys | 🟩 Complete | `██████████ 100%` |
-| `P5.02` | Product Contract declaration model + machine-checkable validation baseline | 🟩 Complete | `██████████ 100%` |
-| `P5.03` | Governed dependency/version resolution + compatibility semantics | 🟩 Complete | `██████████ 100%` |
-| `P5.04` | Integration composition API/facade boundary | 🟩 Complete | `██████████ 100%` |
-| `P5.05` | Scaffolding/templates + local integration harness | 🟩 Complete | `██████████ 100%` |
-| `P5.06` | Security, authority, rights + Organization-scope integration guards | 🟩 Complete | `██████████ 100%` |
-| `P5.07` | Event/provenance/portability integration support | 🟩 Complete | `██████████ 100%` |
-| `P5.08` | Workspace/capability integration adapters without private coupling | 🟩 Complete | `██████████ 100%` |
-| `P5.09` | Second materially distinct integration reuse proof | 🟩 Complete | `██████████ 100%` |
-| `P5.10` | Phase 5 conformance + architecture fitness matrix | 🟩 Complete | `██████████ 100%` |
-| `P5.11` | Compatibility / ADR / refactoring / public-boundary hardening review | 🟩 Complete | `██████████ 100%` |
-| `P5.12` | Phase 5 / M5 closure review | 🟩 Complete | `██████████ 100%` |
+| `P6.01` | Real product/workflow validation target selection + evidence baseline | 🟦 NEXT | `░░░░░░░░░░ 0%` |
+| `P6.02` | First real Product Contract boundary + bounded adoption plan | ⬜ | `░░░░░░░░░░ 0%` |
+| `P6.03` | First real product/workflow platform integration | ⬜ | `░░░░░░░░░░ 0%` |
+| `P6.04` | Product value, delivery-friction + governance evidence capture | ⬜ | `░░░░░░░░░░ 0%` |
+| `P6.05` | Platform-gap remediation from first real use | ⬜ | `░░░░░░░░░░ 0%` |
+| `P6.06` | Second materially distinct real product/workflow target + Product Contract | ⬜ | `░░░░░░░░░░ 0%` |
+| `P6.07` | Second real product/workflow platform integration | ⬜ | `░░░░░░░░░░ 0%` |
+| `P6.08` | Cross-product reuse and Platform Gravity evidence | ⬜ | `░░░░░░░░░░ 0%` |
+| `P6.09` | Capability lifecycle / return-to-product / containment recommendations | ⬜ | `░░░░░░░░░░ 0%` |
+| `P6.10` | Product-driven architecture fitness + value evidence matrix | ⬜ cross-cutting | `░░░░░░░░░░ 0%` |
+| `P6.11` | Product/platform hardening, ADR + refactoring review | ⬜ | `░░░░░░░░░░ 0%` |
+| `P6.12` | Phase 6 / M6 closure review | ⬜ | `░░░░░░░░░░ 0%` |
 
-Engineering gates:
+Engineering/product-validation gates:
 
-- `R13 — Integration Boundary Review` — `PASS after R13-F1 remediation`;
-- `R14 — Developer Safety / Contract Health Review` — `PASS after R14-F1/R14-F2 remediation`;
-- `R15 — Reuse / Developer Experience Refactoring Review` — `PASS after R15-F1/R15-F2 remediation`;
-- `R16 — M5 Integration Hardening` — `PASS after R16-F1 remediation`.
+- `R17 — First Product Boundary Review` — after P6.02;
+- `R18 — First Real-use Health Review` — after P6.05;
+- `R19 — Cross-product Reuse Review` — after P6.08;
+- `R20 — M6 Product-validation Hardening` — after P6.10.
 
-M5 proves that two materially distinct bounded consumers can use the same explicit Product Contract/dependency/composition/adapter method without private platform coupling while preserving exact versions, Organization isolation, Authorization/Organizational Authority separation, governed canonical mutation, Event/provenance, rights/minimization, portability and consumer ownership of consumer-specific semantics.
+These gates do not inflate Phase 6 completion percentage as separate equal-weight roadmap tasks.
 
-The two bounded executable Product Contracts remain `Provisional 0.1.0`. CAP-001 through CAP-004 remain `Incubating / Provisional`. M5 is reuse evidence, not a Product Contract stabilization or capability activation decision.
+## 7. M6 milestone definition
 
-P5.11 remains the controlling public-boundary disposition: current Python modules, scaffolding, facade, adapters and harness are internal/provisional reference implementation, not a supported public SDK/API/package/wire contract.
+`M6 — Platform validated through real products and reuse evidence` requires, within the declared bounded scope:
 
-## 7. M5 closure state
+1. at least two materially distinct real product/workflow contexts with owner-backed validation evidence;
+2. explicit Product Contracts wherever real products rely on platform capabilities, shared platform history or canonical state;
+3. reuse of shared Arvectum OS foundations without hidden coupling;
+4. product-domain semantics remaining product-owned;
+5. measurable evidence of at least one material shared reuse benefit;
+6. explicit measurement/disposition of platform friction and overhead;
+7. preserved Governed Execution, exact-version, authority, security and provenance semantics;
+8. evidence-backed Platform Gravity and capability-lifecycle recommendations;
+9. product-driven architecture fitness/value evidence passing;
+10. all R17–R20 material findings and crossed governance/ADR gates dispositioned;
+11. P6.12 closure review passing.
 
-`M5 — Repeatable product/extension integration` is **Achieved** for the declared bounded reference scope.
+M6 does not require an `Active` Platform Capability, Stable Product Contract, production deployment, public SDK/API, SLA or support commitment.
 
-The closure is based on:
+## 8. Current canonical action
 
-- explicit Product Contract declaration/validation;
-- exact governed dependency/version compatibility;
-- current dependency-support evidence at reliance time;
-- shared internal/provisional composition + adapter tooling;
-- first bounded product integration;
-- materially distinct CAP-004 read-only evidence/reconstruction extension;
-- fail-closed security/authority/rights/Organization behavior;
-- Governed Execution and Event/provenance continuity;
-- vendor-neutral semantic portability;
-- P5.10 CF-01 through CF-15 positive + negative evidence;
-- resolved R13–R16 findings;
-- P5.11 no-ADR/no-public-boundary decision;
-- P5.12 explicit closure review.
+> **P6.01 — Real product/workflow validation target selection + evidence baseline.**
 
-M5 does not require and does not imply a public SDK, Stable Product Contract, Active capability or production deployment.
+Select the first real validation context from actual organizational/product priorities. Record owner/sponsor, concrete organizational outcome, bounded workflow, current baseline, required platform interactions, external authorities, security/rights constraints and rollback path before creating its Product Contract or changing platform behavior.
 
-## 8. Current canonical planning action
+Do not infer the target from roadmap history or a preferred product name. The selection must reflect current real product/workflow evidence.
 
-Phase 5 is closed. **Phase 6 remains `Draft`; it is not automatically activated by M5.**
+## 9. ADR, lifecycle and Product Contract gates
 
-The next planning action is:
-
-> **Phase 6 — Product-driven Platform Validation: boundary revalidation and decomposition against real product needs.**
-
-Before Phase 6 implementation is marked `Active`, re-check actual product evidence, Product Contract boundaries, current capability lifecycle/review state, security/governance constraints and the smallest reversible work breakdown that advances real product validation.
-
-Do not treat the Strategic Roadmap's Phase 6–8 rows as delivery promises or pre-approved architecture.
-
-## 9. ADR, lifecycle and Product Contract gates carried forward
-
-P5.11 records an explicit **no-ADR / no-public-boundary** disposition for the current integration implementation.
-
-Re-open the ADR/governance gate before material reliance on a language-specific supported SDK/package, Stable/public API or wire/serialization contract, package registry/distribution topology, plugin loader/sandbox, extension registry/discovery topology, automated version-negotiation/freshness protocol, generated-code compatibility boundary, separately deployable integration service or stable design-system/component contract.
+Real-product pressure may cross architecture decisions that bounded reference phases intentionally left open. Re-open the minimum sufficient ADR/RFC/policy/Product Contract gate before material reliance on a concrete durable or externally constraining mechanism.
 
 A real Product relying on Incubating capabilities, canonical platform state or shared platform history must use the applicable RFC-0004 Product Contract before governed reliance.
 
-No capability may become `Active` without separate RFC-0001 lifecycle admission, applicable Stable contract/compatibility/migration evidence, operational-readiness approval and decision authority.
+No Platform Capability becomes `Active` without separate RFC-0001 lifecycle admission and applicable stable-contract, compatibility/migration, operational-readiness and decision-authority evidence.
+
+Product Experiment success remains evidence, not automatic platform promotion.
+
+## 10. Phase transition rule
+
+Phase 7 remains `Draft` until Phase 6 closes and its boundary is revalidated against real-product evidence, actual customer/operational requirements and unresolved production-readiness risks.
+
+A roadmap phase transition does not itself change capability lifecycle, Product Contract lifecycle, operational environment/readiness, conformance maturity or commercial commitments.
+
+## 11. Roadmap maintenance rule
+
+Every roadmap update begins with repository synchronization rather than chat-memory reconstruction. After every meaningful canonical milestone, synchronize this roadmap and the active phase roadmap, record evidence, keep lifecycle/environment/conformance distinct, do not inflate Draft/Proposed/exploratory status, and preserve repository history rather than fabricating approvals.
+
+## 12. Current state summary
+
+```text
+Constitution 1.2.0 ✓
+RFC-0001 … RFC-0008 Accepted ✓
+Phase 0 / M0 ✓
+Phase 1 / M1 ✓
+Phase 2 / M2 ✓
+Phase 3 / M3 ✓
+Phase 4 / M4 ✓
+Phase 5 / M5 ✓
+        ↓
+Phase 6 — Product-driven Platform Validation ACTIVE
+        ↓
+P6.01 Real product/workflow target + evidence baseline ← current
+        ↓
+Two real product/workflow validations + reuse/value evidence
+        ↓
+M6
+```
