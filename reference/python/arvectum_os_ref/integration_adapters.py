@@ -1,4 +1,4 @@
-"""P5.08/R15 — internal/provisional integration adapter boundary.
+"""P5.08/R15/R16 — internal/provisional integration adapter boundary.
 
 P5.08 introduced one integration-facing seam over the R14-hardened Phase 5
 composition facade. R15 narrows the reusable core to what both materially
@@ -6,6 +6,13 @@ distinct consumers actually demonstrate: one exact composed facade plus bounded
 capability delegation. Workspace presentation remains available, but is an
 explicit optional binding for consumers that need it rather than an eagerly
 constructed assumption carried by every integration.
+
+R16 hardens Product Contract continuity at the adapter layer. A capability
+adapter may still carry the exact Product Contract semantic owner needed by the
+capability-specific delegates, but that declaration must exactly match the
+immutable P5.02 declaration evidence already validated during facade composition.
+A caller therefore cannot pair one governed facade with alternate same-version
+contract semantics and create a split product/platform boundary.
 
 The adapter boundary is not a new semantic owner. Product Contract validation,
 dependency/version compatibility, capability admission, access checks, workspace
@@ -39,6 +46,7 @@ from .product_capability_consumption import (
     consume_search_source,
 )
 from .product_contract import ProductContract, ProductContractScopeError
+from .product_contract_declaration import validate_product_contract_declaration
 from .product_contract_resolution import GovernedDependencyVersionEvidence
 from .security import ActorContext
 from .workspace_shell import (
@@ -167,6 +175,13 @@ class IntegrationCapabilityAdapter:
         if self.contract.version_pin != self.facade.context.product_contract:
             raise IntegrationCompositionContinuityError(
                 "capability adapter requires the exact composed Product Contract Version"
+            )
+
+        adapter_declaration = validate_product_contract_declaration(contract=self.contract)
+        if adapter_declaration != self.facade.declaration_evidence:
+            raise IntegrationCompositionContinuityError(
+                "capability adapter Product Contract declaration differs from the exact declaration "
+                "validated during facade composition"
             )
 
     def admit(
