@@ -1,0 +1,283 @@
+"""P5.08 — internal/provisional workspace and capability integration adapters.
+
+This module provides a single integration-facing adapter seam over the already
+hardened Phase 5 composition facade. Product/extension code can use the adapter
+without importing workspace or capability implementation modules directly.
+
+The adapter is deliberately not a new semantic owner. Product Contract
+validation, dependency/version compatibility, capability admission, access
+checks, workspace scope, canonical reads and reconstruction remain delegated to
+their existing owners. The adapter grants no Authentication, Authorization,
+Organizational Authority, approval, permission or capability lifecycle state.
+
+The current Python/module/dataclass shapes are internal/provisional reference
+evidence only. They do not establish a Stable/public SDK/API, package, route,
+wire/serialization contract, registry, network protocol or deployment topology.
+"""
+
+from __future__ import annotations
+
+from dataclasses import dataclass
+from typing import Any
+
+from .identity import Identity
+from .integration_composition import (
+    IntegrationCompositionContinuityError,
+    IntegrationCompositionFacade,
+    compose_integration_facade,
+)
+from .product_capability_consumption import (
+    CapabilityConsumptionRequest,
+    consume_document,
+    consume_knowledge,
+    consume_reconstruction,
+    consume_search,
+    consume_search_source,
+)
+from .product_contract import ProductContract, ProductContractScopeError
+from .product_contract_resolution import GovernedDependencyVersionEvidence
+from .security import ActorContext
+from .workspace_shell import (
+    ExactVersionNavigationReference,
+    SubjectNavigationReference,
+    WorkspaceDestination,
+    WorkspaceShellState,
+    navigate_workspace,
+)
+
+
+class IntegrationAdapterError(RuntimeError):
+    """Base fail-closed error for the bounded P5.08 adapter seam."""
+
+
+@dataclass(frozen=True, slots=True)
+class IntegrationWorkspaceAdapter:
+    """Non-authoritative workspace adapter anchored to one composed facade."""
+
+    facade: IntegrationCompositionFacade
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.facade, IntegrationCompositionFacade):
+            raise TypeError("workspace adapter requires IntegrationCompositionFacade")
+
+    def open(
+        self,
+        *,
+        initial_destination: WorkspaceDestination = WorkspaceDestination.DISCOVER,
+    ) -> WorkspaceShellState:
+        return self.facade.open_workspace(initial_destination=initial_destination)
+
+    def navigate_subject(
+        self,
+        state: WorkspaceShellState,
+        *,
+        destination: WorkspaceDestination,
+        subject_id: Identity,
+    ) -> WorkspaceShellState:
+        self._require_state_continuity(state)
+        return navigate_workspace(
+            state,
+            destination=destination,
+            reference=SubjectNavigationReference(
+                organization=self.facade.context.organization,
+                subject_id=subject_id,
+            ),
+        )
+
+    def navigate_exact_version(
+        self,
+        state: WorkspaceShellState,
+        *,
+        destination: WorkspaceDestination,
+        subject_id: Identity,
+        version_id: Identity,
+    ) -> WorkspaceShellState:
+        self._require_state_continuity(state)
+        return navigate_workspace(
+            state,
+            destination=destination,
+            reference=ExactVersionNavigationReference(
+                organization=self.facade.context.organization,
+                subject_id=subject_id,
+                version_id=version_id,
+            ),
+        )
+
+    def _require_state_continuity(self, state: WorkspaceShellState) -> None:
+        if not isinstance(state, WorkspaceShellState):
+            raise TypeError("workspace adapter navigation requires WorkspaceShellState")
+        if state.organization != self.facade.context.organization:
+            raise ProductContractScopeError(
+                "workspace adapter state and composed integration must share Organization scope"
+            )
+        if state.actor != self.facade.context.actor:
+            raise ProductContractScopeError(
+                "workspace adapter state Actor must match the composed integration Actor"
+            )
+        if (
+            state.product_context is None
+            or state.product_context.product_id != self.facade.context.product_id
+            or state.product_context.product_contract_version_id
+            != self.facade.context.product_contract.version_id
+        ):
+            raise IntegrationCompositionContinuityError(
+                "workspace adapter state lost exact Product/Product Contract Version continuity"
+            )
+
+
+@dataclass(frozen=True, slots=True)
+class IntegrationCapabilityAdapter:
+    """Typed delegation seam for bounded CAP-001..CAP-004 read-oriented reliance."""
+
+    facade: IntegrationCompositionFacade
+    contract: ProductContract
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.facade, IntegrationCompositionFacade):
+            raise TypeError("capability adapter requires IntegrationCompositionFacade")
+        if not isinstance(self.contract, ProductContract):
+            raise TypeError("capability adapter requires the RFC-0004 ProductContract semantic owner")
+        if self.contract.organization != self.facade.context.organization:
+            raise ProductContractScopeError(
+                "capability adapter Product Contract and facade must share Organization scope"
+            )
+        if self.contract.product_id != self.facade.context.product_id:
+            raise ProductContractScopeError(
+                "capability adapter Product Contract must preserve the composed Product identity"
+            )
+        if self.contract.product_version != self.facade.context.product_version:
+            raise IntegrationCompositionContinuityError(
+                "capability adapter Product Contract lost the composed Product version"
+            )
+        if self.contract.version_pin != self.facade.context.product_contract:
+            raise IntegrationCompositionContinuityError(
+                "capability adapter requires the exact composed Product Contract Version"
+            )
+
+    def admit(
+        self,
+        request: CapabilityConsumptionRequest,
+        *,
+        governed_versions: tuple[GovernedDependencyVersionEvidence, ...],
+    ):
+        return self.facade.admit_capability(
+            request,
+            governed_versions=governed_versions,
+        )
+
+    def resolve_document(
+        self,
+        *,
+        request: CapabilityConsumptionRequest,
+        governed_versions: tuple[GovernedDependencyVersionEvidence, ...],
+        admitted: Any,
+        artifact_id: Identity,
+    ):
+        self.admit(request, governed_versions=governed_versions)
+        return consume_document(
+            contract=self.contract,
+            request=request,
+            admitted=admitted,
+            artifact_id=artifact_id,
+        )
+
+    def retrieve_knowledge(
+        self,
+        *,
+        request: CapabilityConsumptionRequest,
+        governed_versions: tuple[GovernedDependencyVersionEvidence, ...],
+        knowledge: tuple[Any, ...],
+        allow_stale: bool = False,
+    ):
+        self.admit(request, governed_versions=governed_versions)
+        return consume_knowledge(
+            contract=self.contract,
+            request=request,
+            knowledge=knowledge,
+            allow_stale=allow_stale,
+        )
+
+    def discover_sources(
+        self,
+        *,
+        request: CapabilityConsumptionRequest,
+        governed_versions: tuple[GovernedDependencyVersionEvidence, ...],
+        projection: Any,
+        current_sources: tuple[Any, ...],
+        query_text: str,
+    ):
+        self.admit(request, governed_versions=governed_versions)
+        return consume_search(
+            contract=self.contract,
+            request=request,
+            projection=projection,
+            current_sources=current_sources,
+            query_text=query_text,
+        )
+
+    def resolve_search_source(
+        self,
+        *,
+        request: CapabilityConsumptionRequest,
+        governed_versions: tuple[GovernedDependencyVersionEvidence, ...],
+        hit: Any,
+        current_sources: tuple[Any, ...],
+    ):
+        self.admit(request, governed_versions=governed_versions)
+        return consume_search_source(
+            contract=self.contract,
+            request=request,
+            hit=hit,
+            current_sources=current_sources,
+        )
+
+    def reconstruct_execution(
+        self,
+        *,
+        request: CapabilityConsumptionRequest,
+        governed_versions: tuple[GovernedDependencyVersionEvidence, ...],
+        manifest: Any,
+        evidence_constraints: tuple[tuple[Identity, str, tuple[str, ...], str], ...],
+    ):
+        self.admit(request, governed_versions=governed_versions)
+        return consume_reconstruction(
+            contract=self.contract,
+            request=request,
+            manifest=manifest,
+            evidence_constraints=evidence_constraints,
+        )
+
+
+@dataclass(frozen=True, slots=True)
+class IntegrationAdapters:
+    """One bounded integration-facing composition of workspace and capability adapters."""
+
+    facade: IntegrationCompositionFacade
+    workspace: IntegrationWorkspaceAdapter
+    capabilities: IntegrationCapabilityAdapter
+
+    def __post_init__(self) -> None:
+        if self.workspace.facade is not self.facade or self.capabilities.facade is not self.facade:
+            raise IntegrationAdapterError("integration adapters must share one exact composed facade")
+
+
+def compose_integration_adapters(
+    *,
+    contract: ProductContract,
+    actor: ActorContext,
+    effective_product_contract: Any,
+    governed_versions: tuple[GovernedDependencyVersionEvidence, ...],
+) -> IntegrationAdapters:
+    """Compose P5.08 adapters only through the R14-hardened P5.04 factory path."""
+
+    facade = compose_integration_facade(
+        contract=contract,
+        actor=actor,
+        effective_product_contract=effective_product_contract,
+        governed_versions=governed_versions,
+    )
+    return IntegrationAdapters(
+        facade=facade,
+        workspace=IntegrationWorkspaceAdapter(facade),
+        capabilities=IntegrationCapabilityAdapter(facade, contract),
+    )
