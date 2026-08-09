@@ -18,6 +18,7 @@ from arvectum_os_ref.product_capability_consumption import (
     OP_RESOLVE_DOCUMENT,
     CapabilityConsumptionRequest,
 )
+from arvectum_os_ref.product_contract import ProductContractScopeError
 from arvectum_os_ref.product_contract_resolution import (
     DependencySupportDisposition,
     GovernedDependencyVersionEvidence,
@@ -144,6 +145,25 @@ class P508WorkspaceCapabilityIntegrationAdaptersTests(unittest.TestCase):
         self.assertEqual(next_state.current_reference.subject_id, subject)
         self.assertEqual(next_state.current_reference.version_id, version)
         self.assertEqual(next_state.product_context.product_contract_version_id, self.contract.record.version_id)
+
+    def test_workspace_adapter_rejects_cross_organization_identity_scope(self) -> None:
+        adapter = self._adapters().workspace
+        workspace = adapter.open()
+
+        with self.assertRaises(ProductContractScopeError):
+            adapter.navigate_subject(
+                workspace,
+                destination=WorkspaceDestination.DOCUMENTS,
+                subject_id=Identity("document-subject", "foreign-doc", "org-b"),
+            )
+
+        with self.assertRaises(ProductContractScopeError):
+            adapter.navigate_exact_version(
+                workspace,
+                destination=WorkspaceDestination.DOCUMENTS,
+                subject_id=Identity("document-subject", "doc-p5-08", "org-a"),
+                version_id=Identity("document-version", "foreign-doc-v1", "org-b"),
+            )
 
     def test_capability_adapter_admission_reuses_current_facade_compatibility_gate(self) -> None:
         admission = self._adapters().capabilities.admit(
