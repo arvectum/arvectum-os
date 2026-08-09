@@ -70,7 +70,7 @@ class P505IntegrationScaffoldingLocalHarnessTests(unittest.TestCase):
             and node.module is not None
             and node.module.startswith("arvectum_os_ref")
         )
-        self.assertEqual(imports, ("arvectum_os_ref.integration_composition",))
+        self.assertEqual(imports, ("arvectum_os_ref.integration_adapters",))
 
     def test_template_does_not_copy_contract_resolution_or_domain_implementation(self) -> None:
         source = render_integration_entry_template().source.lower()
@@ -95,7 +95,7 @@ class P505IntegrationScaffoldingLocalHarnessTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             render_integration_entry_template(module_name="not-a-module")
 
-    def test_local_harness_composes_exact_facade_and_non_authoritative_workspace(self) -> None:
+    def test_local_harness_composes_shared_adapters_and_non_authoritative_workspace(self) -> None:
         result = run_local_integration_harness(
             contract=self.contract,
             actor=self.actor,
@@ -105,6 +105,7 @@ class P505IntegrationScaffoldingLocalHarnessTests(unittest.TestCase):
 
         self.assertTrue(result.provisional)
         self.assertEqual(result.product_contract, self.contract.version_pin)
+        self.assertIs(result.adapters.capabilities.facade, result.adapters.facade)
         self.assertEqual(result.facade.context.product_contract, self.contract.version_pin)
         self.assertEqual(result.workspace.presentation_authority, PresentationAuthority.NON_AUTHORITATIVE)
         self.assertIsNotNone(result.workspace.product_context)
@@ -144,7 +145,8 @@ class P505IntegrationScaffoldingLocalHarnessTests(unittest.TestCase):
     def test_scaffolding_module_remains_domain_neutral_and_infrastructure_free(self) -> None:
         source = inspect.getsource(scaffolding_module).lower()
         self.assertIn("internal/provisional", source)
-        self.assertIn("compose_integration_facade", source)
+        self.assertIn("compose_integration_adapters", source)
+        self.assertIn("compose_workspace_adapter", source)
         self.assertNotIn("bounded_product_ref", source)
         for forbidden in (
             "import fastapi",
