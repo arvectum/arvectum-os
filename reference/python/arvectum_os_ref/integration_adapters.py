@@ -1,14 +1,18 @@
-"""P5.08 — internal/provisional workspace and capability integration adapters.
+"""P5.08/R15 — internal/provisional integration adapter boundary.
 
-This module provides a single integration-facing adapter seam over the already
-hardened Phase 5 composition facade. Product/extension code can use the adapter
-without importing workspace or capability implementation modules directly.
+P5.08 introduced one integration-facing seam over the R14-hardened Phase 5
+composition facade. R15 narrows the reusable core to what both materially
+distinct consumers actually demonstrate: one exact composed facade plus bounded
+capability delegation. Workspace presentation remains available, but is an
+explicit optional binding for consumers that need it rather than an eagerly
+constructed assumption carried by every integration.
 
-The adapter is deliberately not a new semantic owner. Product Contract
+The adapters are deliberately not new semantic owners. Product Contract
 validation, dependency/version compatibility, capability admission, access
 checks, workspace scope, canonical reads and reconstruction remain delegated to
-their existing owners. The adapter grants no Authentication, Authorization,
-Organizational Authority, approval, permission or capability lifecycle state.
+their existing owners. The adapter boundary grants no Authentication,
+Authorization, Organizational Authority, approval, permission or capability
+lifecycle state.
 
 The current Python/module/dataclass shapes are internal/provisional reference
 evidence only. They do not establish a Stable/public SDK/API, package, route,
@@ -48,12 +52,12 @@ from .workspace_shell import (
 
 
 class IntegrationAdapterError(RuntimeError):
-    """Base fail-closed error for the bounded P5.08 adapter seam."""
+    """Base fail-closed error for the bounded integration adapter seam."""
 
 
 @dataclass(frozen=True, slots=True)
 class IntegrationWorkspaceAdapter:
-    """Non-authoritative workspace adapter anchored to one composed facade."""
+    """Optional non-authoritative workspace binding anchored to one facade."""
 
     facade: IntegrationCompositionFacade
 
@@ -262,15 +266,41 @@ class IntegrationCapabilityAdapter:
 
 @dataclass(frozen=True, slots=True)
 class IntegrationAdapters:
-    """One bounded integration-facing composition of workspace and capability adapters."""
+    """Reusable cross-consumer core: exact facade plus capability delegation.
+
+    R15 intentionally does not store a workspace adapter here. The first bounded
+    product may opt into workspace presentation through :func:`compose_workspace_adapter`;
+    the headless evidence extension therefore carries no eager workspace binding.
+    """
 
     facade: IntegrationCompositionFacade
-    workspace: IntegrationWorkspaceAdapter
     capabilities: IntegrationCapabilityAdapter
 
     def __post_init__(self) -> None:
-        if self.workspace.facade is not self.facade or self.capabilities.facade is not self.facade:
-            raise IntegrationAdapterError("integration adapters must share one exact composed facade")
+        if self.capabilities.facade is not self.facade:
+            raise IntegrationAdapterError(
+                "integration capability adapter must share one exact composed facade"
+            )
+
+    @property
+    def workspace(self) -> IntegrationWorkspaceAdapter:
+        """Compatibility convenience for the current internal reference only.
+
+        Workspace is created lazily and is not part of the shared dataclass state.
+        New integration code should opt in explicitly through
+        :func:`compose_workspace_adapter` so headless consumers do not accidentally
+        treat workspace presentation as a universal integration requirement.
+        """
+
+        return compose_workspace_adapter(adapters=self)
+
+
+def compose_workspace_adapter(*, adapters: IntegrationAdapters) -> IntegrationWorkspaceAdapter:
+    """Bind optional workspace presentation to one already composed integration."""
+
+    if not isinstance(adapters, IntegrationAdapters):
+        raise TypeError("workspace binding requires IntegrationAdapters")
+    return IntegrationWorkspaceAdapter(adapters.facade)
 
 
 def compose_integration_adapters(
@@ -280,7 +310,7 @@ def compose_integration_adapters(
     effective_product_contract: GovernedVersionPin,
     governed_versions: tuple[GovernedDependencyVersionEvidence, ...],
 ) -> IntegrationAdapters:
-    """Compose P5.08 adapters only through the R14-hardened P5.04 factory path."""
+    """Compose the shared adapter core only through the R14-hardened factory path."""
 
     facade = compose_integration_facade(
         contract=contract,
@@ -290,6 +320,5 @@ def compose_integration_adapters(
     )
     return IntegrationAdapters(
         facade=facade,
-        workspace=IntegrationWorkspaceAdapter(facade),
         capabilities=IntegrationCapabilityAdapter(facade, contract),
     )
