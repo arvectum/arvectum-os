@@ -1,7 +1,7 @@
 # Arvectum OS Phase 6 — Product-driven Platform Validation
 
 Status: `Active`
-Version: `1.6.0`
+Version: `1.7.0`
 Created: `2026-08-09`
 Updated: `2026-08-09`
 Owner: `ООО «Арвектум»`
@@ -38,7 +38,11 @@ P6.03 is **complete with PASS**. Stage 1 proved the exact P6.02 boundary and fai
 
 P6.04 is **complete with PASS** under [`P6-04-product-value-delivery-friction-governance-evidence-capture.md`](../reviews/P6-04-product-value-delivery-friction-governance-evidence-capture.md). It records directly evidenced governance/control value and material integration overhead without inventing absent customer KPIs. The first real case preserved external authority, exact Product Contract/dependency continuity and reconstruction, but reached `0/1` client-ready completion because the run retained `0/7` exact tender-attachment bytes/digests. Repository metadata also shows a material proof/change footprint: product Stage 1 `202` additions / `5` changed files, product Stage 2 `687` / `9`, and platform Stage 1 repair/proof `1223` additions + `45` deletions / `9`; these are change-surface proxies, not engineering hours or monetary cost.
 
-The optional Stage 3 capacity of maximum three calibration cases remains deliberately unconsumed. The current blocker is known; the next useful calibration case should test a materially changed evidence contour after P6.05 rather than repeat the same incomplete source-package path. P6.05 is therefore the current work item.
+P6.05 implementation remediation is now merged on both sides: the bounded Arvectum OS CAP-001 admission work is in platform `main` as `5dbbc7b3af1f0f3896301ef833de2214cb44e6f9`, and `ai-corporation` PR `#142` is merged as `bf9a1c5438426031fce36370344ada969d2493dd`. Hosted implementation CI is green, but P6.05 remains open because real `7/7` exact attachment evidence has not yet been observed in the authorized owner-operated runtime.
+
+The remaining execution is therefore decomposed under [`P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md`](P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md). The Mac mini is treated only as the current bounded internal operational environment for ООО «Арвектум», not as a production or public deployment architecture commitment.
+
+The optional Stage 3 capacity of maximum three calibration cases remains deliberately unconsumed. The current blocker is known; the next useful calibration case should test a materially changed evidence contour after P6.05 rather than repeat the same incomplete source-package path.
 
 ## 2. Starting state inherited from M5
 
@@ -70,7 +74,7 @@ P6.02 added the first real Product Contract boundary without changing that lifec
 | `P6.02` | First real Product Contract boundary + bounded adoption plan | 🟩 Complete | `██████████ 100%` |
 | `P6.03` | First real product/workflow platform integration | 🟩 Complete / PASS | `██████████ 100%` |
 | `P6.04` | Product value, delivery-friction + governance evidence capture | 🟩 Complete / PASS | `██████████ 100%` |
-| `P6.05` | Platform-gap remediation from first real use | 🟨 Current | `░░░░░░░░░░ 0%` |
+| `P6.05` | Platform-gap remediation from first real use | 🟨 Current — implementation merged; local live evidence pending | `tracked by subtasks` |
 | `P6.06` | Second materially distinct real product/workflow target + Product Contract | ⬜ | `░░░░░░░░░░ 0%` |
 | `P6.07` | Second real product/workflow platform integration | ⬜ | `░░░░░░░░░░ 0%` |
 | `P6.08` | Cross-product reuse and Platform Gravity evidence | ⬜ | `░░░░░░░░░░ 0%` |
@@ -78,6 +82,22 @@ P6.02 added the first real Product Contract boundary without changing that lifec
 | `P6.10` | Product-driven architecture fitness + value evidence matrix | ⬜ cross-cutting | `░░░░░░░░░░ 0%` |
 | `P6.11` | Product/platform hardening, ADR + refactoring review | ⬜ | `░░░░░░░░░░ 0%` |
 | `P6.12` | Phase 6 / M6 closure review | ⬜ | `░░░░░░░░░░ 0%` |
+
+### P6.05 execution breakdown
+
+| ID | Subtask | Status |
+|---|---|---|
+| `P6.05-I1` | Bounded platform exact-document admission remediation | 🟩 Complete — merged `5dbbc7b3...` |
+| `P6.05-I2` | Product exact-attachment evidence capture + governed bridge | 🟩 Complete — merged `bf9a1c543...` |
+| `P6.05-L1` | Local host/runtime baseline | ⬜ Pending |
+| `P6.05-L2` | Reproducible Arvectum OS local checkout + reference runtime start | ⬜ Pending |
+| `P6.05-L3` | Secure local configuration + secrets boundary | ⬜ Pending |
+| `P6.05-L4` | Internal Organization + operator bootstrap | ⬜ Pending |
+| `P6.05-L5` | First real product connection through exact P6.02 boundary | ⬜ Pending |
+| `P6.05-L6` | Local synthetic/redacted regression + negative-path smoke | ⬜ Pending |
+| `P6.05-L7` | Real P6.05 exact-attachment live run (`7/7` gate) | ⬜ Pending |
+| `P6.05-L8` | Governed evidence admission + canonical P6.05 closure package | ⬜ Pending |
+| `P6.05-L9` | Dogfooding friction capture | ⬜ Pending / cross-cutting |
 
 ## 4. Work-item intent and exit evidence
 
@@ -167,18 +187,23 @@ Current evidence-backed P0 problem statement from P6.04:
 
 > Enable the first real workflow to obtain and govern sufficient exact external tender attachment evidence to support a truthful client-ready completeness decision, while preserving external authority, exact version/provenance, Organization/rights controls, product ownership of procurement semantics and the current no-external-action boundary.
 
-Possible dispositions remain open:
+The minimum bounded implementation selected from actual product/platform evidence is now implemented: product-local retrieval remains product-owned, exact bytes/digests are captured product-side, and bounded governed CAP-001 admission/reliance uses the existing platform semantic boundary. This implementation does not adopt CAP-002/CAP-003 or define storage/service/public topology.
 
-- fix existing platform behavior;
-- clarify Product Contract;
-- keep retrieval behavior product-local while governing exact admission/reliance through the platform;
-- add bounded capability functionality;
-- simplify/remove a shared abstraction;
-- open RFC/ADR/policy work where the selected decision level requires it.
+The implementation itself is not P6.05 closure. Real execution requires the owner-operated local environment because the selected EIS/getDocsIP contour depends on authorized local configuration that hosted/reference CI intentionally does not possess.
 
-P6.04 does not pre-select an EIS/Fabrikant client, storage backend, document service topology, public API/SDK, CAP-002/CAP-003 adoption, Stable Product Contract or capability lifecycle promotion.
+Remaining execution is governed by [`P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md`](P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md):
 
-No speculative generalization.
+1. `P6.05-L1` host/runtime baseline;
+2. `P6.05-L2` reproducible local Arvectum OS start;
+3. `P6.05-L3` secure local configuration/secrets boundary;
+4. `P6.05-L4` internal Organization/operator bootstrap;
+5. `P6.05-L5` exact P6.02 first-product connection;
+6. `P6.05-L6` local synthetic/redacted + negative-path smoke;
+7. `P6.05-L7` real exact-attachment live run with truthful `7/7` gate;
+8. `P6.05-L8` governed admission + canonical closure package;
+9. `P6.05-L9` cross-cutting dogfooding friction capture.
+
+The Mac mini is an operational environment for this bounded internal validation, not an architectural commitment to macOS or single-host deployment. Successful local operation does not imply Production readiness, Stable/public API, customer installer, SLA/support commitment or capability promotion.
 
 ### P6.06 — Second materially distinct real product/workflow target + Product Contract
 
@@ -281,7 +306,23 @@ P6.03 First real integration ✓ PASS
  ↓
 P6.04 Value / friction evidence ✓ PASS
  ↓
-P6.05 Evidence-backed remediation ← current
+P6.05 bounded implementation remediation ✓ merged
+ ↓
+P6.05-L1 Local host/runtime baseline ← current
+ ↓
+P6.05-L2 Reproducible local Arvectum OS start
+ ↓
+P6.05-L3 Secure local configuration / secrets boundary
+ ↓
+P6.05-L4 Internal Organization/operator bootstrap
+ ↓
+P6.05-L5 First real product connection
+ ↓
+P6.05-L6 Local proof + negative-path smoke
+ ↓
+P6.05-L7 Real exact attachment evidence — 7/7 required
+ ↓
+P6.05-L8 Governed admission + canonical P6.05 closure
  ↓
 R18 First Real-use Health Review
  ↓
@@ -305,6 +346,8 @@ P6.12 Closure review
  ↓
 M6
 ```
+
+`P6.05-L9` dogfooding friction capture is cross-cutting across L1-L8 and does not independently block dependency order, but its evidence must be recorded before P6.05 closure.
 
 ## 7. M6 exit criteria
 
@@ -340,18 +383,20 @@ Phase 6 does not automatically include:
 - automatic capability promotion;
 - speculative generic business modules.
 
+The P6.05 local internal runtime does not alter these exclusions. It is a bounded internal operational environment required to execute already-selected real evidence, not Phase 7 production-readiness work.
+
 ## 9. ADR and governance gate
 
 Real-product pressure may cross decisions that reference phases did not. Before material reliance, create the minimum sufficient ADR/RFC/policy/Product Contract decision where actual evidence crosses the relevant threshold.
 
 Do not delay a bounded reversible product validation merely because a future production technology remains undecided, but do not use experimentation to bypass security, authority, data integrity, contractual commitments or governance.
 
-P6.02/R17/P6.03 selected no durable persistence, Event delivery, IAM, public/stable serialization/API or service topology and therefore created no new ADR. P6.04 records no new durable technology choice; it only measures the demonstrated attachment-evidence blocker. P6.05 must choose the minimum sufficient remediation boundary. If that remediation becomes durable, cross-cutting, externally constraining or public/stable, reopen the minimum sufficient ADR/RFC/policy/Product Contract gate before material reliance.
+P6.02/R17/P6.03 selected no durable persistence, Event delivery, IAM, public/stable serialization/API or service topology and therefore created no new ADR. P6.04 records no new durable technology choice; it only measures the demonstrated attachment-evidence blocker. P6.05's bounded implementation and local-runtime substream likewise do not choose CAP-002/CAP-003, a general storage/service topology, public API/SDK or production architecture. If local execution discovers a materially constraining dependency, reopen the minimum sufficient ADR/RFC/policy/Product Contract gate before material reliance.
 
 ## 10. Current canonical action
 
-> **P6.05 — Platform-gap remediation from first real use.**
+> **P6.05-L1 — Local host/runtime baseline.**
 
-Use the P6.04 evidence record as the problem statement. Preserve the successful exact authority/version/provenance/reconstruction and Product Contract behavior, and remediate only the source-package completeness gap needed for a truthful client-ready decision path.
+Use [`P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md`](P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md) as the execution plan. Inventory only the concrete Mac mini/runtime/network/configuration prerequisites needed for the bounded P6.05 path, including rollback/removal locations. Do not turn host inventory into a general supported-hardware or production deployment specification.
 
-Do not infer missing business KPI values, do not broaden CAP-001 merely because retrieval is useful, and do not pre-select CAP-002/CAP-003, storage, service topology or public compatibility. Reopen Stage 3 only after a materially changed evidence contour exists and there is a specific hypothesis worth validating.
+After L1, proceed dependency-aware through L2-L7. Do not skip local smoke and do not mark P6.05 PASS before the authorized real runner produces truthful complete evidence or a new blocker is canonically recorded.
