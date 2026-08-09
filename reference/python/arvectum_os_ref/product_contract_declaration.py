@@ -7,14 +7,19 @@ bounded reference implementation.  This module validates that declaration as a
 whole and returns immutable inspection evidence; it does not define a second
 manifest, registry, public SDK/API, wire format or compatibility contract.
 
-The P5.02 baseline is intentionally bounded to the current RFC-0004 ``Provisional``
-J1/J2 integration journeys and the P4.08 Product Contract.  It validates:
+The P5.02 baseline is intentionally bounded to current RFC-0004 ``Provisional``
+integration journeys. P5.09 reuse evidence extends the original J1/J2 assumption:
+read-only operations may legitimately expose only a derived governed view and
+therefore have no direct canonical-access declaration. Where canonical access is
+declared, its read/write, authority-source and failure semantics remain checked.
+
+The validator checks:
 
 * exact Product Contract Subject/Version and Product identity/version continuity;
 * accountable owner, bounded scope and compatibility assumptions;
 * explicit Provisional dependency/version/operation reliance and responsibilities;
 * operation side-effect/gate/failure semantics;
-* canonical read/write, authority-source and failure declarations;
+* declared canonical read/write, authority-source and failure semantics where applicable;
 * required Authorization/Data Governance and mutation authority gates;
 * Organization scope, portability, retention/deletion, review and exit declarations;
 * rejection of hidden product/platform coupling mechanisms.
@@ -210,8 +215,8 @@ class ProductContractDeclarationValidation:
             raise ValueError("declaration validation must preserve operations")
         if any(not isinstance(item, DeclaredOperationEvidence) for item in self.operations):
             raise ValueError("validated operations must contain declaration evidence")
-        if not isinstance(self.canonical_accesses, tuple) or not self.canonical_accesses:
-            raise ValueError("declaration validation must preserve canonical access evidence")
+        if not isinstance(self.canonical_accesses, tuple):
+            raise ValueError("declaration validation canonical access evidence must be an immutable tuple")
         if any(not isinstance(item, DeclaredCanonicalAccessEvidence) for item in self.canonical_accesses):
             raise ValueError("validated canonical accesses must contain declaration evidence")
         _require_text(self.portability_responsibility, label="validated portability responsibility")
@@ -291,15 +296,11 @@ def _validate_operation_security_and_access(contract: ProductContract) -> None:
             raise ProductContractSecurityBoundaryError(
                 f"canonical mutation operation {operation.operation_name} must also declare OrganizationalAuthority"
             )
-        if not operation.canonical_accesses:
-            raise ProductContractCanonicalAccessError(
-                f"operation {operation.operation_name} must declare boundary-relevant canonical access"
-            )
-        if OperationSideEffectClass.READ_ONLY in operation.side_effect_classes and not any(
+        if operation.canonical_accesses and OperationSideEffectClass.READ_ONLY in operation.side_effect_classes and not any(
             CanonicalAccessMode.READ in item.access_modes for item in operation.canonical_accesses
         ):
             raise ProductContractCanonicalAccessError(
-                f"read operation {operation.operation_name} must declare canonical Read access"
+                f"read operation {operation.operation_name} with canonical access must declare canonical Read access"
             )
         if OperationSideEffectClass.CANONICAL_MUTATION in operation.side_effect_classes and not any(
             CanonicalAccessMode.WRITE in item.access_modes for item in operation.canonical_accesses
@@ -323,10 +324,16 @@ def validate_product_contract_declaration(
     """Validate the complete bounded declaration before governed platform reliance.
 
     P5.02 intentionally admits only ``Provisional`` Product Contracts because the
-    current J1/J2 and P4.08 evidence does not contain the compatibility, support,
+    current integration evidence does not contain the compatibility, support,
     conformance or deprecation evidence needed to validate ``Stable``,
-    ``Deprecated`` or ``Retired`` declarations.  Failing closed here avoids turning
+    ``Deprecated`` or ``Retired`` declarations. Failing closed here avoids turning
     an internal validator into a lifecycle-promotion mechanism.
+
+    P5.09 clarified that RFC-0004 canonical-state declarations are required where
+    applicable: a derived read-only operation such as reconstruction may cross the
+    Product Contract boundary without exposing a new direct canonical read. Empty
+    ``canonical_accesses`` therefore means no direct canonical access is declared;
+    it does not grant source access or bypass the owning capability's runtime checks.
     """
 
     if not isinstance(contract, ProductContract):

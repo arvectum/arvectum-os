@@ -1,9 +1,10 @@
 # P5.08 — Workspace / Capability Integration Adapters Without Private Coupling
 
-Status: `Implemented — hosted verification pending`
+Status: `Complete`
 Date: `2026-08-09`
 Owner: `ООО «Арвектум»`
 Task classification: `platform`
+Result: `PASS`
 
 ## 1. Scope
 
@@ -130,7 +131,7 @@ The test module defines coverage for:
 10. absence of authority/lifecycle fields in adapter evidence;
 11. internal/provisional and stack-neutral adapter implementation constraints.
 
-Hosted GitHub Actions execution for the final P5.08 head was not observable through the available connector in this work session. Therefore this review does **not** claim a hosted test count or hosted CI PASS that has not been verified.
+Hosted `Reference Python CI #242` executed the full reference suite on the P5.09 PR merge candidate and passed **675 tests** with `OK`. The run includes all focused P5.08 regression cases, so the previously pending hosted-verification condition is now satisfied by observable accumulated evidence.
 
 ## 9. ADR / RFC / lifecycle gate
 
@@ -148,10 +149,8 @@ If this adapter seam later becomes a durable externally relied-upon SDK/package/
 
 ## 10. Result
 
-**Implementation result: complete for the bounded P5.08 code/review scope.**
+**PASS.** P5.08 is complete for its bounded internal/provisional scope. Hosted full-suite evidence is observable in `Reference Python CI #242` with 675 tests passing.
 
-Canonical completion should be marked `PASS` and the Phase 5 roadmap advanced to P5.09 only after the focused P5.08 tests and full reference suite are executed successfully in an observable environment.
-
-Expected next canonical work item after verification and roadmap synchronization:
+The next canonical work item is:
 
 > **P5.09 — Second materially distinct integration reuse proof.**

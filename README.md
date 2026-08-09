@@ -39,40 +39,26 @@ The completed canonical milestone sequence is:
 
 `Phase 3 — Shared Platform Capabilities` is complete; its M3 closure remains scoped to the bounded shared-capability reference baseline and does not promote any capability to `Active`.
 
-`Phase 5 — SDK, Contracts and Extension Experience` is now `Active`. [P5.01 — Integration Boundary Revalidation + Developer Journeys](docs/reviews/P5-01-integration-boundary-revalidation-developer-journeys.md), [P5.02 — Product Contract Declaration Model + Machine-Checkable Validation Baseline](docs/reviews/P5-02-product-contract-declaration-model-machine-checkable-validation-baseline.md), [R13 — Integration Boundary Review](docs/reviews/R13-integration-boundary-review.md), [P5.03 — Governed Dependency/Version Resolution + Compatibility Semantics](docs/reviews/P5-03-governed-dependency-version-resolution-compatibility-semantics.md), [P5.04 — Integration Composition API/Facade Boundary](docs/reviews/P5-04-integration-composition-api-facade-boundary.md), [P5.05 — Scaffolding/Templates + Local Integration Harness](docs/reviews/P5-05-scaffolding-templates-local-integration-harness.md), [P5.06 — Security, Authority, Rights + Organization-Scope Integration Guards](docs/reviews/P5-06-security-authority-rights-organization-scope-integration-guards.md) and [R14 — Developer Safety / Contract Health Review](docs/reviews/R14-developer-safety-contract-health-review.md) record **`PASS`**. The current canonical action is now `P5.07 — Event/provenance/portability integration support`.
+`Phase 5 — SDK, Contracts and Extension Experience` is `Active`. P5.01 through P5.09 are complete, with R13 and R14 passed. P5.08 establishes the internal/provisional workspace/capability adapter seam without product-side private coupling. P5.09 proves reuse through a materially distinct read-only CAP-004 evidence/reconstruction extension with its own `Provisional 0.1.0` Product Contract and the same `arvectum_os_ref.integration_adapters` boundary as the first bounded product.
 
-P5.01/P5.02/R13/P5.03/P5.04/P5.05/P5.06/R14 establish the current integration baseline:
+The P5.09 second-consumer proof also produced one bounded refactoring finding, P5.09-F1: a derived read-only operation does not necessarily expose direct canonical access. The internal P5.02 validator therefore no longer requires a fake canonical Read declaration for such a view. Where direct canonical access is declared, Read semantics remain validated; canonical mutation still requires explicit Write plus Organizational Authority. The change refines internal validation evidence and does not amend RFC-0004 or create a new contract authority.
+
+The current Phase 5 integration baseline includes:
 
 - Product Contract remains the governed product/platform boundary authority and the existing RFC-0004 `ProductContract` remains the single executable declaration model for the bounded reference implementation;
 - relied-upon dependency, operation and version semantics are explicit and machine-checkable;
-- J1 = governed read/composition consumer;
-- J2 = consequential product action through exact Product Contract continuity and Governed Execution;
-- P5.02 validation evidence preserves exact Product Contract/Product/dependency/operation/canonical-access semantics, Organization scope, accountable owner and lifecycle/review/exit responsibilities;
-- R13-F1 preserves dependency provider/consumer/failure responsibilities and operation failure semantics in derived evidence;
-- P5.03 adds exact Product Contract/dependency version resolution against explicit governed provider/version support evidence, with no SemVer/package/module/dataclass inference and no automatic fallback version;
-- compatibility outcomes are explicit (`Compatible`, `VersionMismatch`, `Unsupported`, `Deprecated`, `Retired`, `Ambiguous`) and non-compatible reliance fails closed deterministically;
-- changed/deprecated/retired dependency reliance exposes migration obligations rather than silently advancing to another version;
-- P5.04 adds one internal/provisional integration composition facade over the exact P5.02/P5.03 boundary plus capability admission, non-authoritative workspace entry and Product Contract-backed Governed Execution;
-- the product-owned P5.04 J1/J2 journey proof imports Arvectum OS through that single facade module rather than the private runtime/capability/workspace module graph;
-- P5.05 adds readable/replaceable provisional scaffolding plus an in-process local harness over the P5.04 facade, without copying bounded-product implementation or requiring production infrastructure;
-- the P5.05 harness requires exact Product Contract/version/dependency support evidence and preserves a non-authoritative workspace;
-- P5.06 proves wrong-Organization actor/request paths fail closed through P5.04/P5.05 convenience surfaces;
+- exact dependency compatibility is determined from explicit governed provider/version evidence rather than package/module shape, inferred SemVer or automatic fallback;
+- dependency-backed facade/adapter actions require explicit current governed provider/version evidence and re-run the existing resolution semantics before reliance;
+- the first bounded product and the second read-only extension use the same internal/provisional `IntegrationAdapters` boundary rather than private platform implementation imports;
+- workspace presentation, capability-specific access/reconstruction semantics, canonical-state decisions and Governed Execution remain delegated to their existing semantic owners;
+- wrong-Organization, stale-continuity, missing-current-evidence and rights/classification negative paths remain fail-closed;
 - Product Contract/capability admission remains non-authoritative and does not create permission, approval or Organizational Authority;
-- purpose/right/classification constraints remain enforced by the P3.07 semantic owner after integration admission;
-- RFC-0005 Authorization, Organizational Authority, Data Governance and approval remain independent execution-time gates and stale gate evidence cannot self-advance;
-- stale effective Product Contract continuity cannot self-advance integration composition;
-- R14-F1 makes the governed `compose_integration_facade()` factory the normal construction path so caller-created derived evidence cannot bypass P5.02/P5.03 as a supported developer path;
-- R14-F2 requires explicit current governed dependency/version evidence at dependency-backed J1/J2 facade actions and re-runs P5.03 before reliance, so composition-time compatibility cannot silently become indefinitely current provider-support evidence;
-- composition-time compatibility remains immutable inspection/history evidence rather than permission, Organizational Authority or current support authority;
-- missing current dependency evidence fails closed through a typed integration error, while current deprecated/retired/unsupported/version-mismatched/ambiguous provider evidence remains owned by the existing typed P5.03 errors;
-- capability admission, workspace presentation authority, security/authority gates and canonical-state decisions remain delegated to their existing semantic owners;
-- Product Contract declaration/admission/validation/resolution/facade composition/scaffolding grants neither Authorization nor Organizational Authority;
-- capability lifecycle remains owned by RFC-0001 governance and the canonical capability catalog, not by Product Contract or integration convenience tooling;
-- current Python module/import/dataclass/facade/scaffolding/harness/guard shapes remain internal/provisional executable evidence, not a Stable/public SDK contract;
-- private tables/stores/imports/routes/Event streams, implicit shared state and lower-level mutation bypasses are not valid integration boundaries;
-- no stable/public serialization, SDK/API, wire, package, registry, facade, scaffolding, IAM/policy, freshness protocol, generated-code or version-negotiation boundary is created by the Phase 5 tooling completed so far.
+- Event/provenance/portable evidence remains version-aware and non-authoritative where derived;
+- product/extension-specific behavior remains consumer-owned;
+- Product Contract lifecycle and capability lifecycle remain distinct;
+- no Stable/public SDK/API/wire/package/registry/facade/adapter/plugin-runtime/generated-code compatibility boundary is created by the current reference implementation.
 
-Hosted `Reference Python CI #232` passed the full 644-test reference suite, including all 10 focused R14 regression cases plus the adapted P5.04/P5.06 integration tests.
+Hosted `Reference Python CI #246` passed on the final P5.09 branch head after code, review and roadmap synchronization. The earlier P5.09 code proof was also covered by `Reference Python CI #242`, which passed the full 675-test reference suite.
 
 The retained capability set remains unchanged:
 
@@ -81,9 +67,9 @@ The retained capability set remains unchanged:
 - `CAP-003 — Search / Index Projection` — `Incubating / Provisional`, non-authoritative governed discovery/projection semantics;
 - `CAP-004 — Audit / Reconstruction Support` — `Incubating / Provisional`, derived/read-oriented.
 
-The P4.08 bounded Product Contract remains `Provisional 0.1.0`.
+The P4.08 bounded Product Contract remains `Provisional 0.1.0`. The P5.09 evidence-extension Product Contract is also `Provisional 0.1.0`.
 
-P5.01/P5.02/R13/P5.03/P5.04/P5.05/P5.06/R14 does **not** promote any capability to `Active`, create a Stable Product Contract, create a Stable/public API/SDK/wire/manifest/module/package/registry/facade/scaffolding/IAM-policy/freshness/generated-code/version-negotiation compatibility boundary, select durable package/plugin/network/IAM/Event/storage infrastructure, establish `Production` or operational readiness, claim M5/full-platform conformance, or create SLA/support/commercial commitments.
+Completion of P5.09 does **not** promote any capability to `Active`, stabilize either Product Contract, establish `Production` or operational readiness, claim M5/full-platform conformance, or create SLA/support/commercial commitments. The second consumer is reuse evidence, not a lifecycle transition.
 
 Canonical current evidence:
 
@@ -97,15 +83,20 @@ Canonical current evidence:
 - [P5.05 scaffolding/templates + local harness review](docs/reviews/P5-05-scaffolding-templates-local-integration-harness.md)
 - [P5.06 security/authority/rights Organization-scope integration-guard review](docs/reviews/P5-06-security-authority-rights-organization-scope-integration-guards.md)
 - [R14 Developer Safety / Contract Health Review](docs/reviews/R14-developer-safety-contract-health-review.md)
+- [P5.07 Event/provenance/portability integration-support review](docs/reviews/P5-07-event-provenance-portability-integration-support.md)
+- [P5.08 workspace/capability integration-adapter review](docs/reviews/P5-08-workspace-capability-integration-adapters.md)
+- [P5.09 second materially distinct integration reuse proof](docs/reviews/P5-09-second-materially-distinct-integration-reuse-proof.md)
 - [P4.12 Phase 4 / M4 closure review](docs/reviews/P4-12-phase-4-m4-closure-review.md)
 - [P4.08 bounded Product Contract](docs/contracts/P4-08-BOUNDED-PRODUCT-ENTRY-PRODUCT-CONTRACT.md)
 - [Platform Capability Catalog](docs/catalogs/PLATFORM-CAPABILITY-CANDIDATE-CATALOG.md)
 
 The current canonical action is:
 
-> **P5.07 — Event/provenance/portability integration support.**
+> **R15 — Reuse / Developer Experience Refactoring Review.**
 
-P5.07 should expose the smallest bounded integration support for correct Event attribution, provenance and portable semantic state through the R14-hardened integration path, preserving exact Actor/Execution/Product Contract/version context and keeping telemetry non-authoritative without prematurely selecting durable infrastructure or serialization/freshness mechanisms.
+R15 should review the demonstrated two-consumer evidence before further generalization: retain only abstractions supported by both materially distinct integrations, preserve the P5.09-F1 distinction between derived read-only views and direct canonical access, remove or contain consumer-shaped assumptions, and keep Product Contract/capability lifecycle plus public/stable compatibility decisions separate.
+
+After R15, the next roadmap work item is `P5.10 — Phase 5 conformance + architecture fitness matrix`.
 
 The current delivery sequence is maintained in the [Canonical Roadmap](docs/roadmap/ROADMAP.md) and [RFC Index](docs/rfc/README.md).
 
