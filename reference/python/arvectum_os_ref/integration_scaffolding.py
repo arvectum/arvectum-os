@@ -3,7 +3,9 @@
 P5.05 reduced repeated setup around the composition facade. After P5.08/P5.09
 proved a materially reused adapter seam, R15 aligns the default developer path
 with that demonstrated boundary instead of continuing to teach new consumers the
-lower-level facade directly.
+lower-level facade directly. ``compose_integration_facade`` remains the semantic
+composition path underneath ``compose_integration_adapters``; R15 changes the
+developer-facing reference path, not the owning validation/resolution behavior.
 
 The scaffold remains readable and replaceable. Workspace presentation is an
 explicit optional binding over the shared capability-first adapter core; the
