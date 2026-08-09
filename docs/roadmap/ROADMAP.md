@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.27.0`
+Version: `2.28.0`
 Created: `2026-08-07`
 Updated: `2026-08-09`
 Owner: `ООО «Арвектум»`
@@ -17,13 +17,13 @@ Detailed completed-phase evidence remains in the corresponding `PHASE-N-...` roa
 
 ## 2. Version note
 
-Version `2.27.0` activates **Phase 5 — SDK, Contracts and Extension Experience** after repository-confirmed Phase 4 closure.
+Version `2.28.0` records completion of **P5.01 — Integration boundary revalidation + developer journeys** and advances the current canonical action to P5.02.
 
-Phase 4 is `Complete`: P4.12 records `PASS`, `M4 — Coherent governed workspace baseline` is `Achieved` for the declared bounded reference scope, and final synchronized P4.11 validation recorded `570 tests`, `OK`.
+P5.01 revalidated the Phase 5 integration boundary against M4 evidence. The Product Contract remains the governed product/platform boundary authority; exact dependency/operation/version semantics define relied-upon integration behavior; current Python module paths, dataclass shapes, operation-token spellings and monorepo package layout remain internal/provisional executable evidence rather than a Stable/public SDK contract.
 
-Phase 5 has been boundary-revalidated and decomposed in [`PHASE-5-SDK-CONTRACTS-EXTENSION-EXPERIENCE.md`](PHASE-5-SDK-CONTRACTS-EXTENSION-EXPERIENCE.md). It is now `Active`; the current canonical action is `P5.01`.
+The P5.01 review defines J1 governed read/composition and J2 consequential product action as the minimum real developer journeys, with a read-only evidence/reconstruction extension retained only as a candidate for later second-integration reuse evidence.
 
-Activation does not create a public SDK/API, Stable Product Contract, `Active` Platform Capability, production-readiness approval or compatibility/SLA commitment.
+This transition does not create a public SDK/API, Stable Product Contract, `Active` Platform Capability, production-readiness approval or compatibility/SLA commitment.
 
 ## 3. Verified architecture baseline
 
@@ -35,11 +35,13 @@ Activation does not create a public SDK/API, Stable Product Contract, `Active` P
 - Phase 3 / `M3` — complete / achieved for the bounded shared-capability reference scope;
 - Phase 4 / `M4` — complete / achieved for the bounded governed-workspace reference scope;
 - [`P4.12 closure review`](../reviews/P4-12-phase-4-m4-closure-review.md) — `PASS`;
+- [`P5.01 integration boundary revalidation`](../reviews/P5-01-integration-boundary-revalidation-developer-journeys.md) — `PASS`;
 - [`PHASE-4-WORKSPACE-OPERATOR-EXPERIENCE.md`](PHASE-4-WORKSPACE-OPERATOR-EXPERIENCE.md) — `Complete`;
+- [`PHASE-5-SDK-CONTRACTS-EXTENSION-EXPERIENCE.md`](PHASE-5-SDK-CONTRACTS-EXTENSION-EXPERIENCE.md) — `Active 1.1.0`;
 - CAP-001 through CAP-004 remain `Incubating / Provisional`;
 - P4.08 Product Contract remains `Provisional 0.1.0`;
 - no Platform Capability is `Active` merely because M3/M4 is achieved;
-- no stable/public SDK, API, wire or frontend compatibility boundary has been created by M4.
+- no stable/public SDK, API, wire or frontend compatibility boundary has been created by M4 or P5.01.
 
 ## 4. Strategic roadmap
 
@@ -72,12 +74,13 @@ M4 does not imply production readiness, capability lifecycle `Active`, Stable Pr
 
 Canonical detailed work breakdown:
 
-- [`PHASE-5-SDK-CONTRACTS-EXTENSION-EXPERIENCE.md`](PHASE-5-SDK-CONTRACTS-EXTENSION-EXPERIENCE.md) — `Active 1.0.0`.
+- [`PHASE-5-SDK-CONTRACTS-EXTENSION-EXPERIENCE.md`](PHASE-5-SDK-CONTRACTS-EXTENSION-EXPERIENCE.md) — `Active 1.1.0`;
+- [`P5.01 — Integration Boundary Revalidation + Developer Journeys`](../reviews/P5-01-integration-boundary-revalidation-developer-journeys.md) — `PASS`.
 
 | ID | Work item | Status | Progress |
 |---|---|---:|---:|
-| `P5.01` | Integration boundary revalidation + developer journeys | 🟦 Next | `░░░░░░░░░░ 0%` |
-| `P5.02` | Product Contract declaration model + machine-checkable validation baseline | ⬜ Planned | `░░░░░░░░░░ 0%` |
+| `P5.01` | Integration boundary revalidation + developer journeys | 🟩 Complete | `██████████ 100%` |
+| `P5.02` | Product Contract declaration model + machine-checkable validation baseline | 🟦 Next | `░░░░░░░░░░ 0%` |
 | `P5.03` | Governed dependency/version resolution + compatibility semantics | ⬜ Planned | `░░░░░░░░░░ 0%` |
 | `P5.04` | Integration composition API/facade boundary | ⬜ Planned | `░░░░░░░░░░ 0%` |
 | `P5.05` | Scaffolding/templates + local integration harness | ⬜ Planned | `░░░░░░░░░░ 0%` |
@@ -89,6 +92,15 @@ Canonical detailed work breakdown:
 | `P5.11` | Compatibility / ADR / refactoring / public-boundary hardening review | ⬜ Planned | `░░░░░░░░░░ 0%` |
 | `P5.12` | Phase 5 / M5 closure review | ⬜ Planned | `░░░░░░░░░░ 0%` |
 
+P5.01 established these minimum integration-boundary invariants:
+
+- Product Contract is the governed boundary authority; tooling must not create a second contract system;
+- relied-upon dependencies, operations and versions remain exact and inspectable;
+- direct implementation-private imports/tables/stores/routes/Event streams cannot become the integration contract;
+- Product Contract admission/extension registration grants neither Authorization nor Organizational Authority;
+- product-specific semantics remain product-owned;
+- candidate declaration/validation/facade/scaffolding/harness surfaces remain internal/provisional until evidence and governance justify otherwise.
+
 Engineering gates: `R13 — Integration Boundary Review`, `R14 — Developer Safety / Contract Health Review`, `R15 — Reuse / Developer Experience Refactoring Review`, `R16 — M5 Integration Hardening`. They do not inflate Phase 5 percentage as separate equal-weight roadmap tasks.
 
 ## 7. M5 target
@@ -99,9 +111,9 @@ M5 does not require a public SDK, Stable Product Contract or production deployme
 
 ## 8. Current canonical action
 
-> **P5.01 — Integration boundary revalidation + developer journeys.**
+> **P5.02 — Product Contract declaration model + machine-checkable validation baseline.**
 
-Start from M4 evidence and actual integration needs. Do not begin by choosing an SDK language, API protocol, package format, plugin framework or distribution mechanism.
+Implement the smallest reversible declaration/validation representation needed by the P5.01 J1/J2 journeys and the current P4.08 boundary. Preserve Product Contract as the governed source of boundary semantics; declaration tooling must fail closed and must not become permission, Organizational Authority, capability activation or an accidental public compatibility commitment.
 
 ## 9. ADR and Product Contract gate
 
@@ -134,7 +146,9 @@ Phase 4 / M4 ✓
         ↓
 Phase 5 — SDK, Contracts and Extension Experience ACTIVE
         ↓
-P5.01 Integration boundary + developer journeys ← current
+P5.01 Integration boundary + developer journeys ✓
+        ↓
+P5.02 Product Contract declaration/validation ← current
         ↓
 M5 Repeatable product/extension integration
         ↓
