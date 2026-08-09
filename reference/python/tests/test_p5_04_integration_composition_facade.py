@@ -234,7 +234,10 @@ class P504IntegrationCompositionFacadeTests(unittest.TestCase):
 
     def test_j1_capability_admission_is_exact_and_delegated(self) -> None:
         facade = self._facade()
-        admission = facade.admit_capability(self.document_request)
+        admission = facade.admit_capability(
+            self.document_request,
+            governed_versions=self._supported_versions(),
+        )
 
         self.assertEqual(admission.product_contract_version_id, self.contract.record.version_id)
         self.assertEqual(admission.product_id, self.product_id)
@@ -245,7 +248,10 @@ class P504IntegrationCompositionFacadeTests(unittest.TestCase):
     def test_j1_dependency_version_cannot_drift_after_facade_composition(self) -> None:
         drifted = replace(self.document_request, dependency_contract_version="9.9.9")
         with self.assertRaises(IntegrationCompositionContinuityError):
-            self._facade().admit_capability(drifted)
+            self._facade().admit_capability(
+                drifted,
+                governed_versions=self._supported_versions(),
+            )
 
     def test_workspace_entry_is_non_authoritative_and_pins_exact_contract(self) -> None:
         workspace = self._facade().open_workspace()
@@ -265,6 +271,7 @@ class P504IntegrationCompositionFacadeTests(unittest.TestCase):
         entry = enter_facade_read_journey(
             facade=self._facade(),
             capability_requests=(self.document_request,),
+            governed_versions=self._supported_versions(),
         )
 
         self.assertIsInstance(entry.workspace, WorkspaceShellState)
@@ -283,6 +290,7 @@ class P504IntegrationCompositionFacadeTests(unittest.TestCase):
             execution_id=Identity("execution-subject", "p5-04-task-1", "org-a"),
             version_id=Identity("execution-version", "p5-04-task-1-v1", "org-a"),
             created_at=self._time(2),
+            governed_versions=self._supported_versions(),
         )
 
         self.assertEqual(execution.product_contract, self.contract.version_pin)
@@ -298,6 +306,7 @@ class P504IntegrationCompositionFacadeTests(unittest.TestCase):
             execution_id=Identity("execution-subject", "p5-04-task-2", "org-a"),
             version_id=Identity("execution-version", "p5-04-task-2-v1", "org-a"),
             created_at=self._time(3),
+            governed_versions=self._supported_versions(),
         )
 
         self.assertEqual(execution.product_contract, self.contract.version_pin)
