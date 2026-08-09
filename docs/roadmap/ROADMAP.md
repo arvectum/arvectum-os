@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.49.0`
+Version: `2.50.0`
 Created: `2026-08-07`
 Updated: `2026-08-09`
 Owner: `ООО «Арвектум»`
@@ -17,19 +17,30 @@ Detailed completed-phase evidence remains in the corresponding `PHASE-N-...` roa
 
 ## 2. Version note
 
-Version `2.49.0` records **P6.03 — First real product/workflow platform integration** as `Complete / PASS` and advances the current canonical action to **P6.04 — Product value, delivery-friction + governance evidence capture**.
+Version `2.50.0` records **P6.04 — Product value, delivery-friction + governance evidence capture** as `Complete / PASS` and advances the current canonical action to **P6.05 — Platform-gap remediation from first real use**.
 
-P6.03 now contains both synthetic/redacted boundary proof and real-use evidence. Stage 1 validated the exact P6.02 Product Contract boundary, fail-closed Organization/rights/version/evidence behavior, truthful incomplete reconstruction, no hidden coupling and RFC-0002 `External Reference` semantics. Stage 2 then executed exactly one real public 44-ФЗ case, notice `0344100006426000005`, through the same CAP-001/CAP-004 integration contour.
+P6.04 measured the actual P6.03 Stage 1 + Stage 2 evidence rather than converting a successful governance stop into an invented positive business KPI. The first real case preserved external authority, exact Product Contract/dependency continuity and reconstruction, and truthfully produced `NOT_CLIENT_READY_EVIDENCE_INCOMPLETE` when source evidence was incomplete.
 
-The real product did not fabricate a client-ready positive recommendation. Its evidence-bounded disposition is `NOT_CLIENT_READY_EVIDENCE_INCOMPLETE`: the normalized public procurement facts and exact external references are retained and governed, but the exact bytes/digests of the complete listed tender attachment set are not. That gap prevents truthful completion of the intended client-ready decision-package path and is now explicit P6.04/P6.05 input evidence.
+The directly observed first-real-use balance is mixed:
 
-Product `ai-corporation` CI `#1934` passed all jobs, including the dedicated Stage 2 real-case proof (`2 passed`), the Stage 1 regression, full `make test`, `make check`, security, migrations, PostgreSQL/R8 acceptance and Redis integration. Product PR `#141` was squash-merged to `main` as `2c21a33eec02959aba7d13909f0d0c835294becf`.
+- external authority preserved: `1/1` real case;
+- exact Product Contract continuity: `1/1`;
+- exact declared capability dependencies: `2/2` (`CAP-001` + `CAP-004`);
+- reconstructable platform-backed real case within retained evidence: `1/1`;
+- unsupported client-ready outcomes: `0`;
+- external automated actions: `0`;
+- listed tender attachments with exact bytes/digests retained by the Stage 2 run: `0/7`;
+- client-ready completion: `0/1` real case.
 
-The P6.02 Stage 3 allowance remains a **maximum**, not a quota. `0` additional calibration cases are consumed now because Stage 2 already produced the material new finding: the current read-oriented contour works for a real external reference but cannot complete the intended client-ready workflow without full governed external-attachment retrieval/admission. Repeating unchanged cases would duplicate known evidence. Remaining calibration capacity is preserved for a materially new hypothesis after P6.04/P6.05 or another bounded decision.
+Repository metadata also proves that the first integration carried non-trivial implementation/testing overhead. Product Stage 1 PR `#140` added `202` lines across `5` changed files; product Stage 2 PR `#141` added `687` across `9`; platform Stage 1 PR `#77` added `1223`, deleted `45`, across `9`. The aggregate `2112` additions / `45` deletions / `23` PR file-touches is a change-surface proxy only, not engineering hours, monetary cost or net productivity.
 
-The first real Product Contract remains [`P6-02-FIRST-REAL-PRODUCT-CONTRACT.md`](../contracts/P6-02-FIRST-REAL-PRODUCT-CONTRACT.md), `Provisional 0.1.0`, with exactly CAP-001 + CAP-004 at Provisional capability contract `1.0.0`; CAP-002/CAP-003 remain omitted, external authority remains external, procurement semantics remain product-owned, and automated external mutation/organizational commitment remains outside scope.
+Manual active time, requirement/risk recall, usefulness, operating cost and portability benefit remain not-yet-observed. P6.04 therefore demonstrates positive governance/control value and a material product-outcome blocker, but does not claim net economic/productivity value.
 
-No Platform Capability is promoted, no Stable/public integration compatibility boundary is created, and no production/SLA/support commitment follows from P6.03 completion.
+P6.05 receives one evidence-backed P0 problem statement: enable sufficient exact external tender attachment evidence for a truthful client-ready completeness decision while preserving external authority, exact version/provenance, Organization/rights controls, procurement-domain ownership and the no-external-action boundary. P6.04 does not pre-select whether the minimum sufficient remedy is product-local retrieval plus governed admission, bounded CAP-001 functionality, Product Contract clarification or another subordinate implementation choice.
+
+The P6.02 Stage 3 allowance remains a **maximum**, not a quota. `0` additional calibration cases remain consumed. Reopen bounded calibration only after P6.05 creates a materially changed evidence contour and a specific new hypothesis worth testing.
+
+No Platform Capability is promoted, no Stable/public integration compatibility boundary is created, and no production/SLA/support commitment follows from P6.04 completion.
 
 ## 3. Verified architecture and milestone baseline
 
@@ -48,10 +59,11 @@ No Platform Capability is promoted, no Stable/public integration compatibility b
 - [`R17 First Product Boundary Review`](../reviews/R17-first-product-boundary-review.md) — `PASS`;
 - [`P6.03 Stage 1 integration review`](../reviews/P6-03-stage-1-first-real-product-workflow-platform-integration.md) — `PASS`;
 - [`P6.03 first real integration closure`](../reviews/P6-03-stage-2-one-real-44fz-case-review.md) — `PASS`;
+- [`P6.04 value/friction/governance evidence`](../reviews/P6-04-product-value-delivery-friction-governance-evidence-capture.md) — `PASS`;
 - CAP-001 through CAP-004 remain `Incubating / Provisional`;
 - P4.08 and P5.09 Product Contracts remain `Provisional 0.1.0` reference evidence;
 - P6.02 procurement Product Contract remains `Provisional 0.1.0`;
-- no Platform Capability is `Active` merely because M3–M5 or P6.01–P6.03 are complete;
+- no Platform Capability is `Active` merely because M3–M5 or P6.01–P6.04 are complete;
 - no Stable/public SDK, API, wire, package or service compatibility boundary has been created;
 - no production/operational-readiness or SLA/support commitment is implied.
 
@@ -86,15 +98,15 @@ M5 proves repeatable governed integration through explicit Product Contracts and
 
 Canonical detailed roadmap:
 
-- [`PHASE-6-PRODUCT-DRIVEN-PLATFORM-VALIDATION.md`](PHASE-6-PRODUCT-DRIVEN-PLATFORM-VALIDATION.md) — `Active 1.5.0`.
+- [`PHASE-6-PRODUCT-DRIVEN-PLATFORM-VALIDATION.md`](PHASE-6-PRODUCT-DRIVEN-PLATFORM-VALIDATION.md) — `Active 1.6.0`.
 
 | ID | Work item | Status | Progress |
 |---|---|---:|---:|
 | `P6.01` | Real product/workflow validation target selection + evidence baseline | 🟩 Complete | `██████████ 100%` |
 | `P6.02` | First real Product Contract boundary + bounded adoption plan | 🟩 Complete | `██████████ 100%` |
 | `P6.03` | First real product/workflow platform integration | 🟩 Complete / PASS | `██████████ 100%` |
-| `P6.04` | Product value, delivery-friction + governance evidence capture | 🟨 Current | `░░░░░░░░░░ 0%` |
-| `P6.05` | Platform-gap remediation from first real use | ⬜ | `░░░░░░░░░░ 0%` |
+| `P6.04` | Product value, delivery-friction + governance evidence capture | 🟩 Complete / PASS | `██████████ 100%` |
+| `P6.05` | Platform-gap remediation from first real use | 🟨 Current | `░░░░░░░░░░ 0%` |
 | `P6.06` | Second materially distinct real product/workflow target + Product Contract | ⬜ | `░░░░░░░░░░ 0%` |
 | `P6.07` | Second real product/workflow platform integration | ⬜ | `░░░░░░░░░░ 0%` |
 | `P6.08` | Cross-product reuse and Platform Gravity evidence | ⬜ | `░░░░░░░░░░ 0%` |
@@ -132,34 +144,36 @@ M6 does not require an `Active` Platform Capability, Stable Product Contract, pr
 
 ## 8. Current canonical action
 
-> **P6.04 — Product value, delivery-friction + governance evidence capture.**
+> **P6.05 — Platform-gap remediation from first real use.**
 
-Use the actual P6.03 Stage 1 + Stage 2 evidence rather than assuming the first real integration was uniformly positive.
+Use [`P6.04 evidence capture`](../reviews/P6-04-product-value-delivery-friction-governance-evidence-capture.md) as the exact problem statement rather than assuming the first real integration was uniformly positive.
 
-P6.04 must capture and, where feasible, quantify:
+P6.05 must preserve the successful first-real-use behavior:
 
-- value from exact external authority, Product Contract/version continuity and reconstructability;
-- implementation/integration effort introduced by the governed boundary;
-- operator clarity from fail-closed and evidence-completeness behavior;
-- the concrete friction that the current contour does not provide the exact complete external tender attachment package needed to finish the intended client-ready path;
-- any time/cost/quality/security/governance overhead or benefit that can actually be evidenced;
-- evidence gaps that cannot yet be measured without inventing customer KPI values.
+- exact external authority rather than false `Native` substitution;
+- exact Product Contract/version and CAP-001/CAP-004 provider evidence;
+- truthful incomplete reconstruction/evidence handling;
+- explicit Organization/rights/security boundary;
+- product ownership of procurement semantics and completeness judgment;
+- no automatic external mutation or organizational commitment.
 
-Do not pre-decide the P6.05 remediation. P6.05 must resolve only gaps demonstrated and prioritized by P6.04 evidence.
+P6.05 must remediate only the demonstrated blocker: the current contour did not retain/admit the exact complete seven-document external tender attachment package needed for the intended client-ready path.
 
-The remaining Stage 3 calibration capacity is preserved rather than consumed as ceremony. Reopen it only for a materially new hypothesis after evidence-backed remediation or another bounded decision.
+Do not pre-decide the implementation or ownership boundary. Possible minimum sufficient outcomes include product-local retrieval with governed platform admission/reliance, bounded CAP-001 functionality, Product Contract clarification or another subordinate implementation decision. If the chosen remedy becomes durable, cross-cutting, externally constraining or public/stable, reopen the minimum sufficient ADR/RFC/Product Contract/policy gate before material reliance.
+
+Manual-time, recall, usefulness, cost and portability KPI values remain unknown; P6.05 must not invent them. The remaining Stage 3 calibration capacity stays preserved and should be reopened only for a materially new hypothesis after remediation.
 
 ## 9. ADR, lifecycle and Product Contract gates
 
 Real-product pressure may cross architecture decisions that bounded reference phases intentionally left open. Re-open the minimum sufficient ADR/RFC/policy/Product Contract gate before material reliance on a concrete durable or externally constraining mechanism.
 
-P6.02 satisfies the RFC-0004 declaration prerequisite for its exact real-product scope. R17 and P6.03 confirm that the current read-oriented boundary can be exercised without hidden coupling while preserving external authority and product ownership.
+P6.02 satisfies the RFC-0004 declaration prerequisite for its exact real-product scope. R17 and P6.03 confirm that the current read-oriented boundary can be exercised without hidden coupling while preserving external authority and product ownership. P6.04 confirms that this boundary creates directly evidenced governance/control value but is insufficient for the intended client-ready source-package completeness outcome.
 
 No Platform Capability becomes `Active` without separate RFC-0001 lifecycle admission and applicable stable-contract, compatibility/migration, operational-readiness and decision-authority evidence.
 
 Product Experiment success remains evidence, not automatic platform promotion.
 
-P6.03 selected no durable persistence, Event delivery, IAM/PDP/PEP provider, stable serialization/API, public SDK/package, object-store, search/vector or service topology. The demonstrated attachment-contour friction must be measured in P6.04 before P6.05 selects a remedy. If a later remedy crosses a materially constraining boundary, reopen the minimum sufficient governance gate first.
+P6.03/P6.04 selected no durable persistence, Event delivery, IAM/PDP/PEP provider, stable serialization/API, public SDK/package, object-store, search/vector or service topology. P6.05 must choose the minimum sufficient remediation boundary from the demonstrated attachment-evidence problem. If a later remedy crosses a materially constraining boundary, reopen the minimum sufficient governance gate first.
 
 ## 10. Phase transition rule
 
@@ -199,9 +213,11 @@ Stage 2 one real 44-ФЗ case ✓
         ↓
 Stage 3 calibration cap: 0 additional cases consumed
         ↓
-P6.04 Product value / friction / governance evidence ← current
+P6.04 Product value / friction / governance evidence ✓ PASS
         ↓
-P6.05 evidence-backed remediation
+P6.05 evidence-backed remediation ← current
+        ↓
+R18 First Real-use Health Review
         ↓
 Second real product/workflow validation + reuse evidence
         ↓
