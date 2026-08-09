@@ -49,12 +49,10 @@ class P312Phase3M3ClosureTests(unittest.TestCase):
             roadmap,
         )
         self.assertIn("| `Phase 4` | Workspace / Operator Experience |", roadmap)
+        self.assertIn("CAP-001 through CAP-004 remain `Incubating / Provisional`", roadmap)
+        self.assertIn("no Platform Capability is `Active`", roadmap)
         self.assertIn(
-            "Phase status, capability lifecycle, operational environment and conformance maturity remain distinct.",
-            roadmap,
-        )
-        self.assertIn(
-            "M3 does not imply lifecycle `Active`, operational readiness, Stable Product Contracts, public API compatibility, production deployment or customer-facing SLA/support commitments.",
+            "Phase status, capability lifecycle, Product Contract lifecycle, operational environment/readiness and conformance maturity remain distinct.",
             roadmap,
         )
 
@@ -74,20 +72,19 @@ class P312Phase3M3ClosureTests(unittest.TestCase):
             self.assertIn("M3 achieved", rows[0])
             self.assertNotIn("| `Active` |", rows[0])
 
-    def test_root_readme_preserves_m3_scope_as_phase_4_progresses(self) -> None:
+    def test_root_readme_preserves_m3_scope_as_later_phases_progress(self) -> None:
         readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
 
-        self.assertIn("`Phase 3 — Shared Platform Capabilities` is complete", readme)
-        self.assertIn("`M3 — Validated shared capability baseline` is achieved", readme)
+        self.assertIn(
+            "`Phase 3 — Shared Platform Capabilities` — `Complete`, `M3 — Validated shared capability baseline` achieved for the bounded shared-capability reference scope",
+            readme,
+        )
         self.assertIn("`Phase 4 — Workspace / Operator Experience`", readme)
-        self.assertIn(
-            "M3 closure does not promote any capability to `Active`",
-            readme,
-        )
-        self.assertIn(
-            "Phase status, capability lifecycle, operational environment and conformance maturity remain distinct.",
-            readme,
-        )
+        for capability_id in CAPABILITY_IDS:
+            self.assertIn(f"`{capability_id}", readme)
+        self.assertIn("`Incubating / Provisional`", readme)
+        self.assertIn("does **not** promote any capability to `Active`", readme)
+        self.assertIn("The P4.08 bounded Product Contract remains `Provisional 0.1.0`", readme)
 
 
 if __name__ == "__main__":
