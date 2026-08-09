@@ -1,7 +1,7 @@
 # Arvectum OS Phase 6 — Product-driven Platform Validation
 
 Status: `Active`
-Version: `1.0.0`
+Version: `1.1.0`
 Created: `2026-08-09`
 Updated: `2026-08-09`
 Owner: `ООО «Арвектум»`
@@ -28,6 +28,8 @@ Phase 6 is deliberately product-driven:
 
 The phase does not assume that Tender, Marketing, Sales, Legal, Finance or any other named product must be implemented in a fixed order.
 
+P6.01 is complete. The selected first real validation target is the Arvectum procurement/tender AI operator in a bounded real 44-ФЗ pre-bid workflow from accepted tender documentation to a human-reviewed client-ready decision package, while external actions remain manual. Canonical completion evidence is [`P6-01-real-product-workflow-validation-target-evidence-baseline.md`](../reviews/P6-01-real-product-workflow-validation-target-evidence-baseline.md).
+
 ## 2. Starting state inherited from M5
 
 M5 established:
@@ -52,8 +54,8 @@ At Phase 6 start:
 
 | ID | Work item | Status | Progress |
 |---|---|---:|---:|
-| `P6.01` | Real product/workflow validation target selection + evidence baseline | 🟦 NEXT | `░░░░░░░░░░ 0%` |
-| `P6.02` | First real Product Contract boundary + bounded adoption plan | ⬜ | `░░░░░░░░░░ 0%` |
+| `P6.01` | Real product/workflow validation target selection + evidence baseline | 🟩 Complete | `██████████ 100%` |
+| `P6.02` | First real Product Contract boundary + bounded adoption plan | 🟦 NEXT | `░░░░░░░░░░ 0%` |
 | `P6.03` | First real product/workflow platform integration | ⬜ | `░░░░░░░░░░ 0%` |
 | `P6.04` | Product value, delivery-friction + governance evidence capture | ⬜ | `░░░░░░░░░░ 0%` |
 | `P6.05` | Platform-gap remediation from first real use | ⬜ | `░░░░░░░░░░ 0%` |
@@ -84,6 +86,8 @@ Required evidence:
 - exit/rollback path.
 
 Selection alone creates no Product Contract and no platform commitment.
+
+**Completion:** `PASS` under [`P6.01 evidence baseline`](../reviews/P6-01-real-product-workflow-validation-target-evidence-baseline.md). The selected target is the real Arvectum procurement/tender AI operator workflow for a bounded 44-ФЗ pre-bid decision package. CAP-001 and CAP-004 are the minimum evidence-backed platform-dependency hypothesis for P6.02; CAP-002/CAP-003 remain conditional rather than forced. Empirical customer KPI values that do not yet exist are explicitly marked not-yet-observed rather than invented.
 
 ### P6.02 — First real Product Contract boundary + bounded adoption plan
 
@@ -216,9 +220,9 @@ These gates are engineering/governance checkpoints and do not count as equal-wei
 ```text
 M5 ✓
  ↓
-P6.01 Real target + baseline
+P6.01 Real target + baseline ✓
  ↓
-P6.02 Product Contract + adoption plan
+P6.02 Product Contract + adoption plan ← current
  ↓
 R17 First Product Boundary Review
  ↓
@@ -293,6 +297,6 @@ Do not delay a bounded reversible product validation merely because a future pro
 
 ## 10. Current canonical action
 
-> **P6.01 — Real product/workflow validation target selection + evidence baseline.**
+> **P6.02 — First real Product Contract boundary + bounded adoption plan.**
 
-The task is to select the first real validation target from actual organizational/product priorities and record a bounded evidence baseline before creating its Product Contract or changing platform implementation.
+Create the smallest sufficient Provisional Product Contract for the selected procurement/tender workflow before any governed platform reliance. Preserve procurement semantics in the product, declare only evidence-backed platform dependencies, make external authority/security/rights/failure/rollback behavior explicit, and keep the adoption reversible.

@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.44.0`
+Version: `2.45.0`
 Created: `2026-08-07`
 Updated: `2026-08-09`
 Owner: `ООО «Арвектум»`
@@ -17,13 +17,13 @@ Detailed completed-phase evidence remains in the corresponding `PHASE-N-...` roa
 
 ## 2. Version note
 
-Version `2.44.0` records the verified completion of **Phase 5 / M5** and activates **Phase 6 — Product-driven Platform Validation** after bounded decomposition.
+Version `2.45.0` records completion of **P6.01 — Real product/workflow validation target selection + evidence baseline** with `PASS` and advances the current canonical action to **P6.02 — First real Product Contract boundary + bounded adoption plan**.
+
+The first real Phase 6 validation target is the Arvectum procurement/tender AI operator in a bounded real 44-ФЗ pre-bid workflow from accepted tender documentation to a human-reviewed client-ready decision package while external actions remain manual. Completion evidence is [`P6.01`](../reviews/P6-01-real-product-workflow-validation-target-evidence-baseline.md).
+
+P6.01 does not create a Product Contract or platform commitment. CAP-001 and CAP-004 are the minimum evidence-backed dependency hypothesis for P6.02; CAP-002 and CAP-003 remain conditional rather than forced. Empirical real-customer KPI values not yet observed are recorded as evidence gaps instead of being fabricated.
 
 Phase 5 closure remains based on [`P5.12`](../reviews/P5-12-phase-5-m5-closure-review.md): `PASS — M5 achieved for the declared bounded repeatable product/extension integration reference scope.` The final synchronized pre-closure hosted baseline remains `Reference Python CI #269`, CPython 3.12.13, `704 tests`, `OK`.
-
-Phase 6 is now `Active` under [`PHASE-6-PRODUCT-DRIVEN-PLATFORM-VALIDATION.md`](PHASE-6-PRODUCT-DRIVEN-PLATFORM-VALIDATION.md). Its goal is not to build a predetermined product portfolio; it is to validate Arvectum OS through at least two materially distinct real product/workflow contexts and evidence-backed reuse.
-
-The current canonical action is **`P6.01 — Real product/workflow validation target selection + evidence baseline`**.
 
 ## 3. Verified architecture and milestone baseline
 
@@ -36,6 +36,7 @@ The current canonical action is **`P6.01 — Real product/workflow validation ta
 - Phase 4 / `M4` — complete / achieved for the bounded governed-workspace reference scope;
 - Phase 5 / `M5` — complete / achieved for the bounded repeatable integration reference scope;
 - [`P5.12 closure review`](../reviews/P5-12-phase-5-m5-closure-review.md) — `PASS`;
+- [`P6.01 real target + evidence baseline`](../reviews/P6-01-real-product-workflow-validation-target-evidence-baseline.md) — `PASS`;
 - CAP-001 through CAP-004 remain `Incubating / Provisional`;
 - P4.08 and P5.09 Product Contracts remain `Provisional 0.1.0` reference evidence;
 - no Platform Capability is `Active` merely because M3–M5 are achieved;
@@ -73,12 +74,12 @@ M5 proves repeatable governed integration through explicit Product Contracts and
 
 Canonical detailed roadmap:
 
-- [`PHASE-6-PRODUCT-DRIVEN-PLATFORM-VALIDATION.md`](PHASE-6-PRODUCT-DRIVEN-PLATFORM-VALIDATION.md) — `Active 1.0.0`.
+- [`PHASE-6-PRODUCT-DRIVEN-PLATFORM-VALIDATION.md`](PHASE-6-PRODUCT-DRIVEN-PLATFORM-VALIDATION.md) — `Active 1.1.0`.
 
 | ID | Work item | Status | Progress |
 |---|---|---:|---:|
-| `P6.01` | Real product/workflow validation target selection + evidence baseline | 🟦 NEXT | `░░░░░░░░░░ 0%` |
-| `P6.02` | First real Product Contract boundary + bounded adoption plan | ⬜ | `░░░░░░░░░░ 0%` |
+| `P6.01` | Real product/workflow validation target selection + evidence baseline | 🟩 Complete | `██████████ 100%` |
+| `P6.02` | First real Product Contract boundary + bounded adoption plan | 🟦 NEXT | `░░░░░░░░░░ 0%` |
 | `P6.03` | First real product/workflow platform integration | ⬜ | `░░░░░░░░░░ 0%` |
 | `P6.04` | Product value, delivery-friction + governance evidence capture | ⬜ | `░░░░░░░░░░ 0%` |
 | `P6.05` | Platform-gap remediation from first real use | ⬜ | `░░░░░░░░░░ 0%` |
@@ -119,11 +120,11 @@ M6 does not require an `Active` Platform Capability, Stable Product Contract, pr
 
 ## 8. Current canonical action
 
-> **P6.01 — Real product/workflow validation target selection + evidence baseline.**
+> **P6.02 — First real Product Contract boundary + bounded adoption plan.**
 
-Select the first real validation context from actual organizational/product priorities. Record owner/sponsor, concrete organizational outcome, bounded workflow, current baseline, required platform interactions, external authorities, security/rights constraints and rollback path before creating its Product Contract or changing platform behavior.
+Create the smallest sufficient Provisional Product Contract for the selected procurement/tender workflow before governed platform reliance. Preserve procurement-specific semantics in the product, declare only evidence-backed platform dependencies, make external authority/security/rights/failure/rollback behavior explicit, and keep the adoption reversible.
 
-Do not infer the target from roadmap history or a preferred product name. The selection must reflect current real product/workflow evidence.
+Do not add CAP-002 or CAP-003 merely to broaden platform coverage. P6.01 identified CAP-001 and CAP-004 as the minimum evidence-backed dependency hypothesis; P6.02 must confirm, narrow or reject that hypothesis contractually before implementation.
 
 ## 9. ADR, lifecycle and Product Contract gates
 
@@ -159,7 +160,9 @@ Phase 5 / M5 ✓
         ↓
 Phase 6 — Product-driven Platform Validation ACTIVE
         ↓
-P6.01 Real product/workflow target + evidence baseline ← current
+P6.01 Real product/workflow target + evidence baseline ✓
+        ↓
+P6.02 First real Product Contract + bounded adoption plan ← current
         ↓
 Two real product/workflow validations + reuse/value evidence
         ↓
