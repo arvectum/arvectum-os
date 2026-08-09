@@ -39,11 +39,13 @@ The completed canonical milestone sequence is:
 
 `Phase 3 — Shared Platform Capabilities` is complete; its M3 closure remains scoped to the bounded shared-capability reference baseline and does not promote any capability to `Active`.
 
-`Phase 5 — SDK, Contracts and Extension Experience` is `Active`. P5.01 through P5.09 are complete, and R13, R14 and R15 have passed. P5.08 establishes the internal/provisional integration-adapter seam without product-side private coupling. P5.09 proves reuse through a materially distinct read-only CAP-004 evidence/reconstruction extension with its own `Provisional 0.1.0` Product Contract and the same `arvectum_os_ref.integration_adapters` boundary as the first bounded product.
+`Phase 5 — SDK, Contracts and Extension Experience` is `Active`. P5.01 through P5.10 are complete, and R13, R14 and R15 have passed. P5.08 establishes the internal/provisional integration-adapter seam without product-side private coupling. P5.09 proves reuse through a materially distinct read-only CAP-004 evidence/reconstruction extension with its own `Provisional 0.1.0` Product Contract and the same `arvectum_os_ref.integration_adapters` boundary as the first bounded product.
 
 P5.09 also produced P5.09-F1: a derived read-only operation does not necessarily expose direct canonical access. The internal P5.02 validator therefore no longer requires a fake canonical Read declaration for such a view. Where direct canonical access is declared, Read semantics remain validated; canonical mutation still requires explicit Write plus Organizational Authority. R15 preserves this distinction unchanged.
 
 R15 reviews the two-consumer evidence before further generalization and closes two bounded reuse/DX findings. Shared `IntegrationAdapters` stored state is now limited to the demonstrated cross-consumer core (`facade + capabilities`), while workspace presentation is an explicit optional binding for consumers that need it. P5.05 scaffolding/local harness now teaches the same adapter seam demonstrated by both consumers rather than the lower-level composition facade as the default developer entry.
+
+P5.10 assembles the accumulated Phase 5 architecture-fitness evidence into a machine-checked 15-row index (`CF-01` through `CF-15`). Every row has positive and negative/fail-closed executable anchors, and the index spans P5.02, R13, P5.03, P5.04, P5.05, P5.06, P5.07, P5.08, P5.09, R14 and R15. It remains evidence over existing semantic owners rather than becoming a new Product Contract, compatibility, security, Event or lifecycle authority.
 
 The current Phase 5 integration baseline includes:
 
@@ -59,9 +61,10 @@ The current Phase 5 integration baseline includes:
 - Event/provenance/portable evidence remains version-aware and non-authoritative where derived;
 - product/extension-specific behavior remains consumer-owned;
 - Product Contract lifecycle and capability lifecycle remain distinct;
+- P5.10 records accumulated evidence without establishing a competing semantic owner;
 - no Stable/public SDK/API/wire/package/registry/facade/adapter/plugin-runtime/generated-code compatibility boundary is created by the current reference implementation.
 
-Hosted `Reference Python CI #251` passed the 682-test reference suite on the R15 code/refactoring head. The R15 review/roadmap synchronization is kept in the same PR and is revalidated by hosted CI before merge.
+Hosted `Reference Python CI #256` passed 688 tests with `OK` on the P5.10 implementation head. The synchronized P5.10 review/roadmap/README head remains subject to the same hosted CI gate before merge.
 
 The retained capability set remains unchanged:
 
@@ -72,7 +75,7 @@ The retained capability set remains unchanged:
 
 The P4.08 bounded Product Contract remains `Provisional 0.1.0`. The P5.09 evidence-extension Product Contract is also `Provisional 0.1.0`.
 
-Completion of R15 does **not** promote any capability to `Active`, stabilize either Product Contract, establish `Production` or operational readiness, claim M5/full-platform conformance, or create SLA/support/commercial commitments. The refactor is reuse evidence and developer-experience narrowing, not a lifecycle transition.
+Completion of P5.10 does **not** promote any capability to `Active`, stabilize either Product Contract, establish `Production` or operational readiness, claim M5/full-platform conformance, or create SLA/support/commercial commitments. The matrix is accumulated conformance evidence for the bounded Phase 5 integration scope, not a lifecycle, readiness or public-boundary transition.
 
 Canonical current evidence:
 
@@ -90,17 +93,18 @@ Canonical current evidence:
 - [P5.08 workspace/capability integration-adapter review](docs/reviews/P5-08-workspace-capability-integration-adapters.md)
 - [P5.09 second materially distinct integration reuse proof](docs/reviews/P5-09-second-materially-distinct-integration-reuse-proof.md)
 - [R15 Reuse / Developer Experience Refactoring Review](docs/reviews/R15-reuse-developer-experience-refactoring-review.md)
+- [P5.10 Phase 5 conformance + architecture fitness matrix](docs/reviews/P5-10-phase-5-conformance-architecture-fitness-matrix.md)
 - [P4.12 Phase 4 / M4 closure review](docs/reviews/P4-12-phase-4-m4-closure-review.md)
 - [P4.08 bounded Product Contract](docs/contracts/P4-08-BOUNDED-PRODUCT-ENTRY-PRODUCT-CONTRACT.md)
 - [Platform Capability Catalog](docs/catalogs/PLATFORM-CAPABILITY-CANDIDATE-CATALOG.md)
 
 The current canonical action is:
 
-> **P5.10 — Phase 5 conformance + architecture fitness matrix.**
+> **R16 — M5 Integration Hardening.**
 
-P5.10 should assemble the accumulated positive/negative fitness evidence across Product Contract identity/version continuity, exact dependency responsibilities and current-support evidence, hidden-coupling prohibition, Organization isolation, Authorization/Organizational Authority separation, governed mutation, Event/provenance, rights/minimization, portability, lifecycle separation, unsupported/deprecated behavior, second-integration reuse and absence of accidental Stable/public compatibility claims.
+R16 uses the P5.10 `CF-01` through `CF-15` matrix as the accumulated regression/evidence index while reviewing integration correctness, security, compatibility and maintainability. Existing semantic owners remain authoritative; any material regression becomes an R16 finding unless a higher-authority architectural change explicitly changes the invariant.
 
-After P5.10, the next engineering gate is `R16 — M5 Integration Hardening`.
+After R16, proceed to `P5.11 — Compatibility / ADR / refactoring / public-boundary hardening review`.
 
 The current delivery sequence is maintained in the [Canonical Roadmap](docs/roadmap/ROADMAP.md) and [RFC Index](docs/rfc/README.md).
 
