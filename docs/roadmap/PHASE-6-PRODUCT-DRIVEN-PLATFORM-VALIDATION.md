@@ -1,7 +1,7 @@
 # Arvectum OS Phase 6 — Product-driven Platform Validation
 
 Status: `Active`
-Version: `1.1.0`
+Version: `1.2.0`
 Created: `2026-08-09`
 Updated: `2026-08-09`
 Owner: `ООО «Арвектум»`
@@ -30,6 +30,8 @@ The phase does not assume that Tender, Marketing, Sales, Legal, Finance or any o
 
 P6.01 is complete. The selected first real validation target is the Arvectum procurement/tender AI operator in a bounded real 44-ФЗ pre-bid workflow from accepted tender documentation to a human-reviewed client-ready decision package, while external actions remain manual. Canonical completion evidence is [`P6-01-real-product-workflow-validation-target-evidence-baseline.md`](../reviews/P6-01-real-product-workflow-validation-target-evidence-baseline.md).
 
+P6.02 is complete. The first real Product Contract is [`P6-02-FIRST-REAL-PRODUCT-CONTRACT.md`](../contracts/P6-02-FIRST-REAL-PRODUCT-CONTRACT.md), `Provisional 0.1.0`, with exactly CAP-001 + CAP-004 at Provisional contract `1.0.0`. CAP-002/CAP-003 are intentionally omitted from the first slice; procurement semantics remain product-owned; external tender/TKP sources remain externally authoritative; external actions remain manual. Completion evidence is [`P6-02-first-real-product-contract-boundary-bounded-adoption-plan.md`](../reviews/P6-02-first-real-product-contract-boundary-bounded-adoption-plan.md).
+
 ## 2. Starting state inherited from M5
 
 M5 established:
@@ -50,12 +52,14 @@ At Phase 6 start:
 - no real product is deemed validated merely because bounded reference consumers exist;
 - no platform capability is `Active`.
 
+P6.02 adds the first **real** Product Contract boundary without changing that lifecycle baseline. The new procurement Product Contract remains `Provisional 0.1.0`; it does not stabilize the Phase 5 integration mechanism or create production/support claims.
+
 ## 3. Phase 6 work breakdown
 
 | ID | Work item | Status | Progress |
 |---|---|---:|---:|
 | `P6.01` | Real product/workflow validation target selection + evidence baseline | 🟩 Complete | `██████████ 100%` |
-| `P6.02` | First real Product Contract boundary + bounded adoption plan | 🟦 NEXT | `░░░░░░░░░░ 0%` |
+| `P6.02` | First real Product Contract boundary + bounded adoption plan | 🟩 Complete | `██████████ 100%` |
 | `P6.03` | First real product/workflow platform integration | ⬜ | `░░░░░░░░░░ 0%` |
 | `P6.04` | Product value, delivery-friction + governance evidence capture | ⬜ | `░░░░░░░░░░ 0%` |
 | `P6.05` | Platform-gap remediation from first real use | ⬜ | `░░░░░░░░░░ 0%` |
@@ -96,6 +100,8 @@ Create or adapt a Provisional Product Contract for the selected real product bef
 The contract must declare exact dependencies, canonical-state interactions, events/artifacts, authority modes, security/rights/data handling, portability/migration responsibilities and failure behavior proportionate to the workflow.
 
 The adoption plan must remain reversible and identify what stays product-owned.
+
+**Completion:** `PASS` under [`P6.02 review`](../reviews/P6-02-first-real-product-contract-boundary-bounded-adoption-plan.md). The first real Product Contract is [`P6-02-FIRST-REAL-PRODUCT-CONTRACT.md`](../contracts/P6-02-FIRST-REAL-PRODUCT-CONTRACT.md), `Provisional 0.1.0`. It confirms only CAP-001 + CAP-004 at exact Provisional capability contract `1.0.0`; omits CAP-002/CAP-003; preserves external authority for ЕИС/partner/supplier source documents; keeps procurement-domain semantics in the product; allows no automated external mutation/organizational commitment; and caps adoption at synthetic/redacted proof → one real case → maximum three-case calibration set. No real governed reliance begins before R17.
 
 ### P6.03 — First real product/workflow platform integration
 
@@ -222,9 +228,9 @@ M5 ✓
  ↓
 P6.01 Real target + baseline ✓
  ↓
-P6.02 Product Contract + adoption plan ← current
+P6.02 Product Contract + adoption plan ✓
  ↓
-R17 First Product Boundary Review
+R17 First Product Boundary Review ← current
  ↓
 P6.03 First real integration
  ↓
@@ -295,8 +301,10 @@ Real-product pressure may cross decisions that reference phases did not. Before 
 
 Do not delay a bounded reversible product validation merely because a future production technology remains undecided, but do not use experimentation to bypass security, authority, data integrity, contractual commitments or governance.
 
+P6.02 selects no durable persistence, Event delivery, IAM, public/stable serialization/API or service topology and therefore creates no new ADR. R17/P6.03 must reopen the minimum sufficient gate if implementation crosses one.
+
 ## 10. Current canonical action
 
-> **P6.02 — First real Product Contract boundary + bounded adoption plan.**
+> **R17 — First Product Boundary Review.**
 
-Create the smallest sufficient Provisional Product Contract for the selected procurement/tender workflow before any governed platform reliance. Preserve procurement semantics in the product, declare only evidence-backed platform dependencies, make external authority/security/rights/failure/rollback behavior explicit, and keep the adoption reversible.
+Independently review the P6.02 `Provisional 0.1.0` real Product Contract before P6.03 implementation reliance. Confirm that CAP-001 + CAP-004 are sufficient and exact, CAP-002/CAP-003 remain omitted without evidence, external authorities remain external, procurement-domain semantics remain product-owned, Organization/security/rights/evidence behavior fails closed, the maximum-three-case adoption remains reversible, and no durable/public/stable boundary has been smuggled into the plan.
