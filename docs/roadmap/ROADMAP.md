@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.32.0`
+Version: `2.33.0`
 Created: `2026-08-07`
 Updated: `2026-08-09`
 Owner: `ООО «Арвектум»`
@@ -17,20 +17,20 @@ Detailed completed-phase evidence remains in the corresponding `PHASE-N-...` roa
 
 ## 2. Version note
 
-Version `2.32.0` records completion of **P5.04 — Integration composition API/facade boundary** with `PASS` for the bounded internal/provisional facade baseline, records successful hosted `Reference Python CI #218` with 615 tests on the P5.04 implementation/test head, and advances the current canonical action to **P5.05 — Scaffolding/templates + local integration harness**.
+Version `2.33.0` records completion of **P5.05 — Scaffolding/templates + local integration harness** with `PASS` for the bounded internal/provisional scaffolding and local-harness baseline and advances the current canonical action to **P5.06 — Security, authority, rights + Organization-scope integration guards**.
 
-P5.04 adds a domain-neutral integration-facing composition seam that consumes the exact RFC-0004 `ProductContract`, P5.02 declaration validation and P5.03 exact dependency/version compatibility evidence before composing capability admission, non-authoritative workspace entry and Product Contract-backed Governed Execution.
+P5.05 adds a tiny readable product-owned entry template and an in-process local harness over the P5.04 integration facade. The harness requires the exact RFC-0004 Product Contract, attributable Actor, exact effective Product Contract Version and explicit governed dependency/version support evidence; it does not construct a second contract or resolver.
 
-The facade owns composition continuity only. Authorization, Organizational Authority, Data Governance, capability-specific access semantics, workspace presentation authority and canonical-state decisions remain with their existing semantic owners. Product-owned J1/J2 journey evidence now reaches Arvectum OS through one facade import rather than importing the private runtime/capability/workspace module graph directly.
+Generated/template artifacts remain explicitly provisional and replaceable. The harness preserves exact Product Contract Version continuity into a non-authoritative workspace and requires no database, broker, IAM provider, object store, package registry, network endpoint or deployment topology.
 
-P5.04 does not create permission or Organizational Authority, promote any Platform Capability, stabilize the P4.08 Product Contract, select a public SDK/API/wire/package/network boundary, or create production/commercial compatibility commitments. Capability-specific adapters remain P5.08 scope.
+P5.05 does not grant Authorization or Organizational Authority, promote any Platform Capability, stabilize the P4.08 Product Contract, select a public SDK/API/wire/package/generated-code compatibility boundary, establish production readiness or create commercial commitments. Capability-specific adapters remain P5.08 scope and the materially distinct second-integration reuse proof remains P5.09 scope.
 
 ## 3. Verified architecture baseline
 
 - Constitution `1.2.0` — `Ratified`, frozen;
 - RFC-0001 through RFC-0008 — `Accepted 1.0.0`;
 - Phase 0 / `M0` — complete / achieved;
-- Phase 1 / `M1` — complete / achieved;
+- Phase 1 / `M1` — complete / achieved for its declared scope;
 - Phase 2 / `M2` — complete / achieved for the bounded reusable-runtime reference scope;
 - Phase 3 / `M3` — complete / achieved for the bounded shared-capability reference scope;
 - Phase 4 / `M4` — complete / achieved for the bounded governed-workspace reference scope;
@@ -40,13 +40,14 @@ P5.04 does not create permission or Organizational Authority, promote any Platfo
 - [`R13 Integration Boundary Review`](../reviews/R13-integration-boundary-review.md) — `PASS` after R13-F1 remediation;
 - [`P5.03 governed dependency/version resolution review`](../reviews/P5-03-governed-dependency-version-resolution-compatibility-semantics.md) — `PASS`;
 - [`P5.04 integration composition facade review`](../reviews/P5-04-integration-composition-api-facade-boundary.md) — `PASS`;
-- hosted `Reference Python CI #218` — `PASS`, 615 tests on the P5.04 implementation/test head before roadmap completion synchronization;
+- [`P5.05 scaffolding/templates + local harness review`](../reviews/P5-05-scaffolding-templates-local-integration-harness.md) — `PASS`;
+- hosted `Reference Python CI #222` — `PASS`, 615 tests on the final synchronized P5.04 PR head; P5.05 execution evidence is to be taken from the P5.05 closure PR CI when available;
 - [`PHASE-4-WORKSPACE-OPERATOR-EXPERIENCE.md`](PHASE-4-WORKSPACE-OPERATOR-EXPERIENCE.md) — `Complete`;
 - [`PHASE-5-SDK-CONTRACTS-EXTENSION-EXPERIENCE.md`](PHASE-5-SDK-CONTRACTS-EXTENSION-EXPERIENCE.md) — `Active`;
 - CAP-001 through CAP-004 remain `Incubating / Provisional`;
 - P4.08 Product Contract remains `Provisional 0.1.0`;
-- no Platform Capability is `Active` merely because M3/M4/P5.02/R13/P5.03/P5.04 is achieved;
-- no stable/public SDK, API, wire, manifest, package, registry or facade compatibility boundary has been created by M4, P5.01, P5.02, R13, P5.03 or P5.04.
+- no Platform Capability is `Active` merely because M3/M4/P5.02/R13/P5.03/P5.04/P5.05 is achieved;
+- no stable/public SDK, API, wire, manifest, package, registry, facade, scaffolding or generated-code compatibility boundary has been created by M4 or P5.01 through P5.05.
 
 ## 4. Strategic roadmap
 
@@ -84,7 +85,8 @@ Canonical detailed work breakdown:
 - [`P5.02 — Product Contract Declaration Model + Machine-Checkable Validation Baseline`](../reviews/P5-02-product-contract-declaration-model-machine-checkable-validation-baseline.md) — `PASS`;
 - [`R13 — Integration Boundary Review`](../reviews/R13-integration-boundary-review.md) — `PASS` after R13-F1 remediation;
 - [`P5.03 — Governed Dependency/Version Resolution + Compatibility Semantics`](../reviews/P5-03-governed-dependency-version-resolution-compatibility-semantics.md) — `PASS`;
-- [`P5.04 — Integration Composition API/Facade Boundary`](../reviews/P5-04-integration-composition-api-facade-boundary.md) — `PASS`.
+- [`P5.04 — Integration Composition API/Facade Boundary`](../reviews/P5-04-integration-composition-api-facade-boundary.md) — `PASS`;
+- [`P5.05 — Scaffolding/Templates + Local Integration Harness`](../reviews/P5-05-scaffolding-templates-local-integration-harness.md) — `PASS`.
 
 | ID | Work item | Status | Progress |
 |---|---|---:|---:|
@@ -92,7 +94,7 @@ Canonical detailed work breakdown:
 | `P5.02` | Product Contract declaration model + machine-checkable validation baseline | 🟩 Complete | `██████████ 100%` |
 | `P5.03` | Governed dependency/version resolution + compatibility semantics | 🟩 Complete | `██████████ 100%` |
 | `P5.04` | Integration composition API/facade boundary | 🟩 Complete | `██████████ 100%` |
-| `P5.05` | Scaffolding/templates + local integration harness | ⬜ Planned | `░░░░░░░░░░ 0%` |
+| `P5.05` | Scaffolding/templates + local integration harness | 🟩 Complete | `██████████ 100%` |
 | `P5.06` | Security, authority, rights + Organization-scope integration guards | ⬜ Planned | `░░░░░░░░░░ 0%` |
 | `P5.07` | Event/provenance/portability integration support | ⬜ Planned | `░░░░░░░░░░ 0%` |
 | `P5.08` | Workspace/capability integration adapters without private coupling | ⬜ Planned | `░░░░░░░░░░ 0%` |
@@ -101,7 +103,7 @@ Canonical detailed work breakdown:
 | `P5.11` | Compatibility / ADR / refactoring / public-boundary hardening review | ⬜ Planned | `░░░░░░░░░░ 0%` |
 | `P5.12` | Phase 5 / M5 closure review | ⬜ Planned | `░░░░░░░░░░ 0%` |
 
-P5.01/P5.02/R13/P5.03/P5.04 establish these minimum integration-boundary invariants:
+P5.01/P5.02/R13/P5.03/P5.04/P5.05 establish these minimum integration-boundary invariants:
 
 - Product Contract is the governed boundary authority; tooling must not create a second contract system;
 - relied-upon dependencies, operations and versions remain exact and inspectable;
@@ -111,12 +113,14 @@ P5.01/P5.02/R13/P5.03/P5.04 establish these minimum integration-boundary invaria
 - ambiguous, unsupported, deprecated and retired reliance fails closed deterministically and changed reliance exposes migration obligations;
 - product-owned proved J1/J2 entry can pass through one internal/provisional composition facade instead of importing the private platform module graph;
 - capability admission, workspace presentation authority and Governed Execution remain delegated to existing semantic owners rather than being reimplemented by the facade;
+- P5.05 scaffolding imports Arvectum OS through the P5.04 facade, remains readable/replaceable and does not copy bounded-product implementation or contract/resolution logic;
+- the local harness requires explicit Product Contract/version/dependency evidence and preserves a non-authoritative workspace without production infrastructure;
 - direct implementation-private imports/tables/stores/routes/Event streams cannot become the integration contract;
-- Product Contract declaration/admission/validation/resolution/facade composition grants neither Authorization nor Organizational Authority;
+- Product Contract declaration/admission/validation/resolution/facade composition/scaffolding grants neither Authorization nor Organizational Authority;
 - product-specific semantics remain product-owned;
 - Product Contract lifecycle and capability lifecycle remain distinct;
 - current declaration/validation/resolution/facade/scaffolding/harness surfaces remain internal/provisional until evidence and governance justify otherwise;
-- no representation, packaging, version-resolution or facade mechanism is stable/public merely because the reference implementation exists.
+- no representation, packaging, version-resolution, facade, scaffolding or generated-code mechanism is stable/public merely because the reference implementation exists.
 
 Engineering gates: `R13 — Integration Boundary Review` — `Complete / PASS`; `R14 — Developer Safety / Contract Health Review`, `R15 — Reuse / Developer Experience Refactoring Review`, `R16 — M5 Integration Hardening` remain future gates. They do not inflate Phase 5 percentage as separate equal-weight roadmap tasks.
 
@@ -128,9 +132,9 @@ M5 does not require a public SDK, Stable Product Contract or production deployme
 
 ## 8. Current canonical action
 
-> **P5.05 — Scaffolding/templates + local integration harness.**
+> **P5.06 — Security, authority, rights + Organization-scope integration guards.**
 
-Add the smallest reversible scaffolding/templates and local integration harness that consume the P5.04 facade rather than copying the bounded product implementation. Generated/template artifacts must remain understandable and explicitly provisional, and local tests must not require production infrastructure assumptions.
+Prove that the P5.04/P5.05 integration convenience surfaces cannot bypass RFC-0003/RFC-0005 security, Organization-scope, Authorization, Organizational Authority, rights or data-governance gates. Wrong-Organization, denied/missing authorization/authority and stale continuity paths must fail closed while the facade/scaffolding remain non-authoritative convenience tooling.
 
 ## 9. ADR and Product Contract gate
 
@@ -138,7 +142,7 @@ Re-open the ADR/governance gate before material reliance on a language-specific 
 
 A real Product relying on Incubating capabilities, canonical platform state or shared platform history must use the applicable RFC-0004 Product Contract before governed reliance.
 
-Extension registration, Product Contract admission, validation, dependency resolution, facade composition or technical tool access does not itself grant Authorization or Organizational Authority.
+Extension registration, Product Contract admission, validation, dependency resolution, facade composition, scaffolding/harness convenience or technical tool access does not itself grant Authorization or Organizational Authority.
 
 ## 10. Phase transition rule
 
@@ -173,7 +177,9 @@ P5.03 Dependency/version + compatibility semantics ✓
         ↓
 P5.04 Composition API/facade boundary ✓
         ↓
-P5.05 Scaffolding/templates + local harness ← current
+P5.05 Scaffolding/templates + local harness ✓
+        ↓
+P5.06 Security/authority/rights guards ← current
         ↓
 M5 Repeatable product/extension integration
         ↓

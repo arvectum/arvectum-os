@@ -1,7 +1,7 @@
 # Phase 5 — SDK, Contracts and Extension Experience
 
 Status: `Active`
-Version: `1.5.0`
+Version: `1.6.0`
 Created: `2026-08-09`
 Updated: `2026-08-09`
 Owner: `ООО «Арвектум»`
@@ -33,7 +33,8 @@ Phase 5 is bounded by:
 10. [`P5.02 Product Contract declaration/validation review`](../reviews/P5-02-product-contract-declaration-model-machine-checkable-validation-baseline.md) — `PASS`; the existing Product Contract semantic owner remains the single executable declaration model and the internal validator adds machine-checkable fail-closed evidence without creating a Stable/public schema;
 11. [`R13 Integration Boundary Review`](../reviews/R13-integration-boundary-review.md) — `PASS` after R13-F1 remediation; derived validation evidence now preserves dependency provider/consumer/failure responsibilities and operation failure semantics so later dependency/version tooling cannot normalize a narrower projection into a competing contract source;
 12. [`P5.03 governed dependency/version resolution review`](../reviews/P5-03-governed-dependency-version-resolution-compatibility-semantics.md) — `PASS`; exact Product Contract/dependency version continuity plus explicit governed support evidence now produces deterministic compatibility decisions without SemVer/package inference, automatic fallback, authority grants or a Stable/public negotiation boundary;
-13. [`P5.04 integration composition facade review`](../reviews/P5-04-integration-composition-api-facade-boundary.md) — `PASS`; a bounded internal/provisional facade now composes P5.02/P5.03, capability admission, non-authoritative workspace entry and Product Contract-backed Governed Execution while delegating all authority/canonical-state decisions to their existing semantic owners.
+13. [`P5.04 integration composition facade review`](../reviews/P5-04-integration-composition-api-facade-boundary.md) — `PASS`; a bounded internal/provisional facade now composes P5.02/P5.03, capability admission, non-authoritative workspace entry and Product Contract-backed Governed Execution while delegating all authority/canonical-state decisions to their existing semantic owners;
+14. [`P5.05 scaffolding/templates + local harness review`](../reviews/P5-05-scaffolding-templates-local-integration-harness.md) — `PASS`; bounded readable scaffolding and an in-process harness consume the P5.04 facade without copying product implementation, creating a second contract source or requiring production infrastructure.
 
 ## 3. Phase boundary
 
@@ -70,7 +71,7 @@ Phase 5 is bounded by:
 | `P5.02` | Product Contract declaration model + machine-checkable validation baseline | 🟩 Complete | `██████████ 100%` |
 | `P5.03` | Governed dependency/version resolution + compatibility semantics | 🟩 Complete | `██████████ 100%` |
 | `P5.04` | Integration composition API/facade boundary | 🟩 Complete | `██████████ 100%` |
-| `P5.05` | Scaffolding/templates + local integration harness | ⬜ Planned | `░░░░░░░░░░ 0%` |
+| `P5.05` | Scaffolding/templates + local integration harness | 🟩 Complete | `██████████ 100%` |
 | `P5.06` | Security, authority, rights + Organization-scope integration guards | ⬜ Planned | `░░░░░░░░░░ 0%` |
 | `P5.07` | Event/provenance/portability integration support | ⬜ Planned | `░░░░░░░░░░ 0%` |
 | `P5.08` | Workspace/capability integration adapters without private coupling | ⬜ Planned | `░░░░░░░░░░ 0%` |
@@ -129,7 +130,19 @@ P5.04 completion evidence:
 - product/domain semantics remain outside the platform facade and capability-specific adapters remain P5.08 scope;
 - no Stable/public Python/API/wire/package/network boundary or capability lifecycle transition is created;
 - `reference/python/tests/test_p5_04_integration_composition_facade.py` adds 12 focused regression/fitness cases;
-- hosted `Reference Python CI #218` passed the full 615-test reference suite for the implementation/test head.
+- hosted `Reference Python CI #222` passed the full 615-test reference suite on the final synchronized P5.04 PR head.
+
+P5.05 completion evidence:
+
+- [`P5-05-scaffolding-templates-local-integration-harness.md`](../reviews/P5-05-scaffolding-templates-local-integration-harness.md) — `PASS`;
+- `reference/python/arvectum_os_ref/integration_scaffolding.py` adds a tiny explicit provisional template and local in-process harness over P5.04;
+- rendered entry code imports Arvectum OS only through `arvectum_os_ref.integration_composition` and remains readable/replaceable rather than becoming a generated-code compatibility contract;
+- the local harness consumes the exact Product Contract, Actor, effective Product Contract Version and explicit governed provider/version evidence, then delegates composition to P5.04;
+- the harness preserves exact Product Contract Version continuity into a `NON_AUTHORITATIVE` workspace;
+- Product Contract construction, dependency resolution, authorization/authority, capability lifecycle and product-domain semantics remain with their existing owners;
+- no database, broker, IAM provider, object store, registry, network endpoint or deployable service is required;
+- `reference/python/tests/test_p5_05_integration_scaffolding_local_harness.py` adds 8 focused regression/fitness cases;
+- hosted P5.05 execution evidence is evaluated on the canonical-closure PR rather than fabricated from the earlier direct-push implementation commits.
 
 ## 5. Engineering gates
 
@@ -157,9 +170,9 @@ P5.03 Dependency/version + compatibility semantics ✓
  ↓
 P5.04 Composition API/facade boundary ✓
  ↓
-P5.05 Scaffolding/templates + local harness ← current
+P5.05 Scaffolding/templates + local harness ✓
  ↓
-P5.06 Security/authority/rights guards
+P5.06 Security/authority/rights guards ← current
  ↓
 R14 Developer Safety / Contract Health
  ↓
@@ -250,21 +263,29 @@ Exit evidence:
 - facade construction/admission grants no Authorization, Organizational Authority or capability activation — `PASS`;
 - product-domain semantics remain product-owned and capability-specific adapters remain P5.08 scope — `PASS`;
 - no language/network/wire/package choice is declared Stable/public merely by implementation — `PASS`;
-- hosted full reference CI — `PASS` (`Reference Python CI #218`, 615 tests, OK).
+- hosted full reference CI — `PASS` (`Reference Python CI #222`, 615 tests, OK).
 
 ### P5.05 — Scaffolding/templates + local integration harness
 
-**Current canonical action.** Provide reversible helpers that reduce repeated setup for a bounded integration while keeping generated/templated code understandable and replaceable.
+Status: `Complete` — [`review evidence`](../reviews/P5-05-scaffolding-templates-local-integration-harness.md).
+
+P5.05 provides reversible helpers that reduce repeated setup for a bounded integration while keeping generated/templated code understandable, replaceable and explicitly provisional. Both helpers consume the P5.04 facade boundary instead of copying the bounded product implementation.
 
 Exit evidence:
 
-- a new bounded integration can be initialized without copying an existing product implementation;
-- generated/template artifacts identify provisional boundaries;
-- local tests can run without production infrastructure assumptions.
+- a new bounded integration can be initialized without copying an existing product implementation — `PASS`;
+- generated/template artifacts identify provisional boundaries — `PASS`;
+- local tests require no production infrastructure assumptions — `PASS` by implementation/test design;
+- Product Contract and dependency/version semantics remain owned by RFC-0004/P5.02/P5.03 rather than the scaffold — `PASS`;
+- exact Product Contract Version continuity and non-authoritative workspace presentation are preserved — `PASS`;
+- scaffolding/harness grants no Authorization, Organizational Authority, capability activation or operational readiness — `PASS`;
+- no Stable/public SDK/API/wire/package/generated-code compatibility boundary is created — `PASS`;
+- focused P5.05 executable regression evidence is committed — `PASS`;
+- hosted execution evidence is obtained from the P5.05 canonical-closure PR when available.
 
 ### P5.06 — Security, authority, rights + Organization-scope integration guards
 
-Prove that integration convenience cannot bypass RFC-0003/RFC-0005 gates.
+**Current canonical action.** Prove that integration convenience cannot bypass RFC-0003/RFC-0005 gates.
 
 Exit evidence:
 
@@ -372,6 +393,6 @@ M5 does not require a public SDK, Stable Product Contract or production deployme
 
 ## 9. Current canonical action
 
-> **P5.05 — Scaffolding/templates + local integration harness.**
+> **P5.06 — Security, authority, rights + Organization-scope integration guards.**
 
-P5.05 must add the smallest reversible scaffolding and local harness that consumes the P5.04 facade instead of copying the bounded product implementation. Generated/template artifacts must remain understandable, explicitly provisional and runnable locally without production infrastructure assumptions.
+P5.06 must prove that the P5.04/P5.05 integration convenience surfaces cannot bypass RFC-0003/RFC-0005 security and authority semantics. Wrong-Organization, denied/missing Authorization or Organizational Authority, rights/purpose violations and stale continuity paths must fail closed while convenience tooling remains non-authoritative.
