@@ -1,7 +1,7 @@
 # Arvectum OS Phase 4 — Workspace / Operator Experience
 
 Status: `Active`
-Version: `1.12.0`
+Version: `1.13.0`
 Created: `2026-08-08`
 Updated: `2026-08-09`
 Owner: `ООО «Арвектум»`
@@ -13,19 +13,19 @@ Predecessor: `Phase 3 — Shared Platform Capabilities`, `M3` achieved
 
 ## Version note
 
-Version `1.12.0` records completion of **P4.09 — Security, rights, minimization and authority-safe UX** with `PASS` and advances the current canonical action to **P4.10 — Workspace architecture fitness + accessibility/usability baseline**.
+Version `1.13.0` records completion of **P4.10 — Workspace architecture fitness + accessibility/usability baseline** with `PASS` and advances the current canonical action to **R12 — M4 Workspace Hardening**.
 
-P4.09 adds a bounded internal `authority_safe_ux.py` decision-consumption helper. It consumes already-produced `CurrentSourceAuthorization` evidence and deliberately does not become an IAM/PDP/PEP, policy engine, Organizational Authority source, public API, Product Contract or canonical-state owner.
+P4.10 evaluates the accumulated P4.02–P4.09 workspace against the complete 14-dimension M4 fitness matrix. Organization isolation, identity attribution, Authorization-versus-Organizational-Authority separation, canonical-versus-derived state, exact-version visibility/reliance, provenance honesty, Product Contract integrity, Document/Artifact authority, Knowledge/Search non-authority, fail-closed actions, product-domain neutrality, bounded accessibility, deterministic critical states and presentation reversibility all pass for the declared internal reference scope.
 
-Missing, denied, ambiguous and wrong-Organization access evidence all fail closed without governed content, protected counts or derived previews. If the exact source-authorization decision used for a prior view is replaced, the presentation requires re-inspection rather than silently continuing from stale client state. Bounded action labels describe operator intent/state and do not claim approval, permission, Organizational Authority or guaranteed commit.
+The bounded accessibility/usability baseline requires textual Organization/Actor/reference/status meaning, explicit blocked-state reasons, programmatic current-navigation/alert semantics, escaped governed text, exact Version/authority/gate visibility and authority-safe action labels. It is not represented as formal WCAG conformance, production UX certification or completed end-user validation.
 
-Purpose/right/classification handling remains owned by existing P3.07/CAP-001/CAP-002 boundaries; Knowledge freshness and exact-reliance eligibility remain owned by P4.07/CAP-002; consequential action remains owned by R10/P4.05/Governed Execution. The P4.09 helper therefore narrows presentation behavior without widening authority.
+P4.10 adds `reference/python/tests/test_p4_10_workspace_architecture_fitness_accessibility_usability.py` as cross-cutting executable regression evidence. Missing, denied, ambiguous and wrong-Organization source-access evidence remain minimized/fail-closed; replaced authorization evidence requires re-inspection; product composition keeps the R10/P4.05/Governed Execution choke point; and reviewed presentation modules still select no durable frontend/API/IAM/storage boundary.
 
-P4.09 supplies positive evidence for R11's source-authorization matching watch item, but does not broadly migrate P4.03–P4.07/R10 callers. P4.10 must determine whether wider reuse is justified without creating a new security-policy owner or weakening capability-specific handling/freshness/exact-reliance semantics.
+R11/P4.09's source-authorization refactoring watch item is resolved for this gate as **narrow reuse only**. `authority_safe_ux.consume_current_source_authorization()` remains an internal presentation decision consumer; P4.03–P4.07/R10 are not broadly migrated because their purpose/right/classification/freshness/exact-reliance/action-safety responsibilities remain distinct semantic-owner checks. P4.11 may reconsider a lower-level utility only if it preserves those ownership boundaries and materially reduces inconsistency.
 
 No Product Contract change, capability lifecycle promotion, Stable/public interface, production/conformance claim or ADR-triggering durable technology choice is created. The P4.08 Product Contract remains `Provisional 0.1.0`; CAP-001 through CAP-004 remain `Incubating / Provisional`.
 
-GitHub-hosted `Reference Python CI #188` failed at the separately tracked runner/account provisioning issue #54. No green hosted P4.09 run or test-suite failure is claimed from that run. Deterministic critical-state testability remains an explicit P4.10 requirement.
+GitHub issue #54 remains the separately tracked hosted runner/account provisioning gap. P4.10 records deterministic executable coverage and syntax-validated test source without claiming a green hosted run that does not exist.
 
 Canonical completion evidence:
 
@@ -42,6 +42,8 @@ Canonical completion evidence:
 - [`P4.08 bounded product Product Contract`](../contracts/P4-08-BOUNDED-PRODUCT-ENTRY-PRODUCT-CONTRACT.md) — reviewed at R11, remains `Provisional 0.1.0`;
 - [`R11 Composition / Usability Refactoring Review`](../reviews/R11-composition-usability-refactoring-review.md) — `PASS`, five functional cross-review iterations;
 - [`P4.09 Security, rights, minimization and authority-safe UX review`](../reviews/P4-09-security-rights-minimization-authority-safe-ux.md) — `PASS`;
+- [`P4.10 Workspace architecture fitness + accessibility/usability baseline`](../reviews/P4-10-workspace-architecture-fitness-accessibility-usability-baseline.md) — `PASS`;
+- `reference/python/tests/test_p4_10_workspace_architecture_fitness_accessibility_usability.py` — deterministic cross-cutting regression evidence;
 - GitHub issue `#54` — tracked hosted-CI provisioning gap; not an architecture exception or green-test claim.
 
 ## 1. Purpose
@@ -79,11 +81,11 @@ The workspace remains a platform interaction capability under development. Activ
 | `P4.07` | Memory / Knowledge / Search discovery experience | 🟩 Complete | `██████████ 100%` |
 | `P4.08` | Cross-capability task/context composition + bounded product entry point | 🟩 Complete | `██████████ 100%` |
 | `P4.09` | Security, rights, minimization and authority-safe UX | 🟩 Complete | `██████████ 100%` |
-| `P4.10` | Workspace architecture fitness + accessibility/usability baseline | ⬜ Current / cross-cutting | `░░░░░░░░░░ 0%` |
+| `P4.10` | Workspace architecture fitness + accessibility/usability baseline | 🟩 Complete | `██████████ 100%` |
 | `P4.11` | Workspace hardening / ADR / refactoring review | ⬜ | `░░░░░░░░░░ 0%` |
 | `P4.12` | Phase 4 / M4 closure review | ⬜ | `░░░░░░░░░░ 0%` |
 
-Phase 4 roadmap work-item completion is `9 / 12 = 75.0%`. Engineering reviews such as R9/R10/R11 are gates and do not inflate this percentage as separate equal-weight work items.
+Phase 4 roadmap work-item completion is `10 / 12 = 83.3%`. Engineering reviews such as R9/R10/R11/R12 are gates and do not inflate this percentage as separate equal-weight work items.
 
 ## 4. Detailed task intent
 
@@ -263,6 +265,8 @@ Minimum matrix dimensions:
 
 Usability evidence SHOULD verify that an operator can identify what object/version they are viewing, where its authority comes from, what action is being requested, and why an action is allowed, blocked or awaiting approval.
 
+Completion evidence: [`P4.10 Workspace architecture fitness + accessibility/usability baseline`](../reviews/P4-10-workspace-architecture-fitness-accessibility-usability-baseline.md) — `PASS`, four cross-review iterations and executable deterministic regression guards. The baseline is intentionally scoped to semantic/textual accessibility and does not claim formal WCAG or production visual-UX certification. Broad reuse of the P4.09 source-authorization helper is deferred because current capability/action surfaces still own distinct purpose/right/classification/freshness/exact-reliance safety checks.
+
 ### P4.11 — Workspace hardening / ADR / refactoring review
 
 Before M4 closure:
@@ -296,7 +300,7 @@ The closure review MUST distinguish:
 | `R9 — Workspace Boundary Review` | after P4.02 | **Complete / PASS** — shell/navigation does not create authority, product leakage or accidental public boundary; P4.03 source-resolution handoff recorded |
 | `R10 — Operator Safety / Cross-Capability Health Review` | after P4.07 | **Complete / PASS** — current source-access freshness is enforced at operator action composition; cross-capability presentation/reliance health reviewed before P4.08 |
 | `R11 — Composition / Usability Refactoring Review` | after P4.08 / meaningful usability evidence | **Complete / PASS** — product-backed composition remains bounded and semantically explicit; no action bypass or ADR trigger found; source-access matcher duplication retained as bounded watch item for P4.09/P4.10 |
-| `R12 — M4 Workspace Hardening` | after P4.10 | final dependency, authority-bypass, accessibility, deterministic-state and ADR-gate hardening |
+| `R12 — M4 Workspace Hardening` | after P4.10 | **Current** — final dependency, authority-bypass, accessibility, deterministic-state and ADR-gate hardening |
 
 Engineering gates are review/hardening gates and do not inflate roadmap completion percentages as separate equal-weight product tasks.
 
@@ -331,9 +335,9 @@ R11 Composition/Usability Refactoring ✅
             ↓
 P4.09 Security / rights / authority-safe UX ✅
             ↓
-P4.10 Fitness + accessibility/usability evidence ← current
+P4.10 Fitness + accessibility/usability evidence ✅
             ↓
-R12 M4 Hardening
+R12 M4 Hardening ← current
             ↓
 P4.11 ADR / boundary / refactoring review
             ↓
@@ -342,7 +346,7 @@ P4.12 Closure review
 M4
 ```
 
-P4.10 accumulates evidence throughout the phase rather than beginning only near closure.
+P4.10 is now complete; R12 consumes its matrix/baseline as hardening regression evidence.
 
 ## 7. M4 exit criteria
 
@@ -398,12 +402,10 @@ A reversible internal reference implementation may proceed without an ADR when t
 
 ## 10. Current canonical action
 
-> **`P4.10 — Workspace architecture fitness + accessibility/usability baseline`.**
+> **`R12 — M4 Workspace Hardening`.**
 
-Evaluate the accumulated P4.02–P4.09 workspace against the cross-cutting M4 fitness matrix and produce executable/review evidence for core operator journeys, accessibility/usability, deterministic security-critical states and reversible presentation boundaries.
+Use the completed P4.10 fitness matrix and accessibility/usability baseline as regression evidence. Re-check dependency direction, product/platform boundaries, source-authorization/Organizational-Authority separation, fail-closed action paths, exact-version/provenance semantics, derived-state non-authority, accessibility-critical blocked/current-state meaning, deterministic critical-state coverage and every still-armed ADR trigger.
 
-P4.10 must preserve the distinctions validated by P4.09: source-authorization consumption cannot become policy authority; purpose/right/classification/freshness/exact-reliance remain with their semantic owners; derived state remains non-authoritative; exact Version/provenance meaning stays visible where material; and consequential actions continue through R10/P4.05/Governed Execution.
+R12 must not turn the P4.10 bounded accessibility baseline into an unsupported formal WCAG/production-certification claim, and it must not treat issue #54 as proof of test success or as grounds to waive deterministic negative-path coverage.
 
-The P4.09 narrow decision-consumption helper may be considered for wider internal reuse only if P4.10 evidence shows that doing so reduces inconsistency without weakening source-specific controls or creating an accidental IAM/policy abstraction.
-
-Issue #54 remains separately tracked for hosted deterministic test execution. P4.10 must record the environment limitation accurately and provide deterministic-testability evidence without claiming a green hosted run unless one actually exists.
+The P4.09 helper remains a narrow presentation decision-consumption primitive through R12. Any wider refactor must preserve capability-specific purpose/right/classification/freshness/exact-reliance checks and R10 action-freshness semantics rather than centralizing them into an accidental IAM/policy owner.
