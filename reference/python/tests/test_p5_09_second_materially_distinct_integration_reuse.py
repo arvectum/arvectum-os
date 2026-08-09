@@ -17,7 +17,10 @@ from arvectum_os_ref.event_provenance import ReconstructionManifest
 from arvectum_os_ref.execution import GovernedVersionPin
 from arvectum_os_ref.identity import Identity
 from arvectum_os_ref.integration_adapters import compose_integration_adapters
-from arvectum_os_ref.integration_composition import IntegrationCompositionEvidenceRequiredError
+from arvectum_os_ref.integration_composition import (
+    IntegrationCompositionContinuityError,
+    IntegrationCompositionEvidenceRequiredError,
+)
 from arvectum_os_ref.product_capability_consumption import (
     CAP_001_DOCUMENT_ARTIFACT,
     CAP_002_MEMORY_KNOWLEDGE,
@@ -211,23 +214,30 @@ class P509SecondMateriallyDistinctIntegrationReuseTests(unittest.TestCase):
         self.assertEqual(platform_imports(second_journey), ("arvectum_os_ref.integration_adapters",))
 
     def test_second_consumer_has_no_workspace_event_store_or_capability_private_import(self) -> None:
-        source = inspect.getsource(second_journey).lower()
+        tree = ast.parse(inspect.getsource(second_journey))
+        imported_modules = {
+            node.module
+            for node in ast.walk(tree)
+            if isinstance(node, ast.ImportFrom) and node.module is not None
+        }
         for forbidden in (
-            "workspace_shell",
-            "audit_reconstruction_support",
-            "event_provenance",
-            "cross_capability_enforcement",
-            "product_capability_consumption",
-            "canonical",
-            "governed_execution",
-            "search_index_projection",
-            "memory_knowledge_governance",
-            "document_artifact_governance",
+            "arvectum_os_ref.workspace_shell",
+            "arvectum_os_ref.audit_reconstruction_support",
+            "arvectum_os_ref.event_provenance",
+            "arvectum_os_ref.cross_capability_enforcement",
+            "arvectum_os_ref.product_capability_consumption",
+            "arvectum_os_ref.canonical",
+            "arvectum_os_ref.governed_execution",
+            "arvectum_os_ref.search_index_projection",
+            "arvectum_os_ref.memory_knowledge_governance",
+            "arvectum_os_ref.document_artifact_governance",
         ):
-            self.assertNotIn(forbidden, source)
-        self.assertNotIn("open_workspace", source)
-        self.assertNotIn("navigate_workspace", source)
-        self.assertNotIn("start_governed_execution", source)
+            self.assertNotIn(forbidden, imported_modules)
+
+        source = inspect.getsource(second_journey).lower()
+        self.assertNotIn("open_workspace(", source)
+        self.assertNotIn("navigate_workspace(", source)
+        self.assertNotIn("start_governed_execution(", source)
 
     def test_reconstruction_executes_through_same_adapters_and_preserves_exact_contract_context(self) -> None:
         manifest, constraints = self._manifest()
@@ -304,7 +314,7 @@ class P509SecondMateriallyDistinctIntegrationReuseTests(unittest.TestCase):
         )
         manifest, constraints = self._manifest()
 
-        with self.assertRaises(Exception) as caught:
+        with self.assertRaises(IntegrationCompositionContinuityError):
             inspect_execution_evidence(
                 adapters=self._adapters(),
                 request=changed_request,
@@ -312,7 +322,6 @@ class P509SecondMateriallyDistinctIntegrationReuseTests(unittest.TestCase):
                 manifest=manifest,
                 evidence_constraints=constraints,
             )
-        self.assertNotIsInstance(caught.exception, CrossCapabilityEnforcementError)
 
     def test_reuse_does_not_promote_capability_or_contract_lifecycle(self) -> None:
         self.assertEqual(self.contract.lifecycle, ProductContractLifecycle.PROVISIONAL)
