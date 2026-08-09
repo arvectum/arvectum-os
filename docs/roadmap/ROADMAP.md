@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.38.0`
+Version: `2.39.0`
 Created: `2026-08-07`
 Updated: `2026-08-09`
 Owner: `ООО «Арвектум»`
@@ -17,15 +17,13 @@ Detailed completed-phase evidence remains in the corresponding `PHASE-N-...` roa
 
 ## 2. Version note
 
-Version `2.38.0` records completion of **P5.08 — Workspace/capability integration adapters without private coupling** and **P5.09 — Second materially distinct integration reuse proof**, both with `PASS`, and advances the current canonical action to **R15 — Reuse / Developer Experience Refactoring Review**.
+Version `2.39.0` records completion of **R15 — Reuse / Developer Experience Refactoring Review** with `PASS` and advances the current canonical action to **P5.10 — Phase 5 conformance + architecture fitness matrix**.
 
-P5.08 closes the integration-facing workspace/CAP-001..CAP-004 adapter seam as an internal/provisional boundary above the R14-hardened composition path. The first bounded product journey reaches that seam through one Arvectum OS integration module rather than private workspace/capability implementation imports. Hosted `Reference Python CI #242` supplies the previously pending observable P5.08 verification.
+R15 reviewed the P5.08/P5.09 two-consumer evidence before further generalization. Two bounded findings were remediated: shared `IntegrationAdapters` state no longer eagerly carries first-consumer workspace presentation, and P5.05 scaffolding/harness now teaches the demonstrated adapter seam rather than the lower-level composition facade as the default developer entry.
 
-P5.09 realizes the P5.01 J3 candidate as a materially distinct read-only evidence/reconstruction extension with its own `Provisional 0.1.0` Product Contract and CAP-004-only dependency. The second consumer uses the same `arvectum_os_ref.integration_adapters` boundary as the first product but has no workspace, product task/disposition or canonical-mutation path.
+The retained reusable core remains exact Product Contract/dependency-version resolution → composition facade → capability adapter delegation. Workspace is an explicit optional consumer binding. P5.09-F1 remains intact: truthful derived read-only operations may declare no direct canonical access, while declared direct Read and canonical Write/Organizational Authority requirements remain fail-closed.
 
-Second-consumer evidence exposed P5.09-F1: the internal P5.02 validator had overfit the first consumer by assuming every read-only operation must declare direct canonical Read access. The implementation is now narrower and more truthful: a derived read-only view may declare no direct canonical access; when direct canonical access is declared it remains validated, and canonical mutation still requires explicit Write plus Organizational Authority. Hosted `Reference Python CI #242` passed the full 675-test reference suite with `OK`.
-
-No Product Contract or capability lifecycle promotion, Stable/public SDK/API/package boundary, extension registry/runtime, Event-store authority, operational-readiness claim or conformance expansion is created by P5.08/P5.09.
+Hosted `Reference Python CI #251` passed the 682-test reference suite on the R15 code/refactoring head. R15 creates no Product Contract or capability lifecycle promotion, Stable/public SDK/API/package boundary, plugin/extension registry/runtime, new authority source, operational-readiness claim or conformance expansion.
 
 ## 3. Verified architecture baseline
 
@@ -38,7 +36,7 @@ No Product Contract or capability lifecycle promotion, Stable/public SDK/API/pac
 - Phase 4 / `M4` — complete / achieved for the bounded governed-workspace reference scope;
 - [`P4.12 closure review`](../reviews/P4-12-phase-4-m4-closure-review.md) — `PASS`;
 - [`P5.01 integration boundary revalidation`](../reviews/P5-01-integration-boundary-revalidation-developer-journeys.md) — `PASS`;
-- [`P5.02 Product Contract declaration/validation review`](../reviews/P5-02-product-contract-declaration-model-machine-checkable-validation-baseline.md) — `PASS`, with P5.09-F1 internal refinement recorded in the P5.09 review;
+- [`P5.02 Product Contract declaration/validation review`](../reviews/P5-02-product-contract-declaration-model-machine-checkable-validation-baseline.md) — `PASS`, with P5.09-F1 internal refinement recorded in the P5.09/R15 evidence;
 - [`R13 Integration Boundary Review`](../reviews/R13-integration-boundary-review.md) — `PASS` after R13-F1 remediation;
 - [`P5.03 governed dependency/version resolution review`](../reviews/P5-03-governed-dependency-version-resolution-compatibility-semantics.md) — `PASS`;
 - [`P5.04 integration composition facade review`](../reviews/P5-04-integration-composition-api-facade-boundary.md) — `PASS`;
@@ -48,14 +46,15 @@ No Product Contract or capability lifecycle promotion, Stable/public SDK/API/pac
 - [`P5.07 Event/provenance/portability integration-support review`](../reviews/P5-07-event-provenance-portability-integration-support.md) — `PASS`;
 - [`P5.08 workspace/capability integration-adapter review`](../reviews/P5-08-workspace-capability-integration-adapters.md) — `PASS`;
 - [`P5.09 second materially distinct integration reuse proof`](../reviews/P5-09-second-materially-distinct-integration-reuse-proof.md) — `PASS`;
-- hosted `Reference Python CI #242` — `PASS`, 675 tests, including the focused P5.08/P5.09 regressions and accumulated reference architecture-fitness suite;
+- [`R15 Reuse / Developer Experience Refactoring Review`](../reviews/R15-reuse-developer-experience-refactoring-review.md) — `PASS` after R15-F1/R15-F2 remediation;
+- hosted `Reference Python CI #251` — `PASS`, 682 tests on the R15 code/refactoring head;
 - [`PHASE-4-WORKSPACE-OPERATOR-EXPERIENCE.md`](PHASE-4-WORKSPACE-OPERATOR-EXPERIENCE.md) — `Complete`;
 - [`PHASE-5-SDK-CONTRACTS-EXTENSION-EXPERIENCE.md`](PHASE-5-SDK-CONTRACTS-EXTENSION-EXPERIENCE.md) — `Active`;
 - CAP-001 through CAP-004 remain `Incubating / Provisional`;
 - P4.08 bounded Product Contract remains `Provisional 0.1.0`;
 - P5.09 evidence-extension Product Contract remains `Provisional 0.1.0`;
-- no Platform Capability is `Active` merely because M3/M4/P5.02/R13/P5.03/P5.04/P5.05/P5.06/R14/P5.07/P5.08/P5.09 is achieved;
-- no stable/public SDK, API, wire, manifest, package, registry, facade, scaffolding, adapter, event-transport, portability-serialization, IAM/policy, freshness, extension-runtime or generated-code compatibility boundary has been created by M4 or P5.01 through P5.09.
+- no Platform Capability is `Active` merely because M3/M4/P5.02/R13/P5.03/P5.04/P5.05/P5.06/R14/P5.07/P5.08/P5.09/R15 is achieved;
+- no stable/public SDK, API, wire, manifest, package, registry, facade, scaffolding, adapter, event-transport, portability-serialization, IAM/policy, freshness, extension-runtime or generated-code compatibility boundary has been created by M4 or P5.01 through R15.
 
 ## 4. Strategic roadmap
 
@@ -99,7 +98,8 @@ Canonical detailed work breakdown:
 - [`R14 — Developer Safety / Contract Health Review`](../reviews/R14-developer-safety-contract-health-review.md) — `PASS` after R14-F1/R14-F2 remediation;
 - [`P5.07 — Event/Provenance/Portability Integration Support`](../reviews/P5-07-event-provenance-portability-integration-support.md) — `PASS`;
 - [`P5.08 — Workspace/Capability Integration Adapters Without Private Coupling`](../reviews/P5-08-workspace-capability-integration-adapters.md) — `PASS`;
-- [`P5.09 — Second Materially Distinct Integration Reuse Proof`](../reviews/P5-09-second-materially-distinct-integration-reuse-proof.md) — `PASS`.
+- [`P5.09 — Second Materially Distinct Integration Reuse Proof`](../reviews/P5-09-second-materially-distinct-integration-reuse-proof.md) — `PASS`;
+- [`R15 — Reuse / Developer Experience Refactoring Review`](../reviews/R15-reuse-developer-experience-refactoring-review.md) — `PASS` after R15-F1/R15-F2 remediation.
 
 | ID | Work item | Status | Progress |
 |---|---|---:|---:|
@@ -116,7 +116,7 @@ Canonical detailed work breakdown:
 | `P5.11` | Compatibility / ADR / refactoring / public-boundary hardening review | ⬜ Planned | `░░░░░░░░░░ 0%` |
 | `P5.12` | Phase 5 / M5 closure review | ⬜ Planned | `░░░░░░░░░░ 0%` |
 
-P5.01 through P5.09, with R13/R14 gates, establish these minimum integration-boundary invariants:
+P5.01 through P5.09, with R13/R14/R15 gates, establish these minimum integration-boundary invariants:
 
 - Product Contract is the governed boundary authority; tooling must not create a second contract system;
 - relied-upon dependencies, operations and versions remain exact and inspectable;
@@ -128,9 +128,10 @@ P5.01 through P5.09, with R13/R14 gates, establish these minimum integration-bou
 - dependency-backed facade/adapter actions require explicit current governed dependency/version evidence and re-run P5.03 resolution instead of self-advancing composition-time compatibility snapshots;
 - composition-time compatibility remains immutable inspection/history evidence, not current provider-support authority;
 - the first bounded product and second read-only extension each pass through the same internal/provisional `IntegrationAdapters` boundary rather than importing the private platform module graph;
+- the reusable `IntegrationAdapters` stored core is limited to the exact facade plus capability delegation; workspace presentation is an explicit optional consumer binding rather than a universal integration assumption;
 - capability admission, workspace presentation authority, CAP-004 reconstruction and Governed Execution remain delegated to existing semantic owners rather than being reimplemented by integration tooling;
-- P5.05 scaffolding imports Arvectum OS through the P5.04 facade, remains readable/replaceable and does not copy bounded-product implementation or contract/resolution logic;
-- the local harness requires explicit Product Contract/version/dependency evidence and preserves a non-authoritative workspace without production infrastructure;
+- P5.05 scaffolding now imports Arvectum OS through the demonstrated `integration_adapters` seam, remains readable/replaceable and does not copy bounded-product implementation or contract/resolution logic;
+- the local harness composes the same adapter core, requires explicit Product Contract/version/dependency evidence and preserves a non-authoritative workspace without production infrastructure;
 - wrong-Organization actor/request/Event/evidence paths fail closed at composition/admission/capability boundaries;
 - Product Contract/capability admission grants no Authorization, permission, Organizational Authority or approval;
 - P3.07 purpose/right/classification constraints remain effective after contract/capability admission;
@@ -147,23 +148,23 @@ P5.01 through P5.09, with R13/R14 gates, establish these minimum integration-bou
 - current declaration/validation/resolution/facade/scaffolding/harness/guard/event-evidence/adapter surfaces remain internal/provisional until evidence and governance justify otherwise;
 - no representation, packaging, version-resolution, facade, scaffolding, adapter, event-transport, portability-serialization, IAM/policy, freshness-registry, extension-runtime or generated-code mechanism is stable/public merely because the reference implementation exists.
 
-Engineering gates: `R13 — Integration Boundary Review` — `Complete / PASS`; `R14 — Developer Safety / Contract Health Review` — `Complete / PASS after R14-F1/R14-F2 remediation`; `R15 — Reuse / Developer Experience Refactoring Review` is the current gate; `R16 — M5 Integration Hardening` remains future. They do not inflate Phase 5 percentage as separate equal-weight roadmap tasks.
+Engineering gates: `R13 — Integration Boundary Review` — `Complete / PASS`; `R14 — Developer Safety / Contract Health Review` — `Complete / PASS after R14-F1/R14-F2 remediation`; `R15 — Reuse / Developer Experience Refactoring Review` — `Complete / PASS after R15-F1/R15-F2 remediation`; `R16 — M5 Integration Hardening` remains future. They do not inflate Phase 5 percentage as separate equal-weight roadmap tasks.
 
 ## 7. M5 target
 
 `M5 — Repeatable product/extension integration` requires repository evidence that at least two materially distinct bounded integrations can rely on the same explicit Product Contract/integration boundary and reusable tooling without private platform coupling, while preserving exact dependency/version identity, Organization isolation, Authorization/Organizational Authority separation, governed canonical mutation, Event/provenance attribution, portability and consumer ownership of consumer-specific semantics.
 
-P5.09 now satisfies the two-materially-distinct-integration reuse condition, but M5 is **not yet achieved**: R15, P5.10, R16, P5.11 and P5.12 remain applicable gates/work items.
+P5.09 satisfies the two-materially-distinct-integration reuse condition and R15 has refined the shared seam from that evidence, but M5 is **not yet achieved**: P5.10, R16, P5.11 and P5.12 remain applicable gates/work items.
 
 M5 does not require a public SDK, Stable Product Contract or production deployment. Any stable/public compatibility boundary must be governed separately when evidence justifies it.
 
 ## 8. Current canonical action
 
-> **R15 — Reuse / Developer Experience Refactoring Review.**
+> **P5.10 — Phase 5 conformance + architecture fitness matrix.**
 
-Review the accumulated two-consumer evidence before further generalization. Retain only abstractions demonstrated by both materially distinct integrations, preserve the P5.09-F1 distinction between derived read-only views and direct canonical access, remove or contain consumer-shaped assumptions, and keep Product Contract/capability lifecycle plus public/stable compatibility decisions separate.
+Build the accumulated positive/negative Phase 5 fitness matrix across Product Contract identity/version continuity, dependency responsibility and current-support evidence, hidden-coupling prohibition, Organization isolation, Authorization/Organizational Authority separation, governed mutation, Event/provenance, rights/minimization, portability, lifecycle separation, unsupported/deprecated behavior, second-integration reuse and absence of accidental Stable/public compatibility claims.
 
-After R15, the next roadmap work item is **P5.10 — Phase 5 conformance + architecture fitness matrix**.
+After P5.10, the next engineering gate is **R16 — M5 Integration Hardening**.
 
 ## 9. ADR and Product Contract gate
 
@@ -218,9 +219,9 @@ P5.08 Workspace/capability adapters ✓
         ↓
 P5.09 Second integration reuse proof ✓
         ↓
-R15 Reuse / Developer Experience Refactoring ← current
+R15 Reuse / Developer Experience Refactoring ✓
         ↓
-P5.10 Conformance + fitness matrix
+P5.10 Conformance + fitness matrix ← current
         ↓
 R16 M5 Integration Hardening
         ↓
