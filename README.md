@@ -84,11 +84,21 @@ Canonical Phase 5 closure evidence:
 - [P4.08 bounded Product Contract](docs/contracts/P4-08-BOUNDED-PRODUCT-ENTRY-PRODUCT-CONTRACT.md)
 - [Platform Capability Catalog](docs/catalogs/PLATFORM-CAPABILITY-CANDIDATE-CATALOG.md)
 
-Phase 6 is `Active`. [P6.01 — Real product/workflow validation target selection + evidence baseline](docs/reviews/P6-01-real-product-workflow-validation-target-evidence-baseline.md) is `Complete / PASS`.
+Phase 6 is `Active`.
 
-The selected first real Phase 6 validation target is the Arvectum procurement/tender AI operator in a bounded real 44-ФЗ pre-bid workflow from accepted tender documentation to a human-reviewed client-ready decision package while external actions remain manual. The minimum evidence-backed platform-dependency hypothesis for P6.02 is CAP-001 + CAP-004; CAP-002 and CAP-003 remain conditional rather than being forced into the first slice.
+[P6.01 — Real product/workflow validation target selection + evidence baseline](docs/reviews/P6-01-real-product-workflow-validation-target-evidence-baseline.md) is `Complete / PASS`. The selected first real validation target is the Arvectum procurement/tender AI operator in a bounded real 44-ФЗ pre-bid workflow from accepted tender documentation to a human-reviewed client-ready decision package while external actions remain manual.
 
-The current canonical action is **P6.02 — First real Product Contract boundary + bounded adoption plan**. P6.02 must create the smallest sufficient Provisional Product Contract before governed platform reliance and preserve procurement-domain semantics in the product.
+[P6.02 — First real Product Contract boundary + bounded adoption plan](docs/reviews/P6-02-first-real-product-contract-boundary-bounded-adoption-plan.md) is `Complete / PASS`.
+
+The first real Product Contract is [P6-02-FIRST-REAL-PRODUCT-CONTRACT.md](docs/contracts/P6-02-FIRST-REAL-PRODUCT-CONTRACT.md), `Provisional 0.1.0`. It declares exactly CAP-001 Document & Artifact Governance + CAP-004 Audit / Reconstruction Support at the current Provisional capability-contract baseline `1.0.0`. CAP-002 and CAP-003 are deliberately omitted from the first real slice. Procurement-specific schemas, workflow, knowledge, search/relevance, economics, risk and decision semantics remain product-owned.
+
+External ЕИС/zakupki.gov.ru, partner tender files and supplier TKP/quote content remain externally authoritative within their scopes. Arvectum OS governs only its declared exact references/versions/provenance plus Native Product Contract/Execution/Event/review evidence. No automated external mutation or organizational commitment is admitted by the Product Contract.
+
+The P6.02 adoption plan is bounded to synthetic/redacted integration proof → one real 44-ФЗ case → maximum three-case calibration set, with explicit stop/rollback conditions and no bulk migration. No real governed implementation reliance begins before R17.
+
+The current canonical action is **R17 — First Product Boundary Review**. R17 must independently verify the real Product Contract boundary, CAP-001/CAP-004-only dependency set, external authority, Organization/security/rights handling, product ownership and reversibility before P6.03 begins.
+
+P6.02 does **not** promote any capability to `Active`, make the new Product Contract `Stable`, establish production/operational readiness, create a public SDK/API/wire/package/service boundary or create SLA/support/customer compatibility commitments.
 
 The current delivery sequence is maintained in the [Canonical Roadmap](docs/roadmap/ROADMAP.md) and [RFC Index](docs/rfc/README.md).
 
