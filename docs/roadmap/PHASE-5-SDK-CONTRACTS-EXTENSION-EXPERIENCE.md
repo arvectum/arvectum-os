@@ -1,7 +1,7 @@
 # Phase 5 — SDK, Contracts and Extension Experience
 
 Status: `Active`
-Version: `1.4.1`
+Version: `1.5.0`
 Created: `2026-08-09`
 Updated: `2026-08-09`
 Owner: `ООО «Арвектум»`
@@ -32,7 +32,8 @@ Phase 5 is bounded by:
 9. [`P5.01 integration boundary revalidation`](../reviews/P5-01-integration-boundary-revalidation-developer-journeys.md) — `PASS`; Product Contract/dependency/operation/version semantics are the revalidated boundary and current Python import/module shapes remain internal evidence only;
 10. [`P5.02 Product Contract declaration/validation review`](../reviews/P5-02-product-contract-declaration-model-machine-checkable-validation-baseline.md) — `PASS`; the existing Product Contract semantic owner remains the single executable declaration model and the internal validator adds machine-checkable fail-closed evidence without creating a Stable/public schema;
 11. [`R13 Integration Boundary Review`](../reviews/R13-integration-boundary-review.md) — `PASS` after R13-F1 remediation; derived validation evidence now preserves dependency provider/consumer/failure responsibilities and operation failure semantics so later dependency/version tooling cannot normalize a narrower projection into a competing contract source;
-12. [`P5.03 governed dependency/version resolution review`](../reviews/P5-03-governed-dependency-version-resolution-compatibility-semantics.md) — `PASS`; exact Product Contract/dependency version continuity plus explicit governed support evidence now produces deterministic compatibility decisions without SemVer/package inference, automatic fallback, authority grants or a Stable/public negotiation boundary.
+12. [`P5.03 governed dependency/version resolution review`](../reviews/P5-03-governed-dependency-version-resolution-compatibility-semantics.md) — `PASS`; exact Product Contract/dependency version continuity plus explicit governed support evidence now produces deterministic compatibility decisions without SemVer/package inference, automatic fallback, authority grants or a Stable/public negotiation boundary;
+13. [`P5.04 integration composition facade review`](../reviews/P5-04-integration-composition-api-facade-boundary.md) — `PASS`; a bounded internal/provisional facade now composes P5.02/P5.03, capability admission, non-authoritative workspace entry and Product Contract-backed Governed Execution while delegating all authority/canonical-state decisions to their existing semantic owners.
 
 ## 3. Phase boundary
 
@@ -68,7 +69,7 @@ Phase 5 is bounded by:
 | `P5.01` | Integration boundary revalidation + developer journeys | 🟩 Complete | `██████████ 100%` |
 | `P5.02` | Product Contract declaration model + machine-checkable validation baseline | 🟩 Complete | `██████████ 100%` |
 | `P5.03` | Governed dependency/version resolution + compatibility semantics | 🟩 Complete | `██████████ 100%` |
-| `P5.04` | Integration composition API/facade boundary | ⬜ Planned | `░░░░░░░░░░ 0%` |
+| `P5.04` | Integration composition API/facade boundary | 🟩 Complete | `██████████ 100%` |
 | `P5.05` | Scaffolding/templates + local integration harness | ⬜ Planned | `░░░░░░░░░░ 0%` |
 | `P5.06` | Security, authority, rights + Organization-scope integration guards | ⬜ Planned | `░░░░░░░░░░ 0%` |
 | `P5.07` | Event/provenance/portability integration support | ⬜ Planned | `░░░░░░░░░░ 0%` |
@@ -118,6 +119,18 @@ P5.03 completion evidence:
 - `reference/python/tests/test_p5_03_product_contract_dependency_resolution.py` adds 12 focused regression/fitness cases;
 - hosted `Reference Python CI #217` passed on the final P5.03 PR head before merge.
 
+P5.04 completion evidence:
+
+- [`P5-04-integration-composition-api-facade-boundary.md`](../reviews/P5-04-integration-composition-api-facade-boundary.md) — `PASS`;
+- `reference/python/arvectum_os_ref/integration_composition.py` adds the smallest internal/provisional integration-facing composition seam justified by J1/J2;
+- facade construction consumes the exact RFC-0004 Product Contract, P5.02 declaration validation and P5.03 exact compatibility evidence;
+- capability admission, workspace authority and Governed Execution remain delegated to their existing semantic owners;
+- `reference/python/bounded_product_ref/integration_journeys.py` proves J1/J2 product entry with exactly one Arvectum OS import boundary: the integration facade;
+- product/domain semantics remain outside the platform facade and capability-specific adapters remain P5.08 scope;
+- no Stable/public Python/API/wire/package/network boundary or capability lifecycle transition is created;
+- `reference/python/tests/test_p5_04_integration_composition_facade.py` adds 12 focused regression/fitness cases;
+- hosted `Reference Python CI #218` passed the full 615-test reference suite for the implementation/test head.
+
 ## 5. Engineering gates
 
 Engineering reviews are gates, not equal-weight roadmap work items.
@@ -142,9 +155,9 @@ R13 Integration Boundary Review ✓
  ↓
 P5.03 Dependency/version + compatibility semantics ✓
  ↓
-P5.04 Composition API/facade boundary ← current
+P5.04 Composition API/facade boundary ✓
  ↓
-P5.05 Scaffolding/templates + local harness
+P5.05 Scaffolding/templates + local harness ← current
  ↓
 P5.06 Security/authority/rights guards
  ↓
@@ -223,17 +236,25 @@ Exit evidence:
 
 ### P5.04 — Integration composition API/facade boundary
 
-**Current canonical action.** Extract the smallest reusable integration-facing boundary that composes governed runtime/capability/workspace semantics without exposing private implementation structure.
+Status: `Complete` — [`review evidence`](../reviews/P5-04-integration-composition-api-facade-boundary.md).
+
+P5.04 extracts the smallest reusable integration-facing composition boundary justified by J1/J2 without exposing product code to the implementation-private runtime/capability/workspace module graph.
 
 Exit evidence:
 
-- product code does not import private runtime/capability internals for the proved journeys;
-- the facade delegates authority/canonical-state decisions to existing semantic owners;
-- no language/network/wire choice is declared stable merely by implementation.
+- product-owned P5.04 J1/J2 journey code imports no private runtime/capability/workspace implementation modules — `PASS`;
+- the product journey sees Arvectum OS through one internal/provisional integration facade module — `PASS`;
+- facade construction consumes exact P5.02 declaration and P5.03 dependency/version resolution semantics — `PASS`;
+- exact Product Contract/Product/dependency/version/operation continuity remains fail-closed — `PASS`;
+- capability admission, workspace authority and consequential execution delegate to existing semantic owners — `PASS`;
+- facade construction/admission grants no Authorization, Organizational Authority or capability activation — `PASS`;
+- product-domain semantics remain product-owned and capability-specific adapters remain P5.08 scope — `PASS`;
+- no language/network/wire/package choice is declared Stable/public merely by implementation — `PASS`;
+- hosted full reference CI — `PASS` (`Reference Python CI #218`, 615 tests, OK).
 
 ### P5.05 — Scaffolding/templates + local integration harness
 
-Provide reversible helpers that reduce repeated setup for a bounded integration while keeping generated/templated code understandable and replaceable.
+**Current canonical action.** Provide reversible helpers that reduce repeated setup for a bounded integration while keeping generated/templated code understandable and replaceable.
 
 Exit evidence:
 
@@ -351,6 +372,6 @@ M5 does not require a public SDK, Stable Product Contract or production deployme
 
 ## 9. Current canonical action
 
-> **P5.04 — Integration composition API/facade boundary.**
+> **P5.05 — Scaffolding/templates + local integration harness.**
 
-P5.04 must extract the smallest reusable integration-facing composition boundary from the now-explicit Product Contract declaration/validation/resolution semantics and the proved J1/J2 journeys. It must avoid exposing private implementation structure, preserve authority/canonical-state decisions in their existing semantic owners, and must not turn the current Python facade/module shape into a Stable/public API without the applicable evidence and governance.
+P5.05 must add the smallest reversible scaffolding and local harness that consumes the P5.04 facade instead of copying the bounded product implementation. Generated/template artifacts must remain understandable, explicitly provisional and runnable locally without production infrastructure assumptions.

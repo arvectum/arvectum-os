@@ -39,9 +39,9 @@ The completed canonical milestone sequence is:
 
 `Phase 3 — Shared Platform Capabilities` is complete; its M3 closure remains scoped to the bounded shared-capability reference baseline and does not promote any capability to `Active`.
 
-`Phase 5 — SDK, Contracts and Extension Experience` is now `Active`. [P5.01 — Integration Boundary Revalidation + Developer Journeys](docs/reviews/P5-01-integration-boundary-revalidation-developer-journeys.md), [P5.02 — Product Contract Declaration Model + Machine-Checkable Validation Baseline](docs/reviews/P5-02-product-contract-declaration-model-machine-checkable-validation-baseline.md), [R13 — Integration Boundary Review](docs/reviews/R13-integration-boundary-review.md) and [P5.03 — Governed Dependency/Version Resolution + Compatibility Semantics](docs/reviews/P5-03-governed-dependency-version-resolution-compatibility-semantics.md) record **`PASS`**. The current canonical action is now `P5.04 — Integration composition API/facade boundary`.
+`Phase 5 — SDK, Contracts and Extension Experience` is now `Active`. [P5.01 — Integration Boundary Revalidation + Developer Journeys](docs/reviews/P5-01-integration-boundary-revalidation-developer-journeys.md), [P5.02 — Product Contract Declaration Model + Machine-Checkable Validation Baseline](docs/reviews/P5-02-product-contract-declaration-model-machine-checkable-validation-baseline.md), [R13 — Integration Boundary Review](docs/reviews/R13-integration-boundary-review.md), [P5.03 — Governed Dependency/Version Resolution + Compatibility Semantics](docs/reviews/P5-03-governed-dependency-version-resolution-compatibility-semantics.md) and [P5.04 — Integration Composition API/Facade Boundary](docs/reviews/P5-04-integration-composition-api-facade-boundary.md) record **`PASS`**. The current canonical action is now `P5.05 — Scaffolding/templates + local integration harness`.
 
-P5.01/P5.02/R13/P5.03 establish the current integration baseline:
+P5.01/P5.02/R13/P5.03/P5.04 establish the current integration baseline:
 
 - Product Contract remains the governed product/platform boundary authority and the existing RFC-0004 `ProductContract` remains the single executable declaration model for the bounded reference implementation;
 - relied-upon dependency, operation and version semantics are explicit and machine-checkable;
@@ -52,11 +52,14 @@ P5.01/P5.02/R13/P5.03 establish the current integration baseline:
 - P5.03 adds exact Product Contract/dependency version resolution against explicit governed provider/version support evidence, with no SemVer/package/module/dataclass inference and no automatic fallback version;
 - compatibility outcomes are explicit (`Compatible`, `VersionMismatch`, `Unsupported`, `Deprecated`, `Retired`, `Ambiguous`) and non-compatible reliance fails closed deterministically;
 - changed/deprecated/retired dependency reliance exposes migration obligations rather than silently advancing to another version;
-- Product Contract declaration/admission/validation/resolution grants neither Authorization nor Organizational Authority;
-- capability lifecycle remains owned by RFC-0001 governance and the canonical capability catalog, not by Product Contract validation/resolution tooling;
-- current Python module/import/dataclass shapes remain internal/provisional executable evidence, not a Stable/public SDK contract;
+- P5.04 adds one internal/provisional integration composition facade over the exact P5.02/P5.03 boundary plus capability admission, non-authoritative workspace entry and Product Contract-backed Governed Execution;
+- the product-owned P5.04 J1/J2 journey proof imports Arvectum OS through that single facade module rather than the private runtime/capability/workspace module graph;
+- capability admission, workspace presentation authority, security/authority gates and canonical-state decisions remain delegated to their existing semantic owners;
+- Product Contract declaration/admission/validation/resolution/facade composition grants neither Authorization nor Organizational Authority;
+- capability lifecycle remains owned by RFC-0001 governance and the canonical capability catalog, not by Product Contract validation/resolution/facade tooling;
+- current Python module/import/dataclass/facade shapes remain internal/provisional executable evidence, not a Stable/public SDK contract;
 - private tables/stores/imports/routes/Event streams, implicit shared state and lower-level mutation bypasses are not valid integration boundaries;
-- no stable/public serialization, SDK/API, wire, package, registry or version-negotiation boundary is created by the Phase 5 declaration/validation/resolution tooling.
+- no stable/public serialization, SDK/API, wire, package, registry, facade or version-negotiation boundary is created by the Phase 5 declaration/validation/resolution/composition tooling.
 
 The retained capability set remains unchanged:
 
@@ -67,7 +70,7 @@ The retained capability set remains unchanged:
 
 The P4.08 bounded Product Contract remains `Provisional 0.1.0`.
 
-P5.01/P5.02/R13/P5.03 does **not** promote any capability to `Active`, create a Stable Product Contract, create a Stable/public API/SDK/wire/manifest/module/package/registry/version-negotiation compatibility boundary, select durable package/plugin/network/IAM/Event/storage infrastructure, establish `Production` or operational readiness, claim M5/full-platform conformance, or create SLA/support/commercial commitments.
+P5.01/P5.02/R13/P5.03/P5.04 does **not** promote any capability to `Active`, create a Stable Product Contract, create a Stable/public API/SDK/wire/manifest/module/package/registry/facade/version-negotiation compatibility boundary, select durable package/plugin/network/IAM/Event/storage infrastructure, establish `Production` or operational readiness, claim M5/full-platform conformance, or create SLA/support/commercial commitments.
 
 Canonical current evidence:
 
@@ -77,15 +80,16 @@ Canonical current evidence:
 - [P5.02 Product Contract declaration/validation review](docs/reviews/P5-02-product-contract-declaration-model-machine-checkable-validation-baseline.md)
 - [R13 Integration Boundary Review](docs/reviews/R13-integration-boundary-review.md)
 - [P5.03 governed dependency/version resolution review](docs/reviews/P5-03-governed-dependency-version-resolution-compatibility-semantics.md)
+- [P5.04 integration composition facade review](docs/reviews/P5-04-integration-composition-api-facade-boundary.md)
 - [P4.12 Phase 4 / M4 closure review](docs/reviews/P4-12-phase-4-m4-closure-review.md)
 - [P4.08 bounded Product Contract](docs/contracts/P4-08-BOUNDED-PRODUCT-ENTRY-PRODUCT-CONTRACT.md)
 - [Platform Capability Catalog](docs/catalogs/PLATFORM-CAPABILITY-CANDIDATE-CATALOG.md)
 
 The current canonical action is:
 
-> **P5.04 — Integration composition API/facade boundary.**
+> **P5.05 — Scaffolding/templates + local integration harness.**
 
-P5.04 must extract the smallest reusable integration-facing composition boundary from the proved J1/J2 journeys and the Product Contract declaration/validation/resolution semantics now established by P5.02/P5.03. It must avoid private platform coupling, delegate authority/canonical-state decisions to existing semantic owners, preserve exact Product Contract/dependency continuity, and avoid turning the current Python facade/module shape into a Stable/public API without the applicable evidence and governance.
+P5.05 must add the smallest reversible scaffolding/templates and local integration harness that consume the P5.04 facade rather than copying the bounded product implementation. Generated/template artifacts must remain understandable and explicitly provisional, and local tests must not require production infrastructure assumptions.
 
 The current delivery sequence is maintained in the [Canonical Roadmap](docs/roadmap/ROADMAP.md) and [RFC Index](docs/rfc/README.md).
 
