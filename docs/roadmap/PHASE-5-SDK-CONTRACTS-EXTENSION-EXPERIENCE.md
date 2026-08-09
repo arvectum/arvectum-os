@@ -1,7 +1,7 @@
 # Phase 5 — SDK, Contracts and Extension Experience
 
 Status: `Active`
-Version: `1.11.0`
+Version: `1.12.0`
 Created: `2026-08-09`
 Updated: `2026-08-09`
 Owner: `ООО «Арвектум»`
@@ -40,7 +40,8 @@ Phase 5 is bounded by:
 17. [`P5.07 Event/provenance/portability integration-support review`](../reviews/P5-07-event-provenance-portability-integration-support.md) — `PASS`; bounded integration evidence now preserves exact Actor/Product/Product Contract/Execution/Event attribution, delegates canonical Event semantics to P2.05, keeps telemetry non-authoritative and portable semantic fixtures non-canonical/vendor-neutral; hosted `Reference Python CI #237` passes the full 653-test reference suite;
 18. [`P5.08 workspace/capability integration-adapter review`](../reviews/P5-08-workspace-capability-integration-adapters.md) — `PASS`; product-side integration now consumes workspace/CAP-001..CAP-004 through one internal/provisional adapter seam without private coupling, and hosted `Reference Python CI #242` supplies the previously pending full-suite verification;
 19. [`P5.09 second materially distinct integration reuse proof`](../reviews/P5-09-second-materially-distinct-integration-reuse-proof.md) — `PASS`; a read-only CAP-004 evidence/reconstruction extension reuses the same Product Contract/composition/adapter boundary as the first product, exposes no workspace or canonical mutation path, and refines one overfitted internal P5.02 read-only assumption without weakening direct canonical-read or mutation gates; hosted `Reference Python CI #242` passes the full 675-test suite;
-20. [`R15 Reuse / Developer Experience Refactoring Review`](../reviews/R15-reuse-developer-experience-refactoring-review.md) — `PASS` after R15-F1/R15-F2 remediation; the demonstrated shared adapter state is narrowed to facade + capability delegation, workspace becomes an explicit optional consumer binding, and P5.05 scaffold/harness guidance is aligned with the reused adapter seam without creating a public/stable boundary; hosted `Reference Python CI #251` passes the 682-test R15 code/refactoring head.
+20. [`R15 Reuse / Developer Experience Refactoring Review`](../reviews/R15-reuse-developer-experience-refactoring-review.md) — `PASS` after R15-F1/R15-F2 remediation; the demonstrated shared adapter state is narrowed to facade + capability delegation, workspace becomes an explicit optional consumer binding, and P5.05 scaffold/harness guidance is aligned with the reused adapter seam without creating a public/stable boundary; hosted `Reference Python CI #251` passes the 682-test R15 code/refactoring head;
+21. [`P5.10 Phase 5 conformance + architecture fitness matrix`](../reviews/P5-10-phase-5-conformance-architecture-fitness-matrix.md) — `PASS`; all 15 required cross-cutting dimensions have positive and negative executable anchors across P5.02–P5.09 and R13–R15, the matrix remains an evidence index rather than a semantic owner, and hosted `Reference Python CI #256` passes 688 tests on the P5.10 implementation head.
 
 ## 3. Phase boundary
 
@@ -82,7 +83,7 @@ Phase 5 is bounded by:
 | `P5.07` | Event/provenance/portability integration support | 🟩 Complete | `██████████ 100%` |
 | `P5.08` | Workspace/capability integration adapters without private coupling | 🟩 Complete | `██████████ 100%` |
 | `P5.09` | Second materially distinct integration reuse proof | 🟩 Complete | `██████████ 100%` |
-| `P5.10` | Phase 5 conformance + architecture fitness matrix | ⬜ Cross-cutting | `░░░░░░░░░░ 0%` |
+| `P5.10` | Phase 5 conformance + architecture fitness matrix | 🟩 Complete | `██████████ 100%` |
 | `P5.11` | Compatibility / ADR / refactoring / public-boundary hardening review | ⬜ Planned | `░░░░░░░░░░ 0%` |
 | `P5.12` | Phase 5 / M5 closure review | ⬜ Planned | `░░░░░░░░░░ 0%` |
 
@@ -226,6 +227,17 @@ R15 completion evidence:
 - `reference/python/tests/test_r15_reuse_developer_experience_refactoring_review.py` adds 7 focused review regressions;
 - hosted `Reference Python CI #251` passes the 682-test reference suite on the R15 code/refactoring head.
 
+P5.10 completion evidence:
+
+- [`P5-10-phase-5-conformance-architecture-fitness-matrix.md`](../reviews/P5-10-phase-5-conformance-architecture-fitness-matrix.md) — `PASS`;
+- all 15 minimum Phase 5 matrix dimensions are represented exactly once as `CF-01` through `CF-15`;
+- every matrix row carries both positive and negative/fail-closed executable evidence;
+- the executable index resolves anchors across P5.02, R13, P5.03, P5.04, P5.05, P5.06, P5.07, P5.08, P5.09, R14 and R15 instead of allowing P5.10 to self-certify semantics;
+- Product Contract identity/version, exact dependency responsibilities, current provider support, hidden-coupling prohibition, Organization isolation, authority separation, governed mutation, Event/provenance, rights/minimization, portability, lifecycle separation, deprecated/unsupported behavior, second-consumer reuse and no-public/stable-boundary invariants all have executable positive/negative evidence;
+- P5.10 remains an evidence index and does not become a second semantic owner, compatibility service, permission/authority source or lifecycle/public-boundary decision;
+- no Constitution/RFC amendment or ADR is required by the matrix itself;
+- hosted `Reference Python CI #256` passes 688 tests with `OK` on the initial P5.10 implementation head; the synchronized PR head remains subject to the same merge-time CI gate.
+
 ## 5. Engineering gates
 
 Engineering reviews are gates, not equal-weight roadmap work items.
@@ -233,7 +245,7 @@ Engineering reviews are gates, not equal-weight roadmap work items.
 - `R13 — Integration Boundary Review` — **Complete / PASS after R13-F1 remediation**. Product Contract remains the single governed semantic owner; derived validation evidence preserves boundary responsibilities without becoming a second contract system.
 - `R14 — Developer Safety / Contract Health Review` — **Complete / PASS after R14-F1/R14-F2 remediation**. Normal facade construction cannot bypass P5.02/P5.03, and dependency-backed J1/J2 reliance cannot silently reuse composition-time provider compatibility.
 - `R15 — Reuse / Developer Experience Refactoring Review` — **Complete / PASS after R15-F1/R15-F2 remediation**. Shared adapter state is narrowed to demonstrated reuse, workspace is optional, P5.09-F1 is preserved and scaffolding follows the reused adapter seam without public-boundary inflation.
-- `R16 — M5 Integration Hardening` — after P5.10 and before P5.11. Resolve material conformance, compatibility, security and maintainability findings.
+- `R16 — M5 Integration Hardening` — **Current** after P5.10 and before P5.11. Resolve material conformance, compatibility, security and maintainability findings.
 
 Performance optimization remains evidence-backed; do not optimize package/API/runtime mechanics without benchmark/profile evidence except correctness, security or resource-exhaustion defects.
 
@@ -266,9 +278,9 @@ P5.09 Second integration reuse proof ✓
  ↓
 R15 Reuse / DX Refactoring ✓
  ↓
-P5.10 Conformance + fitness matrix ← current
+P5.10 Conformance + fitness matrix ✓
  ↓
-R16 M5 Hardening
+R16 M5 Hardening ← current
  ↓
 P5.11 Compatibility / ADR / public-boundary review
  ↓
@@ -277,7 +289,7 @@ P5.12 M5 closure
 M5
 ```
 
-P5.10 accumulates evidence throughout the phase.
+P5.10 accumulates evidence throughout the phase; R16 now hardens that accumulated integration surface before P5.11 decides any crossed compatibility/ADR/public-boundary gates.
 
 ## 7. Work-item intent and exit evidence
 
@@ -436,27 +448,19 @@ Exit evidence:
 
 ### P5.10 — Phase 5 conformance + architecture fitness matrix
 
-Status: `Current`.
+Status: `Complete` — [`review evidence`](../reviews/P5-10-phase-5-conformance-architecture-fitness-matrix.md).
 
-Accumulate positive and negative evidence across the phase.
+P5.10 accumulates the phase's positive and negative evidence into a machine-checked cross-cutting index. The matrix is intentionally not a new semantic owner and does not restate Product Contract, compatibility, security, Event or lifecycle logic as independent runtime behavior.
 
-Minimum matrix:
+Exit evidence:
 
-- Product Contract declaration/version identity;
-- dependency/version continuity;
-- dependency provider/consumer/failure responsibility continuity;
-- current dependency-support evidence / stale-evidence fail-closed behavior;
-- hidden-coupling prohibition;
-- Organization isolation;
-- Authorization vs Organizational Authority separation;
-- governed canonical mutation path;
-- event/provenance attribution;
-- rights/minimization/data-governance continuity;
-- portability;
-- capability/Product Contract lifecycle separation;
-- unsupported/deprecated dependency behavior;
-- second-integration reuse;
-- no accidental public/stable compatibility promise.
+- all 15 minimum matrix dimensions are represented as `CF-01` through `CF-15` — `PASS`;
+- every row has positive and negative/fail-closed executable evidence — `PASS`;
+- all evidence anchors resolve to current test classes/methods — `PASS`;
+- the evidence index spans P5.02, R13, P5.03, P5.04, P5.05, P5.06, P5.07, P5.08, P5.09, R14 and R15 rather than self-certifying P5.10 — `PASS`;
+- no capability/Product Contract lifecycle promotion, authority grant, public/stable boundary, operational-readiness or M5 conformance claim is created — `PASS`;
+- no RFC/ADR is required because no new durable mechanism or Accepted architecture contract is selected — `PASS`;
+- hosted implementation-head full reference CI — `PASS` (`Reference Python CI #256`, 688 tests, `OK`).
 
 ### P5.11 — Compatibility / ADR / refactoring / public-boundary hardening review
 
@@ -505,8 +509,8 @@ M5 does not require a public SDK, Stable Product Contract or production deployme
 
 ## 9. Current canonical action
 
-> **P5.10 — Phase 5 conformance + architecture fitness matrix.**
+> **R16 — M5 Integration Hardening.**
 
-Build the accumulated positive/negative Phase 5 matrix over Product Contract declaration/version identity, exact dependency/version and responsibility continuity, current provider-support evidence, hidden-coupling prohibition, Organization isolation, Authorization/Organizational Authority separation, governed mutation, Event/provenance attribution, rights/minimization, portability, lifecycle separation, unsupported/deprecated behavior, second-integration reuse and absence of accidental Stable/public compatibility claims.
+Use the accumulated P5.10 `CF-01` through `CF-15` matrix as a regression/evidence index while reviewing integration correctness, security, compatibility and maintainability. Preserve the existing semantic owners and treat any material regression as an R16 finding unless a higher-authority architectural change explicitly changes the underlying invariant.
 
-After P5.10, proceed to **R16 — M5 Integration Hardening**.
+After R16, proceed to **P5.11 — Compatibility / ADR / refactoring / public-boundary hardening review**.
