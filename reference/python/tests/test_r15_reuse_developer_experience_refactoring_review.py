@@ -168,7 +168,7 @@ class R15ReuseDeveloperExperienceRefactoringReviewTests(unittest.TestCase):
 
         self.assertIn("internal/provisional", source)
         self.assertIn("stable/public", source)
-        self.assertIn("not new semantic owners", source)
+        self.assertIn("not a new semantic owner", source)
         for forbidden in (
             "import fastapi",
             "import requests",
