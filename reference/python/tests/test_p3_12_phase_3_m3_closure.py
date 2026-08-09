@@ -52,7 +52,7 @@ class P312Phase3M3ClosureTests(unittest.TestCase):
         self.assertIn("CAP-001 through CAP-004 remain `Incubating / Provisional`", roadmap)
         self.assertIn("no Platform Capability is `Active`", roadmap)
         self.assertIn(
-            "Phase status, capability lifecycle, Product Contract lifecycle, operational environment/readiness and conformance maturity remain distinct.",
+            "Phase status, Platform Capability lifecycle, Product Contract lifecycle, operational environment/readiness and conformance maturity remain distinct.",
             roadmap,
         )
 
@@ -83,7 +83,7 @@ class P312Phase3M3ClosureTests(unittest.TestCase):
         for capability_id in CAPABILITY_IDS:
             self.assertIn(f"`{capability_id}", readme)
         self.assertIn("`Incubating / Provisional`", readme)
-        self.assertIn("does **not** promote any capability to `Active`", readme)
+        self.assertIn("do **not** promote any capability to `Active`", readme)
         self.assertIn("The P4.08 bounded Product Contract remains `Provisional 0.1.0`", readme)
 
 

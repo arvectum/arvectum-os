@@ -1,9 +1,16 @@
-"""Canonical Record reference semantics for P1.02 and P2.02.
+"""Canonical Record reference semantics for P1.02, P2.02 and P6.03.
 
 The module remains a bounded in-memory reference model, not a persistence or
 public wire contract. P2.02 extends the immutable Canonical Record envelope with
 optional temporal applicability metadata so a lineage resolver can distinguish
 Canonical Head from Effective Version without changing historical versions.
+
+P6.03 adds the minimum RFC-0002 external-authority declaration needed by the
+first real Product Contract validation target. External Reference and Governed
+Replica remain explicit authority modes and require a complete bounded external
+authority contract; missing or ambiguous authority evidence fails closed. This
+is reference semantics only and does not select synchronization infrastructure,
+a registry client, storage, transport or a Stable/public schema.
 """
 
 from __future__ import annotations
@@ -29,6 +36,52 @@ def _require_aware_datetime(value: datetime, *, label: str) -> None:
         raise ValueError(f"{label} must be timezone-aware")
 
 
+def _require_text(value: str, *, label: str) -> None:
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(f"{label} must be explicit")
+
+
+@dataclass(frozen=True, slots=True)
+class ExternalAuthorityContract:
+    """Bounded RFC-0002 authority mapping for one external fact scope.
+
+    The object records organizational semantics only. It is not a connector,
+    credential, synchronization runtime, SLA, legal-rights assertion or proof
+    that the external source is currently available.
+    """
+
+    authoritative_system: str
+    external_object_ref: str
+    authority_scope: str
+    retrieval_or_sync: str
+    freshness_expectation: str
+    source_version_semantics: str
+    conflict_rule: str
+    failure_behavior: str
+    permitted_transformations: tuple[str, ...]
+    retention_deletion: str
+    portability: str
+
+    def __post_init__(self) -> None:
+        for label, value in (
+            ("authoritative_system", self.authoritative_system),
+            ("external_object_ref", self.external_object_ref),
+            ("authority_scope", self.authority_scope),
+            ("retrieval_or_sync", self.retrieval_or_sync),
+            ("freshness_expectation", self.freshness_expectation),
+            ("source_version_semantics", self.source_version_semantics),
+            ("conflict_rule", self.conflict_rule),
+            ("failure_behavior", self.failure_behavior),
+            ("retention_deletion", self.retention_deletion),
+            ("portability", self.portability),
+        ):
+            _require_text(value, label=f"external authority {label}")
+        if not isinstance(self.permitted_transformations, tuple):
+            raise ValueError("external authority permitted_transformations must be an immutable tuple")
+        if any(not isinstance(value, str) or not value.strip() for value in self.permitted_transformations):
+            raise ValueError("external authority permitted_transformations must contain explicit values")
+
+
 @dataclass(frozen=True, slots=True)
 class CanonicalRecord:
     """Immutable governed representation of one logical subject at one version.
@@ -39,9 +92,9 @@ class CanonicalRecord:
     half-open intervals ``[effective_from, effective_until)``; the resolver
     refuses overlapping applicability instead of silently guessing.
 
-    The reference harness still admits only ``Native`` records. External
-    Reference and Governed Replica require authority contracts outside this
-    bounded implementation.
+    ``external_authority`` is mandatory for External Reference and Governed
+    Replica records and forbidden for Native records so the reference model
+    cannot silently create competing authority.
     """
 
     subject_id: Identity
@@ -61,6 +114,7 @@ class CanonicalRecord:
     predecessor_version_id: Identity | None = None
     effective_from: datetime | None = None
     effective_until: datetime | None = None
+    external_authority: ExternalAuthorityContract | None = None
 
     def __post_init__(self) -> None:
         if not isinstance(self.subject_id, Identity):
@@ -71,10 +125,20 @@ class CanonicalRecord:
             raise ValueError("Subject Identity and Version Identity are distinct semantic roles")
         if not isinstance(self.organization, OrganizationScope):
             raise ValueError("organization scope must be explicit")
-        if self.authority_mode is not AuthorityMode.NATIVE:
-            raise ValueError(
-                "P1.02 implements Native authority only; external modes require an explicit authority contract"
-            )
+        if not isinstance(self.authority_mode, AuthorityMode):
+            raise ValueError("authority_mode must be explicit")
+        if self.authority_mode is AuthorityMode.NATIVE:
+            if self.external_authority is not None:
+                raise ValueError("Native Canonical Record must not carry an external authority contract")
+        else:
+            if not isinstance(self.external_authority, ExternalAuthorityContract):
+                raise ValueError(
+                    "External Reference and Governed Replica require an explicit ExternalAuthorityContract"
+                )
+            if self.external_authority.authority_scope != self.authority_scope:
+                raise ValueError(
+                    "external authority contract and Canonical Record must declare the same authority scope"
+                )
         if not isinstance(self.semantic_type, str) or not self.semantic_type.strip():
             raise ValueError("semantic_type must be a non-empty string")
         if not isinstance(self.schema_version, str) or not self.schema_version.strip():
