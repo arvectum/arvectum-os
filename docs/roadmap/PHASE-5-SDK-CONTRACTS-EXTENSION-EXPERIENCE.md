@@ -1,7 +1,7 @@
 # Phase 5 — SDK, Contracts and Extension Experience
 
 Status: `Active`
-Version: `1.6.0`
+Version: `1.7.0`
 Created: `2026-08-09`
 Updated: `2026-08-09`
 Owner: `ООО «Арвектум»`
@@ -34,7 +34,8 @@ Phase 5 is bounded by:
 11. [`R13 Integration Boundary Review`](../reviews/R13-integration-boundary-review.md) — `PASS` after R13-F1 remediation; derived validation evidence now preserves dependency provider/consumer/failure responsibilities and operation failure semantics so later dependency/version tooling cannot normalize a narrower projection into a competing contract source;
 12. [`P5.03 governed dependency/version resolution review`](../reviews/P5-03-governed-dependency-version-resolution-compatibility-semantics.md) — `PASS`; exact Product Contract/dependency version continuity plus explicit governed support evidence now produces deterministic compatibility decisions without SemVer/package inference, automatic fallback, authority grants or a Stable/public negotiation boundary;
 13. [`P5.04 integration composition facade review`](../reviews/P5-04-integration-composition-api-facade-boundary.md) — `PASS`; a bounded internal/provisional facade now composes P5.02/P5.03, capability admission, non-authoritative workspace entry and Product Contract-backed Governed Execution while delegating all authority/canonical-state decisions to their existing semantic owners;
-14. [`P5.05 scaffolding/templates + local harness review`](../reviews/P5-05-scaffolding-templates-local-integration-harness.md) — `PASS`; bounded readable scaffolding and an in-process harness consume the P5.04 facade without copying product implementation, creating a second contract source or requiring production infrastructure.
+14. [`P5.05 scaffolding/templates + local harness review`](../reviews/P5-05-scaffolding-templates-local-integration-harness.md) — `PASS`; bounded readable scaffolding and an in-process harness consume the P5.04 facade without copying product implementation, creating a second contract source or requiring production infrastructure;
+15. [`P5.06 security/authority/rights Organization-scope integration-guard review`](../reviews/P5-06-security-authority-rights-organization-scope-integration-guards.md) — `PASS`; wrong-Organization, missing/denied Authorization/Organizational Authority, purpose/right and stale-continuity paths fail closed through existing semantic owners, with hosted `Reference Python CI #223` passing 634 tests.
 
 ## 3. Phase boundary
 
@@ -72,7 +73,7 @@ Phase 5 is bounded by:
 | `P5.03` | Governed dependency/version resolution + compatibility semantics | 🟩 Complete | `██████████ 100%` |
 | `P5.04` | Integration composition API/facade boundary | 🟩 Complete | `██████████ 100%` |
 | `P5.05` | Scaffolding/templates + local integration harness | 🟩 Complete | `██████████ 100%` |
-| `P5.06` | Security, authority, rights + Organization-scope integration guards | ⬜ Planned | `░░░░░░░░░░ 0%` |
+| `P5.06` | Security, authority, rights + Organization-scope integration guards | 🟩 Complete | `██████████ 100%` |
 | `P5.07` | Event/provenance/portability integration support | ⬜ Planned | `░░░░░░░░░░ 0%` |
 | `P5.08` | Workspace/capability integration adapters without private coupling | ⬜ Planned | `░░░░░░░░░░ 0%` |
 | `P5.09` | Second materially distinct integration reuse proof | ⬜ Planned | `░░░░░░░░░░ 0%` |
@@ -142,14 +143,27 @@ P5.05 completion evidence:
 - Product Contract construction, dependency resolution, authorization/authority, capability lifecycle and product-domain semantics remain with their existing owners;
 - no database, broker, IAM provider, object store, registry, network endpoint or deployable service is required;
 - `reference/python/tests/test_p5_05_integration_scaffolding_local_harness.py` adds 8 focused regression/fitness cases;
-- hosted P5.05 execution evidence is evaluated on the canonical-closure PR rather than fabricated from the earlier direct-push implementation commits.
+- hosted P5.05 execution evidence is covered by the next full-suite run and is included in P5.06 `Reference Python CI #223`.
+
+P5.06 completion evidence:
+
+- [`P5-06-security-authority-rights-organization-scope-integration-guards.md`](../reviews/P5-06-security-authority-rights-organization-scope-integration-guards.md) — `PASS`;
+- no second authorization, Organizational Authority, rights/policy or IAM subsystem was introduced; P5.06 exercises the existing semantic owners through P5.04/P5.05;
+- wrong-Organization actor and capability-request paths fail closed;
+- Product Contract/capability admission remains non-authoritative and grants no permission, approval or Organizational Authority;
+- an admitted CAP-001 request with a mismatched current right remains rejected by the P3.07 access semantic owner;
+- missing required Authorization/Organizational Authority remain unresolved, explicit Authorization denial blocks `Ready`, and all independent required RFC-0005 gates must allow before `Ready`;
+- stale gate decisions are rejected after re-evaluation and stale effective Product Contract Version continuity is rejected before composition;
+- P5.05 local harness remains `NON_AUTHORITATIVE`;
+- `reference/python/tests/test_p5_06_security_authority_rights_integration_guards.py` adds 11 focused cross-layer regression/fitness cases;
+- hosted `Reference Python CI #223` passed the full 634-test reference suite.
 
 ## 5. Engineering gates
 
 Engineering reviews are gates, not equal-weight roadmap work items.
 
 - `R13 — Integration Boundary Review` — **Complete / PASS after R13-F1 remediation**. Product Contract remains the single governed semantic owner; derived validation evidence preserves boundary responsibilities without becoming a second contract system.
-- `R14 — Developer Safety / Contract Health Review` — after P5.06. Review fail-closed behavior, authority separation, error semantics and coupling pressure.
+- `R14 — Developer Safety / Contract Health Review` — **current after P5.06**. Review fail-closed behavior, authority separation, error semantics and coupling pressure before P5.07.
 - `R15 — Reuse / Developer Experience Refactoring Review` — after P5.09. Refactor only from demonstrated second-integration reuse evidence.
 - `R16 — M5 Integration Hardening` — after P5.10 and before P5.11. Resolve material conformance, compatibility, security and maintainability findings.
 
@@ -172,9 +186,9 @@ P5.04 Composition API/facade boundary ✓
  ↓
 P5.05 Scaffolding/templates + local harness ✓
  ↓
-P5.06 Security/authority/rights guards ← current
+P5.06 Security/authority/rights guards ✓
  ↓
-R14 Developer Safety / Contract Health
+R14 Developer Safety / Contract Health ← current
  ↓
 P5.07 Event/provenance/portability support
  ↓
@@ -281,18 +295,23 @@ Exit evidence:
 - scaffolding/harness grants no Authorization, Organizational Authority, capability activation or operational readiness — `PASS`;
 - no Stable/public SDK/API/wire/package/generated-code compatibility boundary is created — `PASS`;
 - focused P5.05 executable regression evidence is committed — `PASS`;
-- hosted execution evidence is obtained from the P5.05 canonical-closure PR when available.
+- hosted execution is covered by `Reference Python CI #223` as part of the accumulated full suite.
 
 ### P5.06 — Security, authority, rights + Organization-scope integration guards
 
-**Current canonical action.** Prove that integration convenience cannot bypass RFC-0003/RFC-0005 gates.
+Status: `Complete` — [`review evidence`](../reviews/P5-06-security-authority-rights-organization-scope-integration-guards.md).
+
+P5.06 proves that integration convenience cannot bypass RFC-0003/RFC-0005 gates without adding a parallel security/authority subsystem.
 
 Exit evidence:
 
-- wrong-Organization, missing/denied authorization and missing Organizational Authority paths fail closed;
-- extension registration or contract admission grants no authority;
-- minimization/purpose/right constraints remain enforced by their semantic owners;
-- stale authorization/contract continuity cannot self-advance.
+- wrong-Organization, missing/denied authorization and missing Organizational Authority paths fail closed — `PASS`;
+- extension registration or contract/capability admission grants no authority — `PASS` for the exercised Product Contract/capability/facade boundary; no registration authority grant is introduced by the current extension model;
+- minimization/purpose/right constraints remain enforced by their semantic owners — `PASS`;
+- stale authorization/gate-decision and Product Contract continuity cannot self-advance — `PASS`;
+- P5.04/P5.05 convenience surfaces remain non-authoritative and delegate to existing semantic owners — `PASS`;
+- no second IAM/PDP/PEP, authority registry or policy engine is introduced — `PASS`;
+- hosted full reference CI — `PASS` (`Reference Python CI #223`, 634 tests, `OK`).
 
 ### P5.07 — Event/provenance/portability integration support
 
@@ -393,6 +412,6 @@ M5 does not require a public SDK, Stable Product Contract or production deployme
 
 ## 9. Current canonical action
 
-> **P5.06 — Security, authority, rights + Organization-scope integration guards.**
+> **R14 — Developer Safety / Contract Health Review.**
 
-P5.06 must prove that the P5.04/P5.05 integration convenience surfaces cannot bypass RFC-0003/RFC-0005 security and authority semantics. Wrong-Organization, denied/missing Authorization or Organizational Authority, rights/purpose violations and stale continuity paths must fail closed while convenience tooling remains non-authoritative.
+R14 must review the accumulated P5.02–P5.06 integration boundary for fail-closed developer behavior, authority separation, rights/purpose/data-governance continuity, stale evidence handling, error semantics, coupling pressure and accidental public/stable or authority inflation before P5.07 begins.
