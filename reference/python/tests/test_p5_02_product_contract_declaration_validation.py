@@ -173,8 +173,25 @@ class P502ProductContractDeclarationValidationTests(unittest.TestCase):
         with self.assertRaises(ProductContractSecurityBoundaryError):
             self._validate(contract)
 
-    def test_read_operation_without_canonical_read_declaration_fails_closed(self) -> None:
+    def test_derived_read_operation_may_declare_no_direct_canonical_access(self) -> None:
         changed = replace(self.contract.operations[0], canonical_accesses=())
+        contract = replace(
+            self.contract,
+            operations=(changed,) + self.contract.operations[1:],
+        )
+
+        result = self._validate(contract)
+
+        self.assertEqual(len(result.operations), 3)
+        self.assertEqual(len(result.canonical_accesses), 2)
+
+    def test_read_operation_with_declared_canonical_access_requires_read_mode(self) -> None:
+        read_operation = self.contract.operations[0]
+        access = replace(
+            read_operation.canonical_accesses[0],
+            access_modes=(CanonicalAccessMode.WRITE,),
+        )
+        changed = replace(read_operation, canonical_accesses=(access,))
         contract = replace(
             self.contract,
             operations=(changed,) + self.contract.operations[1:],
