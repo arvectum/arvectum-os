@@ -72,7 +72,7 @@ P5.01/P5.02/R13/P5.03/P5.04/P5.05/P5.06/R14 establish the current integration ba
 - private tables/stores/imports/routes/Event streams, implicit shared state and lower-level mutation bypasses are not valid integration boundaries;
 - no stable/public serialization, SDK/API, wire, package, registry, facade, scaffolding, IAM/policy, freshness protocol, generated-code or version-negotiation boundary is created by the Phase 5 tooling completed so far.
 
-Hosted R14 CI is explicitly unclaimed: GitHub generated no workflow run/status for PR `#67` at review publication time. The last confirmed hosted baseline remains `Reference Python CI #223`, which passed the full 634-test suite including all 11 P5.06 integration-guard cases. R14 adds 10 deterministic regression cases that must be included in the next available full hosted reference-suite execution before a later gate claims hosted validation over R14.
+Hosted `Reference Python CI #232` passed the full 644-test reference suite, including all 10 focused R14 regression cases plus the adapted P5.04/P5.06 integration tests.
 
 The retained capability set remains unchanged:
 
