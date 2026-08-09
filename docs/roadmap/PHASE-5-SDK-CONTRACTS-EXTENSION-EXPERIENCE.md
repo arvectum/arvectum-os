@@ -1,7 +1,7 @@
 # Phase 5 — SDK, Contracts and Extension Experience
 
 Status: `Active`
-Version: `1.4.0`
+Version: `1.4.1`
 Created: `2026-08-09`
 Updated: `2026-08-09`
 Owner: `ООО «Арвектум»`
@@ -116,7 +116,7 @@ P5.03 completion evidence:
 - deprecated/retired support evidence requires explicit migration obligations and version mismatch records a Product Contract revision obligation;
 - resolution grants no Authorization or Organizational Authority and does not alter capability lifecycle;
 - `reference/python/tests/test_p5_03_product_contract_dependency_resolution.py` adds 12 focused regression/fitness cases;
-- no new hosted full-suite CI run is claimed at P5.03 closure because no PR workflow/status was observed; last observed hosted full-suite baseline remains P5.02 `#205`.
+- hosted `Reference Python CI #217` passed on the final P5.03 PR head before merge.
 
 ## 5. Engineering gates
 
@@ -219,7 +219,7 @@ Exit evidence:
 - R13 provider/consumer/dependency/operation failure semantics remain preserved — `PASS`;
 - no fallback version, Stable/public negotiation protocol, permission/authority grant or capability-lifecycle transition is created — `PASS`;
 - focused P5.03 executable regression evidence is committed — `PASS`;
-- new hosted full reference CI — `not claimed / no run observed`.
+- hosted full reference CI — `PASS` (`Reference Python CI #217`).
 
 ### P5.04 — Integration composition API/facade boundary
 
