@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.46.0`
+Version: `2.47.0`
 Created: `2026-08-07`
 Updated: `2026-08-09`
 Owner: `ООО «Арвектум»`
@@ -17,13 +17,15 @@ Detailed completed-phase evidence remains in the corresponding `PHASE-N-...` roa
 
 ## 2. Version note
 
-Version `2.46.0` records completion of **P6.02 — First real Product Contract boundary + bounded adoption plan** with `PASS` and advances the current canonical action to **R17 — First Product Boundary Review**.
+Version `2.47.0` records completion of **R17 — First Product Boundary Review** with `PASS` and advances the current canonical action to **P6.03 — First real product/workflow platform integration**.
 
-The first real Product Contract is [`P6-02-FIRST-REAL-PRODUCT-CONTRACT.md`](../contracts/P6-02-FIRST-REAL-PRODUCT-CONTRACT.md), `Provisional 0.1.0`, for the selected Arvectum procurement/tender AI operator bounded 44-ФЗ pre-bid workflow. It declares exactly CAP-001 + CAP-004 at Provisional capability contract `1.0.0`, deliberately omits CAP-002/CAP-003, preserves external authority for ЕИС/partner/supplier source documents, keeps procurement-domain semantics product-owned and admits no automated external mutation or organizational commitment. Completion evidence is [`P6.02`](../reviews/P6-02-first-real-product-contract-boundary-bounded-adoption-plan.md).
+R17 independently re-checked the P6.02 `Provisional 0.1.0` real Product Contract against the current product evidence and Accepted architecture. All six immutable `ai-corporation` evidence blobs used by P6.01 remain unchanged. CAP-001 + CAP-004 at exact Provisional capability contract `1.0.0` remain the smallest sufficient dependency set; CAP-002/CAP-003 remain deliberately omitted; external ЕИС/partner/supplier authority remains external; procurement semantics remain product-owned; Organization/security/rights/evidence behavior remains fail-closed; and no durable/public/stable architecture choice was introduced.
 
-The bounded adoption sequence is synthetic/redacted proof → one real case → maximum three-case calibration set, with explicit stop/rollback criteria and no bulk migration. R17 must pass before P6.03 creates real governed implementation reliance.
+P6.03 is therefore unblocked only within the existing bounded adoption sequence. Its first increment is the **Stage 1 synthetic/anonymized/redacted integration proof**. One-real-case Stage 2 reliance begins only after Stage 1 proves exact Product Contract/dependency continuity, fail-closed Organization/rights/version/evidence behavior and absence of hidden product→platform coupling. Stage 3 remains capped at maximum three platform-backed calibration cases before P6.04/P6.05 disposition; this cap does not redefine the broader product-local pilot scope.
 
-P6.01 remains complete under [`P6.01`](../reviews/P6-01-real-product-workflow-validation-target-evidence-baseline.md). Empirical real-customer KPI values not yet observed remain evidence gaps rather than fabricated baselines.
+The first real Product Contract remains [`P6-02-FIRST-REAL-PRODUCT-CONTRACT.md`](../contracts/P6-02-FIRST-REAL-PRODUCT-CONTRACT.md), `Provisional 0.1.0`, for the selected Arvectum procurement/tender AI operator bounded 44-ФЗ pre-bid workflow. It declares exactly CAP-001 + CAP-004 at Provisional capability contract `1.0.0`, deliberately omits CAP-002/CAP-003, preserves external authority for ЕИС/partner/supplier source documents, keeps procurement-domain semantics product-owned and admits no automated external mutation or organizational commitment.
+
+P6.01 and P6.02 remain complete under [`P6.01`](../reviews/P6-01-real-product-workflow-validation-target-evidence-baseline.md) and [`P6.02`](../reviews/P6-02-first-real-product-contract-boundary-bounded-adoption-plan.md). Empirical real-customer KPI values not yet observed remain evidence gaps rather than fabricated baselines.
 
 Phase 5 closure remains based on [`P5.12`](../reviews/P5-12-phase-5-m5-closure-review.md): `PASS — M5 achieved for the declared bounded repeatable product/extension integration reference scope.` The final synchronized pre-closure hosted baseline remains `Reference Python CI #269`, CPython 3.12.13, `704 tests`, `OK`.
 
@@ -41,10 +43,11 @@ Phase 5 closure remains based on [`P5.12`](../reviews/P5-12-phase-5-m5-closure-r
 - [`P6.01 real target + evidence baseline`](../reviews/P6-01-real-product-workflow-validation-target-evidence-baseline.md) — `PASS`;
 - [`P6.02 first real Product Contract review`](../reviews/P6-02-first-real-product-contract-boundary-bounded-adoption-plan.md) — `PASS`;
 - [`P6.02 first real Product Contract`](../contracts/P6-02-FIRST-REAL-PRODUCT-CONTRACT.md) — `Provisional 0.1.0`;
+- [`R17 First Product Boundary Review`](../reviews/R17-first-product-boundary-review.md) — `PASS`;
 - CAP-001 through CAP-004 remain `Incubating / Provisional`;
 - P4.08 and P5.09 Product Contracts remain `Provisional 0.1.0` reference evidence;
-- P6.02 real procurement Product Contract is `Provisional 0.1.0` and does not stabilize the integration boundary;
-- no Platform Capability is `Active` merely because M3–M5 or P6.01/P6.02 are complete;
+- P6.02 real procurement Product Contract remains `Provisional 0.1.0` and does not stabilize the integration boundary;
+- no Platform Capability is `Active` merely because M3–M5, P6.01/P6.02 or R17 are complete;
 - no Stable/public SDK, API, wire, package or service compatibility boundary has been created;
 - no production/operational-readiness or SLA/support commitment is implied.
 
@@ -79,13 +82,13 @@ M5 proves repeatable governed integration through explicit Product Contracts and
 
 Canonical detailed roadmap:
 
-- [`PHASE-6-PRODUCT-DRIVEN-PLATFORM-VALIDATION.md`](PHASE-6-PRODUCT-DRIVEN-PLATFORM-VALIDATION.md) — `Active 1.2.0`.
+- [`PHASE-6-PRODUCT-DRIVEN-PLATFORM-VALIDATION.md`](PHASE-6-PRODUCT-DRIVEN-PLATFORM-VALIDATION.md) — `Active 1.3.0`.
 
 | ID | Work item | Status | Progress |
 |---|---|---:|---:|
 | `P6.01` | Real product/workflow validation target selection + evidence baseline | 🟩 Complete | `██████████ 100%` |
 | `P6.02` | First real Product Contract boundary + bounded adoption plan | 🟩 Complete | `██████████ 100%` |
-| `P6.03` | First real product/workflow platform integration | ⬜ | `░░░░░░░░░░ 0%` |
+| `P6.03` | First real product/workflow platform integration | 🟨 Current | `░░░░░░░░░░ 0%` |
 | `P6.04` | Product value, delivery-friction + governance evidence capture | ⬜ | `░░░░░░░░░░ 0%` |
 | `P6.05` | Platform-gap remediation from first real use | ⬜ | `░░░░░░░░░░ 0%` |
 | `P6.06` | Second materially distinct real product/workflow target + Product Contract | ⬜ | `░░░░░░░░░░ 0%` |
@@ -98,7 +101,7 @@ Canonical detailed roadmap:
 
 Engineering/product-validation gates:
 
-- `R17 — First Product Boundary Review` — **current**, after P6.02 and before P6.03;
+- `R17 — First Product Boundary Review` — **Complete / PASS**, after P6.02 and before P6.03;
 - `R18 — First Real-use Health Review` — after P6.05;
 - `R19 — Cross-product Reuse Review` — after P6.08;
 - `R20 — M6 Product-validation Hardening` — after P6.10.
@@ -125,35 +128,37 @@ M6 does not require an `Active` Platform Capability, Stable Product Contract, pr
 
 ## 8. Current canonical action
 
-> **R17 — First Product Boundary Review.**
+> **P6.03 — First real product/workflow platform integration.**
 
-Review the completed P6.02 `Provisional 0.1.0` Product Contract before P6.03 creates real implementation reliance.
+Begin only with **Stage 1 — synthetic/anonymized/redacted integration proof** under the exact P6.02 `Provisional 0.1.0` Product Contract.
 
-R17 must verify that:
+The first P6.03 increment must:
 
-- the real target still matches P6.01 evidence;
-- CAP-001 + CAP-004 at exact Provisional contract `1.0.0` are the smallest sufficient dependency set;
-- CAP-002/CAP-003 remain omitted unless a concrete dependency is demonstrated;
-- ЕИС/partner/supplier source authority remains external and no competing source of truth is created;
-- procurement-domain schemas, knowledge, workflow, search/relevance, economics and decision semantics remain product-owned;
-- Organization/security/rights/retention/evidence behavior fails closed;
-- Product Contract validation creates no permission or Organizational Authority;
-- adoption remains synthetic/redacted → one real case → maximum three-case calibration set with explicit rollback;
-- no durable persistence/Event/IAM/service/public/stable compatibility choice has been smuggled into the boundary.
+- instantiate the exact Product Contract `0.1.0` through the existing explicit governed Product Contract/integration path;
+- bind only CAP-001 + CAP-004 to explicit current provider/version evidence at exact Provisional capability contract `1.0.0`;
+- keep CAP-002/CAP-003 absent unless a concrete governed dependency is demonstrated;
+- prove wrong-Organization, denied-rights/classification/purpose, missing/stale/incompatible dependency-version and incomplete-evidence paths fail closed;
+- prove no product-side private platform table/import/endpoint/Event/cache fallback is required;
+- preserve external ЕИС/partner/supplier authority and product ownership of procurement semantics;
+- introduce no automated external mutation or organizational commitment;
+- keep all fixtures synthetic/anonymized/redacted for Stage 1;
+- pass focused changed-scope tests plus the applicable reference regression suite.
 
-P6.03 remains blocked on this review gate, not on capability promotion or platform-wide production readiness.
+Stage 2 may move to **one real 44-ФЗ case** only after Stage 1 evidence passes. Stage 3 remains capped at **maximum three platform-backed calibration cases** before P6.04/P6.05 disposition. No bulk migration or automatic expansion is authorized.
+
+If P6.03 requires a durable persistence, Event delivery, IAM, service, public/stable compatibility or another materially constraining choice, it must reopen the minimum sufficient ADR/RFC/policy/Product Contract gate before reliance is normalized.
 
 ## 9. ADR, lifecycle and Product Contract gates
 
 Real-product pressure may cross architecture decisions that bounded reference phases intentionally left open. Re-open the minimum sufficient ADR/RFC/policy/Product Contract gate before material reliance on a concrete durable or externally constraining mechanism.
 
-A real Product relying on Incubating capabilities, canonical platform state or shared platform history must use the applicable RFC-0004 Product Contract before governed reliance. P6.02 now satisfies that declaration prerequisite for its exact bounded scope, subject to R17 before implementation reliance.
+A real Product relying on Incubating capabilities, canonical platform state or shared platform history must use the applicable RFC-0004 Product Contract before governed reliance. P6.02 satisfies that declaration prerequisite for its exact bounded scope, and R17 has now passed the independent boundary gate.
 
 No Platform Capability becomes `Active` without separate RFC-0001 lifecycle admission and applicable stable-contract, compatibility/migration, operational-readiness and decision-authority evidence.
 
 Product Experiment success remains evidence, not automatic platform promotion.
 
-P6.02 selects no durable persistence, Event delivery, IAM/PDP/PEP provider, stable serialization/API, public SDK/package, object-store, search/vector or service topology; therefore it creates no new ADR. R17/P6.03 must reopen the minimum sufficient gate if implementation crosses one.
+P6.02/R17 select no durable persistence, Event delivery, IAM/PDP/PEP provider, stable serialization/API, public SDK/package, object-store, search/vector or service topology; therefore they create no new ADR. P6.03 must reopen the minimum sufficient gate if implementation crosses one.
 
 ## 10. Phase transition rule
 
@@ -183,9 +188,13 @@ P6.01 Real product/workflow target + evidence baseline ✓
         ↓
 P6.02 First real Product Contract + bounded adoption plan ✓
         ↓
-R17 First Product Boundary Review ← current
+R17 First Product Boundary Review ✓
         ↓
-P6.03 First real product/workflow platform integration
+P6.03 First real product/workflow platform integration ← current
+        ↓
+Stage 1 synthetic/redacted proof
+        ↓
+Stage 2 one real case → Stage 3 max three platform-backed calibration cases
         ↓
 Two real product/workflow validations + reuse/value evidence
         ↓

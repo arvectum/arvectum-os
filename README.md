@@ -94,11 +94,22 @@ The first real Product Contract is [P6-02-FIRST-REAL-PRODUCT-CONTRACT.md](docs/c
 
 External ЕИС/zakupki.gov.ru, partner tender files and supplier TKP/quote content remain externally authoritative within their scopes. Arvectum OS governs only its declared exact references/versions/provenance plus Native Product Contract/Execution/Event/review evidence. No automated external mutation or organizational commitment is admitted by the Product Contract.
 
-The P6.02 adoption plan is bounded to synthetic/redacted integration proof → one real 44-ФЗ case → maximum three-case calibration set, with explicit stop/rollback conditions and no bulk migration. No real governed implementation reliance begins before R17.
+[R17 — First Product Boundary Review](docs/reviews/R17-first-product-boundary-review.md) is `Complete / PASS`. The independent review confirmed that the P6.01 product evidence is unchanged; CAP-001 + CAP-004 remain the smallest sufficient exact dependency set; CAP-002/CAP-003 remain omitted; external authority and product-owned procurement semantics remain intact; Organization/security/rights/evidence behavior remains fail-closed; and the boundary introduces no durable/public/stable infrastructure or compatibility commitment.
 
-The current canonical action is **R17 — First Product Boundary Review**. R17 must independently verify the real Product Contract boundary, CAP-001/CAP-004-only dependency set, external authority, Organization/security/rights handling, product ownership and reversibility before P6.03 begins.
+R17 also confirms that the P6.02 adoption cap of maximum three platform-backed calibration cases is a bounded Arvectum OS validation sample, not a redefinition of the broader product-local pilot. No Product Contract version change, capability lifecycle change or new ADR/RFC/policy is required by R17.
 
-P6.02 does **not** promote any capability to `Active`, make the new Product Contract `Stable`, establish production/operational readiness, create a public SDK/API/wire/package/service boundary or create SLA/support/customer compatibility commitments.
+The current canonical action is **P6.03 — First real product/workflow platform integration**. P6.03 must begin with **Stage 1 synthetic/anonymized/redacted proof** under the exact `Provisional 0.1.0` Product Contract and exact CAP-001/CAP-004 Provisional `1.0.0` provider/version evidence. Stage 1 must prove fail-closed wrong-Organization, rights/classification/purpose, dependency-version and incomplete-evidence paths plus absence of hidden private platform coupling before Stage 2 may use one real 44-ФЗ case. Stage 3 remains capped at maximum three platform-backed calibration cases before P6.04/P6.05 disposition.
+
+P6.02/R17 do **not** promote any capability to `Active`, make the real Product Contract `Stable`, establish production/operational readiness, create a public SDK/API/wire/package/service boundary or create SLA/support/customer compatibility commitments.
+
+Canonical Phase 6 evidence now includes:
+
+- [Canonical Roadmap](docs/roadmap/ROADMAP.md)
+- [Active Phase 6 workstream](docs/roadmap/PHASE-6-PRODUCT-DRIVEN-PLATFORM-VALIDATION.md)
+- [P6.01 target + evidence baseline](docs/reviews/P6-01-real-product-workflow-validation-target-evidence-baseline.md)
+- [P6.02 boundary + adoption review](docs/reviews/P6-02-first-real-product-contract-boundary-bounded-adoption-plan.md)
+- [P6.02 first real Product Contract](docs/contracts/P6-02-FIRST-REAL-PRODUCT-CONTRACT.md)
+- [R17 First Product Boundary Review](docs/reviews/R17-first-product-boundary-review.md)
 
 The current delivery sequence is maintained in the [Canonical Roadmap](docs/roadmap/ROADMAP.md) and [RFC Index](docs/rfc/README.md).
 
