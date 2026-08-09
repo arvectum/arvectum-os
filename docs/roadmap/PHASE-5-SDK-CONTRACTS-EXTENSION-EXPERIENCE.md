@@ -1,7 +1,7 @@
 # Phase 5 — SDK, Contracts and Extension Experience
 
 Status: `Active`
-Version: `1.7.0`
+Version: `1.8.0`
 Created: `2026-08-09`
 Updated: `2026-08-09`
 Owner: `ООО «Арвектум»`
@@ -35,7 +35,8 @@ Phase 5 is bounded by:
 12. [`P5.03 governed dependency/version resolution review`](../reviews/P5-03-governed-dependency-version-resolution-compatibility-semantics.md) — `PASS`; exact Product Contract/dependency version continuity plus explicit governed support evidence now produces deterministic compatibility decisions without SemVer/package inference, automatic fallback, authority grants or a Stable/public negotiation boundary;
 13. [`P5.04 integration composition facade review`](../reviews/P5-04-integration-composition-api-facade-boundary.md) — `PASS`; a bounded internal/provisional facade now composes P5.02/P5.03, capability admission, non-authoritative workspace entry and Product Contract-backed Governed Execution while delegating all authority/canonical-state decisions to their existing semantic owners;
 14. [`P5.05 scaffolding/templates + local harness review`](../reviews/P5-05-scaffolding-templates-local-integration-harness.md) — `PASS`; bounded readable scaffolding and an in-process harness consume the P5.04 facade without copying product implementation, creating a second contract source or requiring production infrastructure;
-15. [`P5.06 security/authority/rights Organization-scope integration-guard review`](../reviews/P5-06-security-authority-rights-organization-scope-integration-guards.md) — `PASS`; wrong-Organization, missing/denied Authorization/Organizational Authority, purpose/right and stale-continuity paths fail closed through existing semantic owners, with hosted `Reference Python CI #223` passing 634 tests.
+15. [`P5.06 security/authority/rights Organization-scope integration-guard review`](../reviews/P5-06-security-authority-rights-organization-scope-integration-guards.md) — `PASS`; wrong-Organization, missing/denied Authorization/Organizational Authority, purpose/right and stale-continuity paths fail closed through existing semantic owners, with hosted `Reference Python CI #223` passing 634 tests;
+16. [`R14 Developer Safety / Contract Health Review`](../reviews/R14-developer-safety-contract-health-review.md) — `PASS` after R14-F1/R14-F2 remediation; normal facade construction is forced through P5.02/P5.03 and dependency-backed J1/J2 actions require explicit current governed provider/version evidence instead of silently reusing composition-time compatibility; hosted `Reference Python CI #232` passes the full 644-test reference suite.
 
 ## 3. Phase boundary
 
@@ -158,12 +159,26 @@ P5.06 completion evidence:
 - `reference/python/tests/test_p5_06_security_authority_rights_integration_guards.py` adds 11 focused cross-layer regression/fitness cases;
 - hosted `Reference Python CI #223` passed the full 634-test reference suite.
 
+R14 completion evidence:
+
+- [`R14-developer-safety-contract-health-review.md`](../reviews/R14-developer-safety-contract-health-review.md) — `PASS` after two material findings were remediated;
+- R14-F1 closes direct facade construction as a normal path around the P5.02/P5.03 governed composition factory through typed `IntegrationCompositionConstructionError`;
+- R14-F2 prevents composition-time compatibility from self-advancing after provider-support state changes;
+- dependency-backed `admit_capability()` and `start_governed_execution()` now require explicit current governed dependency/version evidence and re-run the existing P5.03 resolver;
+- missing current evidence fails closed through typed `IntegrationCompositionEvidenceRequiredError`;
+- current P5.03 `Deprecated`, `Retired`, `Unsupported`, `VersionMismatch` and `Ambiguous` failures remain owned by and propagate from P5.03;
+- Authorization, Organizational Authority, purpose/right/classification and Data Governance remain separate existing semantic owners;
+- product-owned J1/J2 helpers still import exactly one platform integration module and pass provider evidence opaquely;
+- no provider registry, TTL/freshness protocol, public compatibility service or Stable/public SDK/API/wire/package boundary is selected;
+- `reference/python/tests/test_r14_developer_safety_contract_health_review.py` adds 10 focused regression/fitness cases;
+- hosted `Reference Python CI #232` passed the full 644-test reference suite with `OK`, including all 10 R14 regression cases and the adapted P5.04/P5.06 callers.
+
 ## 5. Engineering gates
 
 Engineering reviews are gates, not equal-weight roadmap work items.
 
 - `R13 — Integration Boundary Review` — **Complete / PASS after R13-F1 remediation**. Product Contract remains the single governed semantic owner; derived validation evidence preserves boundary responsibilities without becoming a second contract system.
-- `R14 — Developer Safety / Contract Health Review` — **current after P5.06**. Review fail-closed behavior, authority separation, error semantics and coupling pressure before P5.07.
+- `R14 — Developer Safety / Contract Health Review` — **Complete / PASS after R14-F1/R14-F2 remediation**. Normal facade construction cannot bypass P5.02/P5.03, and dependency-backed J1/J2 reliance cannot silently reuse composition-time provider compatibility.
 - `R15 — Reuse / Developer Experience Refactoring Review` — after P5.09. Refactor only from demonstrated second-integration reuse evidence.
 - `R16 — M5 Integration Hardening` — after P5.10 and before P5.11. Resolve material conformance, compatibility, security and maintainability findings.
 
@@ -188,9 +203,9 @@ P5.05 Scaffolding/templates + local harness ✓
  ↓
 P5.06 Security/authority/rights guards ✓
  ↓
-R14 Developer Safety / Contract Health ← current
+R14 Developer Safety / Contract Health ✓
  ↓
-P5.07 Event/provenance/portability support
+P5.07 Event/provenance/portability support ← current
  ↓
 P5.08 Workspace/capability adapters
  ↓
@@ -279,6 +294,8 @@ Exit evidence:
 - no language/network/wire/package choice is declared Stable/public merely by implementation — `PASS`;
 - hosted full reference CI — `PASS` (`Reference Python CI #222`, 615 tests, OK).
 
+R14 later hardens this boundary by restricting normal construction to the governed P5.02/P5.03 factory path and requiring current governed provider/version evidence at dependency-backed actions.
+
 ### P5.05 — Scaffolding/templates + local integration harness
 
 Status: `Complete` — [`review evidence`](../reviews/P5-05-scaffolding-templates-local-integration-harness.md).
@@ -353,6 +370,7 @@ Minimum matrix:
 - Product Contract declaration/version identity;
 - dependency/version continuity;
 - dependency provider/consumer/failure responsibility continuity;
+- current dependency-support evidence / stale-evidence fail-closed behavior;
 - hidden-coupling prohibition;
 - Organization isolation;
 - Authorization vs Organizational Authority separation;
@@ -376,7 +394,7 @@ Explicit gates include:
 - package registry/distribution topology;
 - plugin loading/sandboxing/isolation mechanism;
 - extension registry/discovery topology;
-- version negotiation/migration protocol;
+- version negotiation/migration/freshness protocol;
 - generated-code compatibility boundary;
 - separately deployable integration service;
 - stable design-system/component integration contract.
@@ -412,6 +430,6 @@ M5 does not require a public SDK, Stable Product Contract or production deployme
 
 ## 9. Current canonical action
 
-> **R14 — Developer Safety / Contract Health Review.**
+> **P5.07 — Event/provenance/portability integration support.**
 
-R14 must review the accumulated P5.02–P5.06 integration boundary for fail-closed developer behavior, authority separation, rights/purpose/data-governance continuity, stale evidence handling, error semantics, coupling pressure and accidental public/stable or authority inflation before P5.07 begins.
+P5.07 should expose the smallest bounded integration support for correct Event attribution, provenance and portable semantic state through the R14-hardened integration path. It must preserve exact Actor/Execution/Product Contract/version context, keep telemetry and projections non-authoritative, and avoid selecting durable infrastructure, wire/serialization or freshness-registry mechanisms without evidence and the applicable ADR/governance decision.

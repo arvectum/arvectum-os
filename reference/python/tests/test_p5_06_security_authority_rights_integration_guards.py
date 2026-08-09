@@ -215,6 +215,7 @@ class P506SecurityAuthorityRightsIntegrationGuardsTests(unittest.TestCase):
             execution_id=Identity("execution-subject", "p5-06-task-execution", "org-a"),
             version_id=Identity("execution-version", "p5-06-task-execution-v1", "org-a"),
             created_at=self._time(2),
+            governed_versions=self._supported_versions(),
         )
 
     def _awaiting_execution(self):
@@ -307,10 +308,16 @@ class P506SecurityAuthorityRightsIntegrationGuardsTests(unittest.TestCase):
             access=other_access,
         )
         with self.assertRaises(ProductContractScopeError):
-            self._facade().admit_capability(other_request)
+            self._facade().admit_capability(
+                other_request,
+                governed_versions=self._supported_versions(),
+            )
 
     def test_contract_and_capability_admission_do_not_create_authority(self) -> None:
-        admission = self._facade().admit_capability(self._capability_request())
+        admission = self._facade().admit_capability(
+            self._capability_request(),
+            governed_versions=self._supported_versions(),
+        )
         names = {field.name for field in fields(admission)}
         for forbidden in (
             "authorization",
@@ -332,7 +339,10 @@ class P506SecurityAuthorityRightsIntegrationGuardsTests(unittest.TestCase):
         )
         request = self._capability_request(access=denied_access)
 
-        self._facade().admit_capability(request)
+        self._facade().admit_capability(
+            request,
+            governed_versions=self._supported_versions(),
+        )
         with self.assertRaises(CrossCapabilityEnforcementError):
             consume_document(
                 contract=self.contract,
