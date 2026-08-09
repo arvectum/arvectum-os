@@ -1,7 +1,7 @@
 # Phase 5 — SDK, Contracts and Extension Experience
 
 Status: `Active`
-Version: `1.0.0`
+Version: `1.1.0`
 Created: `2026-08-09`
 Updated: `2026-08-09`
 Owner: `ООО «Арвектум»`
@@ -28,7 +28,8 @@ Phase 5 is bounded by:
 5. M3 — CAP-001 through CAP-004 retained as `Incubating / Provisional` shared capabilities;
 6. M4 — coherent governed workspace baseline and one bounded Product Contract-backed composition proof;
 7. P4.08 Product Contract remains `Provisional 0.1.0` and is evidence, not a Stable compatibility promise;
-8. P4.12 — `PASS`, M4 achieved for the bounded governed-workspace reference scope.
+8. P4.12 — `PASS`, M4 achieved for the bounded governed-workspace reference scope;
+9. [`P5.01 integration boundary revalidation`](../reviews/P5-01-integration-boundary-revalidation-developer-journeys.md) — `PASS`; Product Contract/dependency/operation/version semantics are the revalidated boundary and current Python import/module shapes remain internal evidence only.
 
 ## 3. Phase boundary
 
@@ -61,8 +62,8 @@ Phase 5 is bounded by:
 
 | ID | Work item | Status | Progress |
 |---|---|---:|---:|
-| `P5.01` | Integration boundary revalidation + developer journeys | 🟦 Next | `░░░░░░░░░░ 0%` |
-| `P5.02` | Product Contract declaration model + machine-checkable validation baseline | ⬜ Planned | `░░░░░░░░░░ 0%` |
+| `P5.01` | Integration boundary revalidation + developer journeys | 🟩 Complete | `██████████ 100%` |
+| `P5.02` | Product Contract declaration model + machine-checkable validation baseline | 🟦 Next | `░░░░░░░░░░ 0%` |
 | `P5.03` | Governed dependency/version resolution + compatibility semantics | ⬜ Planned | `░░░░░░░░░░ 0%` |
 | `P5.04` | Integration composition API/facade boundary | ⬜ Planned | `░░░░░░░░░░ 0%` |
 | `P5.05` | Scaffolding/templates + local integration harness | ⬜ Planned | `░░░░░░░░░░ 0%` |
@@ -73,6 +74,14 @@ Phase 5 is bounded by:
 | `P5.10` | Phase 5 conformance + architecture fitness matrix | ⬜ Cross-cutting | `░░░░░░░░░░ 0%` |
 | `P5.11` | Compatibility / ADR / refactoring / public-boundary hardening review | ⬜ Planned | `░░░░░░░░░░ 0%` |
 | `P5.12` | Phase 5 / M5 closure review | ⬜ Planned | `░░░░░░░░░░ 0%` |
+
+P5.01 completion evidence:
+
+- [`P5-01-integration-boundary-revalidation-developer-journeys.md`](../reviews/P5-01-integration-boundary-revalidation-developer-journeys.md) — `PASS`;
+- J1 = governed read/composition consumer;
+- J2 = consequential product action through exact Product Contract continuity and Governed Execution;
+- J3 = read-only evidence/reconstruction extension candidate, explicitly not yet the P5.09 second-integration proof;
+- current Python imports, module paths, dataclass shapes, operation-token spellings and monorepo package layout remain internal/provisional evidence rather than a Stable/public SDK contract.
 
 ## 5. Engineering gates
 
@@ -90,9 +99,9 @@ Performance optimization remains evidence-backed; do not optimize package/API/ru
 ```text
 M4 ✓
  ↓
-P5.01 Integration boundary + developer journeys
+P5.01 Integration boundary + developer journeys ✓
  ↓
-P5.02 Product Contract declaration/validation
+P5.02 Product Contract declaration/validation ← current
  ↓
 R13 Integration Boundary Review
  ↓
@@ -131,14 +140,18 @@ P5.10 accumulates evidence throughout the phase.
 
 ### P5.01 — Integration boundary revalidation + developer journeys
 
-Revalidate Phase 5 against M4 and identify the smallest real integration journeys worth supporting. Separate product-local code, Product Contract declarations, shared platform integration surfaces and implementation-private internals.
+Status: `Complete` — [`review evidence`](../reviews/P5-01-integration-boundary-revalidation-developer-journeys.md).
+
+P5.01 revalidated Phase 5 against actual M4 evidence and identified the smallest real integration journeys worth supporting. The Product Contract remains the governed boundary authority; exact dependency/operation/version semantics are relied-upon integration semantics; current repository import/module/dataclass shape remains implementation-private.
 
 Exit evidence:
 
-- at least two bounded integration journeys are described;
-- private/internal coupling points are explicitly prohibited;
-- no public/stable compatibility promise is inferred;
-- candidate tooling surfaces are classified as internal/provisional until proven otherwise.
+- at least two bounded integration journeys are described — `PASS` (J1 and J2; J3 retained as a non-binding future reuse candidate);
+- private/internal coupling points are explicitly prohibited — `PASS`;
+- no public/stable compatibility promise is inferred — `PASS`;
+- candidate tooling surfaces are classified as internal/provisional until proven otherwise — `PASS`.
+
+P5.01 changes no runtime behavior and intentionally does not create an SDK/declaration implementation ahead of P5.02.
 
 ### P5.02 — Product Contract declaration model + machine-checkable validation baseline
 
@@ -291,6 +304,6 @@ M5 does not require a public SDK, Stable Product Contract or production deployme
 
 ## 9. Current canonical action
 
-> **P5.01 — Integration boundary revalidation + developer journeys.**
+> **P5.02 — Product Contract declaration model + machine-checkable validation baseline.**
 
-Start from M4 evidence and actual integration needs. Do not begin by choosing an SDK language, API protocol, package format, plugin framework or distribution mechanism.
+Implement the smallest reversible declaration/validation representation needed for J1/J2 and the current P4.08 boundary. Preserve Product Contract as the governed boundary authority; do not let a manifest/schema/tool become a parallel contract system. Do not choose serialization/package/public-API stability ahead of evidence.
