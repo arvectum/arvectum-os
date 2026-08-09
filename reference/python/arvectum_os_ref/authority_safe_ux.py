@@ -46,6 +46,25 @@ class AuthoritySafeUxDecision:
     def __post_init__(self) -> None:
         if self.presentation_authority is not PresentationAuthority.NON_AUTHORITATIVE:
             raise ValueError("workspace presentation cannot become organizational authority")
+        if self.state is AuthoritySafeUxState.AVAILABLE:
+            if self.action_label is not AuthoritySafeActionLabel.REQUEST_ACTION:
+                raise ValueError("available authority-safe UX must use the governed-action label")
+            if not isinstance(self.source_authorization_decision_version_id, Identity):
+                raise ValueError("available authority-safe UX must pin the current allow decision")
+            if self.governed_content_visible is not True:
+                raise ValueError("available authority-safe UX must explicitly expose source visibility")
+        elif self.state is AuthoritySafeUxState.REINSPECTION_REQUIRED:
+            if self.action_label is not AuthoritySafeActionLabel.REINSPECT:
+                raise ValueError("re-inspection state must require re-inspection")
+            if not isinstance(self.source_authorization_decision_version_id, Identity):
+                raise ValueError(
+                    "re-inspection state must retain only the stale inspected decision identity"
+                )
+        elif self.state is AuthoritySafeUxState.NOT_AVAILABLE:
+            if self.action_label is not AuthoritySafeActionLabel.UNAVAILABLE:
+                raise ValueError("unavailable state must use the unavailable action label")
+            if self.source_authorization_decision_version_id is not None:
+                raise ValueError("unavailable authority-safe UX cannot expose decision identity")
         if self.state is not AuthoritySafeUxState.AVAILABLE and (
             self.governed_content_visible
             or self.protected_count_visible
@@ -77,6 +96,13 @@ def consume_current_source_authorization(
     protected Subject. Missing, denied or ambiguous evidence fails closed. When an
     exact prior decision version is supplied, replacement/revocation requires
     re-inspection rather than silently continuing from stale client state.
+
+    A replacement decision identity is intentionally withheld from a blocked result.
+    Re-inspection state retains only the already-known stale decision identity so a
+    caller that reuses the returned continuity token remains blocked. Callers must
+    re-dereference the governed source and obtain a fresh presentation decision
+    rather than advancing stale presentation state with a replacement authorization
+    identifier.
 
     The helper intentionally does not evaluate purpose/right/classification policy;
     capability owners must continue to perform those checks independently before
@@ -121,7 +147,7 @@ def consume_current_source_authorization(
         return AuthoritySafeUxDecision(
             state=AuthoritySafeUxState.REINSPECTION_REQUIRED,
             action_label=AuthoritySafeActionLabel.REINSPECT,
-            source_authorization_decision_version_id=current.decision_version_id,
+            source_authorization_decision_version_id=expected_decision_version_id,
             governed_content_visible=False,
         )
 
