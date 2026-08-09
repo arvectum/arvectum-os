@@ -2,7 +2,7 @@
 
 This module consumes already-produced authorization evidence. It is not an IAM,
 PDP, policy engine, Organizational Authority source, Product Contract, public API
-or canonical-state owner.
+or canonical-state owner. It does not decide permissions or Organizational Authority.
 
 Its purpose is deliberately narrow: make the presentation boundary fail closed
 and prevent operator UX from turning visibility, labels, previews or stale client
