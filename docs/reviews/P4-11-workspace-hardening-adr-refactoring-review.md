@@ -1,7 +1,7 @@
 # P4.11 — Workspace Hardening / ADR / Refactoring Review
 
-Status: `Review in progress`
-Version: `0.1.0`
+Status: `Complete`
+Version: `1.0.0`
 Created: `2026-08-09`
 Updated: `2026-08-09`
 Owner: `ООО «Арвектум»`
@@ -9,7 +9,7 @@ Task classification: `platform`
 Roadmap work item: `P4.11 — Workspace hardening / ADR / refactoring review`
 Phase: `Phase 4 — Workspace / Operator Experience`
 Milestone target: `M4 — Coherent governed workspace baseline`
-Result: **`SOURCE REVIEW PASS — no material presentation-domain leakage, authority bypass, derived-state authority drift, accessibility/operator-error defect, ADR-triggering durable choice or evidence-backed performance need was found. No material runtime refactor is justified before P4.12; R12-F1 remains a fixed regression invariant. Hosted validation and canonical roadmap synchronization remain pending before completion.`**
+Result: **`PASS — no material presentation-domain leakage, authority bypass, derived-state authority drift, accessibility/operator-error defect, ADR-triggering durable choice or evidence-backed performance need was found. No material runtime refactor is justified before P4.12; R12-F1 remains a fixed regression invariant. Canonical roadmaps are synchronized to P4.12 and hosted pre-synchronization validation passes 570 tests.`**
 
 ## 1. Purpose and decision level
 
@@ -45,10 +45,11 @@ P4.11 was evaluated against:
 11. `docs/adrs/README.md` — no applicable Accepted ADR currently constrains the bounded internal Phase 4 implementation;
 12. P4.01 through P4.10 reviews and R9/R10/R11/R12 engineering gates;
 13. `P4.08 Bounded Product Entry Product Contract` — remains `Provisional 0.1.0`;
-14. canonical Phase 4 roadmap `1.14.0` and canonical Roadmap `2.24.0` at P4.11 start;
-15. R12 final synchronized-head evidence — Reference Python CI #196, `563 tests`, `OK`.
+14. canonical Phase 4 roadmap synchronized to `1.15.0` and canonical Roadmap synchronized to `2.25.0` by P4.11;
+15. R12 final synchronized-head evidence — Reference Python CI #196, `563 tests`, `OK`;
+16. P4.11 hosted pre-synchronization evidence — Reference Python CI #197, `570 tests`, `OK`.
 
-No conflict with Constitution `1.2.0` or Accepted RFC-0001 through RFC-0008 was identified by the P4.11 source review.
+No conflict with Constitution `1.2.0` or Accepted RFC-0001 through RFC-0008 was identified by P4.11.
 
 ## 3. Presentation-domain and product/platform boundary review
 
@@ -161,7 +162,7 @@ P4.11 re-opens every implementation category that could create durable or extern
 | Deployable service/process boundary | Phase 4 remains module-level reference code without an independently deployed workspace/API process. | **No ADR now.** | Separate service/worker/process with independent lifecycle, scaling or failure semantics. |
 | Design-system/public component compatibility | Accessibility baseline is semantic/textual; no component-library compatibility promise exists. | **No ADR now.** | Supported stable component/design-system boundary or cross-product UI compatibility obligation. |
 
-**ADR decision:** no new ADR proposal is justified by the P4.11 head. Creating one now would standardize a mechanism the Accepted architecture intentionally leaves replaceable.
+**ADR decision:** no new ADR proposal is justified by P4.11. Creating one now would standardize a mechanism the Accepted architecture intentionally leaves replaceable.
 
 The ADR gate remains armed for future implementation. A later durable/stable choice must be recorded before it becomes accidental architecture.
 
@@ -210,7 +211,7 @@ P4.11 changes none of the following states:
 
 P4.11 completion is therefore a bounded architecture/refactoring gate only. P4.12 remains responsible for the separate M4 closure decision.
 
-## 12. Executable P4.11 hardening evidence
+## 12. Executable and hosted P4.11 hardening evidence
 
 P4.11 adds:
 
@@ -227,9 +228,19 @@ The guard verifies:
 7. semantic accessibility/operator-error safeguards remain textual and explicit;
 8. the P4.08 Product Contract remains `Provisional 0.1.0` with no inferred Stable boundary.
 
-These guards protect the current reviewed decision, not an eternal ban on later governed architecture change. A legitimate future ADR/refactor/stable-boundary decision must update the guard together with the canonical decision.
+Hosted pre-synchronization validation on PR #60 head `27b663ba643ecc7ca06a0318c47d0fa9f10993c8`:
 
-Hosted validation is pending before this review is marked `Complete`.
+```text
+Reference Python CI #197
+Runner: Ubuntu 24.04.4
+Python: CPython 3.12.13
+Command: python -m unittest discover -s tests -v
+Result: Ran 570 tests — OK
+```
+
+This validates all seven new P4.11 test methods together with the complete existing reference suite. Canonical roadmap synchronization follows that evidence. PR merge remains conditional on a green final synchronized-head CI run; that merge control does not change the P4.11 architecture/refactoring disposition.
+
+These guards protect the current reviewed decision, not an eternal ban on later governed architecture change. A legitimate future ADR/refactor/stable-boundary decision must update the guard together with the canonical decision.
 
 ## 13. Functional cross-review iterations
 
@@ -251,17 +262,17 @@ Finding: source-authorization matching duplication is real, but its callers own 
 
 Disposition: no runtime refactor; keep `authority_safe_ux` narrow, record the shared evidence DTO placement as a watch item, and avoid speculative performance infrastructure.
 
-### Iteration 4 — ADR / accessibility / closure readiness
+### Iteration 4 — ADR / accessibility / delivery
 
-Finding: no durable frontend/API/serialization/IAM/cache/search/service choice crosses an ADR threshold; the bounded textual accessibility/operator-error baseline remains intact without creating unsupported WCAG claims.
+Finding: no durable frontend/API/serialization/IAM/cache/search/service choice crosses an ADR threshold; the bounded textual accessibility/operator-error baseline remains intact without creating unsupported WCAG claims. Hosted CI #197 passes the full 570-test reference suite.
 
-Disposition: no ADR; proceed to hosted validation and canonical synchronization before P4.11 completion. P4.12 should remain a closure decision rather than an implementation expansion.
+Disposition: no ADR; synchronize the canonical roadmaps to P4.12 and require final synchronized-head CI before merge. P4.12 remains a closure decision rather than an implementation expansion.
 
-No material source-level objection remains after iteration 4.
+No material objection remains after iteration 4.
 
 ## 14. Exit assessment
 
-Source-review exit conditions are satisfied:
+P4.11 exit conditions are satisfied:
 
 - [x] presentation-domain/product-platform boundary reviewed;
 - [x] refactoring threshold reviewed against repeated workspace evidence;
@@ -272,12 +283,14 @@ Source-review exit conditions are satisfied:
 - [x] R12-F1 preserved as a fixed executable regression invariant;
 - [x] P4.09 helper retained as a narrow decision consumer;
 - [x] no performance architecture introduced without reproducible evidence;
-- [ ] full current Reference Python CI green on the P4.11 head;
-- [ ] canonical Roadmap, Phase 4 roadmap and repository navigation synchronized to P4.11 completion / P4.12 current action.
+- [x] full Reference Python suite green on the P4.11 pre-synchronization implementation/review head (`#197`, `570 tests`, `OK`);
+- [x] canonical Roadmap and Phase 4 roadmap synchronized to P4.11 completion / P4.12 current action.
+
+**Final P4.11 decision: `PASS — no material runtime refactor or ADR is required before P4.12; preserve the current bounded workspace architecture and R12-F1 invariant.`**
 
 ## 15. Handoff
 
-After green hosted validation and canonical synchronization, P4.11 may close with `PASS` and hand off only to:
+Proceed to:
 
 > **`P4.12 — Phase 4 / M4 closure review`.**
 
