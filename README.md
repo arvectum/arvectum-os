@@ -55,7 +55,7 @@ Canonical Phase 3 closure evidence:
 - [R8 milestone hardening review](docs/reviews/R8-phase-3-milestone-hardening.md)
 - [P3.11 capability admission / ADR / refactoring hardening review](docs/reviews/P3-11-capability-admission-adr-refactoring-hardening-review.md)
 
-`Phase 4 — Workspace / Operator Experience` is **Active**. `P4.01` through `P4.08`, `R9 — Workspace Boundary Review`, `R10 — Operator Safety / Cross-Capability Health Review` and `R11 — Composition / Usability Refactoring Review` are complete with `PASS`. The current canonical action is **`P4.09 — Security, rights, minimization and authority-safe UX`**.
+`Phase 4 — Workspace / Operator Experience` is **Active**. `P4.01` through `P4.09`, `R9 — Workspace Boundary Review`, `R10 — Operator Safety / Cross-Capability Health Review` and `R11 — Composition / Usability Refactoring Review` are complete with `PASS`. The current canonical action is **`P4.10 — Workspace architecture fitness + accessibility/usability baseline`**.
 
 P4.02 provides the first bounded visible workspace shell: explicit Organization and attributable Actor context, `Discover / Records / Executions / Evidence / Documents / Knowledge` navigation, distinct Subject and exact-Version references, fail-closed unresolved/mismatched Organization state and non-authoritative presentation semantics. A zero-dependency static HTML demo makes the shell inspectable without selecting a frontend framework, route schema, public API/BFF, IAM/session provider or durable read-model topology.
 
@@ -113,6 +113,10 @@ R11 reviews the complete P4.02–P4.08 composition and closes with `PASS`. It co
 
 R11 also confirms that repeated current source-authorization matching is genuine but not yet evidence for a new shared IAM/policy/presentation framework. The duplication remains bounded through P4.09/P4.10 so those tasks can determine whether a narrow internal decision-consumption helper is justified without weakening capability-specific handling/freshness/exact-reliance checks. The P4.08 Product Contract satisfies its R11 review condition and remains `Provisional 0.1.0`. No ADR threshold is crossed. Hosted CI issue #54 remains separately tracked; R11 claims no green hosted run.
 
+P4.09 closes the security/rights/minimization/authority-safe UX hardening task with `PASS`. The new bounded internal `authority_safe_ux.py` helper consumes already-produced source-authorization decisions but owns no authorization policy. Missing, denied, ambiguous or wrong-Organization evidence exposes no governed content, protected count or derived preview; source-authorization replacement requires re-inspection; and UI action labels are phrased as intent/state rather than approval or Organizational Authority.
+
+P4.09 does not replace capability-specific purpose/right/classification, freshness or exact-reliance checks. Consequential action remains routed through R10 and P4.05/Governed Execution. The helper therefore provides positive evidence for a narrow shared decision-consumption pattern while broader reuse remains a P4.10 architecture-fitness question. `Reference Python CI #188` failed at the separately tracked hosted-runner provisioning issue #54; no green hosted P4.09 run or test-suite failure is claimed from that run.
+
 Canonical Phase 4 planning/current evidence:
 
 - [Canonical roadmap](docs/roadmap/ROADMAP.md)
@@ -129,8 +133,9 @@ Canonical Phase 4 planning/current evidence:
 - [P4.08 cross-capability task/context composition review](docs/reviews/P4-08-cross-capability-task-context-composition.md)
 - [P4.08 bounded Product Contract](docs/contracts/P4-08-BOUNDED-PRODUCT-ENTRY-PRODUCT-CONTRACT.md)
 - [R11 Composition / Usability Refactoring Review](docs/reviews/R11-composition-usability-refactoring-review.md)
+- [P4.09 Security, rights, minimization and authority-safe UX review](docs/reviews/P4-09-security-rights-minimization-authority-safe-ux.md)
 
-P4.01 through P4.08 plus R9/R10/R11 establish, harden, compose and refactoring-review a domain-neutral workspace boundary while retaining product-domain meaning on the product side. They do not create a new Platform Capability, change CAP-001 through CAP-004 lifecycle, stabilize the P4.08 Product Contract, create a public interface or establish production readiness. **P4.09 — Security, rights, minimization and authority-safe UX** is now the current canonical action.
+P4.01 through P4.09 plus R9/R10/R11 establish, harden, compose and security-review a domain-neutral workspace boundary while retaining product-domain meaning on the product side. They do not create a new Platform Capability, change CAP-001 through CAP-004 lifecycle, stabilize the P4.08 Product Contract, create a public interface or establish production readiness. **P4.10 — Workspace architecture fitness + accessibility/usability baseline** is now the current canonical action.
 
 RFC-0001 through RFC-0008 are `Accepted 1.0.0` and remain binding within their declared scopes.
 
