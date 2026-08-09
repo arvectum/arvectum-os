@@ -39,9 +39,11 @@ The completed canonical milestone sequence is:
 
 `Phase 3 — Shared Platform Capabilities` is complete; its M3 closure remains scoped to the bounded shared-capability reference baseline and does not promote any capability to `Active`.
 
-`Phase 5 — SDK, Contracts and Extension Experience` is `Active`. P5.01 through P5.09 are complete, with R13 and R14 passed. P5.08 establishes the internal/provisional workspace/capability adapter seam without product-side private coupling. P5.09 proves reuse through a materially distinct read-only CAP-004 evidence/reconstruction extension with its own `Provisional 0.1.0` Product Contract and the same `arvectum_os_ref.integration_adapters` boundary as the first bounded product.
+`Phase 5 — SDK, Contracts and Extension Experience` is `Active`. P5.01 through P5.09 are complete, and R13, R14 and R15 have passed. P5.08 establishes the internal/provisional integration-adapter seam without product-side private coupling. P5.09 proves reuse through a materially distinct read-only CAP-004 evidence/reconstruction extension with its own `Provisional 0.1.0` Product Contract and the same `arvectum_os_ref.integration_adapters` boundary as the first bounded product.
 
-The P5.09 second-consumer proof also produced one bounded refactoring finding, P5.09-F1: a derived read-only operation does not necessarily expose direct canonical access. The internal P5.02 validator therefore no longer requires a fake canonical Read declaration for such a view. Where direct canonical access is declared, Read semantics remain validated; canonical mutation still requires explicit Write plus Organizational Authority. The change refines internal validation evidence and does not amend RFC-0004 or create a new contract authority.
+P5.09 also produced P5.09-F1: a derived read-only operation does not necessarily expose direct canonical access. The internal P5.02 validator therefore no longer requires a fake canonical Read declaration for such a view. Where direct canonical access is declared, Read semantics remain validated; canonical mutation still requires explicit Write plus Organizational Authority. R15 preserves this distinction unchanged.
+
+R15 reviews the two-consumer evidence before further generalization and closes two bounded reuse/DX findings. Shared `IntegrationAdapters` stored state is now limited to the demonstrated cross-consumer core (`facade + capabilities`), while workspace presentation is an explicit optional binding for consumers that need it. P5.05 scaffolding/local harness now teaches the same adapter seam demonstrated by both consumers rather than the lower-level composition facade as the default developer entry.
 
 The current Phase 5 integration baseline includes:
 
@@ -50,6 +52,7 @@ The current Phase 5 integration baseline includes:
 - exact dependency compatibility is determined from explicit governed provider/version evidence rather than package/module shape, inferred SemVer or automatic fallback;
 - dependency-backed facade/adapter actions require explicit current governed provider/version evidence and re-run the existing resolution semantics before reliance;
 - the first bounded product and the second read-only extension use the same internal/provisional `IntegrationAdapters` boundary rather than private platform implementation imports;
+- the reusable adapter stored core is capability-oriented; workspace is consumer-specific and opt-in rather than a universal integration assumption;
 - workspace presentation, capability-specific access/reconstruction semantics, canonical-state decisions and Governed Execution remain delegated to their existing semantic owners;
 - wrong-Organization, stale-continuity, missing-current-evidence and rights/classification negative paths remain fail-closed;
 - Product Contract/capability admission remains non-authoritative and does not create permission, approval or Organizational Authority;
@@ -58,7 +61,7 @@ The current Phase 5 integration baseline includes:
 - Product Contract lifecycle and capability lifecycle remain distinct;
 - no Stable/public SDK/API/wire/package/registry/facade/adapter/plugin-runtime/generated-code compatibility boundary is created by the current reference implementation.
 
-Hosted `Reference Python CI #246` passed on the final P5.09 branch head after code, review and roadmap synchronization. The earlier P5.09 code proof was also covered by `Reference Python CI #242`, which passed the full 675-test reference suite.
+Hosted `Reference Python CI #251` passed the 682-test reference suite on the R15 code/refactoring head. The R15 review/roadmap synchronization is kept in the same PR and is revalidated by hosted CI before merge.
 
 The retained capability set remains unchanged:
 
@@ -69,7 +72,7 @@ The retained capability set remains unchanged:
 
 The P4.08 bounded Product Contract remains `Provisional 0.1.0`. The P5.09 evidence-extension Product Contract is also `Provisional 0.1.0`.
 
-Completion of P5.09 does **not** promote any capability to `Active`, stabilize either Product Contract, establish `Production` or operational readiness, claim M5/full-platform conformance, or create SLA/support/commercial commitments. The second consumer is reuse evidence, not a lifecycle transition.
+Completion of R15 does **not** promote any capability to `Active`, stabilize either Product Contract, establish `Production` or operational readiness, claim M5/full-platform conformance, or create SLA/support/commercial commitments. The refactor is reuse evidence and developer-experience narrowing, not a lifecycle transition.
 
 Canonical current evidence:
 
@@ -86,17 +89,18 @@ Canonical current evidence:
 - [P5.07 Event/provenance/portability integration-support review](docs/reviews/P5-07-event-provenance-portability-integration-support.md)
 - [P5.08 workspace/capability integration-adapter review](docs/reviews/P5-08-workspace-capability-integration-adapters.md)
 - [P5.09 second materially distinct integration reuse proof](docs/reviews/P5-09-second-materially-distinct-integration-reuse-proof.md)
+- [R15 Reuse / Developer Experience Refactoring Review](docs/reviews/R15-reuse-developer-experience-refactoring-review.md)
 - [P4.12 Phase 4 / M4 closure review](docs/reviews/P4-12-phase-4-m4-closure-review.md)
 - [P4.08 bounded Product Contract](docs/contracts/P4-08-BOUNDED-PRODUCT-ENTRY-PRODUCT-CONTRACT.md)
 - [Platform Capability Catalog](docs/catalogs/PLATFORM-CAPABILITY-CANDIDATE-CATALOG.md)
 
 The current canonical action is:
 
-> **R15 — Reuse / Developer Experience Refactoring Review.**
+> **P5.10 — Phase 5 conformance + architecture fitness matrix.**
 
-R15 should review the demonstrated two-consumer evidence before further generalization: retain only abstractions supported by both materially distinct integrations, preserve the P5.09-F1 distinction between derived read-only views and direct canonical access, remove or contain consumer-shaped assumptions, and keep Product Contract/capability lifecycle plus public/stable compatibility decisions separate.
+P5.10 should assemble the accumulated positive/negative fitness evidence across Product Contract identity/version continuity, exact dependency responsibilities and current-support evidence, hidden-coupling prohibition, Organization isolation, Authorization/Organizational Authority separation, governed mutation, Event/provenance, rights/minimization, portability, lifecycle separation, unsupported/deprecated behavior, second-integration reuse and absence of accidental Stable/public compatibility claims.
 
-After R15, the next roadmap work item is `P5.10 — Phase 5 conformance + architecture fitness matrix`.
+After P5.10, the next engineering gate is `R16 — M5 Integration Hardening`.
 
 The current delivery sequence is maintained in the [Canonical Roadmap](docs/roadmap/ROADMAP.md) and [RFC Index](docs/rfc/README.md).
 
