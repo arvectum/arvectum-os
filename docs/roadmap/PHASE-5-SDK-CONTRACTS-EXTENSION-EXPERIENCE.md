@@ -1,25 +1,26 @@
 # Phase 5 — SDK, Contracts and Extension Experience
 
-Status: `Active`
-Version: `1.14.0`
+Status: `Complete`
+Version: `1.15.0`
 Created: `2026-08-09`
 Updated: `2026-08-09`
 Owner: `ООО «Арвектум»`
 Task classification: `platform`
 Parent roadmap: [`ROADMAP.md`](ROADMAP.md)
 Milestone: `M5 — Repeatable product/extension integration`
+Milestone state: `Achieved` for the declared bounded reference scope
 
 ## 1. Purpose
 
 Phase 5 turns the governed runtime, shared-capability and workspace evidence from M1–M4 into a repeatable integration experience for products and extensions without prematurely declaring public/stable compatibility boundaries.
 
-The phase must prove that a materially distinct integration can be created through explicit Product Contracts, reusable integration tooling and conformance evidence rather than private imports, copied internals or accidental platform coupling.
+The phase proves that a materially distinct integration can be created through explicit Product Contracts, reusable integration tooling and conformance evidence rather than private imports, copied internals or accidental platform coupling.
 
 Phase 5 is not a commitment to publish a public SDK, public API, marketplace, plugin runtime, stable wire protocol or final developer platform. Those boundaries become stable/public only through their applicable evidence and governance.
 
 ## 2. Canonical basis
 
-Phase 5 is bounded by:
+Phase 5 closed against:
 
 1. Constitution `1.2.0` — `Ratified`, frozen;
 2. RFC-0001 through RFC-0008 — `Accepted 1.0.0`;
@@ -42,35 +43,44 @@ Phase 5 is bounded by:
 19. [`P5.09 second materially distinct integration reuse proof`](../reviews/P5-09-second-materially-distinct-integration-reuse-proof.md) — `PASS`;
 20. [`R15 Reuse / Developer Experience Refactoring Review`](../reviews/R15-reuse-developer-experience-refactoring-review.md) — `PASS` after R15-F1/R15-F2 remediation;
 21. [`P5.10 Phase 5 conformance + architecture fitness matrix`](../reviews/P5-10-phase-5-conformance-architecture-fitness-matrix.md) — `PASS`;
-22. [`R16 M5 Integration Hardening Review`](../reviews/R16-m5-integration-hardening.md) — `PASS` after R16-F1 remediation; hosted `Reference Python CI #262` passes 695 tests with `OK`;
-23. [`P5.11 Compatibility / ADR / Refactoring / Public-Boundary Hardening Review`](../reviews/P5-11-compatibility-adr-refactoring-public-boundary-hardening-review.md) — `PASS`; all nine explicit architecture/public-boundary gates remain un-crossed, no ADR or Stable/public boundary is justified, no material runtime refactor is required before P5.12, and hosted `Reference Python CI #266` passes 704 tests with `OK`.
+22. [`R16 M5 Integration Hardening Review`](../reviews/R16-m5-integration-hardening.md) — `PASS` after R16-F1 remediation;
+23. [`P5.11 Compatibility / ADR / Refactoring / Public-Boundary Hardening Review`](../reviews/P5-11-compatibility-adr-refactoring-public-boundary-hardening-review.md) — `PASS`, explicit no-ADR/no-public-boundary disposition;
+24. [`P5.12 Phase 5 / M5 Closure Review`](../reviews/P5-12-phase-5-m5-closure-review.md) — `PASS`, M5 achieved for the bounded repeatable product/extension integration reference scope;
+25. final synchronized pre-closure executable baseline — `Reference Python CI #269`, Ubuntu 24.04.4, CPython 3.12.13, `704 tests`, `OK`.
+
+No conflict with Constitution or Accepted RFC/ADR was identified by the closure review.
 
 ## 3. Phase boundary
 
-### In scope
+### Delivered in scope
 
-- revalidate the integration boundary from actual M4 evidence;
-- define an internal integration/developer experience around Product Contracts and governed platform reliance;
-- machine-check Product Contract declarations and exact dependency/version pins where useful;
-- provide bounded scaffolding/templates/helpers only after their boundary is evidenced;
-- provide local conformance/fitness fixtures for product/extension integrations;
-- prove repeatable integration with a materially distinct second integration;
-- preserve Organization, identity, authorization, Organizational Authority, provenance, portability and capability-lifecycle semantics;
-- define compatibility/migration/deprecation semantics only to the degree actually justified by relied-upon boundaries;
-- reassess ADR and public/stable contract gates before M5 closure.
+- integration boundary revalidated from actual M4 evidence;
+- internal/provisional developer integration experience built around Product Contracts and governed platform reliance;
+- Product Contract declarations and exact dependency/version semantics made machine-checkable where useful;
+- bounded scaffolding/templates/helpers and local integration harness retained as replaceable reference tooling;
+- security, Organization, authorization, Organizational Authority, rights and current-support continuity guarded fail-closed;
+- Event/provenance and semantic portability preserved through existing owners;
+- workspace/capability adapters provided without product-side private coupling;
+- materially distinct second integration proved against the same reusable boundary;
+- cross-phase conformance/architecture-fitness evidence indexed in P5.10;
+- R13–R16 hardening/refactoring findings resolved;
+- ADR/public-boundary pressure re-opened in P5.11 and explicitly dispositioned;
+- M5 closed only after P5.12 repository-evidence review.
 
-### Explicitly out of scope unless separately justified
+### Explicitly not created by Phase 5
 
-- declaring a public SDK or public API merely because Phase 5 is named SDK/Contracts;
-- promoting any Product Contract to `Stable` without lifecycle evidence;
-- promoting CAP-001 through CAP-004 to `Active` merely because tooling consumes them;
+- public or Stable SDK/package/API compatibility;
+- Stable Product Contract lifecycle;
+- Active Platform Capability lifecycle;
 - generic plugin/marketplace runtime;
-- cross-organization extension distribution;
+- cross-organization extension distribution rights;
 - production package registry/support/SLA commitments;
 - fixed REST/GraphQL/gRPC/BFF or serialization/wire topology;
 - fixed language-specific SDK as permanent architecture;
-- extension registration as authorization or Organizational Authority;
-- hiding product-domain semantics inside shared SDK helpers.
+- extension registration as Authorization or Organizational Authority;
+- consumer-domain semantics hidden inside shared integration helpers;
+- Production environment or operational-readiness approval;
+- full-platform conformance or commercial compatibility guarantees.
 
 ## 4. Work breakdown
 
@@ -87,160 +97,192 @@ Phase 5 is bounded by:
 | `P5.09` | Second materially distinct integration reuse proof | 🟩 Complete | `██████████ 100%` |
 | `P5.10` | Phase 5 conformance + architecture fitness matrix | 🟩 Complete | `██████████ 100%` |
 | `P5.11` | Compatibility / ADR / refactoring / public-boundary hardening review | 🟩 Complete | `██████████ 100%` |
-| `P5.12` | Phase 5 / M5 closure review | 🟨 Current | `░░░░░░░░░░ 0%` |
+| `P5.12` | Phase 5 / M5 closure review | 🟩 Complete | `██████████ 100%` |
 
-The detailed implementation/review evidence for completed work remains in the linked review artifacts and git history. This roadmap records planning state and the minimum evidence needed for the next decision; it does not replace those semantic owners or review records.
+Engineering gates are separate review gates and do not inflate the phase percentage:
 
-## 5. Accumulated Phase 5 evidence
-
-### Product Contract and compatibility
-
-- RFC-0004 `ProductContract` remains the single executable product/platform boundary owner for the bounded reference implementation.
-- P5.02 machine-checks the existing declaration model rather than creating a competing manifest/schema source.
-- R13 preserves provider/consumer/failure responsibilities and operation failure semantics in derived declaration evidence.
-- P5.03 resolves only exact declared dependency versions from explicit governed provider/version evidence; no SemVer/package/module/dataclass inference or automatic fallback is used.
-- Deprecated, Retired, Unsupported, VersionMismatch and Ambiguous paths remain explicit and fail closed; changed reliance exposes migration obligations.
-- R14 requires explicit current governed provider/version evidence for dependency-backed reliance and prevents composition-time compatibility evidence from becoming current support authority.
-- R16 binds capability-adapter semantics to the exact P5.02 declaration evidence validated by the facade, so alternate same-version Product Contract semantics fail closed.
-
-### Composition, scaffolding and reuse
-
-- P5.04 establishes a bounded internal/provisional integration composition seam over existing semantic owners.
-- P5.05 provides readable, replaceable provisional scaffolding and an in-process local harness without production infrastructure assumptions.
-- P5.08 adds the internal/provisional integration adapter seam over workspace/capability consumption.
-- P5.09 proves materially distinct reuse with a read-only CAP-004 evidence/reconstruction extension using its own `Provisional 0.1.0` Product Contract.
-- R15 narrows demonstrated shared adapter state to `facade + capabilities`; workspace remains an explicit optional binding.
-- Product/extension-specific business semantics remain consumer-owned.
-
-### Security, authority, evidence and portability
-
-- Wrong-Organization, missing/denied Authorization/Organizational Authority, purpose/right/classification and stale-continuity paths remain fail closed through existing semantic owners.
-- Product Contract/capability admission grants no Authentication, Authorization, permission, Organizational Authority or approval.
-- Governed Execution remains the only consequential mutation path for the exercised boundary.
-- P5.07 preserves exact Actor/Product/Product Contract/Execution/Event attribution while retaining P2.05 as Event/provenance semantic owner.
-- Derived telemetry and CAP-004 reconstruction remain non-authoritative.
-- Portable integration fixtures preserve semantic identity/relationship meaning without selecting a durable vendor serialization or transport mechanism.
-
-### Conformance and hardening
-
-- P5.10 indexes `CF-01` through `CF-15` across positive and negative executable evidence without becoming a second semantic owner.
-- R16 re-opens the matrix and resolves the only material same-version Product Contract continuity defect found in that hardening pass.
-- P5.11 adds nine executable architecture/public-boundary guards and explicitly reviews every listed ADR/public-compatibility threshold.
-- Hosted `Reference Python CI #266` passes the full accumulated 704-test suite with `OK`.
-
-## 6. Engineering gates
-
-Engineering reviews are gates, not equal-weight roadmap work items.
-
-- `R13 — Integration Boundary Review` — **Complete / PASS after R13-F1 remediation**.
-- `R14 — Developer Safety / Contract Health Review` — **Complete / PASS after R14-F1/R14-F2 remediation**.
-- `R15 — Reuse / Developer Experience Refactoring Review` — **Complete / PASS after R15-F1/R15-F2 remediation**.
+- `R13 — Integration Boundary Review` — **Complete / PASS after R13-F1 remediation**;
+- `R14 — Developer Safety / Contract Health Review` — **Complete / PASS after R14-F1/R14-F2 remediation**;
+- `R15 — Reuse / Developer Experience Refactoring Review` — **Complete / PASS after R15-F1/R15-F2 remediation**;
 - `R16 — M5 Integration Hardening` — **Complete / PASS after R16-F1 remediation**.
 
-Performance optimization remains evidence-backed; do not optimize package/API/runtime mechanics without benchmark/profile evidence except correctness, security or resource-exhaustion defects.
+## 5. Validated integration baseline
 
-## 7. Dependency-aware sequence
+The bounded reference integration method is:
+
+```text
+Product / Extension-owned Product Contract
+        ↓
+P5.02 declaration validation
+        ↓
+P5.03 exact governed dependency/version resolution
+        ↓
+P5.04 composition facade
+        ↓
+P5.08 IntegrationAdapters
+        ↓
+existing capability / workspace / runtime semantic owners
+```
+
+The boundary retains these rules:
+
+- RFC-0004 `ProductContract` remains the product/platform semantic owner; no competing manifest/schema source was introduced;
+- exact dependency versions are resolved only from explicit governed provider/version evidence;
+- compatibility does not infer package/module/dataclass/SemVer compatibility or automatic fallback;
+- R14 requires explicit current support evidence at dependency-backed reliance;
+- R16 binds capability-adapter Product Contract semantics to the exact declaration evidence already validated by the facade;
+- capability-specific rights/freshness/reconstruction semantics remain with their existing semantic owners;
+- Governed Execution remains the consequential canonical-mutation path;
+- Product Contract/admission/composition evidence grants no permission, Organizational Authority or approval.
+
+## 6. Reuse evidence
+
+P5.09 proves two materially distinct consumers over the same integration-facing adapter seam:
+
+1. the first bounded product integration, with workspace/capability composition and declared consequential behavior;
+2. a read-only evidence/reconstruction extension using CAP-004 only, with its own `Provisional 0.1.0` Product Contract, no workspace assumption and no canonical mutation.
+
+The second consumer exposed P5.09-F1: derived read-only capability consumption does not necessarily mean direct canonical read access. The P5.02 validator was narrowed accordingly rather than forcing a fake canonical-read declaration.
+
+R15 then reduced shared adapter state to the demonstrated cross-consumer core (`facade + capabilities`) and left workspace as explicit optional consumer binding. This is validated reuse, not speculative generalization.
+
+## 7. Security, authority, evidence and portability
+
+The closed M5 scope preserves:
+
+- explicit Organization context and fail-closed cross-Organization isolation;
+- independent Authentication/Actor attribution, Authorization, Organizational Authority and Data Governance semantics;
+- explicit purpose/right/classification/freshness handling under existing semantic owners;
+- no authority gain from Product Contract validation, extension registration, adapter composition or capability admission;
+- exact Product Contract/Workflow/material-input/Execution/Event attribution where materially relied upon;
+- Event/provenance admission through existing RFC-0006/P2 semantic owners;
+- derived telemetry, search/projection and reconstruction as non-authoritative;
+- semantic portability without selecting one durable vendor transport/serialization/store.
+
+## 8. Conformance, hardening and closure evidence
+
+P5.10 records a 15-row cross-phase evidence index, `CF-01` through `CF-15`. Every row carries positive and negative/fail-closed executable evidence and remains subordinate to the relevant Accepted RFC/Product Contract/capability/runtime semantic owner.
+
+R16 re-opened the accumulated integration surface and fixed R16-F1: same Product Contract Version identity can no longer carry alternate declaration semantics through the capability adapter.
+
+P5.11 then reviewed all nine explicit compatibility/public-boundary gates and found none crossed. It records the explicit **no-ADR / no-public-boundary** disposition and no material runtime refactor before closure.
+
+P5.12 re-checked all 14 M5 exit criteria and closed one subordinate documentation synchronization finding, P5.12-F1: root README lagged the canonical roadmap after P5.11. The closure synchronizes that summary without changing runtime behavior.
+
+## 9. M5 exit criteria — final disposition
+
+| # | Criterion | Final result |
+|---|---|---|
+| 1 | bounded integration boundary above private internals | `PASS` |
+| 2 | explicit/machine-checkable Product Contract declaration evidence | `PASS` |
+| 3 | exact dependency/version identity continuity | `PASS` |
+| 4 | hidden coupling rejected | `PASS` |
+| 5 | security/Organization/Authz/Organizational Authority fail-closed | `PASS` |
+| 6 | governed canonical mutation + Event/provenance continuity | `PASS` |
+| 7 | vendor-neutral portability evidence | `PASS` |
+| 8 | second materially distinct integration reuse | `PASS` |
+| 9 | consumer-specific semantics remain consumer-owned | `PASS` |
+| 10 | CAP-001..CAP-004 lifecycle not inflated | `PASS` |
+| 11 | P5.10 fitness matrix | `PASS` |
+| 12 | R13–R16 findings resolved/bounded | `PASS` |
+| 13 | P5.11 ADR/public-boundary disposition | `PASS` |
+| 14 | P5.12 closure review | `PASS` |
+
+**M5 result:** `Achieved` for the declared bounded repeatable product/extension integration reference scope.
+
+## 10. Lifecycle and readiness state after closure
+
+Phase 5 completion changes roadmap state only.
+
+| Dimension | State after P5.12 |
+|---|---|
+| Phase 5 | `Complete` |
+| M5 | `Achieved` for bounded reference scope |
+| P4.08 Product Contract | `Provisional 0.1.0` |
+| P5.09 Product Contract | `Provisional 0.1.0` |
+| CAP-001..CAP-004 | `Incubating / Provisional` |
+| Integration facade/adapters/scaffolding/harness | internal / provisional reference implementation |
+| Public SDK/API/wire/package boundary | not established |
+| Operational readiness / `Production` | not established |
+| Full-platform conformance | not claimed |
+| SLA/support/commercial compatibility commitment | not created |
+
+## 11. ADR and public-boundary gate
+
+P5.11 remains the controlling Phase 5 disposition: **no ADR / no public boundary** for the current implementation.
+
+Re-open the ADR/governance gate before material reliance on:
+
+- a supported language-specific SDK/package boundary;
+- a Stable/public API or wire/serialization contract;
+- package registry/distribution topology;
+- plugin loading/sandboxing/isolation;
+- extension registry/discovery topology;
+- automated version-negotiation/fallback or durable freshness protocol;
+- supported generated-code/client compatibility;
+- separately deployable integration service;
+- stable design-system/component integration contract.
+
+The internal P5.11 watch items `IntegrationAdapters.workspace` and `LocalIntegrationHarnessResult.facade` remain implementation conveniences, not compatibility promises.
+
+## 12. Hosted verification
+
+The final synchronized P5.11 pre-closure baseline is:
+
+- `Reference Python CI #269` — `PASS`;
+- Ubuntu 24.04.4;
+- CPython 3.12.13;
+- `python -m unittest discover -s tests -v`;
+- `704 tests`, `OK`.
+
+P5.12 changes closure/review/planning documentation only. The P5.12 pull-request head must remain green before merge; that validation is closure hygiene over the unchanged executable baseline.
+
+## 13. Dependency-aware sequence
 
 ```text
 M4 ✓
  ↓
-P5.01 Integration boundary + developer journeys ✓
+P5.01 ✓
  ↓
-P5.02 Product Contract declaration/validation ✓
+P5.02 ✓
  ↓
-R13 Integration Boundary Review ✓
+R13 ✓
  ↓
-P5.03 Dependency/version + compatibility semantics ✓
+P5.03 ✓
  ↓
-P5.04 Composition API/facade boundary ✓
+P5.04 ✓
  ↓
-P5.05 Scaffolding/templates + local harness ✓
+P5.05 ✓
  ↓
-P5.06 Security/authority/rights guards ✓
+P5.06 ✓
  ↓
-R14 Developer Safety / Contract Health ✓
+R14 ✓
  ↓
-P5.07 Event/provenance/portability support ✓
+P5.07 ✓
  ↓
-P5.08 Workspace/capability adapters ✓
+P5.08 ✓
  ↓
-P5.09 Second integration reuse proof ✓
+P5.09 ✓
  ↓
-R15 Reuse / DX Refactoring ✓
+R15 ✓
  ↓
-P5.10 Conformance + fitness matrix ✓
+P5.10 ✓
  ↓
-R16 M5 Hardening ✓
+R16 ✓
  ↓
-P5.11 Compatibility / ADR / public-boundary review ✓
+P5.11 ✓
  ↓
-P5.12 M5 closure ← current
+P5.12 ✓
  ↓
-M5
+M5 ✓
 ```
 
-## 8. P5.11 disposition
+## 14. Closure and handoff
 
-P5.11 is `Complete` — [`review evidence`](../reviews/P5-11-compatibility-adr-refactoring-public-boundary-hardening-review.md).
+Canonical closure record:
 
-All explicit gates were reviewed:
+- [`P5.12 — Phase 5 / M5 Closure Review`](../reviews/P5-12-phase-5-m5-closure-review.md) — **PASS**.
 
-| Gate | P5.11 result |
-|---|---|
-| language-specific SDK/package boundary | Not crossed — no ADR / no public boundary |
-| stable/public API or wire/serialization contract | Not crossed — no ADR / no public boundary |
-| package registry/distribution topology | Not crossed — no ADR |
-| plugin loading/sandboxing/isolation mechanism | Not crossed — no ADR |
-| extension registry/discovery topology | Not crossed — no ADR |
-| version negotiation/migration/freshness protocol | Not crossed — no ADR |
-| generated-code compatibility boundary | Not crossed — no ADR / no public boundary |
-| separately deployable integration service | Not crossed — no ADR |
-| stable design-system/component integration contract | Not crossed — no ADR / no public boundary |
+Phase 5 is **Complete**. M5 is **Achieved** for the bounded repeatable product/extension integration reference scope.
 
-Refactoring disposition:
-
-- no material runtime refactor is justified before P5.12;
-- retain Product Contract declaration/validation + exact governed compatibility + composition + adapters as internal/provisional reference architecture;
-- retain `IntegrationAdapters.workspace` and `LocalIntegrationHarnessResult.facade` only as bounded internal compatibility conveniences/watch items rather than public contracts;
-- do not extract a generic SDK/package, plugin system, registry, wire DTO layer, generated-client boundary or deployable integration service without new evidence and the applicable governed decision.
-
-Hosted `Reference Python CI #266` passes 704 tests with `OK`, including all nine P5.11 guards.
-
-## 9. M5 exit criteria
-
-`M5 — Repeatable product/extension integration` is achieved only if all applicable conditions pass:
-
-1. a bounded integration boundary exists above implementation-private internals;
-2. RFC-0004 Product Contract declarations used by that boundary are explicit and machine-checkable where useful;
-3. exact relied-upon dependency/version identity is preserved;
-4. hidden product/platform coupling is rejected by tests/review;
-5. security, Organization isolation, Authorization and Organizational Authority semantics remain fail-closed;
-6. governed actions preserve Event/provenance attribution and canonical-state rules;
-7. portability evidence does not depend on one durable vendor mechanism;
-8. a second materially distinct integration reuses the same integration tooling/boundary;
-9. product-specific semantics remain product-owned;
-10. CAP-001..CAP-004 lifecycle is not inflated by integration convenience;
-11. P5.10 fitness matrix passes;
-12. R13–R16 material findings are resolved or explicitly bounded;
-13. P5.11 dispositions every crossed ADR/public-compatibility gate;
-14. P5.12 closure review passes.
-
-Items 1–13 now have accumulated evidence. **M5 is not yet achieved:** P5.12 remains the explicit closure decision.
-
-M5 does not require a public SDK, Stable Product Contract or production deployment. If later evidence justifies such a boundary, it must be governed separately before that claim is made.
-
-## 10. Current canonical action
-
-> **P5.12 — Phase 5 / M5 closure review.**
-
-Close Phase 5 only on repository evidence. Re-check all M5 exit criteria, current hosted test evidence, unresolved findings and canonical-state consistency. The closure result must distinguish roadmap completion from Product Contract stability, capability lifecycle, operational readiness, conformance maturity and public/commercial commitments.
-
-Do not infer from P5.11 that any Product Contract is `Stable`, any capability is `Active`, any public SDK/API/wire/package boundary exists, or M5 is already achieved.
-
-## 11. ADR and Product Contract gate
-
-P5.11 records an explicit **no-ADR / no-public-boundary** disposition for the current implementation.
-
-Re-open the ADR/governance gate before material reliance on a language-specific SDK/package boundary, stable/public API or wire/serialization contract, package registry/distribution topology, plugin loading/sandboxing mechanism, extension registry topology, version-negotiation/migration/freshness protocol, generated-code compatibility boundary, separately deployable integration service or stable design-system/component contract.
-
-A real Product relying on Incubating capabilities, canonical platform state or shared platform history must use the applicable RFC-0004 Product Contract before governed reliance.
+Phase 6 remains `Draft`; M5 closure does not activate it automatically. The next planning action is **Phase 6 boundary revalidation and decomposition** against real product-driven validation needs before Phase 6 implementation becomes active canonical work.
