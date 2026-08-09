@@ -11,7 +11,7 @@ Architecture basis: RFC-0001 `1.0.0`; RFC-0002 `1.0.0`; RFC-0003 `1.0.0`; RFC-00
 Preceding baseline: P5.01/P5.02/R13/P5.03/P5.04/P5.05/P5.06 — `PASS`
 ADR disposition: no Accepted ADR constrains this bounded internal/provisional remediation; no new ADR threshold crossed
 Implementation PR: `#67`
-Hosted validation: no GitHub Actions run/status was generated for the R14 PR head at review publication time; last confirmed hosted full-suite baseline remains P5.06 `Reference Python CI #223`, 634 tests, `OK`
+Hosted validation: `Reference Python CI #232` — `PASS`, 644 tests, `OK`
 Result: **`PASS — two material developer-safety/contract-health defects were identified and remediated. R14-F1 closes direct facade construction that could bypass the governed P5.02/P5.03 composition path. R14-F2 prevents composition-time dependency compatibility evidence from self-advancing as indefinitely current provider-support evidence. Dependency-backed J1/J2 actions now require explicit current governed dependency/version evidence and re-run the existing P5.03 resolver before reliance.`**
 
 ## 1. Purpose
@@ -86,25 +86,16 @@ The facade may make the correct path easier, but it must not become an alternate
 Severity: `Material — developer safety / semantic-owner bypass`
 Disposition: `Remediated`
 
-### 4.1 Finding
-
 P5.04 correctly provided `compose_integration_facade()` as the intended construction path. That factory invokes P5.02 declaration validation and P5.03 exact dependency/version resolution before creating the facade.
 
 However, `IntegrationCompositionFacade.__init__()` remained directly callable. A developer could construct the class with caller-created `ProductContractDeclarationValidation` and `DependencyCompatibilityReport` objects that were structurally plausible without actually passing through the P5.02/P5.03 evaluation path.
 
-The constructor performed continuity checks over the supplied derived evidence, but it could not prove that the evidence itself had been obtained from the semantic owners. Later facade operations relied on the stored compatibility report.
+R14 remediates this by:
 
-This was a material R14 defect because the convenient integration seam itself created a developer path around the very contract-health evaluation it was intended to compose.
-
-### 4.2 Remediation
-
-`reference/python/arvectum_os_ref/integration_composition.py` now:
-
-- restricts facade construction to `compose_integration_facade()` through an internal construction token;
-- raises typed `IntegrationCompositionConstructionError` when a caller directly invokes the constructor without the governed factory path;
-- keeps the token implementation-private and explicitly non-public/non-stable;
-- leaves P5.02/P5.03 as the existing validation and compatibility semantic owners;
-- creates no new registry, admission authority or contract lineage.
+- restricting facade construction to `compose_integration_facade()` through an internal construction token;
+- raising typed `IntegrationCompositionConstructionError` when a caller invokes the constructor without the governed factory path;
+- keeping P5.02/P5.03 as the existing validation and compatibility semantic owners;
+- creating no new registry, admission authority or contract lineage.
 
 The internal token is a developer-safety guard, not a security credential. Deliberately importing private module state to circumvent it would itself be hidden implementation coupling and is outside the supported integration path.
 
@@ -113,70 +104,56 @@ The internal token is a developer-safety guard, not a security credential. Delib
 Severity: `Material — stale evidence / contract health`
 Disposition: `Remediated`
 
-### 5.1 Finding
-
 P5.03 intentionally models `GovernedDependencyVersionEvidence` as an explicit provider/version support snapshot. P5.04 used such evidence during facade composition and retained the resulting immutable `DependencyCompatibilityReport`.
 
-Before R14, later `admit_capability()` and `start_governed_execution()` operations checked only the stored `Compatible` evaluation. A long-lived facade could therefore continue dependency-backed reliance after the current provider/version evidence had become `Deprecated`, `Retired`, `Unsupported`, ambiguous or otherwise unavailable.
+Before R14, later `admit_capability()` and `start_governed_execution()` operations checked only the stored `Compatible` evaluation. A long-lived facade could therefore continue dependency-backed reliance after current provider/version evidence had become `Deprecated`, `Retired`, `Unsupported`, ambiguous or otherwise unavailable.
 
-P5.06 proved stale RFC-0005 gate-decision rejection and stale Product Contract Version rejection, but it did not cover staleness of the dependency-support evidence that P5.03 uses to establish compatibility.
-
-This was a direct R14 stale-evidence defect.
-
-### 5.2 Remediation
-
-Dependency-backed J1/J2 facade operations now require explicit current governed dependency/version evidence:
+R14 remediates this by requiring explicit current governed dependency/version evidence for dependency-backed J1/J2 facade operations:
 
 - `admit_capability(..., governed_versions=...)`;
 - `start_governed_execution(..., governed_versions=...)`.
 
 If current governed evidence is omitted, the facade raises typed `IntegrationCompositionEvidenceRequiredError` rather than silently reusing the composition-time compatibility report.
 
-When evidence is supplied, the facade re-runs `resolve_product_contract_dependencies()` against:
+When evidence is supplied, the facade re-runs `resolve_product_contract_dependencies()` against the exact source RFC-0004 Product Contract, the exact Product Contract Version already composed into the facade and the supplied current governed dependency/version evidence.
 
-- the exact source RFC-0004 Product Contract;
-- the exact Product Contract Version already composed into the facade;
-- the supplied current governed dependency/version evidence.
+P5.03 typed failures remain visible without being translated into facade-owned compatibility decisions. Current `Deprecated`, `Retired`, `Unsupported`, `VersionMismatch` or `Ambiguous` results therefore fail through existing P5.03 error semantics.
 
-P5.03 typed errors remain visible without being translated into facade-owned compatibility decisions. A current `Deprecated`, `Retired`, `Unsupported`, `VersionMismatch` or `Ambiguous` result therefore fails through the existing P5.03 error semantics.
+The composition-time `compatibility_evidence` property remains immutable inspection/history evidence only and is explicitly not current provider-support authority.
 
-The composition-time `compatibility_evidence` property remains available for immutable inspection/history only and is explicitly documented as not being current provider-support authority.
-
-## 6. Bounded freshness model — what R14 deliberately does not decide
+## 6. Bounded freshness model — deliberately not decided by R14
 
 R14 does not invent a provider registry, TTL, lease, polling protocol, clock-based freshness rule or externally supported compatibility service.
 
-The current internal/provisional rule is smaller:
+The current internal/provisional rule is intentionally smaller:
 
 > Every dependency-backed J1/J2 reliance must explicitly present the governed provider/version evidence the caller intends to treat as current, and the existing P5.03 semantic owner must evaluate that evidence against the exact effective Product Contract before reliance.
-
-This removes the unsafe implicit cache behavior without pretending that Arvectum OS already has a canonical provider-support registry or universal freshness protocol.
 
 Residual boundary:
 
 - caller-supplied evidence is still an explicit snapshot;
-- the source and acquisition mechanism that establishes how a future operational system obtains the authoritative current snapshot remain outside this R14 implementation;
+- the future operational source/acquisition mechanism for an authoritative current snapshot remains outside R14;
 - if later work introduces a durable provider registry, TTL/freshness protocol, network resolver, public compatibility service or externally relied-upon negotiation mechanism, the ADR/governance gate must be re-opened before material reliance.
 
-This residual is acceptable for the current `Provisional` internal reference stage because R14 removes silent self-advancement and makes the evidence dependency explicit.
+This residual is acceptable for the current `Provisional` internal reference stage because silent self-advancement is removed and the evidence dependency is explicit.
 
-## 7. Authorization, Organizational Authority and data-right continuity review
+## 7. Authorization, Organizational Authority and data-right continuity
 
 Result: `PASS`.
 
-R14 confirms that the remediation does not merge or infer distinct governance decisions:
+R14 confirms that:
 
 - Product Contract declaration/validation remains non-authoritative;
 - provider/version compatibility remains compatibility evidence only;
 - capability admission remains non-authoritative boundary evidence;
-- actual capability access continues to enforce current Organization/purpose/right/classification constraints through the existing access semantic owner;
+- actual capability access continues to enforce current Organization/purpose/right/classification constraints through existing access semantic owners;
 - consequential execution still begins with Authorization, Organizational Authority, Data Governance and applicable approval gates independently unresolved;
 - a `Supported` dependency version does not satisfy Authorization or Organizational Authority;
-- a Product Contract, facade, scaffold or local harness still grants no permission or approval.
+- a Product Contract, facade, scaffold or local harness grants no permission or approval.
 
 No second IAM/PDP/PEP, role model, authority registry or policy evaluator was introduced.
 
-## 8. Error-semantics review
+## 8. Error semantics
 
 Result: `PASS after remediation`.
 
@@ -189,50 +166,35 @@ The developer-facing failure model remains layered by semantic ownership:
 - current purpose/right/classification denial -> existing access-enforcement errors;
 - unresolved/denied execution gates -> existing RFC-0005 governed-execution errors.
 
-The facade does not catch and relabel P5.03 failures as generic success/failure booleans. This keeps error behavior attributable to the semantic owner and avoids turning developer convenience into a competing policy layer.
+The facade does not relabel P5.03 failures as generic booleans or become a competing policy layer.
 
-## 9. Hidden-coupling and developer-experience review
+## 9. Hidden coupling and developer experience
 
 Result: `PASS after R14-F1/R14-F2 remediation`.
 
 The bounded product journey still imports exactly one Arvectum OS integration-facing module: `arvectum_os_ref.integration_composition`.
 
-Current governed provider/version evidence is passed opaquely through product-owned journey helpers. The product does not import the dependency resolver, Product Contract internals, canonical-state implementation, workspace internals or Governed Execution implementation directly.
+Current governed provider/version evidence is passed opaquely through product-owned journey helpers. Product code does not import the dependency resolver, Product Contract internals, canonical-state implementation, workspace internals or Governed Execution implementation directly.
 
 The P5.05 template remains small, readable and replaceable. It opens only the non-authoritative workspace and therefore does not require provider-support evidence merely to render presentation state.
 
 No new hidden table, internal store, private Event stream, undocumented endpoint or implicit shared-state dependency is created.
 
-## 10. Authority/lifecycle/public-contract inflation review
+## 10. Authority/lifecycle/public-contract inflation
 
 Result: `PASS`.
 
-R14 creates no field or state representing:
-
-- Authentication success;
-- Authorization allow;
-- permission grant;
-- Organizational Authority;
-- consequential approval;
-- capability lifecycle transition;
-- capability activation;
-- Product Contract stabilization;
-- operational readiness;
-- full-platform conformance.
+R14 creates no field or state representing Authentication success, Authorization allow, permission grant, Organizational Authority, consequential approval, capability lifecycle transition, capability activation, Product Contract stabilization, operational readiness or full-platform conformance.
 
 P4.08 remains `Provisional 0.1.0`.
 
-Platform Capability lifecycle remains owned by RFC-0001 governance and the canonical capability catalog. Provider/version support evidence used by P5.03 is still not Platform Capability lifecycle state.
+Platform Capability lifecycle remains owned by RFC-0001 governance and the canonical capability catalog. Provider/version support evidence used by P5.03 is not Platform Capability lifecycle state.
 
 No Stable/public Python SDK/package path, Product Contract serialization, REST/gRPC/wire API, registry topology, SemVer negotiation rule, automatic migration protocol or production support commitment is introduced.
 
 ## 11. Executable regression evidence
 
-R14 adds:
-
-- `reference/python/tests/test_r14_developer_safety_contract_health_review.py`.
-
-The focused suite adds 10 cases covering:
+R14 adds `reference/python/tests/test_r14_developer_safety_contract_health_review.py` with 10 focused cases covering:
 
 1. direct facade construction fails closed through a typed construction error;
 2. J1 dependency-backed reliance rejects omitted current dependency evidence;
@@ -245,27 +207,26 @@ The focused suite adds 10 cases covering:
 9. composition-time compatibility remains inspection evidence and cannot self-advance;
 10. remediation remains internal/provisional and selects no public transport/serialization/registry/SemVer stack.
 
-Existing P5.04 and P5.06 regression tests were updated only to provide explicit current governed dependency evidence at their dependency-backed J1/J2 calls. Their existing authority, Organization, rights, gate and integration-boundary assertions remain intact.
+Existing P5.04 and P5.06 regression tests were updated only to provide explicit current governed dependency evidence at dependency-backed J1/J2 calls. Their existing authority, Organization, rights, gate and integration-boundary assertions remain intact.
 
-### Hosted validation status
+### Hosted validation
 
-PR `#67` was opened for the R14 branch.
+PR `#67` is mergeable and `Reference Python CI #232` completed successfully against the R14 PR merge ref.
 
-At review publication time GitHub returned:
+The hosted job `Full reference test suite` executed:
 
-- PR mergeability: `true`;
-- no workflow run associated with the R14 head;
-- no combined commit status entries for the R14 head.
+```text
+python -m unittest discover -s tests -v
+```
 
-R14 therefore does **not** claim a hosted CI success that did not occur.
+Result:
 
-The last confirmed hosted full reference-suite evidence remains:
+```text
+Ran 644 tests in 2.046s
+OK
+```
 
-- P5.06 `Reference Python CI #223`;
-- 634 tests;
-- result `OK`.
-
-The new R14 tests are committed deterministic regression evidence and must be exercised by the next available full reference-suite run before a later gate claims hosted validation over the R14 changes.
+All 10 R14 regression cases passed, together with the adapted P5.04/P5.06 tests and the accumulated reference architecture-fitness suite.
 
 ## 12. Functional cross-review iterations
 
@@ -291,7 +252,7 @@ Disposition: compatibility remains compatibility only; access and execution gate
 
 Finding: re-resolution before facade admission must not move current purpose/right/classification evaluation into the Product Contract layer.
 
-Disposition: facade checks contract health only, then existing capability access paths continue to enforce current rights/purpose/classification; Governed Execution retains independent Data Governance gates.
+Disposition: facade checks contract health only, existing capability access paths continue to enforce current rights/purpose/classification and Governed Execution retains independent Data Governance gates.
 
 ### Iteration 5 — error semantics and hidden coupling
 
@@ -323,7 +284,7 @@ No remaining material objection was identified after iteration 6 for the declare
 - [x] no Stable/public registry, SDK/API, wire, serialization or SemVer compatibility mechanism is selected;
 - [x] no new RFC or ADR threshold is crossed;
 - [x] focused R14 regression evidence is committed;
-- [x] hosted R14 CI is explicitly unclaimed because GitHub generated no run/status;
+- [x] hosted `Reference Python CI #232` passes the full 644-test reference suite;
 - [x] bounded residual freshness-source question is explicit rather than silently solved by a cache.
 
 ## 14. Final disposition
