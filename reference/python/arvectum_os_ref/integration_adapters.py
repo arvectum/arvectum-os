@@ -7,12 +7,11 @@ capability delegation. Workspace presentation remains available, but is an
 explicit optional binding for consumers that need it rather than an eagerly
 constructed assumption carried by every integration.
 
-The adapters are deliberately not new semantic owners. Product Contract
-validation, dependency/version compatibility, capability admission, access
-checks, workspace scope, canonical reads and reconstruction remain delegated to
-their existing owners. The adapter boundary grants no Authentication,
-Authorization, Organizational Authority, approval, permission or capability
-lifecycle state.
+The adapter boundary is not a new semantic owner. Product Contract validation,
+dependency/version compatibility, capability admission, access checks, workspace
+scope, canonical reads and reconstruction remain delegated to their existing
+semantic owners. The adapter boundary grants no Authentication, Authorization,
+Organizational Authority, approval, permission or capability lifecycle state.
 
 The current Python/module/dataclass shapes are internal/provisional reference
 evidence only. They do not establish a Stable/public SDK/API, package, route,
