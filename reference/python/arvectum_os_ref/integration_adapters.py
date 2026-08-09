@@ -20,6 +20,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
+from .execution import GovernedVersionPin
 from .identity import Identity
 from .integration_composition import (
     IntegrationCompositionContinuityError,
@@ -75,6 +76,7 @@ class IntegrationWorkspaceAdapter:
         subject_id: Identity,
     ) -> WorkspaceShellState:
         self._require_state_continuity(state)
+        self._require_identity_scope(subject_id, role="Subject")
         return navigate_workspace(
             state,
             destination=destination,
@@ -93,6 +95,8 @@ class IntegrationWorkspaceAdapter:
         version_id: Identity,
     ) -> WorkspaceShellState:
         self._require_state_continuity(state)
+        self._require_identity_scope(subject_id, role="Subject")
+        self._require_identity_scope(version_id, role="Version")
         return navigate_workspace(
             state,
             destination=destination,
@@ -102,6 +106,14 @@ class IntegrationWorkspaceAdapter:
                 version_id=version_id,
             ),
         )
+
+    def _require_identity_scope(self, identity: Identity, *, role: str) -> None:
+        if not isinstance(identity, Identity):
+            raise TypeError(f"workspace adapter {role} reference requires Identity")
+        if identity.scope != self.facade.context.organization.organization_id.value:
+            raise ProductContractScopeError(
+                f"workspace adapter {role} Identity is outside the composed Organization scope"
+            )
 
     def _require_state_continuity(self, state: WorkspaceShellState) -> None:
         if not isinstance(state, WorkspaceShellState):
@@ -158,7 +170,7 @@ class IntegrationCapabilityAdapter:
         self,
         request: CapabilityConsumptionRequest,
         *,
-        governed_versions: tuple[GovernedDependencyVersionEvidence, ...],
+        governed_versions: tuple[GovernedDependencyVersionEvidence, ...] | None,
     ):
         return self.facade.admit_capability(
             request,
@@ -169,7 +181,7 @@ class IntegrationCapabilityAdapter:
         self,
         *,
         request: CapabilityConsumptionRequest,
-        governed_versions: tuple[GovernedDependencyVersionEvidence, ...],
+        governed_versions: tuple[GovernedDependencyVersionEvidence, ...] | None,
         admitted: Any,
         artifact_id: Identity,
     ):
@@ -185,7 +197,7 @@ class IntegrationCapabilityAdapter:
         self,
         *,
         request: CapabilityConsumptionRequest,
-        governed_versions: tuple[GovernedDependencyVersionEvidence, ...],
+        governed_versions: tuple[GovernedDependencyVersionEvidence, ...] | None,
         knowledge: tuple[Any, ...],
         allow_stale: bool = False,
     ):
@@ -201,7 +213,7 @@ class IntegrationCapabilityAdapter:
         self,
         *,
         request: CapabilityConsumptionRequest,
-        governed_versions: tuple[GovernedDependencyVersionEvidence, ...],
+        governed_versions: tuple[GovernedDependencyVersionEvidence, ...] | None,
         projection: Any,
         current_sources: tuple[Any, ...],
         query_text: str,
@@ -219,7 +231,7 @@ class IntegrationCapabilityAdapter:
         self,
         *,
         request: CapabilityConsumptionRequest,
-        governed_versions: tuple[GovernedDependencyVersionEvidence, ...],
+        governed_versions: tuple[GovernedDependencyVersionEvidence, ...] | None,
         hit: Any,
         current_sources: tuple[Any, ...],
     ):
@@ -235,7 +247,7 @@ class IntegrationCapabilityAdapter:
         self,
         *,
         request: CapabilityConsumptionRequest,
-        governed_versions: tuple[GovernedDependencyVersionEvidence, ...],
+        governed_versions: tuple[GovernedDependencyVersionEvidence, ...] | None,
         manifest: Any,
         evidence_constraints: tuple[tuple[Identity, str, tuple[str, ...], str], ...],
     ):
@@ -265,7 +277,7 @@ def compose_integration_adapters(
     *,
     contract: ProductContract,
     actor: ActorContext,
-    effective_product_contract: Any,
+    effective_product_contract: GovernedVersionPin,
     governed_versions: tuple[GovernedDependencyVersionEvidence, ...],
 ) -> IntegrationAdapters:
     """Compose P5.08 adapters only through the R14-hardened P5.04 factory path."""
