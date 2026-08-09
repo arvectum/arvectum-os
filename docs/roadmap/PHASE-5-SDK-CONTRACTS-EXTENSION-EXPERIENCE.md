@@ -1,7 +1,7 @@
 # Phase 5 — SDK, Contracts and Extension Experience
 
 Status: `Active`
-Version: `1.2.0`
+Version: `1.3.0`
 Created: `2026-08-09`
 Updated: `2026-08-09`
 Owner: `ООО «Арвектум»`
@@ -30,7 +30,8 @@ Phase 5 is bounded by:
 7. P4.08 Product Contract remains `Provisional 0.1.0` and is evidence, not a Stable compatibility promise;
 8. P4.12 — `PASS`, M4 achieved for the bounded governed-workspace reference scope;
 9. [`P5.01 integration boundary revalidation`](../reviews/P5-01-integration-boundary-revalidation-developer-journeys.md) — `PASS`; Product Contract/dependency/operation/version semantics are the revalidated boundary and current Python import/module shapes remain internal evidence only;
-10. [`P5.02 Product Contract declaration/validation review`](../reviews/P5-02-product-contract-declaration-model-machine-checkable-validation-baseline.md) — `PASS`; the existing Product Contract semantic owner remains the single executable declaration model and the internal validator adds machine-checkable fail-closed evidence without creating a Stable/public schema.
+10. [`P5.02 Product Contract declaration/validation review`](../reviews/P5-02-product-contract-declaration-model-machine-checkable-validation-baseline.md) — `PASS`; the existing Product Contract semantic owner remains the single executable declaration model and the internal validator adds machine-checkable fail-closed evidence without creating a Stable/public schema;
+11. [`R13 Integration Boundary Review`](../reviews/R13-integration-boundary-review.md) — `PASS` after R13-F1 remediation; derived validation evidence now preserves dependency provider/consumer/failure responsibilities and operation failure semantics so later dependency/version tooling cannot normalize a narrower projection into a competing contract source.
 
 ## 3. Phase boundary
 
@@ -94,11 +95,21 @@ P5.02 completion evidence:
 - no YAML/JSON/protobuf/OpenAPI/public SDK/API/wire/package/registry boundary was selected;
 - hosted `Reference Python CI` run `#205` passed the full reference suite.
 
+R13 completion evidence:
+
+- [`R13-integration-boundary-review.md`](../reviews/R13-integration-boundary-review.md) — `PASS` after one material boundary-projection completeness finding was remediated;
+- R13-F1 fixed derived validation evidence that omitted Product Contract dependency provider/consumer/failure responsibilities and operation failure behavior;
+- the validator still accepts the existing `ProductContract` as its semantic owner and returns immutable derived evidence rather than an independently editable contract source;
+- validation/admission evidence remains separate from Authorization, Organizational Authority and capability lifecycle;
+- no Stable/public representation, version-negotiation protocol or ADR-triggering mechanism was selected;
+- `reference/python/tests/test_r13_integration_boundary_review.py` records deterministic regression evidence for the fixed boundary invariants;
+- no new hosted CI run is claimed for the direct-push R13 head; the last observed hosted full-suite baseline remains P5.02 `#205`.
+
 ## 5. Engineering gates
 
 Engineering reviews are gates, not equal-weight roadmap work items.
 
-- `R13 — Integration Boundary Review` — **current gate after P5.02**. Confirm that tooling expresses RFC-0004 boundaries rather than inventing a second contract system.
+- `R13 — Integration Boundary Review` — **Complete / PASS after R13-F1 remediation**. Product Contract remains the single governed semantic owner; derived validation evidence preserves boundary responsibilities without becoming a second contract system.
 - `R14 — Developer Safety / Contract Health Review` — after P5.06. Review fail-closed behavior, authority separation, error semantics and coupling pressure.
 - `R15 — Reuse / Developer Experience Refactoring Review` — after P5.09. Refactor only from demonstrated second-integration reuse evidence.
 - `R16 — M5 Integration Hardening` — after P5.10 and before P5.11. Resolve material conformance, compatibility, security and maintainability findings.
@@ -114,9 +125,9 @@ P5.01 Integration boundary + developer journeys ✓
  ↓
 P5.02 Product Contract declaration/validation ✓
  ↓
-R13 Integration Boundary Review ← current
+R13 Integration Boundary Review ✓
  ↓
-P5.03 Dependency/version + compatibility semantics
+P5.03 Dependency/version + compatibility semantics ← current
  ↓
 P5.04 Composition API/facade boundary
  ↓
@@ -182,7 +193,16 @@ Exit evidence:
 
 ### P5.03 — Governed dependency/version resolution + compatibility semantics
 
-Make relied-upon contract/capability versions explicit and reject ambiguous or unsupported reliance.
+**Current canonical action.** Make relied-upon contract/capability versions explicit and reject ambiguous or unsupported reliance while preserving the exact RFC-0004 Product Contract as the semantic owner.
+
+R13 handoff constraints for P5.03:
+
+- a resolver must consume exact Product Contract Version and dependency contract-version identity rather than infer compatibility from Python package/module/dataclass shape;
+- dependency provider responsibility, consumer responsibility, dependency failure behavior and operation failure behavior remain boundary semantics and must not be lost by resolver projections;
+- P5.02 validation evidence is derived inspection/validation evidence, not an independently evolving dependency contract;
+- unsupported/deprecated/retired behavior must be deterministic and based on governed evidence rather than guessed lifecycle state;
+- Product Contract resolution grants no Authorization or Organizational Authority and does not alter capability lifecycle;
+- durable public/stable version-negotiation or migration protocol choices re-open the ADR/governance gate before material reliance.
 
 Exit evidence:
 
@@ -261,6 +281,7 @@ Minimum matrix:
 
 - Product Contract declaration/version identity;
 - dependency/version continuity;
+- dependency provider/consumer/failure responsibility continuity;
 - hidden-coupling prohibition;
 - Organization isolation;
 - Authorization vs Organizational Authority separation;
@@ -320,6 +341,6 @@ M5 does not require a public SDK, Stable Product Contract or production deployme
 
 ## 9. Current canonical action
 
-> **R13 — Integration Boundary Review.**
+> **P5.03 — Governed dependency/version resolution + compatibility semantics.**
 
-Confirm that the P5.02 declaration/validation tooling expresses the existing RFC-0004 Product Contract boundary rather than becoming a second contract system, permission source, capability-lifecycle authority or accidental Stable/public compatibility boundary. Resolve material findings before P5.03.
+P5.03 must consume the exact RFC-0004 Product Contract boundary and the fixed R13 invariants. It must make compatibility decisions explicit, preserve dependency/operation responsibility and failure semantics, reject ambiguous or unsupported reliance, and avoid turning Python package/module/dataclass structure or a new resolver representation into a Stable/public compatibility contract.
