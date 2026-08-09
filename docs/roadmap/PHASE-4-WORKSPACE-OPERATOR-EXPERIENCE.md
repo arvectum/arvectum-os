@@ -1,7 +1,7 @@
 # Arvectum OS Phase 4 — Workspace / Operator Experience
 
 Status: `Active`
-Version: `1.14.0`
+Version: `1.15.0`
 Created: `2026-08-08`
 Updated: `2026-08-09`
 Owner: `ООО «Арвектум»`
@@ -13,17 +13,19 @@ Predecessor: `Phase 3 — Shared Platform Capabilities`, `M3` achieved
 
 ## Version note
 
-Version `1.14.0` records completion of **R12 — M4 Workspace Hardening** with `PASS` and advances the current canonical action to **P4.11 — Workspace hardening / ADR / refactoring review**.
+Version `1.15.0` records completion of **P4.11 — Workspace hardening / ADR / refactoring review** with `PASS` and advances the current canonical action to **P4.12 — Phase 4 / M4 closure review**.
 
-R12 re-checks the accumulated P4.02–P4.10 workspace after the complete 14-dimension P4.10 fitness/accessibility baseline. Dependency direction, product/platform boundaries, Organization/source isolation, Authorization-versus-Organizational-Authority separation, exact-version/provenance semantics, derived-state non-authority, consequential action choke points, accessibility-critical blocked/current-state meaning, deterministic negative paths and all still-armed ADR triggers remain fit for the bounded internal reference scope after one material remediation.
+P4.11 re-opened the presentation-domain, refactoring, authority-bypass, derived-state/read-model, ADR, accessibility/operator-error and performance gates over the accumulated Phase 4 workspace. No accidental product/domain leakage, authority bypass, competing derived authority, ADR-triggering durable technology choice, material operator-error defect or evidence-backed performance need was found.
 
-R12-F1 found that P4.09 `consume_current_source_authorization()` returned the **replacement** authorization decision Version Identity when stale presentation state entered `REINSPECTION_REQUIRED`. Although content/count/preview remained hidden and R10 still independently protected consequential action, the replacement identity could be reused too easily as fresh presentation continuity. The helper now retains only the already-known stale inspected decision pin, never the replacement identity; reusing the blocked token stays blocked until an explicit fresh inspection cycle. State/label/decision-identity/visibility invariants now fail closed at DTO construction.
+R12-F1 remains a fixed regression invariant: authorization replacement cannot turn `REINSPECTION_REQUIRED` into a new presentation continuity token. The blocked result retains only the stale inspected authorization decision pin, never the replacement decision Version Identity, and repeated reuse remains blocked until a real fresh inspection cycle occurs.
 
-This hardening remains deliberately narrow. `authority_safe_ux` is still an internal consumer of already-produced authorization evidence, not IAM/PDP/policy/Organizational Authority. P4.03–P4.07 retain purpose/right/classification/freshness/exact-reliance checks with their semantic owners, and R10 remains the action-freshness choke point before P4.05/Governed Execution. Product task/disposition behavior remains outside the platform package.
+P4.11 deliberately does not broaden `authority_safe_ux` into an IAM/PDP/policy owner and does not introduce a generic source-authorization framework. Repeated `CurrentSourceAuthorization` matching remains bounded because P4.03/P4.04/P4.06/P4.07/R10 still own materially different source-resolution, evidence, handling, freshness, exact-reliance and action-freshness semantics. The cross-used evidence DTO placement remains a code-organization watch item rather than a material architecture defect; extraction is deferred until stronger reuse/stable-boundary evidence or a real correctness divergence exists.
 
-Hosted CI provisioning is no longer an unresolved blocker. [`P4.10 Hosted CI Validation Evidence`](../reviews/P4-10-ci-validation.md) records the recovered pre-R12 baseline (`Reference Python CI #191`, `559 tests`, `OK`) and issue #54 is closed `completed`. R12's pre-synchronization head passed `Reference Python CI #192` on Ubuntu 24.04.4 / CPython 3.12.13 with **563 tests, OK**. Final synchronized-head CI remains required before merge.
+The ADR gate remains armed but uncrossed. Phase 4 still selects no stable frontend/runtime framework, public route/API/BFF topology, stable wire/serialization contract, IAM/session/PDP/PEP technology, durable workspace/read-model/cache store, shared search/vector/RAG technology, Document/object/OCR/signing topology, stable design-system boundary or separately deployable workspace service topology. No speculative performance architecture is added.
 
-No Product Contract change, capability lifecycle promotion, Stable/public interface, production/conformance claim, formal WCAG claim or ADR-triggering durable technology choice is created. The P4.08 Product Contract remains `Provisional 0.1.0`; CAP-001 through CAP-004 remain `Incubating / Provisional`.
+Hosted pre-synchronization validation passed as `Reference Python CI #197` on Ubuntu 24.04.4 / CPython 3.12.13 with **570 tests, OK**. Canonical roadmap synchronization follows this evidence; PR merge remains subject to green final synchronized-head CI.
+
+No Product Contract change, capability lifecycle promotion, Stable/public interface, production/conformance claim, formal WCAG claim or commercial commitment is created. The P4.08 Product Contract remains `Provisional 0.1.0`; CAP-001 through CAP-004 remain `Incubating / Provisional`.
 
 Canonical completion evidence:
 
@@ -44,7 +46,9 @@ Canonical completion evidence:
 - [`P4.10 Hosted CI Validation Evidence`](../reviews/P4-10-ci-validation.md) — `PASS`, Reference Python CI #191, `559 tests`, `OK`, issue #54 closed;
 - [`R12 M4 Workspace Hardening`](../reviews/R12-m4-workspace-hardening.md) — material stale-presentation authorization-continuity finding remediated;
 - `reference/python/tests/test_r12_m4_workspace_hardening.py` — deterministic R12 hardening regression evidence;
-- `Reference Python CI #192` — pre-synchronization R12 head, Ubuntu 24.04.4 / Python 3.12.13, `563 tests`, `OK`.
+- [`P4.11 Workspace hardening / ADR / refactoring review`](../reviews/P4-11-workspace-hardening-adr-refactoring-review.md) — `PASS`, no material runtime refactor or ADR required;
+- `reference/python/tests/test_p4_11_workspace_hardening_adr_refactoring_review.py` — R12-F1, product/platform, semantic-owner, derived-state, ADR and operator-error guards;
+- `Reference Python CI #197` — pre-synchronization P4.11 head, Ubuntu 24.04.4 / Python 3.12.13, `570 tests`, `OK`.
 
 ## 1. Purpose
 
@@ -82,10 +86,10 @@ The workspace remains a platform interaction capability under development. Activ
 | `P4.08` | Cross-capability task/context composition + bounded product entry point | 🟩 Complete | `██████████ 100%` |
 | `P4.09` | Security, rights, minimization and authority-safe UX | 🟩 Complete | `██████████ 100%` |
 | `P4.10` | Workspace architecture fitness + accessibility/usability baseline | 🟩 Complete | `██████████ 100%` |
-| `P4.11` | Workspace hardening / ADR / refactoring review | ⬜ | `░░░░░░░░░░ 0%` |
+| `P4.11` | Workspace hardening / ADR / refactoring review | 🟩 Complete | `██████████ 100%` |
 | `P4.12` | Phase 4 / M4 closure review | ⬜ | `░░░░░░░░░░ 0%` |
 
-Phase 4 roadmap work-item completion is `10 / 12 = 83.3%`. Engineering reviews such as R9/R10/R11/R12 are gates and do not inflate this percentage as separate equal-weight work items.
+Phase 4 roadmap work-item completion is `11 / 12 = 91.7%`. Engineering reviews such as R9/R10/R11/R12 are gates and do not inflate this percentage as separate equal-weight work items.
 
 ## 4. Detailed task intent
 
@@ -282,6 +286,8 @@ Before M4 closure:
 - keep the P4.09 helper narrow unless broader reuse demonstrably preserves semantic-owner controls;
 - avoid performance optimization without reproducible evidence.
 
+Completion evidence: [`P4.11 Workspace hardening / ADR / refactoring review`](../reviews/P4-11-workspace-hardening-adr-refactoring-review.md) — `PASS`, four cross-review iterations. The review found no material product/domain leakage, authority bypass, derived-state authority drift, ADR-triggering stable/durable choice, accessibility/operator-error defect or measured performance need. No material runtime refactor is justified before P4.12; R12-F1 is preserved by deterministic regression evidence and `authority_safe_ux` remains narrow. Pre-synchronization Reference Python CI #197 passed `570 tests`, `OK`.
+
 ### P4.12 — Phase 4 / M4 closure review
 
 Canonical closure review proving or rejecting M4 within the bounded declared scope.
@@ -341,14 +347,14 @@ P4.10 Fitness + accessibility/usability evidence ✅
             ↓
 R12 M4 Hardening ✅
             ↓
-P4.11 ADR / boundary / refactoring review ← current
+P4.11 ADR / boundary / refactoring review ✅
             ↓
-P4.12 Closure review
+P4.12 Closure review ← current
             ↓
 M4
 ```
 
-R12 is complete; P4.11 now consumes the accumulated P4.10/R12 fitness and hardening evidence before closure.
+P4.11 is complete; P4.12 now decides M4 using the accumulated Phase 4 fitness, hardening and final boundary/ADR/refactoring evidence without expanding implementation scope merely for closure.
 
 ## 7. M4 exit criteria
 
@@ -404,8 +410,6 @@ A reversible internal reference implementation may proceed without an ADR when t
 
 ## 10. Current canonical action
 
-> **`P4.11 — Workspace hardening / ADR / refactoring review`.**
+> **`P4.12 — Phase 4 / M4 closure review`.**
 
-Use P4.10's fitness/accessibility baseline and R12's hardening evidence as regression constraints. Review presentation-domain boundaries and accidental product leakage; refactor only where repeated evidence proves a safe shared abstraction; re-check authorization/Organizational-Authority bypass surfaces and derived-state cache/read-model authority risks; inspect API/serialization/frontend/BFF choices against still-armed ADR gates; inspect accessibility/usability failures capable of material operator error; and record any durable infrastructure or stable-interface choice that has actually crossed an ADR threshold.
-
-P4.11 must preserve R12-F1: authorization replacement cannot turn a blocked presentation response into a fresh continuity token. The P4.09 helper remains narrow unless broader reuse demonstrably preserves capability-specific purpose/right/classification/freshness/exact-reliance controls and R10 action-freshness semantics. Do not introduce performance architecture without reproducible evidence.
+Use the complete P4.01–P4.11 and R9–R12 evidence to decide whether `M4 — Coherent governed workspace baseline` is achieved for the declared bounded reference scope. Closure must verify the M4 exit criteria without introducing new architecture merely to finish the phase and must keep roadmap completion, Platform Capability lifecycle, operational readiness/environment, Product Contract stability, conformance scope, public compatibility and SLA/support commitments explicitly distinct.
