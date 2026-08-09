@@ -36,7 +36,7 @@ Phase 5 is bounded by:
 13. [`P5.04 integration composition facade review`](../reviews/P5-04-integration-composition-api-facade-boundary.md) — `PASS`; a bounded internal/provisional facade now composes P5.02/P5.03, capability admission, non-authoritative workspace entry and Product Contract-backed Governed Execution while delegating all authority/canonical-state decisions to their existing semantic owners;
 14. [`P5.05 scaffolding/templates + local harness review`](../reviews/P5-05-scaffolding-templates-local-integration-harness.md) — `PASS`; bounded readable scaffolding and an in-process harness consume the P5.04 facade without copying product implementation, creating a second contract source or requiring production infrastructure;
 15. [`P5.06 security/authority/rights Organization-scope integration-guard review`](../reviews/P5-06-security-authority-rights-organization-scope-integration-guards.md) — `PASS`; wrong-Organization, missing/denied Authorization/Organizational Authority, purpose/right and stale-continuity paths fail closed through existing semantic owners, with hosted `Reference Python CI #223` passing 634 tests;
-16. [`R14 Developer Safety / Contract Health Review`](../reviews/R14-developer-safety-contract-health-review.md) — `PASS` after R14-F1/R14-F2 remediation; normal facade construction is forced through P5.02/P5.03 and dependency-backed J1/J2 actions require explicit current governed provider/version evidence instead of silently reusing composition-time compatibility.
+16. [`R14 Developer Safety / Contract Health Review`](../reviews/R14-developer-safety-contract-health-review.md) — `PASS` after R14-F1/R14-F2 remediation; normal facade construction is forced through P5.02/P5.03 and dependency-backed J1/J2 actions require explicit current governed provider/version evidence instead of silently reusing composition-time compatibility; hosted `Reference Python CI #232` passes the full 644-test reference suite.
 
 ## 3. Phase boundary
 
@@ -171,7 +171,7 @@ R14 completion evidence:
 - product-owned J1/J2 helpers still import exactly one platform integration module and pass provider evidence opaquely;
 - no provider registry, TTL/freshness protocol, public compatibility service or Stable/public SDK/API/wire/package boundary is selected;
 - `reference/python/tests/test_r14_developer_safety_contract_health_review.py` adds 10 focused regression/fitness cases;
-- PR `#67` is mergeable, but GitHub generated no hosted workflow run/status for the R14 head at review publication time; hosted R14 success is therefore explicitly unclaimed and P5.06 `#223` remains the last confirmed hosted full-suite baseline.
+- hosted `Reference Python CI #232` passed the full 644-test reference suite with `OK`, including all 10 R14 regression cases and the adapted P5.04/P5.06 callers.
 
 ## 5. Engineering gates
 
