@@ -1,7 +1,7 @@
 # Phase 5 — SDK, Contracts and Extension Experience
 
 Status: `Active`
-Version: `1.10.0`
+Version: `1.11.0`
 Created: `2026-08-09`
 Updated: `2026-08-09`
 Owner: `ООО «Арвектум»`
@@ -34,12 +34,13 @@ Phase 5 is bounded by:
 11. [`R13 Integration Boundary Review`](../reviews/R13-integration-boundary-review.md) — `PASS` after R13-F1 remediation; derived validation evidence now preserves dependency provider/consumer/failure responsibilities and operation failure semantics so later dependency/version tooling cannot normalize a narrower projection into a competing contract source;
 12. [`P5.03 governed dependency/version resolution review`](../reviews/P5-03-governed-dependency-version-resolution-compatibility-semantics.md) — `PASS`; exact Product Contract/dependency version continuity plus explicit governed support evidence now produces deterministic compatibility decisions without SemVer/package inference, automatic fallback, authority grants or a Stable/public negotiation boundary;
 13. [`P5.04 integration composition facade review`](../reviews/P5-04-integration-composition-api-facade-boundary.md) — `PASS`; a bounded internal/provisional facade now composes P5.02/P5.03, capability admission, non-authoritative workspace entry and Product Contract-backed Governed Execution while delegating all authority/canonical-state decisions to their existing semantic owners;
-14. [`P5.05 scaffolding/templates + local harness review`](../reviews/P5-05-scaffolding-templates-local-integration-harness.md) — `PASS`; bounded readable scaffolding and an in-process harness consume the P5.04 facade without copying product implementation, creating a second contract source or requiring production infrastructure;
+14. [`P5.05 scaffolding/templates + local harness review`](../reviews/P5-05-scaffolding-templates-local-integration-harness.md) — `PASS`; bounded readable scaffolding and an in-process harness consume the governed composition path without copying product implementation, creating a second contract source or requiring production infrastructure; R15 later aligns their developer-facing entry with the demonstrated adapter seam;
 15. [`P5.06 security/authority/rights Organization-scope integration-guard review`](../reviews/P5-06-security-authority-rights-organization-scope-integration-guards.md) — `PASS`; wrong-Organization, missing/denied Authorization/Organizational Authority, purpose/right and stale-continuity paths fail closed through existing semantic owners, with hosted `Reference Python CI #223` passing 634 tests;
 16. [`R14 Developer Safety / Contract Health Review`](../reviews/R14-developer-safety-contract-health-review.md) — `PASS` after R14-F1/R14-F2 remediation; normal facade construction is forced through P5.02/P5.03 and dependency-backed J1/J2 actions require explicit current governed provider/version evidence instead of silently reusing composition-time compatibility; hosted `Reference Python CI #232` passes the full 644-test reference suite;
 17. [`P5.07 Event/provenance/portability integration-support review`](../reviews/P5-07-event-provenance-portability-integration-support.md) — `PASS`; bounded integration evidence now preserves exact Actor/Product/Product Contract/Execution/Event attribution, delegates canonical Event semantics to P2.05, keeps telemetry non-authoritative and portable semantic fixtures non-canonical/vendor-neutral; hosted `Reference Python CI #237` passes the full 653-test reference suite;
 18. [`P5.08 workspace/capability integration-adapter review`](../reviews/P5-08-workspace-capability-integration-adapters.md) — `PASS`; product-side integration now consumes workspace/CAP-001..CAP-004 through one internal/provisional adapter seam without private coupling, and hosted `Reference Python CI #242` supplies the previously pending full-suite verification;
-19. [`P5.09 second materially distinct integration reuse proof`](../reviews/P5-09-second-materially-distinct-integration-reuse-proof.md) — `PASS`; a read-only CAP-004 evidence/reconstruction extension reuses the same Product Contract/composition/adapter boundary as the first product, exposes no workspace or canonical mutation path, and refines one overfitted internal P5.02 read-only assumption without weakening direct canonical-read or mutation gates; hosted `Reference Python CI #242` passes the full 675-test suite.
+19. [`P5.09 second materially distinct integration reuse proof`](../reviews/P5-09-second-materially-distinct-integration-reuse-proof.md) — `PASS`; a read-only CAP-004 evidence/reconstruction extension reuses the same Product Contract/composition/adapter boundary as the first product, exposes no workspace or canonical mutation path, and refines one overfitted internal P5.02 read-only assumption without weakening direct canonical-read or mutation gates; hosted `Reference Python CI #242` passes the full 675-test suite;
+20. [`R15 Reuse / Developer Experience Refactoring Review`](../reviews/R15-reuse-developer-experience-refactoring-review.md) — `PASS` after R15-F1/R15-F2 remediation; the demonstrated shared adapter state is narrowed to facade + capability delegation, workspace becomes an explicit optional consumer binding, and P5.05 scaffold/harness guidance is aligned with the reused adapter seam without creating a public/stable boundary; hosted `Reference Python CI #251` passes the 682-test R15 code/refactoring head.
 
 ## 3. Phase boundary
 
@@ -102,7 +103,7 @@ P5.02 completion evidence:
 - validation evidence grants no Authentication, Authorization, Organizational Authority, approval, permission or capability activation;
 - dependency `provisional` remains a Product Contract reliance/support qualifier and does not replace the capability catalog lifecycle;
 - no YAML/JSON/protobuf/OpenAPI/public SDK/API/wire/package/registry boundary was selected;
-- hosted `Reference Python CI` run `#205` passed the full reference suite; P5.09's refinement is covered by hosted `Reference Python CI #242`.
+- hosted `Reference Python CI` run `#205` passed the full reference suite; P5.09's refinement is covered by hosted `Reference Python CI #242` and R15 regression evidence by `#251`.
 
 R13 completion evidence:
 
@@ -141,14 +142,13 @@ P5.04 completion evidence:
 P5.05 completion evidence:
 
 - [`P5-05-scaffolding-templates-local-integration-harness.md`](../reviews/P5-05-scaffolding-templates-local-integration-harness.md) — `PASS`;
-- `reference/python/arvectum_os_ref/integration_scaffolding.py` adds a tiny explicit provisional template and local in-process harness over P5.04;
-- rendered entry code imports Arvectum OS only through `arvectum_os_ref.integration_composition` and remains readable/replaceable rather than becoming a generated-code compatibility contract;
-- the local harness consumes the exact Product Contract, Actor, effective Product Contract Version and explicit governed provider/version evidence, then delegates composition to P5.04;
-- the harness preserves exact Product Contract Version continuity into a `NON_AUTHORITATIVE` workspace;
+- `reference/python/arvectum_os_ref/integration_scaffolding.py` adds a tiny explicit provisional template and local in-process harness over the existing governed composition path;
+- after R15, rendered entry code imports Arvectum OS through `arvectum_os_ref.integration_adapters` and opts into workspace explicitly, remaining readable/replaceable rather than becoming a generated-code compatibility contract;
+- the local harness consumes the exact Product Contract, Actor, effective Product Contract Version and explicit governed provider/version evidence, composes `IntegrationAdapters`, then binds a `NON_AUTHORITATIVE` workspace explicitly;
+- `LocalIntegrationHarnessResult` stores the shared adapter core; `facade` remains only an internal compatibility accessor over `adapters.facade`;
 - Product Contract construction, dependency resolution, authorization/authority, capability lifecycle and product-domain semantics remain with their existing owners;
 - no database, broker, IAM provider, object store, registry, network endpoint or deployable service is required;
-- `reference/python/tests/test_p5_05_integration_scaffolding_local_harness.py` adds 8 focused regression/fitness cases;
-- hosted P5.05 execution evidence is covered by the next full-suite run and is included in P5.06 `Reference Python CI #223`.
+- `reference/python/tests/test_p5_05_integration_scaffolding_local_harness.py` retains focused regression/fitness coverage and is exercised by R15 `Reference Python CI #251`.
 
 P5.06 completion evidence:
 
@@ -161,7 +161,7 @@ P5.06 completion evidence:
 - stale gate decisions are rejected after re-evaluation and stale effective Product Contract Version continuity is rejected before composition;
 - P5.05 local harness remains `NON_AUTHORITATIVE`;
 - `reference/python/tests/test_p5_06_security_authority_rights_integration_guards.py` adds 11 focused cross-layer regression/fitness cases;
-- hosted `Reference Python CI #223` passed the full 634-test reference suite.
+- hosted `Reference Python CI #223` passed the full 634-test reference suite; R15 `#251` confirms accumulated guards remain green after scaffold/adapter refactoring.
 
 R14 completion evidence:
 
@@ -175,7 +175,7 @@ R14 completion evidence:
 - product-owned J1/J2 helpers still import exactly one platform integration module and pass provider evidence opaquely;
 - no provider registry, TTL/freshness protocol, public compatibility service or Stable/public SDK/API/wire/package boundary is selected;
 - `reference/python/tests/test_r14_developer_safety_contract_health_review.py` adds 10 focused regression/fitness cases;
-- hosted `Reference Python CI #232` passed the full 644-test reference suite with `OK`, including all 10 R14 regression cases and the adapted P5.04/P5.06 callers.
+- hosted `Reference Python CI #232` passed the full 644-test reference suite with `OK`, and R15 `#251` preserves those regressions.
 
 P5.07 completion evidence:
 
@@ -193,12 +193,13 @@ P5.07 completion evidence:
 P5.08 completion evidence:
 
 - [`P5-08-workspace-capability-integration-adapters.md`](../reviews/P5-08-workspace-capability-integration-adapters.md) — `PASS`;
-- `reference/python/arvectum_os_ref/integration_adapters.py` exposes the smallest internal/provisional workspace + CAP-001..CAP-004 adapter seam above the R14-hardened composition facade;
+- `reference/python/arvectum_os_ref/integration_adapters.py` exposes the smallest internal/provisional integration-facing adapter seam above the R14-hardened composition facade;
 - the first bounded product adapter journey imports Arvectum OS only through `arvectum_os_ref.integration_adapters` and does not import workspace/capability private implementation modules;
 - workspace navigation remains non-authoritative and Organization-scoped; capability-specific authority/freshness/rights semantics remain with existing semantic owners;
 - current governed provider/version evidence remains required at dependency-backed adapter calls;
+- R15 later narrows shared stored adapter state to `facade + capabilities`; workspace remains available through an explicit optional binding rather than being carried eagerly by every consumer;
 - no capability promotion, Stable/public SDK/API/package or new authority source is created;
-- hosted `Reference Python CI #242` passes the accumulated full 675-test suite and satisfies the previously pending P5.08 hosted-verification condition.
+- hosted `Reference Python CI #242` passes the accumulated 675-test suite; R15 `#251` passes 682 tests after the bounded refinement.
 
 P5.09 completion evidence:
 
@@ -210,7 +211,20 @@ P5.09 completion evidence:
 - P5.09-F1 removes an overfitted internal P5.02 assumption that every read-only operation must declare direct canonical Read access; derived read-only views may now truthfully declare no direct canonical access, while declared direct reads and canonical mutation remain fail-closed;
 - reuse evidence supports retaining Product Contract + exact dependency resolution + composition + adapter seams and rejecting premature public SDK/plugin/registry/DTO generalization;
 - no Product Contract or capability lifecycle promotion is inferred from second-consumer success;
-- hosted `Reference Python CI #242` passes all 675 tests with `OK`.
+- hosted `Reference Python CI #242` passes all 675 tests with `OK`; R15 `#251` explicitly re-exercises the P5.09-F1 distinction.
+
+R15 completion evidence:
+
+- [`R15-reuse-developer-experience-refactoring-review.md`](../reviews/R15-reuse-developer-experience-refactoring-review.md) — `PASS` after two bounded findings were remediated;
+- R15-F1 removes first-consumer workspace presentation from shared `IntegrationAdapters` stored state: the demonstrated cross-consumer core is the exact facade plus capability delegation;
+- workspace is now an explicit optional binding through `compose_workspace_adapter(...)`; the lazy `adapters.workspace` property remains only as internal compatibility convenience;
+- R15-F2 aligns P5.05 scaffolding/local harness with the adapter seam proven by both P5.08/P5.09 consumers rather than teaching the lower-level facade as the default integration entry;
+- P5.09-F1 remains intact and gets focused regression coverage for derived read-only versus direct canonical access;
+- R14 explicit current governed provider/version evidence remains required; no cache/freshness registry or automatic compatibility self-advance is introduced;
+- no public SDK/API/package/wire/registry/plugin-runtime/DTO boundary, Product Contract stabilization, capability promotion, new authority source, readiness or conformance claim is created;
+- no Constitution/RFC amendment or ADR is required because the refactor remains internal/provisional below existing semantic owners;
+- `reference/python/tests/test_r15_reuse_developer_experience_refactoring_review.py` adds 7 focused review regressions;
+- hosted `Reference Python CI #251` passes the 682-test reference suite on the R15 code/refactoring head.
 
 ## 5. Engineering gates
 
@@ -218,7 +232,7 @@ Engineering reviews are gates, not equal-weight roadmap work items.
 
 - `R13 — Integration Boundary Review` — **Complete / PASS after R13-F1 remediation**. Product Contract remains the single governed semantic owner; derived validation evidence preserves boundary responsibilities without becoming a second contract system.
 - `R14 — Developer Safety / Contract Health Review` — **Complete / PASS after R14-F1/R14-F2 remediation**. Normal facade construction cannot bypass P5.02/P5.03, and dependency-backed J1/J2 reliance cannot silently reuse composition-time provider compatibility.
-- `R15 — Reuse / Developer Experience Refactoring Review` — **next gate after P5.09**. Refactor only from the demonstrated second-integration evidence, including P5.09-F1 and the retain/refine/reject disposition.
+- `R15 — Reuse / Developer Experience Refactoring Review` — **Complete / PASS after R15-F1/R15-F2 remediation**. Shared adapter state is narrowed to demonstrated reuse, workspace is optional, P5.09-F1 is preserved and scaffolding follows the reused adapter seam without public-boundary inflation.
 - `R16 — M5 Integration Hardening` — after P5.10 and before P5.11. Resolve material conformance, compatibility, security and maintainability findings.
 
 Performance optimization remains evidence-backed; do not optimize package/API/runtime mechanics without benchmark/profile evidence except correctness, security or resource-exhaustion defects.
@@ -250,9 +264,9 @@ P5.08 Workspace/capability adapters ✓
  ↓
 P5.09 Second integration reuse proof ✓
  ↓
-R15 Reuse / DX Refactoring ← current
+R15 Reuse / DX Refactoring ✓
  ↓
-P5.10 Conformance + fitness matrix
+P5.10 Conformance + fitness matrix ← current
  ↓
 R16 M5 Hardening
  ↓
@@ -286,7 +300,7 @@ P5.01 changes no runtime behavior and intentionally does not create an SDK/decla
 
 Status: `Complete` — [`review evidence`](../reviews/P5-02-product-contract-declaration-model-machine-checkable-validation-baseline.md).
 
-P5.02 validates the existing RFC-0004 Product Contract declaration as a whole rather than creating a second manifest/schema system. The implementation is internal/provisional and intentionally supports the current Provisional reference baseline. P5.09 later refines only the implementation assumption that every read-only operation necessarily exposes direct canonical access; derived read-only views may declare none, without changing direct-read or mutation gates.
+P5.02 validates the existing RFC-0004 Product Contract declaration as a whole rather than creating a second manifest/schema system. The implementation is internal/provisional and intentionally supports the current Provisional reference baseline. P5.09 later refines only the implementation assumption that every read-only operation necessarily exposes direct canonical access; derived read-only views may declare none, without changing direct-read or mutation gates. R15 preserves that distinction unchanged.
 
 Exit evidence:
 
@@ -296,7 +310,7 @@ Exit evidence:
 - Product Contract lifecycle remains distinct from capability lifecycle — `PASS`;
 - hidden product/platform coupling mechanisms are rejected — `PASS`;
 - no stable/public representation or ADR-triggering mechanism is selected — `PASS`;
-- hosted full reference CI — `PASS` (`#205`; P5.09 refinement covered by `#242`).
+- hosted full reference CI — `PASS` (`#205`; P5.09 refinement covered by `#242`; R15 preservation covered by `#251`).
 
 ### P5.03 — Governed dependency/version resolution + compatibility semantics
 
@@ -324,7 +338,7 @@ P5.04 extracts the smallest reusable integration-facing composition boundary jus
 Exit evidence:
 
 - product-owned P5.04 J1/J2 journey code imports no private runtime/capability/workspace implementation modules — `PASS`;
-- the product journey sees Arvectum OS through one internal/provisional integration facade module — `PASS`;
+- the product journey sees Arvectum OS through one internal/provisional integration facade module — `PASS` for the P5.04 evidence slice; P5.08/R15 later establish the higher adapter-facing default for bounded integration consumers;
 - facade construction consumes exact P5.02 declaration and P5.03 dependency/version resolution semantics — `PASS`;
 - exact Product Contract/Product/dependency/version/operation continuity remains fail-closed — `PASS`;
 - capability admission, workspace authority and consequential execution delegate to existing semantic owners — `PASS`;
@@ -333,13 +347,13 @@ Exit evidence:
 - no language/network/wire/package choice is declared Stable/public merely by implementation — `PASS`;
 - hosted full reference CI — `PASS` (`Reference Python CI #222`, 615 tests, OK).
 
-R14 later hardens this boundary by restricting normal construction to the governed P5.02/P5.03 factory path and requiring current governed provider/version evidence at dependency-backed actions.
+R14 later hardens this boundary by restricting normal construction to the governed P5.02/P5.03 factory path and requiring current governed provider/version evidence at dependency-backed actions. R15 leaves this semantic composition path intact below the adapter seam.
 
 ### P5.05 — Scaffolding/templates + local integration harness
 
-Status: `Complete` — [`review evidence`](../reviews/P5-05-scaffolding-templates-local-integration-harness.md).
+Status: `Complete` — [`review evidence`](../reviews/P5-05-scaffolding-templates-local-integration-harness.md), refined by [`R15`](../reviews/R15-reuse-developer-experience-refactoring-review.md).
 
-P5.05 provides reversible helpers that reduce repeated setup for a bounded integration while keeping generated/templated code understandable, replaceable and explicitly provisional. Both helpers consume the P5.04 facade boundary instead of copying the bounded product implementation.
+P5.05 provides reversible helpers that reduce repeated setup for a bounded integration while keeping generated/templated code understandable, replaceable and explicitly provisional. R15 aligns the current developer-facing scaffold with the P5.08/P5.09 adapter seam demonstrated by both consumers.
 
 Exit evidence:
 
@@ -347,11 +361,12 @@ Exit evidence:
 - generated/template artifacts identify provisional boundaries — `PASS`;
 - local tests require no production infrastructure assumptions — `PASS` by implementation/test design;
 - Product Contract and dependency/version semantics remain owned by RFC-0004/P5.02/P5.03 rather than the scaffold — `PASS`;
+- the current starter imports only `arvectum_os_ref.integration_adapters` and workspace is an explicit consumer opt-in — `PASS` after R15-F2;
 - exact Product Contract Version continuity and non-authoritative workspace presentation are preserved — `PASS`;
 - scaffolding/harness grants no Authorization, Organizational Authority, capability activation or operational readiness — `PASS`;
 - no Stable/public SDK/API/wire/package/generated-code compatibility boundary is created — `PASS`;
-- focused P5.05 executable regression evidence is committed — `PASS`;
-- hosted execution is covered by `Reference Python CI #223` as part of the accumulated full suite.
+- focused P5.05/R15 executable regression evidence is committed — `PASS`;
+- hosted accumulated full reference CI — `PASS` (`Reference Python CI #251`, 682 tests).
 
 ### P5.06 — Security, authority, rights + Organization-scope integration guards
 
@@ -367,7 +382,7 @@ Exit evidence:
 - stale authorization/gate-decision and Product Contract continuity cannot self-advance — `PASS`;
 - P5.04/P5.05 convenience surfaces remain non-authoritative and delegate to existing semantic owners — `PASS`;
 - no second IAM/PDP/PEP, authority registry or policy engine is introduced — `PASS`;
-- hosted full reference CI — `PASS` (`Reference Python CI #223`, 634 tests, `OK`).
+- hosted full reference CI — `PASS` (`Reference Python CI #223`, 634 tests, `OK`; accumulated R15 `#251` remains green).
 
 ### P5.07 — Event/provenance/portability integration support
 
@@ -388,9 +403,9 @@ Exit evidence:
 
 ### P5.08 — Workspace/capability integration adapters without private coupling
 
-Status: `Complete` — [`review evidence`](../reviews/P5-08-workspace-capability-integration-adapters.md).
+Status: `Complete` — [`review evidence`](../reviews/P5-08-workspace-capability-integration-adapters.md), refined by [`R15`](../reviews/R15-reuse-developer-experience-refactoring-review.md).
 
-P5.08 demonstrates integration with the M3/M4 surfaces through an explicit internal/provisional adapter seam, preserving Incubating capability status and product ownership of product semantics.
+P5.08 demonstrates integration with the M3/M4 surfaces through an explicit internal/provisional adapter seam, preserving Incubating capability status and product ownership of product semantics. R15 narrows only the shared stored adapter shape from two-consumer evidence; it does not replace semantic owners.
 
 Exit evidence:
 
@@ -398,7 +413,8 @@ Exit evidence:
 - capability-specific authority/freshness/rights semantics remain owned by capabilities — `PASS`;
 - product-specific task/disposition semantics remain outside shared platform abstractions — `PASS`;
 - current governed dependency/version evidence remains required at dependency-backed adapter calls — `PASS`;
-- hosted full reference CI — `PASS` (`Reference Python CI #242`, 675 tests, `OK`).
+- shared `IntegrationAdapters` stored state is limited to facade + capability delegation; workspace is an explicit optional binding — `PASS` after R15-F1;
+- hosted full reference CI — `PASS` (`Reference Python CI #251`, 682 tests, `OK` on R15 code/refactoring head).
 
 ### P5.09 — Second materially distinct integration reuse proof
 
@@ -416,9 +432,11 @@ Exit evidence:
 - retained direct canonical-read checks, canonical Write/Organizational Authority mutation checks and current provider/version evidence remain fail-closed — `PASS`;
 - reuse evidence is sufficient to retain the Product Contract/resolution/composition/adapter seams and reject premature public SDK/plugin/registry/DTO generalization — `PASS`;
 - no Product Contract/capability lifecycle promotion or Stable/public boundary is inferred — `PASS`;
-- hosted full reference CI — `PASS` (`Reference Python CI #242`, 675 tests, `OK`).
+- hosted full reference CI — `PASS` (`Reference Python CI #242`, 675 tests, `OK`; R15 preservation covered by `#251`).
 
 ### P5.10 — Phase 5 conformance + architecture fitness matrix
+
+Status: `Current`.
 
 Accumulate positive and negative evidence across the phase.
 
@@ -487,6 +505,8 @@ M5 does not require a public SDK, Stable Product Contract or production deployme
 
 ## 9. Current canonical action
 
-> **R15 — Reuse / Developer Experience Refactoring Review.**
+> **P5.10 — Phase 5 conformance + architecture fitness matrix.**
 
-Review the demonstrated two-consumer evidence before further generalization. Retain only abstractions supported by both materially distinct integrations, preserve P5.09-F1's truthful derived-read distinction, remove or contain consumer-shaped assumptions, and keep Product Contract/capability lifecycle plus public/stable boundary decisions separate. After R15, the next roadmap work item is **P5.10 — Phase 5 conformance + architecture fitness matrix**.
+Build the accumulated positive/negative Phase 5 matrix over Product Contract declaration/version identity, exact dependency/version and responsibility continuity, current provider-support evidence, hidden-coupling prohibition, Organization isolation, Authorization/Organizational Authority separation, governed mutation, Event/provenance attribution, rights/minimization, portability, lifecycle separation, unsupported/deprecated behavior, second-integration reuse and absence of accidental Stable/public compatibility claims.
+
+After P5.10, proceed to **R16 — M5 Integration Hardening**.
