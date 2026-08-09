@@ -12,7 +12,8 @@ J1/J2 integration journeys and the P4.08 Product Contract.  It validates:
 
 * exact Product Contract Subject/Version and Product identity/version continuity;
 * accountable owner, bounded scope and compatibility assumptions;
-* explicit Provisional dependency/version/operation reliance;
+* explicit Provisional dependency/version/operation reliance and responsibilities;
+* operation side-effect/gate/failure semantics;
 * canonical read/write, authority-source and failure declarations;
 * required Authorization/Data Governance and mutation authority gates;
 * Organization scope, portability, retention/deletion, review and exit declarations;
@@ -77,14 +78,21 @@ def _require_text(value: str, *, label: str) -> None:
 class DeclaredDependencyEvidence:
     """Immutable exact dependency evidence derived from one Product Contract.
 
-    ``provisional`` is copied from the Product Contract declaration.  There is
-    intentionally no capability-lifecycle or ``active`` field: provider lifecycle
-    remains governed by its own canonical catalog/decision authority.
+    The responsibility/failure fields are copied from the Product Contract so
+    downstream integration tooling does not accidentally treat this derived view
+    as a narrower competing dependency contract. ``provisional`` remains only the
+    Product Contract reliance/support qualifier.
+
+    There is intentionally no capability-lifecycle or ``active`` field: provider
+    lifecycle remains governed by its own canonical catalog/decision authority.
     """
 
     dependency_id: Identity
     contract_version: str
     allowed_operations: tuple[str, ...]
+    provider_responsibility: str
+    consumer_responsibility: str
+    failure_behavior: str
     provisional: bool
 
     def __post_init__(self) -> None:
@@ -95,6 +103,9 @@ class DeclaredDependencyEvidence:
             raise ValueError("declared dependency evidence requires allowed operations")
         if any(not isinstance(item, str) or not item.strip() for item in self.allowed_operations):
             raise ValueError("declared dependency operations must be non-empty strings")
+        _require_text(self.provider_responsibility, label="declared provider responsibility")
+        _require_text(self.consumer_responsibility, label="declared consumer responsibility")
+        _require_text(self.failure_behavior, label="declared dependency failure behavior")
         if not isinstance(self.provisional, bool):
             raise ValueError("declared dependency provisional qualifier must be explicit")
 
@@ -127,12 +138,13 @@ class DeclaredCanonicalAccessEvidence:
 
 @dataclass(frozen=True, slots=True)
 class DeclaredOperationEvidence:
-    """Immutable operation/gate evidence derived from one Product Contract."""
+    """Immutable operation/gate/failure evidence derived from one Product Contract."""
 
     operation_name: str
     dependency_id: Identity
     side_effect_classes: tuple[OperationSideEffectClass, ...]
     required_gates: tuple[GovernedGateKind, ...]
+    failure_behavior: str
 
     def __post_init__(self) -> None:
         _require_text(self.operation_name, label="declared operation_name")
@@ -146,6 +158,7 @@ class DeclaredOperationEvidence:
             raise ValueError("declared operation required gates must be explicit")
         if any(not isinstance(item, GovernedGateKind) for item in self.required_gates):
             raise ValueError("declared operation gates must use GovernedGateKind values")
+        _require_text(self.failure_behavior, label="declared operation failure behavior")
 
 
 @dataclass(frozen=True, slots=True)
@@ -294,6 +307,7 @@ def _validate_operation_security_and_access(contract: ProductContract) -> None:
             raise ProductContractCanonicalAccessError(
                 f"canonical mutation operation {operation.operation_name} must declare canonical Write access"
             )
+        _require_text(operation.failure_behavior, label="Product Contract operation failure behavior")
         for access in operation.canonical_accesses:
             _require_text(access.authoritative_source, label="canonical authoritative_source")
             _require_text(access.failure_behavior, label="canonical access failure_behavior")
@@ -344,6 +358,9 @@ def validate_product_contract_declaration(
             dependency_id=item.dependency_id,
             contract_version=item.contract_version,
             allowed_operations=item.allowed_operations,
+            provider_responsibility=item.provider_responsibility,
+            consumer_responsibility=item.consumer_responsibility,
+            failure_behavior=item.failure_behavior,
             provisional=item.provisional,
         )
         for item in contract.dependencies
@@ -354,6 +371,7 @@ def validate_product_contract_declaration(
             dependency_id=item.dependency_id,
             side_effect_classes=item.side_effect_classes,
             required_gates=item.required_gates,
+            failure_behavior=item.failure_behavior,
         )
         for item in contract.operations
     )
