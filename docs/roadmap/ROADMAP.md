@@ -23,7 +23,7 @@ R14-F1 closed direct `IntegrationCompositionFacade` construction as a normal dev
 
 The remediation keeps Product Contract, dependency compatibility, current rights/purpose constraints, Authorization, Organizational Authority and Data Governance with their existing semantic owners. Composition-time compatibility remains immutable inspection evidence rather than current provider-support authority.
 
-R14 intentionally does not define a provider registry, TTL/freshness protocol, public compatibility service, stable SDK/API/wire/package boundary or capability-lifecycle transition. PR `#67` is mergeable, but GitHub generated no hosted workflow run/status for the R14 head at review publication time; no R14 CI success is fabricated. The last confirmed hosted full-suite baseline remains P5.06 `Reference Python CI #223`, 634 tests, `OK`.
+R14 intentionally does not define a provider registry, TTL/freshness protocol, public compatibility service, stable SDK/API/wire/package boundary or capability-lifecycle transition. PR `#67` is mergeable and hosted `Reference Python CI #232` passed the full 644-test reference suite with result `OK`.
 
 ## 3. Verified architecture baseline
 
@@ -43,8 +43,7 @@ R14 intentionally does not define a provider registry, TTL/freshness protocol, p
 - [`P5.05 scaffolding/templates + local harness review`](../reviews/P5-05-scaffolding-templates-local-integration-harness.md) — `PASS`;
 - [`P5.06 security/authority/rights Organization-scope integration-guard review`](../reviews/P5-06-security-authority-rights-organization-scope-integration-guards.md) — `PASS`;
 - [`R14 Developer Safety / Contract Health Review`](../reviews/R14-developer-safety-contract-health-review.md) — `PASS` after R14-F1/R14-F2 remediation;
-- hosted R14 CI — explicitly unclaimed because no workflow run/status was generated for PR `#67` at review publication time;
-- last confirmed hosted `Reference Python CI #223` — `PASS`, 634 tests on the P5.06 PR head;
+- hosted `Reference Python CI #232` — `PASS`, 644 tests, including all 10 focused R14 regressions and the accumulated reference architecture-fitness suite;
 - [`PHASE-4-WORKSPACE-OPERATOR-EXPERIENCE.md`](PHASE-4-WORKSPACE-OPERATOR-EXPERIENCE.md) — `Complete`;
 - [`PHASE-5-SDK-CONTRACTS-EXTENSION-EXPERIENCE.md`](PHASE-5-SDK-CONTRACTS-EXTENSION-EXPERIENCE.md) — `Active`;
 - CAP-001 through CAP-004 remain `Incubating / Provisional`;
