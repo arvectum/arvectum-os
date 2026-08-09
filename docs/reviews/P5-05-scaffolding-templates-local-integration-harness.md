@@ -1,7 +1,7 @@
 # P5.05 — Scaffolding/Templates + Local Integration Harness Review
 
 Status: `Complete`
-Version: `1.0.0`
+Version: `1.1.0`
 Created: `2026-08-09`
 Updated: `2026-08-09`
 Owner: `ООО «Арвектум»`
@@ -10,7 +10,9 @@ Constitution: `1.2.0` — `Ratified`
 Architecture basis: RFC-0001 `1.0.0`; RFC-0004 `1.0.0`; RFC-0005 `1.0.0` — `Accepted`
 Preceding baseline: P5.01/P5.02/R13/P5.03/P5.04 — `PASS`
 ADR disposition: no threshold crossed by the bounded internal/provisional scaffolding/harness
-Result: `PASS` for repository implementation/review evidence; hosted CI not claimed
+Closure PR: `#65`
+Closure merge commit: `067760aa83c77a822228d61426d27ada5daa9d1e`
+Result: `PASS`
 
 ## 1. Purpose
 
@@ -63,7 +65,9 @@ This is local executable evidence only, not an integration admission or producti
 7. local harness evidence contains no authority or readiness decision fields;
 8. scaffolding module remains domain-neutral and infrastructure-free.
 
-Hosted CI is not claimed in this review. The repository connector used for this task can write canonical files but does not provide a local execution environment for the checked-out repository; therefore the focused suite is committed as executable evidence and must be included in the next available reference CI/full-suite run.
+No hosted GitHub Actions workflow run or status check was generated for closure PR `#65` / head `a8bfffec0aa4bfe3547235982414fa4fd6233cc1`. This record therefore does not fabricate a CI result. The preceding hosted full-suite baseline remains P5.04 `Reference Python CI #222` with 615 tests passing.
+
+The absence of a hosted run does not change the declared P5.05 architecture disposition or create an implicit production/readiness claim. The focused P5.05 suite remains committed executable regression evidence and must be exercised by the next available full reference test execution before any later phase gate relies on an unverified hosted P5.05 result.
 
 ## 6. Functional cross-review
 
@@ -105,7 +109,7 @@ Phase 5 P5.05 exit evidence:
 
 - a new bounded integration can be initialized without copying an existing product implementation — `PASS`;
 - generated/template artifacts identify provisional boundaries — `PASS`;
-- local tests can run without production infrastructure assumptions — `PASS` by test design; next available CI/full-suite run remains required as execution evidence.
+- local tests require no production infrastructure assumptions — `PASS` by implementation/test design; hosted execution evidence remains explicitly unclaimed.
 
 Additional boundary evidence:
 
@@ -113,14 +117,18 @@ Additional boundary evidence:
 - P5.04 remains the only integration composition seam used by the scaffold/harness — `PASS`;
 - no Authorization, Organizational Authority or capability activation is granted — `PASS`;
 - no Stable/public SDK/API/wire/package/generated-code compatibility boundary is created — `PASS`;
-- no new RFC or ADR threshold is crossed — `PASS`.
+- no new RFC or ADR threshold is crossed — `PASS`;
+- canonical roadmap, Phase 5 workstream and README are synchronized and P5.06 is the current action — `PASS`;
+- closure PR `#65` merged to `main` — `PASS`.
 
 ## 8. Final disposition
 
-**PASS — P5.05 implementation is complete for the declared internal/provisional scaffolding/templates and local integration harness scope.**
+**PASS — P5.05 is canonically complete for the declared internal/provisional scaffolding/templates and local integration harness scope.**
 
 This completion does not stabilize the P4.08 Product Contract, promote any Platform Capability, establish production readiness, claim M5, or create public/SLA/support/commercial commitments.
 
-Next canonical work item after roadmap synchronization:
+Hosted P5.05 CI remains explicitly unclaimed because GitHub generated no workflow run for closure PR `#65`; this is recorded validation debt rather than a fabricated success. It must be covered by the next available full reference test execution before a later gate materially relies on hosted P5.05 validation.
+
+Current canonical work item:
 
 > **P5.06 — Security, authority, rights + Organization-scope integration guards.**
