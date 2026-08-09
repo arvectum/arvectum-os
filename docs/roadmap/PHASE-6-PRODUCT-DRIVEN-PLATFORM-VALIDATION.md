@@ -1,7 +1,7 @@
 # Arvectum OS Phase 6 — Product-driven Platform Validation
 
 Status: `Active`
-Version: `1.5.0`
+Version: `1.6.0`
 Created: `2026-08-09`
 Updated: `2026-08-09`
 Owner: `ООО «Арвектум»`
@@ -36,7 +36,9 @@ R17 is complete with **PASS** under [`R17-first-product-boundary-review.md`](../
 
 P6.03 is **complete with PASS**. Stage 1 proved the exact P6.02 boundary and fail-closed negative paths using synthetic/anonymized/redacted fixtures. Stage 2 then exercised exactly one real public 44-ФЗ case, notice `0344100006426000005`, through the same CAP-001/CAP-004 boundary. The product correctly produced `NOT_CLIENT_READY_EVIDENCE_INCOMPLETE` because the retained evidence did not include exact bytes/digests of the complete listed tender attachment set. Product PR `#141` passed all hosted CI gates and was merged as `2c21a33eec02959aba7d13909f0d0c835294becf`. Canonical closure evidence is [`P6-03-stage-2-one-real-44fz-case-review.md`](../reviews/P6-03-stage-2-one-real-44fz-case-review.md).
 
-The optional Stage 3 capacity of maximum three calibration cases is deliberately not consumed. Real Stage 2 use already demonstrated both a working real External Reference boundary and the material blocking friction: the current contour lacks complete end-to-end governed retrieval/admission of the exact external tender attachment package needed for the intended client-ready path. Repeating cases through the unchanged incomplete contour would primarily duplicate known evidence. P6.04 is therefore the current work item.
+P6.04 is **complete with PASS** under [`P6-04-product-value-delivery-friction-governance-evidence-capture.md`](../reviews/P6-04-product-value-delivery-friction-governance-evidence-capture.md). It records directly evidenced governance/control value and material integration overhead without inventing absent customer KPIs. The first real case preserved external authority, exact Product Contract/dependency continuity and reconstruction, but reached `0/1` client-ready completion because the run retained `0/7` exact tender-attachment bytes/digests. Repository metadata also shows a material proof/change footprint: product Stage 1 `202` additions / `5` changed files, product Stage 2 `687` / `9`, and platform Stage 1 repair/proof `1223` additions + `45` deletions / `9`; these are change-surface proxies, not engineering hours or monetary cost.
+
+The optional Stage 3 capacity of maximum three calibration cases remains deliberately unconsumed. The current blocker is known; the next useful calibration case should test a materially changed evidence contour after P6.05 rather than repeat the same incomplete source-package path. P6.05 is therefore the current work item.
 
 ## 2. Starting state inherited from M5
 
@@ -58,7 +60,7 @@ At Phase 6 start:
 - no real product is deemed validated merely because bounded reference consumers exist;
 - no platform capability is `Active`.
 
-P6.02 added the first real Product Contract boundary without changing that lifecycle baseline. R17 validated that boundary. P6.03 now adds one real product-consumer case and a concrete first-real-use friction finding, still without changing capability lifecycle, Product Contract lifecycle, operational readiness or public compatibility status.
+P6.02 added the first real Product Contract boundary without changing that lifecycle baseline. R17 validated that boundary. P6.03 added one real product-consumer case and a concrete first-real-use friction finding. P6.04 measured that evidence: governance/control value is positive within the bounded case, while client-ready completion, speed, recall, usefulness and operating-cost improvement remain unproven. No lifecycle, Product Contract, operational-readiness or public-compatibility status changes follow from that measurement.
 
 ## 3. Phase 6 work breakdown
 
@@ -67,8 +69,8 @@ P6.02 added the first real Product Contract boundary without changing that lifec
 | `P6.01` | Real product/workflow validation target selection + evidence baseline | 🟩 Complete | `██████████ 100%` |
 | `P6.02` | First real Product Contract boundary + bounded adoption plan | 🟩 Complete | `██████████ 100%` |
 | `P6.03` | First real product/workflow platform integration | 🟩 Complete / PASS | `██████████ 100%` |
-| `P6.04` | Product value, delivery-friction + governance evidence capture | 🟨 Current | `░░░░░░░░░░ 0%` |
-| `P6.05` | Platform-gap remediation from first real use | ⬜ | `░░░░░░░░░░ 0%` |
+| `P6.04` | Product value, delivery-friction + governance evidence capture | 🟩 Complete / PASS | `██████████ 100%` |
+| `P6.05` | Platform-gap remediation from first real use | 🟨 Current | `░░░░░░░░░░ 0%` |
 | `P6.06` | Second materially distinct real product/workflow target + Product Contract | ⬜ | `░░░░░░░░░░ 0%` |
 | `P6.07` | Second real product/workflow platform integration | ⬜ | `░░░░░░░░░░ 0%` |
 | `P6.08` | Cross-product reuse and Platform Gravity evidence | ⬜ | `░░░░░░░░░░ 0%` |
@@ -145,20 +147,36 @@ Measure whether platform reuse materially improves at least one relevant outcome
 
 Also record platform overhead and friction. Evidence must be allowed to show that a platform abstraction creates no value.
 
-**Current input evidence:** P6.03 demonstrated useful exact-reference/reconstruction governance and also a concrete inability to complete the intended client-ready path without the exact full tender attachment package. P6.04 must measure both sides rather than treating Stage 2 as an automatically positive platform result.
+**Completion:** `PASS` under [`P6.04 evidence capture`](../reviews/P6-04-product-value-delivery-friction-governance-evidence-capture.md).
+
+The measured first-real-use result is intentionally mixed:
+
+- positive: `1/1` real case preserved external authority, exact Product Contract/dependency continuity and reconstruction within retained evidence;
+- positive: `1/1` real case stopped truthfully on incomplete evidence; unsupported client-ready outcomes and external actions remained `0`;
+- negative: exact attachment evidence completeness was `0/7` retained exact attachment bytes/digests for the listed source documents, so client-ready completion was `0/1`;
+- overhead: three P6.03 implementation/proof PRs total `2112` additions, `45` deletions and `23` PR file-touches as an objective change-surface proxy; this is explicitly not engineering-time or cost evidence;
+- unknown: manual active time, recall, usefulness, monetary operating cost and portability benefit remain not-yet-observed and no positive KPI claim is permitted.
+
+P6.04 therefore demonstrates real governance/control value and a material product-outcome blocker, but not yet net economic/productivity value.
 
 ### P6.05 — Platform-gap remediation from first real use
 
 Resolve only gaps demonstrated by the first real integration.
 
-Possible dispositions:
+Current evidence-backed P0 problem statement from P6.04:
+
+> Enable the first real workflow to obtain and govern sufficient exact external tender attachment evidence to support a truthful client-ready completeness decision, while preserving external authority, exact version/provenance, Organization/rights controls, product ownership of procurement semantics and the current no-external-action boundary.
+
+Possible dispositions remain open:
 
 - fix existing platform behavior;
 - clarify Product Contract;
-- keep behavior product-local;
+- keep retrieval behavior product-local while governing exact admission/reliance through the platform;
 - add bounded capability functionality;
 - simplify/remove a shared abstraction;
-- open RFC/ADR/policy work where the decision level requires it.
+- open RFC/ADR/policy work where the selected decision level requires it.
+
+P6.04 does not pre-select an EIS/Fabrikant client, storage backend, document service topology, public API/SDK, CAP-002/CAP-003 adoption, Stable Product Contract or capability lifecycle promotion.
 
 No speculative generalization.
 
@@ -261,9 +279,9 @@ P6.03 First real integration ✓ PASS
    ↓
    Stage 3 calibration cap: 0 additional cases consumed; preserved for a new hypothesis
  ↓
-P6.04 Value / friction evidence ← current
+P6.04 Value / friction evidence ✓ PASS
  ↓
-P6.05 Evidence-backed remediation
+P6.05 Evidence-backed remediation ← current
  ↓
 R18 First Real-use Health Review
  ↓
@@ -328,12 +346,12 @@ Real-product pressure may cross decisions that reference phases did not. Before 
 
 Do not delay a bounded reversible product validation merely because a future production technology remains undecided, but do not use experimentation to bypass security, authority, data integrity, contractual commitments or governance.
 
-P6.02/R17/P6.03 selected no durable persistence, Event delivery, IAM, public/stable serialization/API or service topology and therefore create no new ADR. P6.04 must measure the demonstrated attachment-contour friction before P6.05 selects any remediation. If remediation later crosses a materially constraining boundary, reopen the minimum sufficient ADR/RFC/policy/Product Contract gate first.
+P6.02/R17/P6.03 selected no durable persistence, Event delivery, IAM, public/stable serialization/API or service topology and therefore created no new ADR. P6.04 records no new durable technology choice; it only measures the demonstrated attachment-evidence blocker. P6.05 must choose the minimum sufficient remediation boundary. If that remediation becomes durable, cross-cutting, externally constraining or public/stable, reopen the minimum sufficient ADR/RFC/policy/Product Contract gate before material reliance.
 
 ## 10. Current canonical action
 
-> **P6.04 — Product value, delivery-friction + governance evidence capture.**
+> **P6.05 — Platform-gap remediation from first real use.**
 
-P6.04 must measure what the Stage 1/Stage 2 integration actually improved and what it made harder. In particular, it must capture the benefit of exact authority/version/provenance/reconstruction controls and the cost/friction of lacking the exact complete tender attachment contour needed for a client-ready outcome.
+Use the P6.04 evidence record as the problem statement. Preserve the successful exact authority/version/provenance/reconstruction and Product Contract behavior, and remediate only the source-package completeness gap needed for a truthful client-ready decision path.
 
-Do not pre-decide P6.05 remediation before the P6.04 evidence is quantified and dispositioned. Do not reopen Stage 3 merely to increase case count; use remaining calibration capacity only for a materially new hypothesis after evidence-backed remediation or another bounded decision.
+Do not infer missing business KPI values, do not broaden CAP-001 merely because retrieval is useful, and do not pre-select CAP-002/CAP-003, storage, service topology or public compatibility. Reopen Stage 3 only after a materially changed evidence contour exists and there is a specific hypothesis worth validating.
