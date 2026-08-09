@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.48.0`
+Version: `2.48.1`
 Created: `2026-08-07`
 Updated: `2026-08-09`
 Owner: `ООО «Арвектум»`
@@ -17,13 +17,13 @@ Detailed completed-phase evidence remains in the corresponding `PHASE-N-...` roa
 
 ## 2. Version note
 
-Version `2.48.0` records **P6.03 Stage 1 — synthetic/anonymized/redacted first real product integration proof** with `PASS` and advances the current canonical action to **P6.03 Stage 2 — one real 44-ФЗ pre-bid case**.
+Version `2.48.1` records **P6.03 Stage 1 — synthetic/anonymized/redacted first real product integration proof** with `PASS` and advances the current canonical action to **P6.03 Stage 2 — one real 44-ФЗ pre-bid case**.
 
 Stage 1 is recorded in [`P6-03-stage-1-first-real-product-workflow-platform-integration.md`](../reviews/P6-03-stage-1-first-real-product-workflow-platform-integration.md). The real `arutyunoveth/ai-corporation` product repository now crosses the explicit Arvectum OS Product Contract boundary through the existing internal/provisional `IntegrationAdapters` seam for CAP-001 exact Document/Artifact reliance and CAP-004 read-oriented reconstruction. The product keeps procurement semantics, RFQ/TKP/economics/recommendation logic and all external actions outside the platform.
 
 Stage 1 preserves exact P6.02 `Provisional 0.1.0`, exact CAP-001/CAP-004 Provisional `1.0.0` provider evidence, wrong-Organization and purpose/right/classification denial, fail-closed missing/incompatible/deprecated provider evidence, truthful incomplete/redacted reconstruction and rejection of hidden platform coupling. It also exposed a real reference-runtime gap: RFC-0002 `External Reference` authority could not previously be represented without falling back to `Native`. The bounded remediation requires an explicit external-authority contract and prohibits Native authority substitution rather than creating a new source of truth.
 
-Hosted Arvectum OS `Reference Python CI #271` is green at `713 tests`, `OK`, including all nine new P6.03 Stage 1 platform tests. The product PR `#140` dedicated cross-repository P6.03 job is green against exact pinned platform commit `18e747d3fa099c9aadb946d16055e0a926c723c1`; the full product regression remains a merge gate until the product PR is merged.
+Hosted Arvectum OS `Reference Python CI #274` is green at `713 tests`, `OK`, including all nine new P6.03 Stage 1 platform tests. Product `ai-corporation` CI `#1922` completed with all jobs green, including the dedicated cross-repository P6.03 proof and the full `make test` regression; product PR `#140` was then squash-merged to `main` as `5d1c0e5f096188cc1028cc2bf79ace325d0a5167`. Platform PR `#77` was squash-merged as `8c838edafeb564862b88230cba1b6ea02b7c8e14`.
 
 R17 remains `PASS`. P6.03 itself remains **In Progress**. Stage 2 is authorized only for exactly one real 44-ФЗ case under the same Product Contract unless real evidence first requires a new immutable Product Contract version. Stage 3 remains blocked until Stage 2 evidence is reviewed. P6.04 remains downstream of completed P6.03 adoption evidence.
 
