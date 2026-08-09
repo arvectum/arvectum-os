@@ -1,4 +1,4 @@
-"""P5.08/R15/R16 — internal/provisional integration adapter boundary.
+"""P5.08/R15/R16 + P6.05 — internal/provisional integration adapter boundary.
 
 P5.08 introduced one integration-facing seam over the R14-hardened Phase 5
 composition facade. R15 narrows the reusable core to what both materially
@@ -14,11 +14,19 @@ immutable P5.02 declaration evidence already validated during facade composition
 A caller therefore cannot pair one governed facade with alternate same-version
 contract semantics and create a split product/platform boundary.
 
+P6.05 exposes the already-existing CAP-001 ``admit_document_version`` semantic
+owner through this same internal seam for a bounded canonical-mutation path.
+Admission is permitted only inside an exact Product Contract-pinned Governed
+Execution that is already Ready/Running with every declared gate satisfied and
+whose exact material input is the candidate Document Version. This does not add
+retrieval, storage, DMS, public API or new capability semantics.
+
 The adapter boundary is not a new semantic owner. Product Contract validation,
 dependency/version compatibility, capability admission, access checks, workspace
-scope, canonical reads and reconstruction remain delegated to their existing
-semantic owners. The adapter boundary grants no Authentication, Authorization,
-Organizational Authority, approval, permission or capability lifecycle state.
+scope, canonical reads, document admission and reconstruction remain delegated
+to their existing semantic owners. The adapter boundary grants no Authentication,
+Authorization, Organizational Authority, approval, permission or capability
+lifecycle state.
 
 The current Python/module/dataclass shapes are internal/provisional reference
 evidence only. They do not establish a Stable/public SDK/API, package, route,
@@ -30,7 +38,16 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
+from .document_artifact_governance import (
+    AdmittedDocumentVersion,
+    DocumentVersionCandidate,
+    admit_document_version,
+)
 from .execution import GovernedVersionPin
+from .governed_execution import (
+    GovernedExecutionContext,
+    require_consequential_operation_admission,
+)
 from .identity import Identity
 from .integration_composition import (
     IntegrationCompositionContinuityError,
@@ -38,6 +55,7 @@ from .integration_composition import (
     compose_integration_facade,
 )
 from .product_capability_consumption import (
+    CAP_001_DOCUMENT_ARTIFACT,
     CapabilityConsumptionRequest,
     consume_document,
     consume_knowledge,
@@ -49,6 +67,7 @@ from .product_contract import ProductContract, ProductContractScopeError
 from .product_contract_declaration import validate_product_contract_declaration
 from .product_contract_resolution import GovernedDependencyVersionEvidence
 from .security import ActorContext
+from .workflow import OperationSideEffectClass
 from .workspace_shell import (
     ExactVersionNavigationReference,
     SubjectNavigationReference,
@@ -150,7 +169,7 @@ class IntegrationWorkspaceAdapter:
 
 @dataclass(frozen=True, slots=True)
 class IntegrationCapabilityAdapter:
-    """Typed delegation seam for bounded CAP-001..CAP-004 read-oriented reliance."""
+    """Typed delegation seam for bounded CAP-001..CAP-004 reliance."""
 
     facade: IntegrationCompositionFacade
     contract: ProductContract
@@ -210,6 +229,79 @@ class IntegrationCapabilityAdapter:
             admitted=admitted,
             artifact_id=artifact_id,
         )
+
+    def admit_document_version(
+        self,
+        *,
+        execution: GovernedExecutionContext,
+        candidate: DocumentVersionCandidate,
+    ) -> AdmittedDocumentVersion:
+        """Admit one exact CAP-001 candidate only inside admitted Governed Execution.
+
+        Provider/version compatibility and Product Contract operation semantics are
+        checked when the execution enters through ``facade.start_governed_execution``.
+        This side-effect boundary then rechecks exact Product Contract continuity,
+        the declared CAP-001 operation, the exact candidate material-input pin and
+        RFC-0005 consequential-operation admission before delegating to CAP-001.
+        """
+
+        if not isinstance(execution, GovernedExecutionContext):
+            raise TypeError("document admission requires GovernedExecutionContext")
+        if not isinstance(candidate, DocumentVersionCandidate):
+            raise TypeError("document admission requires DocumentVersionCandidate")
+        if execution.organization != self.facade.context.organization:
+            raise ProductContractScopeError(
+                "document admission execution and integration facade must share Organization scope"
+            )
+        if execution.product_contract != self.facade.context.product_contract:
+            raise IntegrationCompositionContinuityError(
+                "document admission lost exact Product Contract Version continuity"
+            )
+        if candidate.canonical_record.organization != self.facade.context.organization:
+            raise ProductContractScopeError(
+                "document admission candidate must share the composed Organization scope"
+            )
+
+        operations = tuple(
+            operation
+            for operation in self.contract.operations
+            if operation.operation_name == execution.operation_name
+        )
+        if len(operations) != 1:
+            raise IntegrationCompositionContinuityError(
+                "document admission execution operation is not declared exactly once by Product Contract"
+            )
+        operation = operations[0]
+        if operation.dependency_id != CAP_001_DOCUMENT_ARTIFACT:
+            raise IntegrationCompositionContinuityError(
+                "document admission execution must use the declared CAP-001 dependency"
+            )
+        if set(operation.side_effect_classes) != {
+            OperationSideEffectClass.CANONICAL_MUTATION
+        }:
+            raise IntegrationCompositionContinuityError(
+                "document admission Product Contract operation must declare only canonical mutation"
+            )
+
+        candidate_record = candidate.canonical_record
+        exact_input_matches = tuple(
+            pin
+            for pin in execution.material_inputs
+            if pin.subject_id == candidate_record.subject_id
+            and pin.version_id == candidate_record.version_id
+            and pin.semantic_type == candidate_record.semantic_type
+            and pin.authority_scope == candidate_record.authority_scope
+        )
+        if len(exact_input_matches) != 1:
+            raise IntegrationCompositionContinuityError(
+                "document admission candidate must be the exact material input pinned by execution"
+            )
+
+        require_consequential_operation_admission(
+            execution,
+            side_effect_class=OperationSideEffectClass.CANONICAL_MUTATION,
+        )
+        return admit_document_version(candidate)
 
     def retrieve_knowledge(
         self,
