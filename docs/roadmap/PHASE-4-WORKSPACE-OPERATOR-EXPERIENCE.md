@@ -1,7 +1,7 @@
 # Arvectum OS Phase 4 — Workspace / Operator Experience
 
 Status: `Active`
-Version: `1.11.0`
+Version: `1.12.0`
 Created: `2026-08-08`
 Updated: `2026-08-09`
 Owner: `ООО «Арвектум»`
@@ -13,19 +13,19 @@ Predecessor: `Phase 3 — Shared Platform Capabilities`, `M3` achieved
 
 ## Version note
 
-Version `1.11.0` records completion of **R11 — Composition / Usability Refactoring Review** with `PASS` and advances the current canonical action to **P4.09 — Security, rights, minimization and authority-safe UX**.
+Version `1.12.0` records completion of **P4.09 — Security, rights, minimization and authority-safe UX** with `PASS` and advances the current canonical action to **P4.10 — Workspace architecture fitness + accessibility/usability baseline**.
 
-R11 reviewed the accumulated P4.02–P4.08 implementation after the first real Product Contract-backed composition proof. Product task/disposition meaning remains outside `arvectum_os_ref`; `ProductTaskContextView` composes the existing P4.06 Document/Artifact and P4.07 Memory/Knowledge result types rather than flattening exact Version, authority, provenance, freshness, validation or approval semantics into a new product-owned read model.
+P4.09 adds a bounded internal `authority_safe_ux.py` decision-consumption helper. It consumes already-produced `CurrentSourceAuthorization` evidence and deliberately does not become an IAM/PDP/PEP, policy engine, Organizational Authority source, public API, Product Contract or canonical-state owner.
 
-Exact Organization/Actor/Product/Product Contract/dependency/task-target continuity remains fail-closed after entry. Product consequential actions recheck the exact contract/task boundary and can reach the existing P4.05 mutation adapter only through R10 `operator_safety.py`, preserving source-access freshness independently from Governed Execution authorization/Organizational Authority/approval gates.
+Missing, denied, ambiguous and wrong-Organization access evidence all fail closed without governed content, protected counts or derived previews. If the exact source-authorization decision used for a prior view is replaced, the presentation requires re-inspection rather than silently continuing from stale client state. Bounded action labels describe operator intent/state and do not claim approval, permission, Organizational Authority or guaranteed commit.
 
-R11 confirmed repeated current source-authorization matching across P4.03–P4.07 and R10. The repetition is genuine but is retained as bounded local duplication until P4.09/P4.10 provide stronger evidence for whether a narrow shared decision-consumption helper can be extracted without becoming a new IAM/policy owner or weakening capability-specific data-governance/freshness/exact-reliance checks.
+Purpose/right/classification handling remains owned by existing P3.07/CAP-001/CAP-002 boundaries; Knowledge freshness and exact-reliance eligibility remain owned by P4.07/CAP-002; consequential action remains owned by R10/P4.05/Governed Execution. The P4.09 helper therefore narrows presentation behavior without widening authority.
 
-The P4.08 Product Contract has satisfied its explicit R11 review condition and remains unchanged at `Provisional 0.1.0`. R11 creates no Stable/public Product Contract, new Platform Capability, capability lifecycle promotion, conformance expansion, operational-readiness claim or commercial commitment.
+P4.09 supplies positive evidence for R11's source-authorization matching watch item, but does not broadly migrate P4.03–P4.07/R10 callers. P4.10 must determine whether wider reuse is justified without creating a new security-policy owner or weakening capability-specific handling/freshness/exact-reliance semantics.
 
-No frontend/API/serialization/IAM/storage choice crosses the ADR threshold, so no new ADR is required. R11 adds structural regression evidence around product-domain isolation, semantic-owner composition, exact continuity, R10-only action routing and absence of a speculative shared authorization/framework boundary.
+No Product Contract change, capability lifecycle promotion, Stable/public interface, production/conformance claim or ADR-triggering durable technology choice is created. The P4.08 Product Contract remains `Provisional 0.1.0`; CAP-001 through CAP-004 remain `Incubating / Provisional`.
 
-GitHub-hosted `Reference Python CI` remains unavailable at runner/account provisioning under issue #54. R11 does not claim a green hosted run. The gap remains separate from the scoped R11 architecture/refactoring result and must still be accounted for by P4.10 deterministic-testability evidence.
+GitHub-hosted `Reference Python CI #188` failed at the separately tracked runner/account provisioning issue #54. No green hosted P4.09 run or test-suite failure is claimed from that run. Deterministic critical-state testability remains an explicit P4.10 requirement.
 
 Canonical completion evidence:
 
@@ -41,6 +41,7 @@ Canonical completion evidence:
 - [`P4.08 cross-capability task/context composition review`](../reviews/P4-08-cross-capability-task-context-composition.md) — `PASS`, six functional cross-review iterations with exact Product Contract/dependency/target continuity hardened;
 - [`P4.08 bounded product Product Contract`](../contracts/P4-08-BOUNDED-PRODUCT-ENTRY-PRODUCT-CONTRACT.md) — reviewed at R11, remains `Provisional 0.1.0`;
 - [`R11 Composition / Usability Refactoring Review`](../reviews/R11-composition-usability-refactoring-review.md) — `PASS`, five functional cross-review iterations;
+- [`P4.09 Security, rights, minimization and authority-safe UX review`](../reviews/P4-09-security-rights-minimization-authority-safe-ux.md) — `PASS`;
 - GitHub issue `#54` — tracked hosted-CI provisioning gap; not an architecture exception or green-test claim.
 
 ## 1. Purpose
@@ -77,12 +78,12 @@ The workspace remains a platform interaction capability under development. Activ
 | `P4.06` | Document / Artifact workspace experience | 🟩 Complete | `██████████ 100%` |
 | `P4.07` | Memory / Knowledge / Search discovery experience | 🟩 Complete | `██████████ 100%` |
 | `P4.08` | Cross-capability task/context composition + bounded product entry point | 🟩 Complete | `██████████ 100%` |
-| `P4.09` | Security, rights, minimization and authority-safe UX | ⬜ Current | `░░░░░░░░░░ 0%` |
-| `P4.10` | Workspace architecture fitness + accessibility/usability baseline | ⬜ cross-cutting | `░░░░░░░░░░ 0%` |
+| `P4.09` | Security, rights, minimization and authority-safe UX | 🟩 Complete | `██████████ 100%` |
+| `P4.10` | Workspace architecture fitness + accessibility/usability baseline | ⬜ Current / cross-cutting | `░░░░░░░░░░ 0%` |
 | `P4.11` | Workspace hardening / ADR / refactoring review | ⬜ | `░░░░░░░░░░ 0%` |
 | `P4.12` | Phase 4 / M4 closure review | ⬜ | `░░░░░░░░░░ 0%` |
 
-Phase 4 roadmap work-item completion is `8 / 12 = 66.7%`. Engineering reviews such as R9/R10/R11 are gates and do not inflate this percentage as separate equal-weight work items.
+Phase 4 roadmap work-item completion is `9 / 12 = 75.0%`. Engineering reviews such as R9/R10/R11 are gates and do not inflate this percentage as separate equal-weight work items.
 
 ## 4. Detailed task intent
 
@@ -237,6 +238,8 @@ Required checks:
 - audit-sensitive operator actions remain attributable;
 - revisit R11's bounded source-authorization matching duplication only if P4.09/P4.10 evidence supports a narrow shared decision-consumption helper without creating a new policy/IAM owner.
 
+Completion evidence: [`P4.09 Security, rights, minimization and authority-safe UX review`](../reviews/P4-09-security-rights-minimization-authority-safe-ux.md) — `PASS`. The bounded internal helper consumes exact current source-authorization evidence without deciding policy, fails closed for unauthorized/wrong-Organization/ambiguous state, suppresses protected counts and stale derived previews, requires re-inspection after authorization-decision replacement, and uses authority-safe action labels. Existing semantic owners retain purpose/right/classification/freshness/exact-reliance and Governed Execution authority. `Reference Python CI #188` failed at separately tracked hosted-runner provisioning issue #54; no green run or test-suite failure is claimed from that run.
+
 ### P4.10 — Workspace architecture fitness + accessibility/usability baseline
 
 Cross-cutting executable and review evidence accumulated through the phase.
@@ -326,9 +329,9 @@ P4.08 Product-backed composition proof ✅
             ↓
 R11 Composition/Usability Refactoring ✅
             ↓
-P4.09 Security / rights / authority-safe UX ← current
+P4.09 Security / rights / authority-safe UX ✅
             ↓
-P4.10 Fitness + accessibility/usability evidence
+P4.10 Fitness + accessibility/usability evidence ← current
             ↓
 R12 M4 Hardening
             ↓
@@ -395,12 +398,12 @@ A reversible internal reference implementation may proceed without an ADR when t
 
 ## 10. Current canonical action
 
-> **`P4.09 — Security, rights, minimization and authority-safe UX`.**
+> **`P4.10 — Workspace architecture fitness + accessibility/usability baseline`.**
 
-Harden the composed P4.02–P4.08 workspace so security/governance semantics remain safe and understandable under wrong-Organization, unauthorized, stale, revoked, ambiguous, minimized and derived-state conditions.
+Evaluate the accumulated P4.02–P4.09 workspace against the cross-cutting M4 fitness matrix and produce executable/review evidence for core operator journeys, accessibility/usability, deterministic security-critical states and reversible presentation boundaries.
 
-P4.09 must preserve the distinctions validated by R11: Product Contract possession is not permission; current source authorization is separate from purpose/right/classification handling; Authorization, Organizational Authority and Consequential Approval remain separate; derived/search/reconstruction state is non-authoritative; exact Version/freshness/provenance semantics are not hidden by convenience labels; and product task meaning remains product-owned.
+P4.10 must preserve the distinctions validated by P4.09: source-authorization consumption cannot become policy authority; purpose/right/classification/freshness/exact-reliance remain with their semantic owners; derived state remains non-authoritative; exact Version/provenance meaning stays visible where material; and consequential actions continue through R10/P4.05/Governed Execution.
 
-R11's repeated source-access matching watch item may be reconsidered only if P4.09/P4.10 evidence supports a narrow internal simplification that consumes already-produced authorization decisions without becoming an authorization-policy owner or weakening capability-specific controls.
+The P4.09 narrow decision-consumption helper may be considered for wider internal reuse only if P4.10 evidence shows that doing so reduces inconsistency without weakening source-specific controls or creating an accidental IAM/policy abstraction.
 
-Issue #54 remains separately tracked for hosted deterministic test execution. P4.09 must not use that tooling gap as a reason to weaken executable negative-path design, and P4.10 must still provide deterministic-testability evidence for critical operator states.
+Issue #54 remains separately tracked for hosted deterministic test execution. P4.10 must record the environment limitation accurately and provide deterministic-testability evidence without claiming a green hosted run unless one actually exists.
