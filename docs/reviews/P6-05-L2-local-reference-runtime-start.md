@@ -99,7 +99,15 @@ log_file=<local-root>/evidence/p6-05-l2/20260810T054403Z-fb61889633b1/reference-
 
 No secret value, token, private key, certificate content, cookie, proxy credential or `.env` content was read into the reported evidence.
 
-## 5. Fail-closed history and remediation
+## 5. Evidence provenance and retention boundary
+
+The execution source for this canonical review is the owner-operated OpenCode report from the selected Mac mini, including the generated `summary.txt` fields and the post-run read-only checks for branch, exact `HEAD == origin/main`, clean working tree and absence of bytecode/cache artifacts.
+
+The project chat report was execution input, not an independent canonical source. This review canonically records the bounded, secret-safe result after consistency checking it against the repository state and the exact canonical L2 bootstrap at the reported SHA.
+
+The raw local `summary.txt` and `reference-runtime.log` remain under the owner-operated `<local-root>/evidence/p6-05-l2/...` location and are not copied wholesale into the repository. No byte-for-byte digest of those raw local files was captured for L2, because the L2 exit criteria require the safe execution summary rather than durable exact-byte admission of the runtime log. This limitation does not extend the evidence claim beyond the fields recorded here.
+
+## 6. Fail-closed history and remediation
 
 The first fresh-checkout L2 execution on canonical `7ff47be8184e14f712a2168e69879eddaeffe4ab` passed all `717` tests but correctly returned `FAIL` because the test process generated untracked Python `__pycache__/` directories, making `working_tree_after_runtime=dirty`.
 
@@ -114,7 +122,7 @@ The minimum bounded remediation was merged through PR `#85` as canonical commit 
 
 Hosted `Reference Python CI #281` passed on the remediation head before merge.
 
-## 6. Security and boundary evidence
+## 7. Security and boundary evidence
 
 The successful L2 run recorded:
 
@@ -127,7 +135,7 @@ The successful L2 run recorded:
 
 The run therefore remained inside the declared internal/local bounded reference-runtime scope.
 
-## 7. Dogfooding friction
+## 8. Dogfooding friction
 
 Observed setup/runtime friction:
 
@@ -138,7 +146,7 @@ Observed setup/runtime friction:
 
 These observations are operational evidence. They do not establish a new platform capability, deployment topology or product requirement.
 
-## 8. Exit-criteria assessment
+## 9. Exit-criteria assessment
 
 - canonical repository and `main` used: PASS;
 - local `HEAD == origin/main`: PASS;
@@ -151,7 +159,7 @@ These observations are operational evidence. They do not establish a new platfor
 - product/EIS/public-ingress/external actions: none;
 - secret exposure: none observed.
 
-## 9. Disposition
+## 10. Disposition
 
 `P6.05-L2: Complete / PASS`
 
