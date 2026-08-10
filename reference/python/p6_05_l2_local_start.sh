@@ -28,7 +28,7 @@ git -C "$REPO_ROOT" rev-parse --is-inside-work-tree >/dev/null 2>&1 || fail "rep
 
 ORIGIN_URL=$(git -C "$REPO_ROOT" remote get-url origin 2>/dev/null || true)
 case "$ORIGIN_URL" in
-  *arutyunoveth/arvectum-os*) ;;
+  https://github.com/arutyunoveth/arvectum-os|https://github.com/arutyunoveth/arvectum-os.git|git@github.com:arutyunoveth/arvectum-os|git@github.com:arutyunoveth/arvectum-os.git|ssh://git@github.com/arutyunoveth/arvectum-os|ssh://git@github.com/arutyunoveth/arvectum-os.git) ;;
   *) fail "origin is not the canonical arutyunoveth/arvectum-os repository" ;;
 esac
 
@@ -89,10 +89,19 @@ set -e
 RAN_LINE=$(grep -E '^Ran [0-9]+ tests? in ' "$LOG_FILE" | tail -n 1 || true)
 RESULT_LINE=$(grep -E '^(OK|FAILED)' "$LOG_FILE" | tail -n 1 || true)
 
-if [ "$TEST_RC" -eq 0 ] && [ "$RESULT_LINE" = "OK" ]; then
+if [ -z "$(git -C "$REPO_ROOT" status --porcelain)" ]; then
+  WORKTREE_AFTER=clean
+else
+  WORKTREE_AFTER=dirty
+fi
+
+if [ "$TEST_RC" -eq 0 ] && [ "$RESULT_LINE" = "OK" ] && [ "$WORKTREE_AFTER" = "clean" ]; then
   STATUS=PASS
 else
   STATUS=FAIL
+  if [ "$TEST_RC" -eq 0 ]; then
+    TEST_RC=1
+  fi
 fi
 
 cat >"$SUMMARY_FILE" <<EOF
@@ -110,6 +119,7 @@ runtime_mode=in-process reference harness
 runtime_command=python -m unittest discover -s tests -v
 runtime_result=${RESULT_LINE:-not-observed}
 runtime_test_count=${RAN_LINE:-not-observed}
+working_tree_after_runtime=$WORKTREE_AFTER
 external_actions=false
 public_ingress=false
 product_invoked=false
@@ -126,6 +136,9 @@ fi
 
 printf '%s\n' "P6.05-L2 FAIL"
 printf '%s\n' "Evidence: $SUMMARY_FILE"
+if [ "$WORKTREE_AFTER" = "dirty" ]; then
+  printf '%s\n' "Reason: reference runtime left the source checkout dirty" >&2
+fi
 printf '%s\n' "Last runtime output:"
 tail -n 40 "$LOG_FILE" >&2 || true
 exit "$TEST_RC"
