@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.51.1`
+Version: `2.51.2`
 Created: `2026-08-07`
 Updated: `2026-08-09`
 Owner: `ООО «Арвектум»`
@@ -17,7 +17,7 @@ Detailed completed-phase evidence remains in the corresponding `PHASE-N-...` roa
 
 ## 2. Version note
 
-Version `2.51.1` records `P6.05-L1` as complete after a bounded, secret-safe owner-operated host/runtime inventory. The truthful real `7/7` exact-attachment evidence gate remains unobserved.
+Version `2.51.2` synchronizes the published P6.05 local-substream reference to `0.1.1` after `P6.05-L1` was recorded complete. The truthful real `7/7` exact-attachment evidence gate remains unobserved.
 
 P6.05 implementation readiness is now separated from the owner-operated runtime work required to execute the real evidence path. The local deployment is treated as a bounded **Internal / local owner-operated runtime** for ООО «Арвектум», not as a Production environment, supported macOS product, Stable/public runtime contract or final deployment topology.
 
@@ -93,7 +93,7 @@ M5 proves repeatable governed integration through explicit Product Contracts and
 Canonical detailed roadmap:
 
 - [`PHASE-6-PRODUCT-DRIVEN-PLATFORM-VALIDATION.md`](PHASE-6-PRODUCT-DRIVEN-PLATFORM-VALIDATION.md) — `Active 1.7.0`.
-- [`P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md`](P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md) — `Active 0.1.0`, subordinate execution plan for the current P6.05 owner-operated runtime/evidence path.
+- [`P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md`](P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md) — `Active 0.1.1`, subordinate execution plan for the current P6.05 owner-operated runtime/evidence path.
 
 | ID | Work item | Status | Progress |
 |---|---|---:|---:|
