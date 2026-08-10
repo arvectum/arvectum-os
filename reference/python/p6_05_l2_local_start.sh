@@ -7,6 +7,8 @@ set -eu
 # - synchronizes only the canonical Arvectum OS checkout;
 # - creates an isolated stdlib-only venv outside the source checkout;
 # - runs the existing in-process reference runtime test harness;
+# - suppresses Python bytecode writes during the suite so validation does not
+#   create runtime-generated cache files inside the source checkout;
 # - writes only secret-safe local execution evidence;
 # - does not invoke ai-corporation, EIS, external mutation, public ingress,
 #   containers, or a persistent service topology.
@@ -81,7 +83,7 @@ printf '%s\n' "P6.05-L2: running bounded reference runtime suite..."
 set +e
 (
   cd "$REPO_ROOT/reference/python"
-  "$VENV_PYTHON" -m unittest discover -s tests -v
+  PYTHONDONTWRITEBYTECODE=1 "$VENV_PYTHON" -m unittest discover -s tests -v
 ) >"$LOG_FILE" 2>&1
 TEST_RC=$?
 set -e
@@ -116,7 +118,7 @@ python_version=$PYTHON_VERSION
 platform=$PLATFORM_DESC
 dependency_mode=stdlib-only; no third-party dependency installation
 runtime_mode=in-process reference harness
-runtime_command=python -m unittest discover -s tests -v
+runtime_command=PYTHONDONTWRITEBYTECODE=1 python -m unittest discover -s tests -v
 runtime_result=${RESULT_LINE:-not-observed}
 runtime_test_count=${RAN_LINE:-not-observed}
 working_tree_after_runtime=$WORKTREE_AFTER
