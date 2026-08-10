@@ -1,9 +1,9 @@
 # P6.05 — Local Internal Runtime Substream
 
 Status: `Active / In Progress`
-Version: `0.1.1`
+Version: `0.1.2`
 Created: `2026-08-09`
-Updated: `2026-08-09`
+Updated: `2026-08-10`
 Owner: `ООО «Арвектум»`
 Task classification: `platform` with `product_specific` and `product_contract`
 Parent work item: `P6.05 — Platform-gap remediation from first real use`
@@ -51,6 +51,13 @@ Already completed before this local-runtime substream:
 - product hosted standard CI and dedicated P6.05 exact-attachment evidence CI passed on the unchanged implementation head;
 - the product live runner `scripts/p6_05_capture_real_attachment_evidence.py` exists and fails closed unless the existing EIS/getDocsIP contour is configured and the exact source-listed set is complete.
 
+Local execution evidence now additionally establishes:
+
+- P6.05-L1 host/runtime baseline — `Complete / PASS`;
+- P6.05-L2 reproducible canonical checkout + reference runtime start — `Complete / PASS` under [`P6-05-L2-local-reference-runtime-start.md`](../reviews/P6-05-L2-local-reference-runtime-start.md);
+- the successful L2 run used canonical `main` at `fb61889633b11875dc5e1cf92771a159024a5695`, CPython `3.14.6`, and passed `717/717` reference tests with a clean checkout before and after execution;
+- no product, EIS, public ingress, external action or secret exposure occurred in L2.
+
 Implementation readiness does **not** close P6.05. Real `7/7` evidence remains unobserved.
 
 ## 4. Subtasks
@@ -58,8 +65,8 @@ Implementation readiness does **not** close P6.05. Real `7/7` evidence remains u
 | ID | Subtask | Status | Exit evidence |
 |---|---|---|---|
 | `P6.05-L1` | Local host/runtime baseline | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L1-local-host-runtime-baseline.md) | host prerequisites, repository locations, runtime versions and local-only network/port assumptions are inventoried; no final topology is declared |
-| `P6.05-L2` | Reproducible Arvectum OS local checkout + reference runtime start | 🟨 Current / next | canonical `main` is checked out, dependencies install reproducibly, reference/runtime smoke starts on the Mac mini |
-| `P6.05-L3` | Secure local configuration + secrets boundary | ⬜ Pending | local configuration is separated from repository state; required credentials are detected without being printed/committed; fail-closed behavior is verified |
+| `P6.05-L2` | Reproducible Arvectum OS local checkout + reference runtime start | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L2-local-reference-runtime-start.md) | canonical `main` reproduced on the selected Mac mini; isolated stdlib-only reference runtime passed `717/717`; source checkout remained clean |
+| `P6.05-L3` | Secure local configuration + secrets boundary | 🟨 Current / next | local configuration is separated from repository state; required credentials are detected without being printed/committed; fail-closed behavior is verified |
 | `P6.05-L4` | Internal Organization + operator bootstrap | ⬜ Pending | bounded ООО «Арвектум» Organization/operator context can execute the required local governed flow with least-privilege assumptions documented |
 | `P6.05-L5` | First real product connection | ⬜ Pending | `ai-corporation` connects through exact P6.02 Product Contract `0.1.0`, CAP-001 + CAP-004 only, with Organization/contract continuity preserved |
 | `P6.05-L6` | Local synthetic/redacted regression + negative-path smoke | ⬜ Pending | relevant P6.03/P6.05 proof paths pass locally; missing config/gates/wrong versions fail closed |
@@ -90,6 +97,8 @@ Do not infer a general supported-hardware matrix from this host.
 Use canonical repository state and existing reference/runtime instructions where available. If a missing bootstrap/install mechanism is discovered, implement only the minimum reversible internal mechanism needed for this environment and record the friction.
 
 A successful local start is internal validation evidence only. It does not establish production readiness.
+
+**Completion:** `PASS` under [`P6-05-L2-local-reference-runtime-start.md`](../reviews/P6-05-L2-local-reference-runtime-start.md). The selected Mac mini reproduced canonical `main` at `fb61889633b11875dc5e1cf92771a159024a5695`, created the isolated stdlib-only environment outside the checkout, passed `717/717` tests, and remained clean after execution. The earlier cache-generating attempt was preserved as a truthful FAIL and remediated without weakening the clean-state gate.
 
 ### P6.05-L3 — Secure configuration + secrets
 
@@ -200,4 +209,4 @@ Until a later accepted decision says otherwise, this environment is bounded and 
 
 ## 9. Immediate next action
 
-Proceed with `P6.05-L2 — Reproducible Arvectum OS local checkout + reference runtime start` from the clean canonical checkout identified by [P6.05-L1 evidence](../reviews/P6-05-L1-local-host-runtime-baseline.md). Do not skip local smoke and do not mark P6.05 PASS before truthful real evidence exists.
+Proceed with `P6.05-L3 — Secure local configuration + secrets boundary` from the successful P6.05-L2 owner-operated Mac runtime baseline. Keep credentials outside source control and canonical evidence, report only safe configured/not-configured state, and preserve fail-closed behavior. Do not skip local smoke and do not mark P6.05 PASS before truthful real evidence exists.
