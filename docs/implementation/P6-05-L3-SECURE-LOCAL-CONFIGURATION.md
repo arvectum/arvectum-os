@@ -93,9 +93,9 @@ Do not paste the token into project chat, issue/PR text, canonical evidence or s
 
 ## 6. Legacy repo-local secret migration
 
-A previously working local installation may already contain the authorized EIS token in the product checkout's `.env` or `.env.local`. That historical state is a migration source only; it is not the desired L3 boundary.
+A previously working local installation may already contain the authorized EIS token in one or more product checkouts' `.env` or `.env.local` files. That historical state is a migration source only; it is not the desired L3 boundary.
 
-Do not search for the token by value and do not print the matching env line. First locate the `ai-corporation` checkout by repository metadata/path only, then identify `.env.local` or `.env` by filename only.
+Do not search for the token by value and do not print a matching env line. Locate `ai-corporation` checkouts by repository metadata/path only, then identify candidate `.env.local` or `.env` files by filename/key presence without emitting the value.
 
 The canonical migration helper is:
 
@@ -103,45 +103,62 @@ The canonical migration helper is:
 reference/python/p6_05_l3_migrate_eis_secret.py
 ```
 
-It requires three explicit paths:
+It accepts one or more explicit source pairs plus one destination:
 
-- `--source-checkout-root` — verified local `ai-corporation` checkout;
-- `--source-env` — the `.env.local` or `.env` file inside that checkout;
-- `--destination` — `<local-root>/local-secrets/eis-soap-token` outside both checkouts.
+- repeated `--source-checkout-root` — verified local `ai-corporation` checkout;
+- repeated `--source-env` — corresponding `.env.local` or `.env` file inside that checkout;
+- `--destination` — `<local-root>/local-secrets/eis-soap-token` outside Arvectum OS and every supplied product checkout.
 
-Example invocation from the Arvectum OS checkout:
+The number of source checkout and source env arguments must match. A single-source invocation remains valid. For multiple legacy copies, provide the complete discovered source set in one invocation.
+
+Example multi-source invocation from the Arvectum OS checkout:
 
 ```sh
 python3 reference/python/p6_05_l3_migrate_eis_secret.py \
-  --source-checkout-root "$AI_CORPORATION_CHECKOUT" \
-  --source-env "$AI_CORPORATION_CHECKOUT/.env.local" \
+  --source-checkout-root "$CHECKOUT_1" \
+  --source-env "$ENV_1" \
+  --source-checkout-root "$CHECKOUT_2" \
+  --source-env "$ENV_2" \
   --destination "$ARVECTUM_LOCAL_ROOT/local-secrets/eis-soap-token"
 ```
 
 The helper:
 
-- requires the legacy source env file itself to be owner-only before reading it;
-- accepts exactly one `ZAKUPKI_GOV_RU_SOAP_TOKEN` assignment, including a shell-sourced `export` form or one quoted value;
-- rejects missing, duplicate, placeholder or ambiguous secret state without echoing the value;
-- creates the destination exclusively with owner-only mode and never overwrites an existing destination;
-- refuses a destination inside either source-controlled checkout;
-- after successfully creating the external destination, atomically removes only the token assignment from the legacy source env file while preserving all unrelated lines;
+- requires every legacy source env file to be owner-only before reading it;
+- accepts at most one `ZAKUPKI_GOV_RU_SOAP_TOKEN` assignment per source, including shell-sourced `export` form or one quoted value;
+- treats a source with no token assignment as already scrubbed when a valid external destination already exists or another supplied source establishes the migration value;
+- rejects duplicate, placeholder or malformed secret state without echoing the value;
+- compares configured source values only in process memory and requires them all to be equal before creating a new destination or scrubbing any source;
+- creates a new destination exclusively with owner-only mode when none exists;
+- may reuse an already-existing owner-only destination only when every remaining supplied source token matches it in memory;
+- never overwrites an existing destination;
+- refuses a destination inside Arvectum OS or any supplied product checkout;
+- removes only the token assignment from each supplied source that still contains it while preserving unrelated lines;
 - creates no backup containing the secret;
-- rolls back the newly created destination if the source env scrub cannot be completed;
 - never prints or hashes the token;
 - performs no product, EIS, network, canonical mutation or external action.
 
-A successful migration emits only safe state such as:
+If a source rewrite fails after a valid destination has been created or reused, the helper preserves the destination, does not reintroduce the token into already-scrubbed sources, and returns `SOURCE_SCRUB_INCOMPLETE_DESTINATION_PRESERVED`. Re-running the same complete source set is the bounded recovery path after the local filesystem issue is corrected.
+
+A successful multi-source migration emits only safe state such as:
 
 ```text
 p6_05_l3_secret_migration_status=PASS
-source_secret_detected=true
-source_secret_removed=true
+migration_scope=legacy_repo_local_eis_token_set_to_external_owner_only_file
+source_count=7
+sources_with_secret_before=7
+sources_already_scrubbed_before=0
+sources_scrubbed=7
 destination_created=true
+destination_reused=false
+all_source_secrets_consistent=true
+all_sources_scrubbed=true
 destination_owner_only=true
 secret.ZAKUPKI_GOV_RU_SOAP_TOKEN=configured
 secret_values_printed=false
 secret_values_hashed=false
+secret_values_exported=false
+secret_values_persisted_as_evidence=false
 backup_with_secret_created=false
 product_invoked=false
 eis_invoked=false
@@ -149,7 +166,11 @@ network_invoked=false
 external_actions=false
 ```
 
-After migration, both Arvectum OS and `ai-corporation` checkouts must still have clean tracked working trees. The presence of unrelated non-secret settings in the product `.env.local` is not itself L3 evidence; later P6.05 product connection must explicitly inject the selected L3 config/secret boundary rather than rely on repo-local secret storage.
+Counts may differ on an idempotent retry. Paths and secret values are not canonical evidence.
+
+For the full multi-checkout recovery rationale and fail-closed semantics, see `P6-05-L3-MULTI-CHECKOUT-SECRET-RECOVERY.md`.
+
+After migration, Arvectum OS and every supplied `ai-corporation` checkout must still have clean tracked working trees. The presence of unrelated non-secret settings in product `.env.local` files is not itself L3 evidence; later P6.05 product connection must explicitly inject the selected L3 config/secret boundary rather than rely on repo-local secret storage.
 
 ## 7. Checked-in preflight
 
@@ -222,12 +243,17 @@ Failures identify only a safe code and, where useful, the configuration key name
 
 `reference/python/tests/test_p6_05_l3_migrate_eis_secret.py` additionally proves with synthetic values that:
 
-- a legacy `.env.local` token can be migrated and scrubbed without appearing in output;
+- seven matching legacy repo-local copies migrate to one destination and all supplied copies are scrubbed;
+- differing source values fail before a new destination or source mutation;
+- a matching existing destination is reused without overwrite;
+- a mismatching existing destination fails closed without overwrite;
+- complete and partial retry paths are idempotent and scrub only remaining matching copies;
 - quoted and shell-sourced `export` forms are supported;
-- missing, duplicate and placeholder secret state fails closed;
+- absent, duplicate and placeholder secret state fails closed where no valid destination/reference exists;
 - broad source-file permissions fail before secret reliance;
-- a destination inside the product checkout is rejected;
-- an existing destination is never overwritten.
+- a destination inside any supplied product checkout is rejected;
+- duplicate source env paths are rejected;
+- secret values never appear in safe output.
 
 All test tokens are synthetic and have no external authority or credential value.
 
