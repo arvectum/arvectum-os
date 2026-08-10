@@ -48,12 +48,16 @@ The EIS proxy/TLS constraint observed in L1 is deliberately out of scope for L2 
 
 ## 4. Reproducible start command
 
-From the clean canonical checkout on the Mac mini:
+The L1 checkout may predate publication of this bootstrap. Therefore the first L2 invocation begins by safely acquiring the current canonical `main` before invoking the checked-in script:
 
 ```sh
 cd <local-root>/arvectum-os
+git fetch origin main
+git merge --ff-only origin/main
 sh reference/python/p6_05_l2_local_start.sh
 ```
+
+The explicit `fetch + merge --ff-only` is only a bootstrap-acquisition step. It does not allow local history rewriting or conflict resolution. The checked-in L2 script then repeats canonical synchronization and exact `HEAD == origin/main` verification deliberately, making the execution idempotent and preserving read-after-write evidence.
 
 Optional environment overrides are local-only and must not be committed:
 
