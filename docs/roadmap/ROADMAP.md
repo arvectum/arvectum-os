@@ -98,7 +98,7 @@ M5 proves repeatable governed integration through explicit Product Contracts and
 
 Canonical detailed roadmap:
 
-- [`PHASE-6-PRODUCT-DRIVEN-PLATFORM-VALIDATION.md`](PHASE-6-PRODUCT-DRIVEN-PLATFORM-VALIDATION.md) — `Active 1.7.0`.
+- [`PHASE-6-PRODUCT-DRIVEN-PLATFORM-VALIDATION.md`](PHASE-6-PRODUCT-DRIVEN-PLATFORM-VALIDATION.md) — `Active 1.7.1`.
 - [`P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md`](P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md) — `Active 0.1.2`, subordinate execution plan for the current P6.05 owner-operated runtime/evidence path.
 
 | ID | Work item | Status | Progress |
