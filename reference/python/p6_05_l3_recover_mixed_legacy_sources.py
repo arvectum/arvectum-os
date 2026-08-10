@@ -1,24 +1,24 @@
 #!/usr/bin/env python3
-"""Recover a mixed P6.05-L3 legacy EIS source set without widening Git authority.
+"""Recover mixed repo-local and standalone P6.05-L3 legacy EIS sources.
 
-The owner-operated discovery manifest may contain two bounded legacy source
-classes: env files inside independently verified ai-corporation checkouts and
-standalone local env files outside every supplied checkout. This helper keeps
-those classes explicit.
+The explicit owner-operated discovery manifest may contain legacy env files both
+inside independently verified ai-corporation checkouts and outside every supplied
+checkout. These are distinct source classes.
 
-Repo-local sources are attached to the most specific verified checkout that
-contains them. Standalone sources are accepted only when no valid Git worktree
-owns them. A source owned by any valid Git worktree outside the verified
-ai-corporation discovery set fails closed. Invalid/orphaned non-symlink .git
-markers are not treated as repository authority, but ancestor inspection
-continues so an outer valid repository cannot be hidden by broken debris.
+Repo-local sources are attached to the most specific verified checkout. A source
+outside every verified checkout is accepted as standalone only when no valid Git
+worktree owns it. Any valid unverified repository ownership fails closed.
+Broken non-symlink .git debris is not authority, but ancestor inspection
+continues so it cannot hide an outer valid repository.
 
-All configured secret values must agree in memory before destination creation or
-source scrubbing. Product HEAD/tracked state is captured before and after the
-migration and must remain exactly unchanged. Paths, remotes, diffs, secret
-values, hashes and env contents are never emitted.
+Configured secret values are compared only in memory and must all agree before
+any destination creation or source scrub. Standalone filesystem parents are not
+pretended to be Git checkout roots, so destination exclusion remains limited to
+actual verified product checkouts plus the Arvectum OS checkout.
 
-No product, EIS, SOAP, network, canonical-state or external action is performed.
+Product HEAD/tracked state must remain exactly unchanged. Paths, remotes, diffs,
+secret values, hashes and env contents are never emitted. No product, EIS, SOAP,
+network, canonical-state or external action is performed.
 """
 
 from __future__ import annotations
@@ -47,7 +47,6 @@ def _run_git(path: Path, *args: str) -> subprocess.CompletedProcess[str]:
 
 
 def _nearest_valid_git_root(path: Path) -> Path | None:
-    """Find the nearest valid Git root without letting broken markers hide ancestors."""
     current = path
     while True:
         marker = current / ".git"
@@ -66,10 +65,7 @@ def _nearest_valid_git_root(path: Path) -> Path | None:
         current = parent
 
 
-def _classify_env(
-    env: Path,
-    checkouts: Sequence[Path],
-) -> tuple[Path, Path | None]:
+def _classify_env(env: Path, checkouts: Sequence[Path]) -> tuple[Path, Path | None]:
     if not BASE._supported_legacy_env_filename(env):
         raise BASE.RecoveryError("UNSUPPORTED_LEGACY_ENV_FILENAME")
     if not env.is_file():
@@ -87,8 +83,7 @@ def _classify_env(
             raise BASE.RecoveryError("LEGACY_ENV_TRACKED_BY_GIT")
         return env, checkout
 
-    owner = _nearest_valid_git_root(env.parent)
-    if owner is not None:
+    if _nearest_valid_git_root(env.parent) is not None:
         raise BASE.RecoveryError("STANDALONE_ENV_OWNED_BY_UNVERIFIED_GIT_REPO")
     return env, None
 
@@ -107,19 +102,6 @@ def _owner_only_source(env: Path) -> None:
         raise BASE.RecoveryError("LEGACY_ENV_CHMOD_FAILED") from exc
 
 
-def _migration_pairs(
-    classified: Sequence[tuple[Path, Path | None]],
-) -> tuple[tuple[Path, Path], ...]:
-    pairs: list[tuple[Path, Path]] = []
-    for env, checkout in classified:
-        _owner_only_source(env)
-        # The migration helper requires a containing source root for its local
-        # path-safety checks. For a standalone non-Git source, its parent is a
-        # bounded filesystem container, not a repository authority claim.
-        pairs.append((env, checkout if checkout is not None else env.parent))
-    return tuple(pairs)
-
-
 def _capture_snapshots(checkouts: Sequence[Path]) -> dict[Path, BASE.GitSnapshot]:
     snapshots: dict[Path, BASE.GitSnapshot] = {}
     for checkout in checkouts:
@@ -129,10 +111,121 @@ def _capture_snapshots(checkouts: Sequence[Path]) -> dict[Path, BASE.GitSnapshot
         status = _run_git(checkout, "status", "--porcelain=v1", "--untracked-files=no")
         if status.returncode != 0:
             raise BASE.RecoveryError("AI_CORPORATION_TRACKED_STATUS_FAILED")
-        snapshots[checkout] = BASE.GitSnapshot(
-            head=head.stdout.strip(), tracked_status=status.stdout
-        )
+        snapshots[checkout] = BASE.GitSnapshot(head=head.stdout.strip(), tracked_status=status.stdout)
     return snapshots
+
+
+def _migrate_classified(
+    classified: Sequence[tuple[Path, Path | None]],
+    destination: Path,
+    *,
+    verified_checkouts: Sequence[Path],
+    arvectum_repo_root: Path,
+) -> tuple[int, tuple[str, ...]]:
+    destination_created = False
+    destination_reused = False
+    sources_with_secret_before = 0
+    sources_already_scrubbed_before = 0
+    sources_scrubbed = 0
+
+    try:
+        if not classified:
+            raise MIGRATION.MigrationError("SOURCE_SET_EMPTY")
+
+        inspected: list[tuple[Path, Path]] = []
+        seen: set[Path] = set()
+        for env, checkout in classified:
+            _owner_only_source(env)
+            # Direct/parent symlinks were rejected while parsing the discovery
+            # manifest. For repo-local sources preserve the original migration
+            # containment check. Standalone sources use only a local state label;
+            # their parent is not added to destination-exclusion roots.
+            if checkout is not None:
+                source, source_root = MIGRATION._inspect_source(env, checkout)
+            else:
+                if env.stat().st_size > MIGRATION.MAX_LOCAL_FILE_BYTES:
+                    raise MIGRATION.MigrationError("SOURCE_ENV_TOO_LARGE")
+                source, source_root = env, env.parent
+            if source in seen:
+                raise MIGRATION.MigrationError("SOURCE_ENV_DUPLICATED")
+            seen.add(source)
+            inspected.append((source, source_root))
+
+        target, target_exists = MIGRATION._inspect_destination(
+            destination,
+            source_checkout_roots=list(verified_checkouts),
+            arvectum_repo_root=arvectum_repo_root,
+        )
+
+        states = [MIGRATION._read_source_state(source, source_root) for source, source_root in inspected]
+        with_secret = [state for state in states if state.secret_value is not None]
+        sources_with_secret_before = len(with_secret)
+        sources_already_scrubbed_before = len(states) - sources_with_secret_before
+
+        if target_exists:
+            reference_secret = MIGRATION._read_existing_destination(target)
+            destination_reused = True
+        else:
+            if not with_secret:
+                raise MIGRATION.MigrationError("SECRET_SOURCE_NOT_FOUND", MIGRATION.SECRET_ENV_KEY)
+            reference_secret = with_secret[0].secret_value
+            assert reference_secret is not None
+
+        for state in with_secret:
+            assert state.secret_value is not None
+            if not MIGRATION._same_secret(state.secret_value, reference_secret):
+                raise MIGRATION.MigrationError("SOURCE_SECRETS_DIFFER", MIGRATION.SECRET_ENV_KEY)
+
+        if not target_exists:
+            MIGRATION._write_new_secret(target, reference_secret)
+            destination_created = True
+
+        for state in with_secret:
+            try:
+                MIGRATION._rewrite_source_without_secret(state.source_env, state.scrubbed_text)
+            except Exception as exc:
+                raise MIGRATION.MigrationError("SOURCE_SCRUB_INCOMPLETE_DESTINATION_PRESERVED") from exc
+            sources_scrubbed += 1
+
+    except MIGRATION.MigrationError as exc:
+        return 2, tuple(
+            MIGRATION._safe_lines(
+                status="FAIL",
+                failure=exc,
+                destination_created=destination_created,
+                destination_reused=destination_reused,
+                source_count=len(classified),
+                sources_with_secret_before=sources_with_secret_before,
+                sources_already_scrubbed_before=sources_already_scrubbed_before,
+                sources_scrubbed=sources_scrubbed,
+            )
+        )
+    except OSError:
+        failure = MIGRATION.MigrationError("LOCAL_FILESYSTEM_OPERATION_FAILED")
+        return 2, tuple(
+            MIGRATION._safe_lines(
+                status="FAIL",
+                failure=failure,
+                destination_created=destination_created,
+                destination_reused=destination_reused,
+                source_count=len(classified),
+                sources_with_secret_before=sources_with_secret_before,
+                sources_already_scrubbed_before=sources_already_scrubbed_before,
+                sources_scrubbed=sources_scrubbed,
+            )
+        )
+
+    return 0, tuple(
+        MIGRATION._safe_lines(
+            status="PASS",
+            destination_created=destination_created,
+            destination_reused=destination_reused,
+            source_count=len(classified),
+            sources_with_secret_before=sources_with_secret_before,
+            sources_already_scrubbed_before=sources_already_scrubbed_before,
+            sources_scrubbed=sources_scrubbed,
+        )
+    )
 
 
 def _with_classification_counts(
@@ -151,15 +244,9 @@ def recover_mixed_legacy_sources(
     expected_env_count: int,
     arvectum_repo_root: Path | None = None,
 ) -> tuple[int, tuple[str, ...]]:
-    checkout_count = 0
-    env_count = 0
-    remote_verified_count = 0
-    env_untracked_count = 0
-    repo_local_source_count = 0
-    standalone_source_count = 0
-    tracked_dirty_before_count = 0
-    tracked_state_unchanged = False
-    tracked_head_unchanged = False
+    checkout_count = env_count = remote_verified_count = env_untracked_count = 0
+    repo_local_source_count = standalone_source_count = tracked_dirty_before_count = 0
+    tracked_state_unchanged = tracked_head_unchanged = False
     remaining_secret_key_count: int | None = None
     migration_lines: tuple[str, ...] = ()
 
@@ -168,54 +255,37 @@ def recover_mixed_legacy_sources(
             raise BASE.RecoveryError("EXPECTED_SOURCE_COUNT_INVALID")
 
         discovery = BASE._parse_discovery(BASE._inspect_discovery_file(discovery_file))
-        checkout_count = len(discovery.checkouts)
-        env_count = len(discovery.envs)
+        checkout_count, env_count = len(discovery.checkouts), len(discovery.envs)
         if checkout_count != expected_checkout_count:
             raise BASE.RecoveryError("SOURCE_CHECKOUT_COUNT_CHANGED")
         if env_count != expected_env_count:
             raise BASE.RecoveryError("SOURCE_ENV_COUNT_CHANGED")
 
         remote_verified_count = VERIFIED._verify_checkouts(discovery.checkouts)
-
         classified: list[tuple[Path, Path | None]] = []
         for env in discovery.envs:
-            source = _classify_env(env, discovery.checkouts)
-            classified.append(source)
-            if source[1] is None:
+            item = _classify_env(env, discovery.checkouts)
+            classified.append(item)
+            if item[1] is None:
                 standalone_source_count += 1
             else:
                 repo_local_source_count += 1
-
         env_untracked_count = len(classified)
-        pairs = _migration_pairs(classified)
 
         before = _capture_snapshots(discovery.checkouts)
-        tracked_dirty_before_count = sum(
-            1 for snapshot in before.values() if snapshot.tracked_status.strip()
-        )
+        tracked_dirty_before_count = sum(1 for snapshot in before.values() if snapshot.tracked_status.strip())
 
-        try:
-            migration_rc, migration_lines = MIGRATION.migrate_secret_set(
-                pairs,
-                destination,
-                arvectum_repo_root=(arvectum_repo_root or BASE._repo_root()),
-            )
-        except Exception as exc:
-            raise BASE.RecoveryError("CANONICAL_MIGRATION_EXECUTION_FAILED") from exc
+        migration_rc, migration_lines = _migrate_classified(
+            classified,
+            destination,
+            verified_checkouts=discovery.checkouts,
+            arvectum_repo_root=(arvectum_repo_root or BASE._repo_root()).resolve(strict=True),
+        )
 
         after = _capture_snapshots(discovery.checkouts)
-        tracked_state_unchanged = all(
-            after[checkout].tracked_status == before[checkout].tracked_status
-            for checkout in discovery.checkouts
-        )
-        tracked_head_unchanged = all(
-            after[checkout].head == before[checkout].head
-            for checkout in discovery.checkouts
-        )
-
-        remaining_secret_key_count = sum(
-            1 for env in discovery.envs if BASE._contains_secret_key(env)
-        )
+        tracked_state_unchanged = all(after[c].tracked_status == before[c].tracked_status for c in discovery.checkouts)
+        tracked_head_unchanged = all(after[c].head == before[c].head for c in discovery.checkouts)
+        remaining_secret_key_count = sum(1 for env in discovery.envs if BASE._contains_secret_key(env))
 
         if not tracked_state_unchanged:
             raise BASE.RecoveryError("TRACKED_STATE_CHANGED_DURING_MIGRATION")
@@ -224,15 +294,12 @@ def recover_mixed_legacy_sources(
         if migration_rc != 0:
             lines = _with_classification_counts(
                 BASE._safe_lines(
-                    status="FAIL",
-                    failure_code="CANONICAL_MIGRATION_FAILED",
-                    checkout_count=checkout_count,
-                    env_count=env_count,
+                    status="FAIL", failure_code="CANONICAL_MIGRATION_FAILED",
+                    checkout_count=checkout_count, env_count=env_count,
                     remote_verified_count=remote_verified_count,
                     env_untracked_count=env_untracked_count,
                     tracked_dirty_before_count=tracked_dirty_before_count,
-                    tracked_state_unchanged=True,
-                    tracked_head_unchanged=True,
+                    tracked_state_unchanged=True, tracked_head_unchanged=True,
                     remaining_secret_key_count=remaining_secret_key_count,
                 ),
                 repo_local_source_count=repo_local_source_count,
@@ -245,10 +312,8 @@ def recover_mixed_legacy_sources(
     except BASE.RecoveryError as exc:
         lines = _with_classification_counts(
             BASE._safe_lines(
-                status="FAIL",
-                failure_code=exc.code,
-                checkout_count=checkout_count,
-                env_count=env_count,
+                status="FAIL", failure_code=exc.code,
+                checkout_count=checkout_count, env_count=env_count,
                 remote_verified_count=remote_verified_count,
                 env_untracked_count=env_untracked_count,
                 tracked_dirty_before_count=tracked_dirty_before_count,
@@ -263,14 +328,11 @@ def recover_mixed_legacy_sources(
 
     lines = _with_classification_counts(
         BASE._safe_lines(
-            status="PASS",
-            checkout_count=checkout_count,
-            env_count=env_count,
+            status="PASS", checkout_count=checkout_count, env_count=env_count,
             remote_verified_count=remote_verified_count,
             env_untracked_count=env_untracked_count,
             tracked_dirty_before_count=tracked_dirty_before_count,
-            tracked_state_unchanged=True,
-            tracked_head_unchanged=True,
+            tracked_state_unchanged=True, tracked_head_unchanged=True,
             remaining_secret_key_count=0,
         ),
         repo_local_source_count=repo_local_source_count,
@@ -280,12 +342,7 @@ def recover_mixed_legacy_sources(
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
-        description=(
-            "Recover the explicit P6.05-L3 discovery set while keeping repo-local "
-            "and non-Git standalone legacy env sources distinct."
-        )
-    )
+    parser = argparse.ArgumentParser(description="Recover mixed repo-local and standalone P6.05-L3 legacy EIS sources.")
     parser.add_argument("--discovery-file", required=True, type=Path)
     parser.add_argument("--destination", required=True, type=Path)
     parser.add_argument("--expected-checkout-count", required=True, type=int)
@@ -296,8 +353,7 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     rc, lines = recover_mixed_legacy_sources(
-        args.discovery_file,
-        args.destination,
+        args.discovery_file, args.destination,
         expected_checkout_count=args.expected_checkout_count,
         expected_env_count=args.expected_env_count,
     )
