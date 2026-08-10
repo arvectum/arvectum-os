@@ -63,7 +63,7 @@ The P6.02 Stage 3 allowance remains a **maximum**, not a quota. `0` additional c
 - CAP-001 through CAP-004 remain `Incubating / Provisional`;
 - P4.08 and P5.09 Product Contracts remain `Provisional 0.1.0` reference evidence;
 - P6.02 procurement Product Contract remains `Provisional 0.1.0`;
-- no Platform Capability is `Active` merely because M3–M5 or P6.01–P6.05 local subtasks are complete;
+- no Platform Capability is `Active` merely because M3–M5, P6.01–P6.04, or completed P6.05 local subtasks have passed;
 - no Stable/public SDK, API, wire, package or service compatibility boundary has been created;
 - no production/operational-readiness or SLA/support commitment is implied.
 
