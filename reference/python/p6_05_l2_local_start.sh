@@ -16,10 +16,10 @@ fail() {
   exit 1
 }
 
-SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
-REPO_ROOT=$(CDPATH= cd -- "$SCRIPT_DIR/../.." && pwd)
+SCRIPT_DIR=$(CDPATH= cd "$(dirname "$0")" && pwd)
+REPO_ROOT=$(CDPATH= cd "$SCRIPT_DIR/../.." && pwd)
 PYTHON_BIN=${PYTHON_BIN:-python3}
-LOCAL_ROOT=${ARVECTUM_LOCAL_ROOT:-$(dirname -- "$REPO_ROOT")}
+LOCAL_ROOT=${ARVECTUM_LOCAL_ROOT:-$(dirname "$REPO_ROOT")}
 
 command -v git >/dev/null 2>&1 || fail "git is not available"
 command -v "$PYTHON_BIN" >/dev/null 2>&1 || fail "$PYTHON_BIN is not available"
@@ -50,12 +50,20 @@ ORIGIN_SHA=$(git -C "$REPO_ROOT" rev-parse origin/main)
 HEAD_SHORT=$(printf '%s' "$HEAD_SHA" | cut -c1-12)
 VENV_DIR=${ARVECTUM_L2_VENV_DIR:-$LOCAL_ROOT/runtime-data/venvs/p6-05-l2-arvectum-os-$HEAD_SHORT}
 EVIDENCE_ROOT=${ARVECTUM_L2_EVIDENCE_ROOT:-$LOCAL_ROOT/evidence/p6-05-l2}
+
+case "$VENV_DIR/" in
+  "$REPO_ROOT"/*) fail "L2 venv must remain outside the source-controlled checkout" ;;
+esac
+case "$EVIDENCE_ROOT/" in
+  "$REPO_ROOT"/*) fail "L2 evidence must remain outside the source-controlled checkout" ;;
+esac
+
 TIMESTAMP=$(date -u '+%Y%m%dT%H%M%SZ')
 RUN_DIR="$EVIDENCE_ROOT/$TIMESTAMP-$HEAD_SHORT"
 LOG_FILE="$RUN_DIR/reference-runtime.log"
 SUMMARY_FILE="$RUN_DIR/summary.txt"
 
-mkdir -p "$RUN_DIR" "$(dirname -- "$VENV_DIR")"
+mkdir -p "$RUN_DIR" "$(dirname "$VENV_DIR")"
 
 if [ ! -x "$VENV_DIR/bin/python" ]; then
   printf '%s\n' "P6.05-L2: creating isolated stdlib-only venv at $VENV_DIR"
