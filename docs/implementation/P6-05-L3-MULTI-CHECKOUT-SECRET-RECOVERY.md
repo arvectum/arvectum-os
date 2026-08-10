@@ -102,11 +102,13 @@ python3 reference/python/p6_05_l3_recover_discovered_sources.py \
   --expected-env-count 7
 ```
 
+The bounded legacy filename scope intentionally matches the discovery procedure: `.env.local` and files whose basename ends exactly in `.env`, including `.env` itself and names such as `legacy.env`. This does **not** admit arbitrary configuration files or shell profiles. Names such as `.zshrc`, `.bash_profile`, `.env.production`, `config.txt` or `legacy.env.backup` fail closed.
+
 The helper:
 
 - verifies the discovery file and explicit expected counts;
 - verifies each checkout's Git `origin` identifies `arutyunoveth/ai-corporation` without emitting the remote value;
-- verifies every legacy env source is untracked and maps unambiguously into a supplied checkout;
+- verifies every legacy env source uses the bounded filename scope, is untracked and maps unambiguously into a supplied checkout;
 - rejects direct/parent env symlink sources;
 - makes the env source owner-only before secret reliance;
 - captures each checkout's `HEAD` and tracked `git status --porcelain=v1 --untracked-files=no` entirely in process memory;
@@ -153,6 +155,7 @@ Safe failure includes, without limitation:
 - discovery-file absence, invalid encoding, symlink or excessive size;
 - expected checkout/env count drift;
 - unverified product remote;
+- unsupported legacy source filename outside `.env.local` / `*.env`;
 - ambiguous env-to-checkout mapping;
 - tracked or symlinked legacy env source;
 - source-pair count mismatch or duplicate source env path;
@@ -190,6 +193,12 @@ No failure output contains token values, hashes, checkout paths, tracked filenam
 - expected source-count drift fails closed;
 - differing source secrets fail while preserving tracked baseline state;
 - a newly introduced tracked change during migration is detected and fails closed.
+
+`reference/python/tests/test_p6_05_l3_recover_env_filename_boundary.py` additionally proves that:
+
+- `.env.local`, `.env` and bounded `*.env` filenames are accepted consistently with discovery;
+- arbitrary shell/config filenames and near-miss suffixes remain rejected;
+- a named `*.env` legacy source completes the same recovery path without exposing the synthetic secret.
 
 All test credentials are synthetic and carry no external authority.
 
