@@ -28,7 +28,6 @@ import p6_05_l3_migrate_eis_secret as MIGRATION
 
 
 TARGET_REPOSITORY = "arutyunoveth/ai-corporation"
-SUPPORTED_ENV_NAMES = frozenset({".env", ".env.local"})
 MAX_DISCOVERY_BYTES = 1024 * 1024
 
 
@@ -62,6 +61,12 @@ def _is_relative_to(path: Path, parent: Path) -> bool:
     except ValueError:
         return False
     return True
+
+
+def _supported_legacy_env_filename(path: Path) -> bool:
+    """Match the bounded discovery set: .env.local plus files ending in .env."""
+    name = path.name
+    return name == ".env.local" or name.endswith(".env")
 
 
 def _run_git(checkout: Path, *args: str) -> subprocess.CompletedProcess[str]:
@@ -155,7 +160,7 @@ def _map_envs_to_checkouts(
 ) -> tuple[tuple[Path, Path], ...]:
     pairs: list[tuple[Path, Path]] = []
     for env in envs:
-        if env.name not in SUPPORTED_ENV_NAMES:
+        if not _supported_legacy_env_filename(env):
             raise RecoveryError("UNSUPPORTED_LEGACY_ENV_FILENAME")
         if not env.is_file():
             raise RecoveryError("LEGACY_ENV_NOT_REGULAR_FILE")
