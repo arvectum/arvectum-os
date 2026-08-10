@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.51.0`
+Version: `2.51.1`
 Created: `2026-08-07`
 Updated: `2026-08-09`
 Owner: `ООО «Арвектум»`
@@ -17,7 +17,7 @@ Detailed completed-phase evidence remains in the corresponding `PHASE-N-...` roa
 
 ## 2. Version note
 
-Version `2.51.0` refines the current **P6.05 — Platform-gap remediation from first real use** after the bounded platform and product implementation has merged successfully but the truthful real `7/7` exact-attachment evidence gate remains unobserved.
+Version `2.51.1` records `P6.05-L1` as complete after a bounded, secret-safe owner-operated host/runtime inventory. The truthful real `7/7` exact-attachment evidence gate remains unobserved.
 
 P6.05 implementation readiness is now separated from the owner-operated runtime work required to execute the real evidence path. The local deployment is treated as a bounded **Internal / local owner-operated runtime** for ООО «Арвектум», not as a Production environment, supported macOS product, Stable/public runtime contract or final deployment topology.
 
@@ -116,8 +116,8 @@ Canonical detailed roadmap:
 |---|---|---|
 | `P6.05-I1` | Bounded platform exact-document admission remediation | 🟩 Complete — merged `5dbbc7b3...` |
 | `P6.05-I2` | Product exact-attachment evidence capture + governed bridge | 🟩 Complete — product PR `#142` merged `bf9a1c543...` |
-| `P6.05-L1` | Local host/runtime baseline | ⬜ Pending |
-| `P6.05-L2` | Reproducible Arvectum OS local checkout + reference runtime start | ⬜ Pending |
+| `P6.05-L1` | Local host/runtime baseline | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L1-local-host-runtime-baseline.md) |
+| `P6.05-L2` | Reproducible Arvectum OS local checkout + reference runtime start | 🟨 Current / next |
 | `P6.05-L3` | Secure local configuration + secrets boundary | ⬜ Pending |
 | `P6.05-L4` | Internal Organization + operator bootstrap | ⬜ Pending |
 | `P6.05-L5` | First real product connection through exact P6.02 boundary | ⬜ Pending |
@@ -157,7 +157,9 @@ M6 does not require an `Active` Platform Capability, Stable Product Contract, pr
 
 ## 8. Current canonical action
 
-> **P6.05-L1 — Local host/runtime baseline for the bounded owner-operated Arvectum OS runtime on the Mac mini.**
+> **P6.05-L2 — Reproducible Arvectum OS local checkout + reference runtime start.**
+
+`P6.05-L1` is complete / PASS; its bounded host, runtime, repository, local-network, storage and rollback evidence is recorded in [`P6-05-L1-local-host-runtime-baseline.md`](../reviews/P6-05-L1-local-host-runtime-baseline.md). The EIS proxy/TLS constraint is recorded for L3/L7 and does not block the in-process L2 reference-runtime start.
 
 The P6.05 code remediation is implementation-ready, but P6.05 remains open until truthful real evidence exists. Continue through the dependency-aware local substream in [`P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md`](P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md).
 
@@ -222,9 +224,11 @@ P6.04 Product value / friction / governance evidence ✓ PASS
         ↓
 P6.05 implementation remediation ✓ merged
         ↓
-P6.05-L1 Local host/runtime baseline ← current
+P6.05-L1 Local host/runtime baseline ✓ PASS
         ↓
-P6.05-L2..L6 local start / secure config / org+product / smoke
+P6.05-L2 local checkout + reference runtime start ← current
+        ↓
+P6.05-L3..L6 secure config / org+product / smoke
         ↓
 P6.05-L7 real exact attachment evidence: 7/7 required
         ↓

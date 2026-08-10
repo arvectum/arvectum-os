@@ -1,7 +1,7 @@
 # P6.05 — Local Internal Runtime Substream
 
 Status: `Active / In Progress`
-Version: `0.1.0`
+Version: `0.1.1`
 Created: `2026-08-09`
 Updated: `2026-08-09`
 Owner: `ООО «Арвектум»`
@@ -57,8 +57,8 @@ Implementation readiness does **not** close P6.05. Real `7/7` evidence remains u
 
 | ID | Subtask | Status | Exit evidence |
 |---|---|---|---|
-| `P6.05-L1` | Local host/runtime baseline | ⬜ Pending | host prerequisites, repository locations, runtime versions and local-only network/port assumptions are inventoried; no final topology is declared |
-| `P6.05-L2` | Reproducible Arvectum OS local checkout + reference runtime start | ⬜ Pending | canonical `main` is checked out, dependencies install reproducibly, reference/runtime smoke starts on the Mac mini |
+| `P6.05-L1` | Local host/runtime baseline | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L1-local-host-runtime-baseline.md) | host prerequisites, repository locations, runtime versions and local-only network/port assumptions are inventoried; no final topology is declared |
+| `P6.05-L2` | Reproducible Arvectum OS local checkout + reference runtime start | 🟨 Current / next | canonical `main` is checked out, dependencies install reproducibly, reference/runtime smoke starts on the Mac mini |
 | `P6.05-L3` | Secure local configuration + secrets boundary | ⬜ Pending | local configuration is separated from repository state; required credentials are detected without being printed/committed; fail-closed behavior is verified |
 | `P6.05-L4` | Internal Organization + operator bootstrap | ⬜ Pending | bounded ООО «Арвектум» Organization/operator context can execute the required local governed flow with least-privilege assumptions documented |
 | `P6.05-L5` | First real product connection | ⬜ Pending | `ai-corporation` connects through exact P6.02 Product Contract `0.1.0`, CAP-001 + CAP-004 only, with Organization/contract continuity preserved |
@@ -200,4 +200,4 @@ Until a later accepted decision says otherwise, this environment is bounded and 
 
 ## 9. Immediate next action
 
-Begin `P6.05-L1 — Local host/runtime baseline` on the owner-operated Mac mini, then proceed dependency-aware through L2-L7. Do not skip local smoke and do not mark P6.05 PASS before truthful real evidence exists.
+Proceed with `P6.05-L2 — Reproducible Arvectum OS local checkout + reference runtime start` from the clean canonical checkout identified by [P6.05-L1 evidence](../reviews/P6-05-L1-local-host-runtime-baseline.md). Do not skip local smoke and do not mark P6.05 PASS before truthful real evidence exists.
