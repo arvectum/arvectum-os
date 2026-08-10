@@ -75,15 +75,17 @@ The script performs only these bounded actions:
 4. verifies exact `HEAD == origin/main`;
 5. creates an isolated version-specific venv outside the source checkout;
 6. performs no third-party dependency installation because the current harness is stdlib-only;
-7. runs the existing reference runtime command:
+7. runs the existing reference runtime suite with Python bytecode writes disabled for that process tree so the validation itself does not create `__pycache__` / `.pyc` artifacts inside the source checkout:
 
 ```sh
-python -m unittest discover -s tests -v
+PYTHONDONTWRITEBYTECODE=1 python -m unittest discover -s tests -v
 ```
 
 8. verifies that the source checkout remains clean after the runtime suite;
 9. stores a secret-safe local log and summary under `<local-root>/evidence/p6-05-l2/`;
 10. records `external_actions=false`, `product_invoked=false`, `eis_invoked=false` and `public_ingress=false`.
+
+Disabling bytecode writes is a local execution hygiene control only. It does not change reference runtime semantics, dependencies, persistence, public interfaces or architecture.
 
 ## 5. Expected PASS evidence
 
