@@ -2,7 +2,7 @@
 
 Status: `Prepared / owner-operated Mac execution required for PASS`
 Date: `2026-08-10`
-Owner: `ООО «Арвектум»
+Owner: `ООО «Арвектум»`
 Task classification: `platform`
 Operational environment: `Internal / local owner-operated runtime`
 Production-readiness claim: `None`
@@ -44,7 +44,7 @@ The recovery therefore treats the discovered legacy copies as a set:
 
 If configured source values differ, the helper fails before creating a new destination or scrubbing any source.
 
-## 4. Canonical helper
+## 4. Canonical migration helper
 
 `reference/python/p6_05_l3_migrate_eis_secret.py` accepts repeated source pairs:
 
@@ -82,54 +82,93 @@ Sources that no longer contain the token are treated as already scrubbed. This m
 
 If a source rewrite fails after the destination exists, the helper preserves the destination and reports `SOURCE_SCRUB_INCOMPLETE_DESTINATION_PRESERVED`. It does not reintroduce the secret into already-scrubbed sources and does not create a secret-bearing backup. Re-running the same complete source set is the recovery path after the local filesystem issue is corrected.
 
-## 6. Safe output
+## 6. Baseline-aware discovery recovery
 
-A successful multi-source migration emits only safe state such as:
+A discovered product checkout may already contain unrelated tracked local work. L3 does not own that work and must not erase, stash, reset, stage, commit or otherwise modify it merely to obtain a clean-tree precondition.
+
+For an already-produced local-only discovery manifest, use:
 
 ```text
-p6_05_l3_secret_migration_status=PASS
-migration_scope=legacy_repo_local_eis_token_set_to_external_owner_only_file
-source_count=7
-sources_with_secret_before=7
-sources_already_scrubbed_before=0
-sources_scrubbed=7
-destination_created=true
-destination_reused=false
-all_source_secrets_consistent=true
-all_sources_scrubbed=true
-destination_owner_only=true
-secret.ZAKUPKI_GOV_RU_SOAP_TOKEN=configured
+reference/python/p6_05_l3_recover_discovered_sources.py
+```
+
+Example:
+
+```sh
+python3 reference/python/p6_05_l3_recover_discovered_sources.py \
+  --discovery-file "$ARVECTUM_LOCAL_ROOT/evidence/p6-05-l3/discovery-local-only.txt" \
+  --destination "$ARVECTUM_LOCAL_ROOT/local-secrets/eis-soap-token" \
+  --expected-checkout-count 7 \
+  --expected-env-count 7
+```
+
+The helper:
+
+- verifies the discovery file and explicit expected counts;
+- verifies each checkout's Git `origin` identifies `arutyunoveth/ai-corporation` without emitting the remote value;
+- verifies every legacy env source is untracked and maps unambiguously into a supplied checkout;
+- rejects direct/parent env symlink sources;
+- makes the env source owner-only before secret reliance;
+- captures each checkout's `HEAD` and tracked `git status --porcelain=v1 --untracked-files=no` entirely in process memory;
+- allows pre-existing tracked dirtiness;
+- invokes the canonical multi-source migration helper;
+- captures the same tracked state afterward and requires exact equality for every checkout;
+- verifies no supplied legacy env still contains the EIS token key;
+- emits only counts, booleans and safe failure codes.
+
+Paths, filenames from tracked status, diffs, remote URLs, token values and token hashes are not emitted. A pre-existing dirty checkout therefore does not block L3 when its tracked state remains exactly unchanged. Any new tracked-state or `HEAD` change during migration fails closed.
+
+## 7. Safe output
+
+A successful seven-source recovery may emit safe state such as:
+
+```text
+p6_05_l3_discovered_source_recovery_status=PASS
+source_checkout_count=7
+source_env_count=7
+source_remote_verified_count=7
+source_env_untracked_count=7
+tracked_dirty_before_count=1
+tracked_state_unchanged=true
+tracked_head_unchanged=true
+source_envs_with_eis_key_remaining=0
+preexisting_tracked_changes_modified=false
 secret_values_printed=false
 secret_values_hashed=false
-secret_values_exported=false
-secret_values_persisted_as_evidence=false
-backup_with_secret_created=false
+secret_values_committed=false
 product_invoked=false
 eis_invoked=false
 network_invoked=false
 external_actions=false
+p6_05_l3_secret_migration_status=PASS
+...
 ```
 
-Counts may differ on idempotent retry. Paths and secret values are not part of canonical evidence.
+The exact dirty-before count is descriptive evidence only. It is not a conformance failure. The required invariant is `tracked_state_unchanged=true` and `tracked_head_unchanged=true`.
 
-## 7. Fail-closed conditions
+## 8. Fail-closed conditions
 
 Safe failure includes, without limitation:
 
-- source-pair count mismatch;
-- duplicate source env path;
-- source outside its declared checkout;
-- missing, non-regular, symlinked, oversized or broadly readable source env;
+- discovery-file absence, invalid encoding, symlink or excessive size;
+- expected checkout/env count drift;
+- unverified product remote;
+- ambiguous env-to-checkout mapping;
+- tracked or symlinked legacy env source;
+- source-pair count mismatch or duplicate source env path;
+- missing, non-regular, oversized or broadly readable source env;
 - duplicate or placeholder token assignment in a source;
 - no token source when no destination exists;
 - differing configured token values across sources;
 - existing destination that is unsafe, invalid or does not match remaining source tokens;
 - destination inside any supplied source checkout or the Arvectum OS checkout;
-- incomplete source scrub after destination preservation.
+- incomplete source scrub after destination preservation;
+- any product checkout `HEAD` or tracked status changing during migration;
+- any supplied source still containing the EIS key after a migration reported PASS.
 
-No failure output contains token values or hashes.
+No failure output contains token values, hashes, checkout paths, tracked filenames/diffs or remote URLs.
 
-## 8. Test evidence
+## 9. Test evidence
 
 `reference/python/tests/test_p6_05_l3_migrate_eis_secret.py` uses synthetic credentials to prove:
 
@@ -143,12 +182,21 @@ No failure output contains token values or hashes.
 - duplicate keys, placeholder values, broad permissions, duplicate source paths and unsafe destination placement fail closed;
 - secret values never appear in safe output.
 
+`reference/python/tests/test_p6_05_l3_recover_discovered_sources.py` proves:
+
+- seven-source recovery passes when one checkout has a pre-existing tracked modification and that state is preserved exactly;
+- tracked legacy env files fail before migration;
+- wrong repository remotes fail without emitting remote/path data;
+- expected source-count drift fails closed;
+- differing source secrets fail while preserving tracked baseline state;
+- a newly introduced tracked change during migration is detected and fails closed.
+
 All test credentials are synthetic and carry no external authority.
 
-## 9. Closure rule
+## 10. Closure rule
 
 This recovery preparation does not complete L3 by itself.
 
-L3 remains open until the owner-operated Mac mini runs the canonical helper against the complete discovered source set, the canonical L3 preflight passes against the external config/secret boundary, the bounded synthetic test suites pass, and tracked working trees remain clean.
+L3 remains open until the owner-operated Mac mini runs the canonical discovery recovery/migration helper against the complete discovered source set, the canonical L3 preflight passes against the external config/secret boundary, and the bounded synthetic test suites pass. The Arvectum OS execution checkout must remain clean. Each discovered product checkout must preserve its exact pre-migration `HEAD` and tracked status; pre-existing tracked dirtiness is permitted but must not be modified by L3.
 
 No product, EIS, TLS/proxy, network or external action is authorized by this recovery step. P6.05 remains open after L3 and only advances to L4 after canonical review of safe local PASS evidence.

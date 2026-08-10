@@ -170,7 +170,15 @@ Counts may differ on an idempotent retry. Paths and secret values are not canoni
 
 For the full multi-checkout recovery rationale and fail-closed semantics, see `P6-05-L3-MULTI-CHECKOUT-SECRET-RECOVERY.md`.
 
-After migration, Arvectum OS and every supplied `ai-corporation` checkout must still have clean tracked working trees. The presence of unrelated non-secret settings in product `.env.local` files is not itself L3 evidence; later P6.05 product connection must explicitly inject the selected L3 config/secret boundary rather than rely on repo-local secret storage.
+When local discovery is already available, the canonical discovery-driven orchestrator is:
+
+```text
+reference/python/p6_05_l3_recover_discovered_sources.py
+```
+
+It verifies the expected checkout/env counts, repository remotes and that every legacy env source is untracked; captures each supplied product checkout's `HEAD` plus tracked `git status --porcelain=v1 --untracked-files=no` in memory; calls the canonical multi-source migration helper; then requires the exact tracked state and HEAD of every checkout to be unchanged. It also verifies that none of the supplied legacy env files still contains the EIS key. It never emits checkout paths, tracked filenames/diffs, remote URLs or secret values/hashes.
+
+Pre-existing tracked changes in a product checkout do **not** by themselves block L3. L3 does not own, reset, stash, commit or otherwise modify unrelated product work. The required invariant is that migration leaves each checkout's pre-existing tracked state exactly unchanged. The legacy env sources themselves must remain untracked.
 
 ## 7. Checked-in preflight
 
@@ -225,7 +233,9 @@ The preflight returns non-zero and a safe failure code when any material boundar
 - token value is empty or a known placeholder;
 - local file is too large or not a regular UTF-8 file.
 
-Failures identify only a safe code and, where useful, the configuration key name. They do not echo the rejected value.
+Discovery-driven recovery additionally fails closed if expected source counts drift, a candidate remote is not the declared `ai-corporation` repository, a legacy env is tracked or symlinked, env-to-checkout mapping is ambiguous, the canonical migration fails, any checkout HEAD or tracked state changes during migration, or any supplied legacy env still contains the EIS key afterward.
+
+Failures identify only a safe code and, where useful, the configuration key name. They do not echo rejected values, local paths, tracked filenames or diffs.
 
 ## 9. Test evidence prepared in repository
 
@@ -255,15 +265,24 @@ Failures identify only a safe code and, where useful, the configuration key name
 - duplicate source env paths are rejected;
 - secret values never appear in safe output.
 
+`reference/python/tests/test_p6_05_l3_recover_discovered_sources.py` additionally proves that:
+
+- the discovered seven-source recovery succeeds with a pre-existing tracked modification when that tracked state remains exactly unchanged;
+- tracked legacy env files and wrong remotes fail before migration;
+- source-count drift fails closed;
+- differing secrets preserve the pre-existing tracked baseline and remain unmodified;
+- a new tracked change during migration is detected and fails closed;
+- local paths, remote values and synthetic secrets do not appear in safe output.
+
 All test tokens are synthetic and have no external authority or credential value.
 
 ## 10. Owner-operated Mac execution and evidence
 
 Publishing the runbook/preflight/tests is preparation, not L3 completion.
 
-L3 may be marked `PASS` only after the selected owner-operated Mac mini executes the canonical migration helper where required, then executes the canonical preflight against the actual external local configuration and authorized local token file, plus bounded synthetic negative-path checks, while preserving clean tracked working trees.
+L3 may be marked `PASS` only after the selected owner-operated Mac mini executes the canonical migration/recovery helper where required, then executes the canonical preflight against the actual external local configuration and authorized local token file, plus bounded synthetic negative-path checks. The Arvectum OS tracked working tree must be clean for the canonical execution checkout. For discovered legacy product checkouts, pre-existing tracked changes may remain, but their `HEAD` and tracked status must be proven unchanged across the migration; L3 must not create, remove, stage, commit, reset or otherwise alter those tracked changes.
 
-The retained L3 evidence must contain only safe migration/preflight summaries and source-control state. Do not retain raw config, raw token content, environment dumps, shell traces, token hashes or legacy secret-bearing source-env contents as canonical evidence.
+The retained L3 evidence must contain only safe migration/preflight summaries and source-control state booleans/counts. Do not retain raw config, raw token content, environment dumps, shell traces, token hashes, checkout paths, tracked filenames/diffs or legacy secret-bearing source-env contents as canonical evidence.
 
 The actual EIS TLS/proxy reachability observed as constrained in L1 is not converted into a PASS by this configuration check. Live reachability remains subject to later authorized execution and must fail closed if the verified path is unavailable.
 
