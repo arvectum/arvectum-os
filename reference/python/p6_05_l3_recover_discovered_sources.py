@@ -142,11 +142,23 @@ def _parse_discovery(path: Path) -> DiscoverySet:
     )
 
 
+def _git_worktree_root(path: Path) -> Path:
+    probe = _run_git(path, "rev-parse", "--show-toplevel")
+    if probe.returncode != 0 or not probe.stdout.strip():
+        raise RecoveryError("GIT_WORKTREE_ROOT_NOT_VERIFIED")
+    try:
+        return Path(probe.stdout.strip()).resolve(strict=True)
+    except OSError as exc:
+        raise RecoveryError("GIT_WORKTREE_ROOT_NOT_VERIFIED") from exc
+
+
 def _verify_checkouts(checkouts: Sequence[Path]) -> int:
     verified = 0
     for checkout in checkouts:
         if not checkout.is_dir():
             raise RecoveryError("SOURCE_CHECKOUT_INVALID")
+        if _git_worktree_root(checkout) != checkout:
+            raise RecoveryError("AI_CORPORATION_CHECKOUT_NOT_WORKTREE_ROOT")
         remote = _run_git(checkout, "remote", "get-url", "origin")
         if remote.returncode != 0 or not _remote_matches_target(remote.stdout):
             raise RecoveryError("AI_CORPORATION_REMOTE_NOT_VERIFIED")
@@ -159,17 +171,24 @@ def _map_envs_to_checkouts(
     checkouts: Sequence[Path],
 ) -> tuple[tuple[Path, Path], ...]:
     pairs: list[tuple[Path, Path]] = []
+    checkout_set = set(checkouts)
+
     for env in envs:
         if not _supported_legacy_env_filename(env):
             raise RecoveryError("UNSUPPORTED_LEGACY_ENV_FILENAME")
         if not env.is_file():
             raise RecoveryError("LEGACY_ENV_NOT_REGULAR_FILE")
 
-        matches = [checkout for checkout in checkouts if _is_relative_to(env, checkout)]
-        if len(matches) != 1:
-            raise RecoveryError("ENV_CHECKOUT_MAPPING_AMBIGUOUS")
+        # Path containment is ambiguous when one verified checkout is nested
+        # inside another. Git's nearest worktree root is the authoritative local
+        # owner for this filesystem source; it must be one of the verified
+        # discovery checkouts, otherwise recovery fails closed.
+        checkout = _git_worktree_root(env.parent)
+        if checkout not in checkout_set:
+            raise RecoveryError("ENV_GIT_OWNER_NOT_IN_DISCOVERY")
+        if not _is_relative_to(env, checkout):
+            raise RecoveryError("ENV_GIT_OWNER_MISMATCH")
 
-        checkout = matches[0]
         relative_env = env.relative_to(checkout)
         tracked = _run_git(checkout, "ls-files", "--", str(relative_env))
         if tracked.returncode != 0:
