@@ -21,7 +21,7 @@ The L2 start must preserve:
 
 - canonical repository `arutyunoveth/arvectum-os`;
 - branch `main` synchronized exactly to `origin/main` before execution;
-- a clean working tree before synchronization;
+- a clean working tree before synchronization and after the reference run;
 - the existing in-process reference runtime under `reference/python`;
 - no product/EIS invocation in L2;
 - no credentials or secret material in source control or evidence;
@@ -65,7 +65,7 @@ sh reference/python/p6_05_l2_local_start.sh
 
 The script performs only these bounded actions:
 
-1. verifies that `origin` resolves to the canonical repository;
+1. verifies that `origin` is one of the accepted canonical GitHub HTTPS/SSH forms for `arutyunoveth/arvectum-os`;
 2. requires branch `main` and a clean working tree;
 3. fetches `origin/main` and fast-forwards local `main` only;
 4. verifies exact `HEAD == origin/main`;
@@ -77,8 +77,9 @@ The script performs only these bounded actions:
 python -m unittest discover -s tests -v
 ```
 
-8. stores a secret-safe local log and summary under `<local-root>/evidence/p6-05-l2/`;
-9. records `external_actions=false`, `product_invoked=false`, `eis_invoked=false` and `public_ingress=false`.
+8. verifies that the source checkout remains clean after the runtime suite;
+9. stores a secret-safe local log and summary under `<local-root>/evidence/p6-05-l2/`;
+10. records `external_actions=false`, `product_invoked=false`, `eis_invoked=false` and `public_ingress=false`.
 
 ## 5. Expected PASS evidence
 
@@ -92,6 +93,7 @@ L2 may be marked `PASS` only after the command executes on the selected Mac mini
 - runtime mode is `in-process reference harness`;
 - the full reference suite result is `OK`;
 - the observed test count is recorded from the actual local run;
+- `working_tree_after_runtime=clean`;
 - no product, EIS, public ingress or external action was invoked.
 
 The test count must be recorded from the live Mac execution. It must not be copied from an earlier hosted or local observation.
@@ -102,11 +104,12 @@ The bootstrap fails closed when:
 
 - the checkout is not the canonical repository;
 - the checkout is not on `main`;
-- the working tree is dirty;
+- the working tree is dirty before synchronization;
 - canonical `main` cannot be fetched or fast-forwarded;
 - local `HEAD` does not equal `origin/main` after synchronization;
 - Python or `venv` is unavailable;
-- the reference suite fails.
+- the reference suite fails;
+- the reference suite leaves the source checkout dirty.
 
 A failure remains evidence and must not be converted into `PASS`.
 
