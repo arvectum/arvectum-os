@@ -1,6 +1,6 @@
 # P6.05-L2 — Reproducible Local Reference Runtime Start
 
-Status: `Prepared / owner-operated Mac execution required for PASS`
+Status: `Validated / PASS recorded`
 Date: `2026-08-10`
 Owner: `ООО «Арвектум»`
 Task classification: `platform`
@@ -104,6 +104,8 @@ L2 may be marked `PASS` only after the command executes on the selected Mac mini
 
 The test count must be recorded from the live Mac execution. It must not be copied from an earlier hosted or local observation.
 
+The owner-operated Mac execution recorded on `2026-08-10` satisfied these conditions on canonical `main` commit `fb61889633b11875dc5e1cf92771a159024a5695`: CPython `3.14.6`, `Ran 717 tests in 0.980s`, `OK`, clean working tree after execution, and no generated `__pycache__` / `.pyc` artifacts in `reference/python`. Canonical evidence is [`P6-05-L2-local-reference-runtime-start.md`](../reviews/P6-05-L2-local-reference-runtime-start.md).
+
 ## 6. Failure behavior
 
 The bootstrap fails closed when:
@@ -133,6 +135,8 @@ No container, daemon, public listener, system service, database or durable platf
 
 ## 8. Canonical closure rule
 
-Publishing this runbook and bootstrap script is preparation, not L2 completion.
+Publishing this runbook and bootstrap script alone is preparation, not L2 completion.
 
-`P6.05-L2` remains current until the selected owner-operated Mac mini executes the bootstrap and the actual local result is canonically recorded. Only then should the P6.05 local substream and canonical roadmap be synchronized to mark L2 complete and advance to `P6.05-L3`.
+The selected owner-operated Mac mini has now executed the corrected canonical bootstrap and the actual PASS result is recorded in [`P6-05-L2-local-reference-runtime-start.md`](../reviews/P6-05-L2-local-reference-runtime-start.md). `P6.05-L2` is therefore complete within its bounded internal/local scope, and the next eligible action is `P6.05-L3 — Secure local configuration + secrets boundary`.
+
+This closure does not close P6.05, establish Production readiness, create a Stable/public runtime contract, or promote any Platform Capability lifecycle.
