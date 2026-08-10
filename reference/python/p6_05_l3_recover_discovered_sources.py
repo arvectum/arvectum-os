@@ -116,14 +116,18 @@ def _parse_discovery(path: Path) -> DiscoverySet:
     for line in lines:
         if line.startswith("AI_CORPORATION_CHECKOUT="):
             raw = line.split("=", 1)[1]
+            expanded = Path(raw).expanduser()
             try:
-                checkouts.add(Path(raw).expanduser().resolve(strict=True))
+                checkouts.add(expanded.resolve(strict=True))
             except OSError as exc:
                 raise RecoveryError("DISCOVERED_CHECKOUT_INVALID") from exc
         elif line.startswith("ENV_WITH_EIS_KEY="):
             raw = line.split("=", 1)[1]
+            expanded = Path(raw).expanduser()
+            if expanded.is_symlink() or expanded.parent.is_symlink():
+                raise RecoveryError("DISCOVERED_ENV_SYMLINK_NOT_ALLOWED")
             try:
-                envs.add(Path(raw).expanduser().resolve(strict=True))
+                envs.add(expanded.resolve(strict=True))
             except OSError as exc:
                 raise RecoveryError("DISCOVERED_ENV_INVALID") from exc
 
@@ -153,7 +157,7 @@ def _map_envs_to_checkouts(
     for env in envs:
         if env.name not in SUPPORTED_ENV_NAMES:
             raise RecoveryError("UNSUPPORTED_LEGACY_ENV_FILENAME")
-        if env.is_symlink() or not env.is_file():
+        if not env.is_file():
             raise RecoveryError("LEGACY_ENV_NOT_REGULAR_FILE")
 
         matches = [checkout for checkout in checkouts if _is_relative_to(env, checkout)]
@@ -307,11 +311,14 @@ def recover_discovered_sources(
             1 for snapshot in before.values() if snapshot.tracked_status.strip()
         )
 
-        migration_rc, migration_lines = MIGRATION.migrate_secret_set(
-            pairs,
-            destination,
-            arvectum_repo_root=(arvectum_repo_root or _repo_root()),
-        )
+        try:
+            migration_rc, migration_lines = MIGRATION.migrate_secret_set(
+                pairs,
+                destination,
+                arvectum_repo_root=(arvectum_repo_root or _repo_root()),
+            )
+        except Exception as exc:
+            raise RecoveryError("CANONICAL_MIGRATION_EXECUTION_FAILED") from exc
 
         after = _capture_snapshots(discovery.checkouts)
         tracked_state_unchanged = all(
