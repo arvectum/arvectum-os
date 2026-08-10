@@ -1,9 +1,9 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.51.2`
+Version: `2.51.3`
 Created: `2026-08-07`
-Updated: `2026-08-09`
+Updated: `2026-08-10`
 Owner: `ООО «Арвектум»`
 Task classification: `governance`
 
@@ -17,17 +17,21 @@ Detailed completed-phase evidence remains in the corresponding `PHASE-N-...` roa
 
 ## 2. Version note
 
-Version `2.51.2` synchronizes the published P6.05 local-substream reference to `0.1.1` after `P6.05-L1` was recorded complete. The truthful real `7/7` exact-attachment evidence gate remains unobserved.
+Version `2.51.3` records `P6.05-L2` as `Complete / PASS` after the selected owner-operated Mac mini reproduced canonical `main` at `fb61889633b11875dc5e1cf92771a159024a5695`, passed `717/717` reference tests under CPython `3.14.6`, and preserved a clean source checkout with no product, EIS, public-ingress or external action. Canonical evidence is [`P6-05-L2-local-reference-runtime-start.md`](../reviews/P6-05-L2-local-reference-runtime-start.md).
 
-P6.05 implementation readiness is now separated from the owner-operated runtime work required to execute the real evidence path. The local deployment is treated as a bounded **Internal / local owner-operated runtime** for ООО «Арвектум», not as a Production environment, supported macOS product, Stable/public runtime contract or final deployment topology.
+The detailed P6.05 local substream is synchronized to `0.1.2`; `P6.05-L3 — Secure local configuration + secrets boundary` is now the current action. The truthful real `7/7` exact-attachment evidence gate remains unobserved, so P6.05 itself remains open.
 
-The detailed substream is [`P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md`](P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md). It decomposes the remaining work into host/runtime baseline, reproducible local start, secure configuration, Organization/operator bootstrap, first real product connection, local smoke, real `7/7` live run, governed admission/closure and dogfooding-friction capture.
+P6.05 implementation readiness remains separated from the owner-operated runtime work required to execute the real evidence path. The local deployment is treated as a bounded **Internal / local owner-operated runtime** for ООО «Арвектум», not as a Production environment, supported macOS product, Stable/public runtime contract or final deployment topology.
 
-Already observed implementation evidence:
+The detailed substream is [`P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md`](P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md). It decomposes the remaining work into secure configuration, Organization/operator bootstrap, first real product connection, local smoke, real `7/7` live run, governed admission/closure and dogfooding-friction capture, with L1 and L2 now complete.
+
+Already observed implementation and local-runtime evidence:
 
 - bounded Arvectum OS P6.05 CAP-001 admission implementation merged as `5dbbc7b3af1f0f3896301ef833de2214cb44e6f9`;
 - `ai-corporation` PR `#142` merged as `bf9a1c5438426031fce36370344ada969d2493dd`;
 - hosted standard product CI and dedicated P6.05 exact-attachment CI passed on the unchanged implementation head;
+- P6.05-L1 local host/runtime baseline passed;
+- P6.05-L2 reproducible local reference runtime passed on canonical `main` with `717/717` tests and a clean source checkout;
 - the real live runner exists but has not yet produced real `7/7` evidence in the authorized owner-operated environment.
 
 The P6.05 P0 problem statement remains unchanged: enable sufficient exact external tender attachment evidence for a truthful client-ready completeness decision while preserving external authority, exact version/provenance, Organization/rights controls, procurement-domain ownership and the no-external-action boundary.
@@ -54,10 +58,12 @@ The P6.02 Stage 3 allowance remains a **maximum**, not a quota. `0` additional c
 - [`P6.03 Stage 1 integration review`](../reviews/P6-03-stage-1-first-real-product-workflow-platform-integration.md) — `PASS`;
 - [`P6.03 first real integration closure`](../reviews/P6-03-stage-2-one-real-44fz-case-review.md) — `PASS`;
 - [`P6.04 value/friction/governance evidence`](../reviews/P6-04-product-value-delivery-friction-governance-evidence-capture.md) — `PASS`;
+- [`P6.05-L1 local host/runtime baseline`](../reviews/P6-05-L1-local-host-runtime-baseline.md) — `PASS`;
+- [`P6.05-L2 local reference runtime start`](../reviews/P6-05-L2-local-reference-runtime-start.md) — `PASS`;
 - CAP-001 through CAP-004 remain `Incubating / Provisional`;
 - P4.08 and P5.09 Product Contracts remain `Provisional 0.1.0` reference evidence;
 - P6.02 procurement Product Contract remains `Provisional 0.1.0`;
-- no Platform Capability is `Active` merely because M3–M5 or P6.01–P6.04 are complete;
+- no Platform Capability is `Active` merely because M3–M5 or P6.01–P6.05 local subtasks are complete;
 - no Stable/public SDK, API, wire, package or service compatibility boundary has been created;
 - no production/operational-readiness or SLA/support commitment is implied.
 
@@ -93,7 +99,7 @@ M5 proves repeatable governed integration through explicit Product Contracts and
 Canonical detailed roadmap:
 
 - [`PHASE-6-PRODUCT-DRIVEN-PLATFORM-VALIDATION.md`](PHASE-6-PRODUCT-DRIVEN-PLATFORM-VALIDATION.md) — `Active 1.7.0`.
-- [`P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md`](P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md) — `Active 0.1.1`, subordinate execution plan for the current P6.05 owner-operated runtime/evidence path.
+- [`P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md`](P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md) — `Active 0.1.2`, subordinate execution plan for the current P6.05 owner-operated runtime/evidence path.
 
 | ID | Work item | Status | Progress |
 |---|---|---:|---:|
@@ -101,7 +107,7 @@ Canonical detailed roadmap:
 | `P6.02` | First real Product Contract boundary + bounded adoption plan | 🟩 Complete | `██████████ 100%` |
 | `P6.03` | First real product/workflow platform integration | 🟩 Complete / PASS | `██████████ 100%` |
 | `P6.04` | Product value, delivery-friction + governance evidence capture | 🟩 Complete / PASS | `██████████ 100%` |
-| `P6.05` | Platform-gap remediation from first real use | 🟨 Current — implementation merged; local live evidence pending | `tracked by P6.05 subtasks` |
+| `P6.05` | Platform-gap remediation from first real use | 🟨 Current — L1/L2 PASS; secure configuration next; real evidence pending | `tracked by P6.05 subtasks` |
 | `P6.06` | Second materially distinct real product/workflow target + Product Contract | ⬜ | `░░░░░░░░░░ 0%` |
 | `P6.07` | Second real product/workflow platform integration | ⬜ | `░░░░░░░░░░ 0%` |
 | `P6.08` | Cross-product reuse and Platform Gravity evidence | ⬜ | `░░░░░░░░░░ 0%` |
@@ -117,8 +123,8 @@ Canonical detailed roadmap:
 | `P6.05-I1` | Bounded platform exact-document admission remediation | 🟩 Complete — merged `5dbbc7b3...` |
 | `P6.05-I2` | Product exact-attachment evidence capture + governed bridge | 🟩 Complete — product PR `#142` merged `bf9a1c543...` |
 | `P6.05-L1` | Local host/runtime baseline | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L1-local-host-runtime-baseline.md) |
-| `P6.05-L2` | Reproducible Arvectum OS local checkout + reference runtime start | 🟨 Current / next |
-| `P6.05-L3` | Secure local configuration + secrets boundary | ⬜ Pending |
+| `P6.05-L2` | Reproducible Arvectum OS local checkout + reference runtime start | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L2-local-reference-runtime-start.md) |
+| `P6.05-L3` | Secure local configuration + secrets boundary | 🟨 Current / next |
 | `P6.05-L4` | Internal Organization + operator bootstrap | ⬜ Pending |
 | `P6.05-L5` | First real product connection through exact P6.02 boundary | ⬜ Pending |
 | `P6.05-L6` | Local synthetic/redacted regression + negative-path smoke | ⬜ Pending |
@@ -157,9 +163,11 @@ M6 does not require an `Active` Platform Capability, Stable Product Contract, pr
 
 ## 8. Current canonical action
 
-> **P6.05-L2 — Reproducible Arvectum OS local checkout + reference runtime start.**
+> **P6.05-L3 — Secure local configuration + secrets boundary.**
 
-`P6.05-L1` is complete / PASS; its bounded host, runtime, repository, local-network, storage and rollback evidence is recorded in [`P6-05-L1-local-host-runtime-baseline.md`](../reviews/P6-05-L1-local-host-runtime-baseline.md). The EIS proxy/TLS constraint is recorded for L3/L7 and does not block the in-process L2 reference-runtime start.
+`P6.05-L1` and `P6.05-L2` are complete / PASS. The local runtime evidence is recorded in [`P6-05-L1-local-host-runtime-baseline.md`](../reviews/P6-05-L1-local-host-runtime-baseline.md) and [`P6-05-L2-local-reference-runtime-start.md`](../reviews/P6-05-L2-local-reference-runtime-start.md). L2 proved the bounded reference runtime is reproducibly runnable on the selected Mac mini from canonical `main` without leaving source-tree artifacts or invoking product/EIS/external actions.
+
+L3 must now establish the secure local configuration/secrets boundary required for the later authorized product/EIS contour. Credentials remain outside source control and canonical evidence; diagnostics may report safe configured/not-configured state but must not print secret values. The EIS proxy/TLS constraint observed in L1 remains a recorded prerequisite for later L7 work and must be handled fail-closed rather than bypassed implicitly.
 
 The P6.05 code remediation is implementation-ready, but P6.05 remains open until truthful real evidence exists. Continue through the dependency-aware local substream in [`P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md`](P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md).
 
@@ -226,9 +234,11 @@ P6.05 implementation remediation ✓ merged
         ↓
 P6.05-L1 Local host/runtime baseline ✓ PASS
         ↓
-P6.05-L2 local checkout + reference runtime start ← current
+P6.05-L2 local checkout + reference runtime start ✓ PASS
         ↓
-P6.05-L3..L6 secure config / org+product / smoke
+P6.05-L3 secure local configuration + secrets boundary ← current
+        ↓
+P6.05-L4..L6 org+product / local smoke
         ↓
 P6.05-L7 real exact attachment evidence: 7/7 required
         ↓
