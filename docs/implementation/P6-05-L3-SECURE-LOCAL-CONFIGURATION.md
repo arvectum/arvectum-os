@@ -93,9 +93,11 @@ Do not paste the token into project chat, issue/PR text, canonical evidence or s
 
 ## 6. Legacy repo-local secret migration
 
-A previously working local installation may already contain the authorized EIS token in one or more product checkouts' `.env` or `.env.local` files. That historical state is a migration source only; it is not the desired L3 boundary.
+A previously working local installation may already contain the authorized EIS token in one or more product checkouts' legacy env files. For the bounded L3 discovery/recovery contour, eligible source filenames are `.env.local` and files whose basename ends exactly in `.env`, including `.env` itself and names such as `legacy.env`. That historical state is a migration source only; it is not the desired L3 boundary.
 
-Do not search for the token by value and do not print a matching env line. Locate `ai-corporation` checkouts by repository metadata/path only, then identify candidate `.env.local` or `.env` files by filename/key presence without emitting the value.
+This filename scope intentionally matches the local discovery procedure. It does not admit arbitrary configuration files or shell profiles. Names such as `.zshrc`, `.bash_profile`, `.env.production`, `config.txt` and `legacy.env.backup` remain outside the recovery scope and fail closed.
+
+Do not search for the token by value and do not print a matching env line. Locate `ai-corporation` checkouts by repository metadata/path only, then identify candidate `.env.local` / `*.env` sources by filename and key presence without emitting the value.
 
 The canonical migration helper is:
 
@@ -106,7 +108,7 @@ reference/python/p6_05_l3_migrate_eis_secret.py
 It accepts one or more explicit source pairs plus one destination:
 
 - repeated `--source-checkout-root` — verified local `ai-corporation` checkout;
-- repeated `--source-env` — corresponding `.env.local` or `.env` file inside that checkout;
+- repeated `--source-env` — corresponding bounded `.env.local` / `*.env` source inside that checkout;
 - `--destination` — `<local-root>/local-secrets/eis-soap-token` outside Arvectum OS and every supplied product checkout.
 
 The number of source checkout and source env arguments must match. A single-source invocation remains valid. For multiple legacy copies, provide the complete discovered source set in one invocation.
@@ -176,7 +178,7 @@ When local discovery is already available, the canonical discovery-driven orches
 reference/python/p6_05_l3_recover_discovered_sources.py
 ```
 
-It verifies the expected checkout/env counts, repository remotes and that every legacy env source is untracked; captures each supplied product checkout's `HEAD` plus tracked `git status --porcelain=v1 --untracked-files=no` in memory; calls the canonical multi-source migration helper; then requires the exact tracked state and HEAD of every checkout to be unchanged. It also verifies that none of the supplied legacy env files still contains the EIS key. It never emits checkout paths, tracked filenames/diffs, remote URLs or secret values/hashes.
+It verifies the expected checkout/env counts, bounded `.env.local` / `*.env` filename scope, repository remotes and that every legacy env source is untracked; captures each supplied product checkout's `HEAD` plus tracked `git status --porcelain=v1 --untracked-files=no` in memory; calls the canonical multi-source migration helper; then requires the exact tracked state and HEAD of every checkout to be unchanged. It also verifies that none of the supplied legacy env files still contains the EIS key. It never emits checkout paths, tracked filenames/diffs, remote URLs or secret values/hashes.
 
 Pre-existing tracked changes in a product checkout do **not** by themselves block L3. L3 does not own, reset, stash, commit or otherwise modify unrelated product work. The required invariant is that migration leaves each checkout's pre-existing tracked state exactly unchanged. The legacy env sources themselves must remain untracked.
 
@@ -233,7 +235,7 @@ The preflight returns non-zero and a safe failure code when any material boundar
 - token value is empty or a known placeholder;
 - local file is too large or not a regular UTF-8 file.
 
-Discovery-driven recovery additionally fails closed if expected source counts drift, a candidate remote is not the declared `ai-corporation` repository, a legacy env is tracked or symlinked, env-to-checkout mapping is ambiguous, the canonical migration fails, any checkout HEAD or tracked state changes during migration, or any supplied legacy env still contains the EIS key afterward.
+Discovery-driven recovery additionally fails closed if expected source counts drift, a candidate remote is not the declared `ai-corporation` repository, a legacy source filename falls outside `.env.local` / `*.env`, a legacy env is tracked or symlinked, env-to-checkout mapping is ambiguous, the canonical migration fails, any checkout HEAD or tracked state changes during migration, or any supplied legacy env still contains the EIS key afterward.
 
 Failures identify only a safe code and, where useful, the configuration key name. They do not echo rejected values, local paths, tracked filenames or diffs.
 
@@ -273,6 +275,12 @@ Failures identify only a safe code and, where useful, the configuration key name
 - differing secrets preserve the pre-existing tracked baseline and remain unmodified;
 - a new tracked change during migration is detected and fails closed;
 - local paths, remote values and synthetic secrets do not appear in safe output.
+
+`reference/python/tests/test_p6_05_l3_recover_env_filename_boundary.py` proves the discovery/recovery filename alignment:
+
+- `.env.local`, `.env` and bounded `*.env` filenames are accepted;
+- arbitrary shell/config filenames and suffix near-misses remain rejected;
+- a named `*.env` source runs through the same recovery/migration path without secret output.
 
 All test tokens are synthetic and have no external authority or credential value.
 
