@@ -91,7 +91,67 @@ The L3 preflight:
 
 Do not paste the token into project chat, issue/PR text, canonical evidence or source-controlled configuration.
 
-## 6. Checked-in preflight
+## 6. Legacy repo-local secret migration
+
+A previously working local installation may already contain the authorized EIS token in the product checkout's `.env` or `.env.local`. That historical state is a migration source only; it is not the desired L3 boundary.
+
+Do not search for the token by value and do not print the matching env line. First locate the `ai-corporation` checkout by repository metadata/path only, then identify `.env.local` or `.env` by filename only.
+
+The canonical migration helper is:
+
+```text
+reference/python/p6_05_l3_migrate_eis_secret.py
+```
+
+It requires three explicit paths:
+
+- `--source-checkout-root` — verified local `ai-corporation` checkout;
+- `--source-env` — the `.env.local` or `.env` file inside that checkout;
+- `--destination` — `<local-root>/local-secrets/eis-soap-token` outside both checkouts.
+
+Example invocation from the Arvectum OS checkout:
+
+```sh
+python3 reference/python/p6_05_l3_migrate_eis_secret.py \
+  --source-checkout-root "$AI_CORPORATION_CHECKOUT" \
+  --source-env "$AI_CORPORATION_CHECKOUT/.env.local" \
+  --destination "$ARVECTUM_LOCAL_ROOT/local-secrets/eis-soap-token"
+```
+
+The helper:
+
+- requires the legacy source env file itself to be owner-only before reading it;
+- accepts exactly one `ZAKUPKI_GOV_RU_SOAP_TOKEN` assignment, including a shell-sourced `export` form or one quoted value;
+- rejects missing, duplicate, placeholder or ambiguous secret state without echoing the value;
+- creates the destination exclusively with owner-only mode and never overwrites an existing destination;
+- refuses a destination inside either source-controlled checkout;
+- after successfully creating the external destination, atomically removes only the token assignment from the legacy source env file while preserving all unrelated lines;
+- creates no backup containing the secret;
+- rolls back the newly created destination if the source env scrub cannot be completed;
+- never prints or hashes the token;
+- performs no product, EIS, network, canonical mutation or external action.
+
+A successful migration emits only safe state such as:
+
+```text
+p6_05_l3_secret_migration_status=PASS
+source_secret_detected=true
+source_secret_removed=true
+destination_created=true
+destination_owner_only=true
+secret.ZAKUPKI_GOV_RU_SOAP_TOKEN=configured
+secret_values_printed=false
+secret_values_hashed=false
+backup_with_secret_created=false
+product_invoked=false
+eis_invoked=false
+network_invoked=false
+external_actions=false
+```
+
+After migration, both Arvectum OS and `ai-corporation` checkouts must still have clean tracked working trees. The presence of unrelated non-secret settings in the product `.env.local` is not itself L3 evidence; later P6.05 product connection must explicitly inject the selected L3 config/secret boundary rather than rely on repo-local secret storage.
+
+## 7. Checked-in preflight
 
 The canonical helper is:
 
@@ -129,7 +189,7 @@ external_actions=false
 
 The output MUST NOT contain the token value or token-file contents.
 
-## 7. Fail-closed conditions
+## 8. Fail-closed conditions
 
 The preflight returns non-zero and a safe failure code when any material boundary condition is not proven, including:
 
@@ -146,7 +206,7 @@ The preflight returns non-zero and a safe failure code when any material boundar
 
 Failures identify only a safe code and, where useful, the configuration key name. They do not echo the rejected value.
 
-## 8. Test evidence prepared in repository
+## 9. Test evidence prepared in repository
 
 `reference/python/tests/test_p6_05_l3_secure_local_config.py` proves with synthetic values that:
 
@@ -160,19 +220,28 @@ Failures identify only a safe code and, where useful, the configuration key name
 - undeclared config keys are rejected;
 - secret symlinks are rejected.
 
-The test token is synthetic and has no external authority or credential value.
+`reference/python/tests/test_p6_05_l3_migrate_eis_secret.py` additionally proves with synthetic values that:
 
-## 9. Owner-operated Mac execution and evidence
+- a legacy `.env.local` token can be migrated and scrubbed without appearing in output;
+- quoted and shell-sourced `export` forms are supported;
+- missing, duplicate and placeholder secret state fails closed;
+- broad source-file permissions fail before secret reliance;
+- a destination inside the product checkout is rejected;
+- an existing destination is never overwritten.
+
+All test tokens are synthetic and have no external authority or credential value.
+
+## 10. Owner-operated Mac execution and evidence
 
 Publishing the runbook/preflight/tests is preparation, not L3 completion.
 
-L3 may be marked `PASS` only after the selected owner-operated Mac mini executes the canonical preflight against the actual external local configuration and authorized local token file, plus bounded synthetic negative-path checks, while preserving a clean Arvectum OS checkout.
+L3 may be marked `PASS` only after the selected owner-operated Mac mini executes the canonical migration helper where required, then executes the canonical preflight against the actual external local configuration and authorized local token file, plus bounded synthetic negative-path checks, while preserving clean tracked working trees.
 
-The retained L3 evidence must contain only the safe preflight summary and source-control state. Do not retain raw config, raw token content, environment dumps, shell traces or token hashes as canonical evidence.
+The retained L3 evidence must contain only safe migration/preflight summaries and source-control state. Do not retain raw config, raw token content, environment dumps, shell traces, token hashes or legacy secret-bearing source-env contents as canonical evidence.
 
 The actual EIS TLS/proxy reachability observed as constrained in L1 is not converted into a PASS by this configuration check. Live reachability remains subject to later authorized execution and must fail closed if the verified path is unavailable.
 
-## 10. Rollback / removal
+## 11. Rollback / removal
 
 The L3 mechanism is removable without changing Arvectum OS architecture:
 
@@ -183,7 +252,7 @@ The L3 mechanism is removable without changing Arvectum OS architecture:
 
 Removal of local files must not be represented as revocation at the authoritative EIS source. Credential revocation is a distinct external-authority operation.
 
-## 11. Canonical closure rule
+## 12. Canonical closure rule
 
 `P6.05-L3` remains the current canonical action until actual owner-operated PASS evidence is reviewed and recorded. Only then should the P6.05 substream and roadmaps be synchronized to mark L3 complete and advance to `P6.05-L4 — Internal Organization + operator bootstrap`.
 
