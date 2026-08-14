@@ -21,7 +21,7 @@ Version `2.51.5` records `P6.05-L5` as `Complete / PASS` after the owner-operate
 
 P6.05 implementation readiness remains separated from the owner-operated runtime work required to execute the real evidence path. The local deployment is treated as a bounded **Internal / local owner-operated runtime** for ООО «Арвектум», not as a Production environment, supported macOS product, Stable/public runtime contract or final deployment topology.
 
-The detailed substream is [`P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md`](P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md). It decomposes the remaining work into secure configuration, Organization/operator bootstrap, first real product connection, local smoke, real `7/7` live run, governed admission/closure and dogfooding-friction capture, with L1 and L2 now complete.
+The detailed substream is [`P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md`](P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md). It decomposes the remaining work into secure configuration, Organization/operator bootstrap, first real product connection, local smoke, real `7/7` live run, governed admission/closure and dogfooding-friction capture, with L1 through L5 now Complete / PASS and L6 current / next.
 
 Already observed implementation and local-runtime evidence:
 
@@ -30,6 +30,9 @@ Already observed implementation and local-runtime evidence:
 - hosted standard product CI and dedicated P6.05 exact-attachment CI passed on the unchanged implementation head;
 - P6.05-L1 local host/runtime baseline passed;
 - P6.05-L2 reproducible local reference runtime passed on canonical `main` with `717/717` tests and a clean source checkout;
+- P6.05-L3 secure local configuration/secrets boundary passed — [evidence](../reviews/P6-05-L3-secure-local-configuration-secrets-boundary.md);
+- P6.05-L4 internal Organization/operator bootstrap passed — [evidence](../reviews/P6-05-L4-internal-organization-operator-bootstrap.md);
+- P6.05-L5 owner-operated first real product connection passed — [evidence](../reviews/P6-05-L5-first-real-product-connection.md);
 - the real live runner exists but has not yet produced real `7/7` evidence in the authorized owner-operated environment.
 
 The P6.05 P0 problem statement remains unchanged: enable sufficient exact external tender attachment evidence for a truthful client-ready completeness decision while preserving external authority, exact version/provenance, Organization/rights controls, procurement-domain ownership and the no-external-action boundary.
