@@ -26,7 +26,7 @@ import p6_05_l3_recover_mixed_legacy_sources as MIXED
 import p6_05_l3_recover_verified_containers as VERIFIED
 
 
-ARVECTUM_OS_REPOSITORY = "arutyunoveth/arvectum-os"
+ARVECTUM_OS_REPOSITORY = "arvectum/arvectum-os"
 
 
 class DiagnosticError(RuntimeError):

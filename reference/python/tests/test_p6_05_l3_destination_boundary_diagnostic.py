@@ -50,7 +50,7 @@ class P605L3DestinationBoundaryDiagnosticTests(unittest.TestCase):
             ai = root / "ai"
             tender = root / "tender"
             arvectum.mkdir(mode=0o700)
-            self._make_repo(ai, "https://github.com/arutyunoveth/ai-corporation.git")
+            self._make_repo(ai, "https://github.com/arvectum/ai-corporation.git")
             self._make_repo(tender, "https://github.com/arutyunoveth/tender-app.git")
             discovery = self._manifest(root, ai, tender)
             secret_dir = tender / "local-secrets"
@@ -79,7 +79,7 @@ class P605L3DestinationBoundaryDiagnosticTests(unittest.TestCase):
             ai = root / "ai"
             tender = root / "tender"
             arvectum.mkdir(mode=0o700)
-            self._make_repo(ai, "https://github.com/arutyunoveth/ai-corporation.git")
+            self._make_repo(ai, "https://github.com/arvectum/ai-corporation.git")
             self._make_repo(tender, "https://github.com/arutyunoveth/tender-app.git")
             discovery = self._manifest(root, ai, tender)
             secret_dir = ai / "local-secrets"
@@ -105,7 +105,7 @@ class P605L3DestinationBoundaryDiagnosticTests(unittest.TestCase):
             ai = root / "ai"
             tender = root / "tender"
             arvectum.mkdir(mode=0o700)
-            self._make_repo(ai, "https://github.com/arutyunoveth/ai-corporation.git")
+            self._make_repo(ai, "https://github.com/arvectum/ai-corporation.git")
             self._make_repo(tender, "https://github.com/arutyunoveth/tender-app.git")
             discovery = self._manifest(root, ai, tender)
             secret_dir = root / "external-secrets"

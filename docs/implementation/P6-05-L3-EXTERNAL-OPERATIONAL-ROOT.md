@@ -28,7 +28,7 @@ The helper `reference/python/p6_05_l3_prepare_external_operational_root.py` prep
 
 The existing fixed discovery manifest remains the input authority for the seven already-discovered legacy env sources. It is not regenerated merely because the output root changes.
 
-The owner-authorized `tender-app` recovery remains the only permitted secret migration path. After the external root is prepared, that recovery must use the external root's secret destination. The existing source-containment check remains mandatory and must pass without exception.
+Under the 2026-08-14 owner decision (`DECISION-2026-08-14-P6-05-L3-DIVERGENT-EIS-SECRET-RECONCILIATION.md`), the single fixed legacy env source located inside another local Git worktree is authorized as part of the bounded 2/4/1 fixed source structure. Reconciliation uses `reference/python/p6_05_l3_reconcile_owner_selected_divergent_sources.py` against the external secret destination. The source-containment checks for all 8 repositories (7 manifest checkouts + 1 other local Git worktree) and Arvectum OS remain mandatory and must pass without exception.
 
 The old local root is not deleted, moved, cleaned or rewritten as part of this correction. Any later cleanup is a separate bounded operation after L3 closure evidence is complete.
 
@@ -50,9 +50,9 @@ This correction does not:
 P6.05-L3 remains open until owner-operated evidence proves all of the following:
 
 1. external operational root preparation passes;
-2. the owner-authorized seven-source recovery passes using the external secret destination;
-3. all source token assignments are scrubbed and all values were consistent in memory;
-4. product and `tender-app` HEAD/tracked state remain unchanged;
+2. the owner-approved seven-source divergent reconciliation passes using the external secret destination;
+3. all source token assignments are scrubbed and the selected 5-source class was established;
+4. product and other local Git worktree HEAD/tracked states remain unchanged;
 5. secure local config preflight passes against the external config and secret files;
 6. the bounded L3 regression set passes;
 7. no product, EIS, network or external action occurred.

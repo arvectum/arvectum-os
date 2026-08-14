@@ -40,7 +40,7 @@ class P605L3KnownLegacyOwnerTests(unittest.TestCase):
             envs = []
             for i in range(7):
                 repo = root / f"product-{i}"
-                init_repo(repo, "https://github.com/arutyunoveth/ai-corporation.git")
+                init_repo(repo, "https://github.com/arvectum/ai-corporation.git")
                 checkouts.append(repo)
             for i in range(2):
                 env = checkouts[i] / f"legacy{i}.env"

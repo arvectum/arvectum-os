@@ -99,88 +99,51 @@ This filename scope intentionally matches the local discovery procedure. It does
 
 Do not search for the token by value and do not print a matching env line. Locate `ai-corporation` checkouts by repository metadata/path only, then identify candidate `.env.local` / `*.env` sources by filename and key presence without emitting the value.
 
-The canonical migration helper is:
+### 6.1 Normal multi-source migration
+
+Under normal multi-source recovery where all discovered legacy copies contain identical secret values, the canonical migration helper is:
 
 ```text
 reference/python/p6_05_l3_migrate_eis_secret.py
 ```
 
-It accepts one or more explicit source pairs plus one destination:
+It requires all configured source values to be byte-for-byte equal in memory before creating a new destination or scrubbing any source.
 
-- repeated `--source-checkout-root` — verified local `ai-corporation` checkout;
-- repeated `--source-env` — corresponding bounded `.env.local` / `*.env` source inside that checkout;
-- `--destination` — `<local-root>/local-secrets/eis-soap-token` outside Arvectum OS and every supplied product checkout.
+### 6.2 Approved P6.05-L3 divergent-recovery exception
 
-The number of source checkout and source env arguments must match. A single-source invocation remains valid. For multiple legacy copies, provide the complete discovered source set in one invocation.
+When owner-operated diagnostics on the fixed 7-source discovery manifest proved a 5+2 divergent secret distribution across legacy env files, the owner approved an explicit reconciliation decision (`DECISION-2026-08-14-P6-05-L3-DIVERGENT-EIS-SECRET-RECONCILIATION.md`).
 
-Example multi-source invocation from the Arvectum OS checkout:
+For this exact fixed 7-source manifest, the canonical reconciliation helper is:
+
+```text
+reference/python/p6_05_l3_reconcile_owner_selected_divergent_sources.py
+```
+
+Invocation from the Arvectum OS execution checkout:
 
 ```sh
-python3 reference/python/p6_05_l3_migrate_eis_secret.py \
-  --source-checkout-root "$CHECKOUT_1" \
-  --source-env "$ENV_1" \
-  --source-checkout-root "$CHECKOUT_2" \
-  --source-env "$ENV_2" \
-  --destination "$ARVECTUM_LOCAL_ROOT/local-secrets/eis-soap-token"
+python3 reference/python/p6_05_l3_reconcile_owner_selected_divergent_sources.py \
+  --discovery-file "$ARVECTUM_LOCAL_ROOT/evidence/p6-05-l3/discovery-local-only.txt" \
+  --destination "$ARVECTUM_LOCAL_ROOT/local-secrets/eis-soap-token" \
+  --expected-checkout-count 7 \
+  --expected-env-count 7 \
+  --owner-authorization OWNER_APPROVES_P6_05_L3_DOT_ENV_LOCAL_CLASS_RECONCILIATION
 ```
 
 The helper:
 
-- requires every legacy source env file to be owner-only before reading it;
-- accepts at most one `ZAKUPKI_GOV_RU_SOAP_TOKEN` assignment per source, including shell-sourced `export` form or one quoted value;
-- treats a source with no token assignment as already scrubbed when a valid external destination already exists or another supplied source establishes the migration value;
-- rejects duplicate, placeholder or malformed secret state without echoing the value;
-- compares configured source values only in process memory and requires them all to be equal before creating a new destination or scrubbing any source;
-- creates a new destination exclusively with owner-only mode when none exists;
-- may reuse an already-existing owner-only destination only when every remaining supplied source token matches it in memory;
-- never overwrites an existing destination;
-- refuses a destination inside Arvectum OS or any supplied product checkout;
-- removes only the token assignment from each supplied source that still contains it while preserving unrelated lines;
-- creates no backup containing the secret;
-- never prints or hashes the token;
-- performs no product, EIS, network, canonical mutation or external action.
+- validates the 2/4/1 local source ownership structure (2 manifest `arvectum/ai-corporation` checkouts, 4 standalone sources, 1 owner-approved other local Git worktree);
+- verifies that each manifest checkout remote matches `arvectum/ai-corporation` and that all legacy envs are untracked;
+- captures in-memory Git snapshots of all 8 involved repositories (7 manifest checkouts + 1 other local Git worktree);
+- classifies the 7 configured secret values in memory using constant-time equality;
+- strictly enforces the owner-approved 5+2 distribution where all 4 `.env.local` sources belong to the 5-source equality class;
+- establishes the 5-source selected credential at the external owner-only destination;
+- scrubs the `ZAKUPKI_GOV_RU_SOAP_TOKEN` assignment from all 7 legacy sources;
+- treats the 2 non-selected values as stale local copies without persisting or copying them anywhere;
+- verifies that all 8 repository HEADs and tracked states remain exactly unchanged across reconciliation;
+- never prints, hashes, encodes, or persists secret values.
 
-If a source rewrite fails after a valid destination has been created or reused, the helper preserves the destination, does not reintroduce the token into already-scrubbed sources, and returns `SOURCE_SCRUB_INCOMPLETE_DESTINATION_PRESERVED`. Re-running the same complete source set is the bounded recovery path after the local filesystem issue is corrected.
-
-A successful multi-source migration emits only safe state such as:
-
-```text
-p6_05_l3_secret_migration_status=PASS
-migration_scope=legacy_repo_local_eis_token_set_to_external_owner_only_file
-source_count=7
-sources_with_secret_before=7
-sources_already_scrubbed_before=0
-sources_scrubbed=7
-destination_created=true
-destination_reused=false
-all_source_secrets_consistent=true
-all_sources_scrubbed=true
-destination_owner_only=true
-secret.ZAKUPKI_GOV_RU_SOAP_TOKEN=configured
-secret_values_printed=false
-secret_values_hashed=false
-secret_values_exported=false
-secret_values_persisted_as_evidence=false
-backup_with_secret_created=false
-product_invoked=false
-eis_invoked=false
-network_invoked=false
-external_actions=false
-```
-
-Counts may differ on an idempotent retry. Paths and secret values are not canonical evidence.
-
-For the full multi-checkout recovery rationale and fail-closed semantics, see `P6-05-L3-MULTI-CHECKOUT-SECRET-RECOVERY.md`.
-
-When local discovery is already available, the canonical discovery-driven orchestrator is:
-
-```text
-reference/python/p6_05_l3_recover_discovered_sources.py
-```
-
-It verifies the expected checkout/env counts, bounded `.env.local` / `*.env` filename scope, repository remotes and that every legacy env source is untracked; captures each supplied product checkout's `HEAD` plus tracked `git status --porcelain=v1 --untracked-files=no` in memory; calls the canonical multi-source migration helper; then requires the exact tracked state and HEAD of every checkout to be unchanged. It also verifies that none of the supplied legacy env files still contains the EIS key. It never emits checkout paths, tracked filenames/diffs, remote URLs or secret values/hashes.
-
-Pre-existing tracked changes in a product checkout do **not** by themselves block L3. L3 does not own, reset, stash, commit or otherwise modify unrelated product work. The required invariant is that migration leaves each checkout's pre-existing tracked state exactly unchanged. The legacy env sources themselves must remain untracked.
+This exception applies exclusively to the fixed P6.05-L3 discovery manifest under explicit owner authorization and does not establish a general secret conflict resolution rule.
 
 ## 7. Checked-in preflight
 

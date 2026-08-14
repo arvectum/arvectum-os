@@ -46,7 +46,7 @@ class P605L3OwnerAuthorizedTenderAppRecoveryTests(unittest.TestCase):
         secret_dir = root / "local-secrets"
         arvectum.mkdir(mode=0o700)
         secret_dir.mkdir(mode=0o700)
-        self._make_repo(product, "https://github.com/arutyunoveth/ai-corporation.git")
+        self._make_repo(product, "https://github.com/arvectum/ai-corporation.git")
         self._make_repo(tender, "https://github.com/arutyunoveth/tender-app.git")
         repo_env = product / "product.env"
         tender_env = tender / "legacy.env"

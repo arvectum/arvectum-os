@@ -28,7 +28,11 @@ The applicable authority remains:
 
 No Accepted ADR governs this local reversible recovery mechanism. No new RFC/ADR is required because the change is bounded, local, reversible, non-public and does not establish a cross-cutting platform technology contract.
 
-## 3. Why selecting one checkout is insufficient
+## 3. Normal consistency rule and approved divergent-recovery exception
+
+### 3.1 Normal multi-checkout consistency rule
+
+Under normal multi-source recovery, all configured legacy copies must be equal.
 
 When multiple verified local `ai-corporation` checkouts contain the EIS token key, choosing one checkout and migrating only that copy leaves reusable credentials in the remaining repo-local env files. That does not satisfy the intended L3 secrets boundary.
 
@@ -42,7 +46,26 @@ The recovery therefore treats the discovered legacy copies as a set:
 6. preserve unrelated env content;
 7. retain only safe counts/status booleans as evidence.
 
-If configured source values differ, the helper fails before creating a new destination or scrubbing any source.
+If configured source values differ, the normal helper fails before creating a new destination or scrubbing any source.
+
+### 3.2 Approved P6.05-L3 divergent-recovery exception
+
+When owner-operated diagnostics on the fixed 7-source discovery manifest proved a 5+2 divergent secret distribution across legacy env files, the owner approved an explicit reconciliation decision (`DECISION-2026-08-14-P6-05-L3-DIVERGENT-EIS-SECRET-RECONCILIATION.md`).
+
+ONLY the exact owner-approved fixed 7-source manifest may use this bounded exception, and only when the exact structural/value evidence matches:
+
+- 7 source checkouts (`arvectum/ai-corporation`);
+- 7 legacy env sources;
+- 2 distinct secret equality classes;
+- 5+2 class distribution;
+- 4 `.env.local` sources;
+- all 4 `.env.local` sources in the selected 5-source class;
+- exact 2/4/1 local source ownership structure (2 manifest `ai-corporation`, 4 standalone, 1 owner-approved other local Git worktree);
+- explicit owner authorization assertion (`OWNER_APPROVES_P6_05_L3_DOT_ENV_LOCAL_CLASS_RECONCILIATION`).
+
+The canonical helper for this exception is `reference/python/p6_05_l3_reconcile_owner_selected_divergent_sources.py`.
+
+This exception does not create a general secret conflict resolution rule.
 
 ## 4. Canonical migration helper
 

@@ -32,7 +32,7 @@ class P605L3RecoverDiscoveredSourcesTests(unittest.TestCase):
         *,
         dirty_tracked: bool = False,
         track_env: bool = False,
-        remote: str = "https://github.com/arutyunoveth/ai-corporation.git",
+        remote: str = "https://github.com/arvectum/ai-corporation.git",
     ) -> tuple[Path, Path, Path]:
         repo = root / name
         repo.mkdir(mode=0o700)
@@ -157,7 +157,7 @@ class P605L3RecoverDiscoveredSourcesTests(unittest.TestCase):
         checkout, env, _ = self._make_checkout(
             root,
             "product",
-            remote="https://github.com/example/not-ai-corporation.git",
+            remote="https://github.com/example/unrelated.git",
         )
         self._write_discovery(discovery, [checkout], [env])
 
@@ -172,9 +172,58 @@ class P605L3RecoverDiscoveredSourcesTests(unittest.TestCase):
 
         self.assertEqual(rc, 2)
         self.assertIn("failure_code=AI_CORPORATION_REMOTE_NOT_VERIFIED", output)
+        self.assertNotIn("example/unrelated", output)
         self.assertNotIn(str(checkout), output)
-        self.assertNotIn("example/not-ai-corporation", output)
         self.assertNotIn(SECRET, output)
+
+    def test_historical_arutyunoveth_remote_rejected_for_current_path(self) -> None:
+        root, arvectum, destination, discovery = self._layout()
+        checkout, env, _ = self._make_checkout(
+            root,
+            "product",
+            remote="https://github.com/arutyunoveth/ai-corporation.git",
+        )
+        self._write_discovery(discovery, [checkout], [env])
+
+        rc, lines = MODULE.recover_discovered_sources(
+            discovery,
+            destination,
+            expected_checkout_count=1,
+            expected_env_count=1,
+            arvectum_repo_root=arvectum,
+        )
+        output = "\n".join(lines)
+
+        self.assertEqual(rc, 2)
+        self.assertIn("failure_code=AI_CORPORATION_REMOTE_NOT_VERIFIED", output)
+        self.assertNotIn("arutyunoveth", output)
+        self.assertNotIn(SECRET, output)
+
+    def test_active_arvectum_ssh_remotes_accepted(self) -> None:
+        for remote_url in [
+            "git@github.com:arvectum/ai-corporation.git",
+            "ssh://git@github.com/arvectum/ai-corporation.git",
+            "https://github.com/arvectum/ai-corporation",
+        ]:
+            with self.subTest(remote=remote_url):
+                root, arvectum, destination, discovery = self._layout()
+                checkout, env, _ = self._make_checkout(
+                    root,
+                    "product",
+                    remote=remote_url,
+                )
+                self._write_discovery(discovery, [checkout], [env])
+
+                rc, lines = MODULE.recover_discovered_sources(
+                    discovery,
+                    destination,
+                    expected_checkout_count=1,
+                    expected_env_count=1,
+                    arvectum_repo_root=arvectum,
+                )
+                output = "\n".join(lines)
+                self.assertEqual(rc, 0)
+                self.assertIn("p6_05_l3_discovered_source_recovery_status=PASS", output)
 
     def test_count_change_fails_closed(self) -> None:
         root, arvectum, destination, discovery = self._layout()
