@@ -1,9 +1,9 @@
 # Arvectum OS Phase 6 — Product-driven Platform Validation
 
 Status: `Active`
-Version: `1.7.1`
+Version: `1.7.2`
 Created: `2026-08-09`
-Updated: `2026-08-10`
+Updated: `2026-08-14`
 Owner: `ООО «Арвектум»`
 Task classification: `platform` with `product_contract` and `governance`
 Parent roadmap: [`ROADMAP.md`](ROADMAP.md)
@@ -40,7 +40,7 @@ P6.04 is **complete with PASS** under [`P6-04-product-value-delivery-friction-go
 
 P6.05 implementation remediation is now merged on both sides: the bounded Arvectum OS CAP-001 admission work is in platform `main` as `5dbbc7b3af1f0f3896301ef833de2214cb44e6f9`, and `ai-corporation` PR `#142` is merged as `bf9a1c5438426031fce36370344ada969d2493dd`. Hosted implementation CI is green, but P6.05 remains open because real `7/7` exact attachment evidence has not yet been observed in the authorized owner-operated runtime.
 
-The remaining execution is decomposed under [`P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md`](P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md). P6.05-L1, P6.05-L2, and P6.05-L3 are now `Complete / PASS`; L3 established the external secrets boundary, scrubbed all 7 legacy token assignments under owner decision [`DECISION-2026-08-14-P6-05-L3-DIVERGENT-EIS-SECRET-RECONCILIATION.md`](../governance/decisions/DECISION-2026-08-14-P6-05-L3-DIVERGENT-EIS-SECRET-RECONCILIATION.md), and passed all 69 targeted L3 tests. `P6.05-L4 — Internal Organization + operator bootstrap` is the current action. The Mac mini remains only the current bounded internal operational environment for ООО «Арвектум», not a production or public deployment architecture commitment.
+The remaining execution is decomposed under [`P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md`](P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md). P6.05-L1 through P6.05-L5 are now `Complete / PASS`. L4 established the bounded internal Organization/operator context, and L5 completed the owner-operated first real product connection through exact P6.02 Product Contract `0.1.0`; L5 evidence is [`P6-05-L5-first-real-product-connection.md`](../reviews/P6-05-L5-first-real-product-connection.md). `P6.05-L6 — Local synthetic/redacted regression + negative-path smoke` is the current action. Real `7/7` exact-attachment evidence remains unobserved, so P6.05 remains open. The Mac mini remains only a bounded internal operational environment for ООО «Арвектум», not a production or public deployment architecture commitment.
 
 The optional Stage 3 capacity of maximum three calibration cases remains deliberately unconsumed. The current blocker is known; the next useful calibration case should test a materially changed evidence contour after P6.05 rather than repeat the same incomplete source-package path.
 
@@ -74,7 +74,7 @@ P6.02 added the first real Product Contract boundary without changing that lifec
 | `P6.02` | First real Product Contract boundary + bounded adoption plan | 🟩 Complete | `██████████ 100%` |
 | `P6.03` | First real product/workflow platform integration | 🟩 Complete / PASS | `██████████ 100%` |
 | `P6.04` | Product value, delivery-friction + governance evidence capture | 🟩 Complete / PASS | `██████████ 100%` |
-| `P6.05` | Platform-gap remediation from first real use | 🟨 Current — L1/L2 PASS; secure configuration next; real evidence pending | `tracked by subtasks` |
+| `P6.05` | Platform-gap remediation from first real use | 🟨 Current — L1-L5 PASS; L6 local smoke next; real evidence pending | `tracked by subtasks` |
 | `P6.06` | Second materially distinct real product/workflow target + Product Contract | ⬜ | `░░░░░░░░░░ 0%` |
 | `P6.07` | Second real product/workflow platform integration | ⬜ | `░░░░░░░░░░ 0%` |
 | `P6.08` | Cross-product reuse and Platform Gravity evidence | ⬜ | `░░░░░░░░░░ 0%` |
@@ -92,9 +92,9 @@ P6.02 added the first real Product Contract boundary without changing that lifec
 | `P6.05-L1` | Local host/runtime baseline | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L1-local-host-runtime-baseline.md) |
 | `P6.05-L2` | Reproducible Arvectum OS local checkout + reference runtime start | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L2-local-reference-runtime-start.md) |
 | `P6.05-L3` | Secure local configuration + secrets boundary | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L3-secure-local-configuration-secrets-boundary.md) |
-| `P6.05-L4` | Internal Organization + operator bootstrap | 🟨 Current / next |
-| `P6.05-L5` | First real product connection through exact P6.02 boundary | ⬜ Pending |
-| `P6.05-L6` | Local synthetic/redacted regression + negative-path smoke | ⬜ Pending |
+| `P6.05-L4` | Internal Organization + operator bootstrap | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L4-internal-organization-operator-bootstrap.md) |
+| `P6.05-L5` | First real product connection through exact P6.02 boundary | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L5-first-real-product-connection.md) |
+| `P6.05-L6` | Local synthetic/redacted regression + negative-path smoke | 🟨 Current / next |
 | `P6.05-L7` | Real P6.05 exact-attachment live run (`7/7` gate) | ⬜ Pending |
 | `P6.05-L8` | Governed evidence admission + canonical P6.05 closure package | ⬜ Pending |
 | `P6.05-L9` | Dogfooding friction capture | ⬜ Pending / cross-cutting |
@@ -196,9 +196,9 @@ Remaining execution is governed by [`P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md`]
 1. `P6.05-L1` host/runtime baseline — complete / PASS;
 2. `P6.05-L2` reproducible local Arvectum OS start — complete / PASS;
 3. `P6.05-L3` secure local configuration/secrets boundary — Complete / PASS;
-4. `P6.05-L4` internal Organization/operator bootstrap — current / next;
-5. `P6.05-L5` exact P6.02 first-product connection;
-6. `P6.05-L6` local synthetic/redacted + negative-path smoke;
+4. `P6.05-L4` internal Organization/operator bootstrap — Complete / PASS;
+5. `P6.05-L5` exact P6.02 first-product connection — Complete / PASS;
+6. `P6.05-L6` local synthetic/redacted + negative-path smoke — current / next;
 7. `P6.05-L7` real exact-attachment live run with truthful `7/7` gate;
 8. `P6.05-L8` governed admission + canonical closure package;
 9. `P6.05-L9` cross-cutting dogfooding friction capture.
@@ -312,13 +312,13 @@ P6.05-L1 Local host/runtime baseline ✓ PASS
  ↓
 P6.05-L2 Reproducible local Arvectum OS start ✓ PASS
  ↓
-P6.05-L4 Internal Organization / operator bootstrap ← current
+P6.05-L3 Secure local configuration/secrets boundary ✓ PASS
  ↓
-P6.05-L4 Internal Organization/operator bootstrap
+P6.05-L4 Internal Organization/operator bootstrap ✓ PASS
  ↓
-P6.05-L5 First real product connection
+P6.05-L5 First real product connection ✓ PASS
  ↓
-P6.05-L6 Local proof + negative-path smoke
+P6.05-L6 Local proof + negative-path smoke ← current
  ↓
 P6.05-L7 Real exact attachment evidence — 7/7 required
  ↓
@@ -395,10 +395,6 @@ P6.02/R17/P6.03 selected no durable persistence, Event delivery, IAM, public/sta
 
 ## 10. Current canonical action
 
-> **P6.05-L4 — Internal Organization + operator bootstrap.**
+> **P6.05-L6 — Local synthetic/redacted regression + negative-path smoke.**
 
-Use [`P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md`](P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md) as the execution plan. P6.05-L1 and P6.05-L2 are complete / PASS; L2 evidence is recorded in [`P6-05-L2-local-reference-runtime-start.md`](../reviews/P6-05-L2-local-reference-runtime-start.md).
-
-For L3, keep credentials outside source control and canonical evidence, verify safe configured/not-configured detection without printing secret material, preserve least-privilege/fail-closed behavior, and do not broaden the task into a general production IAM, secret-management or deployment architecture decision.
-
-After L3, proceed dependency-aware through L4-L7. Do not skip local smoke and do not mark P6.05 PASS before the authorized real runner produces truthful complete evidence or a new blocker is canonically recorded.
+Use [`P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md`](P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md) as the execution plan. P6.05-L1 through P6.05-L5 are complete / PASS.
