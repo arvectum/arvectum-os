@@ -1,11 +1,13 @@
 # P6.05-L3 — Secure Local Configuration + Secrets Boundary
 
-Status: `Prepared / owner-operated Mac execution required for PASS`
+Status: `Complete / owner-operated PASS recorded`
 Date: `2026-08-10`
+Updated: `2026-08-14`
 Owner: `ООО «Арвектум»`
 Task classification: `platform`
 Operational environment: `Internal / local owner-operated runtime`
 Production-readiness claim: `None`
+Evidence review: [`docs/reviews/P6-05-L3-secure-local-configuration-secrets-boundary.md`](../reviews/P6-05-L3-secure-local-configuration-secrets-boundary.md)
 
 ## 1. Purpose
 
@@ -268,8 +270,8 @@ The L3 mechanism is removable without changing Arvectum OS architecture:
 
 Removal of local files must not be represented as revocation at the authoritative EIS source. Credential revocation is a distinct external-authority operation.
 
-## 12. Canonical closure rule
+## 12. Canonical closure
 
-`P6.05-L3` remains the current canonical action until actual owner-operated PASS evidence is reviewed and recorded. Only then should the P6.05 substream and roadmaps be synchronized to mark L3 complete and advance to `P6.05-L4 — Internal Organization + operator bootstrap`.
+`P6.05-L3` owner-operated execution is complete and verified as `PASS`. The canonical evidence review is recorded in [`P6-05-L3-secure-local-configuration-secrets-boundary.md`](../reviews/P6-05-L3-secure-local-configuration-secrets-boundary.md).
 
-Successful L3 proves only the bounded local configuration/secrets boundary. It does not close P6.05, establish Production readiness, authorize product/EIS execution, promote a capability or create a Stable/public contract.
+Successful L3 proves the bounded local configuration/secrets boundary. The P6.05 substream advances to `P6.05-L4 — Internal Organization + operator bootstrap`. P6.05 overall remains open until real `7/7` attachment evidence is obtained.
