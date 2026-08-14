@@ -1,6 +1,6 @@
 # P6.05-L4 — Internal Organization + Operator Bootstrap Implementation Runbook
 
-Status: `Prepared / owner-operated execution required for PASS`
+Status: `Complete / owner-operated PASS recorded`
 Version: `0.1.0`
 Date: `2026-08-14`
 Owner: `ООО «Арвектум»`
@@ -249,3 +249,9 @@ external_actions=false
 ## 12. Current Status and Next Steps
 
 P6.05-L4 mechanisms, helpers, and verification tests are prepared and verified under synthetic test fixtures. Real owner-operated execution against `$HOME/.arvectum-os/p6-05-l4-runtime` remains required to establish real local operational context and record final L4 PASS evidence.
+
+## Closure Note (2026-08-14)
+
+Real identity issuance occurred successfully under explicit owner authorization. The stable opaque Organization and Principal identities remain external operational state. This execution is recorded in [P6-05-L4-internal-organization-operator-bootstrap.md](../reviews/P6-05-L4-internal-organization-operator-bootstrap.md).
+
+**Important:** If the local state file is lost after reliance has begun, do not silently generate replacement identities; recover from backup or reconcile through governed administrative action.
