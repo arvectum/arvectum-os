@@ -1,7 +1,7 @@
 # P6.05 — Local Internal Runtime Substream
 
 Status: `Active / In Progress`
-Version: `0.1.4`
+Version: `0.1.5`
 Created: `2026-08-09`
 Updated: `2026-08-14`
 Owner: `ООО «Арвектум»`
@@ -109,6 +109,17 @@ Verify local handling for configuration required by the selected workflow. Crede
 ### P6.05-L4 — Internal Organization/operator bootstrap
 
 Establish the smallest Organization/operator context required by the existing governed boundary. Do not introduce a new general IAM architecture merely to make the local run convenient.
+
+**Implementation readiness:**
+- Bounded bootstrap helper prepared (`p6_05_l4_bootstrap_internal_context.py`);
+- Read-only preflight prepared (`p6_05_l4_operator_context_preflight.py`);
+- Exact-schema fail-closed validation enforced;
+- Canonical `OrganizationScope`, `Principal`, and `ActorContext` types reused;
+- Explicit Organization + attributable human Principal issued as opaque random identifiers;
+- Zero roles, zero permissions, zero delegations, zero organizational authority claims;
+- External owner-only state file (`$HOME/.arvectum-os/p6-05-l4-runtime/local-context/organization-operator.json`);
+- Implementation runbook documented in [`P6-05-L4-INTERNAL-ORGANIZATION-OPERATOR-BOOTSTRAP.md`](../implementation/P6-05-L4-INTERNAL-ORGANIZATION-OPERATOR-BOOTSTRAP.md);
+- Owner-operated execution still required for PASS.
 
 ### P6.05-L5 — First product connection
 
