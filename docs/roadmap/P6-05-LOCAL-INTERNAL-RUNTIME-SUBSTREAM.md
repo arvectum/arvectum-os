@@ -1,7 +1,7 @@
 # P6.05 — Local Internal Runtime Substream
 
 Status: `Active / In Progress`
-Version: `0.1.3`
+Version: `0.1.4`
 Created: `2026-08-09`
 Updated: `2026-08-14`
 Owner: `ООО «Арвектум»`
@@ -66,8 +66,8 @@ Implementation readiness does **not** close P6.05. Real `7/7` evidence remains u
 |---|---|---|---|
 | `P6.05-L1` | Local host/runtime baseline | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L1-local-host-runtime-baseline.md) | host prerequisites, repository locations, runtime versions and local-only network/port assumptions are inventoried; no final topology is declared |
 | `P6.05-L2` | Reproducible Arvectum OS local checkout + reference runtime start | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L2-local-reference-runtime-start.md) | canonical `main` reproduced on the selected Mac mini; isolated stdlib-only reference runtime passed `717/717`; source checkout remained clean |
-| `P6.05-L3` | Secure local configuration + secrets boundary | 🟨 Current / next | local configuration is separated from repository state; required credentials are detected without being printed/committed; fail-closed behavior is verified |
-| `P6.05-L4` | Internal Organization + operator bootstrap | ⬜ Pending | bounded ООО «Арвектум» Organization/operator context can execute the required local governed flow with least-privilege assumptions documented |
+| `P6.05-L3` | Secure local configuration + secrets boundary | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L3-secure-local-configuration-secrets-boundary.md) | local configuration is separated from repository state; required credentials are detected without being printed/committed; fail-closed behavior is verified |
+| `P6.05-L4` | Internal Organization + operator bootstrap | 🟨 Current / next | bounded ООО «Арвектум» Organization/operator context can execute the required local governed flow with least-privilege assumptions documented |
 | `P6.05-L5` | First real product connection | ⬜ Pending | `ai-corporation` connects through exact P6.02 Product Contract `0.1.0`, CAP-001 + CAP-004 only, with Organization/contract continuity preserved |
 | `P6.05-L6` | Local synthetic/redacted regression + negative-path smoke | ⬜ Pending | relevant P6.03/P6.05 proof paths pass locally; missing config/gates/wrong versions fail closed |
 | `P6.05-L7` | Real P6.05 exact-attachment live run | ⬜ Pending | the existing authorized read-only runner executes for `0344100006426000005`; success requires `PASS_EXACT_ATTACHMENT_EVIDENCE`, `exact_document_count = 7`, complete exact set and manifest SHA-256 |
@@ -104,7 +104,7 @@ A successful local start is internal validation evidence only. It does not estab
 
 Verify local handling for configuration required by the selected workflow. Credentials MUST remain outside source control and canonical evidence. Diagnostics may report safe configured/not-configured state but MUST NOT print tokens or secret material.
 
-The first owner-operated recovery run safely detected divergent legacy secret copies across the seven discovered sources (`SOURCE_SECRETS_DIFFER`). Read-only in-memory diagnostic established an exact 5+2 class distribution, with all four `.env.local` sources belonging to the 5-source class. On 2026-08-14 the owner explicitly approved selecting the `.env.local`-anchored 5-source class (`DECISION-2026-08-14-P6-05-L3-DIVERGENT-EIS-SECRET-RECONCILIATION.md`). Bounded reconciliation helper `p6_05_l3_reconcile_owner_selected_divergent_sources.py` implements this decision. An owner-operated rerun is required before L3 can be closed.
+**Completion:** `PASS` under [`P6-05-L3-secure-local-configuration-secrets-boundary.md`](../reviews/P6-05-L3-secure-local-configuration-secrets-boundary.md). The initial fail-closed detection of divergent legacy copies led to an owner-approved in-memory diagnostic (5+2 distribution), owner decision [`DECISION-2026-08-14-P6-05-L3-DIVERGENT-EIS-SECRET-RECONCILIATION.md`](../governance/decisions/DECISION-2026-08-14-P6-05-L3-DIVERGENT-EIS-SECRET-RECONCILIATION.md), canonical reconciliation helper implementation via PR `#1`, and a clean owner-operated execution establishing the external owner-only credential while scrubbing all 7 legacy token assignments with all 69 targeted L3 tests passing.
 
 ### P6.05-L4 — Internal Organization/operator bootstrap
 
@@ -211,4 +211,4 @@ Until a later accepted decision says otherwise, this environment is bounded and 
 
 ## 9. Immediate next action
 
-Proceed with `P6.05-L3 — Secure local configuration + secrets boundary` from the successful P6.05-L2 owner-operated Mac runtime baseline. Keep credentials outside source control and canonical evidence, report only safe configured/not-configured state, and preserve fail-closed behavior. Do not skip local smoke and do not mark P6.05 PASS before truthful real evidence exists.
+Proceed with `P6.05-L4 — Internal Organization + operator bootstrap`. Establish the smallest Organization/operator context required by the existing governed boundary, preserve least privilege, and keep P6.05 overall open until truthful real evidence is observed.

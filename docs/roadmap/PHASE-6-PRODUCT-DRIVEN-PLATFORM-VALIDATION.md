@@ -40,7 +40,7 @@ P6.04 is **complete with PASS** under [`P6-04-product-value-delivery-friction-go
 
 P6.05 implementation remediation is now merged on both sides: the bounded Arvectum OS CAP-001 admission work is in platform `main` as `5dbbc7b3af1f0f3896301ef833de2214cb44e6f9`, and `ai-corporation` PR `#142` is merged as `bf9a1c5438426031fce36370344ada969d2493dd`. Hosted implementation CI is green, but P6.05 remains open because real `7/7` exact attachment evidence has not yet been observed in the authorized owner-operated runtime.
 
-The remaining execution is decomposed under [`P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md`](P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md). P6.05-L1 and P6.05-L2 are now `Complete / PASS`; L2 reproduced canonical `main` at `fb61889633b11875dc5e1cf92771a159024a5695` on the selected Mac mini, passed `717/717` reference tests and preserved a clean source checkout. `P6.05-L3 — Secure local configuration + secrets boundary` is the current action. The Mac mini remains only the current bounded internal operational environment for ООО «Арвектум», not a production or public deployment architecture commitment.
+The remaining execution is decomposed under [`P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md`](P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md). P6.05-L1, P6.05-L2, and P6.05-L3 are now `Complete / PASS`; L3 established the external secrets boundary, scrubbed all 7 legacy token assignments under owner decision [`DECISION-2026-08-14-P6-05-L3-DIVERGENT-EIS-SECRET-RECONCILIATION.md`](../governance/decisions/DECISION-2026-08-14-P6-05-L3-DIVERGENT-EIS-SECRET-RECONCILIATION.md), and passed all 69 targeted L3 tests. `P6.05-L4 — Internal Organization + operator bootstrap` is the current action. The Mac mini remains only the current bounded internal operational environment for ООО «Арвектум», not a production or public deployment architecture commitment.
 
 The optional Stage 3 capacity of maximum three calibration cases remains deliberately unconsumed. The current blocker is known; the next useful calibration case should test a materially changed evidence contour after P6.05 rather than repeat the same incomplete source-package path.
 
@@ -91,8 +91,8 @@ P6.02 added the first real Product Contract boundary without changing that lifec
 | `P6.05-I2` | Product exact-attachment evidence capture + governed bridge | 🟩 Complete — merged `bf9a1c543...` |
 | `P6.05-L1` | Local host/runtime baseline | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L1-local-host-runtime-baseline.md) |
 | `P6.05-L2` | Reproducible Arvectum OS local checkout + reference runtime start | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L2-local-reference-runtime-start.md) |
-| `P6.05-L3` | Secure local configuration + secrets boundary | 🟨 Current / next |
-| `P6.05-L4` | Internal Organization + operator bootstrap | ⬜ Pending |
+| `P6.05-L3` | Secure local configuration + secrets boundary | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L3-secure-local-configuration-secrets-boundary.md) |
+| `P6.05-L4` | Internal Organization + operator bootstrap | 🟨 Current / next |
 | `P6.05-L5` | First real product connection through exact P6.02 boundary | ⬜ Pending |
 | `P6.05-L6` | Local synthetic/redacted regression + negative-path smoke | ⬜ Pending |
 | `P6.05-L7` | Real P6.05 exact-attachment live run (`7/7` gate) | ⬜ Pending |
@@ -195,8 +195,8 @@ Remaining execution is governed by [`P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md`]
 
 1. `P6.05-L1` host/runtime baseline — complete / PASS;
 2. `P6.05-L2` reproducible local Arvectum OS start — complete / PASS;
-3. `P6.05-L3` secure local configuration/secrets boundary — current / next;
-4. `P6.05-L4` internal Organization/operator bootstrap;
+3. `P6.05-L3` secure local configuration/secrets boundary — Complete / PASS;
+4. `P6.05-L4` internal Organization/operator bootstrap — current / next;
 5. `P6.05-L5` exact P6.02 first-product connection;
 6. `P6.05-L6` local synthetic/redacted + negative-path smoke;
 7. `P6.05-L7` real exact-attachment live run with truthful `7/7` gate;
@@ -312,7 +312,7 @@ P6.05-L1 Local host/runtime baseline ✓ PASS
  ↓
 P6.05-L2 Reproducible local Arvectum OS start ✓ PASS
  ↓
-P6.05-L3 Secure local configuration / secrets boundary ← current
+P6.05-L4 Internal Organization / operator bootstrap ← current
  ↓
 P6.05-L4 Internal Organization/operator bootstrap
  ↓
@@ -395,7 +395,7 @@ P6.02/R17/P6.03 selected no durable persistence, Event delivery, IAM, public/sta
 
 ## 10. Current canonical action
 
-> **P6.05-L3 — Secure local configuration + secrets boundary.**
+> **P6.05-L4 — Internal Organization + operator bootstrap.**
 
 Use [`P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md`](P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md) as the execution plan. P6.05-L1 and P6.05-L2 are complete / PASS; L2 evidence is recorded in [`P6-05-L2-local-reference-runtime-start.md`](../reviews/P6-05-L2-local-reference-runtime-start.md).
 
