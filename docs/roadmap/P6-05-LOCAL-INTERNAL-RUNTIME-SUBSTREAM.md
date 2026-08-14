@@ -1,7 +1,7 @@
 # P6.05 — Local Internal Runtime Substream
 
 Status: `Active / In Progress`
-Version: `0.1.5`
+Version: `0.1.6`
 Created: `2026-08-09`
 Updated: `2026-08-14`
 Owner: `ООО «Арвектум»`
@@ -67,8 +67,8 @@ Implementation readiness does **not** close P6.05. Real `7/7` evidence remains u
 | `P6.05-L1` | Local host/runtime baseline | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L1-local-host-runtime-baseline.md) | host prerequisites, repository locations, runtime versions and local-only network/port assumptions are inventoried; no final topology is declared |
 | `P6.05-L2` | Reproducible Arvectum OS local checkout + reference runtime start | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L2-local-reference-runtime-start.md) | canonical `main` reproduced on the selected Mac mini; isolated stdlib-only reference runtime passed `717/717`; source checkout remained clean |
 | `P6.05-L3` | Secure local configuration + secrets boundary | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L3-secure-local-configuration-secrets-boundary.md) | local configuration is separated from repository state; required credentials are detected without being printed/committed; fail-closed behavior is verified |
-| `P6.05-L4` | Internal Organization + operator bootstrap | 🟨 Current / next | bounded ООО «Арвектум» Organization/operator context can execute the required local governed flow with least-privilege assumptions documented |
-| `P6.05-L5` | First real product connection | ⬜ Pending | `ai-corporation` connects through exact P6.02 Product Contract `0.1.0`, CAP-001 + CAP-004 only, with Organization/contract continuity preserved |
+| `P6.05-L4` | Internal Organization + operator bootstrap | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L4-internal-organization-operator-bootstrap.md) | bounded ООО «Арвектум» Organization/operator context can execute the required local governed flow with least-privilege assumptions documented |
+| `P6.05-L5` | First real product connection | 🟨 Current / next | `ai-corporation` connects through exact P6.02 Product Contract `0.1.0`, CAP-001 + CAP-004 only, with Organization/contract continuity preserved |
 | `P6.05-L6` | Local synthetic/redacted regression + negative-path smoke | ⬜ Pending | relevant P6.03/P6.05 proof paths pass locally; missing config/gates/wrong versions fail closed |
 | `P6.05-L7` | Real P6.05 exact-attachment live run | ⬜ Pending | the existing authorized read-only runner executes for `0344100006426000005`; success requires `PASS_EXACT_ATTACHMENT_EVIDENCE`, `exact_document_count = 7`, complete exact set and manifest SHA-256 |
 | `P6.05-L8` | Governed evidence admission + canonical P6.05 closure package | ⬜ Pending | exact evidence is admitted/reconstructed through the bounded governed path; closure review records PASS or the truthful remaining blocker; roadmap is synchronized |
@@ -110,16 +110,7 @@ Verify local handling for configuration required by the selected workflow. Crede
 
 Establish the smallest Organization/operator context required by the existing governed boundary. Do not introduce a new general IAM architecture merely to make the local run convenient.
 
-**Implementation readiness:**
-- Bounded bootstrap helper prepared (`p6_05_l4_bootstrap_internal_context.py`);
-- Read-only preflight prepared (`p6_05_l4_operator_context_preflight.py`);
-- Exact-schema fail-closed validation enforced;
-- Canonical `OrganizationScope`, `Principal`, and `ActorContext` types reused;
-- Explicit Organization + attributable human Principal issued as opaque random identifiers;
-- Zero roles, zero permissions, zero delegations, zero organizational authority claims;
-- External owner-only state file (`$HOME/.arvectum-os/p6-05-l4-runtime/local-context/organization-operator.json`);
-- Implementation runbook documented in [`P6-05-L4-INTERNAL-ORGANIZATION-OPERATOR-BOOTSTRAP.md`](../implementation/P6-05-L4-INTERNAL-ORGANIZATION-OPERATOR-BOOTSTRAP.md);
-- Owner-operated execution still required for PASS.
+**Completion:** `PASS` under [`P6-05-L4-internal-organization-operator-bootstrap.md`](../reviews/P6-05-L4-internal-organization-operator-bootstrap.md). The real owner-operated bootstrap issued the opaque Organization and human Principal identities to external owner-only state under explicit authorization. The second canonical run proved idempotent reuse without state mutation. Both preflights passed, and all 62 targeted L4 tests (and 848 full reference tests) PASS with no authority, roles, permissions, product context or network invocation occurred.
 
 ### P6.05-L5 — First product connection
 
@@ -222,4 +213,4 @@ Until a later accepted decision says otherwise, this environment is bounded and 
 
 ## 9. Immediate next action
 
-Proceed with `P6.05-L4 — Internal Organization + operator bootstrap`. Establish the smallest Organization/operator context required by the existing governed boundary, preserve least privilege, and keep P6.05 overall open until truthful real evidence is observed.
+Proceed with `P6.05-L5 — First real product connection`. Establish the smallest Organization/operator context required by the existing governed boundary, preserve least privilege, and keep P6.05 overall open until truthful real evidence is observed.

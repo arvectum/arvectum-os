@@ -19,7 +19,7 @@ Detailed completed-phase evidence remains in the corresponding `PHASE-N-...` roa
 
 Version `2.51.3` records `P6.05-L2` as `Complete / PASS` after the selected owner-operated Mac mini reproduced canonical `main` at `fb61889633b11875dc5e1cf92771a159024a5695`, passed `717/717` reference tests under CPython `3.14.6`, and preserved a clean source checkout with no product, EIS, public-ingress or external action. Canonical evidence is [`P6-05-L2-local-reference-runtime-start.md`](../reviews/P6-05-L2-local-reference-runtime-start.md).
 
-The detailed P6.05 local substream is synchronized to `0.1.4`; `P6.05-L3` is `Complete / PASS` ([evidence](../reviews/P6-05-L3-secure-local-configuration-secrets-boundary.md)), and `P6.05-L4 — Internal Organization + operator bootstrap` is now the current action. The truthful real `7/7` exact-attachment evidence gate remains unobserved, so P6.05 itself remains open.
+The detailed P6.05 local substream is synchronized to `0.1.4`; `P6.05-L3` is `Complete / PASS` ([evidence](../reviews/P6-05-L3-secure-local-configuration-secrets-boundary.md)), and `P6.05-L4` is `Complete / PASS` ([evidence](../reviews/P6-05-L4-internal-organization-operator-bootstrap.md)), and `P6.05-L5 — First real product connection through exact P6.02 boundary` is now the current action. The truthful real `7/7` exact-attachment evidence gate remains unobserved, so P6.05 itself remains open.
 
 P6.05 implementation readiness remains separated from the owner-operated runtime work required to execute the real evidence path. The local deployment is treated as a bounded **Internal / local owner-operated runtime** for ООО «Арвектум», not as a Production environment, supported macOS product, Stable/public runtime contract or final deployment topology.
 
@@ -125,8 +125,8 @@ Canonical detailed roadmap:
 | `P6.05-L1` | Local host/runtime baseline | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L1-local-host-runtime-baseline.md) |
 | `P6.05-L2` | Reproducible Arvectum OS local checkout + reference runtime start | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L2-local-reference-runtime-start.md) |
 | `P6.05-L3` | Secure local configuration + secrets boundary | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L3-secure-local-configuration-secrets-boundary.md) |
-| `P6.05-L4` | Internal Organization + operator bootstrap | 🟨 Current / next |
-| `P6.05-L5` | First real product connection through exact P6.02 boundary | ⬜ Pending |
+| `P6.05-L4` | Internal Organization + operator bootstrap | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L4-internal-organization-operator-bootstrap.md) |
+| `P6.05-L5` | First real product connection through exact P6.02 boundary | 🟨 Current / next |
 | `P6.05-L6` | Local synthetic/redacted regression + negative-path smoke | ⬜ Pending |
 | `P6.05-L7` | Real P6.05 exact-attachment live run (`7/7` gate) | ⬜ Pending |
 | `P6.05-L8` | Governed evidence admission + canonical P6.05 closure package | ⬜ Pending |
@@ -163,7 +163,7 @@ M6 does not require an `Active` Platform Capability, Stable Product Contract, pr
 
 ## 8. Current canonical action
 
-> **P6.05-L4 — Internal Organization + operator bootstrap.**
+> **P6.05-L5 — First real product connection through exact P6.02 boundary.**
 
 `P6.05-L1`, `P6.05-L2`, and `P6.05-L3` are complete / PASS. The local runtime evidence is recorded in [`P6-05-L1-local-host-runtime-baseline.md`](../reviews/P6-05-L1-local-host-runtime-baseline.md), [`P6-05-L2-local-reference-runtime-start.md`](../reviews/P6-05-L2-local-reference-runtime-start.md), and [`P6-05-L3-secure-local-configuration-secrets-boundary.md`](../reviews/P6-05-L3-secure-local-configuration-secrets-boundary.md). L3 proved the secure local configuration/secrets boundary is established, seven legacy token assignments were scrubbed under explicit owner decision, and the external owner-only secret boundary was established without exposing credential values.
 
@@ -238,7 +238,9 @@ P6.05-L2 local checkout + reference runtime start ✓ PASS
         ↓
 P6.05-L3 secure local configuration + secrets boundary ✓ PASS
         ↓
-P6.05-L4 internal Organization + operator bootstrap ← current
+P6.05-L4 internal Organization + operator bootstrap ✓ PASS
+        ↓
+P6.05-L5 first real product connection ← current
         ↓
 P6.05-L7 real exact attachment evidence: 7/7 required
         ↓
