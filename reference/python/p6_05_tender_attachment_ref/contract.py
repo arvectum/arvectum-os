@@ -71,7 +71,7 @@ class P605ExecutableProductContractProjection(ProductContract):
     canonical_source_blob_sha: str
 
     def __post_init__(self) -> None:
-        super().__post_init__()
+        ProductContract.__post_init__(self)
         if self.canonical_source_path != P6_02_CANONICAL_CONTRACT_PATH:
             raise ValueError("canonical_source_path mismatch")
         if self.canonical_source_blob_sha != P6_02_CANONICAL_BLOB_SHA:
