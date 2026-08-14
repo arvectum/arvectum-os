@@ -18,9 +18,25 @@ import p6_05_l4_operator_context_preflight as PREFLIGHT
 
 class P605L4InternalOrgOperatorBootstrapTests(unittest.TestCase):
     def setUp(self) -> None:
-        self.temp_dir = tempfile.TemporaryDirectory()
+        # Use a canonical physical temp base to avoid macOS symlink aliases like /var → /private/var
+        raw_temp_base = Path(tempfile.gettempdir())
+        canonical_temp_base = raw_temp_base.resolve(strict=True)
+
+        self.temp_dir = tempfile.TemporaryDirectory(
+            dir=str(canonical_temp_base)
+        )
         self.addCleanup(self.temp_dir.cleanup)
-        self.external_root = Path(self.temp_dir.name) / "p6-05-l4-runtime"
+        self.test_root = Path(self.temp_dir.name)
+
+        # Test-harness invariant: normal fixture root must be symlink-free
+        # This prevents accidentally reintroducing /tmp or /var alias dependence
+        self.assertEqual(
+            self.test_root,
+            Path(os.path.realpath(self.test_root)),
+            f"Test root {self.test_root} must be canonical (no unresolved symlinks)"
+        )
+
+        self.external_root = self.test_root / "p6-05-l4-runtime"
         self.auth_token = BOOTSTRAP.REQUIRED_OWNER_ASSERTION
 
     # Minimum Requirement 1: missing owner assertion fails before creation
@@ -113,7 +129,7 @@ class P605L4InternalOrgOperatorBootstrapTests(unittest.TestCase):
         context_dir = self.external_root / "local-context"
         context_dir.mkdir(parents=True, mode=0o700)
         state_file = context_dir / "organization-operator.json"
-        
+
         # Simulate state file created by concurrent process with valid content
         org_id = Identity("organization", "org-existing", "platform")
         prin_id = Identity("principal", "prin-existing", "org-existing")
@@ -163,7 +179,7 @@ class P605L4InternalOrgOperatorBootstrapTests(unittest.TestCase):
 
     # Minimum Requirement 8: target inside Git fails
     def test_08_target_inside_git_fails(self) -> None:
-        git_repo = Path(self.temp_dir.name) / "mock_git_repo"
+        git_repo = self.test_root / "mock_git_repo"
         git_repo.mkdir(mode=0o700)
         subprocess.run(["git", "init", str(git_repo)], check=True, capture_output=True)
 
@@ -179,7 +195,7 @@ class P605L4InternalOrgOperatorBootstrapTests(unittest.TestCase):
 
     # Minimum Requirement 9: target inside Arvectum OS fails
     def test_09_target_inside_arvectum_os_fails(self) -> None:
-        repo_root = Path(self.temp_dir.name) / "arvectum-os"
+        repo_root = self.test_root / "arvectum-os"
         repo_root.mkdir(mode=0o700)
         target_inside = repo_root / "local-runtime"
 
@@ -194,9 +210,9 @@ class P605L4InternalOrgOperatorBootstrapTests(unittest.TestCase):
 
     # Minimum Requirement 10: symlink root/file fails
     def test_10_symlink_root_fails(self) -> None:
-        real_target = Path(self.temp_dir.name) / "real_target"
+        real_target = self.test_root / "real_target"
         real_target.mkdir(mode=0o700)
-        symlink_target = Path(self.temp_dir.name) / "symlink_target"
+        symlink_target = self.test_root / "symlink_target"
         os.symlink(real_target, symlink_target)
 
         rc, lines, _ = BOOTSTRAP.bootstrap_internal_context(
@@ -222,11 +238,11 @@ class P605L4InternalOrgOperatorBootstrapTests(unittest.TestCase):
 
     # Intermediate symlink tests
     def test_10c_intermediate_symlink_parent_bootstrap_fails(self) -> None:
-        real_parent = Path(self.temp_dir.name).resolve() / "real_parent"
+        real_parent = self.test_root / "real_parent"
         real_parent.mkdir(mode=0o700)
         (real_parent / "nested").mkdir(mode=0o700)
 
-        alias_parent = Path(self.temp_dir.name).resolve() / "alias_parent"
+        alias_parent = self.test_root / "alias_parent"
         os.symlink(real_parent, alias_parent)
 
         target_through_alias = alias_parent / "nested" / "p6-05-l4-runtime"
@@ -239,7 +255,7 @@ class P605L4InternalOrgOperatorBootstrapTests(unittest.TestCase):
         self.assertFalse(target_through_alias.exists())
 
     def test_10d_intermediate_symlink_parent_preflight_fails(self) -> None:
-        real_parent = Path(self.temp_dir.name).resolve() / "real_parent_pre"
+        real_parent = self.test_root / "real_parent_pre"
         real_parent.mkdir(mode=0o700)
         target_root = real_parent / "p6-05-l4-runtime"
 
@@ -249,11 +265,119 @@ class P605L4InternalOrgOperatorBootstrapTests(unittest.TestCase):
         )
         self.assertEqual(rc, 0)
 
-        alias_parent = Path(self.temp_dir.name).resolve() / "alias_parent_pre"
+        alias_parent = self.test_root / "alias_parent_pre"
         os.symlink(real_parent, alias_parent)
 
         state_through_alias = alias_parent / "p6-05-l4-runtime" / "local-context" / "organization-operator.json"
         rc, lines, _ = PREFLIGHT.inspect_operator_context_file(state_through_alias)
+        self.assertEqual(rc, 2)
+        self.assertIn("failure_code=CONTEXT_FILE_SYMLINK_NOT_ALLOWED", lines)
+
+    # Relative path regression test for symlink validation
+    def test_10e_relative_path_symlink_ancestor_rejection(self) -> None:
+        """Test that relative paths through symlink ancestors are rejected."""
+        # Create real directory structure under test root
+        real_parent = self.test_root / "real-parent"
+        real_parent.mkdir(mode=0o700)
+        nested = real_parent / "nested"
+        nested.mkdir(mode=0o700)
+
+        # Create symlink alias to real-parent
+        alias_parent = self.test_root / "alias-parent"
+        os.symlink(real_parent, alias_parent)
+
+        # Create a subdirectory to set as cwd
+        cwd_dir = self.test_root / "cwd"
+        cwd_dir.mkdir(mode=0o700)
+
+        # Save current cwd
+        original_cwd = os.getcwd()
+        try:
+            # Change to cwd directory
+            os.chdir(cwd_dir)
+
+            # Create relative path through symlink
+            relative_path = Path("../alias-parent/nested/p6-05-l4-runtime")
+
+            # Bootstrap should reject because ancestor contains symlink
+            rc, lines, _ = BOOTSTRAP.bootstrap_internal_context(
+                relative_path,
+                owner_authorization=self.auth_token,
+            )
+
+            # Should fail with TARGET_SYMLINK_NOT_ALLOWED
+            self.assertEqual(rc, 2)
+            self.assertIn("failure_code=TARGET_SYMLINK_NOT_ALLOWED", lines)
+
+            # Ensure no context was created
+            self.assertFalse(relative_path.exists())
+
+            # Real target remains untouched
+            real_target = real_parent / "nested" / "p6-05-l4-runtime"
+            self.assertFalse(real_target.exists())
+
+        finally:
+            # Restore original cwd
+                os.chdir(original_cwd)
+
+    # Complete ancestor test for deep symlinks
+    def test_10f_absolute_deep_symlink_ancestor_rejection(self) -> None:
+        """Test that deep symlink ancestors are rejected, not just immediate parents."""
+        # Create deep directory structure under test root
+        real_deep = self.test_root / "real" / "very" / "deep" / "path"
+        real_deep.mkdir(parents=True, exist_ok=True)
+
+        # Create symlink partway up the chain
+        link_point = self.test_root / "linkpoint"
+        link_point.symlink_to(self.test_root / "real")
+
+        # Target path through the symlink
+        target_through_link = link_point / "very" / "deep" / "path" / "p6-05-l4-runtime"
+
+        # Bootstrap should reject because ancestor contains symlink
+        rc, lines, _ = BOOTSTRAP.bootstrap_internal_context(
+            target_through_link,
+            owner_authorization=self.auth_token,
+        )
+
+        # Should fail with TARGET_SYMLINK_NOT_ALLOWED
+        self.assertEqual(rc, 2)
+        self.assertIn("failure_code=TARGET_SYMLINK_NOT_ALLOWED", lines)
+
+        # No context file should be created
+        context_file = target_through_link / "local-context" / "organization-operator.json"
+        self.assertFalse(context_file.exists())
+
+        # Real target untouched
+        real_target = real_deep / "p6-05-l4-runtime"
+        self.assertFalse(real_target.exists())
+
+    # Preflight test for deep symlink ancestors
+    def test_10g_preflight_deep_symlink_ancestor_rejection(self) -> None:
+        """Preflight should also reject absolute paths with deep symlink ancestors."""
+        # Create deep directory structure under test root
+        real_deep = self.test_root / "real" / "very" / "deep" / "path"
+        real_deep.mkdir(parents=True, exist_ok=True)
+
+        # Create symlink partway up the chain
+        link_point = self.test_root / "linkpoint"
+        link_point.symlink_to(self.test_root / "real")
+
+        # First create a valid context (using real path, not through symlink)
+        real_target = real_deep / "p6-05-l4-runtime"
+        rc, _, _ = BOOTSTRAP.bootstrap_internal_context(
+            real_target,
+            owner_authorization=self.auth_token,
+        )
+        self.assertEqual(rc, 0)
+
+        # Target path through the symlink for preflight
+        state_through_link = link_point / "very" / "deep" / "path" / "p6-05-l4-runtime" / "local-context" / "organization-operator.json"
+
+        # Preflight should reject
+        rc, lines, _ = PREFLIGHT.inspect_operator_context_file(state_through_link)
+
+        # Should fail with CONTEXT_FILE_SYMLINK_NOT_ALLOWED
         self.assertEqual(rc, 2)
         self.assertIn("failure_code=CONTEXT_FILE_SYMLINK_NOT_ALLOWED", lines)
 

@@ -125,14 +125,35 @@ def _assert_not_symlink(path: Path, code: str) -> None:
 
 
 def _assert_no_intermediate_symlinks(path: Path, code: str) -> None:
-    """Ensure no user-specified intermediate path component is a symlink."""
+    """Ensure no user-specified intermediate path component is a symlink.
+
+    Walks from the expanded path upward through EVERY ancestor until the
+    filesystem root, checking each EXISTING component for symlinks.
+    Non-existing leaf/intermediate components are allowed only insofar as
+    their existing ancestor chain is symlink-free.
+    """
+    # Expand ~ first
     expanded = path.expanduser()
-    current = expanded
+    # Convert a relative user-supplied path to an absolute lexical path WITHOUT resolving symlinks
+    # os.path.abspath() gives absolute path without following symlinks
+    absolute_path = Path(os.path.abspath(str(expanded)))
+
+    # Walk from the path upward through every ancestor until root
+    current = absolute_path
     while True:
-        if current.is_symlink():
-            raise BootstrapError(code)
+        # For each EXISTING component: inspect without following the final component
+        # Use is_symlink() which uses lstat() internally
+        try:
+            if current.is_symlink():
+                raise BootstrapError(code)
+        except OSError:
+            # Component doesn't exist or can't be stat'd
+            # This is OK - we only need to check existing components
+            pass
+
         parent = current.parent
-        if parent == current or len(current.parts) <= 3:
+        # Stop when we reach the root (parent == current)
+        if parent == current:
             break
         current = parent
 
