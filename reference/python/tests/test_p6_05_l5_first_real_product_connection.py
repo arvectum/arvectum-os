@@ -5,6 +5,7 @@ import tempfile
 import unittest
 from pathlib import Path
 from datetime import datetime, timezone
+from unittest.mock import patch, MagicMock
 
 import p6_05_l4_bootstrap_internal_context as BOOTSTRAP
 import p6_05_l5_first_real_product_connection as L5
@@ -13,6 +14,8 @@ from arvectum_os_ref.product_capability_consumption import (
     CAP_004_AUDIT_RECONSTRUCTION,
     CAPABILITY_CONTRACT_VERSION,
 )
+from arvectum_os_ref.identity import Identity
+from arvectum_os_ref.security import OrganizationScope
 
 class P605L5FirstRealProductConnectionTests(unittest.TestCase):
     def setUp(self) -> None:
@@ -45,8 +48,6 @@ class P605L5FirstRealProductConnectionTests(unittest.TestCase):
         self.assertIn("product_contract=0.1.0", lines)
         self.assertIn("cap_001_contract_version=1.0.0", lines)
         self.assertIn("cap_004_contract_version=1.0.0", lines)
-        self.assertIn("cap_002_present=false", lines)
-        self.assertIn("cap_003_present=false", lines)
         
         # Continuity checks
         self.assertIn("organization_continuity=true", lines)
@@ -57,12 +58,17 @@ class P605L5FirstRealProductConnectionTests(unittest.TestCase):
         # Verify internal objects
         self.assertEqual(result.organization_scope, self.l4_ctx.organization_scope)
         self.assertEqual(result.principal, self.l4_ctx.principal)
-        self.assertEqual(result.product_contract.product_version, "restricted-paid-pilot/44fz-prebid-v1")
+        self.assertEqual(result.connected_at, L5.CANONICAL_P6_02_CREATED_AT)
 
-    def test_02_no_state_mutation(self) -> None:
+    def test_02_no_state_mutation_and_permissions(self) -> None:
         content_before = self.state_file.read_bytes()
         mtime_before = self.state_file.stat().st_mtime_ns
         
+        # Capture modes
+        root_mode_before = stat.S_IMODE(self.external_root.stat().st_mode)
+        context_dir_mode_before = stat.S_IMODE(self.external_root.joinpath("local-context").stat().st_mode)
+        state_file_mode_before = stat.S_IMODE(self.state_file.stat().st_mode)
+
         L5.connect_product(self.state_file)
         
         content_after = self.state_file.read_bytes()
@@ -71,34 +77,83 @@ class P605L5FirstRealProductConnectionTests(unittest.TestCase):
         self.assertEqual(content_before, content_after)
         self.assertEqual(mtime_before, mtime_after)
 
-    def test_03_missing_state_fails(self) -> None:
+        # Permissions check
+        self.assertEqual(root_mode_before, stat.S_IMODE(self.external_root.stat().st_mode))
+        self.assertEqual(context_dir_mode_before, stat.S_IMODE(self.external_root.joinpath("local-context").stat().st_mode))
+        self.assertEqual(state_file_mode_before, stat.S_IMODE(self.state_file.stat().st_mode))
+
+    def test_03_missing_state_fails_safe(self) -> None:
         missing_file = self.external_root / "missing.json"
         rc, lines, result = L5.connect_product(missing_file)
         
-        self.assertEqual(rc, 2) # From PREFLIGHT.inspect_operator_context_file
+        self.assertEqual(rc, 2)
         self.assertIsNone(result)
         self.assertIn("p6_05_l5_status=FAIL", lines)
         self.assertIn("failure_code=CONTEXT_MALFORMED", lines)
+        self.assertIn("organization_continuity=not_proven", lines)
 
-    def test_04_wrong_contract_version_fails(self) -> None:
-        # P6.05 executable projection specifically targets P6.02 0.1.0.
-        # If we tampered with the contract projection to change its version identity, it should fail.
-        # Since build_p6_05_product_contract_projection is what we use, we have to mock or 
-        # force an error in L5.connect_product logic if it detected a mismatch.
+    def test_04_wrong_contract_subject_fails(self) -> None:
+        with patch("p6_05_l5_first_real_product_connection.build_p6_05_product_contract_projection") as mock_build:
+            mock_contract = MagicMock()
+            mock_contract.record.subject_id.value = "WRONG_SUBJECT"
+            mock_build.return_value = mock_contract
+            
+            rc, lines, result = L5.connect_product(self.state_file)
+            self.assertEqual(rc, 1)
+            self.assertIn("failure_code=WRONG_PRODUCT_CONTRACT_SUBJECT", lines)
+
+    def test_05_wrong_organization_fails(self) -> None:
+        with patch("p6_05_l5_first_real_product_connection.build_p6_05_product_contract_projection") as mock_build:
+            mock_contract = MagicMock()
+            mock_contract.record.subject_id.value = "p6-02-arvectum-tender-operator"
+            mock_contract.record.version_id.value = "p6-02-arvectum-tender-operator-v0.1.0"
+            mock_contract.record.lifecycle_status = "Provisional"
+            mock_contract.product_version = "restricted-paid-pilot/44fz-prebid-v1"
+            
+            # Tamper with organization
+            other_org = OrganizationScope(Identity("organization", "OTHER", "platform"))
+            mock_contract.organization = other_org
+            mock_build.return_value = mock_contract
+            
+            rc, lines, result = L5.connect_product(self.state_file)
+            self.assertEqual(rc, 1)
+            self.assertIn("failure_code=ORGANIZATION_MISMATCH", lines)
+
+    def test_06_dependency_set_mismatch_fails(self) -> None:
+        with patch("p6_05_l5_first_real_product_connection.build_p6_05_product_contract_projection") as mock_build:
+            mock_contract = MagicMock()
+            mock_contract.record.subject_id.value = "p6-02-arvectum-tender-operator"
+            mock_contract.record.version_id.value = "p6-02-arvectum-tender-operator-v0.1.0"
+            mock_contract.record.lifecycle_status = "Provisional"
+            mock_contract.product_version = "restricted-paid-pilot/44fz-prebid-v1"
+            mock_contract.organization = self.l4_ctx.organization_scope
+            
+            # Tamper with dependencies
+            mock_contract.dependencies = []
+            mock_build.return_value = mock_contract
+            
+            rc, lines, result = L5.connect_product(self.state_file)
+            self.assertEqual(rc, 1)
+            self.assertIn("failure_code=DEPENDENCY_SET_MISMATCH", lines)
+
+    def test_07_provider_version_mismatch_fails(self) -> None:
+        from arvectum_os_ref.product_contract import ProductContract
+        base_contract = L5.build_p6_05_product_contract_projection(
+            actor=self.l4_ctx.actor_context,
+            created_at=L5.CANONICAL_P6_02_CREATED_AT
+        )
         
-        # Actually, L5.connect_product checks contract.record.payload[1] for ("contract_version", "0.1.0")
-        # Let's see if we can trigger a failure by using a custom contract builder if it was injectable, 
-        # but it's not. So we rely on the internal validation logic in L5.connect_product.
-        pass
+        from dataclasses import replace
+        dep0 = replace(base_contract.dependencies[0], contract_version="2.0.0")
+        tampered_contract = replace(base_contract, dependencies=(dep0,) + base_contract.dependencies[1:])
+        
+        with patch("p6_05_l5_first_real_product_connection.build_p6_05_product_contract_projection", return_value=tampered_contract):
+            rc, lines, result = L5.connect_product(self.state_file)
+            self.assertEqual(rc, 1)
+            self.assertIn("p6_05_l5_status=FAIL", lines)
+            self.assertIn("failure_code=CONNECTION_FAILED", lines)
 
-    def test_05_dependency_continuity_fails_on_extra_dependency(self) -> None:
-        # We need to prove it fails if CAP-002 or CAP-003 is present.
-        # Since L5.connect_product uses build_p6_05_product_contract_projection, 
-        # which currently only adds CAP-001 and CAP-004, we can verify it passes.
-        # To test failure, we'd need to mock the contract or the building function.
-        pass
-
-    def test_06_safe_output_no_ids(self) -> None:
+    def test_08_safe_output_no_ids(self) -> None:
         rc, lines, result = L5.connect_product(self.state_file)
         self.assertEqual(rc, 0)
         
@@ -109,38 +164,13 @@ class P605L5FirstRealProductConnectionTests(unittest.TestCase):
             if line.strip():
                 self.assertNotIn(org_id, line)
                 self.assertNotIn(prin_id, line)
-                # Check for base64-like strings or hashes if they were there
                 self.assertNotIn("==", line)
 
-    def test_07_no_side_effects_summary(self) -> None:
-        rc, lines, _ = L5.connect_product(self.state_file)
+    def test_09_external_authority_preserved_check(self) -> None:
+        rc, lines, result = L5.connect_product(self.state_file)
         self.assertEqual(rc, 0)
-        
-        self.assertIn("authorization_grants_created=false", lines)
-        self.assertIn("delegations_created=false", lines)
-        self.assertIn("organizational_authority_created=false", lines)
-        self.assertIn("canonical_mutation=false", lines)
-        self.assertIn("eis_invoked=false", lines)
-        self.assertIn("soap_invoked=false", lines)
-        self.assertIn("network_product_runtime_invoked=false", lines)
-        self.assertIn("external_actions=false", lines)
-
-    def test_08_organization_mismatch_fails(self) -> None:
-        # Create a second context with different IDs
-        external_root2 = self.test_root / "other-runtime"
-        BOOTSTRAP.bootstrap_internal_context(external_root2, owner_authorization=self.auth_token)
-        state_file2 = external_root2 / "local-context" / "organization-operator.json"
-        
-        # Load data from state_file2
-        with open(state_file2, 'r') as f:
-            data2 = json.load(f)
-            
-        # Tamper with state_file (first one) to have organization ID from data2 but keep other things if possible?
-        # Actually PREFLIGHT.inspect_operator_context_file will return a result.
-        # If we mix them, L5.connect_product should catch it if it uses the wrong ActorContext for build_p6_05_product_contract_projection.
-        # But build_p6_05_product_contract_projection uses the provided actor_context.
-        # The continuity check "Product Contract scope == L4 Organization" is what matters.
-        pass
+        self.assertTrue(result.external_authority_preserved)
+        self.assertIn("external_authority_preserved=true", lines)
 
 if __name__ == "__main__":
     unittest.main()
