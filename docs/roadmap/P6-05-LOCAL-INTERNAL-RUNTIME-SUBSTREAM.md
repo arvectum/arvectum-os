@@ -113,6 +113,7 @@ Establish the smallest Organization/operator context required by the existing go
 **Implementation readiness:**
 - Bounded bootstrap helper prepared (`p6_05_l4_bootstrap_internal_context.py`);
 - Read-only preflight prepared (`p6_05_l4_operator_context_preflight.py`);
+- Exact-schema fail-closed validation enforced;
 - Canonical `OrganizationScope`, `Principal`, and `ActorContext` types reused;
 - Explicit Organization + attributable human Principal issued as opaque random identifiers;
 - Zero roles, zero permissions, zero delegations, zero organizational authority claims;

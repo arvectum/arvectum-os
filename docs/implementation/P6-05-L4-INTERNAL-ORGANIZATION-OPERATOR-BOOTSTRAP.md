@@ -63,9 +63,10 @@ $HOME/.arvectum-os/p6-05-l4-runtime/
 
 ### Storage Controls
 - **Location:** Outside every Git worktree and outside the Arvectum OS checkout.
-- **Permissions:** Directories `0700` or stricter; state file `0600` or stricter.
-- **Symlinks:** Symlinks at root, directory, or file level are strictly rejected.
-- **Secrets/Credentials:** Zero secrets, zero credentials, zero EIS tokens, zero passwords.
+- **Permissions:** Directories `0700` or stricter; state file `0600` or stricter. Existing broad permissions are never auto-repaired and fail closed.
+- **Symlinks:** Symlinks in target paths, parents, or state files are strictly rejected across all components.
+- **Exact Bounded Schema:** Unknown fields fail closed (`CONTEXT_SCHEMA_UNEXPECTED_FIELD`).
+- **Secrets/Credentials:** Zero secrets, zero credentials, zero EIS tokens, zero passwords. PASS claims are guaranteed by exact-schema admission.
 - **Operational Nature:** The L4 local context is operational state for this bounded internal runtime. It is not a Stable/public identity-management contract or Production IAM system.
 
 ## 5. Real Identity Issuance Model
@@ -189,6 +190,36 @@ network_invoked=false
 external_actions=false
 ```
 
+### Truthful Safe FAIL Output Sample
+When any invariant fails, unproven facts are reported as `not_proven`:
+```text
+p6_05_l4_status=FAIL
+failure_code=CONTEXT_SCHEMA_UNEXPECTED_FIELD
+context_created=false
+context_reused=false
+organization_context=unconfigured
+operator_principal=unconfigured
+principal_category=unconfigured
+actor_context=unconfigured
+organization_scope_explicit=not_proven
+principal_attributable=not_proven
+authorization_grants=not_proven
+delegations=not_proven
+organizational_authority_claimed=not_proven
+authentication_evidence_refs=not_proven
+tenant_context_introduced=not_proven
+product_context_introduced=not_proven
+context_outside_source_control=false
+context_owner_only=false
+credentials_present=not_proven
+secrets_present=not_proven
+canonical_mutation=false
+product_invoked=false
+eis_invoked=false
+network_invoked=false
+external_actions=false
+```
+
 ## 11. Fail-Closed Error Codes
 
 | Error Code | Meaning |
@@ -200,6 +231,8 @@ external_actions=false
 | `CONTEXT_FILE_SYMLINK_NOT_ALLOWED` | State file is a symlink |
 | `CONTEXT_PERMISSIONS_TOO_BROAD` | Directory is not 0700 or file is not 0600 |
 | `CONTEXT_SCHEMA_UNSUPPORTED` | Unsupported schema version or bootstrap scope |
+| `CONTEXT_SCHEMA_UNEXPECTED_FIELD` | Unknown or unexpected field in state file schema |
+| `ORGANIZATION_CONTEXT_LABEL_MISMATCH` | Context label does not match exact bounded internal label |
 | `CONTEXT_MALFORMED` | Malformed JSON or invalid structural shape |
 | `ORGANIZATION_IDENTITY_INVALID` | Invalid namespace/value/scope for Organization Identity |
 | `PRINCIPAL_IDENTITY_INVALID` | Invalid namespace/value for Principal Identity |

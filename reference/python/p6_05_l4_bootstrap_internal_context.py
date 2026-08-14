@@ -12,13 +12,16 @@ It creates or reuses an external, owner-only local state file containing exactly
 
 It strictly adheres to the following constraints:
 - Outside all Git worktrees and Arvectum OS checkouts;
+- Rejects symbolic links in target paths, intermediate parents, and state files;
 - Requires exact owner assertion before any generation or filesystem mutation;
 - Atomic exclusive creation (O_CREAT | O_EXCL) with owner-only permissions (0600 / 0700);
+- Never auto-repairs existing broad permissions (fails closed);
+- Exact bounded schema: unknown fields or mismatching context_label fail closed;
 - Zero authorization grants, zero delegations, zero authority claimed;
 - Zero authentication evidence refs at bootstrap;
 - No IAM/SSO/RBAC/credentials/secrets/product/tenant context;
-- Idempotent safe reuse without regenerating identities;
-- Fail closed under any anomaly or schema mismatch.
+- Idempotent safe reuse without regenerating identities or modifying file/mtime;
+- Fail closed under any anomaly, reporting unproven facts as not_proven.
 """
 
 from __future__ import annotations
@@ -47,6 +50,48 @@ MAX_CONTEXT_FILE_BYTES = 64 * 1024
 REQUIRED_OWNER_ASSERTION = (
     "OWNER_APPROVES_P6_05_L4_INTERNAL_ORGANIZATION_OPERATOR_BOOTSTRAP"
 )
+
+# Exact schema keys
+TOP_LEVEL_EXACT_KEYS = frozenset({
+    "schema_version",
+    "organization",
+    "operator",
+    "authority",
+    "authentication",
+    "bootstrap",
+})
+
+ORGANIZATION_EXACT_KEYS = frozenset({
+    "identity",
+    "context_label",
+})
+
+IDENTITY_EXACT_KEYS = frozenset({
+    "namespace",
+    "value",
+    "scope",
+})
+
+OPERATOR_EXACT_KEYS = frozenset({
+    "identity",
+    "principal_category",
+    "operating_mode",
+})
+
+AUTHORITY_EXACT_KEYS = frozenset({
+    "authorization_grants",
+    "delegations",
+    "organizational_authority_claimed",
+})
+
+AUTHENTICATION_EXACT_KEYS = frozenset({
+    "evidence_refs",
+})
+
+BOOTSTRAP_EXACT_KEYS = frozenset({
+    "scope",
+    "owner_authorization_asserted",
+})
 
 
 class BootstrapError(RuntimeError):
@@ -79,8 +124,21 @@ def _assert_not_symlink(path: Path, code: str) -> None:
         raise BootstrapError(code)
 
 
+def _assert_no_intermediate_symlinks(path: Path, code: str) -> None:
+    """Ensure no user-specified intermediate path component is a symlink."""
+    expanded = path.expanduser()
+    current = expanded
+    while True:
+        if current.is_symlink():
+            raise BootstrapError(code)
+        parent = current.parent
+        if parent == current or len(current.parts) <= 3:
+            break
+        current = parent
+
+
 def _nearest_existing_ancestor(path: Path) -> Path:
-    current = path
+    current = path.expanduser()
     while not current.exists():
         parent = current.parent
         if parent == current:
@@ -91,6 +149,7 @@ def _nearest_existing_ancestor(path: Path) -> Path:
 
 def _ensure_owner_only_directory(path: Path, *, create: bool) -> bool:
     _assert_not_symlink(path, "TARGET_SYMLINK_NOT_ALLOWED")
+    _assert_no_intermediate_symlinks(path, "TARGET_SYMLINK_NOT_ALLOWED")
     created = False
     if not path.exists():
         if not create:
@@ -99,7 +158,6 @@ def _ensure_owner_only_directory(path: Path, *, create: bool) -> bool:
         created = True
     if not path.is_dir():
         raise BootstrapError("LOCAL_FILESYSTEM_OPERATION_FAILED")
-    os.chmod(path, 0o700)
     mode = stat.S_IMODE(path.stat().st_mode)
     if not _owner_only(mode):
         raise BootstrapError("CONTEXT_PERMISSIONS_TOO_BROAD")
@@ -112,16 +170,27 @@ def _validate_bounded_context_data(
     if not isinstance(data, dict):
         raise BootstrapError("CONTEXT_MALFORMED")
 
+    if set(data.keys()) != TOP_LEVEL_EXACT_KEYS:
+        raise BootstrapError("CONTEXT_SCHEMA_UNEXPECTED_FIELD")
+
     if data.get("schema_version") != SCHEMA_VERSION:
         raise BootstrapError("CONTEXT_SCHEMA_UNSUPPORTED")
 
+    # Organization validation
     org_data = data.get("organization")
     if not isinstance(org_data, dict):
         raise BootstrapError("CONTEXT_MALFORMED")
+    if set(org_data.keys()) != ORGANIZATION_EXACT_KEYS:
+        raise BootstrapError("CONTEXT_SCHEMA_UNEXPECTED_FIELD")
+
+    if org_data.get("context_label") != CONTEXT_LABEL:
+        raise BootstrapError("ORGANIZATION_CONTEXT_LABEL_MISMATCH")
 
     org_id_data = org_data.get("identity")
     if not isinstance(org_id_data, dict):
         raise BootstrapError("ORGANIZATION_IDENTITY_INVALID")
+    if set(org_id_data.keys()) != IDENTITY_EXACT_KEYS:
+        raise BootstrapError("CONTEXT_SCHEMA_UNEXPECTED_FIELD")
 
     if (
         org_id_data.get("namespace") != "organization"
@@ -141,9 +210,12 @@ def _validate_bounded_context_data(
     except Exception as exc:
         raise BootstrapError("ORGANIZATION_IDENTITY_INVALID") from exc
 
+    # Operator validation
     op_data = data.get("operator")
     if not isinstance(op_data, dict):
         raise BootstrapError("CONTEXT_MALFORMED")
+    if set(op_data.keys()) != OPERATOR_EXACT_KEYS:
+        raise BootstrapError("CONTEXT_SCHEMA_UNEXPECTED_FIELD")
 
     if op_data.get("principal_category") != PRINCIPAL_CATEGORY:
         raise BootstrapError("PRINCIPAL_CATEGORY_UNSUPPORTED")
@@ -154,6 +226,8 @@ def _validate_bounded_context_data(
     prin_id_data = op_data.get("identity")
     if not isinstance(prin_id_data, dict):
         raise BootstrapError("PRINCIPAL_IDENTITY_INVALID")
+    if set(prin_id_data.keys()) != IDENTITY_EXACT_KEYS:
+        raise BootstrapError("CONTEXT_SCHEMA_UNEXPECTED_FIELD")
 
     if (
         prin_id_data.get("namespace") != "principal"
@@ -175,9 +249,12 @@ def _validate_bounded_context_data(
     except Exception as exc:
         raise BootstrapError("PRINCIPAL_IDENTITY_INVALID") from exc
 
+    # Authority validation
     authority_data = data.get("authority")
     if not isinstance(authority_data, dict):
         raise BootstrapError("CONTEXT_MALFORMED")
+    if set(authority_data.keys()) != AUTHORITY_EXACT_KEYS:
+        raise BootstrapError("CONTEXT_SCHEMA_UNEXPECTED_FIELD")
 
     grants = authority_data.get("authorization_grants")
     if not isinstance(grants, list) or len(grants) != 0:
@@ -190,17 +267,23 @@ def _validate_bounded_context_data(
     if authority_data.get("organizational_authority_claimed") is not False:
         raise BootstrapError("ORGANIZATIONAL_AUTHORITY_NOT_ALLOWED")
 
+    # Authentication validation
     authn_data = data.get("authentication")
     if not isinstance(authn_data, dict):
         raise BootstrapError("CONTEXT_MALFORMED")
+    if set(authn_data.keys()) != AUTHENTICATION_EXACT_KEYS:
+        raise BootstrapError("CONTEXT_SCHEMA_UNEXPECTED_FIELD")
 
     evidence_refs = authn_data.get("evidence_refs")
     if not isinstance(evidence_refs, list) or len(evidence_refs) != 0:
         raise BootstrapError("AUTHENTICATION_EVIDENCE_NOT_EMPTY")
 
+    # Bootstrap validation
     bootstrap_data = data.get("bootstrap")
     if not isinstance(bootstrap_data, dict):
         raise BootstrapError("CONTEXT_MALFORMED")
+    if set(bootstrap_data.keys()) != BOOTSTRAP_EXACT_KEYS:
+        raise BootstrapError("CONTEXT_SCHEMA_UNEXPECTED_FIELD")
 
     if bootstrap_data.get("scope") != BOOTSTRAP_SCOPE:
         raise BootstrapError("CONTEXT_SCHEMA_UNSUPPORTED")
@@ -226,6 +309,7 @@ def _read_and_validate_existing_context(
     state_file: Path,
 ) -> tuple[OrganizationScope, Principal, ActorContext]:
     _assert_not_symlink(state_file, "CONTEXT_FILE_SYMLINK_NOT_ALLOWED")
+    _assert_no_intermediate_symlinks(state_file, "CONTEXT_FILE_SYMLINK_NOT_ALLOWED")
     if not state_file.is_file():
         raise BootstrapError("CONTEXT_MALFORMED")
     if state_file.stat().st_size > MAX_CONTEXT_FILE_BYTES:
@@ -260,6 +344,7 @@ def bootstrap_internal_context(
 
         expanded = target_root.expanduser()
         _assert_not_symlink(expanded, "TARGET_SYMLINK_NOT_ALLOWED")
+        _assert_no_intermediate_symlinks(expanded, "TARGET_SYMLINK_NOT_ALLOWED")
         existing_ancestor = _nearest_existing_ancestor(expanded)
         _assert_not_symlink(existing_ancestor, "TARGET_SYMLINK_NOT_ALLOWED")
 
@@ -289,6 +374,7 @@ def bootstrap_internal_context(
 
         state_file = context_dir / "organization-operator.json"
         _assert_not_symlink(state_file, "CONTEXT_FILE_SYMLINK_NOT_ALLOWED")
+        _assert_no_intermediate_symlinks(state_file, "CONTEXT_FILE_SYMLINK_NOT_ALLOWED")
 
         if state_file.exists():
             org_scope, principal, actor_context = _read_and_validate_existing_context(
@@ -378,7 +464,6 @@ def bootstrap_internal_context(
                     handle.write(serialized)
                     handle.flush()
                     os.fsync(handle.fileno())
-                os.chmod(state_file, 0o600)
             except Exception:
                 state_file.unlink(missing_ok=True)
                 raise BootstrapError("LOCAL_FILESYSTEM_OPERATION_FAILED")
@@ -436,34 +521,64 @@ def _safe_lines(
     root_outside_git: bool,
     failure_code: str | None = None,
 ) -> list[str]:
-    lines = [
-        f"p6_05_l4_status={status}",
-        f"context_created={_safe_bool(context_created)}",
-        f"context_reused={_safe_bool(context_reused)}",
-        f"organization_context={'configured' if status == 'PASS' else 'unconfigured'}",
-        f"operator_principal={'configured' if status == 'PASS' else 'unconfigured'}",
-        f"principal_category={PRINCIPAL_CATEGORY if status == 'PASS' else 'unconfigured'}",
-        f"actor_context={'configured' if status == 'PASS' else 'unconfigured'}",
-        f"organization_scope_explicit={_safe_bool(status == 'PASS')}",
-        f"principal_attributable={_safe_bool(status == 'PASS')}",
-        "authorization_grants=0",
-        "delegations=0",
-        "organizational_authority_claimed=false",
-        "authentication_evidence_refs=0",
-        "tenant_context_introduced=false",
-        "product_context_introduced=false",
-        f"context_outside_source_control={_safe_bool(root_outside_git)}",
-        f"context_owner_only={_safe_bool(context_owner_only)}",
-        "credentials_present=false",
-        "secrets_present=false",
-        "canonical_mutation=false",
-        "product_invoked=false",
-        "eis_invoked=false",
-        "network_invoked=false",
-        "external_actions=false",
-    ]
-    if failure_code is not None:
-        lines.append(f"failure_code={failure_code}")
+    if status == "PASS":
+        lines = [
+            "p6_05_l4_status=PASS",
+            f"context_created={_safe_bool(context_created)}",
+            f"context_reused={_safe_bool(context_reused)}",
+            "organization_context=configured",
+            "operator_principal=configured",
+            f"principal_category={PRINCIPAL_CATEGORY}",
+            "actor_context=configured",
+            "organization_scope_explicit=true",
+            "principal_attributable=true",
+            "authorization_grants=0",
+            "delegations=0",
+            "organizational_authority_claimed=false",
+            "authentication_evidence_refs=0",
+            "tenant_context_introduced=false",
+            "product_context_introduced=false",
+            f"context_outside_source_control={_safe_bool(root_outside_git)}",
+            f"context_owner_only={_safe_bool(context_owner_only)}",
+            "credentials_present=false",
+            "secrets_present=false",
+            "canonical_mutation=false",
+            "product_invoked=false",
+            "eis_invoked=false",
+            "network_invoked=false",
+            "external_actions=false",
+        ]
+    else:
+        lines = [
+            "p6_05_l4_status=FAIL",
+        ]
+        if failure_code is not None:
+            lines.append(f"failure_code={failure_code}")
+        lines.extend([
+            f"context_created={_safe_bool(context_created)}",
+            f"context_reused={_safe_bool(context_reused)}",
+            "organization_context=unconfigured",
+            "operator_principal=unconfigured",
+            "principal_category=unconfigured",
+            "actor_context=unconfigured",
+            "organization_scope_explicit=not_proven",
+            "principal_attributable=not_proven",
+            "authorization_grants=not_proven",
+            "delegations=not_proven",
+            "organizational_authority_claimed=not_proven",
+            "authentication_evidence_refs=not_proven",
+            "tenant_context_introduced=not_proven",
+            "product_context_introduced=not_proven",
+            f"context_outside_source_control={_safe_bool(root_outside_git)}",
+            f"context_owner_only={_safe_bool(context_owner_only)}",
+            "credentials_present=not_proven",
+            "secrets_present=not_proven",
+            "canonical_mutation=false",
+            "product_invoked=false",
+            "eis_invoked=false",
+            "network_invoked=false",
+            "external_actions=false",
+        ])
     return lines
 
 

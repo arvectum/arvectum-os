@@ -33,6 +33,7 @@ class P605L4InternalOrgOperatorBootstrapTests(unittest.TestCase):
         self.assertIsNone(ctx)
         self.assertIn("p6_05_l4_status=FAIL", lines)
         self.assertIn("failure_code=OWNER_AUTHORIZATION_REQUIRED", lines)
+        self.assertIn("authorization_grants=not_proven", lines)
         self.assertFalse(self.external_root.exists())
 
     # Minimum Requirement 2: wrong owner assertion fails before creation
@@ -45,6 +46,7 @@ class P605L4InternalOrgOperatorBootstrapTests(unittest.TestCase):
         self.assertIsNone(ctx)
         self.assertIn("p6_05_l4_status=FAIL", lines)
         self.assertIn("failure_code=OWNER_AUTHORIZATION_REQUIRED", lines)
+        self.assertIn("authorization_grants=not_proven", lines)
         self.assertFalse(self.external_root.exists())
 
     # Minimum Requirement 3: valid owner assertion creates context
@@ -60,6 +62,14 @@ class P605L4InternalOrgOperatorBootstrapTests(unittest.TestCase):
         self.assertIn("p6_05_l4_status=PASS", lines)
         self.assertIn("context_created=true", lines)
         self.assertIn("context_reused=false", lines)
+        self.assertIn("authorization_grants=0", lines)
+        self.assertIn("delegations=0", lines)
+        self.assertIn("organizational_authority_claimed=false", lines)
+        self.assertIn("authentication_evidence_refs=0", lines)
+        self.assertIn("tenant_context_introduced=false", lines)
+        self.assertIn("product_context_introduced=false", lines)
+        self.assertIn("credentials_present=false", lines)
+        self.assertIn("secrets_present=false", lines)
 
     # Minimum Requirement 4: root/directories owner-only
     def test_04_root_and_directories_owner_only(self) -> None:
@@ -99,6 +109,7 @@ class P605L4InternalOrgOperatorBootstrapTests(unittest.TestCase):
     # Minimum Requirement 7: creation race never overwrites existing state
     def test_07_creation_race_never_overwrites_existing_state(self) -> None:
         # Prepare context directory
+        self.external_root.mkdir(parents=True, mode=0o700)
         context_dir = self.external_root / "local-context"
         context_dir.mkdir(parents=True, mode=0o700)
         state_file = context_dir / "organization-operator.json"
@@ -164,6 +175,7 @@ class P605L4InternalOrgOperatorBootstrapTests(unittest.TestCase):
         self.assertEqual(rc, 2)
         self.assertIn("p6_05_l4_status=FAIL", lines)
         self.assertIn("failure_code=TARGET_INSIDE_GIT_WORKTREE", lines)
+        self.assertIn("authorization_grants=not_proven", lines)
 
     # Minimum Requirement 9: target inside Arvectum OS fails
     def test_09_target_inside_arvectum_os_fails(self) -> None:
@@ -205,6 +217,43 @@ class P605L4InternalOrgOperatorBootstrapTests(unittest.TestCase):
         os.symlink(real_backup, state_file)
 
         rc, lines, _ = PREFLIGHT.inspect_operator_context_file(state_file)
+        self.assertEqual(rc, 2)
+        self.assertIn("failure_code=CONTEXT_FILE_SYMLINK_NOT_ALLOWED", lines)
+
+    # Intermediate symlink tests
+    def test_10c_intermediate_symlink_parent_bootstrap_fails(self) -> None:
+        real_parent = Path(self.temp_dir.name).resolve() / "real_parent"
+        real_parent.mkdir(mode=0o700)
+        (real_parent / "nested").mkdir(mode=0o700)
+
+        alias_parent = Path(self.temp_dir.name).resolve() / "alias_parent"
+        os.symlink(real_parent, alias_parent)
+
+        target_through_alias = alias_parent / "nested" / "p6-05-l4-runtime"
+        rc, lines, _ = BOOTSTRAP.bootstrap_internal_context(
+            target_through_alias,
+            owner_authorization=self.auth_token,
+        )
+        self.assertEqual(rc, 2)
+        self.assertIn("failure_code=TARGET_SYMLINK_NOT_ALLOWED", lines)
+        self.assertFalse(target_through_alias.exists())
+
+    def test_10d_intermediate_symlink_parent_preflight_fails(self) -> None:
+        real_parent = Path(self.temp_dir.name).resolve() / "real_parent_pre"
+        real_parent.mkdir(mode=0o700)
+        target_root = real_parent / "p6-05-l4-runtime"
+
+        rc, _, _ = BOOTSTRAP.bootstrap_internal_context(
+            target_root,
+            owner_authorization=self.auth_token,
+        )
+        self.assertEqual(rc, 0)
+
+        alias_parent = Path(self.temp_dir.name).resolve() / "alias_parent_pre"
+        os.symlink(real_parent, alias_parent)
+
+        state_through_alias = alias_parent / "p6-05-l4-runtime" / "local-context" / "organization-operator.json"
+        rc, lines, _ = PREFLIGHT.inspect_operator_context_file(state_through_alias)
         self.assertEqual(rc, 2)
         self.assertIn("failure_code=CONTEXT_FILE_SYMLINK_NOT_ALLOWED", lines)
 
@@ -396,6 +445,7 @@ class P605L4InternalOrgOperatorBootstrapTests(unittest.TestCase):
         )
         self.assertEqual(rc, 2)
         self.assertIn("failure_code=CONTEXT_MALFORMED", lines)
+        self.assertIn("authorization_grants=not_proven", lines)
 
     # Minimum Requirement 27: unsupported schema fails closed
     def test_27_unsupported_schema_fails_closed(self) -> None:
@@ -414,6 +464,7 @@ class P605L4InternalOrgOperatorBootstrapTests(unittest.TestCase):
         )
         self.assertEqual(rc, 2)
         self.assertIn("failure_code=CONTEXT_SCHEMA_UNSUPPORTED", lines)
+        self.assertIn("authorization_grants=not_proven", lines)
 
     # Minimum Requirement 28: Organization Identity mutation/drift fails
     def test_28_organization_identity_invalid_fails_closed(self) -> None:
@@ -432,6 +483,7 @@ class P605L4InternalOrgOperatorBootstrapTests(unittest.TestCase):
         )
         self.assertEqual(rc, 2)
         self.assertIn("failure_code=ORGANIZATION_IDENTITY_INVALID", lines)
+        self.assertIn("authorization_grants=not_proven", lines)
 
     # Minimum Requirement 29: Principal scope mismatch fails
     def test_29_principal_scope_mismatch_fails_closed(self) -> None:
@@ -450,6 +502,7 @@ class P605L4InternalOrgOperatorBootstrapTests(unittest.TestCase):
         )
         self.assertEqual(rc, 2)
         self.assertIn("failure_code=PRINCIPAL_ORGANIZATION_SCOPE_MISMATCH", lines)
+        self.assertIn("authorization_grants=not_proven", lines)
 
     # Minimum Requirement 30: invalid principal category fails
     def test_30_invalid_principal_category_fails_closed(self) -> None:
@@ -468,6 +521,7 @@ class P605L4InternalOrgOperatorBootstrapTests(unittest.TestCase):
         )
         self.assertEqual(rc, 2)
         self.assertIn("failure_code=PRINCIPAL_CATEGORY_UNSUPPORTED", lines)
+        self.assertIn("authorization_grants=not_proven", lines)
 
     # Minimum Requirement 31: non-empty grant list fails
     def test_31_non_empty_grants_fail_closed(self) -> None:
@@ -486,6 +540,7 @@ class P605L4InternalOrgOperatorBootstrapTests(unittest.TestCase):
         )
         self.assertEqual(rc, 2)
         self.assertIn("failure_code=AUTHORIZATION_GRANTS_NOT_EMPTY", lines)
+        self.assertIn("authorization_grants=not_proven", lines)
 
     # Minimum Requirement 32: non-empty delegation list fails
     def test_32_non_empty_delegations_fail_closed(self) -> None:
@@ -504,6 +559,7 @@ class P605L4InternalOrgOperatorBootstrapTests(unittest.TestCase):
         )
         self.assertEqual(rc, 2)
         self.assertIn("failure_code=DELEGATIONS_NOT_EMPTY", lines)
+        self.assertIn("delegations=not_proven", lines)
 
     # Minimum Requirement 33: authority=true fails
     def test_33_authority_claimed_true_fails_closed(self) -> None:
@@ -522,6 +578,7 @@ class P605L4InternalOrgOperatorBootstrapTests(unittest.TestCase):
         )
         self.assertEqual(rc, 2)
         self.assertIn("failure_code=ORGANIZATIONAL_AUTHORITY_NOT_ALLOWED", lines)
+        self.assertIn("organizational_authority_claimed=not_proven", lines)
 
     # Minimum Requirement 34: auth evidence present fails
     def test_34_auth_evidence_present_fails_closed(self) -> None:
@@ -540,9 +597,10 @@ class P605L4InternalOrgOperatorBootstrapTests(unittest.TestCase):
         )
         self.assertEqual(rc, 2)
         self.assertIn("failure_code=AUTHENTICATION_EVIDENCE_NOT_EMPTY", lines)
+        self.assertIn("authentication_evidence_refs=not_proven", lines)
 
-    # Minimum Requirement 35: broad permissions fail
-    def test_35_broad_file_permissions_fail_closed(self) -> None:
+    # Minimum Requirement 35: broad permissions fail and are not auto-repaired
+    def test_35_broad_file_permissions_fail_closed_and_not_repaired(self) -> None:
         BOOTSTRAP.bootstrap_internal_context(
             self.external_root,
             owner_authorization=self.auth_token,
@@ -556,6 +614,209 @@ class P605L4InternalOrgOperatorBootstrapTests(unittest.TestCase):
         )
         self.assertEqual(rc, 2)
         self.assertIn("failure_code=CONTEXT_PERMISSIONS_TOO_BROAD", lines)
+        self.assertEqual(stat.S_IMODE(state_file.stat().st_mode), 0o644)
+
+    def test_35b_broad_root_permissions_fail_closed_and_not_repaired(self) -> None:
+        self.external_root.mkdir(parents=True, mode=0o755)
+        rc, lines, _ = BOOTSTRAP.bootstrap_internal_context(
+            self.external_root,
+            owner_authorization=self.auth_token,
+        )
+        self.assertEqual(rc, 2)
+        self.assertIn("failure_code=CONTEXT_PERMISSIONS_TOO_BROAD", lines)
+        self.assertEqual(stat.S_IMODE(self.external_root.stat().st_mode), 0o755)
+
+    def test_35c_broad_context_dir_permissions_fail_closed_and_not_repaired(self) -> None:
+        self.external_root.mkdir(parents=True, mode=0o700)
+        context_dir = self.external_root / "local-context"
+        context_dir.mkdir(parents=True, mode=0o755)
+        rc, lines, _ = BOOTSTRAP.bootstrap_internal_context(
+            self.external_root,
+            owner_authorization=self.auth_token,
+        )
+        self.assertEqual(rc, 2)
+        self.assertIn("failure_code=CONTEXT_PERMISSIONS_TOO_BROAD", lines)
+        self.assertEqual(stat.S_IMODE(context_dir.stat().st_mode), 0o755)
+
+    def test_35d_preflight_broad_permissions_fail_and_not_repaired(self) -> None:
+        BOOTSTRAP.bootstrap_internal_context(
+            self.external_root,
+            owner_authorization=self.auth_token,
+        )
+        state_file = self.external_root / "local-context" / "organization-operator.json"
+
+        # Test state file broad mode
+        os.chmod(state_file, 0o644)
+        rc, lines, _ = PREFLIGHT.inspect_operator_context_file(state_file)
+        self.assertEqual(rc, 2)
+        self.assertIn("failure_code=CONTEXT_PERMISSIONS_TOO_BROAD", lines)
+        self.assertEqual(stat.S_IMODE(state_file.stat().st_mode), 0o644)
+        os.chmod(state_file, 0o600)
+
+        # Test local-context dir broad mode
+        context_dir = self.external_root / "local-context"
+        os.chmod(context_dir, 0o755)
+        rc, lines, _ = PREFLIGHT.inspect_operator_context_file(state_file)
+        self.assertEqual(rc, 2)
+        self.assertIn("failure_code=CONTEXT_PERMISSIONS_TOO_BROAD", lines)
+        self.assertEqual(stat.S_IMODE(context_dir.stat().st_mode), 0o755)
+        os.chmod(context_dir, 0o700)
+
+        # Test target root dir broad mode
+        os.chmod(self.external_root, 0o755)
+        rc, lines, _ = PREFLIGHT.inspect_operator_context_file(state_file)
+        self.assertEqual(rc, 2)
+        self.assertIn("failure_code=CONTEXT_PERMISSIONS_TOO_BROAD", lines)
+        self.assertEqual(stat.S_IMODE(self.external_root.stat().st_mode), 0o755)
+
+    # Negative Schema Tests: Unexpected Fields and Label Mismatch
+    def test_negative_schema_extra_top_level_product_context(self) -> None:
+        BOOTSTRAP.bootstrap_internal_context(self.external_root, owner_authorization=self.auth_token)
+        state_file = self.external_root / "local-context" / "organization-operator.json"
+        data = json.loads(state_file.read_text(encoding="utf-8"))
+        data["product_context"] = {"id": "prod-1"}
+        state_file.write_text(json.dumps(data), encoding="utf-8")
+
+        rc, lines, _ = BOOTSTRAP.bootstrap_internal_context(self.external_root, owner_authorization=self.auth_token)
+        self.assertEqual(rc, 2)
+        self.assertIn("failure_code=CONTEXT_SCHEMA_UNEXPECTED_FIELD", lines)
+        self.assertNotIn("prod-1", "".join(lines))
+
+    def test_negative_schema_extra_top_level_tenant_context(self) -> None:
+        BOOTSTRAP.bootstrap_internal_context(self.external_root, owner_authorization=self.auth_token)
+        state_file = self.external_root / "local-context" / "organization-operator.json"
+        data = json.loads(state_file.read_text(encoding="utf-8"))
+        data["tenant_context"] = {"id": "tenant-1"}
+        state_file.write_text(json.dumps(data), encoding="utf-8")
+
+        rc, lines, _ = BOOTSTRAP.bootstrap_internal_context(self.external_root, owner_authorization=self.auth_token)
+        self.assertEqual(rc, 2)
+        self.assertIn("failure_code=CONTEXT_SCHEMA_UNEXPECTED_FIELD", lines)
+
+    def test_negative_schema_extra_top_level_password(self) -> None:
+        BOOTSTRAP.bootstrap_internal_context(self.external_root, owner_authorization=self.auth_token)
+        state_file = self.external_root / "local-context" / "organization-operator.json"
+        data = json.loads(state_file.read_text(encoding="utf-8"))
+        data["password"] = "secret123"
+        state_file.write_text(json.dumps(data), encoding="utf-8")
+
+        rc, lines, _ = BOOTSTRAP.bootstrap_internal_context(self.external_root, owner_authorization=self.auth_token)
+        self.assertEqual(rc, 2)
+        self.assertIn("failure_code=CONTEXT_SCHEMA_UNEXPECTED_FIELD", lines)
+        self.assertNotIn("secret123", "".join(lines))
+
+    def test_negative_schema_extra_top_level_credential(self) -> None:
+        BOOTSTRAP.bootstrap_internal_context(self.external_root, owner_authorization=self.auth_token)
+        state_file = self.external_root / "local-context" / "organization-operator.json"
+        data = json.loads(state_file.read_text(encoding="utf-8"))
+        data["credential"] = "token-xyz"
+        state_file.write_text(json.dumps(data), encoding="utf-8")
+
+        rc, lines, _ = BOOTSTRAP.bootstrap_internal_context(self.external_root, owner_authorization=self.auth_token)
+        self.assertEqual(rc, 2)
+        self.assertIn("failure_code=CONTEXT_SCHEMA_UNEXPECTED_FIELD", lines)
+        self.assertNotIn("token-xyz", "".join(lines))
+
+    def test_negative_schema_extra_top_level_secret(self) -> None:
+        BOOTSTRAP.bootstrap_internal_context(self.external_root, owner_authorization=self.auth_token)
+        state_file = self.external_root / "local-context" / "organization-operator.json"
+        data = json.loads(state_file.read_text(encoding="utf-8"))
+        data["secret"] = "mysecret"
+        state_file.write_text(json.dumps(data), encoding="utf-8")
+
+        rc, lines, _ = BOOTSTRAP.bootstrap_internal_context(self.external_root, owner_authorization=self.auth_token)
+        self.assertEqual(rc, 2)
+        self.assertIn("failure_code=CONTEXT_SCHEMA_UNEXPECTED_FIELD", lines)
+        self.assertNotIn("mysecret", "".join(lines))
+
+    def test_negative_schema_extra_field_inside_organization(self) -> None:
+        BOOTSTRAP.bootstrap_internal_context(self.external_root, owner_authorization=self.auth_token)
+        state_file = self.external_root / "local-context" / "organization-operator.json"
+        data = json.loads(state_file.read_text(encoding="utf-8"))
+        data["organization"]["extra"] = "val"
+        state_file.write_text(json.dumps(data), encoding="utf-8")
+
+        rc, lines, _ = BOOTSTRAP.bootstrap_internal_context(self.external_root, owner_authorization=self.auth_token)
+        self.assertEqual(rc, 2)
+        self.assertIn("failure_code=CONTEXT_SCHEMA_UNEXPECTED_FIELD", lines)
+
+    def test_negative_schema_extra_field_inside_organization_identity(self) -> None:
+        BOOTSTRAP.bootstrap_internal_context(self.external_root, owner_authorization=self.auth_token)
+        state_file = self.external_root / "local-context" / "organization-operator.json"
+        data = json.loads(state_file.read_text(encoding="utf-8"))
+        data["organization"]["identity"]["extra"] = "val"
+        state_file.write_text(json.dumps(data), encoding="utf-8")
+
+        rc, lines, _ = BOOTSTRAP.bootstrap_internal_context(self.external_root, owner_authorization=self.auth_token)
+        self.assertEqual(rc, 2)
+        self.assertIn("failure_code=CONTEXT_SCHEMA_UNEXPECTED_FIELD", lines)
+
+    def test_negative_schema_extra_field_inside_operator(self) -> None:
+        BOOTSTRAP.bootstrap_internal_context(self.external_root, owner_authorization=self.auth_token)
+        state_file = self.external_root / "local-context" / "organization-operator.json"
+        data = json.loads(state_file.read_text(encoding="utf-8"))
+        data["operator"]["role"] = "admin"
+        state_file.write_text(json.dumps(data), encoding="utf-8")
+
+        rc, lines, _ = BOOTSTRAP.bootstrap_internal_context(self.external_root, owner_authorization=self.auth_token)
+        self.assertEqual(rc, 2)
+        self.assertIn("failure_code=CONTEXT_SCHEMA_UNEXPECTED_FIELD", lines)
+
+    def test_negative_schema_extra_field_inside_operator_identity(self) -> None:
+        BOOTSTRAP.bootstrap_internal_context(self.external_root, owner_authorization=self.auth_token)
+        state_file = self.external_root / "local-context" / "organization-operator.json"
+        data = json.loads(state_file.read_text(encoding="utf-8"))
+        data["operator"]["identity"]["extra"] = "val"
+        state_file.write_text(json.dumps(data), encoding="utf-8")
+
+        rc, lines, _ = BOOTSTRAP.bootstrap_internal_context(self.external_root, owner_authorization=self.auth_token)
+        self.assertEqual(rc, 2)
+        self.assertIn("failure_code=CONTEXT_SCHEMA_UNEXPECTED_FIELD", lines)
+
+    def test_negative_schema_extra_field_inside_authority(self) -> None:
+        BOOTSTRAP.bootstrap_internal_context(self.external_root, owner_authorization=self.auth_token)
+        state_file = self.external_root / "local-context" / "organization-operator.json"
+        data = json.loads(state_file.read_text(encoding="utf-8"))
+        data["authority"]["extra"] = "val"
+        state_file.write_text(json.dumps(data), encoding="utf-8")
+
+        rc, lines, _ = BOOTSTRAP.bootstrap_internal_context(self.external_root, owner_authorization=self.auth_token)
+        self.assertEqual(rc, 2)
+        self.assertIn("failure_code=CONTEXT_SCHEMA_UNEXPECTED_FIELD", lines)
+
+    def test_negative_schema_extra_field_inside_authentication(self) -> None:
+        BOOTSTRAP.bootstrap_internal_context(self.external_root, owner_authorization=self.auth_token)
+        state_file = self.external_root / "local-context" / "organization-operator.json"
+        data = json.loads(state_file.read_text(encoding="utf-8"))
+        data["authentication"]["token"] = "xyz"
+        state_file.write_text(json.dumps(data), encoding="utf-8")
+
+        rc, lines, _ = BOOTSTRAP.bootstrap_internal_context(self.external_root, owner_authorization=self.auth_token)
+        self.assertEqual(rc, 2)
+        self.assertIn("failure_code=CONTEXT_SCHEMA_UNEXPECTED_FIELD", lines)
+
+    def test_negative_schema_extra_field_inside_bootstrap(self) -> None:
+        BOOTSTRAP.bootstrap_internal_context(self.external_root, owner_authorization=self.auth_token)
+        state_file = self.external_root / "local-context" / "organization-operator.json"
+        data = json.loads(state_file.read_text(encoding="utf-8"))
+        data["bootstrap"]["extra"] = "val"
+        state_file.write_text(json.dumps(data), encoding="utf-8")
+
+        rc, lines, _ = BOOTSTRAP.bootstrap_internal_context(self.external_root, owner_authorization=self.auth_token)
+        self.assertEqual(rc, 2)
+        self.assertIn("failure_code=CONTEXT_SCHEMA_UNEXPECTED_FIELD", lines)
+
+    def test_negative_schema_context_label_mismatch(self) -> None:
+        BOOTSTRAP.bootstrap_internal_context(self.external_root, owner_authorization=self.auth_token)
+        state_file = self.external_root / "local-context" / "organization-operator.json"
+        data = json.loads(state_file.read_text(encoding="utf-8"))
+        data["organization"]["context_label"] = "Other Company LLC"
+        state_file.write_text(json.dumps(data), encoding="utf-8")
+
+        rc, lines, _ = BOOTSTRAP.bootstrap_internal_context(self.external_root, owner_authorization=self.auth_token)
+        self.assertEqual(rc, 2)
+        self.assertIn("failure_code=ORGANIZATION_CONTEXT_LABEL_MISMATCH", lines)
+        self.assertNotIn("Other Company LLC", "".join(lines))
 
     # Minimum Requirement 36: preflight performs no mutation
     def test_36_preflight_performs_no_mutation(self) -> None:
@@ -566,6 +827,7 @@ class P605L4InternalOrgOperatorBootstrapTests(unittest.TestCase):
         state_file = self.external_root / "local-context" / "organization-operator.json"
         content_before = state_file.read_bytes()
         mtime_before = state_file.stat().st_mtime_ns
+        mode_before = stat.S_IMODE(state_file.stat().st_mode)
 
         rc, lines, ctx = PREFLIGHT.inspect_operator_context_file(state_file)
         self.assertEqual(rc, 0)
@@ -573,8 +835,10 @@ class P605L4InternalOrgOperatorBootstrapTests(unittest.TestCase):
 
         content_after = state_file.read_bytes()
         mtime_after = state_file.stat().st_mtime_ns
+        mode_after = stat.S_IMODE(state_file.stat().st_mode)
         self.assertEqual(content_before, content_after)
         self.assertEqual(mtime_before, mtime_after)
+        self.assertEqual(mode_before, mode_after)
 
     # Minimum Requirement 37: workspace smoke preserves Organization and Actor
     def test_37_workspace_smoke_preserves_organization_and_actor(self) -> None:
