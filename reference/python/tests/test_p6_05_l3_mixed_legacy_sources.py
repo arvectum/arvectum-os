@@ -22,7 +22,7 @@ class P605L3MixedLegacySourceTests(unittest.TestCase):
             check=False,
         )
 
-    def _make_repo(self, path: Path, remote: str = "https://github.com/arutyunoveth/ai-corporation.git") -> None:
+    def _make_repo(self, path: Path, remote: str = "https://github.com/arvectum/ai-corporation.git") -> None:
         path.mkdir(parents=True, mode=0o700)
         self.assertEqual(self._git(path, "init", "-b", "main").returncode, 0)
         self.assertEqual(self._git(path, "config", "user.name", "Test").returncode, 0)

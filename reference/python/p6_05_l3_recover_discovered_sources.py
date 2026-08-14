@@ -27,7 +27,7 @@ from typing import Sequence
 import p6_05_l3_migrate_eis_secret as MIGRATION
 
 
-TARGET_REPOSITORY = "arutyunoveth/ai-corporation"
+TARGET_REPOSITORY = "arvectum/ai-corporation"
 MAX_DISCOVERY_BYTES = 1024 * 1024
 
 

@@ -34,7 +34,7 @@ class P605L3VerifiedContainerRecoveryTests(unittest.TestCase):
                 "remote",
                 "add",
                 "origin",
-                "https://github.com/arutyunoveth/ai-corporation.git",
+                "https://github.com/arvectum/ai-corporation.git",
             ).returncode,
             0,
         )

@@ -1,9 +1,9 @@
 # P6.05 — Local Internal Runtime Substream
 
 Status: `Active / In Progress`
-Version: `0.1.2`
+Version: `0.1.3`
 Created: `2026-08-09`
-Updated: `2026-08-10`
+Updated: `2026-08-14`
 Owner: `ООО «Арвектум»`
 Task classification: `platform` with `product_specific` and `product_contract`
 Parent work item: `P6.05 — Platform-gap remediation from first real use`
@@ -103,6 +103,8 @@ A successful local start is internal validation evidence only. It does not estab
 ### P6.05-L3 — Secure configuration + secrets
 
 Verify local handling for configuration required by the selected workflow. Credentials MUST remain outside source control and canonical evidence. Diagnostics may report safe configured/not-configured state but MUST NOT print tokens or secret material.
+
+The first owner-operated recovery run safely detected divergent legacy secret copies across the seven discovered sources (`SOURCE_SECRETS_DIFFER`). Read-only in-memory diagnostic established an exact 5+2 class distribution, with all four `.env.local` sources belonging to the 5-source class. On 2026-08-14 the owner explicitly approved selecting the `.env.local`-anchored 5-source class (`DECISION-2026-08-14-P6-05-L3-DIVERGENT-EIS-SECRET-RECONCILIATION.md`). Bounded reconciliation helper `p6_05_l3_reconcile_owner_selected_divergent_sources.py` implements this decision. An owner-operated rerun is required before L3 can be closed.
 
 ### P6.05-L4 — Internal Organization/operator bootstrap
 

@@ -9,8 +9,8 @@ from pathlib import Path
 import p6_05_l3_diagnose_unverified_env_owner as DIAG
 
 
-AI_REMOTE = "https://github.com/arutyunoveth/ai-corporation.git"
-OS_REMOTE = "https://github.com/arutyunoveth/arvectum-os.git"
+AI_REMOTE = "https://github.com/arvectum/ai-corporation.git"
+OS_REMOTE = "https://github.com/arvectum/arvectum-os.git"
 OTHER_REMOTE = "https://github.com/example/other.git"
 SYNTHETIC_SECRET = "synthetic-never-read-secret"
 
