@@ -16,6 +16,7 @@ from arvectum_os_ref.product_capability_consumption import (
 )
 from arvectum_os_ref.identity import Identity
 from arvectum_os_ref.security import OrganizationScope
+from arvectum_os_ref.canonical import AuthorityMode
 
 class P605L5FirstRealProductConnectionTests(unittest.TestCase):
     def setUp(self) -> None:
@@ -58,7 +59,8 @@ class P605L5FirstRealProductConnectionTests(unittest.TestCase):
         # Verify internal objects
         self.assertEqual(result.organization_scope, self.l4_ctx.organization_scope)
         self.assertEqual(result.principal, self.l4_ctx.principal)
-        self.assertEqual(result.connected_at, L5.CANONICAL_P6_02_CREATED_AT)
+        # Verify non-authoritative projection timestamp
+        self.assertEqual(result.connected_at, datetime.fromisoformat("2026-08-09T00:00:00+00:00"))
 
     def test_02_no_state_mutation_and_permissions(self) -> None:
         content_before = self.state_file.read_bytes()
@@ -140,7 +142,7 @@ class P605L5FirstRealProductConnectionTests(unittest.TestCase):
         from arvectum_os_ref.product_contract import ProductContract
         base_contract = L5.build_p6_05_product_contract_projection(
             actor=self.l4_ctx.actor_context,
-            created_at=L5.CANONICAL_P6_02_CREATED_AT
+            created_at=datetime.fromisoformat("2026-08-09T00:00:00+00:00")
         )
         
         from dataclasses import replace
@@ -166,11 +168,104 @@ class P605L5FirstRealProductConnectionTests(unittest.TestCase):
                 self.assertNotIn(prin_id, line)
                 self.assertNotIn("==", line)
 
-    def test_09_external_authority_preserved_check(self) -> None:
+    def test_09_external_authority_happy_path(self) -> None:
         rc, lines, result = L5.connect_product(self.state_file)
         self.assertEqual(rc, 0)
         self.assertTrue(result.external_authority_preserved)
         self.assertIn("external_authority_preserved=true", lines)
+
+    def test_10_native_document_authority_drift_fails(self) -> None:
+        from dataclasses import replace
+        base_contract = L5.build_p6_05_product_contract_projection(
+            actor=self.l4_ctx.actor_context,
+            created_at=datetime.fromisoformat("2026-08-09T00:00:00+00:00")
+        )
+        
+        # Tamper with operation access mode
+        ops = list(base_contract.operations)
+        op0 = ops[0]
+        accesses = list(op0.canonical_accesses)
+        a0 = accesses[0]
+        if a0.semantic_type == "platform.document":
+            accesses[0] = replace(a0, authority_mode=AuthorityMode.NATIVE)
+        ops[0] = replace(op0, canonical_accesses=tuple(accesses))
+        tampered_contract = replace(base_contract, operations=tuple(ops))
+
+        with patch("p6_05_l5_first_real_product_connection.build_p6_05_product_contract_projection", return_value=tampered_contract):
+            rc, lines, result = L5.connect_product(self.state_file)
+            self.assertEqual(rc, 1)
+            self.assertIn("failure_code=EXTERNAL_AUTHORITY_DECLARATION_LOST", lines)
+
+    def test_11_wrong_document_authority_scope_fails(self) -> None:
+        from dataclasses import replace
+        base_contract = L5.build_p6_05_product_contract_projection(
+            actor=self.l4_ctx.actor_context,
+            created_at=datetime.fromisoformat("2026-08-09T00:00:00+00:00")
+        )
+        
+        # Tamper with authority scope
+        ops = list(base_contract.operations)
+        op0 = ops[0]
+        accesses = list(op0.canonical_accesses)
+        a0 = accesses[0]
+        if a0.semantic_type == "platform.document":
+            accesses[0] = replace(a0, authority_scope="WRONG_SCOPE")
+        ops[0] = replace(op0, canonical_accesses=tuple(accesses))
+        tampered_contract = replace(base_contract, operations=tuple(ops))
+
+        with patch("p6_05_l5_first_real_product_connection.build_p6_05_product_contract_projection", return_value=tampered_contract):
+            rc, lines, result = L5.connect_product(self.state_file)
+            self.assertEqual(rc, 1)
+            self.assertIn("failure_code=EXTERNAL_AUTHORITY_DECLARATION_LOST", lines)
+
+    def test_12_missing_document_authority_declaration_fails(self) -> None:
+        from dataclasses import replace
+        base_contract = L5.build_p6_05_product_contract_projection(
+            actor=self.l4_ctx.actor_context,
+            created_at=datetime.fromisoformat("2026-08-09T00:00:00+00:00")
+        )
+        
+        # Remove document access
+        ops = list(base_contract.operations)
+        op0 = ops[0]
+        accesses = [a for a in op0.canonical_accesses if a.semantic_type != "platform.document"]
+        ops[0] = replace(op0, canonical_accesses=tuple(accesses))
+        # Do it for all operations
+        new_ops = []
+        for op in base_contract.operations:
+            acc = [a for a in op.canonical_accesses if a.semantic_type != "platform.document"]
+            new_ops.append(replace(op, canonical_accesses=tuple(acc)))
+            
+        tampered_contract = replace(base_contract, operations=tuple(new_ops))
+
+        with patch("p6_05_l5_first_real_product_connection.build_p6_05_product_contract_projection", return_value=tampered_contract):
+            rc, lines, result = L5.connect_product(self.state_file)
+            self.assertEqual(rc, 1)
+            self.assertIn("failure_code=EXTERNAL_AUTHORITY_DECLARATION_LOST", lines)
+
+    def test_13_arbitrary_exception_text_is_sanitized(self) -> None:
+        with patch("p6_05_l5_first_real_product_connection.build_p6_05_product_contract_projection") as mock_build:
+            mock_build.side_effect = ValueError("internal-path=/private/foo opaque-id=secret-value")
+            
+            rc, lines, result = L5.connect_product(self.state_file)
+            self.assertEqual(rc, 1)
+            self.assertIn("failure_code=CONNECTION_FAILED", lines)
+            for line in lines:
+                self.assertNotIn("/private/foo", line)
+                self.assertNotIn("secret-value", line)
+
+    def test_14_no_side_effects_summary(self) -> None:
+        rc, lines, _ = L5.connect_product(self.state_file)
+        self.assertEqual(rc, 0)
+        
+        self.assertIn("authorization_grants_created=false", lines)
+        self.assertIn("delegations_created=false", lines)
+        self.assertIn("organizational_authority_created=false", lines)
+        self.assertIn("canonical_mutation=false", lines)
+        self.assertIn("eis_invoked=false", lines)
+        self.assertIn("soap_invoked=false", lines)
+        self.assertIn("network_product_runtime_invoked=false", lines)
+        self.assertIn("external_actions=false", lines)
 
 if __name__ == "__main__":
     unittest.main()

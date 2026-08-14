@@ -12,16 +12,16 @@ from __future__ import annotations
 
 import sys
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import datetime
 from enum import Enum
 from pathlib import Path
 from typing import Final, Sequence
 
+from arvectum_os_ref.canonical import AuthorityMode
 from arvectum_os_ref.integration_adapters import IntegrationAdapters, compose_integration_adapters
 from arvectum_os_ref.product_capability_consumption import (
     CAP_001_DOCUMENT_ARTIFACT,
     CAP_004_AUDIT_RECONSTRUCTION,
-    CAPABILITY_CONTRACT_VERSION,
 )
 from arvectum_os_ref.product_contract import ProductContract
 from arvectum_os_ref.product_contract_resolution import (
@@ -33,7 +33,6 @@ from p6_05_l4_operator_context_preflight import inspect_operator_context_file
 from p6_05_tender_attachment_ref.contract import build_p6_05_product_contract_projection
 
 GOVERNANCE_REFERENCE: Final = "docs/contracts/PHASE-3-PROVISIONAL-CAPABILITY-CONTRACTS.md@1.0.0"
-CANONICAL_P6_02_CREATED_AT: Final = datetime(2026, 8, 9, 18, 30, tzinfo=timezone.utc)
 
 
 class L5Error(str, Enum):
@@ -45,6 +44,13 @@ class L5Error(str, Enum):
     DEPENDENCY_SET_MISMATCH = "DEPENDENCY_SET_MISMATCH"
     EXTERNAL_AUTHORITY_DECLARATION_LOST = "EXTERNAL_AUTHORITY_DECLARATION_LOST"
     CONNECTION_FAILED = "CONNECTION_FAILED"
+
+
+class L5ConnectionError(Exception):
+    """Typed error for explicit L5 preflight continuity guards."""
+    def __init__(self, code: L5Error):
+        self.code = code
+        super().__init__(code.value)
 
 
 @dataclass(frozen=True, slots=True)
@@ -64,7 +70,13 @@ def connect_product(
     *,
     arvectum_repo_root: Path | None = None,
 ) -> tuple[int, tuple[str, ...], ConnectionResult | None]:
-    """Connect existing L4 context to P6.02 product boundary."""
+    """Connect existing L4 context to P6.02 product boundary.
+
+    The Product Contract objects produced by this module are non-authoritative
+    executable projections of the canonical P6.02 declaration. They do not
+    represent the authoritative Canonical Product Contract Record and their
+    creation metadata (Actor/time) is projected for runtime use only.
+    """
 
     # 1. Inspect L4 context (read-only)
     rc, l4_lines, bootstrap_result = inspect_operator_context_file(
@@ -86,24 +98,28 @@ def connect_product(
     actor_context = bootstrap_result.actor_context
 
     try:
-        # 2. Build exact P6.05 projection of P6.02 0.1.0 contract
-        # Use stable canonical timestamp from P6.05 scenario
+        # 2. Build non-authoritative executable projection of P6.02 0.1.0 contract
+        # P6.02 declaration date is 2026-08-09. Projected created_at is not canonical.
+        projected_at = datetime.fromisoformat("2026-08-09T00:00:00+00:00")
         contract = build_p6_05_product_contract_projection(
             actor=actor_context,
-            created_at=CANONICAL_P6_02_CREATED_AT
+            created_at=projected_at
         )
 
         # 3. Exact P6.02 semantic continuity validation
-        if contract.record.subject_id.value != "p6-02-arvectum-tender-operator":
-            raise ValueError(L5Error.WRONG_PRODUCT_CONTRACT_SUBJECT.value)
-        if contract.record.version_id.value != "p6-02-arvectum-tender-operator-v0.1.0":
-            raise ValueError(L5Error.WRONG_PRODUCT_CONTRACT_VERSION_IDENTITY.value)
-        if contract.record.lifecycle_status != "Provisional":
-            raise ValueError(L5Error.WRONG_PRODUCT_CONTRACT_LIFECYCLE.value)
-        if contract.product_version != "restricted-paid-pilot/44fz-prebid-v1":
-            raise ValueError(L5Error.WRONG_PRODUCT_COMPATIBILITY_LINE.value)
-        if contract.organization != org_scope:
-            raise ValueError(L5Error.ORGANIZATION_MISMATCH.value)
+        try:
+            if contract.record.subject_id.value != "p6-02-arvectum-tender-operator":
+                raise L5ConnectionError(L5Error.WRONG_PRODUCT_CONTRACT_SUBJECT)
+            if contract.record.version_id.value != "p6-02-arvectum-tender-operator-v0.1.0":
+                raise L5ConnectionError(L5Error.WRONG_PRODUCT_CONTRACT_VERSION_IDENTITY)
+            if contract.record.lifecycle_status != "Provisional":
+                raise L5ConnectionError(L5Error.WRONG_PRODUCT_CONTRACT_LIFECYCLE)
+            if contract.product_version != "restricted-paid-pilot/44fz-prebid-v1":
+                raise L5ConnectionError(L5Error.WRONG_PRODUCT_COMPATIBILITY_LINE)
+            if contract.organization != org_scope:
+                raise L5ConnectionError(L5Error.ORGANIZATION_MISMATCH)
+        except (AttributeError, IndexError, TypeError):
+            raise L5ConnectionError(L5Error.CONNECTION_FAILED)
 
         # 4. Explicit L5 pin CAP-001@1.0.0 + CAP-004@1.0.0 exactly
         governed_versions = (
@@ -121,31 +137,41 @@ def connect_product(
             ),
         )
 
-        # 5. Composition check - Verify exact dependency set matches CAP-001 + CAP-004 only
+        # 5. Verify exact dependency set matches CAP-001 + CAP-004 only
         actual_deps = {dep.dependency_id for dep in contract.dependencies}
         expected_deps = {CAP_001_DOCUMENT_ARTIFACT, CAP_004_AUDIT_RECONSTRUCTION}
         if actual_deps != expected_deps:
-            raise ValueError(L5Error.DEPENDENCY_SET_MISMATCH.value)
+            raise L5ConnectionError(L5Error.DEPENDENCY_SET_MISMATCH)
 
-        # 6. Compose integration adapters (validates declaration & compatibility)
-        adapters = compose_integration_adapters(
-            contract=contract,
-            actor=actor_context,
-            effective_product_contract=contract.version_pin,
-            governed_versions=governed_versions,
-        )
-
-        # 7. Verify External Reference Document authority declaration
-        external_authority_preserved = False
+        # 6. Verify External Authority continuity for documents BEFORE composition
+        document_accesses = []
         for op in contract.operations:
             for access in op.canonical_accesses:
                 if access.semantic_type == "platform.document":
-                    from arvectum_os_ref.canonical import AuthorityMode
-                    if access.authority_mode == AuthorityMode.EXTERNAL_REFERENCE:
-                        external_authority_preserved = True
+                    document_accesses.append(access)
         
-        if not external_authority_preserved:
-            raise ValueError(L5Error.EXTERNAL_AUTHORITY_DECLARATION_LOST.value)
+        if not document_accesses:
+            raise L5ConnectionError(L5Error.EXTERNAL_AUTHORITY_DECLARATION_LOST)
+            
+        from p6_03_tender_operator_ref.contract import DOCUMENT_EXTERNAL_AUTHORITY_SCOPE
+        for access in document_accesses:
+            if access.authority_mode is not AuthorityMode.EXTERNAL_REFERENCE:
+                raise L5ConnectionError(L5Error.EXTERNAL_AUTHORITY_DECLARATION_LOST)
+            if access.authority_scope != DOCUMENT_EXTERNAL_AUTHORITY_SCOPE:
+                raise L5ConnectionError(L5Error.EXTERNAL_AUTHORITY_DECLARATION_LOST)
+
+        # 7. Compose integration adapters (validates declaration & compatibility)
+        try:
+            adapters = compose_integration_adapters(
+                contract=contract,
+                actor=actor_context,
+                effective_product_contract=contract.version_pin,
+                governed_versions=governed_versions,
+            )
+        except Exception as exc:
+            if isinstance(exc, L5ConnectionError):
+                raise
+            raise L5ConnectionError(L5Error.CONNECTION_FAILED) from exc
 
         result = ConnectionResult(
             organization_scope=org_scope,
@@ -153,15 +179,14 @@ def connect_product(
             actor_context=actor_context,
             product_contract=contract,
             adapters=adapters,
-            connected_at=CANONICAL_P6_02_CREATED_AT,
-            external_authority_preserved=external_authority_preserved,
+            connected_at=projected_at,
+            external_authority_preserved=True,
         )
 
         return 0, tuple(_safe_summary(status="PASS", result=result)), result
 
-    except ValueError as exc:
-        code = str(exc)
-        return 1, tuple(_safe_summary(status="FAIL", failure_code=code)), None
+    except L5ConnectionError as exc:
+        return 1, tuple(_safe_summary(status="FAIL", failure_code=exc.code.value)), None
     except Exception:
         return 1, tuple(_safe_summary(status="FAIL", failure_code=L5Error.CONNECTION_FAILED.value)), None
 
