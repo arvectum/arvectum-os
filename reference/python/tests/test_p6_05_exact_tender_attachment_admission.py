@@ -21,7 +21,10 @@ from arvectum_os_ref.product_capability_consumption import (
     CAP_002_MEMORY_KNOWLEDGE,
     CAP_003_SEARCH_PROJECTION,
 )
-from p6_05_tender_attachment_ref.contract import OP_ADMIT_DOCUMENT_VERSION
+from p6_05_tender_attachment_ref.contract import (
+    OP_ADMIT_DOCUMENT_VERSION,
+    P6_02_CANONICAL_BLOB_SHA,
+)
 from p6_05_tender_attachment_ref.scenario import (
     SYNTHETIC_MANIFEST_SHA256,
     build_p6_05_synthetic_admission_scenario,
@@ -80,9 +83,13 @@ class P605ExactTenderAttachmentAdmissionTests(unittest.TestCase):
     def test_projection_preserves_exact_p6_02_version_and_does_not_add_cap002_or_cap003(self) -> None:
         contract = self.scenario.contract
         self.assertEqual(
-            contract.record.version_id.value,
+            contract.version_pin.version_id.value,
             "p6-02-arvectum-tender-operator-v0.1.0",
         )
+        self.assertNotEqual(contract.record.version_id, contract.version_pin.version_id)
+        self.assertNotEqual(contract.record.subject_id, contract.version_pin.subject_id)
+        self.assertEqual(contract.canonical_source_blob_sha, P6_02_CANONICAL_BLOB_SHA)
+
         dependency_ids = {item.dependency_id for item in contract.dependencies}
         self.assertIn(CAP_001_DOCUMENT_ARTIFACT, dependency_ids)
         self.assertNotIn(CAP_002_MEMORY_KNOWLEDGE, dependency_ids)

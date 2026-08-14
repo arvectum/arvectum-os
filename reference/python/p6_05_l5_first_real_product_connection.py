@@ -10,9 +10,10 @@ or performing external actions.
 
 from __future__ import annotations
 
+import hashlib
 import sys
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 from pathlib import Path
 from typing import Final, Sequence
@@ -23,25 +24,44 @@ from arvectum_os_ref.product_capability_consumption import (
     CAP_001_DOCUMENT_ARTIFACT,
     CAP_004_AUDIT_RECONSTRUCTION,
 )
-from arvectum_os_ref.product_contract import ProductContract
+from arvectum_os_ref.product_contract import (
+    ProductContract,
+    ProductContractLifecycle,
+)
 from arvectum_os_ref.product_contract_resolution import (
     DependencySupportDisposition,
     GovernedDependencyVersionEvidence,
 )
 from arvectum_os_ref.security import ActorContext, OrganizationScope, Principal
+from p6_03_tender_operator_ref.contract import (
+    DOCUMENT_EXTERNAL_AUTHORITY_SCOPE,
+    PRODUCT_COMPATIBILITY_LINE,
+)
 from p6_05_l4_operator_context_preflight import inspect_operator_context_file
-from p6_05_tender_attachment_ref.contract import build_p6_05_product_contract_projection
+from p6_05_tender_attachment_ref.contract import (
+    P6_02_CANONICAL_BLOB_SHA,
+    P6_02_CANONICAL_CONTRACT_PATH,
+    P6_02_CONTRACT_SUBJECT_VALUE,
+    P6_02_CONTRACT_VERSION_VALUE,
+    P6_05_PROJECTION_SUBJECT_VALUE,
+    P605ExecutableProductContractProjection,
+    build_p6_05_product_contract_projection,
+    p6_02_canonical_version_pin,
+)
 
 GOVERNANCE_REFERENCE: Final = "docs/contracts/PHASE-3-PROVISIONAL-CAPABILITY-CONTRACTS.md@1.0.0"
 
 
 class L5Error(str, Enum):
+    CANONICAL_PRODUCT_CONTRACT_SOURCE_MISMATCH = "CANONICAL_PRODUCT_CONTRACT_SOURCE_MISMATCH"
+    PROJECTION_SOURCE_BOUNDARY_LOST = "PROJECTION_SOURCE_BOUNDARY_LOST"
     WRONG_PRODUCT_CONTRACT_SUBJECT = "WRONG_PRODUCT_CONTRACT_SUBJECT"
     WRONG_PRODUCT_CONTRACT_VERSION_IDENTITY = "WRONG_PRODUCT_CONTRACT_VERSION_IDENTITY"
     WRONG_PRODUCT_CONTRACT_LIFECYCLE = "WRONG_PRODUCT_CONTRACT_LIFECYCLE"
     WRONG_PRODUCT_COMPATIBILITY_LINE = "WRONG_PRODUCT_COMPATIBILITY_LINE"
     ORGANIZATION_MISMATCH = "ORGANIZATION_MISMATCH"
     DEPENDENCY_SET_MISMATCH = "DEPENDENCY_SET_MISMATCH"
+    DEPENDENCY_VERSION_MISMATCH = "DEPENDENCY_VERSION_MISMATCH"
     EXTERNAL_AUTHORITY_DECLARATION_LOST = "EXTERNAL_AUTHORITY_DECLARATION_LOST"
     CONNECTION_FAILED = "CONNECTION_FAILED"
 
@@ -63,6 +83,35 @@ class ConnectionResult:
     adapters: IntegrationAdapters
     connected_at: datetime
     external_authority_preserved: bool
+    canonical_source_verified: bool
+
+
+def _git_blob_sha(path: Path) -> str:
+    """Calculate Git object blob SHA without git subprocess."""
+    data = path.read_bytes()
+    header = f"blob {len(data)}\0".encode("utf-8")
+    return hashlib.sha1(header + data).hexdigest()
+
+
+def _verify_canonical_source(repo_root: Path) -> None:
+    source_file = repo_root / P6_02_CANONICAL_CONTRACT_PATH
+    if source_file.is_symlink():
+        raise L5ConnectionError(L5Error.CANONICAL_PRODUCT_CONTRACT_SOURCE_MISMATCH)
+    if not source_file.is_file():
+        raise L5ConnectionError(L5Error.CANONICAL_PRODUCT_CONTRACT_SOURCE_MISMATCH)
+    try:
+        resolved = source_file.resolve(strict=True)
+        resolved.relative_to(repo_root)
+    except (ValueError, OSError) as exc:
+        raise L5ConnectionError(L5Error.CANONICAL_PRODUCT_CONTRACT_SOURCE_MISMATCH) from exc
+
+    try:
+        blob_sha = _git_blob_sha(resolved)
+    except OSError as exc:
+        raise L5ConnectionError(L5Error.CANONICAL_PRODUCT_CONTRACT_SOURCE_MISMATCH) from exc
+
+    if blob_sha != P6_02_CANONICAL_BLOB_SHA:
+        raise L5ConnectionError(L5Error.CANONICAL_PRODUCT_CONTRACT_SOURCE_MISMATCH)
 
 
 def connect_product(
@@ -97,31 +146,73 @@ def connect_product(
     principal = bootstrap_result.principal
     actor_context = bootstrap_result.actor_context
 
+    repo_root = (
+        arvectum_repo_root or Path(__file__).resolve().parents[2]
+    ).resolve(strict=True)
+
     try:
-        # 2. Build non-authoritative executable projection of P6.02 0.1.0 contract
-        # P6.02 declaration date is 2026-08-09. Projected created_at is not canonical.
-        projected_at = datetime.fromisoformat("2026-08-09T00:00:00+00:00")
+        # 2. Verify immutable canonical P6.02 source
+        _verify_canonical_source(repo_root)
+
+        # 3. Build non-authoritative executable projection of P6.02 0.1.0 contract
+        connected_at = datetime.now(timezone.utc)
         contract = build_p6_05_product_contract_projection(
             actor=actor_context,
-            created_at=projected_at
+            created_at=connected_at
         )
 
-        # 3. Exact P6.02 semantic continuity validation
+        # 4. Continuity check on the canonical source pin and projection boundary
         try:
-            if contract.record.subject_id.value != "p6-02-arvectum-tender-operator":
-                raise L5ConnectionError(L5Error.WRONG_PRODUCT_CONTRACT_SUBJECT)
-            if contract.record.version_id.value != "p6-02-arvectum-tender-operator-v0.1.0":
-                raise L5ConnectionError(L5Error.WRONG_PRODUCT_CONTRACT_VERSION_IDENTITY)
-            if contract.record.lifecycle_status != "Provisional":
-                raise L5ConnectionError(L5Error.WRONG_PRODUCT_CONTRACT_LIFECYCLE)
-            if contract.product_version != "restricted-paid-pilot/44fz-prebid-v1":
-                raise L5ConnectionError(L5Error.WRONG_PRODUCT_COMPATIBILITY_LINE)
+            pin = contract.version_pin
+            
+            # scope == real L4 Organization
+            if pin.subject_id.scope != org_scope.organization_id.value or pin.version_id.scope != org_scope.organization_id.value:
+                raise L5ConnectionError(L5Error.ORGANIZATION_MISMATCH)
+            
+            # Organization continuity
             if contract.organization != org_scope:
                 raise L5ConnectionError(L5Error.ORGANIZATION_MISMATCH)
-        except (AttributeError, IndexError, TypeError):
-            raise L5ConnectionError(L5Error.CONNECTION_FAILED)
 
-        # 4. Explicit L5 pin CAP-001@1.0.0 + CAP-004@1.0.0 exactly
+            # Require exact canonical P6.02 pin
+            if pin.subject_id.namespace != "product-contract-subject":
+                raise L5ConnectionError(L5Error.WRONG_PRODUCT_CONTRACT_SUBJECT)
+            if pin.subject_id.value != P6_02_CONTRACT_SUBJECT_VALUE:
+                raise L5ConnectionError(L5Error.WRONG_PRODUCT_CONTRACT_SUBJECT)
+            if pin.version_id.namespace != "product-contract-version":
+                raise L5ConnectionError(L5Error.WRONG_PRODUCT_CONTRACT_VERSION_IDENTITY)
+            if pin.version_id.value != P6_02_CONTRACT_VERSION_VALUE:
+                raise L5ConnectionError(L5Error.WRONG_PRODUCT_CONTRACT_VERSION_IDENTITY)
+            if pin.semantic_type != "platform.product-contract":
+                raise L5ConnectionError(L5Error.PROJECTION_SOURCE_BOUNDARY_LOST)
+            if pin.authority_scope != "platform.product-contract/boundary":
+                raise L5ConnectionError(L5Error.PROJECTION_SOURCE_BOUNDARY_LOST)
+            if pin.lifecycle_status != ProductContractLifecycle.PROVISIONAL.value:
+                raise L5ConnectionError(L5Error.WRONG_PRODUCT_CONTRACT_LIFECYCLE)
+            
+            # product compatibility line
+            if contract.product_version != PRODUCT_COMPATIBILITY_LINE:
+                raise L5ConnectionError(L5Error.WRONG_PRODUCT_COMPATIBILITY_LINE)
+
+            # Require distinct projection record identity
+            if contract.record.subject_id == pin.subject_id or contract.record.version_id == pin.version_id:
+                raise L5ConnectionError(L5Error.PROJECTION_SOURCE_BOUNDARY_LOST)
+            if contract.record.subject_id.value != P6_05_PROJECTION_SUBJECT_VALUE:
+                raise L5ConnectionError(L5Error.PROJECTION_SOURCE_BOUNDARY_LOST)
+                
+            if not isinstance(contract, P605ExecutableProductContractProjection):
+                raise L5ConnectionError(L5Error.PROJECTION_SOURCE_BOUNDARY_LOST)
+            if (
+                contract.canonical_source_path != P6_02_CANONICAL_CONTRACT_PATH
+                or contract.canonical_source_blob_sha != P6_02_CANONICAL_BLOB_SHA
+            ):
+                raise L5ConnectionError(L5Error.PROJECTION_SOURCE_BOUNDARY_LOST)
+
+        except (AttributeError, IndexError, TypeError) as exc:
+            if isinstance(exc, L5ConnectionError):
+                raise
+            raise L5ConnectionError(L5Error.CONNECTION_FAILED) from exc
+
+        # 5. Form explicit provider evidence for CAP-001@1.0.0 and CAP-004@1.0.0
         governed_versions = (
             GovernedDependencyVersionEvidence(
                 dependency_id=CAP_001_DOCUMENT_ARTIFACT,
@@ -137,13 +228,17 @@ def connect_product(
             ),
         )
 
-        # 5. Verify exact dependency set matches CAP-001 + CAP-004 only
+        # 6. Verify exact dependency set and version matches CAP-001 + CAP-004 @ 1.0.0 only
         actual_deps = {dep.dependency_id for dep in contract.dependencies}
         expected_deps = {CAP_001_DOCUMENT_ARTIFACT, CAP_004_AUDIT_RECONSTRUCTION}
         if actual_deps != expected_deps:
             raise L5ConnectionError(L5Error.DEPENDENCY_SET_MISMATCH)
 
-        # 6. Verify External Authority continuity for documents BEFORE composition
+        for dep in contract.dependencies:
+            if dep.contract_version != "1.0.0":
+                raise L5ConnectionError(L5Error.DEPENDENCY_VERSION_MISMATCH)
+
+        # 7. Verify External Authority continuity for documents BEFORE composition
         document_accesses = []
         for op in contract.operations:
             for access in op.canonical_accesses:
@@ -153,19 +248,19 @@ def connect_product(
         if not document_accesses:
             raise L5ConnectionError(L5Error.EXTERNAL_AUTHORITY_DECLARATION_LOST)
             
-        from p6_03_tender_operator_ref.contract import DOCUMENT_EXTERNAL_AUTHORITY_SCOPE
         for access in document_accesses:
             if access.authority_mode is not AuthorityMode.EXTERNAL_REFERENCE:
                 raise L5ConnectionError(L5Error.EXTERNAL_AUTHORITY_DECLARATION_LOST)
             if access.authority_scope != DOCUMENT_EXTERNAL_AUTHORITY_SCOPE:
                 raise L5ConnectionError(L5Error.EXTERNAL_AUTHORITY_DECLARATION_LOST)
 
-        # 7. Compose integration adapters (validates declaration & compatibility)
+        # 8. Compose integration adapters using canonical source pin
+        expected_pin = p6_02_canonical_version_pin(organization=org_scope)
         try:
             adapters = compose_integration_adapters(
                 contract=contract,
                 actor=actor_context,
-                effective_product_contract=contract.version_pin,
+                effective_product_contract=expected_pin,
                 governed_versions=governed_versions,
             )
         except Exception as exc:
@@ -173,14 +268,18 @@ def connect_product(
                 raise
             raise L5ConnectionError(L5Error.CONNECTION_FAILED) from exc
 
+        if adapters.facade.context.product_contract != expected_pin:
+            raise L5ConnectionError(L5Error.PROJECTION_SOURCE_BOUNDARY_LOST)
+
         result = ConnectionResult(
             organization_scope=org_scope,
             principal=principal,
             actor_context=actor_context,
             product_contract=contract,
             adapters=adapters,
-            connected_at=projected_at,
+            connected_at=connected_at,
             external_authority_preserved=True,
+            canonical_source_verified=True,
         )
 
         return 0, tuple(_safe_summary(status="PASS", result=result)), result
@@ -199,6 +298,7 @@ def _safe_summary(
     if status == "PASS" and result:
         # Pass summary formed from verified values
         contract = result.product_contract
+        pin = contract.version_pin
         cap001_ver = "unknown"
         cap004_ver = "unknown"
         for dep in contract.dependencies:
@@ -219,12 +319,14 @@ def _safe_summary(
             "actor_context=configured",
             "product_context=configured",
             "",
-            f"product_contract={contract.record.payload[1][1]}",
+            "product_contract=0.1.0",
+            "product_contract_projection=non_authoritative",
+            "canonical_source_verified=true",
             "",
             f"organization_continuity={str(result.organization_scope == contract.organization).lower()}",
             f"actor_organization_continuity={str(result.actor_context.organization == contract.organization).lower()}",
             f"product_organization_continuity={str(contract.product_id.scope == contract.organization.organization_id.value).lower()}",
-            f"product_contract_organization_continuity={str(contract.record.subject_id.scope == contract.organization.organization_id.value).lower()}",
+            f"product_contract_organization_continuity={str(pin.subject_id.scope == contract.organization.organization_id.value).lower()}",
             "",
             "cap_001=configured",
             f"cap_001_contract_version={cap001_ver}",
@@ -256,6 +358,8 @@ def _safe_summary(
             "actor_context=not_proven",
             "product_context=not_proven",
             "product_contract=not_proven",
+            "product_contract_projection=not_proven",
+            "canonical_source_verified=not_proven",
             "organization_continuity=not_proven",
             "actor_organization_continuity=not_proven",
             "product_organization_continuity=not_proven",
