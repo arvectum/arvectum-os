@@ -38,10 +38,10 @@ The preflight confirmed that Arvectum OS successfully established a bounded conn
 
 ### Capability Dependency Set
 
-* **CAP-001 (Identity & Security):** `configured` (1.0.0)
-* **CAP-004 (Artifacts):** `configured` (1.0.0)
-* **CAP-002 (Hermes/LLM):** `absent`
-* **CAP-003 (External Integrations):** `absent`
+* **CAP-001 — Document & Artifact Governance:** `configured` (1.0.0)
+* **CAP-004 — Audit / Reconstruction Support:** `configured` (1.0.0)
+* **CAP-002 — Memory & Knowledge Governance:** `absent`
+* **CAP-003 — Search / Index Projection:** `absent`
 
 ## 3. Governance and Safety Controls
 
@@ -74,7 +74,13 @@ Remediation of repository hygiene should be handled as a separate bounded task.
 
 ## 6. Conclusion
 
-L5 preflight is Complete and PASS. The platform is ready for P6.05-L6.
+P6.05-L5 is `Complete / PASS` for the declared internal owner-operated preflight scope.
+
+Explicitly preserve:
+- P6.05 itself remains open;
+- Production readiness is NOT established;
+- no capability lifecycle promotion;
+- Product Contract 0.1.0 is not broadened.
 
 ---
 **NEXT_CANONICAL_ACTION:** P6.05-L6 — Local synthetic/redacted regression + negative-path smoke

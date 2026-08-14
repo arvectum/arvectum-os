@@ -1,7 +1,7 @@
 # P6.05 — Local Internal Runtime Substream
 
 Status: `Active / In Progress`
-Version: `0.1.6`
+Version: `0.1.7`
 Created: `2026-08-09`
 Updated: `2026-08-14`
 Owner: `ООО «Арвектум»`
@@ -68,8 +68,8 @@ Implementation readiness does **not** close P6.05. Real `7/7` evidence remains u
 | `P6.05-L2` | Reproducible Arvectum OS local checkout + reference runtime start | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L2-local-reference-runtime-start.md) | canonical `main` reproduced on the selected Mac mini; isolated stdlib-only reference runtime passed `717/717`; source checkout remained clean |
 | `P6.05-L3` | Secure local configuration + secrets boundary | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L3-secure-local-configuration-secrets-boundary.md) | local configuration is separated from repository state; required credentials are detected without being printed/committed; fail-closed behavior is verified |
 | `P6.05-L4` | Internal Organization + operator bootstrap | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L4-internal-organization-operator-bootstrap.md) | bounded ООО «Арвектум» Organization/operator context can execute the required local governed flow with least-privilege assumptions documented |
-| `P6.05-L5` | First real product connection | 🟨 Current / next | `ai-corporation` connects through exact P6.02 Product Contract `0.1.0`, CAP-001 + CAP-004 only, with Organization/contract continuity preserved |
-| `P6.05-L6` | Local synthetic/redacted regression + negative-path smoke | ⬜ Pending | relevant P6.03/P6.05 proof paths pass locally; missing config/gates/wrong versions fail closed |
+| `P6.05-L5` | First real product connection | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L5-first-real-product-connection.md) | `ai-corporation` connects through exact P6.02 Product Contract `0.1.0`, canonical source verified, CAP-001 + CAP-004 only, with Organization/Actor/Product/Product Contract continuity preserved; CAP-002/CAP-003 absent; no grants/delegations/Organizational Authority; no external actions |
+| `P6.05-L6` | Local synthetic/redacted regression + negative-path smoke | 🟨 Current / next | relevant P6.03/P6.05 proof paths pass locally; missing config/gates/wrong versions fail closed |
 | `P6.05-L7` | Real P6.05 exact-attachment live run | ⬜ Pending | the existing authorized read-only runner executes for `0344100006426000005`; success requires `PASS_EXACT_ATTACHMENT_EVIDENCE`, `exact_document_count = 7`, complete exact set and manifest SHA-256 |
 | `P6.05-L8` | Governed evidence admission + canonical P6.05 closure package | ⬜ Pending | exact evidence is admitted/reconstructed through the bounded governed path; closure review records PASS or the truthful remaining blocker; roadmap is synchronized |
 | `P6.05-L9` | Dogfooding friction capture | ⬜ Pending | concrete operator/setup/workspace friction observed during L1-L8 is recorded as evidence/backlog without silently expanding P6.05 scope |
@@ -121,6 +121,8 @@ Connect `ai-corporation` without broadening the P6.02 contract:
 - external source authority preserved;
 - procurement logic remains product-owned;
 - no external mutation.
+
+**Completion:** `PASS` under [`P6-05-L5-first-real-product-connection.md`](../reviews/P6-05-L5-first-real-product-connection.md). The real owner-operated preflight successfully connected through exact P6.02 Product Contract `0.1.0` while maintaining strict Organization continuity and platform governance boundaries. Execution SHA `77233e798ce6a490035c457a97dfe03c04149df5`. 26/26 targeted L5 tests and 874/874 full reference tests PASS. The isolated worktree remained clean with `PYTHONDONTWRITEBYTECODE=1` and no grants, delegations, Organizational Authority or external actions occurred.
 
 ### P6.05-L6 — Local smoke
 
@@ -213,4 +215,4 @@ Until a later accepted decision says otherwise, this environment is bounded and 
 
 ## 9. Immediate next action
 
-Proceed with `P6.05-L5 — First real product connection`. Establish the smallest Organization/operator context required by the existing governed boundary, preserve least privilege, and keep P6.05 overall open until truthful real evidence is observed.
+Proceed with `P6.05-L6 — Local synthetic/redacted regression + negative-path smoke`. Keep P6.05 overall `Active / In Progress`.

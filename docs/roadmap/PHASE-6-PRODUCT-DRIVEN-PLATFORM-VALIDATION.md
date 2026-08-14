@@ -1,9 +1,9 @@
 # Arvectum OS Phase 6 — Product-driven Platform Validation
 
 Status: `Active`
-Version: `1.7.1`
+Version: `1.7.2`
 Created: `2026-08-09`
-Updated: `2026-08-10`
+Updated: `2026-08-14`
 Owner: `ООО «Арвектум»`
 Task classification: `platform` with `product_contract` and `governance`
 Parent roadmap: [`ROADMAP.md`](ROADMAP.md)
@@ -74,7 +74,7 @@ P6.02 added the first real Product Contract boundary without changing that lifec
 | `P6.02` | First real Product Contract boundary + bounded adoption plan | 🟩 Complete | `██████████ 100%` |
 | `P6.03` | First real product/workflow platform integration | 🟩 Complete / PASS | `██████████ 100%` |
 | `P6.04` | Product value, delivery-friction + governance evidence capture | 🟩 Complete / PASS | `██████████ 100%` |
-| `P6.05` | Platform-gap remediation from first real use | 🟨 Current — L1/L2 PASS; secure configuration next; real evidence pending | `tracked by subtasks` |
+| `P6.05` | Platform-gap remediation from first real use | 🟨 Current — L1-L5 PASS; L6 local smoke next; real evidence pending | `tracked by subtasks` |
 | `P6.06` | Second materially distinct real product/workflow target + Product Contract | ⬜ | `░░░░░░░░░░ 0%` |
 | `P6.07` | Second real product/workflow platform integration | ⬜ | `░░░░░░░░░░ 0%` |
 | `P6.08` | Cross-product reuse and Platform Gravity evidence | ⬜ | `░░░░░░░░░░ 0%` |
@@ -92,9 +92,9 @@ P6.02 added the first real Product Contract boundary without changing that lifec
 | `P6.05-L1` | Local host/runtime baseline | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L1-local-host-runtime-baseline.md) |
 | `P6.05-L2` | Reproducible Arvectum OS local checkout + reference runtime start | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L2-local-reference-runtime-start.md) |
 | `P6.05-L3` | Secure local configuration + secrets boundary | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L3-secure-local-configuration-secrets-boundary.md) |
-| `P6.05-L4` | Internal Organization + operator bootstrap | 🟨 Current / next |
-| `P6.05-L5` | First real product connection through exact P6.02 boundary | ⬜ Pending |
-| `P6.05-L6` | Local synthetic/redacted regression + negative-path smoke | ⬜ Pending |
+| `P6.05-L4` | Internal Organization + operator bootstrap | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L4-internal-organization-operator-bootstrap.md) |
+| `P6.05-L5` | First real product connection through exact P6.02 boundary | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L5-first-real-product-connection.md) |
+| `P6.05-L6` | Local synthetic/redacted regression + negative-path smoke | 🟨 Current / next |
 | `P6.05-L7` | Real P6.05 exact-attachment live run (`7/7` gate) | ⬜ Pending |
 | `P6.05-L8` | Governed evidence admission + canonical P6.05 closure package | ⬜ Pending |
 | `P6.05-L9` | Dogfooding friction capture | ⬜ Pending / cross-cutting |
@@ -395,10 +395,6 @@ P6.02/R17/P6.03 selected no durable persistence, Event delivery, IAM, public/sta
 
 ## 10. Current canonical action
 
-> **P6.05-L4 — Internal Organization + operator bootstrap.**
+> **P6.05-L6 — Local synthetic/redacted regression + negative-path smoke.**
 
-Use [`P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md`](P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md) as the execution plan. P6.05-L1 and P6.05-L2 are complete / PASS; L2 evidence is recorded in [`P6-05-L2-local-reference-runtime-start.md`](../reviews/P6-05-L2-local-reference-runtime-start.md).
-
-For L3, keep credentials outside source control and canonical evidence, verify safe configured/not-configured detection without printing secret material, preserve least-privilege/fail-closed behavior, and do not broaden the task into a general production IAM, secret-management or deployment architecture decision.
-
-After L3, proceed dependency-aware through L4-L7. Do not skip local smoke and do not mark P6.05 PASS before the authorized real runner produces truthful complete evidence or a new blocker is canonically recorded.
+Use [`P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md`](P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md) as the execution plan. P6.05-L1 through P6.05-L5 are complete / PASS.
