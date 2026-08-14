@@ -8,7 +8,6 @@ import unittest
 
 import p6_05_l3_recover_owner_authorized_tender_app as MODULE
 
-
 SECRET = "TEST_EIS_SECRET_AUTHORIZED_TENDER_APP_8c91"
 
 
@@ -63,7 +62,7 @@ class P605L3OwnerAuthorizedTenderAppRecoveryTests(unittest.TestCase):
         )
         return arvectum, product, tender, discovery, secret_dir / "eis-soap-token"
 
-    def test_explicit_authorization_migrates_and_preserves_both_repo_tracked_states(self) -> None:
+    def test_direct_invocation_fails_closed_as_superseded(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
             arvectum, product, tender, discovery, destination = self._fixture(root)
@@ -75,120 +74,22 @@ class P605L3OwnerAuthorizedTenderAppRecoveryTests(unittest.TestCase):
                 destination,
                 expected_checkout_count=1,
                 expected_env_count=3,
-                owner_authorization=MODULE.OWNER_AUTHORIZATION_VALUE,
+                owner_authorization="OWNER_APPROVES_TENDER_APP_LEGACY_SECRET_SCRUB",
                 arvectum_repo_root=arvectum,
             )
             output = "\n".join(lines)
 
-            self.assertEqual(rc, 0)
-            self.assertIn("p6_05_l3_owner_authorized_recovery_status=PASS", output)
-            self.assertIn("repo_local_source_count=1", output)
-            self.assertIn("standalone_source_count=1", output)
-            self.assertIn("authorized_tender_app_source_count=1", output)
-            self.assertIn("source_env_untracked_count=3", output)
-            self.assertIn("owner_authorization_asserted=true", output)
-            self.assertIn("tracked_state_unchanged=true", output)
-            self.assertIn("tracked_head_unchanged=true", output)
-            self.assertIn("tender_app_tracked_state_unchanged=true", output)
-            self.assertIn("tender_app_head_unchanged=true", output)
-            self.assertIn("source_envs_with_eis_key_remaining=0", output)
+            self.assertEqual(rc, 2)
+            self.assertIn("p6_05_l3_owner_authorized_recovery_status=FAIL", output)
+            self.assertIn("failure_code=LEGACY_GITHUB_IDENTITY_PATH_SUPERSEDED", output)
+            self.assertIn("replacement_helper=p6_05_l3_reconcile_owner_selected_divergent_sources.py", output)
+            self.assertIn("secret_values_read=false", output)
+            self.assertIn("filesystem_modified=false", output)
+            self.assertIn("network_invoked=false", output)
+            self.assertFalse(destination.exists())
             self.assertEqual(self._git(product, "rev-parse", "HEAD").stdout.strip(), product_head_before)
             self.assertEqual(self._git(tender, "rev-parse", "HEAD").stdout.strip(), tender_head_before)
-            self.assertEqual(destination.read_text(encoding="utf-8").strip(), SECRET)
             self.assertNotIn(SECRET, output)
-
-    def test_missing_owner_authorization_fails_before_secret_read_or_mutation(self) -> None:
-        with tempfile.TemporaryDirectory() as temp:
-            root = Path(temp)
-            arvectum, _product, _tender, discovery, destination = self._fixture(root)
-
-            rc, lines = MODULE.recover(
-                discovery,
-                destination,
-                expected_checkout_count=1,
-                expected_env_count=3,
-                owner_authorization="NOT_APPROVED",
-                arvectum_repo_root=arvectum,
-            )
-            output = "\n".join(lines)
-
-            self.assertEqual(rc, 2)
-            self.assertIn("failure_code=TENDER_APP_OWNER_AUTHORIZATION_REQUIRED", output)
-            self.assertIn("owner_authorization_asserted=false", output)
-            self.assertFalse(destination.exists())
-            self.assertNotIn(SECRET, output)
-            self.assertNotIn("sources_with_secret_before=", output)
-
-    def test_non_tender_app_git_owner_is_not_authorized_by_flag(self) -> None:
-        with tempfile.TemporaryDirectory() as temp:
-            root = Path(temp)
-            arvectum, _product, tender, discovery, destination = self._fixture(root)
-            self.assertEqual(self._git(tender, "remote", "set-url", "origin", "https://github.com/arutyunoveth/tender-ai.git").returncode, 0)
-
-            rc, lines = MODULE.recover(
-                discovery,
-                destination,
-                expected_checkout_count=1,
-                expected_env_count=3,
-                owner_authorization=MODULE.OWNER_AUTHORIZATION_VALUE,
-                arvectum_repo_root=arvectum,
-            )
-            output = "\n".join(lines)
-
-            self.assertEqual(rc, 2)
-            self.assertIn("failure_code=UNVERIFIED_GIT_OWNER_NOT_AUTHORIZED_TENDER_APP", output)
-            self.assertFalse(destination.exists())
-            self.assertNotIn(SECRET, output)
-
-    def test_tracked_tender_app_env_fails_before_migration(self) -> None:
-        with tempfile.TemporaryDirectory() as temp:
-            root = Path(temp)
-            arvectum, _product, tender, discovery, destination = self._fixture(root)
-            tender_env = tender / "legacy.env"
-            self.assertEqual(self._git(tender, "add", "legacy.env").returncode, 0)
-            self.assertEqual(self._git(tender, "commit", "-m", "track env for negative test").returncode, 0)
-
-            rc, lines = MODULE.recover(
-                discovery,
-                destination,
-                expected_checkout_count=1,
-                expected_env_count=3,
-                owner_authorization=MODULE.OWNER_AUTHORIZATION_VALUE,
-                arvectum_repo_root=arvectum,
-            )
-            output = "\n".join(lines)
-
-            self.assertEqual(rc, 2)
-            self.assertIn("failure_code=TENDER_APP_LEGACY_ENV_TRACKED_BY_GIT", output)
-            self.assertFalse(destination.exists())
-            self.assertIn("ZAKUPKI_GOV_RU_SOAP_TOKEN", tender_env.read_text(encoding="utf-8"))
-            self.assertNotIn(SECRET, output)
-
-    def test_differing_tender_app_secret_fails_before_any_scrub(self) -> None:
-        with tempfile.TemporaryDirectory() as temp:
-            root = Path(temp)
-            arvectum, product, tender, discovery, destination = self._fixture(root)
-            tender_env = tender / "legacy.env"
-            self._write_env(tender_env, "DIFFERENT_SYNTHETIC_VALUE")
-            product_env = product / "product.env"
-
-            rc, lines = MODULE.recover(
-                discovery,
-                destination,
-                expected_checkout_count=1,
-                expected_env_count=3,
-                owner_authorization=MODULE.OWNER_AUTHORIZATION_VALUE,
-                arvectum_repo_root=arvectum,
-            )
-            output = "\n".join(lines)
-
-            self.assertEqual(rc, 2)
-            self.assertIn("failure_code=SOURCE_SECRETS_DIFFER", output)
-            self.assertFalse(destination.exists())
-            self.assertIn("ZAKUPKI_GOV_RU_SOAP_TOKEN", product_env.read_text(encoding="utf-8"))
-            self.assertIn("ZAKUPKI_GOV_RU_SOAP_TOKEN", tender_env.read_text(encoding="utf-8"))
-            self.assertNotIn(SECRET, output)
-            self.assertNotIn("DIFFERENT_SYNTHETIC_VALUE", output)
 
 
 if __name__ == "__main__":

@@ -5,6 +5,7 @@ from pathlib import Path
 import subprocess
 import tempfile
 import unittest
+from unittest import mock
 
 import p6_05_l3_reconcile_owner_selected_divergent_sources as MODULE
 
@@ -155,6 +156,9 @@ class P605L3ReconcileOwnerSelectedDivergentSourcesTests(unittest.TestCase):
         self.assertEqual(rc, 2)
         self.assertIn("p6_05_l3_divergent_reconciliation_status=FAIL", output)
         self.assertIn("failure_code=OWNER_AUTHORIZATION_REQUIRED", output)
+        self.assertNotIn("distinct_secret_class_count=", [line for line in lines if not line.startswith("expected_")])
+        self.assertNotIn("selected_secret_source_count=", [line for line in lines if not line.startswith("expected_")])
+        self.assertNotIn("stale_secret_source_count=", [line for line in lines if not line.startswith("expected_")])
         self.assertFalse(destination.exists())
 
     def test_distribution_other_than_5_plus_2_fails_closed(self) -> None:
@@ -225,6 +229,7 @@ class P605L3ReconcileOwnerSelectedDivergentSourcesTests(unittest.TestCase):
 
         self.assertEqual(rc, 2)
         self.assertIn("failure_code=AI_CORPORATION_REMOTE_MISMATCH", output)
+        self.assertNotIn("distinct_secret_class_count=", [line for line in lines if not line.startswith("expected_")])
         self.assertFalse(destination.exists())
 
     def test_tracked_env_in_category_c_fails_closed(self) -> None:
@@ -241,6 +246,7 @@ class P605L3ReconcileOwnerSelectedDivergentSourcesTests(unittest.TestCase):
 
         self.assertEqual(rc, 2)
         self.assertIn("failure_code=OTHER_GIT_WORKTREE_ENV_TRACKED_BY_GIT", output)
+        self.assertNotIn("distinct_secret_class_count=", [line for line in lines if not line.startswith("expected_")])
         self.assertFalse(destination.exists())
 
     def test_destination_inside_source_checkout_fails_closed(self) -> None:
@@ -308,7 +314,7 @@ class P605L3ReconcileOwnerSelectedDivergentSourcesTests(unittest.TestCase):
         destination.write_text(f"{SECRET_SELECTED}\n", encoding="utf-8")
         os.chmod(destination, 0o600)
 
-        # Scrub first 3 sources manually
+        # Scrub first 3 sources manually (2 stale + 1 .env.local; 3 .env.local remain)
         envs[0].write_text("LOCAL_DEBUG=false\nEXTRA_KEY=value\n", encoding="utf-8")
         envs[1].write_text("LOCAL_DEBUG=false\nEXTRA_KEY=value\n", encoding="utf-8")
         envs[2].write_text("LOCAL_DEBUG=false\nEXTRA_KEY=value\n", encoding="utf-8")
@@ -327,6 +333,77 @@ class P605L3ReconcileOwnerSelectedDivergentSourcesTests(unittest.TestCase):
         self.assertIn("sources_already_scrubbed_before=3", output)
         self.assertIn("sources_scrubbed=4", output)
         self.assertIn("source_envs_with_eis_key_remaining=0", output)
+
+    def test_retry_without_remaining_dot_env_local_fails_closed(self) -> None:
+        root, arvectum, destination, manifest, checkouts, other_repo, envs = self._setup_canonical_layout()
+
+        # Destination exists with selected value
+        destination.write_text(f"{SECRET_SELECTED}\n", encoding="utf-8")
+        os.chmod(destination, 0o600)
+
+        # Scrub all 4 .env.local sources (envs[2], envs[3], envs[4], envs[5])
+        envs[2].write_text("LOCAL_DEBUG=false\nEXTRA_KEY=value\n", encoding="utf-8")
+        envs[3].write_text("LOCAL_DEBUG=false\nEXTRA_KEY=value\n", encoding="utf-8")
+        envs[4].write_text("LOCAL_DEBUG=false\nEXTRA_KEY=value\n", encoding="utf-8")
+        envs[5].write_text("LOCAL_DEBUG=false\nEXTRA_KEY=value\n", encoding="utf-8")
+
+        # envs[6] (other_repo/.env) still contains SECRET_SELECTED
+        # envs[0] and envs[1] still contain SECRET_STALE
+
+        rc, lines = MODULE.reconcile_divergent_sources(
+            discovery_file=manifest,
+            destination=destination,
+            owner_authorization=MODULE.OWNER_AUTHORIZATION_ASSERTION,
+            arvectum_repo_root=arvectum,
+        )
+        output = "\n".join(lines)
+
+        self.assertEqual(rc, 2)
+        self.assertIn("p6_05_l3_divergent_reconciliation_status=FAIL", output)
+        self.assertIn("failure_code=RETRY_DOT_ENV_LOCAL_PROOF_REQUIRED", output)
+
+        # Verify destination unchanged, remaining sources unchanged
+        self.assertEqual(destination.read_text(encoding="utf-8").strip(), SECRET_SELECTED)
+        self.assertIn("ZAKUPKI_GOV_RU_SOAP_TOKEN", envs[6].read_text(encoding="utf-8"))
+        self.assertNotIn(SECRET_SELECTED, output)
+        self.assertNotIn(SECRET_STALE, output)
+
+    def test_destination_exclusive_create_prevents_overwrite_race(self) -> None:
+        root, arvectum, destination, manifest, checkouts, other_repo, envs = self._setup_canonical_layout()
+        initial_dest_content = "EXISTING_CONCURRENT_SECRET_VAL\n"
+
+        # Patch _write_destination_secret_exclusive or simulate concurrent creation
+        original_write = MODULE._write_destination_secret_exclusive
+
+        def concurrent_creation(dest: Path, secret_val: str):
+            # Simulate another process creating destination right before write
+            dest.write_text(initial_dest_content, encoding="utf-8")
+            os.chmod(dest, 0o600)
+            # Now try exclusive create which must fail
+            return original_write(dest, secret_val)
+
+        with mock.patch.object(MODULE, "_write_destination_secret_exclusive", side_effect=concurrent_creation):
+            rc, lines = MODULE.reconcile_divergent_sources(
+                discovery_file=manifest,
+                destination=destination,
+                owner_authorization=MODULE.OWNER_AUTHORIZATION_ASSERTION,
+                arvectum_repo_root=arvectum,
+            )
+            output = "\n".join(lines)
+
+            self.assertEqual(rc, 2)
+            self.assertIn("p6_05_l3_divergent_reconciliation_status=FAIL", output)
+            self.assertIn("failure_code=DESTINATION_ALREADY_EXISTS", output)
+
+            # Destination was not overwritten
+            self.assertEqual(destination.read_text(encoding="utf-8"), initial_dest_content)
+
+            # Source envs remain unscrubbed
+            for env in envs:
+                self.assertIn("ZAKUPKI_GOV_RU_SOAP_TOKEN", env.read_text(encoding="utf-8"))
+
+            self.assertNotIn(SECRET_SELECTED, output)
+            self.assertNotIn(SECRET_STALE, output)
 
 
 if __name__ == "__main__":

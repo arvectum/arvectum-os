@@ -10,7 +10,7 @@ where all four .env.local sources belong to the 5-source class, this helper:
 2. verifies active repository identity arvectum/ai-corporation for manifest roots;
 3. classifies all seven secret values in memory using constant-time equality;
 4. selects the unique .env.local-anchored 5-source equality class;
-5. establishes the selected credential at the external owner-only destination;
+5. establishes the selected credential at the external owner-only destination exclusively;
 6. safely scrubs the ZAKUPKI_GOV_RU_SOAP_TOKEN assignment from all seven sources;
 7. treats the 2-source non-selected values as stale local copies;
 8. proves that all product and other local Git worktree tracked states and HEADs
@@ -269,27 +269,16 @@ def _classify_secrets_in_memory(
     return selected_secret, class_5, class_2
 
 
-def _write_destination_secret(destination: Path, secret_value: str) -> None:
-    parent = destination.parent
-    fd, temp_path_str = tempfile.mkstemp(
-        prefix="eis-secret-",
-        dir=str(parent),
-        text=True,
-    )
-    temp_path = Path(temp_path_str)
+def _write_destination_secret_exclusive(destination: Path, secret_value: str) -> None:
     try:
-        with os.fdopen(fd, "w", encoding="utf-8") as fh:
-            fh.write(f"{secret_value}\n")
-            fh.flush()
-            os.fsync(fh.fileno())
-        os.chmod(temp_path, 0o600)
-        os.replace(temp_path, destination)
-    except Exception as exc:
-        if temp_path.exists():
-            try:
-                temp_path.unlink()
-            except OSError:
-                pass
+        MIGRATION._write_new_secret(destination, secret_value)
+    except FileExistsError as exc:
+        raise BASE.RecoveryError("DESTINATION_ALREADY_EXISTS") from exc
+    except MIGRATION.MigrationError as exc:
+        raise BASE.RecoveryError(exc.code) from exc
+    except OSError as exc:
+        if isinstance(exc, FileExistsError) or getattr(exc, "errno", None) == 17:
+            raise BASE.RecoveryError("DESTINATION_ALREADY_EXISTS") from exc
         raise BASE.RecoveryError("LOCAL_FILESYSTEM_OPERATION_FAILED") from exc
 
 
@@ -298,53 +287,86 @@ def _safe_report_lines(
     status: str,
     failure_code: str | None = None,
     owner_authorization_asserted: bool,
-    source_checkout_count: int,
-    source_env_count: int,
-    manifest_ai_corporation_source_count: int,
-    standalone_source_count: int,
-    owner_approved_other_git_source_count: int,
-    distinct_secret_class_count: int,
-    dot_env_local_source_count: int,
-    selected_secret_source_count: int,
-    stale_secret_source_count: int,
-    destination_created: bool,
-    destination_reused: bool,
-    sources_with_key_before: int,
-    sources_already_scrubbed_before: int,
-    sources_scrubbed: int,
-    source_envs_with_eis_key_remaining: int,
-    selected_class_established: bool,
-    stale_local_copies_discarded: bool,
-    manifest_checkout_heads_unchanged: bool,
-    manifest_checkout_tracked_states_unchanged: bool,
-    other_local_git_head_unchanged: bool,
-    other_local_git_tracked_state_unchanged: bool,
+    source_checkout_count: int | None = None,
+    source_env_count: int | None = None,
+    manifest_ai_corporation_source_count: int | None = None,
+    standalone_source_count: int | None = None,
+    owner_approved_other_git_source_count: int | None = None,
+    distinct_secret_class_count: int | None = None,
+    dot_env_local_source_count: int | None = None,
+    selected_secret_source_count: int | None = None,
+    stale_secret_source_count: int | None = None,
+    destination_created: bool = False,
+    destination_reused: bool = False,
+    sources_with_key_before: int | None = None,
+    sources_already_scrubbed_before: int | None = None,
+    sources_scrubbed: int = 0,
+    source_envs_with_eis_key_remaining: int | None = None,
+    selected_class_established: bool = False,
+    stale_local_copies_discarded: bool = False,
+    manifest_checkout_heads_unchanged: bool = True,
+    manifest_checkout_tracked_states_unchanged: bool = True,
+    other_local_git_head_unchanged: bool = True,
+    other_local_git_tracked_state_unchanged: bool = True,
 ) -> tuple[str, ...]:
     lines = [
         f"p6_05_l3_divergent_reconciliation_status={status}",
         f"owner_authorization_asserted={_safe_bool(owner_authorization_asserted)}",
-        f"source_checkout_count={source_checkout_count}",
-        f"source_env_count={source_env_count}",
-        f"manifest_ai_corporation_source_count={manifest_ai_corporation_source_count}",
-        f"standalone_source_count={standalone_source_count}",
-        f"owner_approved_other_git_source_count={owner_approved_other_git_source_count}",
-        f"distinct_secret_class_count={distinct_secret_class_count}",
-        f"dot_env_local_source_count={dot_env_local_source_count}",
-        f"selected_secret_source_count={selected_secret_source_count}",
-        f"stale_secret_source_count={stale_secret_source_count}",
+        f"expected_source_checkout_count={EXPECTED_CHECKOUT_COUNT}",
+        f"expected_source_env_count={EXPECTED_ENV_COUNT}",
+        f"expected_manifest_ai_corporation_source_count={EXPECTED_MANIFEST_AI_COUNT}",
+        f"expected_standalone_source_count={EXPECTED_STANDALONE_COUNT}",
+        f"expected_owner_approved_other_git_source_count={EXPECTED_OTHER_GIT_COUNT}",
+        f"expected_distinct_secret_class_count={EXPECTED_DISTINCT_CLASS_COUNT}",
+        f"expected_dot_env_local_source_count={EXPECTED_DOT_ENV_LOCAL_COUNT}",
+        f"expected_selected_secret_source_count={EXPECTED_SELECTED_CLASS_COUNT}",
+        f"expected_stale_secret_source_count={EXPECTED_STALE_CLASS_COUNT}",
+    ]
+
+    # Only include observed counts when they have actually been proven
+    if source_checkout_count is not None:
+        lines.append(f"source_checkout_count={source_checkout_count}")
+    if source_env_count is not None:
+        lines.append(f"source_env_count={source_env_count}")
+    if manifest_ai_corporation_source_count is not None:
+        lines.append(f"manifest_ai_corporation_source_count={manifest_ai_corporation_source_count}")
+    if standalone_source_count is not None:
+        lines.append(f"standalone_source_count={standalone_source_count}")
+    if owner_approved_other_git_source_count is not None:
+        lines.append(f"owner_approved_other_git_source_count={owner_approved_other_git_source_count}")
+    if distinct_secret_class_count is not None:
+        lines.append(f"distinct_secret_class_count={distinct_secret_class_count}")
+    if dot_env_local_source_count is not None:
+        lines.append(f"dot_env_local_source_count={dot_env_local_source_count}")
+    if selected_secret_source_count is not None:
+        lines.append(f"selected_secret_source_count={selected_secret_source_count}")
+    if stale_secret_source_count is not None:
+        lines.append(f"stale_secret_source_count={stale_secret_source_count}")
+
+    lines.extend([
         f"destination_created={_safe_bool(destination_created)}",
         f"destination_reused={_safe_bool(destination_reused)}",
-        f"sources_with_key_before={sources_with_key_before}",
-        f"sources_already_scrubbed_before={sources_already_scrubbed_before}",
-        f"sources_scrubbed={sources_scrubbed}",
-        f"source_envs_with_eis_key_remaining={source_envs_with_eis_key_remaining}",
+    ])
+
+    if sources_with_key_before is not None:
+        lines.append(f"sources_with_key_before={sources_with_key_before}")
+    if sources_already_scrubbed_before is not None:
+        lines.append(f"sources_already_scrubbed_before={sources_already_scrubbed_before}")
+
+    lines.append(f"sources_scrubbed={sources_scrubbed}")
+
+    if source_envs_with_eis_key_remaining is not None:
+        lines.append(f"source_envs_with_eis_key_remaining={source_envs_with_eis_key_remaining}")
+
+    lines.extend([
         f"selected_class_established={_safe_bool(selected_class_established)}",
         f"stale_local_copies_discarded={_safe_bool(stale_local_copies_discarded)}",
         f"manifest_checkout_heads_unchanged={_safe_bool(manifest_checkout_heads_unchanged)}",
         f"manifest_checkout_tracked_states_unchanged={_safe_bool(manifest_checkout_tracked_states_unchanged)}",
         f"other_local_git_head_unchanged={_safe_bool(other_local_git_head_unchanged)}",
         f"other_local_git_tracked_state_unchanged={_safe_bool(other_local_git_tracked_state_unchanged)}",
-    ]
+    ])
+
     if status == "PASS":
         lines.append("secret.ZAKUPKI_GOV_RU_SOAP_TOKEN=configured")
     if failure_code is not None:
@@ -381,18 +403,20 @@ def reconcile_divergent_sources(
     destination_reused = False
     selected_class_established = False
     stale_local_copies_discarded = False
-    sources_with_key_before = 0
-    sources_already_scrubbed_before = 0
+    sources_with_key_before: int | None = None
+    sources_already_scrubbed_before: int | None = None
     sources_scrubbed = 0
-    remaining_secret_key_count = 0
+    remaining_secret_key_count: int | None = None
 
-    manifest_ai_count = EXPECTED_MANIFEST_AI_COUNT
-    standalone_count = EXPECTED_STANDALONE_COUNT
-    other_git_count = EXPECTED_OTHER_GIT_COUNT
-    dot_env_local_count = EXPECTED_DOT_ENV_LOCAL_COUNT
-    selected_class_count = EXPECTED_SELECTED_CLASS_COUNT
-    stale_class_count = EXPECTED_STALE_CLASS_COUNT
-    distinct_class_count = EXPECTED_DISTINCT_CLASS_COUNT
+    observed_checkout_count: int | None = None
+    observed_env_count: int | None = None
+    observed_manifest_ai_count: int | None = None
+    observed_standalone_count: int | None = None
+    observed_other_git_count: int | None = None
+    observed_dot_env_local_count: int | None = None
+    observed_distinct_class_count: int | None = None
+    observed_selected_class_count: int | None = None
+    observed_stale_class_count: int | None = None
 
     manifest_heads_unchanged = True
     manifest_tracked_unchanged = True
@@ -404,12 +428,20 @@ def reconcile_divergent_sources(
             raise BASE.RecoveryError("OWNER_AUTHORIZATION_REQUIRED")
 
         discovery = BASE._parse_discovery(discovery_file)
+        observed_checkout_count = len(discovery.checkouts)
+        observed_env_count = len(discovery.envs)
+
         classified_envs, other_git_root = _validate_manifest_and_classify_sources(
             discovery,
             expected_checkout_count=expected_checkout_count,
             expected_env_count=expected_env_count,
         )
         assert other_git_root is not None
+
+        observed_manifest_ai_count = sum(1 for c in classified_envs if c.category == "manifest_ai_corporation")
+        observed_standalone_count = sum(1 for c in classified_envs if c.category == "standalone")
+        observed_other_git_count = sum(1 for c in classified_envs if c.category == "owner_approved_other_git")
+        observed_dot_env_local_count = sum(1 for c in classified_envs if c.is_dot_env_local)
 
         # Inspect destination placement safety
         all_prohibited_roots = list(discovery.checkouts) + [other_git_root]
@@ -435,9 +467,13 @@ def reconcile_divergent_sources(
         dest_exists = destination.exists()
 
         if not dest_exists:
-            # First run: require exact 5+2 distribution
+            # First run: require exact 5+2 distribution across all 7 sources
             selected_secret, class_5, class_2 = _classify_secrets_in_memory(env_states)
-            _write_destination_secret(destination, selected_secret)
+            observed_distinct_class_count = 2
+            observed_selected_class_count = 5
+            observed_stale_class_count = 2
+
+            _write_destination_secret_exclusive(destination, selected_secret)
             destination_created = True
             selected_class_established = True
         else:
@@ -446,22 +482,22 @@ def reconcile_divergent_sources(
             dest_secret = MIGRATION._read_existing_destination(destination)
             selected_class_established = True
 
-            # Verify that any remaining .env.local matches dest_secret
-            remaining_dot_env_local = [
-                s for s in env_states if s.classified.is_dot_env_local and s.secret_value is not None
-            ]
-            if remaining_dot_env_local:
+            if sources_with_key_before == 0:
+                # Idempotent retry: all 7 sources already scrubbed, accept existing destination
+                pass
+            else:
+                # Strict retry proof: at least ONE remaining .env.local must exist,
+                # and ALL remaining .env.local sources MUST match the destination.
+                remaining_dot_env_local = [
+                    s for s in env_states if s.classified.is_dot_env_local and s.secret_value is not None
+                ]
+                if not remaining_dot_env_local:
+                    raise BASE.RecoveryError("RETRY_DOT_ENV_LOCAL_PROOF_REQUIRED")
+
                 for s in remaining_dot_env_local:
                     assert s.secret_value is not None
                     if not secrets.compare_digest(s.secret_value, dest_secret):
                         raise BASE.RecoveryError("RETRY_SECRET_DOES_NOT_MATCH_DESTINATION")
-            elif sources_with_key_before > 0:
-                # No remaining .env.local to prove the destination; check if any remaining source matches
-                matching_remaining = [
-                    s for s in env_states if s.secret_value is not None and secrets.compare_digest(s.secret_value, dest_secret)
-                ]
-                if not matching_remaining:
-                    raise BASE.RecoveryError("RETRY_CANNOT_PROVE_DESTINATION_MATCH")
 
         # Scrub in ordered sequence: non-.env.local first, .env.local last
         non_dot_env_local = [s for s in env_states if not s.classified.is_dot_env_local and s.secret_value is not None]
@@ -504,22 +540,23 @@ def reconcile_divergent_sources(
             raise BASE.RecoveryError("SOURCE_SCRUB_POSTCHECK_FAILED")
 
     except BASE.RecoveryError as exc:
-        remaining_secret_key_count = sum(
-            1 for env in discovery.envs if BASE._contains_secret_key(env)
-        ) if 'discovery' in locals() else 0
+        if 'discovery' in locals() and hasattr(discovery, 'envs'):
+            remaining_secret_key_count = sum(
+                1 for env in discovery.envs if BASE._contains_secret_key(env)
+            )
         return 2, _safe_report_lines(
             status="FAIL",
             failure_code=exc.code,
             owner_authorization_asserted=owner_authorization_asserted,
-            source_checkout_count=expected_checkout_count,
-            source_env_count=expected_env_count,
-            manifest_ai_corporation_source_count=manifest_ai_count,
-            standalone_source_count=standalone_count,
-            owner_approved_other_git_source_count=other_git_count,
-            distinct_secret_class_count=distinct_class_count,
-            dot_env_local_source_count=dot_env_local_count,
-            selected_secret_source_count=selected_class_count,
-            stale_secret_source_count=stale_class_count,
+            source_checkout_count=observed_checkout_count,
+            source_env_count=observed_env_count,
+            manifest_ai_corporation_source_count=observed_manifest_ai_count,
+            standalone_source_count=observed_standalone_count,
+            owner_approved_other_git_source_count=observed_other_git_count,
+            distinct_secret_class_count=observed_distinct_class_count,
+            dot_env_local_source_count=observed_dot_env_local_count,
+            selected_secret_source_count=observed_selected_class_count,
+            stale_secret_source_count=observed_stale_class_count,
             destination_created=destination_created,
             destination_reused=destination_reused,
             sources_with_key_before=sources_with_key_before,
@@ -537,15 +574,15 @@ def reconcile_divergent_sources(
     return 0, _safe_report_lines(
         status="PASS",
         owner_authorization_asserted=True,
-        source_checkout_count=expected_checkout_count,
-        source_env_count=expected_env_count,
-        manifest_ai_corporation_source_count=manifest_ai_count,
-        standalone_source_count=standalone_count,
-        owner_approved_other_git_source_count=other_git_count,
-        distinct_secret_class_count=distinct_class_count,
-        dot_env_local_source_count=dot_env_local_count,
-        selected_secret_source_count=selected_class_count,
-        stale_secret_source_count=stale_class_count,
+        source_checkout_count=EXPECTED_CHECKOUT_COUNT,
+        source_env_count=EXPECTED_ENV_COUNT,
+        manifest_ai_corporation_source_count=EXPECTED_MANIFEST_AI_COUNT,
+        standalone_source_count=EXPECTED_STANDALONE_COUNT,
+        owner_approved_other_git_source_count=EXPECTED_OTHER_GIT_COUNT,
+        distinct_secret_class_count=EXPECTED_DISTINCT_CLASS_COUNT,
+        dot_env_local_source_count=EXPECTED_DOT_ENV_LOCAL_COUNT,
+        selected_secret_source_count=EXPECTED_SELECTED_CLASS_COUNT,
+        stale_secret_source_count=EXPECTED_STALE_CLASS_COUNT,
         destination_created=destination_created,
         destination_reused=destination_reused,
         sources_with_key_before=sources_with_key_before,
