@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.51.6`
+Version: `2.51.7`
 Created: `2026-08-07`
 Updated: `2026-08-15`
 Owner: `ООО «Арвектум»`
@@ -17,7 +17,7 @@ Detailed completed-phase evidence remains in the corresponding `PHASE-N-...` roa
 
 ## 2. Version note
 
-Version `2.51.6` records `P6.05-L6` as `Complete / PASS` after the local synthetic/redacted regression + negative-path smoke passed on platform SHA `0e0fcac9a2fbf43920799ba96110a0db149cb85b` with product `ai-corporation` main at `2aa3e6d1d53f70b4cb5c22c951bc5313c9b6bb38`. Platform targeted suites passed `9+4+8+26` and the full reference suite passed `874/874`; product passed `11` P6.03 bridge tests and `17` P6.05 exact-evidence tests; read-only L3/L4/L5 preflights passed; missing config/gates/wrong versions fail closed; no real EIS/SOAP call, no real P6.05 runner execution and no external action occurred. The detailed P6.05 local substream is synchronized to `0.1.8`. `P6.05-L7 — Real P6.05 exact-attachment live run` is now the current action. The truthful real `7/7` exact-attachment evidence gate remains unobserved, so P6.05 itself remains open.
+Version `2.51.6` records `P6.05-L6` as `Complete / PASS` after the local synthetic/redacted regression + negative-path smoke passed on platform SHA `0e0fcac9a2fbf43920799ba96110a0db149cb85b` with product `ai-corporation` main at `2aa3e6d1d53f70b4cb5c22c951bc5313c9b6bb38`. Platform targeted suites passed `9+4+8+26` and the full reference suite passed `874/874`; product passed `11` P6.03 bridge tests and `17` P6.05 exact-evidence tests; read-only L3/L4/L5 preflights passed; missing config/gates/wrong versions fail closed; no real EIS/SOAP call, no real P6.05 runner execution and no external action occurred. The detailed P6.05 local substream is synchronized to `0.1.9`. `P6.05-L7 — Real P6.05 exact-attachment live run` is the current action but is blocked: the single read-only attempt #1 failed closed on EIS TLS trust (`CERTIFICATE_VERIFY_FAILED`, disposition D — SYSTEM_TRUST_CHAIN_UNAVAILABLE), blocker review [`P6-05-L7-attempt-1-eis-tls-trust-blocker.md`](../reviews/P6-05-L7-attempt-1-eis-tls-trust-blocker.md). A retry requires separate authorization after minimal trust remediation. The truthful real `7/7` exact-attachment evidence gate remains unobserved, so P6.05 itself remains open.
 
 P6.05 implementation readiness remains separated from the owner-operated runtime work required to execute the real evidence path. The local deployment is treated as a bounded **Internal / local owner-operated runtime** for ООО «Арвектум», not as a Production environment, supported macOS product, Stable/public runtime contract or final deployment topology.
 
@@ -101,8 +101,8 @@ M5 proves repeatable governed integration through explicit Product Contracts and
 
 Canonical detailed roadmap:
 
-- [`PHASE-6-PRODUCT-DRIVEN-PLATFORM-VALIDATION.md`](PHASE-6-PRODUCT-DRIVEN-PLATFORM-VALIDATION.md) — `Active 1.7.3`.
-- [`P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md`](P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md) — `Active 0.1.8`, subordinate execution plan for the current P6.05 owner-operated runtime/evidence path.
+- [`PHASE-6-PRODUCT-DRIVEN-PLATFORM-VALIDATION.md`](PHASE-6-PRODUCT-DRIVEN-PLATFORM-VALIDATION.md) — `Active 1.7.4`.
+- [`P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md`](P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md) — `Active 0.1.9`, subordinate execution plan for the current P6.05 owner-operated runtime/evidence path.
 
 | ID | Work item | Status | Progress |
 |---|---|---:|---:|
@@ -110,7 +110,7 @@ Canonical detailed roadmap:
 | `P6.02` | First real Product Contract boundary + bounded adoption plan | 🟩 Complete | `██████████ 100%` |
 | `P6.03` | First real product/workflow platform integration | 🟩 Complete / PASS | `██████████ 100%` |
 | `P6.04` | Product value, delivery-friction + governance evidence capture | 🟩 Complete / PASS | `██████████ 100%` |
-| `P6.05` | Platform-gap remediation from first real use | 🟨 Current — L1-L6 PASS; L7 real live run next; real evidence pending | `tracked by P6.05 subtasks` |
+| `P6.05` | Platform-gap remediation from first real use | 🟨 Current — L1-L6 PASS; L7 blocked (EIS TLS trust); real evidence pending | `tracked by P6.05 subtasks` |
 | `P6.06` | Second materially distinct real product/workflow target + Product Contract | ⬜ | `░░░░░░░░░░ 0%` |
 | `P6.07` | Second real product/workflow platform integration | ⬜ | `░░░░░░░░░░ 0%` |
 | `P6.08` | Cross-product reuse and Platform Gravity evidence | ⬜ | `░░░░░░░░░░ 0%` |
@@ -131,7 +131,7 @@ Canonical detailed roadmap:
 | `P6.05-L4` | Internal Organization + operator bootstrap | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L4-internal-organization-operator-bootstrap.md) |
 | `P6.05-L5` | First real product connection through exact P6.02 boundary | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L5-first-real-product-connection.md) |
 | `P6.05-L6` | Local synthetic/redacted regression + negative-path smoke | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L6-local-synthetic-redacted-regression-negative-path-smoke.md) |
-| `P6.05-L7` | Real P6.05 exact-attachment live run (`7/7` gate) | 🟨 Current / next |
+| `P6.05-L7` | Real P6.05 exact-attachment live run (`7/7` gate) | 🟨 Current / blocked — attempt #1 EIS TLS trust: [review](../reviews/P6-05-L7-attempt-1-eis-tls-trust-blocker.md) |
 | `P6.05-L8` | Governed evidence admission + canonical P6.05 closure package | ⬜ Pending |
 | `P6.05-L9` | Dogfooding friction capture | ⬜ Pending / cross-cutting |
 
@@ -166,9 +166,9 @@ M6 does not require an `Active` Platform Capability, Stable Product Contract, pr
 
 ## 8. Current canonical action
 
-> **P6.05-L7 — Real P6.05 exact-attachment live run.**
+> **P6.05-L7 — EIS TLS trust blocker remediation, then a separately authorized real exact-attachment live run.**
 
-`P6.05-L1` through `P6.05-L6` are complete / PASS. The local runtime evidence is recorded in [`P6-05-L1-local-host-runtime-baseline.md`](../reviews/P6-05-L1-local-host-runtime-baseline.md), [`P6-05-L2-local-reference-runtime-start.md`](../reviews/P6-05-L2-local-reference-runtime-start.md), [`P6-05-L3-secure-local-configuration-secrets-boundary.md`](../reviews/P6-05-L3-secure-local-configuration-secrets-boundary.md), [`P6-05-L4-internal-organization-operator-bootstrap.md`](../reviews/P6-05-L4-internal-organization-operator-bootstrap.md), [`P6-05-L5-first-real-product-connection.md`](../reviews/P6-05-L5-first-real-product-connection.md), and [`P6-05-L6-local-synthetic-redacted-regression-negative-path-smoke.md`](../reviews/P6-05-L6-local-synthetic-redacted-regression-negative-path-smoke.md).
+`P6.05-L1` through `P6.05-L6` are complete / PASS. The local runtime evidence is recorded in [`P6-05-L1-local-host-runtime-baseline.md`](../reviews/P6-05-L1-local-host-runtime-baseline.md), [`P6-05-L2-local-reference-runtime-start.md`](../reviews/P6-05-L2-local-reference-runtime-start.md), [`P6-05-L3-secure-local-configuration-secrets-boundary.md`](../reviews/P6-05-L3-secure-local-configuration-secrets-boundary.md), [`P6-05-L4-internal-organization-operator-bootstrap.md`](../reviews/P6-05-L4-internal-organization-operator-bootstrap.md), [`P6-05-L5-first-real-product-connection.md`](../reviews/P6-05-L5-first-real-product-connection.md), and [`P6-05-L6-local-synthetic-redacted-regression-negative-path-smoke.md`](../reviews/P6-05-L6-local-synthetic-redacted-regression-negative-path-smoke.md). P6.05-L7 attempt #1 failed closed on EIS TLS trust — blocker review [`P6-05-L7-attempt-1-eis-tls-trust-blocker.md`](../reviews/P6-05-L7-attempt-1-eis-tls-trust-blocker.md); L7 remains blocked, L8 not started, and the live retry requires separate authorization.
 
 The local runtime exists to make the already-selected P6.05 evidence path executable and to begin real internal use of Arvectum OS. It must preserve:
 
@@ -243,7 +243,7 @@ P6.05-L5 first real product connection ✓ PASS
         ↓
 P6.05-L6 local synthetic/redacted + negative-path smoke ✓ PASS
         ↓
-P6.05-L7 real exact attachment evidence: 7/7 required ← current
+P6.05-L7 real exact attachment evidence: 7/7 required ← current / blocked (TLS trust)
         ↓
 P6.05-L8 governed admission + P6.05 closure
         ↓
