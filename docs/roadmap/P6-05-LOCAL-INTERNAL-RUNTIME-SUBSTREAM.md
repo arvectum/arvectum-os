@@ -1,7 +1,7 @@
 # P6.05 — Local Internal Runtime Substream
 
 Status: `Active / In Progress`
-Version: `0.1.9`
+Version: `0.1.10`
 Created: `2026-08-09`
 Updated: `2026-08-15`
 Owner: `ООО «Арвектум»`
@@ -70,8 +70,8 @@ Implementation readiness does **not** close P6.05. Real `7/7` evidence remains u
 | `P6.05-L4` | Internal Organization + operator bootstrap | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L4-internal-organization-operator-bootstrap.md) | bounded ООО «Арвектум» Organization/operator context can execute the required local governed flow with least-privilege assumptions documented |
 | `P6.05-L5` | First real product connection | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L5-first-real-product-connection.md) | `ai-corporation` connects through exact P6.02 Product Contract `0.1.0`, canonical source verified, CAP-001 + CAP-004 only, with Organization/Actor/Product/Product Contract continuity preserved; CAP-002/CAP-003 absent; no grants/delegations/Organizational Authority; no external actions |
 | `P6.05-L6` | Local synthetic/redacted regression + negative-path smoke | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L6-local-synthetic-redacted-regression-negative-path-smoke.md) | relevant P6.03/P6.05 proof paths pass locally; missing config/gates/wrong versions fail closed; no real EIS/SOAP; real runner not executed; external actions false |
-| `P6.05-L7` | Real P6.05 exact-attachment live run | 🟨 Current / blocked — attempt #1 failed closed on EIS TLS trust: [review](../reviews/P6-05-L7-attempt-1-eis-tls-trust-blocker.md) | the existing authorized read-only runner executes for `0344100006426000005`; success requires `PASS_EXACT_ATTACHMENT_EVIDENCE`, `exact_document_count = 7`, complete exact set and manifest SHA-256 |
-| `P6.05-L8` | Governed evidence admission + canonical P6.05 closure package | ⬜ Pending | exact evidence is admitted/reconstructed through the bounded governed path; closure review records PASS or the truthful remaining blocker; roadmap is synchronized |
+| `P6.05-L7` | Real P6.05 exact-attachment live run | 🟩 Complete / PASS — attempt #2 evidence: [review](../reviews/P6-05-L7-attempt-2-real-exact-attachment-live-run.md) | attempt #1 blocked on EIS TLS trust: [review](../reviews/P6-05-L7-attempt-1-eis-tls-trust-blocker.md); attempt #2 passed with `PASS_EXACT_ATTACHMENT_EVIDENCE`, `exact_document_count = 7`, complete exact set and manifest SHA-256 |
+| `P6.05-L8` | Governed evidence admission + canonical P6.05 closure package | 🟨 Current / next | exact evidence is admitted/reconstructed through the bounded governed path; closure review records PASS or the truthful remaining blocker; roadmap is synchronized |
 | `P6.05-L9` | Dogfooding friction capture | ⬜ Pending | concrete operator/setup/workspace friction observed during L1-L8 is recorded as evidence/backlog without silently expanding P6.05 scope |
 
 Subtasks are sequential where dependencies require it, but reversible preparation may proceed in parallel when it cannot change canonical state or external systems.
@@ -152,7 +152,9 @@ The only successful real-evidence result for this subtask is a truthful complete
 
 Any safe blocker/incomplete output remains evidence and MUST NOT be converted into PASS.
 
-**Attempt #1 (2026-08-15):** one top-level read-only execution failed closed before any application response — `CERTIFICATE_VERIFY_FAILED` / `self-signed certificate in certificate chain` against `int.zakupki.gov.ru`. Evidence-backed primary root cause `OWNER_ETP_TRUST_POLICY_NOT_CONFIGURED_FOR_EIS` with contributing condition `PYTHON_DEFAULT_CA_STORE_MISSING_REQUIRED_RUSSIAN_PKI_ROOT`: no owner ETP trust policy was configured for the EIS host, so the runtime used the Python default CA store, which lacks the Russian national PKI root that the complete and valid EIS chain terminates at; system trust itself is available and validates the chain. Full blocker review: [`P6-05-L7-attempt-1-eis-tls-trust-blocker.md`](../reviews/P6-05-L7-attempt-1-eis-tls-trust-blocker.md). Retry requires separate authorization after minimal trust remediation; L7 remains blocked, L8 not started.
+**Attempt #1 (2026-08-15):** one top-level read-only execution failed closed before any application response — `CERTIFICATE_VERIFY_FAILED` / `self-signed certificate in certificate chain` against `int.zakupki.gov.ru`. Evidence-backed primary root cause `OWNER_ETP_TRUST_POLICY_NOT_CONFIGURED_FOR_EIS` with contributing condition `PYTHON_DEFAULT_CA_STORE_MISSING_REQUIRED_RUSSIAN_PKI_ROOT`: no owner ETP trust policy was configured for the EIS host, so the runtime used the Python default CA store, which lacks the Russian national PKI root that the complete and valid EIS chain terminates at; system trust itself is available and validates the chain. Full blocker review: [`P6-05-L7-attempt-1-eis-tls-trust-blocker.md`](../reviews/P6-05-L7-attempt-1-eis-tls-trust-blocker.md). Retry requires separate authorization after minimal trust remediation.
+
+**Attempt #2 (2026-08-15, PASS):** after the owner-operated `authority: system` (truststore) trust remediation was applied and independently reviewed, exactly one new top-level read-only execution completed with `PASS_EXACT_ATTACHMENT_EVIDENCE`, `expected_document_count = 7`, `exact_document_count = 7`, `missing_names = []`, `duplicate_names = []`, manifest SHA-256 `74e943d855406b04741f040fed271bddfaada9a9cc6e7da4501735a6e8725121`, `external_actions = false`, product analysis not executed. Independent verification (retrieval/safety metadata, source-listed set, file-system safety, per-file SHA-256/sizes, canonical manifest-body hash, product-helper rebuild) passed. Real exact `7/7` evidence observed. Full evidence: [`P6-05-L7-attempt-2-real-exact-attachment-live-run.md`](../reviews/P6-05-L7-attempt-2-real-exact-attachment-live-run.md).
 
 ### P6.05-L8 — Governed admission + closure
 
@@ -218,4 +220,4 @@ Until a later accepted decision says otherwise, this environment is bounded and 
 
 ## 9. Immediate next action
 
-Resolve the P6.05-L7 attempt #1 EIS TLS trust blocker (`OWNER_ETP_TRUST_POLICY_NOT_CONFIGURED_FOR_EIS`, contributing condition `PYTHON_DEFAULT_CA_STORE_MISSING_REQUIRED_RUSSIAN_PKI_ROOT`) via minimal owner-operated trust remediation, then proceed to a separately authorized one-shot `P6.05-L7 — Real P6.05 exact-attachment live run`. Keep P6.05 overall `Active / In Progress`; real `7/7` exact-attachment evidence remains unobserved.
+`P6.05-L7 — Real P6.05 exact-attachment live run` completed as PASS on attempt #2 (real exact `7/7` observed). Next: governed P6.05-L8 evidence admission and canonical P6.05 closure. Keep P6.05 overall `Active / In Progress` until L8 closure.
