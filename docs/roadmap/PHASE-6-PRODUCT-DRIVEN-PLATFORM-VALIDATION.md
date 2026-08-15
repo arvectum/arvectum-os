@@ -38,11 +38,11 @@ P6.03 is **complete with PASS**. Stage 1 proved the exact P6.02 boundary and fai
 
 P6.04 is **complete with PASS** under [`P6-04-product-value-delivery-friction-governance-evidence-capture.md`](../reviews/P6-04-product-value-delivery-friction-governance-evidence-capture.md). It records directly evidenced governance/control value and material integration overhead without inventing absent customer KPIs. The first real case preserved external authority, exact Product Contract/dependency continuity and reconstruction, but reached `0/1` client-ready completion because the run retained `0/7` exact tender-attachment bytes/digests. Repository metadata also shows a material proof/change footprint: product Stage 1 `202` additions / `5` changed files, product Stage 2 `687` / `9`, and platform Stage 1 repair/proof `1223` additions + `45` deletions / `9`; these are change-surface proxies, not engineering hours or monetary cost.
 
-P6.05 implementation remediation is now merged on both sides: the bounded Arvectum OS CAP-001 admission work is in platform `main` as `5dbbc7b3af1f0f3896301ef833de2214cb44e6f9`, and `ai-corporation` PR `#142` is merged as `bf9a1c5438426031fce36370344ada969d2493dd`. Hosted implementation CI is green, but P6.05 remains open because real `7/7` exact attachment evidence has not yet been observed in the authorized owner-operated runtime.
+P6.05 implementation remediation is now merged on both sides: the bounded Arvectum OS CAP-001 admission work is in platform `main` as `5dbbc7b3af1f0f3896301ef833de2214cb44e6f9`, and `ai-corporation` PR `#142` is merged as `bf9a1c5438426031fce36370344ada969d2493dd`. Hosted implementation CI is green. real `7/7` exact attachment evidence was observed on attempt #2; P6.05 remains open for governed evidence admission and closure review (L8).
 
 The remaining execution is decomposed under [`P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md`](P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md). P6.05-L1 through P6.05-L7 are now `Complete / PASS`. L7 completed the real exact-attachment live run on attempt #2 (after verified `authority: system` trust remediation) with truthful real `7/7` evidence observed on platform SHA `5480f282cf8b3ec786b658f431e2fc0225afe257` and product `33721ab63ffe8bcd1178b119c488a54fcb1b1748`; evidence is [`P6-05-L7-attempt-2-real-exact-attachment-live-run.md`](../reviews/P6-05-L7-attempt-2-real-exact-attachment-live-run.md). P6.05 remains open for governed evidence admission and closure review (L8). The Mac mini remains only a bounded internal operational environment for ООО «Арвектум», not a production or public deployment architecture commitment.
 
-The optional Stage 3 capacity of maximum three calibration cases remains deliberately unconsumed. The current blocker is known; the next useful calibration case should test a materially changed evidence contour after P6.05 rather than repeat the same incomplete source-package path.
+The optional Stage 3 capacity of maximum three calibration cases remains deliberately unconsumed. The L7 blocker is resolved and L7 passed; optional Stage 3 capacity should not be spent merely repeating the same contour.
 
 ## 2. Starting state inherited from M5
 
@@ -97,7 +97,6 @@ P6.02 added the first real Product Contract boundary without changing that lifec
 | `P6.05-L6` | Local synthetic/redacted regression + negative-path smoke | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L6-local-synthetic-redacted-regression-negative-path-smoke.md) |
 | `P6.05-L7` | Real P6.05 exact-attachment live run (`7/7` gate) | 🟩 Complete / PASS — attempt #2 evidence: [review](../reviews/P6-05-L7-attempt-2-real-exact-attachment-live-run.md) |
 | `P6.05-L8` | Governed evidence admission + canonical P6.05 closure package | 🟨 Current / next |
-| `P6.05-L8` | Governed evidence admission + canonical P6.05 closure package | ⬜ Pending |
 | `P6.05-L9` | Dogfooding friction capture | ⬜ Pending / cross-cutting |
 
 ## 4. Work-item intent and exit evidence
@@ -202,7 +201,6 @@ Remaining execution is governed by [`P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md`]
 6. `P6.05-L6` local synthetic/redacted + negative-path smoke — Complete / PASS;
 7. `P6.05-L7` real exact-attachment live run with truthful `7/7` gate — Complete / PASS on attempt #2 (real evidence observed);
 8. `P6.05-L8` governed evidence admission and P6.05 closure review — current / next;
-8. `P6.05-L8` governed admission + canonical closure package;
 9. `P6.05-L9` cross-cutting dogfooding friction capture.
 
 The Mac mini is an operational environment for this bounded internal validation, not an architectural commitment to macOS or single-host deployment. Successful local operation does not imply Production readiness, Stable/public API, customer installer, SLA/support commitment or capability promotion.
@@ -324,8 +322,6 @@ P6.05-L6 Local proof + negative-path smoke ✓ PASS
  ↓
 P6.05-L7 Real exact attachment evidence — 7/7 required — Complete / PASS
 P6.05-L8 Governed evidence admission and closure review ← current
- ↓
-P6.05-L8 Governed admission + canonical P6.05 closure
  ↓
 R18 First Real-use Health Review
  ↓

@@ -34,7 +34,7 @@ Already observed implementation and local-runtime evidence:
 - P6.05-L4 internal Organization/operator bootstrap passed — [evidence](../reviews/P6-05-L4-internal-organization-operator-bootstrap.md);
 - P6.05-L5 owner-operated first real product connection passed — [evidence](../reviews/P6-05-L5-first-real-product-connection.md);
 - P6.05-L6 local synthetic/redacted regression + negative-path smoke passed — [evidence](../reviews/P6-05-L6-local-synthetic-redacted-regression-negative-path-smoke.md);
-- the real live runner exists but has not yet produced real `7/7` evidence in the authorized owner-operated environment.
+- the real live runner has produced real `7/7` evidence in the authorized owner-operated environment on attempt #2.
 
 The P6.05 P0 problem statement remains unchanged: enable sufficient exact external tender attachment evidence for a truthful client-ready completeness decision while preserving external authority, exact version/provenance, Organization/rights controls, procurement-domain ownership and the no-external-action boundary.
 
@@ -133,7 +133,6 @@ Canonical detailed roadmap:
 | `P6.05-L6` | Local synthetic/redacted regression + negative-path smoke | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L6-local-synthetic-redacted-regression-negative-path-smoke.md) |
 | `P6.05-L7` | Real P6.05 exact-attachment live run (`7/7` gate) | 🟩 Complete / PASS — attempt #2 evidence: [review](../reviews/P6-05-L7-attempt-2-real-exact-attachment-live-run.md) |
 | `P6.05-L8` | Governed evidence admission + canonical P6.05 closure package | 🟨 Current / next |
-| `P6.05-L8` | Governed evidence admission + canonical P6.05 closure package | ⬜ Pending |
 | `P6.05-L9` | Dogfooding friction capture | ⬜ Pending / cross-cutting |
 
 Detailed exit evidence and non-goals are defined in [`P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md`](P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md).
@@ -246,8 +245,6 @@ P6.05-L6 local synthetic/redacted + negative-path smoke ✓ PASS
         ↓
 P6.05-L7 real exact attachment evidence: 7/7 required — Complete / PASS
 P6.05-L8 Governed evidence admission and closure review ← current
-        ↓
-P6.05-L8 governed admission + P6.05 closure
         ↓
 R18 First Real-use Health Review
         ↓

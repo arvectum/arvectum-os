@@ -58,7 +58,7 @@ Local execution evidence now additionally establishes:
 - the successful L2 run used canonical `main` at `fb61889633b11875dc5e1cf92771a159024a5695`, CPython `3.14.6`, and passed `717/717` reference tests with a clean checkout before and after execution;
 - no product, EIS, public ingress, external action or secret exposure occurred in L2.
 
-Implementation readiness does **not** close P6.05. Real `7/7` evidence remains unobserved.
+Implementation readiness alone did not close P6.05. Real exact `7/7` evidence is now observed via L7 attempt #2, but P6.05 remains open until L8 governed admission/closure.
 
 ## 4. Subtasks
 
