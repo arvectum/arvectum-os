@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.51.8`
+Version: `2.51.9`
 Created: `2026-08-07`
 Updated: `2026-08-15`
 Owner: `ООО «Арвектум»`
@@ -17,7 +17,7 @@ Detailed completed-phase evidence remains in the corresponding `PHASE-N-...` roa
 
 ## 2. Version note
 
-Version `2.51.8` is the current note. The prior `2.51.7` recorded the `P6.05-L7` attempt #1 blocker; `2.51.8` records `P6.05-L7` attempt #2 as `Complete / PASS` after verified `authority: system` trust remediation on platform SHA `5480f282cf8b3ec786b658f431e2fc0225afe257` and product `33721ab63ffe8bcd1178b119c488a54fcb1b1748` (real `7/7` exact-attachment evidence observed); evidence is [`P6-05-L7-attempt-2-real-exact-attachment-live-run.md`](../reviews/P6-05-L7-attempt-2-real-exact-attachment-live-run.md). L1-L7 remain `Complete / PASS`; `P6.05-L8` is `Current / next`; `P6.05` remains `Active / In Progress` until closure. The detailed P6.05 local substream is synchronized to `0.1.10`.
+Version `2.51.9` is the current note. The prior `2.51.8` recorded the `P6.05-L7` PASS; `2.51.9` records `P6.05-L8` attempt #1 as FAIL-CLOSED / blocked during evidence-chain reconstruction; blocker review [`P6-05-L8-attempt-1-reconstruction-harness-blocker.md`](../reviews/P6-05-L8-attempt-1-reconstruction-harness-blocker.md). P6.05 remains `Active / In Progress`. The detailed P6.05 local substream is synchronized to `0.1.11`.
 
 P6.05 implementation readiness remains separated from the owner-operated runtime work required to execute the real evidence path. The local deployment is treated as a bounded **Internal / local owner-operated runtime** for ООО «Арвектум», not as a Production environment, supported macOS product, Stable/public runtime contract or final deployment topology.
 
@@ -110,7 +110,7 @@ Canonical detailed roadmap:
 | `P6.02` | First real Product Contract boundary + bounded adoption plan | 🟩 Complete | `██████████ 100%` |
 | `P6.03` | First real product/workflow platform integration | 🟩 Complete / PASS | `██████████ 100%` |
 | `P6.04` | Product value, delivery-friction + governance evidence capture | 🟩 Complete / PASS | `██████████ 100%` |
-| `P6.05` | Platform-gap remediation from first real use | 🟨 Current — L1-L7 PASS; L8 next; real 7/7 observed | `tracked by P6.05 subtasks` |
+| `P6.05` | Platform-gap remediation from first real use | 🟨 Current — L1-L7 PASS; L8 blocked (reconstruction/evidence); real 7/7 observed | `tracked by P6.05 subtasks` |
 | `P6.06` | Second materially distinct real product/workflow target + Product Contract | ⬜ | `░░░░░░░░░░ 0%` |
 | `P6.07` | Second real product/workflow platform integration | ⬜ | `░░░░░░░░░░ 0%` |
 | `P6.08` | Cross-product reuse and Platform Gravity evidence | ⬜ | `░░░░░░░░░░ 0%` |
@@ -132,7 +132,7 @@ Canonical detailed roadmap:
 | `P6.05-L5` | First real product connection through exact P6.02 boundary | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L5-first-real-product-connection.md) |
 | `P6.05-L6` | Local synthetic/redacted regression + negative-path smoke | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L6-local-synthetic-redacted-regression-negative-path-smoke.md) |
 | `P6.05-L7` | Real P6.05 exact-attachment live run (`7/7` gate) | 🟩 Complete / PASS — attempt #2 evidence: [review](../reviews/P6-05-L7-attempt-2-real-exact-attachment-live-run.md) |
-| `P6.05-L8` | Governed evidence admission + canonical P6.05 closure package | 🟨 Current / next |
+| `P6.05-L8` | Governed evidence admission + canonical P6.05 closure package | 🟨 Current / blocked — attempt #1 failed: [review](../reviews/P6-05-L8-attempt-1-reconstruction-harness-blocker.md) |
 | `P6.05-L9` | Dogfooding friction capture | ⬜ Pending / cross-cutting |
 
 Detailed exit evidence and non-goals are defined in [`P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md`](P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md).
@@ -166,9 +166,9 @@ M6 does not require an `Active` Platform Capability, Stable Product Contract, pr
 
 ## 8. Current canonical action
 
-> **P6.05-L8 — Governed P6.05 evidence admission and closure review.**
+> **P6.05-L8 — Fixed owner-local harness, then a separately authorized attempt #2 for governed evidence admission and closure.**
 
-`P6.05-L1` through `P6.05-L7` are complete / PASS. The local runtime evidence is recorded in [`P6-05-L1-local-host-runtime-baseline.md`](../reviews/P6-05-L1-local-host-runtime-baseline.md), [`P6-05-L2-local-reference-runtime-start.md`](../reviews/P6-05-L2-local-reference-runtime-start.md), [`P6-05-L3-secure-local-configuration-secrets-boundary.md`](../reviews/P6-05-L3-secure-local-configuration-secrets-boundary.md), [`P6-05-L4-internal-organization-operator-bootstrap.md`](../reviews/P6-05-L4-internal-organization-operator-bootstrap.md), [`P6-05-L5-first-real-product-connection.md`](../reviews/P6-05-L5-first-real-product-connection.md), [`P6-05-L6-local-synthetic-redacted-regression-negative-path-smoke.md`](../reviews/P6-05-L6-local-synthetic-redacted-regression-negative-path-smoke.md), and [`P6-05-L7-attempt-2-real-exact-attachment-live-run.md`](../reviews/P6-05-L7-attempt-2-real-exact-attachment-live-run.md). real `7/7` exact-attachment evidence was observed on attempt #2; L8 is the current action.
+`P6.05-L1` through `P6.05-L7` are complete / PASS. The local runtime evidence is recorded in [`P6-05-L1-local-host-runtime-baseline.md`](../reviews/P6-05-L1-local-host-runtime-baseline.md), [`P6-05-L2-local-reference-runtime-start.md`](../reviews/P6-05-L2-local-reference-runtime-start.md), [`P6-05-L3-secure-local-configuration-secrets-boundary.md`](../reviews/P6-05-L3-secure-local-configuration-secrets-boundary.md), [`P6-05-L4-internal-organization-operator-bootstrap.md`](../reviews/P6-05-L4-internal-organization-operator-bootstrap.md), [`P6-05-L5-first-real-product-connection.md`](../reviews/P6-05-L5-first-real-product-connection.md), [`P6-05-L6-local-synthetic-redacted-regression-negative-path-smoke.md`](../reviews/P6-05-L6-local-synthetic-redacted-regression-negative-path-smoke.md), and [`P6-05-L7-attempt-2-real-exact-attachment-live-run.md`](../reviews/P6-05-L7-attempt-2-real-exact-attachment-live-run.md). L8 attempt #1 failed closed during reconstruction — blocker review [`P6-05-L8-attempt-1-reconstruction-harness-blocker.md`](../reviews/P6-05-L8-attempt-1-reconstruction-harness-blocker.md); P6.05 remains open.
 
 The local runtime exists to make the already-selected P6.05 evidence path executable and to begin real internal use of Arvectum OS. It must preserve:
 
@@ -244,7 +244,7 @@ P6.05-L5 first real product connection ✓ PASS
 P6.05-L6 local synthetic/redacted + negative-path smoke ✓ PASS
         ↓
 P6.05-L7 real exact attachment evidence: 7/7 required — Complete / PASS
-P6.05-L8 Governed evidence admission and closure review ← current
+P6.05-L8 Governed evidence admission and closure review ← current / blocked
         ↓
 R18 First Real-use Health Review
         ↓
