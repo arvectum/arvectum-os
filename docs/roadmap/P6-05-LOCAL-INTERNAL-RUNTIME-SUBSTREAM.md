@@ -1,9 +1,9 @@
 # P6.05 — Local Internal Runtime Substream
 
 Status: `Active / In Progress`
-Version: `0.1.7`
+Version: `0.1.8`
 Created: `2026-08-09`
-Updated: `2026-08-14`
+Updated: `2026-08-15`
 Owner: `ООО «Арвектум»`
 Task classification: `platform` with `product_specific` and `product_contract`
 Parent work item: `P6.05 — Platform-gap remediation from first real use`
@@ -69,8 +69,8 @@ Implementation readiness does **not** close P6.05. Real `7/7` evidence remains u
 | `P6.05-L3` | Secure local configuration + secrets boundary | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L3-secure-local-configuration-secrets-boundary.md) | local configuration is separated from repository state; required credentials are detected without being printed/committed; fail-closed behavior is verified |
 | `P6.05-L4` | Internal Organization + operator bootstrap | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L4-internal-organization-operator-bootstrap.md) | bounded ООО «Арвектум» Organization/operator context can execute the required local governed flow with least-privilege assumptions documented |
 | `P6.05-L5` | First real product connection | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L5-first-real-product-connection.md) | `ai-corporation` connects through exact P6.02 Product Contract `0.1.0`, canonical source verified, CAP-001 + CAP-004 only, with Organization/Actor/Product/Product Contract continuity preserved; CAP-002/CAP-003 absent; no grants/delegations/Organizational Authority; no external actions |
-| `P6.05-L6` | Local synthetic/redacted regression + negative-path smoke | 🟨 Current / next | relevant P6.03/P6.05 proof paths pass locally; missing config/gates/wrong versions fail closed |
-| `P6.05-L7` | Real P6.05 exact-attachment live run | ⬜ Pending | the existing authorized read-only runner executes for `0344100006426000005`; success requires `PASS_EXACT_ATTACHMENT_EVIDENCE`, `exact_document_count = 7`, complete exact set and manifest SHA-256 |
+| `P6.05-L6` | Local synthetic/redacted regression + negative-path smoke | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L6-local-synthetic-redacted-regression-negative-path-smoke.md) | relevant P6.03/P6.05 proof paths pass locally; missing config/gates/wrong versions fail closed; no real EIS/SOAP; real runner not executed; external actions false |
+| `P6.05-L7` | Real P6.05 exact-attachment live run | 🟨 Current / next | the existing authorized read-only runner executes for `0344100006426000005`; success requires `PASS_EXACT_ATTACHMENT_EVIDENCE`, `exact_document_count = 7`, complete exact set and manifest SHA-256 |
 | `P6.05-L8` | Governed evidence admission + canonical P6.05 closure package | ⬜ Pending | exact evidence is admitted/reconstructed through the bounded governed path; closure review records PASS or the truthful remaining blocker; roadmap is synchronized |
 | `P6.05-L9` | Dogfooding friction capture | ⬜ Pending | concrete operator/setup/workspace friction observed during L1-L8 is recorded as evidence/backlog without silently expanding P6.05 scope |
 
@@ -129,6 +129,8 @@ Connect `ai-corporation` without broadening the P6.02 contract:
 Before real-source execution, prove locally that the bounded path still behaves as expected under synthetic/redacted evidence and fails closed under material negative conditions.
 
 This avoids using a real external request as the first signal that the local runtime is misconfigured.
+
+**Completion:** `PASS` under [`P6-05-L6-local-synthetic-redacted-regression-negative-path-smoke.md`](../reviews/P6-05-L6-local-synthetic-redacted-regression-negative-path-smoke.md). Platform targeted suites passed — P6.03 Stage 1 `9`, P6.05 exact-document admission `4`, L3 secure local config `8`, L5 first real product connection `26` — and the full reference suite passed `874/874`. Product `ai-corporation` passed `11` P6.03 bridge tests and `17` P6.05 exact-evidence tests with secret scan and `make check` passing. Read-only L3/L4/L5 preflights passed with no mutation. Missing config (`CONFIG_NOT_FOUND`), wrong Organization, incompatible provider versions and deprecated provider evidence fail closed. No real EIS/SOAP call, no real P6.05 runner execution and no external action occurred.
 
 ### P6.05-L7 — Real exact-attachment run
 
@@ -215,4 +217,4 @@ Until a later accepted decision says otherwise, this environment is bounded and 
 
 ## 9. Immediate next action
 
-Proceed with `P6.05-L6 — Local synthetic/redacted regression + negative-path smoke`. Keep P6.05 overall `Active / In Progress`.
+Proceed with `P6.05-L7 — Real P6.05 exact-attachment live run`. Keep P6.05 overall `Active / In Progress`; real `7/7` exact-attachment evidence remains unobserved.
