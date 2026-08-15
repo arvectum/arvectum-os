@@ -28,13 +28,15 @@
 
 ## 3. Root-cause disposition
 
-- **Disposition: D — SYSTEM_TRUST_CHAIN_UNAVAILABLE** (the Python runtime trust store lacks the required national PKI root).
+- **Primary root cause: `OWNER_ETP_TRUST_POLICY_NOT_CONFIGURED_FOR_EIS`** — the owner-operated ETP trust policy was not configured for the EIS host. With no host trust policy active, the runtime used Python `ssl.create_default_context()`; this is a product/operator configuration blocker, not a product code defect.
+- **Contributing condition: `PYTHON_DEFAULT_CA_STORE_MISSING_REQUIRED_RUSSIAN_PKI_ROOT`** — the Python default CA store used when no ETP policy is active lacks the Russian national PKI trust anchor required to validate the EIS server chain.
 - Evidence:
   1. System-trust `openssl s_client` to `int.zakupki.gov.ru:443` (SNI, `-showcerts`, TLS 1.2) receives a complete chain — leaf `CN=*.zakupki.gov.ru` (O=ФЕДЕРАЛЬНОЕ КАЗНАЧЕЙСТВО) -> `CN=Russian Trusted Sub CA` -> `CN=Russian Trusted Root CA` (O=The Ministry of Digital Development and Communications) — and verifies `OK` against the macOS system trust (verify return 1 at all depths).
   2. A bare TLS-only handshake with the product Python 3.11 `ssl.create_default_context()` reproduces the exact L7 error (`CERTIFICATE_VERIFY_FAILED`, code 19) with no product code involved.
-  3. A TLS-only handshake with `truststore.SSLContext(PROTOCOL_TLS_CLIENT)` (macOS system keychain, already used by the product for `authority: system`) succeeds, confirming the required root is present in the system keychain but absent from the Python default context.
+  3. A TLS-only handshake with `truststore.SSLContext(PROTOCOL_TLS_CLIENT)` (macOS system keychain, already used by the product for `authority: system`) succeeds — confirming macOS system trust is AVAILABLE and works, the required root is present in the system keychain, and the existing `authority: system` path is a validated remediation path.
 - Leaf certificate (safe public metadata): subject `CN=*.zakupki.gov.ru`, issuer `CN=Russian Trusted Sub CA`, validity `2026-03-17` .. `2027-03-17`, SHA-256 fingerprint `3B76E9699D7D00CB2CA239EFB18CDE05B024010D5FA8DAF3192C31E235B714A4`.
-- The presented server chain is complete and valid; this is not a server-side chain defect and not evidence of interception.
+- The presented server chain is complete and valid; this is not a server-side chain defect, not interception, and not evidence that EIS requires a custom CA.
+- System trust itself did NOT fail. No product TLS bug demonstrated.
 - Confidence: HIGH.
 
 ## 4. Governance level

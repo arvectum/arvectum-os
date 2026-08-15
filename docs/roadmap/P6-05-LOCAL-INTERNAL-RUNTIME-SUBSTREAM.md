@@ -152,7 +152,7 @@ The only successful real-evidence result for this subtask is a truthful complete
 
 Any safe blocker/incomplete output remains evidence and MUST NOT be converted into PASS.
 
-**Attempt #1 (2026-08-15):** one top-level read-only execution failed closed before any application response — `CERTIFICATE_VERIFY_FAILED` / `self-signed certificate in certificate chain` against `int.zakupki.gov.ru`. Evidence-backed disposition D — SYSTEM_TRUST_CHAIN_UNAVAILABLE: the Python default trust store lacks the Russian national PKI root that the complete and valid EIS chain terminates at. Full blocker review: [`P6-05-L7-attempt-1-eis-tls-trust-blocker.md`](../reviews/P6-05-L7-attempt-1-eis-tls-trust-blocker.md). Retry requires separate authorization after minimal trust remediation; L7 remains blocked, L8 not started.
+**Attempt #1 (2026-08-15):** one top-level read-only execution failed closed before any application response — `CERTIFICATE_VERIFY_FAILED` / `self-signed certificate in certificate chain` against `int.zakupki.gov.ru`. Evidence-backed primary root cause `OWNER_ETP_TRUST_POLICY_NOT_CONFIGURED_FOR_EIS` with contributing condition `PYTHON_DEFAULT_CA_STORE_MISSING_REQUIRED_RUSSIAN_PKI_ROOT`: no owner ETP trust policy was configured for the EIS host, so the runtime used the Python default CA store, which lacks the Russian national PKI root that the complete and valid EIS chain terminates at; system trust itself is available and validates the chain. Full blocker review: [`P6-05-L7-attempt-1-eis-tls-trust-blocker.md`](../reviews/P6-05-L7-attempt-1-eis-tls-trust-blocker.md). Retry requires separate authorization after minimal trust remediation; L7 remains blocked, L8 not started.
 
 ### P6.05-L8 — Governed admission + closure
 
@@ -218,4 +218,4 @@ Until a later accepted decision says otherwise, this environment is bounded and 
 
 ## 9. Immediate next action
 
-Resolve the P6.05-L7 attempt #1 EIS TLS trust blocker (disposition D — SYSTEM_TRUST_CHAIN_UNAVAILABLE) via minimal owner-operated trust remediation, then proceed to a separately authorized one-shot `P6.05-L7 — Real P6.05 exact-attachment live run`. Keep P6.05 overall `Active / In Progress`; real `7/7` exact-attachment evidence remains unobserved.
+Resolve the P6.05-L7 attempt #1 EIS TLS trust blocker (`OWNER_ETP_TRUST_POLICY_NOT_CONFIGURED_FOR_EIS`, contributing condition `PYTHON_DEFAULT_CA_STORE_MISSING_REQUIRED_RUSSIAN_PKI_ROOT`) via minimal owner-operated trust remediation, then proceed to a separately authorized one-shot `P6.05-L7 — Real P6.05 exact-attachment live run`. Keep P6.05 overall `Active / In Progress`; real `7/7` exact-attachment evidence remains unobserved.
