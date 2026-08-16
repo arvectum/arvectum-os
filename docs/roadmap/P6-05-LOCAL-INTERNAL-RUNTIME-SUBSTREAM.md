@@ -1,7 +1,7 @@
 # P6.05 — Local Internal Runtime Substream
 
 Status: `Active / In Progress`
-Version: `0.1.10`
+Version: `0.1.11`
 Created: `2026-08-09`
 Updated: `2026-08-15`
 Owner: `ООО «Арвектум»`
@@ -58,7 +58,7 @@ Local execution evidence now additionally establishes:
 - the successful L2 run used canonical `main` at `fb61889633b11875dc5e1cf92771a159024a5695`, CPython `3.14.6`, and passed `717/717` reference tests with a clean checkout before and after execution;
 - no product, EIS, public ingress, external action or secret exposure occurred in L2.
 
-Implementation readiness alone did not close P6.05. Real exact `7/7` evidence is now observed via L7 attempt #2, but P6.05 remains open until L8 governed admission/closure.
+Implementation readiness alone did not close P6.05. Real exact `7/7` evidence is now observed via L7 attempt #2, but P6.05 remains open until L8 governed admission/closure (attempt #1 failed closed during reconstruction).
 
 ## 4. Subtasks
 
@@ -71,7 +71,7 @@ Implementation readiness alone did not close P6.05. Real exact `7/7` evidence is
 | `P6.05-L5` | First real product connection | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L5-first-real-product-connection.md) | `ai-corporation` connects through exact P6.02 Product Contract `0.1.0`, canonical source verified, CAP-001 + CAP-004 only, with Organization/Actor/Product/Product Contract continuity preserved; CAP-002/CAP-003 absent; no grants/delegations/Organizational Authority; no external actions |
 | `P6.05-L6` | Local synthetic/redacted regression + negative-path smoke | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L6-local-synthetic-redacted-regression-negative-path-smoke.md) | relevant P6.03/P6.05 proof paths pass locally; missing config/gates/wrong versions fail closed; no real EIS/SOAP; real runner not executed; external actions false |
 | `P6.05-L7` | Real P6.05 exact-attachment live run | 🟩 Complete / PASS — attempt #2 evidence: [review](../reviews/P6-05-L7-attempt-2-real-exact-attachment-live-run.md) | attempt #1 blocked on EIS TLS trust: [review](../reviews/P6-05-L7-attempt-1-eis-tls-trust-blocker.md); attempt #2 passed with `PASS_EXACT_ATTACHMENT_EVIDENCE`, `exact_document_count = 7`, complete exact set and manifest SHA-256 |
-| `P6.05-L8` | Governed evidence admission + canonical P6.05 closure package | 🟨 Current / next | exact evidence is admitted/reconstructed through the bounded governed path; closure review records PASS or the truthful remaining blocker; roadmap is synchronized |
+| `P6.05-L8` | Governed evidence admission + canonical P6.05 closure package | 🟨 Current / blocked — attempt #1 failed closed: [review](../reviews/P6-05-L8-attempt-1-reconstruction-harness-blocker.md) | in-process CAP-001 admission succeeded but complete evidence chain not retained; separate attempt #2 required |
 | `P6.05-L9` | Dogfooding friction capture | ⬜ Pending | concrete operator/setup/workspace friction observed during L1-L8 is recorded as evidence/backlog without silently expanding P6.05 scope |
 
 Subtasks are sequential where dependencies require it, but reversible preparation may proceed in parallel when it cannot change canonical state or external systems.
@@ -160,6 +160,8 @@ Any safe blocker/incomplete output remains evidence and MUST NOT be converted in
 
 Use the already-implemented bounded governed admission/reliance path. Record exact evidence/provenance and then perform the canonical P6.05 closure review. Only after a passing closure may R18 begin.
 
+**Attempt #1 (2026-08-15):** in-process CAP-001 admission succeeded, but the owner-local orchestration harness failed while constructing the canonical admission Event needed for the RFC-0006/CAP-004 evidence chain. Exception: `ValueError: Canonical Event provenance must preserve actor, execution and related governed references`. The complete governed outcome and history were not retained. Disposition: `NOT_RECOVERABLE_WITHOUT_NEW_ADMISSION`. Blocker review: [`P6-05-L8-attempt-1-reconstruction-harness-blocker.md`](../reviews/P6-05-L8-attempt-1-reconstruction-harness-blocker.md). Attempt #2 required.
+
 ### P6.05-L9 — Dogfooding friction capture
 
 During all local steps, record concrete friction such as:
@@ -220,4 +222,4 @@ Until a later accepted decision says otherwise, this environment is bounded and 
 
 ## 9. Immediate next action
 
-`P6.05-L7 — Real P6.05 exact-attachment live run` completed as PASS on attempt #2 (real exact `7/7` observed). Next: governed P6.05-L8 evidence admission and canonical P6.05 closure. Keep P6.05 overall `Active / In Progress` until L8 closure.
+`P6.05-L7 — Real P6.05 exact-attachment live run` completed as PASS on attempt #2 (real exact `7/7` observed). Next: fixed owner-local harness, then a separately authorized attempt #2 for `P6.05-L8 — Governed evidence admission and closure review`. Keep P6.05 overall `Active / In Progress` until L8 closure.
