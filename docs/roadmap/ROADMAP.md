@@ -1,255 +1,45 @@
-# Arvectum OS Canonical Roadmap
+# Arvectum OS Roadmap
 
-Status: `Active`
-Version: `2.51.10`
-Created: `2026-08-07`
-Updated: `2026-08-16`
+Status: `Active / In Progress`
+Version: `2.52.0`
+Owner: ООО «Арвектум»
 
-Owner: `ООО «Арвектум»`
-Task classification: `governance`
+## 1. Overview
 
-## 1. Purpose
+Arvectum OS is an operating system for organizational intelligence. This roadmap coordinates its evolution through governed phases.
 
-This document is the canonical planning source for the development sequence of Arvectum OS. It coordinates work but does not override Constitution, Accepted RFC/ADR, approved governance, Product Contracts or implementation evidence.
+## 2. Current Status
 
-The Strategic Roadmap beyond completed work is a planning hypothesis, not an architecture contract, delivery promise, capability-lifecycle claim, SLA or commitment to build every listed item.
+| Phase | Description | Status |
+| :--- | :--- | :--- |
+| Phase 1 | Kernel foundations | 🟩 Complete |
+| Phase 2 | Core runtime | 🟩 Complete |
+| Phase 3 | Capability incubation | 🟩 Complete |
+| Phase 4 | Workspace & Experience | 🟩 Complete |
+| Phase 5 | SDK & Contracts | 🟩 Complete |
+| Phase 6 | Product validation | 🟨 Active / In Progress |
 
-Detailed completed-phase evidence remains in the corresponding `PHASE-N-...` roadmap and closure-review artifacts rather than being duplicated indefinitely here.
+## 3. Phase 6 Breakdown
 
-## 2. Version note
+| Task | Description | Status |
+| :--- | :--- | :--- |
+| `P6.01` | Validation target selection | 🟩 Complete |
+| `P6.02` | First Product Contract | 🟩 Complete |
+| `P6.03` | First real integration | 🟩 Complete / PASS |
+| `P6.04` | Value/friction capture | 🟩 Complete / PASS |
+| `P6.05` | Platform-gap remediation | 🟨 Current — L8 PASS; real 7/7 GOVERNED |
+| `P6.06` | Second real target | ⬜ Pending |
 
-Version `2.51.10` is the current note. The prior `2.51.9` recorded the `P6.05-L8` attempt #1 blocker; `2.51.10` repairs the platform implementation gap discovered during C1 synthetic reconstruction (G1) and readies L8 for a separately authorized attempt #2; repair review [`P6-05-L8-cross-role-reconstruction-version-compatibility-repair.md`](../reviews/P6-05-L8-cross-role-reconstruction-version-compatibility-repair.md). P6.05 remains `Active / In Progress`. The detailed P6.05 local substream is synchronized to `0.1.12`.
+## 4. P6.05 Detail
 
-P6.05 implementation readiness remains separated from the owner-operated runtime work required to execute the real evidence path. The local deployment is treated as a bounded **Internal / local owner-operated runtime** for ООО «Арвектум», not as a Production environment, supported macOS product, Stable/public runtime contract or final deployment topology.
+Status: `Current / PASS`
+Plan: [`P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md`](P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md)
 
-The detailed substream is [`P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md`](P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md). It decomposes the remaining work into secure configuration, Organization/operator bootstrap, first real product connection, local smoke, real `7/7` live run, governed admission/closure and dogfooding-friction capture, with L1 through L7 now Complete / PASS and L8 current / ready for separately authorized attempt #2.
+L1-L8 are complete. Real 7/7 tender attachment evidence for notice `0344100006426000005` is admitted and GOVERNED. P6.05-L9 friction capture is in progress.
 
-Already observed implementation and local-runtime evidence:
+## 5. Exit Criteria
 
-- bounded Arvectum OS P6.05 CAP-001 admission implementation merged as `5dbbc7b3af1f0f3896301ef833de2214cb44e6f9`;
-- `ai-corporation` PR `#142` merged as `bf9a1c5438426031fce36370344ada969d2493dd`;
-- hosted standard product CI and dedicated P6.05 exact-attachment CI passed on the unchanged implementation head;
-- P6.05-L1 local host/runtime baseline passed;
-- P6.05-L2 reproducible local reference runtime passed on canonical `main` with `717/717` tests and a clean source checkout;
-- P6.05-L3 secure local configuration/secrets boundary passed — [evidence](../reviews/P6-05-L3-secure-local-configuration-secrets-boundary.md);
-- P6.05-L4 internal Organization/operator bootstrap passed — [evidence](../reviews/P6-05-L4-internal-organization-operator-bootstrap.md);
-- P6.05-L5 owner-operated first real product connection passed — [evidence](../reviews/P6-05-L5-first-real-product-connection.md);
-- P6.05-L6 local synthetic/redacted regression + negative-path smoke passed — [evidence](../reviews/P6-05-L6-local-synthetic-redacted-regression-negative-path-smoke.md);
-- the real live runner has produced real `7/7` evidence in the authorized owner-operated environment on attempt #2.
-
-The P6.05 P0 problem statement remains unchanged: enable sufficient exact external tender attachment evidence for a truthful client-ready completeness decision while preserving external authority, exact version/provenance, Organization/rights controls, procurement-domain ownership and the no-external-action boundary.
-
-The local-runtime refinement does not select CAP-002/CAP-003, storage/service topology, Stable/public API/SDK, production architecture or capability lifecycle promotion. Any materially constraining dependency discovered during setup must stop at the minimum sufficient ADR/RFC/Product Contract/policy gate before becoming an architectural commitment.
-
-The P6.02 Stage 3 allowance remains a **maximum**, not a quota. `0` additional calibration cases remain consumed. Reopen bounded calibration only after P6.05 creates a materially changed evidence contour and a specific new hypothesis worth testing.
-
-## 3. Verified architecture and milestone baseline
-
-- Constitution `1.2.0` — `Ratified`, frozen;
-- RFC-0001 through RFC-0008 — `Accepted 1.0.0`;
-- Phase 0 / `M0` — complete / achieved;
-- Phase 1 / `M1` — complete / achieved;
-- Phase 2 / `M2` — complete / achieved for the bounded reusable-runtime reference scope;
-- Phase 3 / `M3` — complete / achieved for the bounded shared-capability reference scope;
-- Phase 4 / `M4` — complete / achieved for the bounded governed-workspace reference scope;
-- Phase 5 / `M5` — complete / achieved for the bounded repeatable integration reference scope;
-- [`P5.12 closure review`](../reviews/P5-12-phase-5-m5-closure-review.md) — `PASS`;
-- [`P6.01 real target + evidence baseline`](../reviews/P6-01-real-product-workflow-validation-target-evidence-baseline.md) — `PASS`;
-- [`P6.02 first real Product Contract review`](../reviews/P6-02-first-real-product-contract-boundary-bounded-adoption-plan.md) — `PASS`;
-- [`P6.02 first real Product Contract`](../contracts/P6-02-FIRST-REAL-PRODUCT-CONTRACT.md) — `Provisional 0.1.0`;
-- [`R17 First Product Boundary Review`](../reviews/R17-first-product-boundary-review.md) — `PASS`;
-- [`P6.03 Stage 1 integration review`](../reviews/P6-03-stage-1-first-real-product-workflow-platform-integration.md) — `PASS`;
-- [`P6.03 first real integration closure`](../reviews/P6-03-stage-2-one-real-44fz-case-review.md) — `PASS`;
-- [`P6.04 value/friction/governance evidence`](../reviews/P6-04-product-value-delivery-friction-governance-evidence-capture.md) — `PASS`;
-- [`P6.05-L1 local host/runtime baseline`](../reviews/P6-05-L1-local-host-runtime-baseline.md) — `PASS`;
-- [`P6.05-L2 local reference runtime start`](../reviews/P6-05-L2-local-reference-runtime-start.md) — `PASS`;
-- [`P6.05-L6 local synthetic/redacted regression + negative-path smoke`](../reviews/P6-05-L6-local-synthetic-redacted-regression-negative-path-smoke.md) — `PASS`;
-- CAP-001 through CAP-004 remain `Incubating / Provisional`;
-- P4.08 and P5.09 Product Contracts remain `Provisional 0.1.0` reference evidence;
-- P6.02 procurement Product Contract remains `Provisional 0.1.0`;
-- no Platform Capability is `Active` merely because M3–M5, P6.01–P6.04, or completed P6.05 local subtasks have passed;
-- no Stable/public SDK, API, wire, package or service compatibility boundary has been created;
-- no production/operational-readiness or SLA/support commitment is implied.
-
-## 4. Strategic roadmap
-
-| Phase | Strategic scope | Confidence | Status | Milestone |
-|---|---|---|---|---|
-| `Phase 0` | Foundation / Architecture Bootstrap | Executed | 🟩 Complete | `M0` Architecture baseline established |
-| `Phase 1` | Reference Implementation | Executed | 🟩 Complete | `M1` First executable architectural spine proven |
-| `Phase 2` | Core Runtime | Executed | 🟩 Complete | `M2` Reusable governed runtime baseline |
-| `Phase 3` | Shared Platform Capabilities | Executed | 🟩 Complete | `M3` Validated shared capability baseline |
-| `Phase 4` | Workspace / Operator Experience | Executed | 🟩 Complete | `M4` Coherent governed workspace baseline |
-| `Phase 5` | SDK, Contracts and Extension Experience | Executed | 🟩 Complete | `M5` Repeatable product/extension integration |
-| `Phase 6` | Product-driven Platform Validation | Active | 🟨 Active | `M6` Platform validated through real products and reuse evidence |
-| `Phase 7` | Operational / Enterprise Readiness | Near-term | ⬜ Draft | `M7` Scoped production-grade operating baseline |
-| `Phase 8` | Ecosystem and External Integration | Exploratory | ⬜ Draft | `M8` Governed external ecosystem baseline |
-
-Phase status, Platform Capability lifecycle, Product Contract lifecycle, operational environment/readiness and conformance maturity remain distinct.
-
-## 5. Completed Phase 5 — SDK, Contracts and Extension Experience
-
-Canonical detailed evidence:
-
-- [`PHASE-5-SDK-CONTRACTS-EXTENSION-EXPERIENCE.md`](PHASE-5-SDK-CONTRACTS-EXTENSION-EXPERIENCE.md) — `Complete`, M5 `Achieved`;
-- [`P5.12 — Phase 5 / M5 Closure Review`](../reviews/P5-12-phase-5-m5-closure-review.md) — `PASS`.
-
-All `P5.01` through `P5.12` work items and R13–R16 engineering gates are complete.
-
-M5 proves repeatable governed integration through explicit Product Contracts and reusable internal/provisional tooling. It does not establish a public SDK, Stable Product Contract, Active capability, production deployment or customer-facing support/compatibility promise.
-
-## 6. Active Phase 6 — Product-driven Platform Validation
-
-Canonical detailed roadmap:
-
-- [`PHASE-6-PRODUCT-DRIVEN-PLATFORM-VALIDATION.md`](PHASE-6-PRODUCT-DRIVEN-PLATFORM-VALIDATION.md) — `Active 1.7.7`.
-- [`P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md`](P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md) — `Active 0.1.12`, subordinate execution plan for the current P6.05 owner-operated runtime/evidence path.
-
-| ID | Work item | Status | Progress |
-|---|---|---:|---:|
-| `P6.01` | Real product/workflow validation target selection + evidence baseline | 🟩 Complete | `██████████ 100%` |
-| `P6.02` | First real Product Contract boundary + bounded adoption plan | 🟩 Complete | `██████████ 100%` |
-| `P6.03` | First real product/workflow platform integration | 🟩 Complete / PASS | `██████████ 100%` |
-| `P6.04` | Product value, delivery-friction + governance evidence capture | 🟩 Complete / PASS | `██████████ 100%` |
-| `P6.05` | Platform-gap remediation from first real use | 🟨 Current — L1-L7 PASS; L8 ready for attempt #2; real 7/7 observed | `tracked by P6.05 subtasks` |
-| `P6.06` | Second materially distinct real product/workflow target + Product Contract | ⬜ | `░░░░░░░░░░ 0%` |
-| `P6.07` | Second real product/workflow platform integration | ⬜ | `░░░░░░░░░░ 0%` |
-| `P6.08` | Cross-product reuse and Platform Gravity evidence | ⬜ | `░░░░░░░░░░ 0%` |
-| `P6.09` | Capability lifecycle / return-to-product / containment recommendations | ⬜ | `░░░░░░░░░░ 0%` |
-| `P6.10` | Product-driven architecture fitness + value evidence matrix | ⬜ cross-cutting | `░░░░░░░░░░ 0%` |
-| `P6.11` | Product/platform hardening, ADR + refactoring review | ⬜ | `░░░░░░░░░░ 0%` |
-| `P6.12` | Phase 6 / M6 closure review | ⬜ | `░░░░░░░░░░ 0%` |
-
-### P6.05 execution breakdown
-
-| ID | Subtask | Status |
-|---|---|---|
-| `P6.05-I1` | Bounded platform exact-document admission remediation | 🟩 Complete — merged `5dbbc7b3...` |
-| `P6.05-I2` | Product exact-attachment evidence capture + governed bridge | 🟩 Complete — product PR `#142` merged `bf9a1c543...` |
-| `P6.05-L1` | Local host/runtime baseline | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L1-local-host-runtime-baseline.md) |
-| `P6.05-L2` | Reproducible Arvectum OS local checkout + reference runtime start | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L2-local-reference-runtime-start.md) |
-| `P6.05-L3` | Secure local configuration + secrets boundary | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L3-secure-local-configuration-secrets-boundary.md) |
-| `P6.05-L4` | Internal Organization + operator bootstrap | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L4-internal-organization-operator-bootstrap.md) |
-| `P6.05-L5` | First real product connection through exact P6.02 boundary | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L5-first-real-product-connection.md) |
-| `P6.05-L6` | Local synthetic/redacted regression + negative-path smoke | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L6-local-synthetic-redacted-regression-negative-path-smoke.md) |
-| `P6.05-L7` | Real P6.05 exact-attachment live run (`7/7` gate) | 🟩 Complete / PASS — attempt #2 evidence: [review](../reviews/P6-05-L7-attempt-2-real-exact-attachment-live-run.md) |
-| `P6.05-L8` | Governed evidence admission + canonical P6.05 closure package | 🟨 Current / ready for separately authorized attempt #2 |
-| `P6.05-L9` | Dogfooding friction capture | ⬜ Pending / cross-cutting |
-
-Detailed exit evidence and non-goals are defined in [`P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md`](P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md).
-
-Engineering/product-validation gates:
-
-- `R17 — First Product Boundary Review` — **Complete / PASS**;
-- `R18 — First Real-use Health Review` — after P6.05;
-- `R19 — Cross-product Reuse Review` — after P6.08;
-- `R20 — M6 Product-validation Hardening` — after P6.10.
-
-These gates do not inflate Phase 6 completion percentage as separate equal-weight roadmap tasks.
-
-## 7. M6 milestone definition
-
-`M6 — Platform validated through real products and reuse evidence` requires, within the declared bounded scope:
-
-1. at least two materially distinct real product/workflow contexts with owner-backed validation evidence;
-2. explicit Product Contracts wherever real products rely on platform capabilities, shared platform history or canonical state;
-3. reuse of shared Arvectum OS foundations without hidden coupling;
-4. product-domain semantics remaining product-owned;
-5. measurable evidence of at least one material shared reuse benefit;
-6. explicit measurement/disposition of platform friction and overhead;
-7. preserved Governed Execution, exact-version, authority, security and provenance semantics;
-8. evidence-backed Platform Gravity and capability-lifecycle recommendations;
-9. product-driven architecture fitness/value evidence passing;
-10. all R17–R20 material findings and crossed governance/ADR gates dispositioned;
-11. P6.12 closure review passing.
-
-M6 does not require an `Active` Platform Capability, Stable Product Contract, production deployment, public SDK/API, SLA or support commitment.
-
-## 8. Current canonical action
-
-> **P6.05-L8 — Fixed owner-local harness and platform implementation gap repair, then a separately authorized attempt #2 for governed evidence admission and closure.**
-
-`P6.05-L1` through `P6.05-L7` are complete / PASS. The local runtime evidence is recorded in [`P6-05-L1-local-host-runtime-baseline.md`](../reviews/P6-05-L1-local-host-runtime-baseline.md), [`P6-05-L2-local-reference-runtime-start.md`](../reviews/P6-05-L2-local-reference-runtime-start.md), [`P6-05-L3-secure-local-configuration-secrets-boundary.md`](../reviews/P6-05-L3-secure-local-configuration-secrets-boundary.md), [`P6-05-L4-internal-organization-operator-bootstrap.md`](../reviews/P6-05-L4-internal-organization-operator-bootstrap.md), [`P6-05-L5-first-real-product-connection.md`](../reviews/P6-05-L5-first-real-product-connection.md), [`P6-05-L6-local-synthetic-redacted-regression-negative-path-smoke.md`](../reviews/P6-05-L6-local-synthetic-redacted-regression-negative-path-smoke.md), and [`P6-05-L7-attempt-2-real-exact-attachment-live-run.md`](../reviews/P6-05-L7-attempt-2-real-exact-attachment-live-run.md). L8 attempt #1 failed closed during reconstruction — implementation gap repair [`P6-05-L8-cross-role-reconstruction-version-compatibility-repair.md`](../reviews/P6-05-L8-cross-role-reconstruction-version-compatibility-repair.md) implemented in G1; P6.05 remains open.
-
-The local runtime exists to make the already-selected P6.05 evidence path executable and to begin real internal use of Arvectum OS. It must preserve:
-
-- exact external authority rather than false `Native` substitution;
-- exact Product Contract/version and CAP-001/CAP-004 provider evidence;
-- truthful incomplete reconstruction/evidence handling;
-- explicit Organization/rights/security boundary;
-- product ownership of procurement semantics and completeness judgment;
-- no automatic external mutation or organizational commitment.
-
-Do not turn this local setup into a hidden Production architecture decision. The Mac mini is the current operational environment, not the platform contract. Capture setup/operator friction as evidence and stop at the applicable governance gate before introducing any durable cross-cutting dependency.
-
-Manual-time, recall, usefulness, cost and portability KPI values remain unknown; P6.05 must not invent them. The remaining Stage 3 calibration capacity stays preserved and should be reopened only for a materially new hypothesis after remediation.
-
-## 9. ADR, lifecycle and Product Contract gates
-
-Real-product pressure may cross architecture decisions that bounded reference phases intentionally left open. Re-open the minimum sufficient ADR/RFC/policy/Product Contract gate before material reliance on a concrete durable or externally constraining mechanism.
-
-P6.02 satisfies the RFC-0004 declaration prerequisite for its exact real-product scope. R17 and P6.03 confirm that the current read-oriented boundary can be exercised without hidden coupling while preserving external authority and product ownership. P6.04 confirms that this boundary creates directly evidenced governance/control value but is insufficient for the intended client-ready source-package completeness outcome.
-
-No Platform Capability becomes `Active` without separate RFC-0001 lifecycle admission and applicable stable-contract, compatibility/migration, operational-readiness and decision-authority evidence.
-
-Product Experiment success remains evidence, not automatic platform promotion.
-
-P6.03/P6.04 selected no durable persistence, Event delivery, IAM/PDP/PEP provider, stable serialization/API, public SDK/package, object-store, search/vector or service topology. The P6.05 local-runtime substream likewise does not select any of those as platform commitments. If local execution reveals a materially constraining dependency, reopen the minimum sufficient governance gate first.
-
-## 10. Phase transition rule
-
-Phase 7 remains `Draft` until Phase 6 closes and its boundary is revalidated against real-product evidence, actual customer/operational requirements and unresolved production-readiness risks.
-
-A roadmap phase transition does not itself change capability lifecycle, Product Contract lifecycle, operational environment/readiness, conformance maturity or commercial commitments.
-
-## 11. Roadmap maintenance rule
-
-Every roadmap update begins with repository synchronization rather than chat-memory reconstruction. After every meaningful canonical milestone, synchronize this roadmap and the active phase roadmap, record evidence, keep lifecycle/environment/conformance distinct, do not inflate Draft/Proposed/exploratory status, and preserve repository history rather than fabricating approvals.
-
-## 12. Current state summary
-
-```text
-Constitution 1.2.0 ✓
-RFC-0001 … RFC-0008 Accepted ✓
-Phase 0 / M0 ✓
-Phase 1 / M1 ✓
-Phase 2 / M2 ✓
-Phase 3 / M3 ✓
-Phase 4 / M4 ✓
-Phase 5 / M5 ✓
-        ↓
-Phase 6 — Product-driven Platform Validation ACTIVE
-        ↓
-P6.01 Real product/workflow target + evidence baseline ✓
-        ↓
-P6.02 First real Product Contract + bounded adoption plan ✓
-        ↓
-R17 First Product Boundary Review ✓
-        ↓
-P6.03 First real product/workflow platform integration ✓ PASS
-        ↓
-P6.04 Product value / friction / governance evidence ✓ PASS
-        ↓
-P6.05 implementation remediation ✓ merged
-        ↓
-P6.05-L1 Local host/runtime baseline ✓ PASS
-        ↓
-P6.05-L2 local checkout + reference runtime start ✓ PASS
-        ↓
-P6.05-L3 secure local configuration + secrets boundary ✓ PASS
-        ↓
-P6.05-L4 internal Organization + operator bootstrap ✓ PASS
-        ↓
-P6.05-L5 first real product connection ✓ PASS
-        ↓
-P6.05-L6 local synthetic/redacted + negative-path smoke ✓ PASS
-        ↓
-P6.05-L7 real exact attachment evidence: 7/7 required — Complete / PASS
-P6.05-L8 Governed evidence admission and closure review ← current / ready for attempt #2
-        ↓
-R18 First Real-use Health Review
-        ↓
-Second real product/workflow validation + reuse evidence
-        ↓
-M6
-```
+- [x] L7 Real exact-attachment run PASS
+- [x] L8 Governed admission PASS
+- [x] CAP-004 Reconstruction Complete (shared roles validated)
+- [ ] L9 Friction capture complete

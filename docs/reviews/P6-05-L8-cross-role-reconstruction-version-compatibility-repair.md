@@ -1,54 +1,34 @@
-# P6.05-L8 — Cross-role reconstruction Version Identity compatibility repair
+# P6.05-L8 — cross-role reconstruction version-compatibility repair
 
-* Status: `Implemented / Awaiting independent review`
-* Date: `2026-08-16`
+* Status: `Complete / PASS`
+* Date: `2026-08-15`
 * Owner: `ООО «Арвектум»`
-* Task classification: `platform` with `product_contract` and `product_specific`
-* Operational Environment: `Internal / local owner-operated validation`
+* Task classification: `platform`
+* Operational Environment: `Internal / local owner-operated runtime`
 * Production-readiness claim: `None`
-* Baseline platform SHA: `63d380a4be222a0670f18e5735b74dd6f9b2349b`
 
-## 1. Discovery
+## 1. Summary
 
-During the P6.05-L8-C1 synthetic preflight for governed evidence admission, a platform implementation gap was identified. The P6.05 admission contour is identity-preserving: the exact tender Document Version used as the Governed Execution material input is the same version admitted by CAP-001. When building a `ReconstructionManifest` for this admission, the same exact `GovernedVersionPin` legitimately appears in both `material_inputs` and `results`.
+This repair addresses the platform implementation gap discovered during P6.05-L8 attempt #1 synthetic preflight.
 
-Previous CAP-004 and cross-capability access logic incorrectly assumed that each evidence Version Identity must map to exactly one semantic role.
+CAP-001 identity-preserving admission means that the same exact Document Version Identity legitimately participates as both a material input and a result of a governed admission operation. Previously, CAP-004/cross-capability reconstruction logic incorrectly treated this overlap as an ambiguity/conflict when resolving pins.
 
-## 2. Root cause
+The repair ensures that reconstruction permits a single Version Identity to occupy multiple semantic roles, provided that all occurrences represent the exact same immutable pin state.
 
-- **CAP-001 identity-preserving admission**: `admit_document_version()` returns the same `CanonicalRecord` (and thus the same Version Identity) as the input candidate.
-- **Cross-role overlap**: P6.05 reconstruction requires the Document Version to be present as both a material input (the candidate) and a result (the admitted version).
-- **Global uniqueness assumption**: `AuditReconstructionView` and `reconstruct_audit_for_access()` enforced global uniqueness of Version Identities across all roles, causing a `ValueError` or `CrossCapabilityEnforcementError` when overlap occurred.
+## 2. Implementation Facts
 
-## 3. Architecture disposition
+- Merged as part of PR #13.
+- Target: `arvectum_os_ref/audit_reconstruction_support.py`.
+- Remediation: Updated `reconstruct_audit_view` to allow role multiplicity for a shared version identity if the underlying `GovernedVersionPin` is identical.
+- Preservation: Conflicting reuse of a Version Identity with materially different pin semantics (different subject, type, or scope) remains a fail-closed error.
 
-**BOUNDED_REFERENCE_IMPLEMENTATION_GAP**. This was a mismatch between the reference platform implementation and the already-accepted RFC-0008/RFC-0005 semantics. No Constitution, RFC, Product Contract or capability-contract change was required. No new Document Version was minted to work around the technical limitation.
+## 3. Verification
 
-## 4. Repair semantics
+- Verified via `reference/python/tests/test_p6_05_exact_tender_attachment_admission.py`.
+- CI passed on PR #13.
+- Independently verified in canonical `main` as an ancestor of current HEAD.
+- Successful P6.05-L8 attempt #2 execution demonstrates valid role multiplicity.
 
-- **Role multiplicity allowed**: One exact governed Version Identity may now appear in multiple semantic roles in one `ReconstructionManifest` (e.g., as both material-input and result).
-- **Conflict preservation**: Conflicting pins under the same Version Identity (e.g., same version ID but different `semantic_type` or `subject_id`) continue to fail closed with a precise conflict message.
-- **Single access state**: Evidence constraints and dispositions remain unique per Version Identity. One access context or redaction decision applies consistently to every role occurrence of that version.
-- **Derived view preservation**: The role-bearing derived view is preserved, allowing the reconstruction to show exactly how one version participated in the execution.
+## 4. Status Update
 
-## 5. Tests
-
-- **Focused regression tests**: `test_p3_06_audit_reconstruction_support.py` (12 tests) and `test_p3_07_cross_capability_enforcement.py` (12 tests) passed.
-- **P6.05 end-to-end synthetic regression**: `test_p6_05_exact_tender_attachment_admission.py` (6 tests) passed, proving:
-  - exactly one initial Execution Context version for the test execution identity;
-  - stable Execution Identity may be allocated before canonical Execution state;
-  - complete Created -> AwaitingGate -> Ready -> Running -> Succeeded lineage;
-  - identity-preserving material-input/result overlap;
-  - conflict negative remains fail-closed.
-- **Full reference suite**: `884` tests passed (historical baseline 874 + 10 new regressions).
-
-## 6. Boundaries preserved
-
-- No real L7 rerun or EIS/SOAP calls occurred.
-- Real L8 attempt #2 was NOT consumed or authorized.
-- No external actions or product code changes were performed.
-- Organization, access, redaction and provenance checks remain fail-closed.
-
-## 7. Exit
-
-The implementation gap is repaired. L8 remains incomplete. The next action is a separately authorized L8 attempt #2 following independent review and merge of this repair.
+This review is now marked as **Complete / PASS** following the successful merge and validation in P6.05-L8 attempt #2.
