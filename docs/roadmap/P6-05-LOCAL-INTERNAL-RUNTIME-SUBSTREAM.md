@@ -1,7 +1,7 @@
 # P6.05 Local Internal Runtime Substream
 
-Status: `Complete / PASS`
-Version: `0.2.0`
+Status: `Active / In Progress`
+Version: `0.2.1`
 Owner: ООО «Арвектум»
 
 ## 1. Goal
@@ -31,4 +31,4 @@ Execute the P6.05 evidence path locally to produce the first governed real tende
 
 ## 4. Closure
 
-P6.05 exit criteria for local execution are satisfied. Overall P6.05 closure awaits L9 friction report.
+P6.05 exit criteria for local governed evidence admission are satisfied through L8. Overall P6.05 closure awaits L9 friction report.
