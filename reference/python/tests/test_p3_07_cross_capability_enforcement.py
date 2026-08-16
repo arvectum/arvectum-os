@@ -444,6 +444,39 @@ class P307CrossCapabilityEnforcementTests(unittest.TestCase):
                 evidence_constraints=constraints,
             )
 
+    def test_cap004_duplicate_shared_version_constraint_fails_closed(self):
+        # Overlap manifest
+        workflow, material, execution, _, event = (self._pin(role) for role in ("workflow", "material", "execution", "result", "event"))
+        result = material
+        execution_subject = self._id("execution-subject", "execution")
+        manifest = ReconstructionManifest(
+            organization=self.org_a, execution_subject_id=execution_subject, initiating_actor_id=self.actor.actual_principal.principal_id,
+            operation_name="review", workflow=workflow, material_inputs=(material,), gate_decisions=(), execution_versions=(execution,),
+            results=(result,), events=(event,), event_types=(("example.event", "1"),), correlation_refs=(execution_subject,), causation_refs=(execution.version_id,),
+            provenance_refs=tuple(dict.fromkeys((self.actor.actual_principal.principal_id, execution_subject, workflow.subject_id, workflow.version_id, material.subject_id, material.version_id, execution.version_id, event.subject_id, event.version_id))),
+        )
+        # Correct set
+        valid_constraints = tuple((pin.version_id, "review", ("read",), "internal") for pin in (workflow, material, execution, event))
+        # Add DUPLICATE row for the shared version ID
+        duplicate = (material.version_id, "review", ("read",), "internal")
+        with self.assertRaisesRegex(CrossCapabilityEnforcementError, "evidence constraints must be unique by Version Identity"):
+            reconstruct_audit_for_access(manifest=manifest, request=self.request, evidence_constraints=valid_constraints + (duplicate,))
+
+    def test_cap004_missing_shared_version_constraint_fails_closed(self):
+        workflow, material, execution, _, event = (self._pin(role) for role in ("workflow", "material", "execution", "result", "event"))
+        result = material
+        execution_subject = self._id("execution-subject", "execution")
+        manifest = ReconstructionManifest(
+            organization=self.org_a, execution_subject_id=execution_subject, initiating_actor_id=self.actor.actual_principal.principal_id,
+            operation_name="review", workflow=workflow, material_inputs=(material,), gate_decisions=(), execution_versions=(execution,),
+            results=(result,), events=(event,), event_types=(("example.event", "1"),), correlation_refs=(execution_subject,), causation_refs=(execution.version_id,),
+            provenance_refs=tuple(dict.fromkeys((self.actor.actual_principal.principal_id, execution_subject, workflow.subject_id, workflow.version_id, material.subject_id, material.version_id, execution.version_id, event.subject_id, event.version_id))),
+        )
+        # Missing the shared version constraint
+        incomplete = tuple((pin.version_id, "review", ("read",), "internal") for pin in (workflow, execution, event))
+        with self.assertRaisesRegex(CrossCapabilityEnforcementError, "evidence constraints must cover every governed reconstruction Version Identity exactly once"):
+            reconstruct_audit_for_access(manifest=manifest, request=self.request, evidence_constraints=incomplete)
+
 
 if __name__ == "__main__":
     unittest.main()

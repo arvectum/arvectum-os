@@ -33,9 +33,14 @@ Previous CAP-004 and cross-capability access logic incorrectly assumed that each
 
 ## 5. Tests
 
-- **Focused regression tests**: `test_p3_06_audit_reconstruction_support.py` (12 tests) and `test_p3_07_cross_capability_enforcement.py` (10 tests) passed.
-- **P6.05 end-to-end synthetic regression**: `test_p6_05_exact_tender_attachment_admission.py` (5 tests) passed, proving the complete sequence from execution creation to identity-preserving reconstruction.
-- **Full reference suite**: `881` tests passed (historical baseline 874 + 7 new regressions).
+- **Focused regression tests**: `test_p3_06_audit_reconstruction_support.py` (12 tests) and `test_p3_07_cross_capability_enforcement.py` (12 tests) passed.
+- **P6.05 end-to-end synthetic regression**: `test_p6_05_exact_tender_attachment_admission.py` (6 tests) passed, proving:
+  - exactly one initial Execution Context version for the test execution identity;
+  - stable Execution Identity may be allocated before canonical Execution state;
+  - complete Created -> AwaitingGate -> Ready -> Running -> Succeeded lineage;
+  - identity-preserving material-input/result overlap;
+  - conflict negative remains fail-closed.
+- **Full reference suite**: `884` tests passed (historical baseline 874 + 10 new regressions).
 
 ## 6. Boundaries preserved
 

@@ -2,6 +2,7 @@
 
 Status: `Active`
 Version: `2.51.10`
+Created: `2026-08-07`
 Updated: `2026-08-16`
 
 Owner: `ООО «Арвектум»`
@@ -132,7 +133,7 @@ Canonical detailed roadmap:
 | `P6.05-L5` | First real product connection through exact P6.02 boundary | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L5-first-real-product-connection.md) |
 | `P6.05-L6` | Local synthetic/redacted regression + negative-path smoke | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L6-local-synthetic-redacted-regression-negative-path-smoke.md) |
 | `P6.05-L7` | Real P6.05 exact-attachment live run (`7/7` gate) | 🟩 Complete / PASS — attempt #2 evidence: [review](../reviews/P6-05-L7-attempt-2-real-exact-attachment-live-run.md) |
-| `P6.05-L8` | Governed evidence admission + canonical P6.05 closure package | 🟨 Current / blocked — implementation gap repair: [review](../reviews/P6-05-L8-cross-role-reconstruction-version-compatibility-repair.md) |
+| `P6.05-L8` | Governed evidence admission + canonical P6.05 closure package | 🟨 Current / ready for separately authorized attempt #2 |
 | `P6.05-L9` | Dogfooding friction capture | ⬜ Pending / cross-cutting |
 
 Detailed exit evidence and non-goals are defined in [`P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md`](P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md).
@@ -244,7 +245,7 @@ P6.05-L5 first real product connection ✓ PASS
 P6.05-L6 local synthetic/redacted + negative-path smoke ✓ PASS
         ↓
 P6.05-L7 real exact attachment evidence: 7/7 required — Complete / PASS
-P6.05-L8 Governed evidence admission and closure review ← current / blocked
+P6.05-L8 Governed evidence admission and closure review ← current / ready for attempt #2
         ↓
 R18 First Real-use Health Review
         ↓

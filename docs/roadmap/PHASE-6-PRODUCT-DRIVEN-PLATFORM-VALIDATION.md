@@ -2,6 +2,7 @@
 
 Status: `Active`
 Version: `1.7.7`
+Created: `2026-08-09`
 Updated: `2026-08-16`
 
 Owner: `ООО «Арвектум»`
@@ -96,7 +97,7 @@ P6.02 added the first real Product Contract boundary without changing that lifec
 | `P6.05-L5` | First real product connection through exact P6.02 boundary | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L5-first-real-product-connection.md) |
 | `P6.05-L6` | Local synthetic/redacted regression + negative-path smoke | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L6-local-synthetic-redacted-regression-negative-path-smoke.md) |
 | `P6.05-L7` | Real P6.05 exact-attachment live run (`7/7` gate) | 🟩 Complete / PASS — attempt #2 evidence: [review](../reviews/P6-05-L7-attempt-2-real-exact-attachment-live-run.md) |
-| `P6.05-L8` | Governed evidence admission + canonical P6.05 closure package | 🟨 Current / blocked — implementation gap repair: [review](../reviews/P6-05-L8-cross-role-reconstruction-version-compatibility-repair.md) |
+| `P6.05-L8` | Governed evidence admission + canonical P6.05 closure package | 🟨 Current / ready for separately authorized attempt #2 |
 | `P6.05-L9` | Dogfooding friction capture | ⬜ Pending / cross-cutting |
 
 ## 4. Work-item intent and exit evidence
@@ -200,7 +201,7 @@ Remaining execution is governed by [`P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md`]
 5. `P6.05-L5` exact P6.02 first-product connection — Complete / PASS;
 6. `P6.05-L6` local synthetic/redacted + negative-path smoke — Complete / PASS;
 7. `P6.05-L7` real exact-attachment live run with truthful `7/7` gate — Complete / PASS on attempt #2 (real evidence observed);
-8. `P6.05-L8` governed evidence admission and P6.05 closure review — current / blocked (repairing implementation gap for attempt #2);
+8. `P6.05-L8` governed evidence admission and P6.05 closure review — current / ready for separately authorized attempt #2;
 9. `P6.05-L9` cross-cutting dogfooding friction capture.
 
 The Mac mini is an operational environment for this bounded internal validation, not an architectural commitment to macOS or single-host deployment. Successful local operation does not imply Production readiness, Stable/public API, customer installer, SLA/support commitment or capability promotion.
@@ -321,7 +322,7 @@ P6.05-L5 First real product connection ✓ PASS
 P6.05-L6 Local proof + negative-path smoke ✓ PASS
  ↓
 P6.05-L7 Real exact attachment evidence — 7/7 required — Complete / PASS
-P6.05-L8 Governed evidence admission and closure review ← current / blocked
+P6.05-L8 Governed evidence admission and closure review ← current / ready for attempt #2
  ↓
 R18 First Real-use Health Review
  ↓
