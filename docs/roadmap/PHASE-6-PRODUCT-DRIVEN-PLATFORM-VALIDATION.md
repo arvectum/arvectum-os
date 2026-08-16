@@ -1,7 +1,7 @@
 # Phase 6: Product-driven platform validation
 
 Status: `Active / In Progress`
-Version: `1.2.0`
+Version: `1.2.1`
 
 ## 1. Goal
 
@@ -9,10 +9,10 @@ Validate platform fitness through first real product use.
 
 ## 2. P6.05: Real evidence admission
 
-Status: `Current / PASS`
+Status: `Active / In Progress`
 Evidence: [`P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md`](P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md)
 
-L1 through L8 are complete. L7 produced truthful real 7/7 evidence. L8 admitted that evidence under governed execution.
+L1 through L8 are complete. L7 produced truthful real 7/7 evidence. L8 admitted that evidence under governed execution. P6.05 remains open until L9 dogfooding friction capture is complete.
 
 ## 3. Subtasks
 
