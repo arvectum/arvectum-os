@@ -141,7 +141,7 @@ class P607SecondRealProductWorkflowIntegrationTests(unittest.TestCase):
         self.assertEqual(result.telegram_send_calls, 1)
         self.assertIsNone(result.telegram_message)
         self.assertTrue(result.reconstruction.complete)
-        self.assertIn("uncertain/reconciliation-required", result.manifest.results[0].subject_id.value)
+        self.assertIn("uncertain-reconciliation-required", result.manifest.results[0].subject_id.value)
 
     def test_missing_product_contract_version_pin_fails_closed(self) -> None:
         result = execute_stage1_publication(
