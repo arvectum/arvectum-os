@@ -2,7 +2,7 @@ from dataclasses import replace
 from datetime import datetime, timedelta, timezone
 import unittest
 
-from arvectum_os_ref.canonical import AuthorityMode
+from arvectum_os_ref.canonical import AuthorityMode, CanonicalRecord
 from arvectum_os_ref.document_artifact_governance import (
     ArtifactState,
     DocumentVersionCandidate,
@@ -10,16 +10,29 @@ from arvectum_os_ref.document_artifact_governance import (
 from arvectum_os_ref.governed_execution import (
     ConsequentialOperationNotAdmittedError,
     GovernedGateOutcome,
+    GovernedExecutionLifecycle,
     admit_ready_execution,
     await_required_gates,
     build_governed_gate_decision,
+    transition_governed_execution,
 )
 from arvectum_os_ref.identity import Identity
 from arvectum_os_ref.integration_composition import IntegrationCompositionContinuityError
 from arvectum_os_ref.product_capability_consumption import (
+    AccessRequest,
+    CapabilityConsumptionRequest,
     CAP_001_DOCUMENT_ARTIFACT,
     CAP_002_MEMORY_KNOWLEDGE,
     CAP_003_SEARCH_PROJECTION,
+    CAP_004_AUDIT_RECONSTRUCTION,
+    CAPABILITY_CONTRACT_VERSION,
+    OP_RECONSTRUCT_EXECUTION,
+)
+from arvectum_os_ref.event_provenance import (
+    EventReceipt,
+    admit_event,
+    build_reconstruction_manifest,
+    CanonicalEvent,
 )
 from p6_05_tender_attachment_ref.contract import (
     OP_ADMIT_DOCUMENT_VERSION,
@@ -141,6 +154,238 @@ class P605ExactTenderAttachmentAdmissionTests(unittest.TestCase):
             self.scenario.adapters.capabilities.admit_document_version(
                 execution=self._ready_execution(),
                 candidate=wrong_candidate,
+            )
+
+    def test_end_to_end_identity_preserving_reconstruction(self) -> None:
+        # Allocating a stable Identity is not creating canonical Execution state.
+        # This allows building result-candidate provenance referencing the future execution.
+        execution_subject = self._id(
+            "execution-subject",
+            "p6-05-identity-preserving-reconstruction",
+        )
+
+        # FIX: result must reference execution for reconstruction to pass.
+        # We include the stable subject Identity in candidate provenance.
+        orig_record = self.scenario.candidate.canonical_record
+        fixed_record = replace(
+            orig_record,
+            provenance_refs=tuple(dict.fromkeys(orig_record.provenance_refs + (execution_subject,)))
+        )
+        fixed_candidate = DocumentVersionCandidate(
+            fixed_record, self.scenario.candidate.artifacts, self.scenario.candidate.designated_rendition_role
+        )
+
+        # 1. Start Governed Execution (Exactly once for this execution subject)
+        # The first start_governed_execution call creates the first canonical version.
+        interaction = replace(self.scenario.interaction, material_inputs=(fixed_record,))
+        v1 = self.scenario.adapters.facade.start_governed_execution(
+            interaction=interaction,
+            execution_id=execution_subject,
+            version_id=self._id("execution-version", "p6-05-v1"),
+            created_at=self.base_time,
+            governed_versions=self.scenario.governed_versions,
+        )
+
+        # 2. Await gates -> Ready
+        v2 = await_required_gates(
+            v1, version_id=self._id("execution-version", "p6-05-v2"),
+            actor=self.scenario.actor, created_at=self.base_time + timedelta(minutes=1)
+        )
+        decisions = []
+        for index, kind in enumerate(v2.required_gates, start=1):
+            decisions.append(build_governed_gate_decision(
+                execution=v2, kind=kind, outcome=GovernedGateOutcome.ALLOW, decision_actor=self.scenario.actor,
+                basis_ref=self._id("basis", f"gate-{index}"),
+                decision_id=self._id("gate-decision", f"gate-{index}"),
+                version_id=self._id("gate-version", f"gate-{index}-v1"),
+                created_at=self.base_time + timedelta(minutes=1 + index)
+            ))
+        ready = admit_ready_execution(
+            v2, decisions=tuple(decisions),
+            version_id=self._id("execution-version", "p6-05-v3"),
+            actor=self.scenario.actor, created_at=self.base_time + timedelta(minutes=10)
+        )
+
+        # 3. Admit Document Version (ID preserved)
+        admitted = self.scenario.adapters.capabilities.admit_document_version(
+            execution=ready, candidate=fixed_candidate
+        )
+        self.assertEqual(admitted.version_id, fixed_candidate.canonical_record.version_id)
+
+        # 4. Transition to terminal Succeeded
+        running = transition_governed_execution(
+            ready, lifecycle=GovernedExecutionLifecycle.RUNNING,
+            version_id=self._id("execution-version", "p6-05-v4"),
+            actor=self.scenario.actor, created_at=self.base_time + timedelta(minutes=11)
+        )
+        terminal = transition_governed_execution(
+            running, lifecycle=GovernedExecutionLifecycle.SUCCEEDED,
+            version_id=self._id("execution-version", "p6-05-v5"),
+            actor=self.scenario.actor, created_at=self.base_time + timedelta(minutes=12),
+            additional_provenance_refs=(admitted.document_id, admitted.version_id)
+        )
+
+        # 5. Event admission
+        receipt = EventReceipt(
+            event_id=self._id("event-subject", "admission"),
+            version_id=self._id("event-version", "admission-v1"),
+            event_type="p6.05.document-admitted", event_schema_version="1",
+            organization=self.scenario.organization, authority_mode=AuthorityMode.NATIVE,
+            authority_scope="platform.document/admission", authoritative_source="platform.core",
+            occurred_at=self.base_time + timedelta(minutes=11),
+            recorded_at=self.base_time + timedelta(minutes=13),
+            producer_id=self._id("producer", "platform.core"),
+            initiating_actor_id=self.scenario.actor.actual_principal.principal_id,
+            execution_subject_id=terminal.execution_subject_id,
+            execution_version_id=terminal.execution_version_id,
+            related_subject_ids=(admitted.document_id,),
+            related_version_ids=(admitted.version_id,),
+            correlation_refs=(terminal.execution_subject_id,),
+            causation_refs=(terminal.execution_version_id,),
+            classification="internal", access_scope="organization",
+            provenance_refs=(
+                self._id("producer", "platform.core"),
+                self.scenario.actor.actual_principal.principal_id,
+                terminal.execution_subject_id, terminal.execution_version_id,
+                admitted.document_id, admitted.version_id
+            ),
+            integrity_metadata=(("rep", "mock"),), payload=()
+        )
+        ev_result = admit_event(receipt=receipt, execution=terminal, related_records=(admitted.canonical_record,))
+
+        # 6. Reconstruct
+        manifest = build_reconstruction_manifest(
+            execution_versions=(v1, v2, ready, running, terminal),
+            result_records=(admitted.canonical_record,),
+            events=(ev_result.event,)
+        )
+
+        # Verify overlap (identity-preserving)
+        self.assertEqual(manifest.material_inputs[0].version_id, manifest.results[0].version_id)
+
+        # 7. Access
+        access_request = AccessRequest(
+            actor=self.scenario.actor, purpose="review", required_right="read", allowed_classifications=("internal",)
+        )
+        pins = [manifest.workflow] + list(manifest.material_inputs) + list(manifest.gate_decisions) + list(manifest.execution_versions) + list(manifest.results) + list(manifest.events)
+        if manifest.product_contract:
+            pins.append(manifest.product_contract)
+        v_ids = {pin.version_id for pin in pins}
+        constraints = tuple((vid, "review", ("read",), "internal") for vid in v_ids)
+
+        reconstruction = self.scenario.adapters.capabilities.reconstruct_execution(
+            request=CapabilityConsumptionRequest(
+                organization=self.scenario.organization, product_id=self.scenario.contract.product_id,
+                product_version=self.scenario.contract.product_version,
+                dependency_id=CAP_004_AUDIT_RECONSTRUCTION, dependency_contract_version=CAPABILITY_CONTRACT_VERSION,
+                operation_name=OP_RECONSTRUCT_EXECUTION, access=access_request
+            ),
+            governed_versions=self.scenario.governed_versions,
+            manifest=manifest, evidence_constraints=constraints
+        )
+        self.assertTrue(reconstruction.complete)
+        # Verify two roles for the shared version
+        matches = [item for item in reconstruction.evidence if item.version_id == admitted.version_id]
+        self.assertEqual(len(matches), 2)
+        roles = {item.role for item in matches}
+        self.assertEqual(roles, {"material-input", "result"})
+
+    def test_p6_05_reconstruction_with_conflicting_pin_fails_closed(self) -> None:
+        # Start from valid setup but introduce conflicting result pin
+        execution_subject = self._id("execution-subject", "conflict-test")
+        orig_record = self.scenario.candidate.canonical_record
+        fixed_record = replace(orig_record, provenance_refs=orig_record.provenance_refs + (execution_subject,))
+        fixed_candidate = DocumentVersionCandidate(fixed_record, self.scenario.candidate.artifacts, "source")
+        
+        interaction = replace(self.scenario.interaction, material_inputs=(fixed_record,))
+        v1 = self.scenario.adapters.facade.start_governed_execution(
+            interaction=interaction, execution_id=execution_subject,
+            version_id=self._id("execution-version", "v1"),
+            created_at=self.base_time, governed_versions=self.scenario.governed_versions,
+        )
+        # Await gates
+        awaiting = await_required_gates(
+            v1, version_id=self._id("execution-version", "v2"),
+            actor=self.scenario.actor, created_at=self.base_time + timedelta(minutes=1)
+        )
+        decisions = []
+        for index, kind in enumerate(awaiting.required_gates, start=1):
+            decisions.append(build_governed_gate_decision(
+                execution=awaiting, kind=kind, outcome=GovernedGateOutcome.ALLOW, decision_actor=self.scenario.actor,
+                basis_ref=self._id("basis", f"gate-{index}"),
+                decision_id=self._id("gate-decision", f"gate-{index}"),
+                version_id=self._id("gate-version", f"gate-{index}-v1"),
+                created_at=self.base_time + timedelta(minutes=1 + index)
+            ))
+        ready = admit_ready_execution(
+            awaiting, decisions=tuple(decisions),
+            version_id=self._id("execution-version", "v3"),
+            actor=self.scenario.actor, created_at=self.base_time + timedelta(minutes=10)
+        )
+        
+        # Transition to terminal Succeeded
+        running = transition_governed_execution(
+            ready, lifecycle=GovernedExecutionLifecycle.RUNNING,
+            version_id=self._id("execution-version", "v4"),
+            actor=self.scenario.actor, created_at=self.base_time + timedelta(minutes=11)
+        )
+        terminal = transition_governed_execution(
+            running, lifecycle=GovernedExecutionLifecycle.SUCCEEDED,
+            version_id=self._id("execution-version", "v5"),
+            actor=self.scenario.actor, created_at=self.base_time + timedelta(minutes=12),
+            additional_provenance_refs=(fixed_record.subject_id, fixed_record.version_id)
+        )
+        
+        # Conflict: same version ID, different semantic type
+        conflicting_record = replace(fixed_record, semantic_type="conflicting.type")
+        self.assertEqual(conflicting_record.version_id, fixed_record.version_id)
+        
+        # Event
+        producer_id = self._id("producer", "p")
+        admission_event_record = CanonicalRecord(
+            subject_id=self._id("event", "admission"), version_id=self._id("event-version", "v1"),
+            semantic_type="platform.event", schema_version="1",
+            organization=self.scenario.organization, authority_mode=AuthorityMode.NATIVE,
+            authority_scope="platform.document/admission", accountable_owner_id=self.scenario.actor.actual_principal.principal_id,
+            creation_actor=self.scenario.actor, created_at=self.base_time + timedelta(minutes=13),
+            provenance_refs=tuple(dict.fromkeys((
+                producer_id, self.scenario.actor.actual_principal.principal_id,
+                execution_subject, terminal.execution_version_id,
+                fixed_record.subject_id, fixed_record.version_id
+            ))),
+            integrity_metadata=(("rep", "mock"),), lifecycle_status="Admitted",
+        )
+        admission_event = CanonicalEvent(
+            record=admission_event_record, event_type="type", event_schema_version="1", authoritative_source="src",
+            occurred_at=self.base_time + timedelta(minutes=12), recorded_at=self.base_time + timedelta(minutes=13),
+            producer_id=producer_id, initiating_actor_id=self.scenario.actor.actual_principal.principal_id,
+            execution_subject_id=execution_subject, execution_version_id=terminal.execution_version_id,
+            related_subject_ids=(fixed_record.subject_id,), related_version_ids=(fixed_record.version_id,),
+            correlation_refs=(execution_subject,), causation_refs=(terminal.execution_version_id,),
+            classification="internal", access_scope="organization",
+        )
+
+        manifest = build_reconstruction_manifest(
+            execution_versions=(v1, awaiting, ready, running, terminal),
+            result_records=(conflicting_record,), # CONFLICT HERE
+            events=(admission_event,)
+        )
+
+        
+        from arvectum_os_ref.cross_capability_enforcement import CrossCapabilityEnforcementError
+        with self.assertRaisesRegex(CrossCapabilityEnforcementError, "ambiguous reused Version Identity"):
+            # The CAP-004 access handoff detects the conflict during ID collection
+            v_ids = {pin.version_id for pin in [manifest.workflow] + list(manifest.material_inputs) + list(manifest.execution_versions) + list(manifest.results) + list(manifest.events)}
+            constraints = tuple((vid, "review", ("read",), "internal") for vid in v_ids)
+            self.scenario.adapters.capabilities.reconstruct_execution(
+                request=CapabilityConsumptionRequest(
+                    organization=self.scenario.organization, product_id=self.scenario.contract.product_id,
+                    product_version=self.scenario.contract.product_version,
+                    dependency_id=CAP_004_AUDIT_RECONSTRUCTION, dependency_contract_version="1.0.0",
+                    operation_name=OP_RECONSTRUCT_EXECUTION, access=AccessRequest(self.scenario.actor, "review", "read", ("internal",))
+                ),
+                governed_versions=self.scenario.governed_versions,
+                manifest=manifest, evidence_constraints=constraints
             )
 
 

@@ -200,6 +200,118 @@ class P306AuditReconstructionSupportTests(unittest.TestCase):
         self.assertFalse(hasattr(view, "approve"))
         self.assertFalse(hasattr(view, "replay"))
 
+    def test_exact_version_can_fill_multiple_reconstruction_roles(self) -> None:
+        # P6.05 use case: same pin as material-input and result
+        manifest = ReconstructionManifest(
+            organization=self.organization,
+            execution_subject_id=self.execution_id,
+            initiating_actor_id=self.actor_id,
+            operation_name="identity-preserving-admission",
+            workflow=self.workflow,
+            material_inputs=(self.result,), # REUSED PIN
+            gate_decisions=(self.gate,),
+            execution_versions=(self.execution_v1, self.execution_v2),
+            results=(self.result,), # REUSED PIN
+            events=(self.event,),
+            event_types=(("platform.operation.succeeded", "1"),),
+            correlation_refs=self.correlation,
+            causation_refs=self.causation,
+            provenance_refs=self.manifest.provenance_refs,
+        )
+        view = reconstruct_audit_view(manifest=manifest, organization=self.organization)
+        self.assertTrue(view.complete)
+
+        # Verify two role entries for one version ID
+        matches = [item for item in view.evidence if item.version_id == self.result.version_id]
+        self.assertEqual(len(matches), 2)
+        roles = {item.role for item in matches}
+        self.assertEqual(roles, {"material-input", "result"})
+        for item in matches:
+            self.assertEqual(item.source, self.result)
+            self.assertEqual(item.availability, EvidenceAvailability.AVAILABLE)
+
+    def test_shared_version_disposition_applies_to_every_role(self) -> None:
+        manifest = ReconstructionManifest(
+            organization=self.organization,
+            execution_subject_id=self.execution_id,
+            initiating_actor_id=self.actor_id,
+            operation_name="identity-preserving-admission",
+            workflow=self.workflow,
+            material_inputs=(self.result,),
+            gate_decisions=(self.gate,),
+            execution_versions=(self.execution_v1, self.execution_v2),
+            results=(self.result,),
+            events=(self.event,),
+            event_types=(("platform.operation.succeeded", "1"),),
+            correlation_refs=self.correlation,
+            causation_refs=self.causation,
+            provenance_refs=self.manifest.provenance_refs,
+        )
+        # One disposition for the shared version ID
+        dispositions = (
+            EvidenceDisposition(self.result.version_id, EvidenceAvailability.REDACTED, "shared redaction"),
+        )
+        view = reconstruct_audit_view(manifest=manifest, organization=self.organization, dispositions=dispositions)
+        self.assertFalse(view.complete)
+
+        matches = [item for item in view.evidence if item.version_id == self.result.version_id]
+        self.assertEqual(len(matches), 2)
+        for item in matches:
+            self.assertEqual(item.availability, EvidenceAvailability.REDACTED)
+            self.assertIsNone(item.source)
+            self.assertEqual(item.reason, "shared redaction")
+
+    def test_cross_role_same_version_with_conflicting_pin_fails_closed(self) -> None:
+        # Conflicting pin (different semantic_type)
+        conflicting_result = self._pin("result", "result-a", "result-a-v1", "different.type")
+        self.assertEqual(conflicting_result.version_id, self.result.version_id)
+        self.assertNotEqual(conflicting_result, self.result)
+
+        manifest = ReconstructionManifest(
+            organization=self.organization,
+            execution_subject_id=self.execution_id,
+            initiating_actor_id=self.actor_id,
+            operation_name="ambiguous-admission",
+            workflow=self.workflow,
+            material_inputs=(self.result,),
+            gate_decisions=(self.gate,),
+            execution_versions=(self.execution_v1, self.execution_v2),
+            results=(conflicting_result,), # CONFLICT
+            events=(self.event,),
+            event_types=(("platform.operation.succeeded", "1"),),
+            correlation_refs=self.correlation,
+            causation_refs=self.causation,
+            provenance_refs=self.manifest.provenance_refs,
+        )
+        with self.assertRaisesRegex(AuditReconstructionError, "ambiguous reused Version Identity"):
+            reconstruct_audit_view(manifest=manifest, organization=self.organization)
+
+    def test_export_preserves_role_multiplicity(self) -> None:
+        manifest = ReconstructionManifest(
+            organization=self.organization,
+            execution_subject_id=self.execution_id,
+            initiating_actor_id=self.actor_id,
+            operation_name="identity-preserving-admission",
+            workflow=self.workflow,
+            material_inputs=(self.result,),
+            gate_decisions=(self.gate,),
+            execution_versions=(self.execution_v1, self.execution_v2),
+            results=(self.result,),
+            events=(self.event,),
+            event_types=(("platform.operation.succeeded", "1"),),
+            correlation_refs=self.correlation,
+            causation_refs=self.causation,
+            provenance_refs=self.manifest.provenance_refs,
+        )
+        view = reconstruct_audit_view(manifest=manifest, organization=self.organization)
+        package = export_reconstruction_package(view)
+
+        # Verify two rows in evidence export
+        matches = [row for row in package.evidence if row[1] == self.result.version_id]
+        self.assertEqual(len(matches), 2)
+        roles = {row[0] for row in matches}
+        self.assertEqual(roles, {"material-input", "result"})
+
 
 if __name__ == "__main__":
     unittest.main()

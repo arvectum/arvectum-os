@@ -102,8 +102,20 @@ class AuditReconstructionView:
             raise AuditReconstructionError("audit reconstruction requires explicit evidence items")
         if any(not isinstance(item, AuditEvidenceItem) for item in self.evidence):
             raise AuditReconstructionError("audit reconstruction evidence items must be typed")
-        if len({item.version_id for item in self.evidence}) != len(self.evidence):
-            raise AuditReconstructionError("audit reconstruction must not duplicate evidence Version Identities")
+        if len({(item.role, item.version_id) for item in self.evidence}) != len(self.evidence):
+            raise AuditReconstructionError("audit reconstruction must not duplicate (role, version) pairs")
+
+        # Consistent availability/source for any reused version_id
+        version_dispositions: dict[Identity, tuple[EvidenceAvailability, GovernedVersionPin | None]] = {}
+        for item in self.evidence:
+            prior = version_dispositions.get(item.version_id)
+            if prior is None:
+                version_dispositions[item.version_id] = (item.availability, item.source)
+            elif prior != (item.availability, item.source):
+                raise AuditReconstructionError(
+                    f"reused Version Identity {item.version_id} has inconsistent availability or source"
+                )
+
         expected_complete = all(
             item.availability is EvidenceAvailability.AVAILABLE for item in self.evidence
         )
@@ -161,9 +173,20 @@ def reconstruct_audit_view(
         raise AuditReconstructionError("one evidence Version Identity cannot have multiple dispositions")
 
     source_items = _manifest_evidence(manifest)
-    source_by_version = {pin.version_id: (role, pin) for role, pin in source_items}
-    if len(source_by_version) != len(source_items):
-        raise AuditReconstructionError("governed reconstruction contains ambiguous reused Version Identities")
+
+    # One version ID may occupy multiple semantic roles (e.g. material-input + result)
+    # as long as every occurrence represents the exact same GovernedVersionPin.
+    source_by_version: dict[Identity, tuple[str, GovernedVersionPin]] = {}
+    for role, pin in source_items:
+        prior = source_by_version.get(pin.version_id)
+        if prior is None:
+            source_by_version[pin.version_id] = (role, pin)
+        elif prior[1] != pin:
+            # Different pin semantics for the same Version Identity
+            raise AuditReconstructionError(
+                f"governed reconstruction contains ambiguous reused Version Identity: {pin.version_id}"
+            )
+
     disposition_by_version = {item.version_id: item for item in dispositions}
     unknown = set(disposition_by_version) - set(source_by_version)
     if unknown:
