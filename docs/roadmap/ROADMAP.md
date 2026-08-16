@@ -1,7 +1,7 @@
 # Arvectum OS Roadmap
 
 Status: `Active / In Progress`
-Version: `2.52.3`
+Version: `2.52.4`
 Owner: ООО «Арвектум»
 
 ## 1. Overview
@@ -18,6 +18,21 @@ Arvectum OS is an operating system for organizational intelligence. This roadmap
 | Phase 4 | Workspace & Experience | 🟩 Complete |
 | Phase 5 | SDK & Contracts | 🟩 Complete |
 | Phase 6 | Product validation | 🟨 Active / In Progress |
+
+### Milestone continuity
+
+Later-phase progress does not widen earlier milestone claims or collapse lifecycle dimensions.
+
+| Phase | Scope | Execution | Status | Bounded milestone |
+| :--- | :--- | :--- | :--- | :--- |
+| `Phase 3` | Shared Platform Capabilities | Executed | 🟩 Complete | `M3` Validated shared capability baseline |
+| `Phase 4` | Workspace / Operator Experience | Executed | 🟩 Complete | `M4` Internal workspace/operator baseline |
+| `Phase 5` | SDK / Contracts / Integration | Executed | 🟩 Complete | `M5` Internal integration baseline |
+| `Phase 6` | Product-Driven Platform Validation | In progress | 🟨 Active / In Progress | Real-product evidence accumulation |
+
+`M3` remains bounded to its validated shared-capability reference scope. CAP-001 through CAP-004 remain `Incubating / Provisional`; no Platform Capability is `Active` merely because later phases consume or validate it.
+
+Phase status, Platform Capability lifecycle, Product Contract lifecycle, operational environment/readiness and conformance maturity remain distinct.
 
 ## 3. Phase 6 Breakdown
 
