@@ -1,7 +1,7 @@
 # P6.05 Local Internal Runtime Substream
 
-Status: `Active / In Progress`
-Version: `0.2.1`
+Status: `Complete / PASS`
+Version: `0.2.2`
 Owner: ООО «Арвектум»
 
 ## 1. Goal
@@ -20,7 +20,7 @@ Execute the P6.05 evidence path locally to produce the first governed real tende
 | `P6.05-L6` | Local synthetic smoke | 🟩 Complete / PASS — [review](../reviews/P6-05-L6-local-synthetic-redacted-regression-negative-path-smoke.md) |
 | `P6.05-L7` | Real exact-attachment live run | 🟩 Complete / PASS — [review](../reviews/P6-05-L7-attempt-2-real-exact-attachment-live-run.md) |
 | `P6.05-L8` | Governed evidence admission | 🟩 Complete / PASS — [review](../reviews/P6-05-L8-attempt-2-governed-evidence-admission-and-closure.md) |
-| `P6.05-L9` | Dogfooding friction capture | ⬜ Pending / in progress |
+| `P6.05-L9` | Dogfooding friction capture | 🟩 Complete / PASS — [review](../reviews/P6-05-L9-dogfooding-friction-capture.md) |
 
 ## 3. Evidence Characterization
 
@@ -31,4 +31,4 @@ Execute the P6.05 evidence path locally to produce the first governed real tende
 
 ## 4. Closure
 
-P6.05 exit criteria for local governed evidence admission are satisfied through L8. Overall P6.05 closure awaits L9 friction report.
+P6.05-L1 through P6.05-L9 are complete. The real `7/7` tender attachment evidence remains GOVERNED, and dogfooding friction is canonically captured as observations/improvement candidates without automatic Product Contract, capability, policy, Knowledge or public-API promotion. P6.05 is `Complete / PASS`.
