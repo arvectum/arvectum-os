@@ -1,9 +1,9 @@
 # P6.05 — Local Internal Runtime Substream
 
 Status: `Active / In Progress`
-Version: `0.1.11`
-Created: `2026-08-09`
-Updated: `2026-08-15`
+Version: `0.1.12`
+Updated: `2026-08-16`
+
 Owner: `ООО «Арвектум»`
 Task classification: `platform` with `product_specific` and `product_contract`
 Parent work item: `P6.05 — Platform-gap remediation from first real use`
@@ -71,7 +71,7 @@ Implementation readiness alone did not close P6.05. Real exact `7/7` evidence is
 | `P6.05-L5` | First real product connection | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L5-first-real-product-connection.md) | `ai-corporation` connects through exact P6.02 Product Contract `0.1.0`, canonical source verified, CAP-001 + CAP-004 only, with Organization/Actor/Product/Product Contract continuity preserved; CAP-002/CAP-003 absent; no grants/delegations/Organizational Authority; no external actions |
 | `P6.05-L6` | Local synthetic/redacted regression + negative-path smoke | 🟩 Complete / PASS — [evidence](../reviews/P6-05-L6-local-synthetic-redacted-regression-negative-path-smoke.md) | relevant P6.03/P6.05 proof paths pass locally; missing config/gates/wrong versions fail closed; no real EIS/SOAP; real runner not executed; external actions false |
 | `P6.05-L7` | Real P6.05 exact-attachment live run | 🟩 Complete / PASS — attempt #2 evidence: [review](../reviews/P6-05-L7-attempt-2-real-exact-attachment-live-run.md) | attempt #1 blocked on EIS TLS trust: [review](../reviews/P6-05-L7-attempt-1-eis-tls-trust-blocker.md); attempt #2 passed with `PASS_EXACT_ATTACHMENT_EVIDENCE`, `exact_document_count = 7`, complete exact set and manifest SHA-256 |
-| `P6.05-L8` | Governed evidence admission + canonical P6.05 closure package | 🟨 Current / blocked — attempt #1 failed closed: [review](../reviews/P6-05-L8-attempt-1-reconstruction-harness-blocker.md) | in-process CAP-001 admission succeeded but complete evidence chain not retained; separate attempt #2 required |
+| `P6.05-L8` | Governed evidence admission + canonical P6.05 closure package | 🟨 Current / blocked — implementation gap repair: [review](../reviews/P6-05-L8-cross-role-reconstruction-version-compatibility-repair.md) | attempt #1 failed during reconstruction; C1 found a platform implementation gap regarding identity-preserving admission; G1 repairs the gap; separate attempt #2 required |
 | `P6.05-L9` | Dogfooding friction capture | ⬜ Pending | concrete operator/setup/workspace friction observed during L1-L8 is recorded as evidence/backlog without silently expanding P6.05 scope |
 
 Subtasks are sequential where dependencies require it, but reversible preparation may proceed in parallel when it cannot change canonical state or external systems.
@@ -222,4 +222,4 @@ Until a later accepted decision says otherwise, this environment is bounded and 
 
 ## 9. Immediate next action
 
-`P6.05-L7 — Real P6.05 exact-attachment live run` completed as PASS on attempt #2 (real exact `7/7` observed). Next: fixed owner-local harness, then a separately authorized attempt #2 for `P6.05-L8 — Governed evidence admission and closure review`. Keep P6.05 overall `Active / In Progress` until L8 closure.
+`P6.05-L7 — Real P6.05 exact-attachment live run` completed as PASS on attempt #2 (real exact `7/7` observed). Next: fixed owner-local harness and platform implementation gap repair, then a separately authorized attempt #2 for `P6.05-L8 — Governed evidence admission and closure review`. Keep P6.05 overall `Active / In Progress` until L8 closure.

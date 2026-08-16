@@ -191,21 +191,33 @@ def resolve_search_hit_for_access(
 
 
 def _manifest_evidence_version_ids(manifest: ReconstructionManifest) -> tuple[Identity, ...]:
-    """Return the exact evidence set whose disclosure must be evaluated."""
+    """Return the unique evidence set whose disclosure must be evaluated.
 
-    version_ids: list[Identity] = [manifest.workflow.version_id]
-    version_ids.extend(pin.version_id for pin in manifest.material_inputs)
+    A Version Identity may appear in multiple roles (e.g. material-input and result)
+    if and only if every occurrence represents the exact same GovernedVersionPin.
+    """
+
+    pins: list[GovernedVersionPin] = [manifest.workflow]
+    pins.extend(manifest.material_inputs)
     if manifest.product_contract is not None:
-        version_ids.append(manifest.product_contract.version_id)
-    version_ids.extend(pin.version_id for pin in manifest.gate_decisions)
-    version_ids.extend(pin.version_id for pin in manifest.execution_versions)
-    version_ids.extend(pin.version_id for pin in manifest.results)
-    version_ids.extend(pin.version_id for pin in manifest.events)
-    if len(set(version_ids)) != len(version_ids):
-        raise CrossCapabilityEnforcementError(
-            "governed reconstruction contains ambiguous reused Version Identities"
-        )
-    return tuple(version_ids)
+        pins.append(manifest.product_contract)
+    pins.extend(manifest.gate_decisions)
+    pins.extend(manifest.execution_versions)
+    pins.extend(manifest.results)
+    pins.extend(manifest.events)
+
+    by_version: dict[Identity, GovernedVersionPin] = {}
+    for pin in pins:
+        prior = by_version.get(pin.version_id)
+        if prior is None:
+            by_version[pin.version_id] = pin
+        elif prior != pin:
+            # Conflict: same version ID, different pin semantics
+            raise CrossCapabilityEnforcementError(
+                f"governed reconstruction contains ambiguous reused Version Identity: {pin.version_id}"
+            )
+
+    return tuple(by_version.keys())
 
 
 def _validate_evidence_constraints(
