@@ -1,7 +1,7 @@
 # Arvectum OS Roadmap
 
 Status: `Active`
-Version: `2.52.11`
+Version: `2.52.12`
 Owner: ООО «Арвектум»
 
 ## 1. Overview
@@ -33,6 +33,8 @@ Later-phase progress does not widen earlier milestone claims or collapse lifecyc
 `M3` remains bounded to its validated shared-capability reference scope. CAP-001 through CAP-004 remain `Incubating / Provisional`; no Platform Capability is `Active` merely because later phases consume or validate it.
 
 Phase status, Platform Capability lifecycle, Product Contract lifecycle, operational environment/readiness and conformance maturity remain distinct. Phase 6 / M6 completion does not promote CAP-004, stabilize a Product Contract or establish a production/SLA/support commitment.
+
+The required M6 Milestone Code Health Gate is now canonically recorded as [`M6-milestone-code-health-gate-governance-repair.md`](../reviews/M6-milestone-code-health-gate-governance-repair.md) — `Complete / PASS`. The gate was recorded after the original closure publication as an explicit governance-process repair rather than falsely backdated. It found no material defect requiring M6 reopening and preserves the bounded Phase 6 / M6 closure.
 
 ## 3. Phase 6 Breakdown
 
@@ -73,6 +75,7 @@ Stage 2B preparation: [`P6-07-stage-2b-windows-manual-publication-preparation.md
 Stage 2B real execution: [`P6-07-stage-2b-real-windows-manual-publication.md`](../reviews/P6-07-stage-2b-real-windows-manual-publication.md)
 Stage 2C preparation: [`P6-07-stage-2c-mac-mini-cap004-reconstruction-preparation.md`](../reviews/P6-07-stage-2c-mac-mini-cap004-reconstruction-preparation.md)
 Stage 2C real execution: [`P6-07-stage-2c-real-mac-mini-cap004-reconstruction.md`](../reviews/P6-07-stage-2c-real-mac-mini-cap004-reconstruction.md)
+M6 code-health gate: [`M6-milestone-code-health-gate-governance-repair.md`](../reviews/M6-milestone-code-health-gate-governance-repair.md)
 
 Stage 1 proved that the Discount Parser controlled-publication workflow can reuse the existing CAP-004 integration seam under the exact P6.06 Provisional Product Contract `0.1.0`, using a product-owned fake Telegram adapter and no live network/secret. No blocking platform gap was found.
 
@@ -85,6 +88,8 @@ Stage 2 then completed the bounded real-effect chain:
 The immutable owner-local Stage 2C report SHA-256 is `370a245601b88766c77bbac05a226d0e9fb680fa52fda3c2f946d062603199a1`. Raw Organization/Actor identities, reusable secrets and raw Windows evidence remain outside canonical repository evidence.
 
 P6.07 validates the declared CAP-004-only product/platform boundary through a materially distinct real product/workflow. P6.06 remains `Provisional 0.1.0`; CAP-004 remains `Incubating / Provisional`.
+
+The M6 Milestone Code Health Gate reviewed the Phase 6 implementation surfaces after a process omission was detected. It passed with one bounded non-blocking containment debt: the large P6.07 Stage 2C harness remains task-specific/internal/provisional and must not be generalized into a shared or Stable/public abstraction without additional reuse evidence and the applicable stable-boundary gate.
 
 ## 7. Current Exit State
 
@@ -100,6 +105,7 @@ P6.07 validates the declared CAP-004-only product/platform boundary through a ma
 - [x] P6.06 post-first-real-publication review completed; Provisional 0.1.0 CAP-004-only boundary retained.
 - [x] Stage 2C minimized evidence handoff and CAP-004 reconstruction procedure prepared without external-effect replay.
 - [x] Exact real Stage 2B outcome reconstructed through CAP-004 on Mac mini in Stage 2C with read-only derived evidence and zero effect replay.
+- [x] M6 Milestone Code Health Gate completed / PASS; missing pre-closure gate artifact repaired transparently without backdating.
 
 `Phase 6 = Complete / PASS` for its declared bounded scope. All tasks currently defined by the canonical roadmap through P6.07 are complete.
 
