@@ -1,7 +1,7 @@
 # Arvectum OS Roadmap
 
 Status: `Active / In Progress`
-Version: `2.52.9`
+Version: `2.52.10`
 Owner: ООО «Арвектум»
 
 ## 1. Overview
@@ -43,8 +43,8 @@ Phase status, Platform Capability lifecycle, Product Contract lifecycle, operati
 | `P6.03` | First real integration | 🟩 Complete / PASS |
 | `P6.04` | Value/friction capture | 🟩 Complete / PASS |
 | `P6.05` | Platform-gap remediation | 🟩 Complete / PASS — L1-L9 complete; real 7/7 GOVERNED |
-| `P6.06` | Second materially distinct real target + Product Contract boundary | 🟩 Complete / PASS — Discount Parser / controlled Telegram publication |
-| `P6.07` | Second real product/workflow platform integration | 🟨 In Progress — Stage 1 Complete / PASS; Stage 2A Complete / PASS; Stage 2B Complete / PASS; Stage 2C Pending |
+| `P6.06` | Second materially distinct real target + Product Contract boundary | 🟩 Complete / PASS — Discount Parser / controlled Telegram publication; post-first-real review PASS, no revision |
+| `P6.07` | Second real product/workflow platform integration | 🟨 In Progress — Stage 1 Complete / PASS; Stage 2A Complete / PASS; Stage 2B Complete / PASS; Stage 2C Prepared / local execution pending |
 
 ## 4. P6.05 Detail
 
@@ -57,19 +57,21 @@ L1-L9 are complete. Real 7/7 tender attachment evidence for notice `034410000642
 
 Status: `Complete / PASS`
 Contract: [`P6-06-SECOND-REAL-PRODUCT-CONTRACT.md`](../contracts/P6-06-SECOND-REAL-PRODUCT-CONTRACT.md)
+Post-first-real-publication review: [`P6-06-post-first-real-publication-contract-review.md`](../reviews/P6-06-post-first-real-publication-contract-review.md)
 
 The second materially distinct real target is **Arvectum Discount Parser**, bounded to a controlled Telegram publication workflow. The Provisional Product Contract `0.1.0` uses CAP-004 only and preserves all Offer/source/dedup/classification/scheduler/rule-memory/Telegram business semantics as product-owned.
 
-P6.06 completion means the target is selected and the Product Contract boundary is canonical before governed reliance. It does **not** promote CAP-004 from `Incubating` or stabilize the Product Contract.
+Stage 2B satisfied the Product Contract's first-real-publication review trigger. The canonical review found no material boundary defect or dependency gap: the existing Product Contract remains `Provisional 0.1.0`, CAP-004-only. This is continuity of the existing Provisional boundary, not stabilization, capability promotion or a new public/commercial commitment.
 
 ## 6. P6.07 Detail
 
-Status: `In Progress — Stage 1 Complete / PASS; Stage 2A Complete / PASS; Stage 2B Complete / PASS; Stage 2C Pending`
+Status: `In Progress — Stage 1 Complete / PASS; Stage 2A Complete / PASS; Stage 2B Complete / PASS; Stage 2C Prepared / local execution pending`
 Stage 1 review: [`P6-07-stage-1-second-real-product-workflow-integration.md`](../reviews/P6-07-stage-1-second-real-product-workflow-integration.md)
 Stage 2A preparation: [`P6-07-stage-2a-pre-effect-ticket-preparation.md`](../reviews/P6-07-stage-2a-pre-effect-ticket-preparation.md)
 Stage 2A real execution: [`P6-07-stage-2a-real-mac-mini-execution.md`](../reviews/P6-07-stage-2a-real-mac-mini-execution.md)
 Stage 2B preparation: [`P6-07-stage-2b-windows-manual-publication-preparation.md`](../reviews/P6-07-stage-2b-windows-manual-publication-preparation.md)
 Stage 2B real execution: [`P6-07-stage-2b-real-windows-manual-publication.md`](../reviews/P6-07-stage-2b-real-windows-manual-publication.md)
+Stage 2C preparation: [`P6-07-stage-2c-mac-mini-cap004-reconstruction-preparation.md`](../reviews/P6-07-stage-2c-mac-mini-cap004-reconstruction-preparation.md)
 
 Stage 1 proves the Discount Parser controlled-publication workflow can reuse the existing CAP-004 integration seam under the exact P6.06 Provisional Product Contract `0.1.0`. The proof uses a product-owned fake Telegram adapter and no live network/secret, while preserving exact Product Contract, Organization, Actor, product-owned input/effect references, provenance, correlation, causation and reconstruction semantics.
 
@@ -79,9 +81,9 @@ Stage 2 is executed as a bounded three-part handoff without widening the P6.06 c
 
 1. `Stage 2A` — **Complete / PASS.** Mac mini reused the existing P6.05-L4 Organization/human Actor context, verified the exact P6.06 contract pin, created one immutable Arvectum OS pre-effect execution ticket plus SHA-256 before any real send, and independently verified the digest. Targeted Stage 2A tests passed (`8`); the full Reference Python suite passed (`902`). The evidence remains owner-only and outside source control. No Discount Parser invocation, Telegram call, scheduler/autopost activation, product database mutation, external effect or CAP-004 Stage 2C reconstruction occurred.
 2. `Stage 2B` — **Complete / PASS.** One explicitly authorized real native-Windows publication was executed using the existing product-owned `publish_offer()` path. Offer `148` was fixed as a text-only candidate for `@arvectumtest`; Publication `14` was durably observed `pending` before the network effect; exactly one `publish_offer()` invocation delegated exactly one `send_message` and zero `send_photo` calls. Product state finished `published`, Telegram message id `27` was returned, and the human operator visually confirmed the exact message in the intended target. The distinct pre-effect and outcome evidence files and their stored SHA-256 sidecars were independently reconciled from disk after execution. No retry, secret disclosure or repository mutation occurred.
-3. `Stage 2C` — **Pending.** Mac mini must admit the Stage 2B outcome under the same execution/Organization/Actor/Product Contract continuity and reconstruct it through CAP-004 as read-only derived evidence. The external Telegram effect must not be replayed.
+3. `Stage 2C` — **Prepared / local execution pending.** A P6.07-local handoff command binds retained Windows pre-effect/outcome files by their canonical SHA-256 digests and transfers only safe material product references. A Mac mini command verifies the original Stage 2A ticket plus that handoff, preserves exact Organization/Actor/Product Contract continuity and invokes the existing CAP-004 integration adapter as read-only reconstruction. The implementation has no Telegram/publication replay, product DB mutation or external mutation path, and it does not fabricate a retroactive platform gate decision or retroactive Windows-native platform Event.
 
-Neither the P6.06 Product Contract nor the Stage 2A execution ticket granted authorization for the real Telegram mutation; Stage 2B used a separate contemporaneous explicit human authorization. P6.07 is not complete overall until Stage 2C PASS.
+Neither the P6.06 Product Contract nor the Stage 2A execution ticket granted authorization for the real Telegram mutation; Stage 2B used a separate contemporaneous explicit human authorization. P6.07 is not complete overall until the real Stage 2C Mac mini reconstruction is `PASS` and canonically reviewed.
 
 ## 7. Current Exit State
 
@@ -94,6 +96,8 @@ Neither the P6.06 Product Contract nor the Stage 2A execution ticket granted aut
 - [x] Real Stage 2A Mac mini ticket/hash created and independently verified from actual Organization/human Actor context.
 - [x] Stage 2B native-Windows one-send procedure and evidence boundary prepared without changing Discount Parser publication semantics.
 - [x] One explicitly authorized real manual Discount Parser publication executed in Stage 2B with confirmed external effect and reconciled evidence integrity.
-- [ ] Exact Stage 2B outcome reconstructed through CAP-004 in Stage 2C.
+- [x] P6.06 post-first-real-publication review completed; Provisional 0.1.0 CAP-004-only boundary retained.
+- [x] Stage 2C minimized evidence handoff and CAP-004 reconstruction procedure prepared without external-effect replay.
+- [ ] Exact real Stage 2B outcome reconstructed through CAP-004 on Mac mini in Stage 2C.
 
-Phase 6 remains active. The next governed action is **P6.07 Stage 2C — Mac mini / CAP-004 reconstruction**. Stage 2C must be read-only with respect to the already confirmed Telegram effect; no replay is permitted. No capability promotion or Stable/public commitment is implied by Stage 2B completion.
+Phase 6 remains active. The next governed action is **P6.07 Stage 2C — create the minimized Stage 2B owner-local handoff, then execute the Mac mini CAP-004 reconstruction**. Stage 2C must remain read-only with respect to the already confirmed Telegram effect; no replay is permitted. No capability promotion or Stable/public commitment is implied by Stage 2C preparation.
