@@ -1,7 +1,7 @@
 # Phase 6: Product-driven platform validation
 
 Status: `Active / In Progress`
-Version: `1.2.6`
+Version: `1.2.7`
 
 ## 1. Goal
 
@@ -27,10 +27,11 @@ P6.06 records selection plus the Product Contract boundary only. It does not cla
 
 ## 4. P6.07: Second real product/workflow platform integration
 
-Status: `In Progress — Stage 1 Complete / PASS; Stage 2A Complete / PASS; Stage 2B pending`
+Status: `In Progress — Stage 1 Complete / PASS; Stage 2A Complete / PASS; Stage 2B Prepared / Windows execution pending`
 Stage 1 review: [`P6-07-stage-1-second-real-product-workflow-integration.md`](../reviews/P6-07-stage-1-second-real-product-workflow-integration.md)
 Stage 2A preparation: [`P6-07-stage-2a-pre-effect-ticket-preparation.md`](../reviews/P6-07-stage-2a-pre-effect-ticket-preparation.md)
 Stage 2A real execution: [`P6-07-stage-2a-real-mac-mini-execution.md`](../reviews/P6-07-stage-2a-real-mac-mini-execution.md)
+Stage 2B preparation: [`P6-07-stage-2b-windows-manual-publication-preparation.md`](../reviews/P6-07-stage-2b-windows-manual-publication-preparation.md)
 
 P6.07 validates the P6.06 boundary against executable Discount Parser controlled-publication evidence.
 
@@ -49,7 +50,7 @@ Stage 1 found no blocking platform gap and therefore does not justify a new RFC/
 Stage 2 is decomposed into three bounded handoffs:
 
 - **Stage 2A — Mac mini / Arvectum OS pre-effect ticket — Complete / PASS.** The real Mac mini run reused the existing P6.05-L4 Organization/human Actor context, verified the exact P6.06 contract pin, created one immutable execution ticket and SHA-256 before any real external effect, and independently verified the digest. Targeted Stage 2A tests passed (`8`); the full Reference Python suite passed (`902`). The local ticket remained owner-only and outside source control. No Discount Parser invocation, Telegram call, scheduler/autopost activation, product database mutation, external effect or CAP-004 Stage 2C reconstruction occurred.
-- **Stage 2B — Windows / Discount Parser manual publication — Pending.** Bind the exact Stage 2A ticket hash and execution id, preserve product-owned candidate/target/reservation/intent plus explicit real-action authorization before send, and perform at most one human-operated `publish_offer()` send. Scheduler/autopost remains disabled.
+- **Stage 2B — Windows / Discount Parser manual publication — Prepared / Windows execution pending.** The preparation review pins the exact Stage 2A execution id/hash and Product Contract, reuses the existing product-owned `publish_offer()` path, defines proof-local pre-send observation of the durable product reservation, requires a separate explicit one-time human authorization, and keeps scheduler/autopost disabled. The real external send has not yet occurred. The execution remains limited to at most one human-operated `publish_offer()` invocation and must return confirmed-effect evidence or an explicit failed/uncertain reconciliation-safe outcome.
 - **Stage 2C — Mac mini / CAP-004 reconstruction — Pending.** Admit the Stage 2B outcome under the same execution, Organization, human Actor and P6.06 Product Contract continuity, then reconstruct it through CAP-004 as read-only derived evidence.
 
 Neither the Product Contract nor the Stage 2A ticket grants authorization for the Stage 2B external mutation. Until Stage 2C reconstruction succeeds, P6.07 is not closed overall.
@@ -64,7 +65,7 @@ Neither the Product Contract nor the Stage 2A ticket grants authorization for th
 | `P6.06` | Second materially distinct target selected and Product Contract boundary defined | 🟩 Complete / PASS — [contract](../contracts/P6-06-SECOND-REAL-PRODUCT-CONTRACT.md) |
 | `P6.07 Stage 1` | Synthetic/offline second-product integration proof under P6.06 | 🟩 Complete / PASS — [review](../reviews/P6-07-stage-1-second-real-product-workflow-integration.md) |
 | `P6.07 Stage 2A` | Immutable pre-effect execution ticket + SHA-256 | 🟩 Complete / PASS — [real execution review](../reviews/P6-07-stage-2a-real-mac-mini-execution.md) |
-| `P6.07 Stage 2B` | One explicit real manual Discount Parser publication | 🟨 Pending — requires verified Stage 2A handoff + explicit real-action authorization |
+| `P6.07 Stage 2B` | One explicit real manual Discount Parser publication | 🟨 Prepared / Windows execution pending — exact Stage 2A continuity fixed; real one-send evidence still required |
 | `P6.07 Stage 2C` | Outcome admission + CAP-004 reconstruction | 🟨 Pending — requires Stage 2B evidence |
 
 ## 6. Current Phase 6 state
@@ -76,7 +77,8 @@ Neither the Product Contract nor the Stage 2A ticket grants authorization for th
 - [x] Second-product synthetic/offline bounded integration evidence executed under the P6.06 contract.
 - [x] Stage 2A generator, immutable handoff and verification tests prepared.
 - [x] Real Stage 2A Mac mini ticket/hash created and independently verified from actual Organization/human Actor context.
+- [x] Stage 2B native-Windows one-send execution procedure and evidence boundary prepared without changing product publication semantics.
 - [ ] One explicitly authorized real manual publication executed under P6.06 in Stage 2B.
 - [ ] Exact Stage 2B outcome reconstructed through CAP-004 in Stage 2C.
 
-Phase 6 remains `Active / In Progress`. The next governed action is **P6.07 Stage 2B — one explicit real manual Discount Parser publication on Windows**. Scheduled/autopost operation remains outside the proof.
+Phase 6 remains `Active / In Progress`. The next governed action is **P6.07 Stage 2B — execute the one explicitly authorized real manual Discount Parser publication on native Windows**. Scheduled/autopost operation remains outside the proof.
