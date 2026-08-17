@@ -156,11 +156,13 @@ class P702PersistentRuntimeTests(unittest.TestCase):
                 [
                     sys.executable,
                     str(RUNTIME_SCRIPT),
-                    "check",
+                    "run",
                     "--runtime-root",
                     tmp,
-                    "--expected-release",
+                    "--release-sha",
                     "abc123",
+                    "--heartbeat-seconds",
+                    "0.05",
                 ],
                 cwd=str(PYTHON_ROOT),
                 text=True,
@@ -168,6 +170,8 @@ class P702PersistentRuntimeTests(unittest.TestCase):
                 timeout=5,
             )
             self.assertNotEqual(checked.returncode, 0)
+            self.assertIn("release SHA must be a full 40-character Git commit SHA", checked.stderr)
+            self.assertFalse((Path(tmp) / "run" / "health.json").exists())
 
     def test_macos_lifecycle_adapter_has_valid_posix_shell_syntax(self):
         checked = subprocess.run(
