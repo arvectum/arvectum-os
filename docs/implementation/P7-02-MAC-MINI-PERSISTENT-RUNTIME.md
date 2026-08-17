@@ -1,12 +1,13 @@
 # P7.02 — Persistent Mac mini Runtime and Service Lifecycle
 
-Status: `Implementation prepared / selected-Mac proof required`
+Status: `Complete / PASS`
 Date: `2026-08-17`
 Owner: `ООО «Арвектум»`
 Task classification: `platform`
 Operating classification: `Persistent Internal / owner-operated`
 Parent baseline: [`P7.01 Persistent Internal Operating Boundary`](../roadmap/P7-01-PERSISTENT-INTERNAL-OPERATING-BASELINE.md) `1.0.1`
 Parent phase: [`Phase 7 — Operational / Enterprise Readiness`](../roadmap/PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md)
+Selected-Mac closure evidence: [`P7.02 Selected Mac mini Proof Attempt 2`](../reviews/P7-02-selected-mac-proof-attempt-2.md) — `Complete / PASS`
 
 ## 1. Purpose
 
@@ -26,7 +27,7 @@ This implementation is deliberately an environment-specific reversible adapter:
 
 ## 2. Authority checked
 
-Implementation was designed against:
+Implementation and closure were checked against:
 
 - Constitution `1.2.0` — `Ratified`, frozen;
 - RFC-0001 through RFC-0008 — `Accepted 1.0.0` per the canonical RFC Index;
@@ -65,12 +66,14 @@ Commands:
 
 - `install` — verify canonical clean `main`, fast-forward to `origin/main`, create exact runtime release, create isolated venv, generate/install owner LaunchAgent, start and verify health;
 - `start` — load/start the LaunchAgent;
-- `stop` — unload/stop it;
+- `stop` — unload/stop it using bounded asynchronous unload polling;
 - `restart` — replace the supervised process;
 - `status` — verify launchd state plus fresh exact-release health;
 - `crash-proof` — `SIGKILL` the process and prove launchd replacement, health-generation advance and no process-owned network socket;
 - `prove` — exercise stop/start/restart/crash recovery, LaunchAgent controls, listener boundary and source-checkout cleanliness;
 - `remove` — unload and remove only the service adapter while retaining runtime releases/config/secrets/evidence.
+
+Attempt 1 exposed an asynchronous `launchd bootout` race in the original one-shot stop check. PR `#27` remediated it with bounded polling, an idempotent already-unloaded path and fail-closed timeout behavior. Reference Python CI run `35` completed `920/920 PASS` before the successful selected-Mac re-proof.
 
 ### 3.3 LaunchAgent behavior
 
@@ -117,50 +120,67 @@ P7.02 does not read or migrate P6 product/EIS secrets and does not establish a s
 
 ## 5. Selected-Mac execution
 
-P7.02 is not complete merely because the repository implementation exists. The selected owner-operated Mac mini must execute the canonical merged implementation.
+P7.02 required the selected owner-operated Mac mini to execute the exact canonical implementation rather than treating repository CI as a substitute for real `launchd` behavior.
 
-From the clean canonical checkout:
+Attempt 1 ran exact release `2db9d6c178d8e67a593d7ebb716f86e394862eea`, installed successfully, and then failed during explicit stop because the original adapter used a one-shot post-`bootout` check. The failure is preserved in [`P7.02 Selected Mac mini Proof Attempt 1`](../reviews/P7-02-selected-mac-proof-attempt-1.md).
 
-```sh
-git fetch origin main
-git merge --ff-only origin/main
-sh reference/python/p7_02_macos_service.sh install
-sh reference/python/p7_02_macos_service.sh prove
-```
+After PR `#27` remediation and roadmap/evidence synchronization, Attempt 2 ran exact canonical release:
 
-The script fails closed when the checkout is not canonical `arvectum/arvectum-os`, is not clean `main`, cannot fast-forward exactly to `origin/main`, the runtime root falls inside the checkout, required macOS commands are unavailable, health does not become current, restart does not replace the process, or network sockets are observed on the runtime process.
+`73af746f83271b14670fe22db658dfd55cacb291`
 
-## 6. Required PASS evidence
+The selected Mac reported:
 
-Selected-Mac proof must demonstrate:
+- canonical repository `arvectum/arvectum-os`;
+- clean branch `main`;
+- `HEAD == origin/main == 73af746f83271b14670fe22db658dfd55cacb291`;
+- `install = PASS`;
+- `prove = PASS`;
+- final `status = PASS`;
+- service remained loaded after proof.
 
-- exact `release_sha` equal to canonical merged `main` at installation;
-- runtime release outside the source checkout;
-- clean source checkout after lifecycle proof;
-- owner LaunchAgent installed with `0600` permissions;
-- `RunAtLoad=true`;
-- failed/crashed process supervision with bounded launchd throttle;
-- predictable explicit stop/start/restart;
-- fresh exact-release health indication;
-- `SIGKILL` crash followed by a different replacement PID and increased health generation;
-- no TCP/UDP listener owned by the runtime process;
-- no product/external consequential effect replay;
-- no canonical-state mutation by the runtime envelope;
-- reusable P7.02 secrets absent and any future secrets/config kept outside Git;
-- clean service removal path available.
+## 6. Required PASS evidence and result
 
-Local evidence is written under the runtime root, including:
+All P7.02 selected-Mac evidence obligations are satisfied for the declared scope:
 
-- `evidence/p7-02-crash-<timestamp>.json`;
-- `evidence/p7-02-summary-<timestamp>.txt`.
+- exact release SHA equal to canonical `main` at execution — `PASS`;
+- runtime release separated from source checkout — `PASS`;
+- clean source checkout after lifecycle proof — `PASS`;
+- owner LaunchAgent with `0600` permissions — `PASS`;
+- `RunAtLoad=true` — `PASS`;
+- `KeepAlive.SuccessfulExit=false` — `PASS`;
+- predictable explicit stop/start/restart — `PASS`;
+- restart replaced the process PID — `PASS`;
+- fresh exact-release health indication — `PASS`;
+- actual `SIGKILL` followed by launchd replacement — `PASS`;
+- health generation advanced `3 → 4` after crash — `PASS`;
+- no TCP/UDP listener owned by the runtime process — `PASS`, none observed;
+- product/external consequential effect replay — `false`;
+- canonical-state mutation by the runtime envelope — `false`;
+- reusable P7.02 secrets required — `false`;
+- clean service removal path remains available — `PASS` by implementation/review boundary.
 
-Raw local paths, raw personal identity values and reusable credentials need not be published in the public repository merely to prove the controls. Canonical closure evidence should record the exact release SHA, relevant result fields and minimized attributable execution context.
+Final observed service state after proof:
+
+- label `com.arvectum.os.persistent-internal`;
+- state `loaded`;
+- final observed PID `91885`;
+- health generation `4`;
+- health state PASS.
+
+Local evidence basenames:
+
+- `p7-02-summary-20260817T175128Z.txt`;
+- `p7-02-crash-20260817T175127Z.json`.
+
+Raw local paths, raw personal identity values and reusable credentials are intentionally not published in canonical closure evidence.
 
 ## 7. Failure and replay boundary
 
 The P7.02 runtime envelope performs no product effect itself.
 
 Supervision or restart must not be interpreted as authorization to replay a historical consequential external action. Future product reliance remains constrained by its exact Product Contract and Governed Execution semantics. Uncertain external outcomes remain reconciliation/new-authorization problems rather than daemon retry problems.
+
+The successful crash proof explicitly recorded `product_effect_replay=false` and `canonical_state_written_by_runtime_envelope=false`.
 
 ## 8. Removal / rollback
 
@@ -196,16 +216,16 @@ P7.02 does not establish:
 - full observability/alerting/retention baseline (P7.05);
 - a governed general deployment/update/migration contract (P7.06).
 
-## 10. Closure rule
+## 10. Closure result
 
-Repository CI and review can prove implementation correctness and portability of the bounded adapter logic, but they cannot substitute for selected-Mac lifecycle evidence.
+The P7.02 closure rule is satisfied:
 
-P7.02 may be marked `Complete / PASS` only after:
+1. implementation and remediation are merged to canonical `main`;
+2. the selected Mac mini ran `install` and `prove` against exact canonical release `73af746f83271b14670fe22db658dfd55cacb291`;
+3. minimized local evidence is canonically recorded in [`P7.02 Selected Mac mini Proof Attempt 2`](../reviews/P7-02-selected-mac-proof-attempt-2.md);
+4. functional cross-review completed with no material objection after iteration 5;
+5. canonical roadmap synchronization is part of the P7.02 closure change set.
 
-1. the implementation is merged to canonical `main`;
-2. the selected Mac mini runs `install` and `prove` against that exact merged release;
-3. local evidence is reviewed and minimized canonical closure evidence is recorded;
-4. no material objection remains after functional cross-review;
-5. the canonical roadmap is synchronized.
+`P7.02 = Complete / PASS` for the declared **Persistent Internal / owner-operated** scope.
 
-Until then, P7.02 remains the current canonical action.
+The selected Mac mini enters regular persistent internal operation. P7.03 becomes the next canonical action and is responsible for durable governed state/checkpoint persistence plus backup/restore baseline.

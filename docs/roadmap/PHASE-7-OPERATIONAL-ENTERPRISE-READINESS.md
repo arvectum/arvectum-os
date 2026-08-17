@@ -1,7 +1,7 @@
 # Arvectum OS Phase 7 — Operational / Enterprise Readiness
 
 Status: `Active`
-Version: `1.1.0`
+Version: `1.2.0`
 Created: `2026-08-17`
 Updated: `2026-08-17`
 Owner: `ООО «Арвектум»`
@@ -53,6 +53,8 @@ Phase 7 distinguishes:
 
 Passing `P7.02` moves the selected Mac mini from bounded validation use into **Persistent Internal / owner-operated** use.
 
+P7.02 has now passed. The selected Mac mini therefore operates in the declared `Persistent Internal / owner-operated` mode while P7.03–P7.12 harden the live baseline.
+
 That transition does not itself make the environment Production and does not change capability or Product Contract lifecycle. It also does not by itself prove the repeatable product operational contours that remain assigned to P7.07 and P7.08.
 
 ## 4. Phase 7 work breakdown
@@ -60,8 +62,8 @@ That transition does not itself make the environment Production and does not cha
 | ID | Work item | Primary execution venue | Status | Progress |
 |---|---|---|---:|---:|
 | `P7.01` | Persistent internal operating boundary + operational requirements baseline | Chat/GitHub | 🟩 Complete / PASS | `██████████ 100%` |
-| `P7.02` | Persistent Mac mini runtime + boot/restart/service lifecycle | Mac mini + GitHub | 🟨 Current | `░░░░░░░░░░ 0%` |
-| `P7.03` | Durable governed state/checkpoint persistence + backup/restore baseline | Mac mini + GitHub | ⬜ | `░░░░░░░░░░ 0%` |
+| `P7.02` | Persistent Mac mini runtime + boot/restart/service lifecycle | Mac mini + GitHub | 🟩 Complete / PASS | `██████████ 100%` |
+| `P7.03` | Durable governed state/checkpoint persistence + backup/restore baseline | Mac mini + GitHub | 🟨 Current | `░░░░░░░░░░ 0%` |
 | `P7.04` | Persistent identity/operator/service access + least-privilege operations | Chat + Mac mini + GitHub | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.05` | Health, observability, audit visibility, alerting + retention/minimization | Mac mini + GitHub | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.06` | Governed deploy/update/rollback/version/migration path | Mac mini + GitHub | ⬜ | `░░░░░░░░░░ 0%` |
@@ -119,24 +121,41 @@ No customer SLA/SLO promise, Production claim, lifecycle promotion, Stable Produ
 
 ### P7.02 — Persistent Mac mini runtime + boot/restart/service lifecycle
 
-Turn the already proven owner-operated Mac mini contour into a supervised persistent internal runtime.
+Status: `Complete / PASS`.
 
-Minimum expected evidence:
+Canonical evidence:
 
-- canonical deployable source/build pin;
-- runtime files separated from repository checkout;
-- local configuration and reusable secrets outside Git;
-- predictable start/stop/restart behavior;
-- boot/login lifecycle appropriate to the selected owner-operated model;
-- process supervision and health indication;
-- crash/restart proof;
-- bounded network listener exposure; no accidental public ingress;
-- clean rollback/removal procedure;
-- source checkout remains reproducible and not used as mutable runtime state.
+- [`P7.02 Persistent Mac mini Runtime and Service Lifecycle`](../implementation/P7-02-MAC-MINI-PERSISTENT-RUNTIME.md) — `Complete / PASS`;
+- [`P7.02 Persistent Runtime Implementation Cross-Review`](../reviews/P7-02-persistent-runtime-implementation-review.md) — `Complete / PASS`, five iterations;
+- [`P7.02 Selected Mac mini Proof Attempt 1`](../reviews/P7-02-selected-mac-proof-attempt-1.md) — failed operational attempt preserved, defect remediated;
+- [`P7.02 Selected Mac mini Proof Attempt 2`](../reviews/P7-02-selected-mac-proof-attempt-2.md) — `Complete / PASS`;
+- exact proven release: `73af746f83271b14670fe22db658dfd55cacb291`;
+- repository remediation PR `#27`: `920/920` Reference Python tests PASS.
 
-A concrete macOS service mechanism such as `launchd` MAY be used as an environment-specific adapter if it remains reversible and does not become the platform contract.
+Proven selected-Mac evidence includes:
 
-**Operational transition:** after `P7.02 PASS`, Arvectum OS enters **regular persistent internal operation on the Mac mini**. Later Phase 7 tasks harden that live operating baseline rather than delaying first real use. Repeatable persistent Tender Operator and Discount Parser contours remain P7.07/P7.08 evidence obligations.
+- canonical deployable source/release pin;
+- runtime/source separation and clean source checkout;
+- predictable stop/start/restart behavior;
+- owner-login `RunAtLoad=true` lifecycle;
+- `KeepAlive.SuccessfulExit=false` crash supervision;
+- plist permissions `0600`;
+- actual `SIGKILL` crash followed by a different replacement PID;
+- health generation advance `3 → 4`;
+- no observed runtime-owned network listener;
+- no product-effect replay;
+- no canonical-state mutation by the runtime envelope;
+- no reusable P7.02 secret requirement;
+- reversible service removal path;
+- service left loaded after successful proof.
+
+Attempt 1 exposed an asynchronous `launchd bootout` race. The defect was remediated with bounded polling and regression-tested before Attempt 2. The failed attempt remains preserved as operational evidence.
+
+A concrete macOS service mechanism such as `launchd` remains an environment-specific adapter, not a stable platform contract.
+
+**Operational transition:** satisfied. Arvectum OS has entered **regular persistent internal operation on the selected Mac mini**. Repeatable persistent Tender Operator and Discount Parser contours remain P7.07/P7.08 evidence obligations.
+
+**Exit:** satisfied — repository implementation/remediation + selected-Mac lifecycle/crash/listener proof + cross-review PASS.
 
 ### P7.03 — Durable governed state/checkpoint persistence + backup/restore baseline
 
@@ -323,6 +342,6 @@ M7 does **not** inherently require:
 
 ## 8. Current canonical action
 
-> **P7.02 — Persistent Mac mini runtime + boot/restart/service lifecycle.**
+> **P7.03 — Durable governed state/checkpoint persistence + backup/restore baseline.**
 
-P7.01 and R21 are complete. P7.02 is the first Mac mini implementation step. After P7.02 PASS the environment becomes `Persistent Internal / owner-operated`; the remaining Phase 7 tasks harden that live baseline and separately prove repeatable product, recovery, portability and lifecycle/readiness requirements.
+P7.01/R21 and P7.02 are complete. The selected Mac mini is now in regular `Persistent Internal / owner-operated` use. P7.03 is the next hardening step and must establish the minimum durable governed-state/checkpoint persistence and verified backup/restore behavior without prematurely selecting a cross-product storage architecture.

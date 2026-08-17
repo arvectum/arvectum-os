@@ -1,23 +1,26 @@
 # P7.02 — Persistent Runtime Implementation Cross-Review
 
-Status: `Complete / PASS for repository implementation`
+Status: `Complete / PASS`
 Date: `2026-08-17`
 Owner: `ООО «Арвектум»`
 Task classification: `platform`
-Reviewed scope: repository implementation for `P7.02 — Persistent Mac mini runtime + boot/restart/service lifecycle`
-Selected-Mac operational proof: `Pending`
+Reviewed scope: `P7.02 — Persistent Mac mini runtime + boot/restart/service lifecycle`
+Selected-Mac operational proof: `Complete / PASS`
 Parent baseline: [`P7.01 Persistent Internal Operating Boundary`](../roadmap/P7-01-PERSISTENT-INTERNAL-OPERATING-BASELINE.md) `1.0.1`
 Implementation runbook: [`P7.02 Persistent Mac mini Runtime and Service Lifecycle`](../implementation/P7-02-MAC-MINI-PERSISTENT-RUNTIME.md)
+Closure evidence: [`P7.02 Selected Mac mini Proof Attempt 2`](P7-02-selected-mac-proof-attempt-2.md)
 
 ## 1. Purpose
 
-This functional cross-review verifies that the repository-side P7.02 implementation is sufficiently bounded, reversible and testable to proceed to the selected owner-operated Mac mini proof without silently creating a stable service/deployment architecture, public ingress, product effect path, lifecycle promotion or stronger operational claim.
+This functional cross-review verifies both the repository implementation and the resulting selected owner-operated Mac mini evidence for P7.02.
 
-This review is not `R22`, not operational-readiness approval, not a Platform Capability lifecycle transition and not P7.02 closure. Actual `launchd`/Mac lifecycle evidence remains mandatory before P7.02 can become `Complete / PASS`.
+The review determines whether the bounded persistent runtime satisfies the declared P7.02 scope without silently creating a stable service/deployment architecture, public ingress, product-effect path, lifecycle promotion or stronger production claim.
+
+This review is not `R22`, not a Platform Capability lifecycle transition, not a Product Contract stabilization and not external/customer Production approval.
 
 ## 2. Authority baseline checked
 
-Checked:
+Checked at closure:
 
 - Constitution `1.2.0` — `Ratified`, frozen;
 - canonical RFC Index — RFC-0001 through RFC-0008 `Accepted 1.0.0`;
@@ -26,204 +29,215 @@ Checked:
 - RFC-0006 — telemetry non-authority, failure evidence and replay-safety constraints;
 - P7.01 baseline `1.0.1`;
 - R21 — `Complete / PASS`;
-- Accepted ADRs — none currently select service supervision or deployment topology.
+- Accepted ADRs — none currently select service supervision or deployment topology;
+- canonical roadmap `2.54.2` immediately before P7.02 closure.
 
 No higher-authority conflict was found.
 
-## 3. Review iterations
+## 3. Functional review iterations
 
 ### Iteration 1 — implementation semantics and evidence specificity
 
 Result: `REVISE`.
 
-Two issues were identified.
+Findings:
 
-#### Finding 1 — release-pin negative test was not specific enough
-
-The first test for rejecting a short release SHA invoked the health-check path against an empty runtime root. It therefore could pass because `health.json` was absent rather than because the invalid SHA was rejected.
-
-Disposition:
-
-- changed the test to invoke `run` directly with a short SHA;
-- require the exact release-SHA validation error;
-- require that no health telemetry is created.
-
-#### Finding 2 — existing release-directory reuse needed stronger integrity verification
-
-The first installer version created a canonical Git archive for a new release but, when `releases/<SHA>` already existed, trusted the directory based primarily on its path identity.
-
-That was insufficient for the P7.02 exact deployable-source pin: owner-local corruption or unintended modification could leave a directory named by the correct SHA while its contents no longer matched canonical Git.
+1. invalid release-SHA negative test could pass for the wrong reason;
+2. existing release-directory reuse trusted a SHA-named directory too much;
+3. runtime/source separation needed a physical-path check as well as lexical checking.
 
 Disposition:
 
-- every install now rebuilds the expected canonical `git archive` for the exact SHA in a temporary verification location;
-- compares SHA-256 of the stored release archive with the newly generated canonical archive;
-- compares the deterministic release manifest;
-- recursively compares the extracted runtime source with the canonical archive source;
-- fails closed on mismatch rather than silently reusing the release;
-- reapplies read-only permissions to the verified source/archive/manifest.
+- test exact invalid-SHA rejection directly;
+- reconstruct canonical `git archive` on every install and compare archive SHA-256, deterministic manifest and extracted source;
+- fail closed on release mismatch;
+- add physical-path source/runtime separation validation.
 
-The same revision also added a physical-path check after creating the runtime root so an owner-supplied symlink path cannot bypass the source/runtime separation rule and resolve inside the Git checkout.
-
-### Iteration 2 — post-revision architecture/security/operability review
+### Iteration 2 — post-revision repository review
 
 Result: `PASS for repository implementation`.
 
-No material repository-side objection remains before selected-Mac proof.
+No material repository-side objection remained before selected-Mac execution.
 
-Review iterations completed: `2 of maximum 7`.
+### Iteration 3 — selected-Mac Attempt 1
 
-## 4. Architecture and stable-boundary review
+Result: `REVISE`.
+
+Attempt 1 installed exact canonical release `2db9d6c178d8e67a593d7ebb716f86e394862eea` successfully but failed during explicit stop. The later status check showed the service already unloaded.
+
+Finding: the adapter used a one-shot `bootout → sleep 0.5 → is_loaded` check and could misclassify an asynchronous unload as failure.
+
+Disposition: bounded polling remediation required before re-proof.
+
+Canonical evidence: [`P7.02 Selected Mac mini Proof Attempt 1`](P7-02-selected-mac-proof-attempt-1.md).
+
+### Iteration 4 — stop-race remediation
+
+Result: `PASS for repository remediation`.
+
+PR `#27` introduced:
+
+- bounded asynchronous unload polling;
+- idempotent already-unloaded handling;
+- fail-closed timeout behavior;
+- final target-state check at timeout boundary;
+- one unload helper reused by install/stop/remove;
+- executable fake-`launchctl` regression tests.
+
+Reference Python CI run `35`: `920/920 PASS`, including:
+
+- delayed asynchronous unload reproduction;
+- bounded timeout fail-closed negative path;
+- already-unloaded idempotency path.
+
+PR `#27` was squash-merged at `4a46ad40599287dde92ef87a0459965fb2cb45db`.
+
+### Iteration 5 — selected-Mac Attempt 2 and closure review
 
 Result: `PASS`.
 
-The implementation deliberately uses an owner `launchd` LaunchAgent as a replaceable environment adapter. It does not create:
+Attempt 2 executed exact canonical release:
 
-- a public API or wire protocol;
-- a stable macOS support commitment;
-- a persistent platform service topology contract;
-- a database/broker/storage selection;
-- a Product Contract dependency on `launchd`;
-- a Platform Capability lifecycle transition.
+`73af746f83271b14670fe22db658dfd55cacb291`
 
-The runtime envelope only loads existing bounded domain-neutral semantic modules and publishes local health telemetry. This is consistent with R21's explicit `ADR required now: NO` disposition.
+Observed evidence:
 
-If later evidence turns this supervision/deployment mechanism into a cross-product, externally relied-upon or materially expensive-to-reverse boundary, the P7.01 ADR/stable-boundary trigger must be re-evaluated.
+- canonical repository `arvectum/arvectum-os` — PASS;
+- clean `main`, `HEAD == origin/main` — PASS;
+- install — PASS;
+- aggregate prove — PASS;
+- final status — PASS;
+- explicit stop/start — PASS;
+- explicit restart — PASS;
+- restart changed PID — PASS;
+- real `SIGKILL` — YES;
+- launchd crash restart — PASS;
+- crashed PID `91775`, replacement PID `91885`;
+- health generation `3 → 4`;
+- network listener exposure — none observed;
+- product-effect replay — false;
+- canonical-state write by envelope — false;
+- reusable P7.02 secrets required — false;
+- source checkout dirty — false;
+- `RunAtLoad=true`;
+- `KeepAlive.SuccessfulExit=false`;
+- plist permissions `0600`;
+- service left loaded after proof.
 
-## 5. Source/runtime/release integrity review
+No material objection remains for P7.02.
+
+Functional review iterations completed: `5 of maximum 7`.
+
+## 4. Architecture and stable-boundary disposition
 
 Result: `PASS`.
 
-The implementation requires:
+The owner `launchd` LaunchAgent remains a reversible environment adapter. P7.02 creates no:
 
-- canonical repository `arvectum/arvectum-os`;
-- clean branch `main`;
-- fast-forward-only synchronization;
-- exact `HEAD == origin/main`;
-- full 40-character Git release SHA;
-- runtime root outside the source checkout by lexical and physical-path checks;
-- exact canonical `git archive` release snapshot;
-- archive SHA-256 verification on reuse;
-- manifest and extracted source comparison on reuse;
+- public API or wire protocol;
+- stable macOS support commitment;
+- permanent platform service topology contract;
+- database/broker/storage selection;
+- Product Contract dependency on `launchd`;
+- Platform Capability lifecycle transition;
+- external/customer Production claim.
+
+R21's `ADR required now: NO` disposition remains valid. The ADR/stable-boundary trigger must be re-evaluated if this mechanism becomes cross-product, externally relied upon or materially expensive to reverse.
+
+## 5. Source/runtime/release integrity disposition
+
+Result: `PASS`.
+
+The proven path preserves:
+
+- exact canonical repository pin;
+- clean canonical branch;
+- exact full Git SHA release;
+- immutable `git archive` release snapshot;
+- release archive/manifest/source verification;
+- runtime/source separation;
 - isolated version-specific venv;
-- no Python bytecode writes by the supervised runtime into the release snapshot;
-- source checkout cleanliness after proof.
+- clean source checkout after proof.
 
-The runtime release is therefore reconstructable from canonical Git and is not the mutable Git checkout itself.
+Raw owner-local paths are not required in canonical closure evidence and are intentionally minimized.
 
-## 6. Service lifecycle review
+## 6. Service lifecycle disposition
 
-Result: `PASS subject to selected-Mac execution`.
+Result: `PASS`.
 
-Repository logic provides:
+Selected-Mac evidence proves:
 
-- install;
-- start;
-- stop;
-- restart;
-- status;
-- crash/restart proof;
-- aggregate local proof;
-- reversible service removal.
+- supervised owner-login service lifecycle;
+- explicit stop/start/restart;
+- process replacement on restart;
+- actual crash recovery through `launchd`;
+- bounded unsuccessful-exit restart pressure;
+- service remains loaded after proof.
 
-The selected lifecycle is owner-login scoped rather than root/system-wide boot execution. That is consistent with the declared `Persistent Internal / owner-operated` model and the P7.01/P7.02 requirement for a boot/login lifecycle appropriate to that model.
-
-The plist uses `RunAtLoad`, crash supervision and bounded restart throttling. Repository review can inspect this configuration, but actual `launchctl` behavior remains a selected-Mac evidence obligation.
+`RunAtLoad=true`, `KeepAlive.SuccessfulExit=false` and plist `0600` were observed on the selected Mac.
 
 ## 7. Health and observability boundary
 
-Result: `PASS`.
+Result: `PASS for P7.02 scope`.
 
-Health is local owner-only JSON telemetry that explicitly declares:
+Health remains local operational telemetry, non-canonical by default. It records exact release/process/generation state without becoming organizational authority.
 
-- `non-canonical operational telemetry`;
-- exact release SHA;
-- process instance and generation;
-- fresh heartbeat;
-- local PID;
-- semantic import self-check;
-- no network listener mode;
-- no product effects;
-- no canonical-state writes by the envelope.
+Attempt 2 ended with health generation `4` and PASS state. Crash recovery advanced generation from `3` to `4`.
 
-The health checker fails when telemetry is missing/stopped/stale, the exact release differs or the recorded PID is no longer alive.
-
-This health document is not canonical Event/evidence, organizational authority or Knowledge.
-
-P7.05 remains responsible for broader logs/metrics/alerting/retention/minimization hardening.
+Broader logs, metrics, alerting and retention/minimization remain P7.05 and R22 scope.
 
 ## 8. Network and external-effect boundary
 
-Result: `PASS subject to selected-Mac socket proof`.
-
-The runtime module creates no HTTP/TCP/UDP server and no product/external action adapter.
-
-The Mac proof additionally inspects process-owned network sockets with `lsof` and fails if any are observed.
-
-Crash/restart supervision is explicitly not authorization to replay a consequential product effect. Persistent Tender Operator and Discount Parser operational contours remain P7.07 and P7.08.
-
-## 9. Secrets and local configuration review
-
 Result: `PASS`.
 
-P7.02 itself requires no reusable secret. The runtime root separates `config/` and reserved `secrets/` from source and applies owner-only permissions to the security-sensitive local directories.
+The selected runtime process owned no observed network listener/socket during proof.
 
-The implementation does not read, copy, migrate, print or back up the P6 EIS/product secret material.
+The runtime envelope performs no product/external consequential effect and recorded:
 
-This does not establish the final persistent identity/service-access/secret-rotation model; P7.04 remains authoritative for that hardening step.
+- `product_effect_replay=false`;
+- `canonical_state_written_by_runtime_envelope=false`.
 
-## 10. Failure and recovery review
+Crash/restart supervision is not authorization to replay historical external effects. Persistent Tender Operator and Discount Parser operational reliance remains P7.07/P7.08.
 
-Result: `PASS subject to selected-Mac crash proof`.
+## 9. Secrets and access boundary
 
-The runtime:
+Result: `PASS for P7.02 scope`.
 
-- prevents two owner processes from using one runtime root simultaneously;
-- produces new process-instance/generation evidence after restart;
-- marks graceful termination as stopped;
-- fails health checks closed for stopped/stale/dead-process state;
-- uses unsuccessful-exit supervision for crash replacement;
-- keeps service removal separate from destructive state/evidence deletion.
+P7.02 requires no reusable secret and did not migrate or consume P6 EIS/product secrets.
 
-The selected-Mac proof must demonstrate an actual `SIGKILL` followed by a different PID, increased generation and fresh health.
+This does not establish the final persistent service identity/access/secret-rotation model. P7.04 remains responsible for that hardening.
 
-## 11. Testing and CI disposition
+## 10. Failure and recovery disposition
 
-Repository tests cover:
+Result: `PASS for process/service lifecycle scope`.
 
-- non-canonical/effect-free health semantics;
-- exact release pin;
-- owner-only health-file permission;
-- single-instance lock;
-- process-generation continuity after restart;
-- stopped-health failure;
-- exact invalid-SHA rejection;
-- POSIX shell syntax;
-- absence of a network-service implementation in the Python runtime envelope.
+The final proof demonstrates graceful lifecycle control and actual crash replacement. The failed first attempt remains preserved as operational learning evidence and the corresponding repository defect is regression-tested.
 
-The canonical `Reference Python CI` full suite is required on the PR because the new tests live under `reference/python/**`.
+Durable governed state recovery, backup/restore and host-loss recovery remain P7.03 and P7.10.
 
-Hosted CI cannot substitute for the owner-operated Mac `launchd` proof.
+## 11. Known bounded deferrals
 
-## 12. Known bounded deferrals
-
-The following are intentionally not defects in P7.02 and remain assigned to later Phase 7 work:
+The following remain intentionally outside P7.02:
 
 - durable governed/checkpoint state and backup/restore — P7.03;
-- final persistent service identity/access/secret lifecycle — P7.04;
-- broader observability, alerting and telemetry retention/rotation — P7.05;
-- generalized governed deploy/update/rollback/migration path — P7.06;
+- persistent service identity/access/secret lifecycle — P7.04;
+- broader observability, alerting and telemetry retention — P7.05;
+- generalized governed deploy/update/rollback/migration — P7.06;
 - repeatable persistent Tender Operator reliance — P7.07;
 - repeatable Discount Parser cross-host reliance — P7.08;
-- operator incident/recovery drills — P7.09;
-- host-loss portability proof — P7.10.
+- incident/recovery drills — P7.09;
+- host-loss portability proof — P7.10;
+- lifecycle/conformance/stable-boundary decisions — P7.11;
+- M7 closure — P7.12.
 
 These deferrals must not be represented as already proven by P7.02.
 
-## 13. Review result
+## 12. Review result
 
-`P7.02 repository implementation cross-review = PASS after 2 iterations.`
+`P7.02 functional cross-review = Complete / PASS after 5 iterations.`
 
-The implementation is fit to merge after CI PASS and proceed to selected-Mac execution.
+The repository implementation, remediation and selected-Mac operational proof satisfy the declared P7.02 exit evidence.
 
-P7.02 itself remains `Current / selected-Mac proof pending` until the canonical merged SHA is installed and the required lifecycle/crash/listener evidence is produced and recorded.
+The selected Mac mini may enter **regular Persistent Internal / owner-operated** Arvectum OS operation. This is an operational-mode transition only; it does not imply external Production, capability activation, Product Contract stabilization, SLA/support or a stable deployment boundary.
+
+After canonical roadmap synchronization, P7.03 becomes the next canonical action.
