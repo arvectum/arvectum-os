@@ -1,16 +1,17 @@
 # P7.03 — Durable State Implementation Cross-Review
 
-Status: `Repository review PASS / selected-Mac proof pending`
+Status: `Complete / PASS`
 Date: `2026-08-17`
 Owner: `ООО «Арвектум»`
 Task classification: `platform`
 Reviewed scope: `P7.03 — Durable governed state/checkpoint persistence + backup/restore baseline`
 Implementation: [`P7.03 Durable Governed State / Checkpoint Persistence and Backup / Restore Baseline`](../implementation/P7-03-DURABLE-GOVERNED-STATE-BACKUP-RESTORE.md)
 Parent baseline: [`P7.01 Persistent Internal Operating Boundary`](../roadmap/P7-01-PERSISTENT-INTERNAL-OPERATING-BASELINE.md) `1.0.1`
+Selected-Mac closure evidence: [`P7.03 Selected Mac mini Proof Attempt 3`](P7-03-selected-mac-proof-attempt-3.md) — `Complete / PASS`
 
 ## 1. Purpose
 
-This functional cross-review evaluates the P7.03 repository implementation from architecture, engineering, operations, security/privacy and governance perspectives before selected-Mac execution.
+This functional cross-review evaluates the P7.03 repository implementation and selected-Mac closure evidence from architecture, engineering, operations, security/privacy and governance perspectives.
 
 It is not R23, not an ADR acceptance, not a Platform Capability lifecycle transition and not a production-readiness approval.
 
@@ -22,8 +23,8 @@ Checked:
 - RFC-0001 through RFC-0008 — `Accepted 1.0.0`;
 - P7.01 baseline `1.0.1`;
 - P7.02 `Complete / PASS`;
-- canonical Phase 7 roadmap `1.2.0`;
-- canonical roadmap `2.54.3` before P7.03 implementation;
+- canonical Phase 7 roadmap;
+- canonical roadmap;
 - Accepted ADRs — none select persistence, database, object store or backup topology.
 
 No higher-authority conflict was found.
@@ -90,7 +91,7 @@ Disposition:
 
 Result after revision: exact-version and minimization boundaries are preserved without prejudging P7.06/P7.10.
 
-### Iteration 4 — final repository-side cross-review
+### Iteration 4 — repository-side cross-review
 
 Result: `PASS for repository implementation; selected-Mac proof remains required`.
 
@@ -136,30 +137,124 @@ Governance:
 - no lifecycle, Production, SLA, support or compatibility promotion;
 - P7.03 cannot close until selected-Mac proof and canonical evidence/roadmap synchronization are complete.
 
-No material repository-side objection remains.
+No material repository-side objection remained.
 
-Functional review iterations completed: `4 of maximum 7` so far.
+### Iteration 5 — selected-Mac evidence-contract and lifecycle review
 
-## 4. Validation evidence before repository publication
+Result: `REVISE`.
 
-Local executable validation of the candidate implementation:
+Attempt 1 reported an internally inconsistent combination:
 
-- P7.03 focused unit tests: `12/12 PASS`;
+```text
+status = PASS
+persistent_runtime_state = stopped
+```
+
+The canonical core proof required `healthy` when persistent runtime enforcement was requested, so Attempt 1 could not be accepted as closure evidence even though its backup/restore observations were useful within their demonstrated scope.
+
+Disposition:
+
+- preserve Attempt 1 as rejected closure evidence rather than discard it;
+- add a dedicated selected-Mac wrapper that independently requires `healthy` before and after the core proof;
+- force `require_persistent_runtime=True` internally;
+- reject inconsistent core `PASS + non-healthy` summaries;
+- require unchanged P7.02 runtime release before/after;
+- emit explicit `required_runtime_enforced=true` attestation;
+- add regression coverage for healthy, stopped and inconsistent-summary paths.
+
+PR `#31` merged the hardening and full Reference Python CI passed `935/935` tests.
+
+The first hardened re-proof, preserved as Attempt 2, then correctly failed closed because P7.02 was actually `stopped`. This was an operational lifecycle blocker, not a persistence-integrity regression. The existing P7.02 lifecycle `start` action was then explicitly human owner/operator-authorized without install, upgrade, migration or release change.
+
+Result after revision: the selected-Mac proof contract now fails closed on an unhealthy lifecycle precondition and does not allow operator wording to substitute for machine-checked runtime health.
+
+### Iteration 6 — final selected-Mac operational evidence review
+
+Result: `PASS`.
+
+Attempt 3 executed the hardened wrapper from clean exact canonical tool release:
+
+`e20b7801cf389b1afe7f513182d352a566809c55`
+
+against the existing P7.02 runtime release:
+
+`73af746f83271b14670fe22db658dfd55cacb291`.
+
+Observed closure evidence:
+
+- `status=PASS`;
+- `required_runtime_enforced=true`;
+- runtime state before = `healthy`;
+- runtime state after = `healthy`;
+- P7.02 runtime release unchanged before/after;
+- live restore integrity `PASS`;
+- live state digest equals restored state digest `true`;
+- fixture backup and restore integrity `PASS`;
+- deliberate tamper detection fail-closed `true`;
+- explicit exclusions absent `true`;
+- reusable secrets / telemetry / cache absent;
+- checkpoint canonical authority `false`;
+- proof fixture canonical authority `false`;
+- external-effect replay authorized `false`;
+- source checkout clean after proof.
+
+Architecture review:
+
+- successful persistence/backup proof does not promote the filesystem/tar mechanism into stable architecture;
+- storage locators remain distinct from RFC identities;
+- no permanent database/object-store/backup topology is selected.
+
+Security/privacy review:
+
+- backup minimization boundary remained intact;
+- no reusable secrets, telemetry or cache entered the backup;
+- proof fixture remained non-authoritative.
+
+Operations review:
+
+- P7.02 service recovery used the existing lifecycle action and preserved exact runtime release;
+- hardened runtime-health checks were satisfied both before and after proof;
+- restore remained isolated and replay-safe.
+
+Governance review:
+
+- no Product Contract or Platform Capability lifecycle promotion occurs;
+- no external/customer Production, SLA/support or compatibility claim occurs;
+- no ADR trigger is crossed by the bounded reversible implementation;
+- no historical external effect replay is authorized.
+
+No material objection remains.
+
+Functional review iterations completed: `6 of maximum 7`.
+
+## 4. Validation evidence
+
+Repository and CI evidence:
+
+- initial P7.03 focused unit tests: `12/12 PASS`;
 - standalone `py_compile`: PASS;
-- empty live-store backup/verify/isolated restore: PASS;
-- non-authoritative fixture persist/checkpoint/backup/restore: PASS;
-- post-restore state-tree digest equality: PASS;
-- deliberate restored-payload corruption: detected / fail-closed PASS;
-- explicit exclusion check (`run/`, `logs/`, `cache/`, `secrets/`): PASS;
-- required-persistent-runtime negative path when health absent: PASS.
+- repository implementation PR `#30` merged at `e2440b6f8afc7e0f21b20d370047bfa3ac803017`;
+- full Reference Python CI after implementation: `932/932 PASS`;
+- proof-contract hardening PR `#31` merged at `5d33f874beb38f773ecf816ecd6d35e5fcb26c97`;
+- full Reference Python CI after hardening: `935/935 PASS`.
 
-Repository CI remains required after publication/PR.
+Operational evidence:
+
+- [`Attempt 1`](P7-03-selected-mac-proof-attempt-1.md) — rejected as closure evidence; useful scoped backup/restore observations retained;
+- [`Attempt 2`](P7-03-selected-mac-proof-attempt-2.md) — correct hardened fail-closed result while P7.02 runtime was stopped;
+- [`Attempt 3`](P7-03-selected-mac-proof-attempt-3.md) — `Complete / PASS` after owner-authorized ordinary P7.02 lifecycle recovery.
+
+Attempt 3 selected-Mac local evidence includes:
+
+- attestation `p7-03-selected-mac-attestation-20260817T192924Z-9fa8f43b.json`;
+- core summary `p7-03-summary-20260817T192924Z-a4d188c7.json`;
+- live backup `p7-03-backup-20260817T192924Z-a8b80b0fe41809da.tar.gz`;
+- live backup SHA-256 `6b2661050a2d777c9cae0bada8c584c2e426489156505dc30e6ce5756de97765`.
 
 ## 5. Known bounded deferrals
 
 Intentionally deferred:
 
-- selected-Mac operational proof and canonical evidence record — remaining P7.03 work;
 - persistent workload/service identity and secret lifecycle — P7.04;
 - broader telemetry/log retention and alerting — P7.05;
 - generalized deployment/update/rollback/state migration — P7.06;
@@ -169,15 +264,12 @@ Intentionally deferred:
 - off-host/clean-environment host-loss restore and portability — P7.10;
 - lifecycle/conformance/stable-boundary disposition — P7.11.
 
-These are not defects in the bounded P7.03 repository implementation and must not be represented as already proven.
+These are not defects in the bounded P7.03 implementation and must not be represented as already proven.
 
-## 6. Current review result
+## 6. Final review result
 
-`P7.03 repository implementation cross-review = PASS after 4 iterations.`
+`P7.03 functional cross-review = Complete / PASS after 6 iterations.`
 
-P7.03 itself remains open pending:
+All material objections within the declared P7.03 scope are resolved. Canonical selected-Mac evidence and roadmap synchronization complete the closure package.
 
-1. canonical PR/CI merge;
-2. selected Mac mini `prove --require-persistent-runtime` execution against the real persistent-internal root;
-3. canonical selected-Mac evidence publication;
-4. final read-after-write/cross-review closure and roadmap synchronization.
+This review does not constitute R23, formal production approval, ADR acceptance, Platform Capability promotion or Product Contract stabilization.

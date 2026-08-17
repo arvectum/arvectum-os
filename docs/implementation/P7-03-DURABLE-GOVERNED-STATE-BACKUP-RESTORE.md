@@ -1,6 +1,6 @@
 # P7.03 — Durable Governed State / Checkpoint Persistence and Backup / Restore Baseline
 
-Status: `Repository implementation ready / selected-Mac proof pending`
+Status: `Complete / PASS`
 Date: `2026-08-17`
 Owner: `ООО «Арвектум»`
 Task classification: `platform`
@@ -8,7 +8,8 @@ Operating classification: `Persistent Internal / owner-operated`
 Parent baseline: [`P7.01 Persistent Internal Operating Boundary`](../roadmap/P7-01-PERSISTENT-INTERNAL-OPERATING-BASELINE.md) `1.0.1`
 Parent phase: [`Phase 7 — Operational / Enterprise Readiness`](../roadmap/PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md)
 Predecessor: [`P7.02 Persistent Mac mini Runtime`](P7-02-MAC-MINI-PERSISTENT-RUNTIME.md) — `Complete / PASS`
-Cross-review: [`P7.03 Durable State Implementation Cross-Review`](../reviews/P7-03-durable-state-implementation-review.md)
+Cross-review: [`P7.03 Durable State Implementation Cross-Review`](../reviews/P7-03-durable-state-implementation-review.md) — `Complete / PASS`
+Selected-Mac closure evidence: [`P7.03 Selected Mac mini Proof Attempt 3`](../reviews/P7-03-selected-mac-proof-attempt-3.md) — `Complete / PASS`
 
 ## 1. Purpose
 
@@ -20,7 +21,7 @@ It does **not** authorize canonical mutation. A caller may persist bytes as cano
 
 ## 2. Authority checked
 
-Implementation was checked against:
+Implementation and closure were checked against:
 
 - Constitution `1.2.0` — `Ratified`, frozen;
 - RFC-0001 through RFC-0008 — `Accepted 1.0.0` per the canonical RFC Index;
@@ -55,7 +56,8 @@ The ADR/stable-boundary gate must be revisited before further reliance if this s
 
 Canonical implementation:
 
-`reference/python/p7_03_durable_state.py`
+- `reference/python/p7_03_durable_state.py` — durable state, checkpoint, backup, verification and isolated restore mechanism;
+- `reference/python/p7_03_selected_mac_proof.py` — hardened selected-Mac closure wrapper that enforces healthy P7.02 runtime before and after proof.
 
 Default runtime root inherited from P7.02:
 
@@ -76,6 +78,7 @@ backups/
   p7-03-backup-*.tar.gz.sha256
 evidence/
   p7-03-summary-*.json
+  p7-03-selected-mac-attestation-*.json
 ```
 
 The adapter preserves but does not back up the P7.02/non-governed paths:
@@ -207,6 +210,8 @@ The mechanism fails closed when:
 - restore target already exists;
 - selected-Mac proof requires persistent runtime health but P7.02 health is absent or not healthy.
 
+Attempt 2 exercised the last boundary operationally: the hardened wrapper refused closure while P7.02 reported `stopped`. The owner/operator then used the existing P7.02 `start` lifecycle operation, preserving the same exact runtime release, before Attempt 3.
+
 Consequential processing whose correctness depends on invalid/unavailable governed state must not continue as if the state were valid. P7.03 itself performs no consequential product operation; downstream consumers remain responsible for applying the existing Governed Execution failure/pause/reconciliation semantics.
 
 ## 9. Retention, deletion and minimization
@@ -224,69 +229,67 @@ Current baseline:
 
 Broader telemetry retention belongs to P7.05. Incident/recovery procedures belong to P7.09. Clean-host portability belongs to P7.10.
 
-## 10. Executable proof
+## 10. Executable validation and selected-Mac proof
 
-The repository test suite exercises:
+Repository validation included:
 
-- state-class separation and exclusions;
-- canonical metadata boundaries;
-- historical source-release attribution;
-- secret-declared payload refusal;
-- immutable governed item validation;
-- non-authoritative/replay-safe checkpoints;
-- minimized backup contents;
-- backup checksum verification;
-- isolated restore;
-- restore target protection;
-- path traversal rejection;
-- tamper detection and fail-closed behavior;
-- empty-live-store backup/restore;
-- synthetic non-authoritative checkpoint proof without live canonical pollution;
-- exact persistent-runtime release observation when present;
-- required-runtime failure when health is absent/unhealthy;
-- backup output confinement to the owner-local backup directory.
+- P7.03 focused tests `12/12 PASS` before publication;
+- repository implementation PR `#30`, merged at `e2440b6f8afc7e0f21b20d370047bfa3ac803017`;
+- full Reference Python CI after repository publication: `932/932 PASS`;
+- proof-contract hardening PR `#31`, merged at `5d33f874beb38f773ecf816ecd6d35e5fcb26c97`;
+- full Reference Python CI after hardening: `935/935 PASS`, including healthy, stopped and inconsistent-core-summary proof paths.
 
-### Selected Mac mini proof
+### 10.1 Attempt 1 — rejected closure evidence
 
-Repository/CI validation is not a substitute for the selected-Mac proof. After this implementation is merged to canonical `main`, run from a clean canonical checkout:
+[`P7.03 Selected Mac mini Proof Attempt 1`](../reviews/P7-03-selected-mac-proof-attempt-1.md) preserved useful backup/restore observations but was rejected for closure because the reported combination `status=PASS` and `persistent_runtime_state=stopped` could not satisfy the canonical required-runtime contract.
 
-```sh
-REPO=/Users/master/workspace/arvectum-os
-RUNTIME_ROOT="$HOME/Library/Application Support/ArvectumOS/persistent-internal"
+This triggered the dedicated hardened wrapper in PR `#31`.
 
-cd "$REPO"
-git fetch origin
-git switch main
-git pull --ff-only origin main
-TEST_SHA=$(git rev-parse HEAD)
+### 10.2 Attempt 2 — correct fail-closed lifecycle blocker
 
-test "$(git status --porcelain)" = ""
+[`P7.03 Selected Mac mini Proof Attempt 2`](../reviews/P7-03-selected-mac-proof-attempt-2.md) ran the hardened wrapper on clean canonical SHA `a04f6e6caa90c8f078ab1383be14f83b4f47ad3b` and correctly failed before closure proof because the P7.02 runtime was actually `stopped`.
 
-python3 reference/python/p7_03_durable_state.py prove \
-  --runtime-root "$RUNTIME_ROOT" \
-  --release-sha "$TEST_SHA" \
-  --require-persistent-runtime \
-  --json
-```
+The existing P7.02 lifecycle `start` operation was then explicitly owner/operator-authorized. It did not perform install, upgrade, migration or runtime release change.
 
-The proof intentionally does **not** update the P7.02 running service release. P7.06 owns the generalized governed update/rollback/migration path. P7.03 only observes and records the exact running release exposed by existing P7.02 health.
+### 10.3 Attempt 3 — Complete / PASS
 
-A successful selected-Mac proof must show at least:
+[`P7.03 Selected Mac mini Proof Attempt 3`](../reviews/P7-03-selected-mac-proof-attempt-3.md) executed from clean exact canonical SHA:
+
+`e20b7801cf389b1afe7f513182d352a566809c55`
+
+with existing P7.02 runtime release:
+
+`73af746f83271b14670fe22db658dfd55cacb291`.
+
+The hardened attestation reported:
 
 - `status=PASS`;
-- persistent runtime observed and `state=healthy`;
-- exact persistent-runtime release recorded;
-- live backup integrity PASS;
-- isolated live restore integrity PASS;
-- live state digest equals restored state digest;
-- non-authoritative fixture checkpoint backup/restore PASS;
-- tamper detection fail-closed PASS;
-- explicit exclusions absent from backup;
-- reusable secrets / telemetry / cache absent;
-- no external effect replay authorization;
-- no proof-fixture canonical authority.
+- `required_runtime_enforced=true`;
+- runtime state before = `healthy`;
+- runtime state after = `healthy`;
+- exact runtime release unchanged before/after;
+- live restore integrity `PASS`;
+- live state digest equals restored state digest `true`;
+- fixture backup integrity `PASS`;
+- fixture restore integrity `PASS`;
+- tamper detection fail-closed `true`;
+- explicit exclusions absent `true`;
+- reusable secrets in backup `false`;
+- telemetry in backup `false`;
+- cache in backup `false`;
+- checkpoint canonical authority `false`;
+- proof fixture canonical authority `false`;
+- external-effect replay authorized `false`.
 
-The live store may legitimately contain zero governed items before P7.07/P7.08 begin persistent product reliance. The selected proof therefore verifies the actual live state as-is and uses a separate ephemeral non-authoritative fixture store to prove the non-empty checkpoint/backup/restore mechanics without fabricating or promoting canonical state.
+Selected-Mac local evidence:
+
+- attestation: `p7-03-selected-mac-attestation-20260817T192924Z-9fa8f43b.json`;
+- core summary: `p7-03-summary-20260817T192924Z-a4d188c7.json`;
+- live backup: `p7-03-backup-20260817T192924Z-a8b80b0fe41809da.tar.gz`;
+- live backup SHA-256: `6b2661050a2d777c9cae0bada8c584c2e426489156505dc30e6ce5756de97765`;
+- source working tree after proof: clean.
+
+The live store may legitimately contain zero governed items before P7.07/P7.08 begin persistent product reliance. Non-empty checkpoint/backup/restore mechanics are separately proven through ephemeral non-authoritative fixture state without fabricating or promoting canonical state.
 
 ## 11. Scope and non-claims
 
@@ -305,15 +308,17 @@ P7.03 does not establish:
 - generalized update/migration behavior (P7.06);
 - final IAM/secret lifecycle (P7.04).
 
-## 12. Closure rule
+## 12. Closure result
 
-P7.03 may be closed as `Complete / PASS` only when all of the following are true:
+All P7.03 closure conditions are satisfied within the declared scope:
 
 1. repository implementation and tests are merged to canonical `main`;
-2. Reference Python CI is PASS;
-3. selected Mac mini runs the exact merged implementation against the existing persistent-internal runtime root;
-4. selected-Mac minimized proof evidence is canonically recorded;
-5. functional cross-review has no remaining material objection;
-6. canonical roadmap and Phase 7 roadmap are synchronized to P7.03 closure.
+2. Reference Python CI passed for the implementation and subsequent proof-contract hardening;
+3. the selected Mac mini ran the hardened exact merged implementation against the existing persistent-internal runtime root;
+4. minimized selected-Mac evidence is canonically recorded in Attempt 3, with Attempts 1 and 2 retained rather than hidden;
+5. functional cross-review completes with no remaining material objection after iteration 6;
+6. canonical roadmap and Phase 7 roadmap are synchronized as part of the closure change set.
 
-Until the selected-Mac proof is recorded, P7.03 remains open and P7.04 must not be represented as the current canonical action.
+`P7.03 = Complete / PASS` for the declared **Persistent Internal / owner-operated** scope.
+
+The next canonical action is `P7.04 — Persistent identity/operator/service access + least-privilege operations`.

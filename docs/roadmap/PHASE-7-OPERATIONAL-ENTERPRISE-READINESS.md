@@ -1,7 +1,7 @@
 # Arvectum OS Phase 7 — Operational / Enterprise Readiness
 
 Status: `Active`
-Version: `1.2.0`
+Version: `1.2.1`
 Created: `2026-08-17`
 Updated: `2026-08-17`
 Owner: `ООО «Арвектум»`
@@ -53,7 +53,7 @@ Phase 7 distinguishes:
 
 Passing `P7.02` moves the selected Mac mini from bounded validation use into **Persistent Internal / owner-operated** use.
 
-P7.02 has now passed. The selected Mac mini therefore operates in the declared `Persistent Internal / owner-operated` mode while P7.03–P7.12 harden the live baseline.
+P7.02 has passed. The selected Mac mini therefore operates in the declared `Persistent Internal / owner-operated` mode while P7.03–P7.12 harden the live baseline.
 
 That transition does not itself make the environment Production and does not change capability or Product Contract lifecycle. It also does not by itself prove the repeatable product operational contours that remain assigned to P7.07 and P7.08.
 
@@ -63,8 +63,8 @@ That transition does not itself make the environment Production and does not cha
 |---|---|---|---:|---:|
 | `P7.01` | Persistent internal operating boundary + operational requirements baseline | Chat/GitHub | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.02` | Persistent Mac mini runtime + boot/restart/service lifecycle | Mac mini + GitHub | 🟩 Complete / PASS | `██████████ 100%` |
-| `P7.03` | Durable governed state/checkpoint persistence + backup/restore baseline | Mac mini + GitHub | 🟨 Current | `░░░░░░░░░░ 0%` |
-| `P7.04` | Persistent identity/operator/service access + least-privilege operations | Chat + Mac mini + GitHub | ⬜ | `░░░░░░░░░░ 0%` |
+| `P7.03` | Durable governed state/checkpoint persistence + backup/restore baseline | Mac mini + GitHub | 🟩 Complete / PASS | `██████████ 100%` |
+| `P7.04` | Persistent identity/operator/service access + least-privilege operations | Chat + Mac mini + GitHub | 🟨 Current | `░░░░░░░░░░ 0%` |
 | `P7.05` | Health, observability, audit visibility, alerting + retention/minimization | Mac mini + GitHub | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.06` | Governed deploy/update/rollback/version/migration path | Mac mini + GitHub | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.07` | Persistent Tender Operator operational contour | Mac mini + product environment + GitHub | ⬜ | `░░░░░░░░░░ 0%` |
@@ -96,24 +96,7 @@ Canonical evidence:
 - [`P7.01 Persistent Internal Operating Boundary and Operational Requirements Baseline`](P7-01-PERSISTENT-INTERNAL-OPERATING-BASELINE.md) — `Complete / Baseline 1.0.1`;
 - [`R21 — Operational Boundary Review`](../reviews/R21-operational-boundary-review.md) — `Complete / PASS`, two iterations.
 
-The baseline now defines:
-
-- operating classification: `Persistent Internal / owner-operated`;
-- operational owner ООО «Арвектум» and named `Arvectum OS Owner-Operator` role resolved at runtime to an attributable human Principal/Actor;
-- Organization scope limited initially to ООО «Арвектум»;
-- bounded workloads admitted under existing Provisional Product Contracts;
-- explicit non-goals and prohibited external/customer commitments;
-- data/classification/retention/secret boundaries;
-- authority and approval expectations;
-- health/restart/recovery expectations proportionate to internal use;
-- backup/restore scope;
-- upgrade/rollback requirements;
-- network/proxy/trust dependencies;
-- operator-access assumptions;
-- explicit ADR/stable-boundary triggers;
-- rollback/removal path.
-
-R21 identified one sequencing ambiguity in the first draft and the baseline was revised before PASS: `P7.02` enables the persistent internal runtime and bounded reliance on previously validated contract surfaces, while repeatable persistent product operation remains to be proven by `P7.07` and `P7.08`.
+The baseline defines the `Persistent Internal / owner-operated` operating classification, current ООО «Арвектум» Organization scope, owner/operator authority boundary, bounded admitted workloads, data/secret/retention/network/recovery constraints, ADR/stable-boundary triggers and reversible removal path.
 
 No customer SLA/SLO promise, Production claim, lifecycle promotion, Stable Product Contract, public API or permanent persistence/IAM/service/deployment choice was created.
 
@@ -132,49 +115,59 @@ Canonical evidence:
 - exact proven release: `73af746f83271b14670fe22db658dfd55cacb291`;
 - repository remediation PR `#27`: `920/920` Reference Python tests PASS.
 
-Proven selected-Mac evidence includes:
-
-- canonical deployable source/release pin;
-- runtime/source separation and clean source checkout;
-- predictable stop/start/restart behavior;
-- owner-login `RunAtLoad=true` lifecycle;
-- `KeepAlive.SuccessfulExit=false` crash supervision;
-- plist permissions `0600`;
-- actual `SIGKILL` crash followed by a different replacement PID;
-- health generation advance `3 → 4`;
-- no observed runtime-owned network listener;
-- no product-effect replay;
-- no canonical-state mutation by the runtime envelope;
-- no reusable P7.02 secret requirement;
-- reversible service removal path;
-- service left loaded after successful proof.
-
-Attempt 1 exposed an asynchronous `launchd bootout` race. The defect was remediated with bounded polling and regression-tested before Attempt 2. The failed attempt remains preserved as operational evidence.
+Proven evidence includes predictable stop/start/restart, owner-login launchd supervision, actual crash replacement, health generation advance, no observed runtime-owned network listener, no product-effect replay, no canonical-state mutation by the runtime envelope, no reusable P7.02 secret requirement and a reversible service removal path.
 
 A concrete macOS service mechanism such as `launchd` remains an environment-specific adapter, not a stable platform contract.
 
-**Operational transition:** satisfied. Arvectum OS has entered **regular persistent internal operation on the selected Mac mini**. Repeatable persistent Tender Operator and Discount Parser contours remain P7.07/P7.08 evidence obligations.
+**Operational transition:** satisfied. Arvectum OS entered **regular persistent internal operation on the selected Mac mini**.
 
 **Exit:** satisfied — repository implementation/remediation + selected-Mac lifecycle/crash/listener proof + cross-review PASS.
 
 ### P7.03 — Durable governed state/checkpoint persistence + backup/restore baseline
 
-Provide the minimum durable state required for persistent operation while preserving canonical semantics and avoiding accidental architecture.
+Status: `Complete / PASS`.
 
-Required evidence:
+Canonical evidence:
 
-- identify which state must survive process/host restart;
-- separate canonical governed state, non-canonical telemetry/cache and owner-local secret/config state;
-- durable checkpoint pattern for governance-significant execution state where required;
-- atomicity/integrity behavior proportionate to the current contour;
-- backup creation and integrity verification;
-- restore from backup into an isolated test location;
-- retention/deletion/minimization behavior;
-- explicit failure behavior when persistence is unavailable or inconsistent.
+- [`P7.03 Durable Governed State / Checkpoint Persistence and Backup / Restore Baseline`](../implementation/P7-03-DURABLE-GOVERNED-STATE-BACKUP-RESTORE.md) — `Complete / PASS`;
+- [`P7.03 Durable State Implementation Cross-Review`](../reviews/P7-03-durable-state-implementation-review.md) — `Complete / PASS`, six iterations;
+- [`P7.03 Selected Mac mini Proof Attempt 1`](../reviews/P7-03-selected-mac-proof-attempt-1.md) — rejected as closure evidence because reported `PASS` conflicted with stopped runtime state; scoped backup/restore observations retained;
+- [`P7.03 Selected Mac mini Proof Attempt 2`](../reviews/P7-03-selected-mac-proof-attempt-2.md) — hardened proof correctly failed closed while P7.02 runtime was `stopped`;
+- [`P7.03 Selected Mac mini Proof Attempt 3`](../reviews/P7-03-selected-mac-proof-attempt-3.md) — `Complete / PASS` after owner-authorized ordinary P7.02 `start` recovery;
+- repository implementation PR `#30`, merge `e2440b6f8afc7e0f21b20d370047bfa3ac803017`, full Reference Python CI `932/932 PASS`;
+- proof-contract hardening PR `#31`, merge `5d33f874beb38f773ecf816ecd6d35e5fcb26c97`, full Reference Python CI `935/935 PASS`.
 
-If a storage/database/object-store choice becomes materially constraining across products or difficult to reverse, stop and create the minimum sufficient ADR before further reliance.
+Attempt 3 executed clean exact canonical tool release `e20b7801cf389b1afe7f513182d352a566809c55` against unchanged P7.02 runtime release `73af746f83271b14670fe22db658dfd55cacb291`.
+
+Selected-Mac PASS evidence includes:
+
+- hardened runtime requirement enforced before and after proof;
+- runtime state `healthy` before and after;
+- exact P7.02 runtime release unchanged;
+- live backup and isolated restore integrity `PASS`;
+- restored state digest equal to live state digest;
+- separate non-authoritative fixture backup/restore `PASS`;
+- deliberate tamper detection fail-closed;
+- `run/`, `logs/`, `cache/`, `secrets/` absent from backup;
+- no reusable secrets, telemetry or cache in backup;
+- checkpoint and proof fixture non-authoritative;
+- no external-effect replay authorization;
+- clean source checkout after proof.
+
+Selected live backup:
+
+- `p7-03-backup-20260817T192924Z-a8b80b0fe41809da.tar.gz`;
+- SHA-256 `6b2661050a2d777c9cae0bada8c584c2e426489156505dc30e6ce5756de97765`.
+
+The implementation remains a bounded owner-local reversible filesystem/tar adapter. No Accepted ADR is required at this scope; the ADR/stable-boundary gate remains mandatory before materially constraining, cross-product or externally relied-upon persistence reliance.
+
+P7.03 does not establish external/customer Production, an Active Platform Capability, a Stable Product Contract, SLA/SLO/RPO/RTO/support, permanent persistence technology, off-host disaster recovery, product persistent contours, generalized update/migration or final IAM/secret lifecycle.
+
+**Exit:** satisfied — durable-state implementation + CI + hardened selected-Mac backup/restore proof + final cross-review PASS.
 
 ### P7.04 — Persistent identity/operator/service access + least-privilege operations
+
+Status: `Current`.
 
 Evolve the P6 owner-operated identity proof into an operational access model without conflating identity, authentication, authorization and Organizational Authority.
 
@@ -342,6 +335,6 @@ M7 does **not** inherently require:
 
 ## 8. Current canonical action
 
-> **P7.03 — Durable governed state/checkpoint persistence + backup/restore baseline.**
+> **P7.04 — Persistent identity/operator/service access + least-privilege operations.**
 
-P7.01/R21 and P7.02 are complete. The selected Mac mini is now in regular `Persistent Internal / owner-operated` use. P7.03 is the next hardening step and must establish the minimum durable governed-state/checkpoint persistence and verified backup/restore behavior without prematurely selecting a cross-product storage architecture.
+P7.01/R21, P7.02 and P7.03 are complete. The selected Mac mini remains in regular `Persistent Internal / owner-operated` use with a verified bounded durable-state/checkpoint and backup/restore baseline. P7.04 now establishes persistent attributable human/workload identity and least-privilege access/secret operations without conflating technical access with Organizational Authority.
