@@ -1,7 +1,7 @@
 # P7.01 — Persistent Internal Operating Boundary and Operational Requirements Baseline
 
 Status: `Complete / Baseline`
-Version: `1.0.0`
+Version: `1.0.1`
 Date: `2026-08-17`
 Owner: `ООО «Арвектум»`
 Task classification: `platform` with `governance` and `product_contract`
@@ -12,7 +12,7 @@ Architecture baseline: Constitution `1.2.0`; RFC-0001 through RFC-0008 `1.0.0` (
 
 ## 1. Purpose
 
-This document defines the operating boundary and minimum operational requirements that must be preserved while Arvectum OS moves from bounded owner-operated validation into a persistent internal runtime.
+This document defines the exact operating boundary and minimum operational requirements that must be preserved while Arvectum OS moves from bounded owner-operated validation into a persistent internal runtime.
 
 It is intentionally a requirements baseline rather than a deployment architecture. It does not select a database, IAM provider, service manager, public API, message broker, storage engine, backup product or permanent deployment topology.
 
@@ -41,9 +41,9 @@ The selected Mac mini operating contour is classified as:
 
 > **Persistent Internal / owner-operated**
 
-This means Arvectum OS may run regularly and persistently for internal ООО «Арвектум» governed work after the `P7.02` runtime gate passes.
+After `P7.02 PASS`, Arvectum OS may run regularly and persistently for internal ООО «Арвектум» governed work. The Mac mini is an operating environment, not an architectural platform commitment.
 
-The Mac mini is an operating environment, not an architectural platform commitment.
+`Persistent Internal / owner-operated` is distinct from external/customer `Production`, capability lifecycle, Product Contract lifecycle and conformance maturity.
 
 ### 3.2 Organization scope
 
@@ -72,39 +72,48 @@ Machine/service execution that becomes operationally significant MUST use an att
 
 The operating role does not receive Organizational Authority merely from technical access. Consequential approvals continue to require the applicable owner/delegated authority under Accepted governance.
 
-## 4. Initial workloads allowed to rely on the persistent runtime
+## 4. Initial workloads admitted to the persistent boundary
 
-After `P7.02 PASS`, the following bounded workloads MAY rely on the persistent internal runtime, subject to their existing contracts and later Phase 7 hardening requirements.
+After `P7.02 PASS`, the runtime MAY support bounded internal reliance by the already validated workload classes below, subject to their existing Product Contracts and all applicable Accepted controls.
+
+This admission does **not** mean repeatable persistent product operation has already been proven. The dedicated proof tasks remain:
+
+- Tender Operator persistent operational contour: `P7.07`;
+- Discount Parser persistent cross-host operational contour: `P7.08`.
+
+Until those tasks pass, product reliance remains bounded owner-operated use of the previously validated contract surfaces rather than a claim of completed persistent product operational readiness.
 
 ### 4.1 Tender Operator
 
-Allowed reliance:
+Allowed bounded reliance:
 
-- the existing real Tender Operator platform interaction defined by the applicable P6.02 Provisional Product Contract;
+- the existing P6.02 Product Contract `Provisional 0.1.0` platform interaction;
 - governed exact-document/evidence admission and reconstruction through the already validated platform boundary;
-- persistent internal execution only within declared Product Contract operations and Organization scope.
+- internal execution only within declared Product Contract operations and Organization scope.
 
 Constraints:
 
 - procurement/domain semantics remain product-owned;
 - external EIS authority remains external where already declared;
 - no new platform capability dependency may be inferred from persistence alone;
-- no product-specific approval rule moves into the platform through this baseline.
+- no product-specific approval rule moves into the platform through this baseline;
+- repeatable persistent Tender Operator reliance is not considered proven until `P7.07 PASS`.
 
 ### 4.2 Arvectum Discount Parser
 
-Allowed reliance:
+Allowed bounded reliance:
 
-- the existing P6.06 Provisional Product Contract `0.1.0` boundary;
+- the existing P6.06 Product Contract `Provisional 0.1.0` boundary;
 - CAP-004-only minimized evidence/reconstruction reliance already validated in Phase 6;
-- repeatable Windows/product-host to persistent Mac mini evidence/reconstruction work once P7.08 establishes the operational contour.
+- bounded owner-operated reconstruction/evidence work before `P7.08`, followed by repeatable cross-host reliance only after `P7.08 PASS`.
 
 Constraints:
 
 - Offer/source/normalization/deduplication/classification/scheduler/rules/templates/Telegram/publication-ledger semantics remain product-owned;
 - external Telegram mutation remains product-owned and separately authorized where consequential;
 - persistent platform reliance MUST NOT replay a historical external effect;
-- no hidden shared database, private stream or implicit cross-host state dependency is permitted.
+- no hidden shared database, private stream or implicit cross-host state dependency is permitted;
+- repeatable persistent Discount Parser cross-host operation is not considered proven until `P7.08 PASS`.
 
 ### 4.3 Platform-owned operational work
 
@@ -170,7 +179,7 @@ They MUST NOT silently become a competing source of organizational truth, approv
 
 Where consequential reconstruction requires canonical evidence, loss of ordinary telemetry MUST NOT be treated as equivalent to loss or mutation of canonical history.
 
-### 6.4 Transient outputs
+### 6.4 Transient outputs and knowledge
 
 Generated files, temporary reports, caches, indexes, summaries and other intermediate artifacts remain Transient Outputs unless explicitly promoted through the applicable governed process.
 
