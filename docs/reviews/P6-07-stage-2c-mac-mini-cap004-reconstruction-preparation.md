@@ -132,7 +132,16 @@ The tests cover:
 - exclusion of raw Stage 2A Organization/Actor values from the Stage 2C report;
 - absence of fabricated retroactive platform gate decisions.
 
-Repository CI must pass before this preparation is merged to canonical `main`.
+Preparation CI completed successfully on PR #22 head `bbff058fc17f5b56dea6d7ae38b584aa2fdf5b68`:
+
+- workflow: `Reference Python CI`;
+- run: `32029868251`;
+- job: `Full reference test suite`;
+- Python: `3.12.13`;
+- full suite: `911` tests / `OK`;
+- all `9` Stage 2C regression tests: `PASS`.
+
+This establishes repository-level fitness for the prepared implementation before canonical merge. The documentation-only addition of this CI evidence must itself retain normal PR consistency before merge.
 
 ## 7. Executable Product Contract projection wording
 
@@ -185,7 +194,7 @@ Any mismatch is `BLOCKED` or `FAIL` before canonical closure; no Telegram retry/
 
 ## 10. Preparation result
 
-`P6.07 Stage 2C preparation = PASS, subject to repository CI before merge`.
+`P6.07 Stage 2C preparation = PASS / CI verified`.
 
 `P6.07 Stage 2C real Mac mini reconstruction = PENDING`.
 
