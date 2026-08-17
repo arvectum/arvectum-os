@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.54.1`
+Version: `2.54.2`
 Created: `2026-08-07`
 Updated: `2026-08-17`
 Owner: `ООО «Арвектум»`
@@ -15,9 +15,20 @@ Future roadmap content is a planning hypothesis until its phase is activated. Ro
 
 ## 2. Version note
 
-Version `2.54.1` records the repository-side P7.02 implementation milestone after canonical merge of PR `#25` at `b4b5a162ee7f2d224b72adb3e6a0927a25e3481f` and `917/917` full Reference Python tests PASS.
+Version `2.54.2` records the first selected-Mac P7.02 proof attempt, its repository defect finding and the completed repository remediation.
 
-P7.02 is **not closed** by this repository milestone. The selected owner-operated Mac mini must still install the exact canonical `main` release and produce supervised lifecycle, health, crash/restart, bounded-listener and clean-source evidence before P7.02 may become `Complete / PASS`.
+Attempt 1 executed on exact canonical release `2db9d6c178d8e67a593d7ebb716f86e394862eea` with a clean canonical `main`. Installation passed, but the aggregate proof failed during explicit stop because the adapter used a one-shot `bootout → sleep 0.5 → is_loaded` check. The later status check found the target already unloaded, exposing an asynchronous `launchd` unload race in the repository lifecycle adapter.
+
+PR `#27` remediated that defect with bounded unload polling, idempotent already-unloaded handling, fail-closed timeout behavior and executable fake-`launchctl` regression coverage. `Reference Python CI` run `35` completed `920/920` tests PASS, including the delayed-unload reproduction, bounded-timeout negative path and already-unloaded idempotency case. PR `#27` was squash-merged at `4a46ad40599287dde92ef87a0459965fb2cb45db`.
+
+Canonical Attempt 1 evidence:
+
+- [`P7.02 Selected Mac mini Proof Attempt 1`](../reviews/P7-02-selected-mac-proof-attempt-1.md) — `FAIL recorded / remediation PASS / re-proof required`;
+- PR `#27` — asynchronous `launchd` stop-race remediation, `920/920` full Reference Python tests PASS.
+
+P7.02 is **not closed** by remediation. The selected owner-operated Mac mini must rerun the complete install/lifecycle/crash/listener proof against the latest exact canonical `main` after this roadmap/evidence synchronization. Only a complete real-Mac PASS may establish regular persistent internal operation or advance the roadmap to P7.03.
+
+Version `2.54.1` recorded the repository-side P7.02 implementation milestone after canonical merge of PR `#25` at `b4b5a162ee7f2d224b72adb3e6a0927a25e3481f` and `917/917` full Reference Python tests PASS.
 
 Canonical P7.02 repository evidence:
 
@@ -93,7 +104,7 @@ Phase 7 converts validated owner-operated use into a persistent, recoverable and
 | ID | Work item | Status | Progress |
 |---|---|---:|---:|
 | `P7.01` | Persistent internal operating boundary + operational requirements baseline | 🟩 Complete / PASS | `██████████ 100%` |
-| `P7.02` | Persistent Mac mini runtime + boot/restart/service lifecycle | 🟨 Repository ready / Mac proof pending | `███████░░░ 70%` |
+| `P7.02` | Persistent Mac mini runtime + boot/restart/service lifecycle | 🟨 Remediation merged / Mac re-proof pending | `███████░░░ 70%` |
 | `P7.03` | Durable governed state/checkpoint persistence + backup/restore baseline | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.04` | Persistent identity/operator/service access + least-privilege operations | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.05` | Health, observability, audit visibility, alerting + retention/minimization | ⬜ | `░░░░░░░░░░ 0%` |
@@ -188,6 +199,6 @@ A roadmap phase transition does not itself change lifecycle, production readines
 
 ## 11. Current canonical action
 
-> **P7.02 — selected owner-operated Mac mini install + lifecycle/crash/listener proof.**
+> **P7.02 — selected owner-operated Mac mini re-proof after launchd stop-race remediation.**
 
-The repository-side P7.02 implementation is merged and CI-validated. P7.02 remains open until the selected Mac mini executes the exact canonical `main` release and the resulting local evidence is reviewed and recorded. Only then may P7.02 become `Complete / PASS` and P7.03 become the next canonical action.
+Attempt 1 is canonically recorded as FAIL. Its repository defect has been remediated and the remediation is CI-validated. P7.02 remains open until the selected Mac mini executes the latest exact canonical `main` release and produces complete lifecycle, crash-restart, health, listener-boundary and clean-source evidence. Only then may P7.02 become `Complete / PASS` and P7.03 become the next canonical action.
