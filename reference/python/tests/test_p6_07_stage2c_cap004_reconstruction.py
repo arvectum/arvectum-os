@@ -5,6 +5,7 @@ import inspect
 import json
 import tempfile
 import unittest
+from datetime import datetime, timezone
 from pathlib import Path
 from unittest.mock import patch
 
@@ -12,7 +13,11 @@ from arvectum_os_ref.identity import Identity
 from arvectum_os_ref.product_capability_consumption import CAP_004_AUDIT_RECONSTRUCTION
 from arvectum_os_ref.security import ActorContext, OrganizationScope, Principal
 from arvectum_os_ref.workflow import OperationSideEffectClass
-from p6_07_discount_parser_ref.contract import P6_06_CANONICAL_BLOB_SHA, PRODUCT_CONTRACT_VERSION
+from p6_07_discount_parser_ref.contract import (
+    P6_06_CANONICAL_BLOB_SHA,
+    PRODUCT_CONTRACT_VERSION,
+    build_p6_06_product_contract_projection,
+)
 import p6_07_discount_parser_ref.stage2c as stage2c
 
 
@@ -148,8 +153,10 @@ class P607Stage2CCap004ReconstructionTests(unittest.TestCase):
         self.assertFalse(result.report["containment"]["telegram_effect_replayed"])
 
     def test_projection_remains_cap004_only_and_read_only(self) -> None:
-        result = self._reconstruct()
-        contract = result.adapters.facade.context.contract
+        contract = build_p6_06_product_contract_projection(
+            actor=self.actor,
+            created_at=datetime(2026, 8, 17, 8, 51, 9, tzinfo=timezone.utc),
+        )
         self.assertEqual({item.dependency_id for item in contract.dependencies}, {CAP_004_AUDIT_RECONSTRUCTION})
         self.assertTrue(all(item.provisional for item in contract.dependencies))
         self.assertTrue(
