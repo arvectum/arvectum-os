@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.54.3`
+Version: `2.54.4`
 Created: `2026-08-07`
 Updated: `2026-08-17`
 Owner: `ООО «Арвектум»`
@@ -15,7 +15,36 @@ Future roadmap content is a planning hypothesis until its phase is activated. Ro
 
 ## 2. Version note
 
-Version `2.54.3` closes `P7.02 — Persistent Mac mini runtime + boot/restart/service lifecycle` after the remediated selected-Mac Attempt 2 completed the exact canonical lifecycle proof.
+Version `2.54.4` closes `P7.03 — Durable governed state/checkpoint persistence + backup/restore baseline` after repository implementation, proof-contract hardening, preserved failed attempts, successful hardened selected-Mac Attempt 3 and final six-iteration functional cross-review.
+
+Repository implementation PR `#30` merged at `e2440b6f8afc7e0f21b20d370047bfa3ac803017` and full Reference Python CI passed `932/932`. After Attempt 1 exposed an evidence-contract inconsistency, PR `#31` added the dedicated hardened selected-Mac wrapper and merged at `5d33f874beb38f773ecf816ecd6d35e5fcb26c97`; full Reference Python CI passed `935/935`, including explicit healthy, stopped and inconsistent-core-summary proof paths.
+
+Selected-Mac evidence remains fully traceable:
+
+- [`P7.03 Selected Mac mini Proof Attempt 1`](../reviews/P7-03-selected-mac-proof-attempt-1.md) — rejected as closure evidence because reported `PASS` conflicted with `persistent_runtime_state=stopped`; scoped backup/restore observations retained;
+- [`P7.03 Selected Mac mini Proof Attempt 2`](../reviews/P7-03-selected-mac-proof-attempt-2.md) — hardened proof correctly failed closed while the existing P7.02 runtime was `stopped`;
+- [`P7.03 Selected Mac mini Proof Attempt 3`](../reviews/P7-03-selected-mac-proof-attempt-3.md) — `Complete / PASS` after explicit human owner/operator authorization of the existing P7.02 `start` lifecycle action.
+
+Attempt 3 executed clean exact canonical tool release `e20b7801cf389b1afe7f513182d352a566809c55` against unchanged P7.02 runtime release `73af746f83271b14670fe22db658dfd55cacb291`. The runtime was `healthy` before and after proof and the release remained unchanged. Live backup/isolated restore integrity passed, the restored state digest matched the live digest, fixture backup/restore passed, deliberate tamper detection failed closed, excluded telemetry/cache/secrets were absent, checkpoint/proof fixture remained non-authoritative and external-effect replay authorization remained false.
+
+Selected live backup:
+
+- `p7-03-backup-20260817T192924Z-a8b80b0fe41809da.tar.gz`;
+- SHA-256 `6b2661050a2d777c9cae0bada8c584c2e426489156505dc30e6ce5756de97765`.
+
+Canonical P7.03 closure evidence:
+
+- [`P7.03 Durable Governed State / Checkpoint Persistence and Backup / Restore Baseline`](../implementation/P7-03-DURABLE-GOVERNED-STATE-BACKUP-RESTORE.md) — `Complete / PASS`;
+- [`P7.03 Durable State Implementation Cross-Review`](../reviews/P7-03-durable-state-implementation-review.md) — `Complete / PASS`, six iterations;
+- Attempts 1–3 above;
+- PR `#30` implementation CI `932/932 PASS`;
+- PR `#31` hardening CI `935/935 PASS`.
+
+`P7.03 = Complete / PASS` for the declared `Persistent Internal / owner-operated` scope. The bounded owner-local filesystem/tar adapter remains private, reversible and non-stable. No Accepted ADR is required at this scope, and no external/customer Production, `Active` Platform Capability, Stable Product Contract, SLA/SLO/RPO/RTO/support or permanent persistence technology claim is created.
+
+`P7.04 — Persistent identity/operator/service access + least-privilege operations` becomes the current canonical action.
+
+Version `2.54.3` closed `P7.02 — Persistent Mac mini runtime + boot/restart/service lifecycle` after the remediated selected-Mac Attempt 2 completed the exact canonical lifecycle proof.
 
 Attempt 2 executed canonical release `73af746f83271b14670fe22db658dfd55cacb291` on clean `main` with `HEAD == origin/main`. Installation, aggregate proof and final status all passed. The owner `launchd` LaunchAgent remained loaded after proof. Explicit stop/start/restart, PID replacement, actual `SIGKILL` crash recovery, health-generation advance `3 → 4`, bounded listener check, source-checkout cleanliness, `RunAtLoad=true`, `KeepAlive.SuccessfulExit=false` and plist `0600` all passed. No runtime-owned network listener was observed, `product_effect_replay=false`, `canonical_state_written_by_runtime_envelope=false`, and P7.02 requires no reusable secret.
 
@@ -28,9 +57,7 @@ Canonical P7.02 closure evidence:
 - PR `#27` — asynchronous `launchd` stop-race remediation, `920/920` Reference Python tests PASS;
 - exact proven selected-Mac release — `73af746f83271b14670fe22db658dfd55cacb291`.
 
-`P7.02 = Complete / PASS` for the declared `Persistent Internal / owner-operated` scope. The selected Mac mini now enters regular persistent internal Arvectum OS operation. This is an operational-mode transition only: it does not create external/customer `Production`, an `Active` Platform Capability, a Stable Product Contract, SLA/support, supported macOS matrix or stable deployment/service topology.
-
-`P7.03 — Durable governed state/checkpoint persistence + backup/restore baseline` becomes the current canonical action.
+`P7.02 = Complete / PASS` for the declared `Persistent Internal / owner-operated` scope. The selected Mac mini entered regular persistent internal Arvectum OS operation. This is an operational-mode transition only: it does not create external/customer `Production`, an `Active` Platform Capability, a Stable Product Contract, SLA/support, supported macOS matrix or stable deployment/service topology.
 
 Version `2.54.2` recorded the first selected-Mac P7.02 proof attempt, its repository defect finding and the completed repository remediation.
 
@@ -99,7 +126,7 @@ The required M6 Milestone Code Health Gate is [`M6-milestone-code-health-gate-go
 
 ## 6. Active Phase 7 — Operational / Enterprise Readiness
 
-Detailed roadmap: [`PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md`](PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md) — `Active 1.2.0`.
+Detailed roadmap: [`PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md`](PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md) — `Active 1.2.1`.
 
 Phase 7 converts validated owner-operated use into a persistent, recoverable and observable internal operating baseline before considering stronger production/lifecycle claims.
 
@@ -107,8 +134,8 @@ Phase 7 converts validated owner-operated use into a persistent, recoverable and
 |---|---|---:|---:|
 | `P7.01` | Persistent internal operating boundary + operational requirements baseline | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.02` | Persistent Mac mini runtime + boot/restart/service lifecycle | 🟩 Complete / PASS | `██████████ 100%` |
-| `P7.03` | Durable governed state/checkpoint persistence + backup/restore baseline | 🟨 Current | `░░░░░░░░░░ 0%` |
-| `P7.04` | Persistent identity/operator/service access + least-privilege operations | ⬜ | `░░░░░░░░░░ 0%` |
+| `P7.03` | Durable governed state/checkpoint persistence + backup/restore baseline | 🟩 Complete / PASS | `██████████ 100%` |
+| `P7.04` | Persistent identity/operator/service access + least-privilege operations | 🟨 Current | `░░░░░░░░░░ 0%` |
 | `P7.05` | Health, observability, audit visibility, alerting + retention/minimization | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.06` | Governed deploy/update/rollback/version/migration path | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.07` | Persistent Tender Operator operational contour | ⬜ | `░░░░░░░░░░ 0%` |
@@ -138,12 +165,14 @@ P7.02 persistent Mac mini runtime — PASS
         ↓
 ARVECTUM OS ENTERS REGULAR PERSISTENT INTERNAL USE
         ↓
-P7.03–P7.12 harden the live operating baseline
+P7.03 durable-state/backup-restore baseline — PASS
+        ↓
+P7.04–P7.12 continue hardening the live operating baseline
 ```
 
-P7.02 passed on exact selected-Mac release `73af746f83271b14670fe22db658dfd55cacb291`. The service was left loaded after proof. The environment is now in regular `Persistent Internal / owner-operated` use.
+P7.02 passed on exact selected-Mac release `73af746f83271b14670fe22db658dfd55cacb291`. P7.03 subsequently established the bounded durable-state/checkpoint and backup/restore baseline without changing that runtime release.
 
-This does not prove P7.03–P7.12, persistent product contours, external Production, lifecycle promotion or support commitments.
+This does not prove P7.04–P7.12, persistent product contours, external Production, lifecycle promotion or support commitments.
 
 ## 7. M7 milestone definition
 
@@ -201,6 +230,6 @@ A roadmap phase transition does not itself change lifecycle, production readines
 
 ## 11. Current canonical action
 
-> **P7.03 — Durable governed state/checkpoint persistence + backup/restore baseline.**
+> **P7.04 — Persistent identity/operator/service access + least-privilege operations.**
 
-P7.02 is canonically `Complete / PASS`. The selected Mac mini is now running the declared persistent internal contour. P7.03 must establish the minimum durable governed-state/checkpoint persistence and verified backup/restore behavior while preserving canonical/non-canonical/secret-state separation and stopping for an ADR if a storage choice becomes materially constraining.
+P7.03 is canonically `Complete / PASS`. P7.04 now evolves the persistent internal contour toward attributable human/workload identity, deny-by-default and least-privilege operations, secret/credential lifecycle and revocation while preserving the separation of authentication, authorization, Organizational Authority and data governance.
