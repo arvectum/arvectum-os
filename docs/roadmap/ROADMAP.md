@@ -58,29 +58,28 @@ L1-L9 are complete. Real 7/7 tender attachment evidence for notice `034410000642
 Status: `Complete / PASS`
 Contract: [`P6-06-SECOND-REAL-PRODUCT-CONTRACT.md`](../contracts/P6-06-SECOND-REAL-PRODUCT-CONTRACT.md)
 
-The second materially distinct real target is **Arvectum Discount Parser**, bounded to a controlled Telegram publication workflow. The Provisional Product Contract `0.1.0` uses CAP-004 only and preserves Offer/source/dedup/classification/scheduler/rule-memory/Telegram business semantics as product-owned.
+The second materially distinct real target is **Arvectum Discount Parser**, bounded to a controlled Telegram publication workflow. The Provisional Product Contract `0.1.0` uses CAP-004 only and preserves all Offer/source/dedup/classification/scheduler/rule-memory/Telegram business semantics as product-owned.
 
 P6.06 completion means the target is selected and the Product Contract boundary is canonical before governed reliance. It does **not** promote CAP-004 from `Incubating` or stabilize the Product Contract.
 
 ## 6. P6.07 Detail
 
 Status: `In Progress — Stage 1 Complete / PASS; Stage 2A Complete / PASS; Stage 2B pending`
+Stage 1 review: [`P6-07-stage-1-second-real-product-workflow-integration.md`](../reviews/P6-07-stage-1-second-real-product-workflow-integration.md)
+Stage 2A preparation: [`P6-07-stage-2a-pre-effect-ticket-preparation.md`](../reviews/P6-07-stage-2a-pre-effect-ticket-preparation.md)
+Stage 2A real execution: [`P6-07-stage-2a-real-mac-mini-execution.md`](../reviews/P6-07-stage-2a-real-mac-mini-execution.md)
 
-Evidence:
+Stage 1 proves the Discount Parser controlled-publication workflow can reuse the existing CAP-004 integration seam under the exact P6.06 Provisional Product Contract `0.1.0`. The proof uses a product-owned fake Telegram adapter and no live network/secret, while preserving exact Product Contract, Organization, Actor, product-owned input/effect references, provenance, correlation, causation and reconstruction semantics.
 
-- Stage 1: [`P6-07-stage-1-second-real-product-workflow-integration.md`](../reviews/P6-07-stage-1-second-real-product-workflow-integration.md)
-- Stage 2A preparation: [`P6-07-stage-2a-pre-effect-ticket-preparation.md`](../reviews/P6-07-stage-2a-pre-effect-ticket-preparation.md)
-- Stage 2A real execution: [`P6-07-stage-2a-real-mac-mini-execution.md`](../reviews/P6-07-stage-2a-real-mac-mini-execution.md)
+All 10 P6.07 Stage 1 tests pass as part of the then-current full Reference Python CI suite (`894` tests / `OK`). No blocking platform gap was found, so no new RFC/ADR, Platform Capability, CAP-004 promotion or product-domain transfer is justified by Stage 1.
 
-Stage 1 proved the Discount Parser controlled-publication workflow can reuse the existing CAP-004 integration seam under the exact P6.06 Provisional Product Contract `0.1.0`, while preserving Product Contract, Organization, Actor, product-owned evidence, provenance, correlation, causation and reconstruction semantics. No blocking platform gap was found.
+Stage 2 is executed as a bounded three-part handoff without widening the P6.06 contract:
 
-Stage 2 uses a bounded three-part handoff:
-
-1. `Stage 2A` — **Complete / PASS.** Mac mini reused the existing P6.05-L4 Organization/human Actor context, verified the exact P6.06 contract pin, created and independently verified one immutable pre-effect ticket plus SHA-256, and kept evidence outside source control. Targeted tests passed (`8`) and the full Reference Python suite passed (`902`). No external/product effect occurred.
-2. `Stage 2B` — **Pending.** Windows Discount Parser must bind the exact Stage 2A handoff, record product-owned candidate/target/reservation/intent plus explicit real-action authorization before the external action, and perform at most one human-operated manual publication. Scheduler/autopost remains disabled.
+1. `Stage 2A` — **Complete / PASS.** Mac mini reused the existing P6.05-L4 Organization/human Actor context, verified the exact P6.06 contract pin, created one immutable Arvectum OS pre-effect execution ticket plus SHA-256 before any real send, and independently verified the digest. Targeted Stage 2A tests passed (`8`); the full Reference Python suite passed (`902`). The evidence remains owner-only and outside source control. No Discount Parser invocation, Telegram call, scheduler/autopost activation, product database mutation, external effect or CAP-004 Stage 2C reconstruction occurred.
+2. `Stage 2B` — **Pending.** Windows Discount Parser must bind the exact Stage 2A hash and execution id, record product-owned candidate/target/reservation/intent and explicit real-action authorization before send, then perform at most one human-operated `publish_offer()` external send. Scheduler/autopost remains disabled.
 3. `Stage 2C` — **Pending.** Mac mini must admit the Stage 2B outcome under the same execution/Organization/Actor/Product Contract continuity and reconstruct it through CAP-004 as read-only derived evidence.
 
-Neither the P6.06 Product Contract nor the Stage 2A execution ticket grants authorization for the external mutation. P6.07 remains open until Stage 2C PASS.
+Neither the P6.06 Product Contract nor the Stage 2A execution ticket grants authorization for the real Telegram mutation. P6.07 is not complete overall until Stage 2C PASS.
 
 ## 7. Current Exit State
 
