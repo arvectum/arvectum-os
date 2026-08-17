@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.54.0`
+Version: `2.54.1`
 Created: `2026-08-07`
 Updated: `2026-08-17`
 Owner: `ООО «Арвектум»`
@@ -15,7 +15,17 @@ Future roadmap content is a planning hypothesis until its phase is activated. Ro
 
 ## 2. Version note
 
-Version `2.54.0` closes `P7.01 — Persistent internal operating boundary + operational requirements baseline` and records `R21 — Operational Boundary Review = PASS` after two review iterations.
+Version `2.54.1` records the repository-side P7.02 implementation milestone after canonical merge of PR `#25` at `b4b5a162ee7f2d224b72adb3e6a0927a25e3481f` and `917/917` full Reference Python tests PASS.
+
+P7.02 is **not closed** by this repository milestone. The selected owner-operated Mac mini must still install the exact canonical `main` release and produce supervised lifecycle, health, crash/restart, bounded-listener and clean-source evidence before P7.02 may become `Complete / PASS`.
+
+Canonical P7.02 repository evidence:
+
+- [`P7.02 Persistent Mac mini Runtime and Service Lifecycle`](../implementation/P7-02-MAC-MINI-PERSISTENT-RUNTIME.md) — `Implementation prepared / selected-Mac proof required`;
+- [`P7.02 Persistent Runtime Implementation Cross-Review`](../reviews/P7-02-persistent-runtime-implementation-review.md) — `Complete / PASS for repository implementation`; selected-Mac proof remains `Pending`;
+- PR `#25` — merged to canonical `main` at `b4b5a162ee7f2d224b72adb3e6a0927a25e3481f`.
+
+Version `2.54.0` closed `P7.01 — Persistent internal operating boundary + operational requirements baseline` and recorded `R21 — Operational Boundary Review = PASS` after two review iterations.
 
 Canonical P7.01 evidence:
 
@@ -24,7 +34,7 @@ Canonical P7.01 evidence:
 
 The P7.01 baseline fixes the initial operating classification as `Persistent Internal / owner-operated`, Organization scope as ООО «Арвектум», admitted bounded workload classes, data/secret/retention/authority/recovery/network/upgrade boundaries, explicit ADR/stable-boundary triggers and a rollback/removal path without choosing a permanent persistence, IAM, service, storage, API or deployment topology.
 
-`P7.02` is now the current canonical action. After `P7.02 PASS`, the selected Mac mini enters regular persistent internal operation; dedicated repeatable product operational proof still remains `P7.07` for Tender Operator and `P7.08` for Discount Parser.
+`P7.02` remains the current canonical action. After `P7.02 PASS`, the selected Mac mini enters regular persistent internal operation; dedicated repeatable product operational proof still remains `P7.07` for Tender Operator and `P7.08` for Discount Parser.
 
 The Phase 7/8 strategic restoration remains governed by [`DECISION-2026-08-17-PHASE-7-8-ROADMAP-RESTORATION.md`](../governance/decisions/DECISION-2026-08-17-PHASE-7-8-ROADMAP-RESTORATION.md).
 
@@ -83,7 +93,7 @@ Phase 7 converts validated owner-operated use into a persistent, recoverable and
 | ID | Work item | Status | Progress |
 |---|---|---:|---:|
 | `P7.01` | Persistent internal operating boundary + operational requirements baseline | 🟩 Complete / PASS | `██████████ 100%` |
-| `P7.02` | Persistent Mac mini runtime + boot/restart/service lifecycle | 🟨 Current | `░░░░░░░░░░ 0%` |
+| `P7.02` | Persistent Mac mini runtime + boot/restart/service lifecycle | 🟨 Repository ready / Mac proof pending | `███████░░░ 70%` |
 | `P7.03` | Durable governed state/checkpoint persistence + backup/restore baseline | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.04` | Persistent identity/operator/service access + least-privilege operations | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.05` | Health, observability, audit visibility, alerting + retention/minimization | ⬜ | `░░░░░░░░░░ 0%` |
@@ -178,6 +188,6 @@ A roadmap phase transition does not itself change lifecycle, production readines
 
 ## 11. Current canonical action
 
-> **P7.02 — Persistent Mac mini runtime + boot/restart/service lifecycle.**
+> **P7.02 — selected owner-operated Mac mini install + lifecycle/crash/listener proof.**
 
-P7.01 and R21 are complete. P7.02 is the first local Mac mini implementation step. After `P7.02 PASS`, Arvectum OS becomes a regular `Persistent Internal / owner-operated` runtime for ООО «Арвектум» while the remainder of Phase 7 hardens that live operating baseline. Repeatable persistent product contours are proven separately in P7.07 and P7.08.
+The repository-side P7.02 implementation is merged and CI-validated. P7.02 remains open until the selected Mac mini executes the exact canonical `main` release and the resulting local evidence is reviewed and recorded. Only then may P7.02 become `Complete / PASS` and P7.03 become the next canonical action.
