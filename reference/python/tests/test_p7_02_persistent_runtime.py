@@ -63,6 +63,67 @@ class P702PersistentRuntimeTests(unittest.TestCase):
             if proc.stderr is not None:
                 proc.stderr.close()
 
+    def _fake_macos_launchctl_env(self, root: Path, *, state: str, delay_polls: int, attempts: int):
+        fake_bin = root / "fake-bin"
+        fake_bin.mkdir()
+        state_file = root / "launchctl-state"
+        state_file.write_text(state, encoding="utf-8")
+
+        uname = fake_bin / "uname"
+        uname.write_text("#!/bin/sh\nprintf 'Darwin\\n'\n", encoding="utf-8")
+        uname.chmod(0o755)
+
+        launchctl = fake_bin / "launchctl"
+        launchctl.write_text(
+            """#!/bin/sh
+set -eu
+STATE_FILE=${P7_FAKE_LAUNCHCTL_STATE:?}
+DELAY_POLLS=${P7_FAKE_BOOTOUT_DELAY_POLLS:-0}
+cmd=${1:-}
+case "$cmd" in
+  print)
+    [ -f "$STATE_FILE" ] || exit 1
+    state=$(cat "$STATE_FILE")
+    case "$state" in
+      loaded)
+        exit 0
+        ;;
+      unloading:*)
+        remaining=${state#unloading:}
+        if [ "$remaining" -gt 0 ]; then
+          printf 'unloading:%s\\n' "$((remaining - 1))" > "$STATE_FILE"
+          exit 0
+        fi
+        printf 'unloaded\\n' > "$STATE_FILE"
+        exit 1
+        ;;
+      *)
+        exit 1
+        ;;
+    esac
+    ;;
+  bootout)
+    printf 'unloading:%s\\n' "$DELAY_POLLS" > "$STATE_FILE"
+    exit 0
+    ;;
+  *)
+    exit 0
+    ;;
+esac
+""",
+            encoding="utf-8",
+        )
+        launchctl.chmod(0o755)
+
+        env = os.environ.copy()
+        env["HOME"] = str(root / "home")
+        env["PATH"] = f"{fake_bin}{os.pathsep}{env.get('PATH', '')}"
+        env["P7_FAKE_LAUNCHCTL_STATE"] = str(state_file)
+        env["P7_FAKE_BOOTOUT_DELAY_POLLS"] = str(delay_polls)
+        env["ARVECTUM_P7_02_SERVICE_WAIT_ATTEMPTS"] = str(attempts)
+        env["ARVECTUM_P7_02_SERVICE_WAIT_INTERVAL"] = "0"
+        return env, state_file
+
     def test_runtime_health_is_local_noncanonical_and_effect_free(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -188,6 +249,69 @@ class P702PersistentRuntimeTests(unittest.TestCase):
             timeout=5,
         )
         self.assertEqual(checked.returncode, 0, checked.stderr)
+
+    def test_stop_waits_for_asynchronous_launchd_bootout(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            env, state_file = self._fake_macos_launchctl_env(
+                root,
+                state="loaded\n",
+                delay_polls=2,
+                attempts=5,
+            )
+            checked = subprocess.run(
+                ["sh", str(SERVICE_SCRIPT), "stop"],
+                cwd=str(PYTHON_ROOT),
+                env=env,
+                text=True,
+                capture_output=True,
+                timeout=5,
+            )
+            self.assertEqual(checked.returncode, 0, checked.stderr)
+            self.assertIn("P7.02: stop PASS", checked.stdout)
+            self.assertEqual(state_file.read_text(encoding="utf-8").strip(), "unloaded")
+
+    def test_stop_fails_closed_when_launchd_never_finishes_unload(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            env, state_file = self._fake_macos_launchctl_env(
+                root,
+                state="loaded\n",
+                delay_polls=50,
+                attempts=3,
+            )
+            checked = subprocess.run(
+                ["sh", str(SERVICE_SCRIPT), "stop"],
+                cwd=str(PYTHON_ROOT),
+                env=env,
+                text=True,
+                capture_output=True,
+                timeout=5,
+            )
+            self.assertNotEqual(checked.returncode, 0)
+            self.assertIn("service remains loaded after bounded stop wait", checked.stderr)
+            self.assertTrue(state_file.read_text(encoding="utf-8").startswith("unloading:"))
+
+    def test_stop_is_idempotent_when_launchd_target_is_already_unloaded(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            env, state_file = self._fake_macos_launchctl_env(
+                root,
+                state="unloaded\n",
+                delay_polls=0,
+                attempts=3,
+            )
+            checked = subprocess.run(
+                ["sh", str(SERVICE_SCRIPT), "stop"],
+                cwd=str(PYTHON_ROOT),
+                env=env,
+                text=True,
+                capture_output=True,
+                timeout=5,
+            )
+            self.assertEqual(checked.returncode, 0, checked.stderr)
+            self.assertIn("P7.02: stop PASS", checked.stdout)
+            self.assertEqual(state_file.read_text(encoding="utf-8").strip(), "unloaded")
 
     def test_runtime_source_does_not_create_a_network_service(self):
         source = RUNTIME_SCRIPT.read_text(encoding="utf-8")
