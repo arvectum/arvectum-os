@@ -53,9 +53,15 @@ class P702PersistentRuntimeTests(unittest.TestCase):
         self.fail(f"health did not become ready; last={last!r}")
 
     def _terminate(self, proc: subprocess.Popen[str]):
-        if proc.poll() is None:
-            proc.terminate()
-            proc.wait(timeout=5)
+        try:
+            if proc.poll() is None:
+                proc.terminate()
+                proc.wait(timeout=5)
+        finally:
+            if proc.stdout is not None:
+                proc.stdout.close()
+            if proc.stderr is not None:
+                proc.stderr.close()
 
     def test_runtime_health_is_local_noncanonical_and_effect_free(self):
         with tempfile.TemporaryDirectory() as tmp:
