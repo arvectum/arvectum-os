@@ -1,112 +1,181 @@
-# Arvectum OS Roadmap
+# Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.52.12`
-Owner: ООО «Арвектум»
+Version: `2.53.0`
+Created: `2026-08-07`
+Updated: `2026-08-17`
+Owner: `ООО «Арвектум»`
+Task classification: `governance`
 
-## 1. Overview
+## 1. Purpose
 
-Arvectum OS is an operating system for organizational intelligence. This roadmap coordinates its evolution through governed phases.
+This document is the canonical planning source for Arvectum OS development sequencing. It coordinates work but does not override Constitution, Accepted RFC/ADR, approved governance, Product Contracts or implementation evidence.
 
-## 2. Current Status
+Future roadmap content is a planning hypothesis until its phase is activated. Roadmap status does not by itself change Platform Capability lifecycle, Product Contract lifecycle, operational environment/readiness, conformance maturity, SLA/support or commercial commitments.
 
-| Phase | Description | Status |
-| :--- | :--- | :--- |
-| Phase 1 | Kernel foundations | 🟩 Complete |
-| Phase 2 | Core runtime | 🟩 Complete |
-| Phase 3 | Capability incubation | 🟩 Complete |
-| Phase 4 | Workspace & Experience | 🟩 Complete |
-| Phase 5 | SDK & Contracts | 🟩 Complete |
-| Phase 6 | Product validation | 🟩 Complete / PASS |
+## 2. Version note
 
-### Milestone continuity
+Version `2.53.0` restores the strategic continuation that existed in the earlier canonical roadmap after Phase 6:
 
-Later-phase progress does not widen earlier milestone claims or collapse lifecycle dimensions.
+- `Phase 7 — Operational / Enterprise Readiness` → `M7 — Scoped production-grade operating baseline`;
+- `Phase 8 — Ecosystem and External Integration` → `M8 — Governed external ecosystem baseline`.
 
-| Phase | Scope | Execution | Status | Bounded milestone |
-| :--- | :--- | :--- | :--- | :--- |
+The restoration and revalidated sequencing are approved in [`DECISION-2026-08-17-PHASE-7-8-ROADMAP-RESTORATION.md`](../governance/decisions/DECISION-2026-08-17-PHASE-7-8-ROADMAP-RESTORATION.md).
+
+Phase 7 is now `Active`. Phase 8 is restored as `Draft / Exploratory` and remains inactive until M7 closes and its external boundary is revalidated.
+
+A key Phase 7 sequencing decision is that regular Arvectum OS use on the selected Mac mini does **not** wait until M7 closure. `P7.01` defines the persistent internal operating boundary; `P7.02` establishes the supervised persistent Mac mini runtime. After `P7.02 PASS`, the environment enters `Persistent Internal / owner-operated` operation while the remaining Phase 7 work hardens durability, recovery, observability, upgrades, incident response and portability.
+
+This persistent internal classification is not automatically an external/customer `Production` claim, supported macOS platform promise, `Active` capability transition, Stable Product Contract, SLA/support commitment or final deployment topology.
+
+## 3. Architecture and governance baseline
+
+- Constitution `1.2.0` — `Ratified`, frozen;
+- RFC-0001 through RFC-0008 — `Accepted 1.0.0`;
+- no Accepted ADR currently selects a persistence, IAM, service, deployment, public API, broker or storage topology;
+- Decision Authority Policy remains `Proposed 0.2.1`; residual authority remains with the owner under Accepted governance;
+- Approved Engineering Quality and Refactoring Gates remain binding;
+- CAP-001 through CAP-004 remain `Incubating / Provisional`;
+- P6.02 and P6.06 real Product Contracts remain `Provisional 0.1.0`;
+- no Platform Capability is `Active` merely because later phases consume or validate it;
+- no Stable/public SDK/API/wire/service/deployment compatibility boundary has been established;
+- no external Production/SLA/support/full-platform conformance claim is implied.
+
+## 4. Strategic roadmap
+
+| Phase | Strategic scope | Confidence | Status | Milestone |
+|---|---|---|---|---|
+| `Phase 0` | Foundation / Architecture Bootstrap | Executed | 🟩 Complete | `M0` Architecture baseline established |
+| `Phase 1` | Reference Implementation | Executed | 🟩 Complete | `M1` First executable architectural spine proven |
+| `Phase 2` | Core Runtime | Executed | 🟩 Complete | `M2` Reusable governed runtime baseline |
 | `Phase 3` | Shared Platform Capabilities | Executed | 🟩 Complete | `M3` Validated shared capability baseline |
 | `Phase 4` | Workspace / Operator Experience | Executed | 🟩 Complete | `M4` Internal workspace/operator baseline |
-| `Phase 5` | SDK / Contracts / Integration | Executed | 🟩 Complete | `M5` Internal integration baseline |
-| `Phase 6` | Product-Driven Platform Validation | Executed | 🟩 Complete / PASS | `M6` Real-product validation across two materially distinct workflows |
+| `Phase 5` | SDK, Contracts and Extension Experience | Executed | 🟩 Complete | `M5` Repeatable product/extension integration |
+| `Phase 6` | Product-driven Platform Validation | Executed | 🟩 Complete / PASS | `M6` Real-product validation across two materially distinct workflows |
+| `Phase 7` | Operational / Enterprise Readiness | Active | 🟨 Active | `M7` Scoped production-grade operating baseline |
+| `Phase 8` | Ecosystem and External Integration | Exploratory | ⬜ Draft | `M8` Governed external ecosystem baseline |
 
-`M3` remains bounded to its validated shared-capability reference scope. CAP-001 through CAP-004 remain `Incubating / Provisional`; no Platform Capability is `Active` merely because later phases consume or validate it.
+Phase status, capability lifecycle, Product Contract lifecycle, operational environment/readiness and conformance maturity remain distinct.
 
-Phase status, Platform Capability lifecycle, Product Contract lifecycle, operational environment/readiness and conformance maturity remain distinct. Phase 6 / M6 completion does not promote CAP-004, stabilize a Product Contract or establish a production/SLA/support commitment.
+## 5. Completed Phase 6 / M6
 
-The required M6 Milestone Code Health Gate is now canonically recorded as [`M6-milestone-code-health-gate-governance-repair.md`](../reviews/M6-milestone-code-health-gate-governance-repair.md) — `Complete / PASS`. The gate was recorded after the original closure publication as an explicit governance-process repair rather than falsely backdated. It found no material defect requiring M6 reopening and preserves the bounded Phase 6 / M6 closure.
+Detailed roadmap: [`PHASE-6-PRODUCT-DRIVEN-PLATFORM-VALIDATION.md`](PHASE-6-PRODUCT-DRIVEN-PLATFORM-VALIDATION.md).
 
-## 3. Phase 6 Breakdown
+Phase 6 completed with two materially distinct real-product/workflow chains:
 
-| Task | Description | Status |
-| :--- | :--- | :--- |
-| `P6.01` | Validation target selection | 🟩 Complete |
-| `P6.02` | First Product Contract | 🟩 Complete |
-| `P6.03` | First real integration | 🟩 Complete / PASS |
-| `P6.04` | Value/friction capture | 🟩 Complete / PASS |
-| `P6.05` | Platform-gap remediation | 🟩 Complete / PASS — L1-L9 complete; real 7/7 GOVERNED |
-| `P6.06` | Second materially distinct real target + Product Contract boundary | 🟩 Complete / PASS — Discount Parser / controlled Telegram publication; post-first-real review PASS, no revision |
-| `P6.07` | Second real product/workflow platform integration | 🟩 Complete / PASS — Stage 1, Stage 2A, Stage 2B and real Stage 2C CAP-004 reconstruction complete |
+1. Tender Operator — exact real tender package `7/7` admitted and governed/reconstructed;
+2. Discount Parser — one explicitly authorized real Telegram publication with pre-effect evidence, confirmed external effect and read-only CAP-004 reconstruction without effect replay.
 
-## 4. P6.05 Detail
+P6.07 Stage 2C recorded `9` targeted tests PASS and `911` full Reference Python tests PASS. P6.06 remained `Provisional 0.1.0`, CAP-004-only; CAP-004 remained `Incubating / Provisional`.
 
-Status: `Complete / PASS`
-Plan: [`P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md`](P6-05-LOCAL-INTERNAL-RUNTIME-SUBSTREAM.md)
+The required M6 Milestone Code Health Gate is [`M6-milestone-code-health-gate-governance-repair.md`](../reviews/M6-milestone-code-health-gate-governance-repair.md) — `Complete / PASS`. It was recorded transparently after the original closure publication when the missing gate artifact was discovered. No material defect required M6 reopening.
 
-L1-L9 are complete. Real 7/7 tender attachment evidence for notice `0344100006426000005` is admitted and GOVERNED. L9 captured dogfooding friction and distinguished resolved blockers/defects from non-blocking improvement candidates without automatic architecture, Knowledge, Product Contract or capability promotion.
+`M6 = achieved for the declared bounded scope.`
 
-## 5. P6.06 Detail
+## 6. Active Phase 7 — Operational / Enterprise Readiness
 
-Status: `Complete / PASS`
-Contract: [`P6-06-SECOND-REAL-PRODUCT-CONTRACT.md`](../contracts/P6-06-SECOND-REAL-PRODUCT-CONTRACT.md)
-Post-first-real-publication review: [`P6-06-post-first-real-publication-contract-review.md`](../reviews/P6-06-post-first-real-publication-contract-review.md)
+Detailed roadmap: [`PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md`](PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md) — `Active 1.0.0`.
 
-The second materially distinct real target is **Arvectum Discount Parser**, bounded to a controlled Telegram publication workflow. The Provisional Product Contract `0.1.0` uses CAP-004 only and preserves all Offer/source/dedup/classification/scheduler/rule-memory/Telegram business semantics as product-owned.
+Phase 7 converts validated owner-operated use into a persistent, recoverable and observable internal operating baseline before considering stronger production/lifecycle claims.
 
-Stage 2B satisfied the Product Contract's first-real-publication review trigger. The canonical review found no material boundary defect or dependency gap: the existing Product Contract remains `Provisional 0.1.0`, CAP-004-only. This is continuity of the existing Provisional boundary, not stabilization, capability promotion or a new public/commercial commitment.
+| ID | Work item | Status | Progress |
+|---|---|---:|---:|
+| `P7.01` | Persistent internal operating boundary + operational requirements baseline | 🟨 Current | `░░░░░░░░░░ 0%` |
+| `P7.02` | Persistent Mac mini runtime + boot/restart/service lifecycle | ⬜ | `░░░░░░░░░░ 0%` |
+| `P7.03` | Durable governed state/checkpoint persistence + backup/restore baseline | ⬜ | `░░░░░░░░░░ 0%` |
+| `P7.04` | Persistent identity/operator/service access + least-privilege operations | ⬜ | `░░░░░░░░░░ 0%` |
+| `P7.05` | Health, observability, audit visibility, alerting + retention/minimization | ⬜ | `░░░░░░░░░░ 0%` |
+| `P7.06` | Governed deploy/update/rollback/version/migration path | ⬜ | `░░░░░░░░░░ 0%` |
+| `P7.07` | Persistent Tender Operator operational contour | ⬜ | `░░░░░░░░░░ 0%` |
+| `P7.08` | Persistent Discount Parser cross-host operational contour | ⬜ | `░░░░░░░░░░ 0%` |
+| `P7.09` | Operator runbook + incident/uncertain-outcome/recovery drills | ⬜ | `░░░░░░░░░░ 0%` |
+| `P7.10` | Portability, host-loss and restore-on-clean-environment proof | ⬜ | `░░░░░░░░░░ 0%` |
+| `P7.11` | Scoped operational-readiness, lifecycle, conformance + stable-boundary disposition | ⬜ | `░░░░░░░░░░ 0%` |
+| `P7.12` | Phase 7 / M7 closure review | ⬜ | `░░░░░░░░░░ 0%` |
 
-## 6. P6.07 Detail
+Engineering/quality gates:
 
-Status: `Complete / PASS`
-Stage 1 review: [`P6-07-stage-1-second-real-product-workflow-integration.md`](../reviews/P6-07-stage-1-second-real-product-workflow-integration.md)
-Stage 2A preparation: [`P6-07-stage-2a-pre-effect-ticket-preparation.md`](../reviews/P6-07-stage-2a-pre-effect-ticket-preparation.md)
-Stage 2A real execution: [`P6-07-stage-2a-real-mac-mini-execution.md`](../reviews/P6-07-stage-2a-real-mac-mini-execution.md)
-Stage 2B preparation: [`P6-07-stage-2b-windows-manual-publication-preparation.md`](../reviews/P6-07-stage-2b-windows-manual-publication-preparation.md)
-Stage 2B real execution: [`P6-07-stage-2b-real-windows-manual-publication.md`](../reviews/P6-07-stage-2b-real-windows-manual-publication.md)
-Stage 2C preparation: [`P6-07-stage-2c-mac-mini-cap004-reconstruction-preparation.md`](../reviews/P6-07-stage-2c-mac-mini-cap004-reconstruction-preparation.md)
-Stage 2C real execution: [`P6-07-stage-2c-real-mac-mini-cap004-reconstruction.md`](../reviews/P6-07-stage-2c-real-mac-mini-cap004-reconstruction.md)
-M6 code-health gate: [`M6-milestone-code-health-gate-governance-repair.md`](../reviews/M6-milestone-code-health-gate-governance-repair.md)
+- `R21 — Operational Boundary Review` — after P7.01;
+- `R22 — Persistent Runtime Health Review` — after P7.05;
+- `R23 — Recovery / Portability Review` — after P7.10;
+- `R24 — M7 Operational Hardening + required Milestone Code Health Gate` — after P7.11 and before P7.12.
 
-Stage 1 proved that the Discount Parser controlled-publication workflow can reuse the existing CAP-004 integration seam under the exact P6.06 Provisional Product Contract `0.1.0`, using a product-owned fake Telegram adapter and no live network/secret. No blocking platform gap was found.
+### Persistent Mac mini transition
 
-Stage 2 then completed the bounded real-effect chain:
+The canonical persistent-use threshold is intentionally early:
 
-1. `Stage 2A` — **Complete / PASS.** Mac mini reused the existing P6.05-L4 Organization/human Actor context, verified the exact P6.06 contract pin and created one immutable pre-effect execution ticket plus SHA-256 before any real send. No product/Telegram effect occurred.
-2. `Stage 2B` — **Complete / PASS.** One explicitly authorized real native-Windows publication executed through the existing product-owned `publish_offer()` path. Offer `148` produced Publication `14`, exactly one Telegram `send_message`, terminal product state `published`, Telegram message id `27`, human external confirmation `PASS`, and independently reconciled pre-effect/outcome evidence. No retry or repository mutation occurred.
-3. `Stage 2C` — **Complete / PASS.** The minimized Stage 2B handoff was transferred Windows → Mac mini through owner-controlled SCP and verified at exact SHA-256 `b7a8ae4b263cec8f7498d482634c35b9df4356283e23133aeb73d8041c9c4cc5`. The Mac mini then verified the exact Stage 2A ticket, Product Contract and Stage 2B provenance and completed read-only CAP-004 reconstruction with `18` evidence items and `9` material references. Targeted Stage 2C tests passed (`9`); the full Reference Python suite passed (`911`). Network calls, Telegram calls, publication replay, product DB mutations, canonical state mutations and external mutations were all zero. No retroactive platform gate decision or retroactive Windows-native Event was fabricated.
+```text
+P7.01 operational boundary
+        ↓
+R21 boundary review
+        ↓
+P7.02 persistent Mac mini runtime
+        ↓
+PASS
+        ↓
+ARVECTUM OS ENTERS REGULAR PERSISTENT INTERNAL USE
+        ↓
+P7.03–P7.12 harden the live operating baseline
+```
 
-The immutable owner-local Stage 2C report SHA-256 is `370a245601b88766c77bbac05a226d0e9fb680fa52fda3c2f946d062603199a1`. Raw Organization/Actor identities, reusable secrets and raw Windows evidence remain outside canonical repository evidence.
+`P7.02 PASS` requires supervised start/stop/restart, boot/login lifecycle appropriate to the owner-operated model, source/runtime separation, secrets outside Git, bounded listener exposure, health evidence, crash/restart proof and rollback/removal path.
 
-P6.07 validates the declared CAP-004-only product/platform boundary through a materially distinct real product/workflow. P6.06 remains `Provisional 0.1.0`; CAP-004 remains `Incubating / Provisional`.
+## 7. M7 milestone definition
 
-The M6 Milestone Code Health Gate reviewed the Phase 6 implementation surfaces after a process omission was detected. It passed with one bounded non-blocking containment debt: the large P6.07 Stage 2C harness remains task-specific/internal/provisional and must not be generalized into a shared or Stable/public abstraction without additional reuse evidence and the applicable stable-boundary gate.
+`M7 — Scoped production-grade operating baseline` requires, within the declared scope:
 
-## 7. Current Exit State
+1. persistent supervised owner-operated Arvectum OS runtime on the selected Mac mini;
+2. durable required governed state with tested backup/restore;
+3. persistent least-privilege identity/access/secrets operations;
+4. actionable health/observability without telemetry becoming authority;
+5. governed deploy/update/rollback/version/migration path;
+6. repeatable persistent Tender Operator reliance through its Product Contract;
+7. repeatable Discount Parser cross-host evidence/reconstruction through its Product Contract;
+8. executable incident/recovery procedures;
+9. host-loss/portability proof on a clean secondary environment;
+10. explicit lifecycle/conformance/stable-boundary dispositions;
+11. R21–R24 material findings closed or accepted by appropriate authority;
+12. pre-closure M7 Milestone Code Health Gate PASS.
 
-- [x] First real integration and governed reconstruction completed.
-- [x] First-product value/friction and platform-gap work completed.
-- [x] Second materially distinct target selected.
-- [x] Second Provisional Product Contract boundary defined.
-- [x] Second-product synthetic/offline bounded integration evidence executed under the P6.06 contract.
-- [x] Stage 2A immutable ticket/hash generator and verification tests prepared.
-- [x] Real Stage 2A Mac mini ticket/hash created and independently verified from actual Organization/human Actor context.
-- [x] Stage 2B native-Windows one-send procedure and evidence boundary prepared without changing Discount Parser publication semantics.
-- [x] One explicitly authorized real manual Discount Parser publication executed in Stage 2B with confirmed external effect and reconciled evidence integrity.
-- [x] P6.06 post-first-real-publication review completed; Provisional 0.1.0 CAP-004-only boundary retained.
-- [x] Stage 2C minimized evidence handoff and CAP-004 reconstruction procedure prepared without external-effect replay.
-- [x] Exact real Stage 2B outcome reconstructed through CAP-004 on Mac mini in Stage 2C with read-only derived evidence and zero effect replay.
-- [x] M6 Milestone Code Health Gate completed / PASS; missing pre-closure gate artifact repaired transparently without backdating.
+M7 does not inherently require an external customer Production deployment, public multi-tenant service, `Active` capability, Stable Product Contract, public SDK/API or SLA/support promise.
 
-`Phase 6 = Complete / PASS` for its declared bounded scope. All tasks currently defined by the canonical roadmap through P6.07 are complete.
+## 8. Draft Phase 8 — Ecosystem and External Integration
 
-The current canonical roadmap defines no task or phase after P6.07 / Phase 6. The next governed action is therefore **canonical roadmap extension / next-phase definition** before additional platform-development sequencing is claimed. Completion of M6 does not by itself imply a Phase 7 scope, capability promotion, Stable Product Contract, production readiness or public/commercial commitment.
+Detailed draft: [`PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md`](PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md) — `Draft / Exploratory 0.1.0`.
+
+Draft work items:
+
+- `P8.01` External ecosystem target + evidence baseline;
+- `P8.02` Cross-Organization identity/trust/rights/data-governance boundary;
+- `P8.03` External Product Contract/integration-contract + stable-surface decision;
+- `P8.04` External authoritative-system connector validation;
+- `P8.05` Event/ingress/egress/duplicate/replay/reconciliation semantics;
+- `P8.06` External extension/product onboarding + governed dependency resolution;
+- `P8.07` Portability/export/migration/customer handover interoperability;
+- `P8.08` Multi-Organization isolation + cross-organization security validation;
+- `P8.09` External operator/developer integration experience + documentation;
+- `P8.10` Scoped external conformance/commercial/support boundary review;
+- `P8.11` Ecosystem architecture hardening + ADR/refactoring review;
+- `P8.12` Phase 8 / M8 closure review.
+
+Provisional gates R25–R28 are defined in the Phase 8 draft and must be revalidated before activation.
+
+## 9. ADR, lifecycle and stable-boundary rule
+
+Phase 7 may create pressure to choose concrete durable persistence, service-management, IAM, serialization, API, storage or deployment mechanisms.
+
+Use the lowest sufficient decision level. Environment-specific reversible adapters do not automatically require ADRs. If a choice becomes materially constraining, cross-product, externally relied upon or expensive to reverse, stop at the applicable ADR/stable-boundary gate before further reliance.
+
+No capability becomes `Active` and no Product Contract becomes `Stable` through roadmap progress alone.
+
+## 10. Phase transition rule
+
+Phase 8 remains `Draft / Exploratory` until Phase 7 / M7 closes and the external ecosystem boundary is revalidated against actual operational evidence, external demand, rights, Organization isolation, portability and commercial commitments.
+
+A roadmap phase transition does not itself change lifecycle, production readiness, conformance or commercial status.
+
+## 11. Current canonical action
+
+> **P7.01 — Persistent internal operating boundary + operational requirements baseline.**
+
+P7.01 is repository/governance work and should complete before local serviceization. After `P7.01 + R21 PASS`, begin `P7.02` on the Mac mini. After `P7.02 PASS`, Arvectum OS becomes a regular persistent internal runtime for ООО «Арвектум» while the remainder of Phase 7 hardens that live operating baseline.
