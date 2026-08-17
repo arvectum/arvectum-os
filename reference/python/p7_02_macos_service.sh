@@ -90,14 +90,14 @@ wait_healthy() {
 
 wait_unloaded() {
   i=0
-  while [ "$i" -lt "$SERVICE_WAIT_ATTEMPTS" ]; do
-    if ! is_loaded; then
-      return 0
+  while is_loaded; do
+    if [ "$i" -ge "$SERVICE_WAIT_ATTEMPTS" ]; then
+      return 1
     fi
     i=$((i + 1))
     sleep "$SERVICE_WAIT_INTERVAL"
   done
-  return 1
+  return 0
 }
 
 unload_service() {
