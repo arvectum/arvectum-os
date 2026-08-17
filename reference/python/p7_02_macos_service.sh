@@ -3,7 +3,7 @@ set -eu
 
 LABEL="com.arvectum.os.persistent-internal"
 SCRIPT_DIR=$(CDPATH= cd "$(dirname "$0")" && pwd)
-REPO_ROOT=$(CDPATH= cd "$SCRIPT_DIR/../.." && pwd)
+REPO_ROOT=$(CDPATH= cd "$SCRIPT_DIR/../.." && pwd -P)
 PYTHON_BIN=${PYTHON_BIN:-python3}
 RUNTIME_ROOT=${ARVECTUM_P7_02_ROOT:-"$HOME/Library/Application Support/ArvectumOS/persistent-internal"}
 LAUNCH_AGENT="$HOME/Library/LaunchAgents/$LABEL.plist"
@@ -22,6 +22,14 @@ assert_macos() {
 assert_outside_repo() {
   case "$RUNTIME_ROOT/" in
     "$REPO_ROOT"/*) fail "runtime root must remain outside the source checkout" ;;
+  esac
+}
+
+assert_runtime_root_real_outside_repo() {
+  runtime_real=$(CDPATH= cd "$RUNTIME_ROOT" && pwd -P)
+  [ "$runtime_real" != "$REPO_ROOT" ] || fail "runtime root resolves to the source checkout"
+  case "$runtime_real/" in
+    "$REPO_ROOT"/*) fail "runtime root resolves inside the source checkout" ;;
   esac
 }
 
@@ -78,6 +86,37 @@ wait_healthy() {
   return 1
 }
 
+prepare_release() {
+  release="$RUNTIME_ROOT/releases/$HEAD_SHA"
+  tmp="$RUNTIME_ROOT/releases/.verify-$HEAD_SHA-$$"
+  rm -rf "$tmp"
+  mkdir -p "$tmp"
+  git -C "$REPO_ROOT" archive --format=tar --prefix=source/ "$HEAD_SHA" reference/python > "$tmp/reference-python.tar"
+  archive_sha=$(shasum -a 256 "$tmp/reference-python.tar" | awk '{print $1}')
+  tar -xf "$tmp/reference-python.tar" -C "$tmp"
+  cat > "$tmp/release-manifest.json" <<EOF
+{"canonical_repository":"arvectum/arvectum-os","release_sha":"$HEAD_SHA","reference_python_archive_sha256":"$archive_sha","runtime_classification":"Persistent Internal / owner-operated","network_listener_mode":"none"}
+EOF
+
+  if [ -e "$release" ]; then
+    [ -d "$release/source/reference/python" ] || fail "existing release is incomplete: $release"
+    [ -f "$release/reference-python.tar" ] || fail "existing release archive is missing: $release"
+    [ -f "$release/release-manifest.json" ] || fail "existing release manifest is missing: $release"
+    stored_archive_sha=$(shasum -a 256 "$release/reference-python.tar" | awk '{print $1}')
+    [ "$stored_archive_sha" = "$archive_sha" ] || fail "existing release archive differs from canonical Git archive"
+    cmp -s "$tmp/release-manifest.json" "$release/release-manifest.json" || fail "existing release manifest differs from canonical release pin"
+    diff -qr "$tmp/source" "$release/source" >/dev/null || fail "existing runtime source differs from canonical release snapshot"
+    rm -rf "$tmp"
+    chmod -R a-w "$release/source" "$release/reference-python.tar" "$release/release-manifest.json"
+    info "verified existing exact release $HEAD_SHA"
+    return 0
+  fi
+
+  chmod -R a-w "$tmp/source" "$tmp/reference-python.tar" "$tmp/release-manifest.json"
+  mv "$tmp" "$release"
+  info "created exact release $HEAD_SHA"
+}
+
 write_plist() {
   rel=$1
   venv_python="$RUNTIME_ROOT/venvs/$rel/bin/python"
@@ -115,25 +154,16 @@ install_runtime() {
   require_cmd plutil
   require_cmd tar
   require_cmd shasum
+  require_cmd cmp
+  require_cmd diff
   assert_canonical_checkout
 
+  mkdir -p "$RUNTIME_ROOT"
+  assert_runtime_root_real_outside_repo
   mkdir -p "$RUNTIME_ROOT/releases" "$RUNTIME_ROOT/venvs" "$RUNTIME_ROOT/run" "$RUNTIME_ROOT/logs" "$RUNTIME_ROOT/evidence" "$RUNTIME_ROOT/config" "$RUNTIME_ROOT/secrets" "$RUNTIME_ROOT/service"
   chmod 700 "$RUNTIME_ROOT" "$RUNTIME_ROOT/run" "$RUNTIME_ROOT/config" "$RUNTIME_ROOT/secrets" "$RUNTIME_ROOT/evidence"
 
-  release="$RUNTIME_ROOT/releases/$HEAD_SHA"
-  if [ ! -d "$release/source/reference/python" ]; then
-    tmp="$RUNTIME_ROOT/releases/.install-$HEAD_SHA-$$"
-    rm -rf "$tmp"
-    mkdir -p "$tmp"
-    git -C "$REPO_ROOT" archive --format=tar --prefix=source/ "$HEAD_SHA" reference/python > "$tmp/reference-python.tar"
-    archive_sha=$(shasum -a 256 "$tmp/reference-python.tar" | awk '{print $1}')
-    tar -xf "$tmp/reference-python.tar" -C "$tmp"
-    cat > "$tmp/release-manifest.json" <<EOF
-{"canonical_repository":"arvectum/arvectum-os","release_sha":"$HEAD_SHA","reference_python_archive_sha256":"$archive_sha","runtime_classification":"Persistent Internal / owner-operated","network_listener_mode":"none"}
-EOF
-    chmod -R a-w "$tmp/source" "$tmp/reference-python.tar" "$tmp/release-manifest.json"
-    mv "$tmp" "$release"
-  fi
+  prepare_release
 
   venv="$RUNTIME_ROOT/venvs/$HEAD_SHA"
   if [ ! -x "$venv/bin/python" ]; then
@@ -163,8 +193,8 @@ EOF
   if is_loaded; then
     launchctl bootout "$SERVICE_TARGET" >/dev/null 2>&1 || true
   fi
-  launchctl bootstrap "$DOMAIN" "$LAUNCH_AGENT"
   launchctl enable "$SERVICE_TARGET" >/dev/null 2>&1 || true
+  launchctl bootstrap "$DOMAIN" "$LAUNCH_AGENT"
   launchctl kickstart -k "$SERVICE_TARGET"
   wait_healthy || fail "runtime did not become healthy after install"
   info "install PASS release=$HEAD_SHA"
@@ -174,10 +204,10 @@ EOF
 start_runtime() {
   assert_macos
   [ -f "$LAUNCH_AGENT" ] || fail "LaunchAgent not installed; run install"
+  launchctl enable "$SERVICE_TARGET" >/dev/null 2>&1 || true
   if ! is_loaded; then
     launchctl bootstrap "$DOMAIN" "$LAUNCH_AGENT"
   fi
-  launchctl enable "$SERVICE_TARGET" >/dev/null 2>&1 || true
   launchctl kickstart "$SERVICE_TARGET" >/dev/null
   wait_healthy || fail "runtime did not become healthy"
   info "start PASS"
@@ -195,6 +225,7 @@ stop_runtime() {
 
 restart_runtime() {
   assert_macos
+  launchctl enable "$SERVICE_TARGET" >/dev/null 2>&1 || true
   if is_loaded; then
     launchctl kickstart -k "$SERVICE_TARGET"
   else
@@ -283,6 +314,7 @@ PY
 prove_runtime() {
   assert_macos
   assert_outside_repo
+  assert_runtime_root_real_outside_repo
   rel=$(current_release)
   info "proving predictable stop/start"
   stop_runtime
@@ -334,7 +366,7 @@ usage() {
   cat <<EOF
 Usage: $0 install|start|stop|restart|status|crash-proof|prove|remove
 
-install      pin canonical main into an immutable runtime release and install owner LaunchAgent
+install      pin canonical main into an exact verified runtime release and install owner LaunchAgent
 start        load/start the LaunchAgent
 stop         unload/stop the LaunchAgent
 restart      replace the supervised process
