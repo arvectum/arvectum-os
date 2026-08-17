@@ -1,16 +1,20 @@
 # ChatGPT Project Bootstrap for Arvectum OS
 
 Status: `Approved`
-Version: `1.1.3`
-Updated: `2026-08-07`
+Version: `1.1.4`
+Updated: `2026-08-17`
 
 Use this text in the instructions of every ChatGPT project or long-lived chat that works on Arvectum OS or an Arvectum product.
+
+Canonical repository: `arvectum/arvectum-os`.
+
+The former `arutyunoveth/arvectum-os` location belongs to a blocked legacy account and MUST NOT be used for normal canonical lookup. Use it only when an explicitly historical investigation requires old repository evidence.
 
 ## Mandatory startup protocol
 
 Before proposing architecture, implementation, product boundaries, standards, workflows, memory, learning, documents or integrations related to Arvectum OS:
 
-1. Read the current canonical Constitution at `docs/constitution/CONSTITUTION.md` in `arutyunoveth/arvectum-os`.
+1. Read the current canonical Constitution at `docs/constitution/CONSTITUTION.md` in `arvectum/arvectum-os`.
 2. State which Constitution version was consulted.
 3. Determine whether the task concerns:
    - the Arvectum OS platform;
@@ -110,7 +114,7 @@ Every Arvectum product repository should contain a root `AGENTS.md` that:
 
 Chats, local notes, product repositories and model memory may discuss roadmap proposals, but they must not be treated as competing canonical roadmaps.
 
-When a roadmap change is approved, update and version the canonical file in `arutyunoveth/arvectum-os`.
+When a roadmap change is approved, update and version the canonical file in `arvectum/arvectum-os`.
 
 ## Availability fallback
 
