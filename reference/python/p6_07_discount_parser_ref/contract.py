@@ -1,11 +1,13 @@
-"""Executable Stage 1 projection of the canonical P6.06 Product Contract.
+"""Executable P6.07 projection of the canonical P6.06 Product Contract.
 
 The canonical contract remains
 ``docs/contracts/P6-06-SECOND-REAL-PRODUCT-CONTRACT.md`` at Provisional 0.1.0.
 This module maps only the shared CAP-004 reconstruction dependency needed by the
-synthetic/offline P6.07 proof. Discount Parser collection, Offer semantics,
-normalization, deduplication, classification, scheduling, publication rules,
-Telegram integration and publication ledger remain product-owned.
+bounded P6.07 validation: Stage 1 synthetic/offline proof and Stage 2C read-only
+reconstruction of the confirmed real Stage 2B effect. Discount Parser collection,
+Offer semantics, normalization, deduplication, classification, scheduling,
+publication rules, Telegram integration and publication ledger remain
+product-owned.
 
 The projection is internal/provisional reference evidence. It is not a Stable
 Product Contract, public SDK/API, capability promotion or production commitment.
@@ -55,7 +57,7 @@ def build_p6_06_product_contract_projection(
     actor: ActorContext,
     created_at: datetime,
 ) -> ProductContract:
-    """Build the bounded executable projection used by P6.07 Stage 1."""
+    """Build the bounded executable projection used by P6.07 validation."""
 
     if not isinstance(actor, ActorContext):
         raise ValueError("actor must be an attributable ActorContext")
@@ -80,14 +82,17 @@ def build_p6_06_product_contract_projection(
         created_at=created_at,
         provenance_refs=(owner, product_id),
         integrity_metadata=(
-            ("representation", "p6.07-stage1-executable-projection"),
+            ("representation", "p6.07-bounded-executable-projection"),
             ("canonical-source-blob", P6_06_CANONICAL_BLOB_SHA),
         ),
         payload=(
             ("canonical_contract", P6_06_CANONICAL_CONTRACT_PATH),
             ("canonical_blob_sha", P6_06_CANONICAL_BLOB_SHA),
             ("contract_version", PRODUCT_CONTRACT_VERSION),
-            ("stage", "P6.07 Stage 1 synthetic/offline controlled publication proof"),
+            (
+                "stage",
+                "P6.07 Stage 1 synthetic/offline proof plus Stage 2C confirmed-real-effect read-only reconstruction",
+            ),
         ),
         lifecycle_status=ProductContractLifecycle.PROVISIONAL.value,
     )
@@ -128,15 +133,17 @@ def build_p6_06_product_contract_projection(
         product_id=product_id,
         product_version=PRODUCT_COMPATIBILITY_LINE,
         bounded_scope=(
-            "P6.07 Stage 1 only: synthetic/offline proof of one Discount Parser controlled Telegram "
-            "publication workflow using product-owned references plus CAP-004 reconstruction. No live "
-            "Telegram call, product database migration, shared product schema or capability promotion."
+            "P6.07 bounded validation only: Stage 1 synthetic/offline proof and Stage 2C read-only "
+            "reconstruction of the separately authorized, already completed Stage 2B Discount Parser "
+            "publication using product-owned references plus CAP-004. No Telegram replay, product database "
+            "migration, shared product schema or capability promotion."
         ),
         compatibility_assumptions=(
             "Canonical Product Contract is P6.06 Provisional 0.1.0.",
             "CAP-004 remains Incubating with Provisional provider contract 1.0.0.",
             "Current Python/module/dataclass spellings are internal evidence, not Stable/public compatibility.",
-            "Stage 1 uses a fake Telegram adapter; real manual publication remains separately gated by P6.06 Stage 2.",
+            "Stage 1 uses a fake Telegram adapter; Stage 2B real publication is separately authorized and "
+            "product-owned; Stage 2C only reconstructs retained evidence and must not repeat the effect.",
         ),
         dependencies=(dependency,),
         operations=(operation,),
