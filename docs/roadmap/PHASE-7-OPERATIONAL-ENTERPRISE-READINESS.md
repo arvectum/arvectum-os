@@ -1,7 +1,7 @@
 # Arvectum OS Phase 7 — Operational / Enterprise Readiness
 
 Status: `Active`
-Version: `1.0.0`
+Version: `1.1.0`
 Created: `2026-08-17`
 Updated: `2026-08-17`
 Owner: `ООО «Арвектум»`
@@ -53,14 +53,14 @@ Phase 7 distinguishes:
 
 Passing `P7.02` moves the selected Mac mini from bounded validation use into **Persistent Internal / owner-operated** use.
 
-That transition does not itself make the environment Production and does not change capability or Product Contract lifecycle.
+That transition does not itself make the environment Production and does not change capability or Product Contract lifecycle. It also does not by itself prove the repeatable product operational contours that remain assigned to P7.07 and P7.08.
 
 ## 4. Phase 7 work breakdown
 
 | ID | Work item | Primary execution venue | Status | Progress |
 |---|---|---|---:|---:|
-| `P7.01` | Persistent internal operating boundary + operational requirements baseline | Chat/GitHub | 🟨 Current | `░░░░░░░░░░ 0%` |
-| `P7.02` | Persistent Mac mini runtime + boot/restart/service lifecycle | Mac mini + GitHub | ⬜ | `░░░░░░░░░░ 0%` |
+| `P7.01` | Persistent internal operating boundary + operational requirements baseline | Chat/GitHub | 🟩 Complete / PASS | `██████████ 100%` |
+| `P7.02` | Persistent Mac mini runtime + boot/restart/service lifecycle | Mac mini + GitHub | 🟨 Current | `░░░░░░░░░░ 0%` |
 | `P7.03` | Durable governed state/checkpoint persistence + backup/restore baseline | Mac mini + GitHub | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.04` | Persistent identity/operator/service access + least-privilege operations | Chat + Mac mini + GitHub | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.05` | Health, observability, audit visibility, alerting + retention/minimization | Mac mini + GitHub | ⬜ | `░░░░░░░░░░ 0%` |
@@ -74,12 +74,12 @@ That transition does not itself make the environment Production and does not cha
 
 ## 5. Engineering / quality gates
 
-| Gate | Trigger | Purpose |
-|---|---|---|
-| `R21 — Operational Boundary Review` | after `P7.01`, before material persistent-runtime implementation | prevent the persistent-use requirement from silently selecting unsupported production, public API, storage, IAM or deployment commitments |
-| `R22 — Persistent Runtime Health Review` | after `P7.05`, before operational workload expansion | review runtime/service boundaries, durability, access, observability, secrets, dependency direction, failure semantics and operator friction |
-| `R23 — Recovery / Portability Review` | after `P7.10`, before lifecycle/readiness decisions | verify backup/restore, host-loss recovery, semantic portability, exact identities/versions/provenance and absence of host-specific hidden authority |
-| `R24 — M7 Operational Hardening` | after `P7.11`, before `P7.12` | final bounded architecture/code/security/maintainability/fitness review and the required M7 Milestone Code Health Gate |
+| Gate | Trigger | Status | Purpose |
+|---|---|---|---|
+| [`R21 — Operational Boundary Review`](../reviews/R21-operational-boundary-review.md) | after `P7.01`, before material persistent-runtime implementation | 🟩 `Complete / PASS` | prevent the persistent-use requirement from silently selecting unsupported production, public API, storage, IAM or deployment commitments |
+| `R22 — Persistent Runtime Health Review` | after `P7.05`, before operational workload expansion | ⬜ | review runtime/service boundaries, durability, access, observability, secrets, dependency direction, failure semantics and operator friction |
+| `R23 — Recovery / Portability Review` | after `P7.10`, before lifecycle/readiness decisions | ⬜ | verify backup/restore, host-loss recovery, semantic portability, exact identities/versions/provenance and absence of host-specific hidden authority |
+| `R24 — M7 Operational Hardening` | after `P7.11`, before `P7.12` | ⬜ | final bounded architecture/code/security/maintainability/fitness review and the required M7 Milestone Code Health Gate |
 
 These gates are engineering/governance checkpoints. They are not Platform Capability lifecycle transitions or formal production approvals.
 
@@ -87,13 +87,19 @@ These gates are engineering/governance checkpoints. They are not Platform Capabi
 
 ### P7.01 — Persistent internal operating boundary + operational requirements baseline
 
-Define the exact operating boundary before serviceizing the runtime.
+Status: `Complete / PASS`.
 
-Required outputs:
+Canonical evidence:
+
+- [`P7.01 Persistent Internal Operating Boundary and Operational Requirements Baseline`](P7-01-PERSISTENT-INTERNAL-OPERATING-BASELINE.md) — `Complete / Baseline 1.0.1`;
+- [`R21 — Operational Boundary Review`](../reviews/R21-operational-boundary-review.md) — `Complete / PASS`, two iterations.
+
+The baseline now defines:
 
 - operating classification: `Persistent Internal / owner-operated`;
-- named owner/operator and Organization scope;
-- initial workloads allowed to rely on the persistent runtime;
+- operational owner ООО «Арвектум» and named `Arvectum OS Owner-Operator` role resolved at runtime to an attributable human Principal/Actor;
+- Organization scope limited initially to ООО «Арвектум»;
+- bounded workloads admitted under existing Provisional Product Contracts;
 - explicit non-goals and prohibited external/customer commitments;
 - data/classification/retention/secret boundaries;
 - authority and approval expectations;
@@ -105,9 +111,11 @@ Required outputs:
 - explicit ADR/stable-boundary triggers;
 - rollback/removal path.
 
-Do not invent customer SLA/SLO promises. Internal health/recovery objectives may be measured without becoming external commitments.
+R21 identified one sequencing ambiguity in the first draft and the baseline was revised before PASS: `P7.02` enables the persistent internal runtime and bounded reliance on previously validated contract surfaces, while repeatable persistent product operation remains to be proven by `P7.07` and `P7.08`.
 
-**Exit:** canonical P7.01 baseline + `R21 PASS`.
+No customer SLA/SLO promise, Production claim, lifecycle promotion, Stable Product Contract, public API or permanent persistence/IAM/service/deployment choice was created.
+
+**Exit:** satisfied — canonical P7.01 baseline + `R21 PASS`.
 
 ### P7.02 — Persistent Mac mini runtime + boot/restart/service lifecycle
 
@@ -128,7 +136,7 @@ Minimum expected evidence:
 
 A concrete macOS service mechanism such as `launchd` MAY be used as an environment-specific adapter if it remains reversible and does not become the platform contract.
 
-**Operational transition:** after `P7.02 PASS`, Arvectum OS enters **regular persistent internal operation on the Mac mini**. Later Phase 7 tasks harden that live operating baseline rather than delaying first real use.
+**Operational transition:** after `P7.02 PASS`, Arvectum OS enters **regular persistent internal operation on the Mac mini**. Later Phase 7 tasks harden that live operating baseline rather than delaying first real use. Repeatable persistent Tender Operator and Discount Parser contours remain P7.07/P7.08 evidence obligations.
 
 ### P7.03 — Durable governed state/checkpoint persistence + backup/restore baseline
 
@@ -315,6 +323,6 @@ M7 does **not** inherently require:
 
 ## 8. Current canonical action
 
-> **P7.01 — Persistent internal operating boundary + operational requirements baseline.**
+> **P7.02 — Persistent Mac mini runtime + boot/restart/service lifecycle.**
 
-P7.01 should be completed entirely through canonical repository/governance work before local serviceization begins. After P7.01 + R21 PASS, P7.02 is the first Mac mini implementation step.
+P7.01 and R21 are complete. P7.02 is the first Mac mini implementation step. After P7.02 PASS the environment becomes `Persistent Internal / owner-operated`; the remaining Phase 7 tasks harden that live baseline and separately prove repeatable product, recovery, portability and lifecycle/readiness requirements.
