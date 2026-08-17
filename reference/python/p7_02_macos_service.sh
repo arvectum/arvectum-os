@@ -9,6 +9,8 @@ RUNTIME_ROOT=${ARVECTUM_P7_02_ROOT:-"$HOME/Library/Application Support/ArvectumO
 LAUNCH_AGENT="$HOME/Library/LaunchAgents/$LABEL.plist"
 DOMAIN="gui/$(id -u)"
 SERVICE_TARGET="$DOMAIN/$LABEL"
+SERVICE_WAIT_ATTEMPTS=${ARVECTUM_P7_02_SERVICE_WAIT_ATTEMPTS:-20}
+SERVICE_WAIT_INTERVAL=${ARVECTUM_P7_02_SERVICE_WAIT_INTERVAL:-0.5}
 
 fail() { printf '%s\n' "P7.02 FAIL: $*" >&2; exit 1; }
 info() { printf '%s\n' "P7.02: $*"; }
@@ -84,6 +86,31 @@ wait_healthy() {
     sleep 0.5
   done
   return 1
+}
+
+wait_unloaded() {
+  i=0
+  while is_loaded; do
+    if [ "$i" -ge "$SERVICE_WAIT_ATTEMPTS" ]; then
+      return 1
+    fi
+    i=$((i + 1))
+    sleep "$SERVICE_WAIT_INTERVAL"
+  done
+  return 0
+}
+
+unload_service() {
+  if ! is_loaded; then
+    return 0
+  fi
+  if ! launchctl bootout "$SERVICE_TARGET" >/dev/null 2>&1; then
+    if ! is_loaded; then
+      return 0
+    fi
+    return 1
+  fi
+  wait_unloaded
 }
 
 prepare_release() {
@@ -191,7 +218,7 @@ EOF
   write_plist "$HEAD_SHA"
 
   if is_loaded; then
-    launchctl bootout "$SERVICE_TARGET" >/dev/null 2>&1 || true
+    unload_service || fail "existing service did not unload before install"
   fi
   launchctl enable "$SERVICE_TARGET" >/dev/null 2>&1 || true
   launchctl bootstrap "$DOMAIN" "$LAUNCH_AGENT"
@@ -215,11 +242,7 @@ start_runtime() {
 
 stop_runtime() {
   assert_macos
-  if is_loaded; then
-    launchctl bootout "$SERVICE_TARGET"
-  fi
-  sleep 0.5
-  is_loaded && fail "service remains loaded after stop"
+  unload_service || fail "service remains loaded after bounded stop wait"
   info "stop PASS"
 }
 
@@ -357,7 +380,7 @@ EOF
 
 remove_service() {
   assert_macos
-  if is_loaded; then launchctl bootout "$SERVICE_TARGET" >/dev/null 2>&1 || true; fi
+  unload_service || fail "service remains loaded during remove"
   rm -f "$LAUNCH_AGENT" "$RUNTIME_ROOT/service/$LABEL.plist"
   info "service removed; releases/config/secrets/evidence retained at $RUNTIME_ROOT"
 }
@@ -368,7 +391,7 @@ Usage: $0 install|start|stop|restart|status|crash-proof|prove|remove
 
 install      pin canonical main into an exact verified runtime release and install owner LaunchAgent
 start        load/start the LaunchAgent
-stop         unload/stop the LaunchAgent
+stop         unload/stop the LaunchAgent with bounded asynchronous-unload wait
 restart      replace the supervised process
 status       check launchd state and fresh local health telemetry
 crash-proof  SIGKILL the runtime and prove launchd replacement + no network sockets
