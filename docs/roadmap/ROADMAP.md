@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.53.0`
+Version: `2.54.0`
 Created: `2026-08-07`
 Updated: `2026-08-17`
 Owner: `ООО «Арвектум»`
@@ -15,16 +15,18 @@ Future roadmap content is a planning hypothesis until its phase is activated. Ro
 
 ## 2. Version note
 
-Version `2.53.0` restores the strategic continuation that existed in the earlier canonical roadmap after Phase 6:
+Version `2.54.0` closes `P7.01 — Persistent internal operating boundary + operational requirements baseline` and records `R21 — Operational Boundary Review = PASS` after two review iterations.
 
-- `Phase 7 — Operational / Enterprise Readiness` → `M7 — Scoped production-grade operating baseline`;
-- `Phase 8 — Ecosystem and External Integration` → `M8 — Governed external ecosystem baseline`.
+Canonical P7.01 evidence:
 
-The restoration and revalidated sequencing are approved in [`DECISION-2026-08-17-PHASE-7-8-ROADMAP-RESTORATION.md`](../governance/decisions/DECISION-2026-08-17-PHASE-7-8-ROADMAP-RESTORATION.md).
+- [`P7.01 Persistent Internal Operating Boundary and Operational Requirements Baseline`](P7-01-PERSISTENT-INTERNAL-OPERATING-BASELINE.md) — `Complete / Baseline 1.0.1`;
+- [`R21 — Operational Boundary Review`](../reviews/R21-operational-boundary-review.md) — `Complete / PASS`.
 
-Phase 7 is now `Active`. Phase 8 is restored as `Draft / Exploratory` and remains inactive until M7 closes and its external boundary is revalidated.
+The P7.01 baseline fixes the initial operating classification as `Persistent Internal / owner-operated`, Organization scope as ООО «Арвектум», admitted bounded workload classes, data/secret/retention/authority/recovery/network/upgrade boundaries, explicit ADR/stable-boundary triggers and a rollback/removal path without choosing a permanent persistence, IAM, service, storage, API or deployment topology.
 
-A key Phase 7 sequencing decision is that regular Arvectum OS use on the selected Mac mini does **not** wait until M7 closure. `P7.01` defines the persistent internal operating boundary; `P7.02` establishes the supervised persistent Mac mini runtime. After `P7.02 PASS`, the environment enters `Persistent Internal / owner-operated` operation while the remaining Phase 7 work hardens durability, recovery, observability, upgrades, incident response and portability.
+`P7.02` is now the current canonical action. After `P7.02 PASS`, the selected Mac mini enters regular persistent internal operation; dedicated repeatable product operational proof still remains `P7.07` for Tender Operator and `P7.08` for Discount Parser.
+
+The Phase 7/8 strategic restoration remains governed by [`DECISION-2026-08-17-PHASE-7-8-ROADMAP-RESTORATION.md`](../governance/decisions/DECISION-2026-08-17-PHASE-7-8-ROADMAP-RESTORATION.md).
 
 This persistent internal classification is not automatically an external/customer `Production` claim, supported macOS platform promise, `Active` capability transition, Stable Product Contract, SLA/support commitment or final deployment topology.
 
@@ -74,14 +76,14 @@ The required M6 Milestone Code Health Gate is [`M6-milestone-code-health-gate-go
 
 ## 6. Active Phase 7 — Operational / Enterprise Readiness
 
-Detailed roadmap: [`PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md`](PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md) — `Active 1.0.0`.
+Detailed roadmap: [`PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md`](PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md) — `Active 1.1.0`.
 
 Phase 7 converts validated owner-operated use into a persistent, recoverable and observable internal operating baseline before considering stronger production/lifecycle claims.
 
 | ID | Work item | Status | Progress |
 |---|---|---:|---:|
-| `P7.01` | Persistent internal operating boundary + operational requirements baseline | 🟨 Current | `░░░░░░░░░░ 0%` |
-| `P7.02` | Persistent Mac mini runtime + boot/restart/service lifecycle | ⬜ | `░░░░░░░░░░ 0%` |
+| `P7.01` | Persistent internal operating boundary + operational requirements baseline | 🟩 Complete / PASS | `██████████ 100%` |
+| `P7.02` | Persistent Mac mini runtime + boot/restart/service lifecycle | 🟨 Current | `░░░░░░░░░░ 0%` |
 | `P7.03` | Durable governed state/checkpoint persistence + backup/restore baseline | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.04` | Persistent identity/operator/service access + least-privilege operations | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.05` | Health, observability, audit visibility, alerting + retention/minimization | ⬜ | `░░░░░░░░░░ 0%` |
@@ -95,7 +97,7 @@ Phase 7 converts validated owner-operated use into a persistent, recoverable and
 
 Engineering/quality gates:
 
-- `R21 — Operational Boundary Review` — after P7.01;
+- [`R21 — Operational Boundary Review`](../reviews/R21-operational-boundary-review.md) — 🟩 `Complete / PASS` after P7.01;
 - `R22 — Persistent Runtime Health Review` — after P7.05;
 - `R23 — Recovery / Portability Review` — after P7.10;
 - `R24 — M7 Operational Hardening + required Milestone Code Health Gate` — after P7.11 and before P7.12.
@@ -105,9 +107,9 @@ Engineering/quality gates:
 The canonical persistent-use threshold is intentionally early:
 
 ```text
-P7.01 operational boundary
+P7.01 operational boundary — PASS
         ↓
-R21 boundary review
+R21 boundary review — PASS
         ↓
 P7.02 persistent Mac mini runtime
         ↓
@@ -176,6 +178,6 @@ A roadmap phase transition does not itself change lifecycle, production readines
 
 ## 11. Current canonical action
 
-> **P7.01 — Persistent internal operating boundary + operational requirements baseline.**
+> **P7.02 — Persistent Mac mini runtime + boot/restart/service lifecycle.**
 
-P7.01 is repository/governance work and should complete before local serviceization. After `P7.01 + R21 PASS`, begin `P7.02` on the Mac mini. After `P7.02 PASS`, Arvectum OS becomes a regular persistent internal runtime for ООО «Арвектум» while the remainder of Phase 7 hardens that live operating baseline.
+P7.01 and R21 are complete. P7.02 is the first local Mac mini implementation step. After `P7.02 PASS`, Arvectum OS becomes a regular `Persistent Internal / owner-operated` runtime for ООО «Арвектум» while the remainder of Phase 7 hardens that live operating baseline. Repeatable persistent product contours are proven separately in P7.07 and P7.08.
