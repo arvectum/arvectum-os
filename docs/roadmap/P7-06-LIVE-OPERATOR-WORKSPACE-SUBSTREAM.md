@@ -1,7 +1,7 @@
 # P7.06 — Live Operator Workspace Substream
 
-Status: `Active / UI2 Current — UI1 Complete / PASS`
-Version: `0.1.5`
+Status: `Active / UI3 Current — UI1/UI2 Complete / PASS`
+Version: `0.1.6`
 Created: `2026-08-18`
 Updated: `2026-08-18`
 Owner: `ООО «Арвектум»`
@@ -29,6 +29,8 @@ The owner explicitly approved one bounded real-state admission through [`DECISIO
 
 UI1 selected-Mac Attempt 2 then advanced the selected runtime to exact canonical release `b1b78ed9772727dda41b2e509675691f978957ec` through P7.06, verified the approved retained P6.05-L7 manifest, passed four distinct RFC-0005 gate bases, admitted and persisted one real governed item, proved idempotent retry, inspected the real Subject / exact Version / provenance through the browser and proved zero mutation from browsing. See [`P7.06-UI1 Selected-Mac Live-Browser Proof — Attempt 2`](../reviews/P7-06-UI1-selected-mac-proof-attempt-2.md).
 
+UI2 then added the bounded governed-interaction/preflight boundary through PR `#56`, exact reviewed implementation head `305faafb790e1387cac2aaafa348fbc4ac583797`, `Reference Python CI` run `32159051764 = success`, and merge `a22ba781d32f64b7097aeaf05a90651308533811`. Five functional review/revise iterations closed Host/form-boundary, reconstruction, uncertainty/reconciliation, CAP-004 redaction/retention and Execution-scoped outcome objections. See [`P7.06-UI2 — Governed Interaction / Preflight Functional Cross-Review`](../reviews/P7-06-UI2-governed-interaction-review.md).
+
 Therefore the active sequence is now:
 
 ```text
@@ -36,16 +38,16 @@ P7.06 governed update / rollback proof
         ↓ PASS
 P7.06-UI1 live read-only workspace
         ↓ PASS
-P7.06-UI2 governed interaction / preflight  ← CURRENT
-        ↓
-P7.06-UI3 persistent local operator access
+P7.06-UI2 governed interaction / preflight
+        ↓ PASS
+P7.06-UI3 persistent local operator access  ← CURRENT
         ↓
 P7.06-UI4 owner interaction proof
         ↓ PASS
 P7.07 persistent Tender Operator contour
 ```
 
-UI1 is closed. UI3 MUST NOT start canonically before the bounded UI2 interaction/preflight boundary is implemented and reviewed.
+UI1 and UI2 are closed. UI4 MUST NOT start canonically before persistent private operator access is implemented and reviewed under UI3.
 
 ## 3. Operating boundary
 
@@ -122,7 +124,7 @@ The UI1 adapter itself was unchanged between Attempt 1 and Attempt 2: `reference
 
 ### P7.06-UI2 — Governed interaction and preflight
 
-Status: `Current`.
+Status: `Complete / PASS`.
 
 Add bounded operator interaction without direct-write shortcuts.
 
@@ -137,11 +139,31 @@ Minimum interactive flows:
 
 The UI MUST NOT treat button visibility/enabled state as the security boundary.
 
-UI2 MUST preserve the UI1 read-only inspection invariants while adding only a Governed Execution entry/preflight path. No direct canonical write endpoint, ambient authority or optimistic success projection is permitted.
+UI2 preserves the UI1 inspection invariants while adding only a Governed Execution entry/preflight path. There is no direct canonical write endpoint, ambient authority or optimistic success projection.
+
+Repository closure evidence:
+
+- implementation PR `#56`: `Merged`;
+- exact reviewed implementation head: `305faafb790e1387cac2aaafa348fbc4ac583797`;
+- merge commit: `a22ba781d32f64b7097aeaf05a90651308533811`;
+- final exact-head `Reference Python CI` run `32159051764`: `success`;
+- functional cross-review: five iterations, no material objections remain;
+- [`P7.06-UI2 — Governed Interaction / Preflight Functional Cross-Review`](../reviews/P7-06-UI2-governed-interaction-review.md): `Complete / PASS`;
+- exact Organization / attributable human Actor / source Subject / source Version / provenance / related Execution and Workflow continuity: `PASS`;
+- Authorization / Organizational Authority / Data Governance / Consequential Approval rendered as independent gate concepts: `PASS`;
+- source reconstruction consumes CAP-004 `AuditReconstructionView`, preserving redacted/deleted/unavailable/missing evidence semantics: `PASS`;
+- transient intent and consequential execution delegate only through existing R10 operator-safety / Governed Execution runtime consistency: `PASS`;
+- browser input limited to transient interaction identity + CSRF; no browser-supplied authority/gate/candidate/reconstruction evidence: `PASS`;
+- Host/Origin/CSRF/form/method negative-path boundary and revoked technical interaction grant fail closed: `PASS`;
+- observed `Uncertain` remains distinct from the requirement `Reconciliation required`; blind retry is not projected: `PASS`;
+- observed consequential outcome is scoped to the related Governed Execution Subject: `PASS`;
+- no public/stable route/API/session/frontend/browser-support contract created: `PASS`.
+
+UI2 repository closure is not a selected-Mac owner-interaction proof. UI4 remains responsible for exercising the bounded interaction against the real selected runtime after UI3 establishes persistent private operator access.
 
 ### P7.06-UI3 — Persistent private operator access
 
-Status: `Pending`.
+Status: `Current`.
 
 Make the workspace reachable during regular owner-operated use while retaining a private/reversible boundary.
 
@@ -234,4 +256,6 @@ Selected-Mac UI1 Attempt 2 = `Complete / PASS` on exact canonical/local/runtime 
 
 `P7.06-UI1 = Complete / PASS`.
 
-Current canonical action advances to **`P7.06-UI2 — Governed interaction and preflight`**. UI3/UI4 and P7.07 remain pending/downstream. No lifecycle, Product Contract, Production, public/stable interface or support commitment is promoted by UI1 closure.
+`P7.06-UI2 = Complete / PASS` through PR `#56`, exact reviewed implementation head `305faafb790e1387cac2aaafa348fbc4ac583797`, merge `a22ba781d32f64b7097aeaf05a90651308533811`, final exact-head `Reference Python CI` run `32159051764 = success`, and five-iteration functional cross-review with no remaining material objections.
+
+Current canonical action advances to **`P7.06-UI3 — Persistent private operator access`**. UI4 and P7.07 remain pending/downstream. The overall `P7.06-UI` substream remains `Current`; no selected-owner interaction proof, lifecycle, Product Contract, Production, public/stable interface or support commitment is promoted by UI2 repository closure.
