@@ -1,6 +1,6 @@
 # P7.06 — Selected-Mac Live Remediation Review
 
-Status: `Repository remediation under review / selected-Mac proof pending`
+Status: `Repository remediation PASS / selected-Mac proof pending`
 Date: `2026-08-18`
 Owner: `ООО «Арвектум»`
 Task classification: `platform` with bounded `governance` and operational recovery
@@ -177,18 +177,40 @@ Bounded changes:
 
 The remediation does not change durable-state schema, migration policy, Product Contract scope, Platform Capability lifecycle, Organizational Authority, canonical state, external effects or replay semantics.
 
-## 11. Review iteration 4 — repository verification pending
+## 11. Review iteration 4 — PASS repository-side
 
-Result: `PENDING`.
+Result: `PASS / selected-Mac proof pending`.
 
-Before iteration 4 can pass:
+PR `#46 — P7.06 — Remove launchd install self-race and preserve target evidence` was reviewed against the Attempt 5 evidence and the existing P7.02/P7.06 lifecycle boundaries.
 
-- the complete Reference Python suite must pass on the final remediation head;
-- diff review must confirm initial RunAtLoad activation no longer force-replaces itself;
-- explicit restart replacement semantics must remain intact;
-- P7.06 rollback/failure evidence must preserve the exact Git target SHA;
-- the remediation must merge to canonical `main`;
-- the selected Mac must then complete the full P7.06 `update → rollback → final update → final status` proof on the merged exact target.
+Final code/test head before this review-evidence update:
+
+`cba20a541683caf538f78e78a3b7572b67fa8bcc`
+
+GitHub verification:
+
+- Reference Python CI run `32126851553` (`#69`) — `success`;
+- job `95679210687 — Full reference test suite` — `success`;
+- PR merge-test SHA `66c8763c429c9e6cd4cef99ce9ae3267d7980a42`;
+- `988/988 PASS` (`Ran 988 tests in 12.413s — OK`);
+- P7.02 existing lifecycle/runtime tests — PASS;
+- P7.06 existing governed deploy/rollback/recovery tests — PASS;
+- new install RunAtLoad self-race guard — PASS;
+- explicit restart replacement guard — PASS;
+- P7.06 Git target preservation guard — PASS;
+- remediated POSIX shell syntax guards — PASS.
+
+An earlier intermediate PR CI run failed only because the newly written structural test searched for substring `target=$1`, which is also contained inside the correct `wait_target=$1`. The guard was corrected to reject only the exact assignment line `target=$1`. No runtime, deployment or governance semantics changed as part of that test-only correction. The final full suite above is the governing repository-side evidence.
+
+Diff review confirms:
+
+- initial P7.02 install is now `launchctl bootstrap → wait_healthy` with no immediate forced replacement;
+- explicit P7.02 restart retains `launchctl kickstart -k`;
+- P7.06 `wait_loaded()` uses `wait_target` rather than the deployment Git `target` variable;
+- failed-update payload construction continues to preserve the exact preflight Git target SHA;
+- backup-before-stop, compatibility/migration gates, exact-release pinning, rollback/recovery and no-effect-replay constraints remain intact.
+
+No material repository-side objection remains after iteration 4. The remaining closure gap is live selected-Mac proof on the merged canonical remediation target.
 
 ## 12. Product/platform, authority and ADR disposition
 
