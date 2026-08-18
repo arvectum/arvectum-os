@@ -201,8 +201,6 @@ def _authorize(
         access_path=WORKSPACE_ACCESS_PATH,
     )
     if not decision.allowed:
-        # Do not return a differentiated reason to the HTTP caller. The exact
-        # P7.04 reason is intentionally kept inside this local process boundary.
         raise UI1AccessDenied("workspace access is unavailable")
     if decision.principal_kind != "human":
         raise UI1AccessDenied("workspace access is unavailable")
@@ -231,7 +229,7 @@ def _workspace_context(
 def _live_items(root: Path) -> tuple[LiveGovernedItem, ...]:
     items_root = root / "state" / "governed" / "items"
     if not items_root.exists():
-        return ()
+        raise UI1IntegrityError("governed item root is unavailable")
     if items_root.is_symlink() or not items_root.is_dir():
         raise UI1IntegrityError("governed item root is unsafe")
     entries = sorted(items_root.iterdir(), key=lambda path: path.name)
@@ -251,8 +249,6 @@ def _live_items(root: Path) -> tuple[LiveGovernedItem, ...]:
         metadata = manifest.get("metadata")
         if not isinstance(metadata, Mapping):
             raise UI1IntegrityError("governed item metadata is unavailable")
-        # UI1 is a live governed workspace. Proof fixtures remain outside these
-        # surfaces and cannot satisfy live-state exit evidence.
         if metadata.get("state_class") != "canonical-governed-state":
             continue
         provenance = metadata.get("provenance_refs")
@@ -304,13 +300,13 @@ def _live_items(root: Path) -> tuple[LiveGovernedItem, ...]:
 def _live_checkpoints(root: Path) -> tuple[LiveCheckpoint, ...]:
     checkpoints_root = root / "state" / "checkpoints"
     if not checkpoints_root.exists():
-        return ()
+        raise UI1IntegrityError("checkpoint root is unavailable")
     if checkpoints_root.is_symlink() or not checkpoints_root.is_dir():
         raise UI1IntegrityError("checkpoint root is unsafe")
-    entries = sorted(
-        (path for path in checkpoints_root.iterdir() if path.suffix == ".json"),
-        key=lambda path: path.name,
-    )
+    entries = sorted(checkpoints_root.iterdir(), key=lambda path: path.name)
+    for path in entries:
+        if path.name.startswith(".") or path.is_symlink() or not path.is_file() or path.suffix != ".json":
+            raise UI1IntegrityError("unexpected checkpoint-store entry")
     if len(entries) > MAX_VISIBLE_CHECKPOINTS:
         raise UI1IntegrityError(
             f"live checkpoint set exceeds UI1 bounded limit ({MAX_VISIBLE_CHECKPOINTS})"
@@ -318,8 +314,6 @@ def _live_checkpoints(root: Path) -> tuple[LiveCheckpoint, ...]:
 
     visible: list[LiveCheckpoint] = []
     for path in entries:
-        if path.is_symlink() or not path.is_file():
-            raise UI1IntegrityError("unexpected checkpoint path")
         try:
             value = p703.verify_checkpoint(root, path)
         except p703.P703Error as exc:
@@ -398,8 +392,6 @@ def build_live_snapshot(
 
 
 def _surface_for(item: LiveGovernedItem) -> set[WorkspaceDestination]:
-    """Return non-authoritative IA projections without changing semantic_type."""
-
     semantic = item.semantic_type.casefold()
     surfaces = {WorkspaceDestination.RECORDS}
     if "execution" in semantic or "workflow" in semantic:
@@ -529,9 +521,7 @@ def _render_discover(snapshot: LiveWorkspaceSnapshot) -> str:
 
 
 def _render_records(snapshot: LiveWorkspaceSnapshot, destination: WorkspaceDestination) -> str:
-    items = tuple(
-        item for item in snapshot.items if destination in _surface_for(item)
-    )
+    items = tuple(item for item in snapshot.items if destination in _surface_for(item))
     if not items:
         return (
             f"<section><h2>{escape(destination.value)}</h2>"
@@ -666,8 +656,6 @@ footer {{ max-width: 1180px; margin: 0 auto; padding: 0 24px 32px; opacity: .8; 
 
 
 def render_blocked_html() -> str:
-    """Generic fail-closed page with no protected reason, counts, or identifiers."""
-
     return """<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><title>Workspace unavailable</title></head>
 <body><main data-workspace-state="blocked">
@@ -728,8 +716,6 @@ def make_server(
     if not isinstance(port, int) or port < 0 or port > 65535:
         raise UI1BoundaryError("port must be between 0 and 65535")
 
-    # Preflight before binding. Each later request repeats authorization and
-    # live-state verification so credential/grant revocation takes effect.
     build_live_snapshot(
         root,
         organization=organization,
@@ -743,8 +729,6 @@ def make_server(
         sys_version = ""
 
         def log_message(self, _format: str, *_args: object) -> None:
-            # Avoid request/query metadata in ambient stdout/stderr logs. P7.05
-            # structured telemetry remains separate and UI1 performs no writes.
             return
 
         def _read(self) -> None:
@@ -773,11 +757,7 @@ def make_server(
             self._read()
 
         def _reject_mutation(self) -> None:
-            _write_html(
-                self,
-                HTTPStatus.METHOD_NOT_ALLOWED,
-                render_blocked_html(),
-            )
+            _write_html(self, HTTPStatus.METHOD_NOT_ALLOWED, render_blocked_html())
 
         do_POST = _reject_mutation
         do_PUT = _reject_mutation
