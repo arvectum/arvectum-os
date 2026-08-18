@@ -46,6 +46,10 @@ class P705OperationalVisibilityTests(unittest.TestCase):
         healthy = p705.classify_health(self.root)
         self.assertEqual(healthy.state, "healthy")
         self.assertIn("no operator action", healthy.action)
+        status = p705.operational_status(self.root, publish=False)
+        self.assertEqual(status["process"]["pid"], os.getpid())
+        self.assertGreaterEqual(status["resources"]["filesystem_total_bytes"], status["resources"]["filesystem_free_bytes"])
+        self.assertEqual(status["resources"]["threshold_claims"], "none; visibility only")
 
         future = (p705._utc_now_dt() + timedelta(seconds=30)).isoformat().replace("+00:00", "Z")
         self.write_health(heartbeat_at=future)
@@ -112,7 +116,7 @@ class P705OperationalVisibilityTests(unittest.TestCase):
         return decision
 
     def test_audit_visibility_requires_exact_access_and_never_copies_payload(self):
-        p703.persist_governed_item(
+        item_id = p703.persist_governed_item(
             self.root, SHA, b'{"material":"audit-body-must-not-be-copied"}',
             {
                 "state_class": "canonical-governed-state",
@@ -132,9 +136,21 @@ class P705OperationalVisibilityTests(unittest.TestCase):
                 "contains_reusable_secret": False,
             },
         )
+        p703.create_checkpoint(
+            self.root, SHA,
+            execution_subject_identity="execution:test-1",
+            execution_version_identity="execution:test-1:v1",
+            governed_storage_item_ids=[item_id],
+            classification="internal recovery",
+            retention_policy_ref="test-retention",
+            reason="test reconstruction visibility",
+        )
         decision = self._authorized_audit_decision()
         projection = p705.audit_visibility(self.root, decision)
         self.assertEqual(projection["count"], 1)
+        self.assertEqual(projection["checkpoint_count"], 1)
+        self.assertFalse(projection["recovery_checkpoints"][0]["canonical_authority"])
+        self.assertFalse(projection["recovery_checkpoints"][0]["external_effect_replay_authorized"])
         self.assertFalse(projection["payload_bytes_exposed"])
         self.assertNotIn("audit-body-must-not-be-copied", json.dumps(projection))
         self.assertEqual(projection["items"][0]["semantic_type"], "Event")
