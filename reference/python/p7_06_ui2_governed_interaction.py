@@ -3,8 +3,8 @@
 The adapter extends the UI1 read-only boundary with one narrowly scoped request
 entry point.  It does not accept candidate records, gate decisions, authority,
 approval, reconstruction evidence or retry semantics from the browser.  Trusted
-in-process providers supply a typed GovernedInteractionCase and optional exact
-RFC-0006 ReconstructionManifest; every request reuses UI1 exact-release and read
+in-process providers supply a typed GovernedInteractionCase and optional
+CAP-004 AuditReconstructionView; every request reuses UI1 exact-release and read
 authorization checks, while POST additionally requires its own P7.04 human/local
 grant, same-origin/CSRF checks, and a fresh governed preflight.
 
@@ -22,7 +22,7 @@ from pathlib import Path
 from typing import Callable, Mapping
 from urllib.parse import parse_qs, urlsplit
 
-from arvectum_os_ref.event_provenance import ReconstructionManifest
+from arvectum_os_ref.audit_reconstruction_support import AuditReconstructionView
 from arvectum_os_ref.governed_interaction_preflight import (
     GovernedInteractionBlocked,
     GovernedInteractionCase,
@@ -52,7 +52,7 @@ MAX_FORM_BYTES = 4096
 MAX_INTERACTION_ID_CHARS = 128
 
 InteractionProvider = Callable[[str], GovernedInteractionCase | None]
-ReconstructionProvider = Callable[[str], ReconstructionManifest | None]
+ReconstructionProvider = Callable[[str], AuditReconstructionView | None]
 
 
 class UI2Error(RuntimeError):
@@ -121,16 +121,16 @@ def _provider_case(
 def _provider_reconstruction(
     provider: ReconstructionProvider | None,
     interaction_id: str,
-) -> ReconstructionManifest | None:
+) -> AuditReconstructionView | None:
     if provider is None:
         return None
     try:
-        manifest = provider(interaction_id)
+        view = provider(interaction_id)
     except Exception as exc:
         raise UI2BoundaryError("trusted reconstruction provider is unavailable") from exc
-    if manifest is not None and not isinstance(manifest, ReconstructionManifest):
+    if view is not None and not isinstance(view, AuditReconstructionView):
         raise UI2BoundaryError("trusted reconstruction provider returned invalid evidence")
-    return manifest
+    return view
 
 
 def _interaction_id_from_get(path: str) -> str:
@@ -319,11 +319,11 @@ def make_server(
             case: GovernedInteractionCase,
             interaction_id: str,
         ) -> str:
-            manifest = _provider_reconstruction(reconstruction_provider, interaction_id)
+            audit_view = _provider_reconstruction(reconstruction_provider, interaction_id)
             view = build_source_reconstruction_view(
                 organization=case.organization,
                 source_record=case.source_record,
-                manifest=manifest,
+                audit_view=audit_view,
             )
             return render_source_reconstruction_html(view)
 
@@ -401,8 +401,8 @@ def make_server(
 
                 # Security boundary: do not trust GET/form/button state.  The
                 # governed preflight, source authorization freshness, optional
-                # reconstruction binding and P7.04 technical access are all
-                # re-evaluated in this POST before any governed action request.
+                # authorized reconstruction view and P7.04 technical access are
+                # all re-evaluated in this POST before any governed action request.
                 preflight_for_evidence = build_governed_interaction_preflight(
                     snapshot.workspace,
                     case=case,
