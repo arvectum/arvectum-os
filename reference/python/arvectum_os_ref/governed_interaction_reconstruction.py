@@ -162,7 +162,7 @@ def render_source_reconstruction_html(view: SourceReconstructionView) -> str:
     assert view.workflow_version_id is not None
     events = "".join(
         "<li>"
-        f"Event Subject {_identity_text(subject)}; exact Version {_identity_text(version)}; "
+        f"Event Subject {escape(_identity_text(subject))}; exact Version {escape(_identity_text(version))}; "
         f"type {escape(event_type)}; schema {escape(schema_version)}"
         "</li>"
         for subject, version, event_type, schema_version in view.event_versions
