@@ -1,9 +1,9 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.54.4`
+Version: `2.54.5`
 Created: `2026-08-07`
-Updated: `2026-08-17`
+Updated: `2026-08-18`
 Owner: `ООО «Арвектум»`
 Task classification: `governance`
 
@@ -15,70 +15,29 @@ Future roadmap content is a planning hypothesis until its phase is activated. Ro
 
 ## 2. Version note
 
-Version `2.54.4` closes `P7.03 — Durable governed state/checkpoint persistence + backup/restore baseline` after repository implementation, proof-contract hardening, preserved failed attempts, successful hardened selected-Mac Attempt 3 and final six-iteration functional cross-review.
+Version `2.54.5` records the repository-side implementation milestone for `P7.04 — Persistent identity/operator/service access + least-privilege operations` after PR `#35` merged at `2b808c658c19056cef65b69e82152ae12d861679`.
 
-Repository implementation PR `#30` merged at `e2440b6f8afc7e0f21b20d370047bfa3ac803017` and full Reference Python CI passed `932/932`. After Attempt 1 exposed an evidence-contract inconsistency, PR `#31` added the dedicated hardened selected-Mac wrapper and merged at `5d33f874beb38f773ecf816ecd6d35e5fcb26c97`; full Reference Python CI passed `935/935`, including explicit healthy, stopped and inconsistent-core-summary proof paths.
+The bounded repository implementation now provides exact P6.05-L4 Organization/human identity continuity, one attributable persistent service principal, deny-by-default exact Organization/operation/resource/access-path grants, owner-local credential issuance/rotation/revocation, principal/grant revocation, explicit local/remote access scoping and a hardened selected-Mac proof wrapper. Technical access remains explicitly separate from Organizational Authority and consequential approval. No roles, wildcard grants, superuser or ambient-admin bypass were introduced.
 
-Selected-Mac evidence remains fully traceable:
+Repository evidence for PR `#35`:
 
-- [`P7.03 Selected Mac mini Proof Attempt 1`](../reviews/P7-03-selected-mac-proof-attempt-1.md) — rejected as closure evidence because reported `PASS` conflicted with `persistent_runtime_state=stopped`; scoped backup/restore observations retained;
-- [`P7.03 Selected Mac mini Proof Attempt 2`](../reviews/P7-03-selected-mac-proof-attempt-2.md) — hardened proof correctly failed closed while the existing P7.02 runtime was `stopped`;
-- [`P7.03 Selected Mac mini Proof Attempt 3`](../reviews/P7-03-selected-mac-proof-attempt-3.md) — `Complete / PASS` after explicit human owner/operator authorization of the existing P7.02 `start` lifecycle action.
+- focused persistent-access tests: `14/14 PASS`;
+- selected-Mac proof-contract tests: `2/2 PASS`;
+- GitHub `Reference Python CI` on implementation/documentation head `b9c46646324d5d4bccf384196efa3670b828c6af`: `success`, run `32063442269`;
+- canonical implementation: [`P7.04 Persistent Identity / Operator / Service Access`](../implementation/P7-04-PERSISTENT-IDENTITY-ACCESS.md) — `Repository implementation PASS / selected-Mac closure pending`;
+- repository functional cross-review: `PASS / selected-Mac closure pending`.
 
-Attempt 3 executed clean exact canonical tool release `e20b7801cf389b1afe7f513182d352a566809c55` against unchanged P7.02 runtime release `73af746f83271b14670fe22db658dfd55cacb291`. The runtime was `healthy` before and after proof and the release remained unchanged. Live backup/isolated restore integrity passed, the restored state digest matched the live digest, fixture backup/restore passed, deliberate tamper detection failed closed, excluded telemetry/cache/secrets were absent, checkpoint/proof fixture remained non-authoritative and external-effect replay authorization remained false.
+`P7.04` is **not** `Complete / PASS` yet. The current canonical action remains the selected-Mac closure proof on clean exact canonical `main`, using the existing healthy P7.02 persistent runtime and the retained P6.05-L4 owner context. Only a passing selected-Mac operational attestation may close P7.04 and advance to P7.05.
 
-Selected live backup:
+Version `2.54.4` closed `P7.03 — Durable governed state/checkpoint persistence + backup/restore baseline` after repository implementation, proof-contract hardening, preserved failed attempts, successful hardened selected-Mac Attempt 3 and final six-iteration functional cross-review.
 
-- `p7-03-backup-20260817T192924Z-a8b80b0fe41809da.tar.gz`;
-- SHA-256 `6b2661050a2d777c9cae0bada8c584c2e426489156505dc30e6ce5756de97765`.
-
-Canonical P7.03 closure evidence:
-
-- [`P7.03 Durable Governed State / Checkpoint Persistence and Backup / Restore Baseline`](../implementation/P7-03-DURABLE-GOVERNED-STATE-BACKUP-RESTORE.md) — `Complete / PASS`;
-- [`P7.03 Durable State Implementation Cross-Review`](../reviews/P7-03-durable-state-implementation-review.md) — `Complete / PASS`, six iterations;
-- Attempts 1–3 above;
-- PR `#30` implementation CI `932/932 PASS`;
-- PR `#31` hardening CI `935/935 PASS`.
+Repository implementation PR `#30` merged at `e2440b6f8afc7e0f21b20d370047bfa3ac803017` and full Reference Python CI passed `932/932`. After Attempt 1 exposed an evidence-contract inconsistency, PR `#31` added the dedicated hardened selected-Mac wrapper and merged at `5d33f874beb38f773ecf816ecd6d35e5fcb26c97`; full Reference Python CI passed `935/935`.
 
 `P7.03 = Complete / PASS` for the declared `Persistent Internal / owner-operated` scope. The bounded owner-local filesystem/tar adapter remains private, reversible and non-stable. No Accepted ADR is required at this scope, and no external/customer Production, `Active` Platform Capability, Stable Product Contract, SLA/SLO/RPO/RTO/support or permanent persistence technology claim is created.
 
-`P7.04 — Persistent identity/operator/service access + least-privilege operations` becomes the current canonical action.
+Version `2.54.3` closed `P7.02 — Persistent Mac mini runtime + boot/restart/service lifecycle` after remediated selected-Mac Attempt 2 passed. The selected Mac mini entered regular `Persistent Internal / owner-operated` Arvectum OS operation. This is an operational-mode transition only and does not create external/customer Production, an `Active` Platform Capability, a Stable Product Contract, SLA/support, a supported macOS matrix or stable deployment/service topology.
 
-Version `2.54.3` closed `P7.02 — Persistent Mac mini runtime + boot/restart/service lifecycle` after the remediated selected-Mac Attempt 2 completed the exact canonical lifecycle proof.
-
-Attempt 2 executed canonical release `73af746f83271b14670fe22db658dfd55cacb291` on clean `main` with `HEAD == origin/main`. Installation, aggregate proof and final status all passed. The owner `launchd` LaunchAgent remained loaded after proof. Explicit stop/start/restart, PID replacement, actual `SIGKILL` crash recovery, health-generation advance `3 → 4`, bounded listener check, source-checkout cleanliness, `RunAtLoad=true`, `KeepAlive.SuccessfulExit=false` and plist `0600` all passed. No runtime-owned network listener was observed, `product_effect_replay=false`, `canonical_state_written_by_runtime_envelope=false`, and P7.02 requires no reusable secret.
-
-Canonical P7.02 closure evidence:
-
-- [`P7.02 Persistent Mac mini Runtime and Service Lifecycle`](../implementation/P7-02-MAC-MINI-PERSISTENT-RUNTIME.md) — `Complete / PASS`;
-- [`P7.02 Persistent Runtime Implementation Cross-Review`](../reviews/P7-02-persistent-runtime-implementation-review.md) — `Complete / PASS`, five iterations;
-- [`P7.02 Selected Mac mini Proof Attempt 1`](../reviews/P7-02-selected-mac-proof-attempt-1.md) — failed attempt preserved, repository defect remediated;
-- [`P7.02 Selected Mac mini Proof Attempt 2`](../reviews/P7-02-selected-mac-proof-attempt-2.md) — `Complete / PASS`;
-- PR `#27` — asynchronous `launchd` stop-race remediation, `920/920` Reference Python tests PASS;
-- exact proven selected-Mac release — `73af746f83271b14670fe22db658dfd55cacb291`.
-
-`P7.02 = Complete / PASS` for the declared `Persistent Internal / owner-operated` scope. The selected Mac mini entered regular persistent internal Arvectum OS operation. This is an operational-mode transition only: it does not create external/customer `Production`, an `Active` Platform Capability, a Stable Product Contract, SLA/support, supported macOS matrix or stable deployment/service topology.
-
-Version `2.54.2` recorded the first selected-Mac P7.02 proof attempt, its repository defect finding and the completed repository remediation.
-
-Attempt 1 executed on exact canonical release `2db9d6c178d8e67a593d7ebb716f86e394862eea` with a clean canonical `main`. Installation passed, but the aggregate proof failed during explicit stop because the adapter used a one-shot `bootout → sleep 0.5 → is_loaded` check. The later status check found the target already unloaded, exposing an asynchronous `launchd` unload race in the repository lifecycle adapter.
-
-PR `#27` remediated that defect with bounded unload polling, idempotent already-unloaded handling, fail-closed timeout behavior and executable fake-`launchctl` regression coverage. `Reference Python CI` run `35` completed `920/920` tests PASS, including the delayed-unload reproduction, bounded-timeout negative path and already-unloaded idempotency case. PR `#27` was squash-merged at `4a46ad40599287dde92ef87a0459965fb2cb45db`.
-
-Version `2.54.1` recorded the repository-side P7.02 implementation milestone after canonical merge of PR `#25` at `b4b5a162ee7f2d224b72adb3e6a0927a25e3481f` and `917/917` full Reference Python tests PASS.
-
-Version `2.54.0` closed `P7.01 — Persistent internal operating boundary + operational requirements baseline` and recorded `R21 — Operational Boundary Review = PASS` after two review iterations.
-
-Canonical P7.01 evidence:
-
-- [`P7.01 Persistent Internal Operating Boundary and Operational Requirements Baseline`](P7-01-PERSISTENT-INTERNAL-OPERATING-BASELINE.md) — `Complete / Baseline 1.0.1`;
-- [`R21 — Operational Boundary Review`](../reviews/R21-operational-boundary-review.md) — `Complete / PASS`.
-
-The P7.01 baseline fixes the initial operating classification as `Persistent Internal / owner-operated`, Organization scope as ООО «Арвектум», admitted bounded workload classes, data/secret/retention/authority/recovery/network/upgrade boundaries, explicit ADR/stable-boundary triggers and a rollback/removal path without choosing a permanent persistence, IAM, service, storage, API or deployment topology.
-
-The Phase 7/8 strategic restoration remains governed by [`DECISION-2026-08-17-PHASE-7-8-ROADMAP-RESTORATION.md`](../governance/decisions/DECISION-2026-08-17-PHASE-7-8-ROADMAP-RESTORATION.md).
-
-This persistent internal classification is not automatically an external/customer `Production` claim, supported macOS platform promise, `Active` capability transition, Stable Product Contract, SLA/support commitment or final deployment topology.
+Version `2.54.0` closed `P7.01 — Persistent internal operating boundary + operational requirements baseline` and recorded `R21 — Operational Boundary Review = PASS`.
 
 ## 3. Architecture and governance baseline
 
@@ -113,14 +72,7 @@ Phase status, Platform Capability lifecycle, Product Contract lifecycle, operati
 
 Detailed roadmap: [`PHASE-6-PRODUCT-DRIVEN-PLATFORM-VALIDATION.md`](PHASE-6-PRODUCT-DRIVEN-PLATFORM-VALIDATION.md).
 
-Phase 6 completed with two materially distinct real-product/workflow chains:
-
-1. Tender Operator — exact real tender package `7/7` admitted and governed/reconstructed;
-2. Discount Parser — one explicitly authorized real Telegram publication with pre-effect evidence, confirmed external effect and read-only CAP-004 reconstruction without effect replay.
-
-P6.07 Stage 2C recorded `9` targeted tests PASS and `911` full Reference Python tests PASS. P6.06 remained `Provisional 0.1.0`, CAP-004-only; CAP-004 remained `Incubating / Provisional`.
-
-The required M6 Milestone Code Health Gate is [`M6-milestone-code-health-gate-governance-repair.md`](../reviews/M6-milestone-code-health-gate-governance-repair.md) — `Complete / PASS`. It was recorded transparently after the original closure publication when the missing gate artifact was discovered. No material defect required M6 reopening.
+Phase 6 completed with two materially distinct real-product/workflow chains: Tender Operator exact real tender evidence and Discount Parser real Telegram publication evidence reconstructed through CAP-004 without effect replay. The M6 Milestone Code Health Gate is `Complete / PASS`.
 
 `M6 = achieved for the declared bounded scope.`
 
@@ -135,7 +87,7 @@ Phase 7 converts validated owner-operated use into a persistent, recoverable and
 | `P7.01` | Persistent internal operating boundary + operational requirements baseline | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.02` | Persistent Mac mini runtime + boot/restart/service lifecycle | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.03` | Durable governed state/checkpoint persistence + backup/restore baseline | 🟩 Complete / PASS | `██████████ 100%` |
-| `P7.04` | Persistent identity/operator/service access + least-privilege operations | 🟨 Current | `░░░░░░░░░░ 0%` |
+| `P7.04` | Persistent identity/operator/service access + least-privilege operations | 🟨 Repository implementation PASS / selected-Mac closure pending | `repository PASS; operational proof pending` |
 | `P7.05` | Health, observability, audit visibility, alerting + retention/minimization | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.06` | Governed deploy/update/rollback/version/migration path | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.07` | Persistent Tender Operator operational contour | ⬜ | `░░░░░░░░░░ 0%` |
@@ -154,8 +106,6 @@ Engineering/quality gates:
 
 ### Persistent Mac mini transition
 
-The canonical persistent-use threshold is intentionally early:
-
 ```text
 P7.01 operational boundary — PASS
         ↓
@@ -167,12 +117,14 @@ ARVECTUM OS ENTERS REGULAR PERSISTENT INTERNAL USE
         ↓
 P7.03 durable-state/backup-restore baseline — PASS
         ↓
-P7.04–P7.12 continue hardening the live operating baseline
+P7.04 repository implementation — PASS
+        ↓
+P7.04 selected-Mac operational proof ← current
+        ↓
+P7.05–P7.12 continue hardening the live operating baseline
 ```
 
-P7.02 passed on exact selected-Mac release `73af746f83271b14670fe22db658dfd55cacb291`. P7.03 subsequently established the bounded durable-state/checkpoint and backup/restore baseline without changing that runtime release.
-
-This does not prove P7.04–P7.12, persistent product contours, external Production, lifecycle promotion or support commitments.
+P7.02 passed on exact selected-Mac release `73af746f83271b14670fe22db658dfd55cacb291`. P7.03 subsequently established the bounded durable-state/checkpoint and backup/restore baseline. P7.04 repository implementation is merged but has not yet passed the selected-Mac closure proof.
 
 ## 7. M7 milestone definition
 
@@ -197,28 +149,11 @@ M7 does not inherently require an external customer Production deployment, publi
 
 Detailed draft: [`PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md`](PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md) — `Draft / Exploratory 0.1.0`.
 
-Draft work items:
-
-- `P8.01` External ecosystem target + evidence baseline;
-- `P8.02` Cross-Organization identity/trust/rights/data-governance boundary;
-- `P8.03` External Product Contract/integration-contract + stable-surface decision;
-- `P8.04` External authoritative-system connector validation;
-- `P8.05` Event/ingress/egress/duplicate/replay/reconciliation semantics;
-- `P8.06` External extension/product onboarding + governed dependency resolution;
-- `P8.07` Portability/export/migration/customer handover interoperability;
-- `P8.08` Multi-Organization isolation + cross-organization security validation;
-- `P8.09` External operator/developer integration experience + documentation;
-- `P8.10` Scoped external conformance/commercial/support boundary review;
-- `P8.11` Ecosystem architecture hardening + ADR/refactoring review;
-- `P8.12` Phase 8 / M8 closure review.
-
-Provisional gates R25–R28 are defined in the Phase 8 draft and must be revalidated before activation.
+Phase 8 remains Draft until M7 closes and its external boundary is revalidated.
 
 ## 9. ADR, lifecycle and stable-boundary rule
 
-Phase 7 may create pressure to choose concrete durable persistence, service-management, IAM, serialization, API, storage or deployment mechanisms.
-
-Use the lowest sufficient decision level. Environment-specific reversible adapters do not automatically require ADRs. If a choice becomes materially constraining, cross-product, externally relied upon or expensive to reverse, stop at the applicable ADR/stable-boundary gate before further reliance.
+Phase 7 may create pressure to choose concrete durable persistence, service-management, IAM, serialization, API, storage or deployment mechanisms. Use the lowest sufficient decision level. If a choice becomes materially constraining, cross-product, externally relied upon or expensive to reverse, stop at the applicable ADR/stable-boundary gate before further reliance.
 
 No capability becomes `Active` and no Product Contract becomes `Stable` through roadmap progress alone.
 
@@ -230,6 +165,6 @@ A roadmap phase transition does not itself change lifecycle, production readines
 
 ## 11. Current canonical action
 
-> **P7.04 — Persistent identity/operator/service access + least-privilege operations.**
+> **P7.04 — selected-Mac persistent access closure proof.**
 
-P7.03 is canonically `Complete / PASS`. P7.04 now evolves the persistent internal contour toward attributable human/workload identity, deny-by-default and least-privilege operations, secret/credential lifecycle and revocation while preserving the separation of authentication, authorization, Organizational Authority and data governance.
+Repository implementation is merged and its CI is green. Execute one clean `p7_04_selected_mac_proof.py` run on the selected ООО «Арвектум» Mac mini from exact canonical `main`, against the existing healthy P7.02 runtime and retained P6.05-L4 owner context. Preserve the produced non-canonical attestation and review it canonically. If the proof passes without material objections, close P7.04 and advance to P7.05; otherwise record the failure and remediate without weakening RFC-0003/RFC-0005 authority boundaries.
