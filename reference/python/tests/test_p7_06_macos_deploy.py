@@ -21,7 +21,13 @@ class ShellTests(unittest.TestCase):
     def test_r22_and_governed_sequence_guards_present(self):
         text = DEPLOY.read_text()
         self.assertIn("R22_SHA=", text)
-        self.assertLess(text.index('backup_preupdate "$source"'), text.index('sh "$P705" uninstall'))
+        update_start = text.index("update_runtime()")
+        update_end = text.index("rollback_last()", update_start)
+        update = text[update_start:update_end]
+        self.assertLess(
+            update.index('backup_preupdate "$source"'),
+            update.index('sh "$P705" uninstall'),
+        )
         self.assertIn("compatibility/migration preflight rejected target", text)
         self.assertIn("rollback_and_record_failure", text)
         self.assertIn("restore_plist_and_start", text)
@@ -65,6 +71,41 @@ class ShellTests(unittest.TestCase):
             text,
         )
         self.assertIn("source observer legacy R22 carry-forward status PASS", text)
+
+    def test_update_requires_runtime_lock_quiescence_before_target_install(self):
+        text = DEPLOY.read_text()
+        stop = text.index('sh "$P702" stop\n  wait_runtime_quiescent')
+        quiescent = text.index('wait_runtime_quiescent || rollback_and_record_failure')
+        install = text.index('if ! sh "$P702" install')
+        self.assertLess(stop, quiescent)
+        self.assertLess(quiescent, install)
+        self.assertIn("fcntl.LOCK_EX | fcntl.LOCK_NB", text)
+        self.assertIn("source runtime process did not quiesce after stop", text)
+
+    def test_failure_rollback_reuses_bounded_lifecycle_adapters(self):
+        text = DEPLOY.read_text()
+        restore_start = text.index("restore_plist_and_start()")
+        restore_end = text.index("backup_preupdate()", restore_start)
+        restore = text[restore_start:restore_end]
+        self.assertNotIn('launchctl bootout "$RUNTIME_TARGET"', restore)
+        self.assertNotIn('launchctl bootout "$OBSERVER_TARGET"', restore)
+        self.assertIn('sh "$P705" uninstall', restore)
+        self.assertIn('sh "$P702" stop', restore)
+        self.assertIn('wait_runtime_quiescent', restore)
+        self.assertIn("rollback runtime process did not release the single-instance lock", restore)
+
+    def test_interrupted_recovery_is_exact_source_and_effect_free(self):
+        text = DEPLOY.read_text()
+        self.assertIn("recover_interrupted_latest()", text)
+        self.assertIn('root.glob("work-*")', text)
+        self.assertIn('payload.get("Label") != expected_label', text)
+        self.assertIn('args.index("--release-sha")', text)
+        self.assertIn('restore_plist_and_start "$txdir" "$source"', text)
+        self.assertIn('"durable_backup_restored": False', text)
+        self.assertIn('"canonical_mutation_performed_by_recovery": False', text)
+        self.assertIn('"product_external_effect_invoked": False', text)
+        self.assertIn('"historical_effect_replay_invoked": False', text)
+        self.assertIn('recover-interrupted-latest) recover_interrupted_latest', text)
 
     def test_rollback_reinstalls_safe_exact_observer_instead_of_unsafe_legacy_plist(self):
         text = DEPLOY.read_text()

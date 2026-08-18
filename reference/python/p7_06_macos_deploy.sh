@@ -17,6 +17,8 @@ OBSERVER_PLIST="$HOME/Library/LaunchAgents/$OBSERVER_LABEL.plist"
 LOCK_DIR="$RUNTIME_ROOT/run/p7-06-deploy.lock"
 R22_SHA="950a5a8e0258dd555db4a97e5622d64951bcf6fe"
 P705_LEGACY_PROVEN_SHA="cf60e52c93bf0ef4158cf2c3e26792850a126c70"
+QUIESCE_WAIT_ATTEMPTS=${ARVECTUM_P7_06_QUIESCE_WAIT_ATTEMPTS:-30}
+QUIESCE_WAIT_INTERVAL=${ARVECTUM_P7_06_QUIESCE_WAIT_INTERVAL:-0.5}
 
 fail() { printf '%s\n' "P7.06 deploy FAIL: $*" >&2; exit 1; }
 info() { printf '%s\n' "P7.06 deploy: $*"; }
@@ -93,6 +95,43 @@ wait_loaded() {
   return 1
 }
 
+runtime_lock_available() {
+  lock="$RUNTIME_ROOT/run/runtime.lock"
+  [ -e "$lock" ] || return 0
+  python3 - "$lock" <<'PY'
+import fcntl
+import sys
+
+path = sys.argv[1]
+try:
+    handle = open(path, "r+", encoding="utf-8")
+except FileNotFoundError:
+    raise SystemExit(0)
+except OSError:
+    raise SystemExit(2)
+try:
+    try:
+        fcntl.flock(handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError:
+        raise SystemExit(1)
+    fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+finally:
+    handle.close()
+PY
+}
+
+wait_runtime_quiescent() {
+  i=0
+  while [ "$i" -lt "$QUIESCE_WAIT_ATTEMPTS" ]; do
+    if runtime_lock_available; then
+      return 0
+    fi
+    i=$((i + 1))
+    sleep "$QUIESCE_WAIT_INTERVAL"
+  done
+  runtime_lock_available
+}
+
 verify_source_observer_preupdate() {
   rel=$1
   if sh "$P705" status >/dev/null 2>&1; then
@@ -142,8 +181,10 @@ restore_plist_and_start() {
   [ -d "$RUNTIME_ROOT/releases/$rel" ] || fail "rollback release is no longer installed: $rel"
   [ -x "$(release_python "$rel")" ] || fail "rollback release Python missing"
 
-  launchctl bootout "$RUNTIME_TARGET" >/dev/null 2>&1 || true
-  launchctl bootout "$OBSERVER_TARGET" >/dev/null 2>&1 || true
+  sh "$P705" uninstall >/dev/null || fail "rollback observer did not unload within bounded wait"
+  sh "$P702" stop >/dev/null || fail "rollback runtime launchd target did not unload within bounded wait"
+  wait_runtime_quiescent || fail "rollback runtime process did not release the single-instance lock"
+
   rm -f "$RUNTIME_ROOT/current"
   ln -s "$RUNTIME_ROOT/releases/$rel" "$RUNTIME_ROOT/current"
 
@@ -261,6 +302,7 @@ update_runtime() {
 
   sh "$P705" uninstall
   sh "$P702" stop
+  wait_runtime_quiescent || rollback_and_record_failure "source runtime process did not quiesce after stop"
   if ! sh "$P702" install >/dev/null; then rollback_and_record_failure "target activation failed"; fi
   [ "$(current_release)" = "$target" ] || rollback_and_record_failure "target release did not become current"
   if ! sh "$P702" status >/dev/null; then rollback_and_record_failure "target runtime exact-release health verification failed"; fi
@@ -294,14 +336,103 @@ rollback_last() {
   backup_sha=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["backup_sha256"])' "$pointer")
   [ "$(current_release)" = "$target" ] || fail "rollback source mismatch: active release is not transaction target"
   acquire_lock; trap 'release_lock' EXIT HUP INT TERM
-  sh "$P705" uninstall >/dev/null || true
-  sh "$P702" stop >/dev/null || true
   restore_plist_and_start "$txdir" "$source"
   payload="$txdir/rollback-payload-$(date -u '+%Y%m%dT%H%M%SZ').json"
   write_payload "$payload" "$plan_id" "$source" "$target" ROLLED_BACK "$backup" "$backup_sha" true true "executed: exact source release re-pin; durable schema unchanged; backup retained and not restored"
   tx=$(python3 "$P706" record --runtime-root "$RUNTIME_ROOT" --payload "$payload" --json)
   txid=$(printf '%s' "$tx" | python3 -c 'import json,sys; print(json.load(sys.stdin)["transaction_id"])')
   info "rollback PASS active=$source from_target=$target transaction=$txid"
+  release_lock; trap - EXIT HUP INT TERM
+}
+
+recover_interrupted_latest() {
+  assert_macos
+  command -v launchctl >/dev/null 2>&1 || fail "launchctl unavailable"
+  acquire_lock; trap 'release_lock' EXIT HUP INT TERM
+
+  txdir=$(python3 - "$RUNTIME_ROOT/evidence/p7-06" <<'PY'
+import sys
+from pathlib import Path
+
+root = Path(sys.argv[1])
+candidates = [
+    path for path in root.glob("work-*")
+    if path.is_dir()
+    and (path / "pre-runtime.plist").is_file()
+    and (path / "pre-observer.plist").is_file()
+]
+if not candidates:
+    raise SystemExit(1)
+latest = max(candidates, key=lambda path: (path.stat().st_mtime_ns, path.name))
+print(latest)
+PY
+  ) || fail "no interrupted P7.06 work evidence is available for recovery"
+
+  source=$(python3 - "$txdir/pre-runtime.plist" "$RUNTIME_ROOT" "$RUNTIME_LABEL" <<'PY'
+import plistlib
+import sys
+from pathlib import Path
+
+plist_path, root, expected_label = sys.argv[1:]
+with open(plist_path, "rb") as handle:
+    payload = plistlib.load(handle)
+if payload.get("Label") != expected_label:
+    raise SystemExit(1)
+args = payload.get("ProgramArguments")
+if not isinstance(args, list):
+    raise SystemExit(1)
+try:
+    root_index = args.index("--runtime-root")
+    release_index = args.index("--release-sha")
+    runtime_root = args[root_index + 1]
+    release = args[release_index + 1]
+except (ValueError, IndexError):
+    raise SystemExit(1)
+if runtime_root != root:
+    raise SystemExit(1)
+if len(release) != 40 or any(ch not in "0123456789abcdef" for ch in release):
+    raise SystemExit(1)
+expected_python = str(Path(root) / "venvs" / release / "bin" / "python")
+expected_runtime = str(Path(root) / "releases" / release / "source/reference/python/p7_02_persistent_runtime.py")
+if len(args) < 2 or args[0] != expected_python or args[1] != expected_runtime:
+    raise SystemExit(1)
+print(release)
+PY
+  ) || fail "latest interrupted work evidence does not identify an exact valid source release"
+
+  before=$(current_release)
+  restore_plist_and_start "$txdir" "$source"
+  stamp=$(date -u '+%Y%m%dT%H%M%SZ')
+  evidence="$txdir/interrupted-recovery-$stamp.json"
+  python3 - "$evidence" "$source" "$before" "$(basename "$txdir")" <<'PY'
+import json
+import os
+import sys
+from datetime import datetime, timezone
+
+path, source, before, work_dir = sys.argv[1:]
+value = {
+    "schema": "arvectum.p7_06.interrupted-recovery/1",
+    "classification": "owner-local operational recovery evidence; non-canonical",
+    "operating_mode": "Persistent Internal / owner-operated",
+    "source_release_restored": source,
+    "observed_current_before_recovery": before,
+    "work_evidence_directory": work_dir,
+    "runtime_exact_release_health_verified": True,
+    "observer_exact_release_pin_verified": True,
+    "deployment_transaction_recorded_by_recovery": False,
+    "durable_backup_restored": False,
+    "canonical_mutation_performed_by_recovery": False,
+    "product_external_effect_invoked": False,
+    "historical_effect_replay_invoked": False,
+    "recorded_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+}
+with open(path, "w", encoding="utf-8") as handle:
+    json.dump(value, handle, ensure_ascii=False, sort_keys=True, indent=2)
+    handle.write("\n")
+os.chmod(path, 0o600)
+PY
+  info "interrupted recovery PASS source=$source evidence=$evidence"
   release_lock; trap - EXIT HUP INT TERM
 }
 
@@ -314,12 +445,16 @@ status_runtime() {
 
 usage() {
   cat <<EOF
-Usage: $0 preflight <decision-ref>|update <decision-ref>|rollback-last|status
+Usage: $0 preflight <decision-ref>|update <decision-ref>|rollback-last|recover-interrupted-latest|status
 
 P7.06 is a private owner-operated deployment adapter. It pins exact Git releases,
 requires a verified pre-update P7.03 backup, rejects state-format migration until a
 bounded governed executor + rollback proof exists, stops/re-pins runtime+observer
 as one release unit, and never authorizes/replays product or external effects.
+
+recover-interrupted-latest restores the exact source release from the newest bounded
+work evidence after an interrupted failed-update rollback. It does not restore the
+durable backup, replay effects or create a successful deployment transaction.
 EOF
 }
 
@@ -327,6 +462,7 @@ case "${1:-}" in
   preflight) preflight "${2:-}" ;;
   update) update_runtime "${2:-}" ;;
   rollback-last) rollback_last ;;
+  recover-interrupted-latest) recover_interrupted_latest ;;
   status) status_runtime ;;
   *) usage; exit 2 ;;
 esac
