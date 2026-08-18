@@ -19,6 +19,12 @@ class UI3MacOSOperatorTests(unittest.TestCase):
         self.assertIn('127.0.0.1:$port', text)
         self.assertNotIn('HOST="0.0.0.0"', text)
 
+    def test_listener_validation_accumulates_bad_rows_without_exit_override(self):
+        text = SERVICE.read_text(encoding="utf-8")
+        self.assertIn("bad=1", text)
+        self.assertIn("exit (seen && !bad) ? 0 : 1", text)
+        self.assertNotIn("exit 1; seen=1", text)
+
     def test_launchd_is_exact_release_pinned(self):
         text = SERVICE.read_text(encoding="utf-8")
         self.assertIn("release_python()", text)
@@ -46,7 +52,43 @@ class UI3MacOSOperatorTests(unittest.TestCase):
         self.assertIn("p7-06-ui3.stdout.log", text)
         self.assertIn("P7.04 grants/credentials unchanged", text)
         self.assertIn("process-local browser session invalidated", text)
-        self.assertIn("wait_running", text)
+        self.assertIn("wait_listener_ready", text)
+
+    def test_launchd_waits_for_listener_readiness_not_only_pid(self):
+        text = SERVICE.read_text(encoding="utf-8")
+        self.assertIn("listener_matches()", text)
+        self.assertIn("wait_listener_ready()", text)
+        self.assertIn("sleep 0.25", text)
+        install_start = text.index("install_service()")
+        status_start = text.index("status_service()", install_start)
+        install = text[install_start:status_start]
+        self.assertLess(install.index("stop_service"), install.index('assert_port_free "$port"'))
+        self.assertLess(
+            install.index('assert_port_free "$port"'),
+            install.index('launchctl bootstrap "$DOMAIN" "$PLIST"'),
+        )
+        self.assertLess(
+            install.index('launchctl kickstart -k "$TARGET"'),
+            install.index('wait_listener_ready "$port"'),
+        )
+        self.assertLess(install.index('wait_listener_ready "$port"'), install.index("status_service"))
+
+    def test_port_collision_fails_explicitly_before_launchd_start(self):
+        text = SERVICE.read_text(encoding="utf-8")
+        self.assertIn("assert_port_free()", text)
+        self.assertIn("is already in use before launchd start", text)
+        self.assertIn("is owned by another listener", text)
+
+    def test_restart_and_secret_rotation_wait_for_listener_readiness(self):
+        text = SERVICE.read_text(encoding="utf-8")
+        restart_start = text.index("restart_service()")
+        show_start = text.index("show_secret()", restart_start)
+        restart = text[restart_start:show_start]
+        self.assertIn('wait_listener_ready "$port"', restart)
+        rotate_start = text.index("rotate_secret()")
+        reconcile_start = text.index("reconcile_after_deploy()", rotate_start)
+        rotate = text[rotate_start:reconcile_start]
+        self.assertIn('wait_listener_ready "$port"', rotate)
 
     def test_status_verifies_private_material_modes_and_secret_log_minimization(self):
         text = SERVICE.read_text(encoding="utf-8")
