@@ -1,7 +1,7 @@
 # P7.06 — Live Operator Workspace Substream
 
-Status: `Active / UI1 Current — real-state admission bridge repository-ready, selected-Mac execution pending`
-Version: `0.1.3`
+Status: `Active / UI1 Current — real-state admission bridge merged, selected-Mac execution pending`
+Version: `0.1.4`
 Created: `2026-08-18`
 Updated: `2026-08-18`
 Owner: `ООО «Арвектум»`
@@ -25,7 +25,7 @@ The live workspace MUST NOT be attached to the selected Mac mini before the firs
 
 UI1 selected-Mac Attempt 1 subsequently used the proven P7.06 update path to activate exact release `3a2b561a6935a84749552f016db8d1bd69eabf9a`; deployment, browser, authorization, negative-path and zero-mutation checks passed. The attempt remains `BLOCKED` solely because the persistent P7.03 store contained no real retained `canonical-governed-state` item to inspect. See [`P7.06-UI1 Selected-Mac Live-Browser Proof — Attempt 1`](../reviews/P7-06-UI1-selected-mac-proof-attempt-1.md).
 
-The owner has now explicitly approved one bounded real-state admission through [`DECISION-2026-08-18-P7-06-UI1-FIRST-REAL-GOVERNED-ITEM-ADMISSION`](../governance/decisions/DECISION-2026-08-18-P7-06-UI1-FIRST-REAL-GOVERNED-ITEM-ADMISSION.md). The repository-side bridge is prepared through PR `#53`; selected-Mac execution and resulting real-item browser inspection remain pending and consequential.
+The owner explicitly approved one bounded real-state admission through [`DECISION-2026-08-18-P7-06-UI1-FIRST-REAL-GOVERNED-ITEM-ADMISSION`](../governance/decisions/DECISION-2026-08-18-P7-06-UI1-FIRST-REAL-GOVERNED-ITEM-ADMISSION.md). The repository-side bridge passed three functional review iterations, final `Reference Python CI` run `32144682838`, and merged through PR `#53` at `419d06184e81bbd0dbd292e05a8053ed6bd6f9cc`. Selected-Mac execution and resulting real-item browser inspection remain pending and consequential.
 
 Therefore the active sequence remains:
 
@@ -69,7 +69,7 @@ An owner-controlled loopback/private access method or reversible tunnel MAY be u
 
 ### P7.06-UI1 — Live read-only governed workspace
 
-Status: `Current — real-state admission bridge repository-ready; selected-Mac execution pending`.
+Status: `Current — real-state admission bridge merged; selected-Mac execution pending`.
 
 Connect the M4 workspace presentation semantics to the persistent runtime through a bounded internal adapter.
 
@@ -100,7 +100,7 @@ Exit evidence:
 
 Attempt 1 established all exercised browser/security/read-only conditions but could not establish the real-item inspection condition because the persistent governed-item set was empty.
 
-The bounded unblock is **not** to insert an arbitrary P7.03 record. P7.03 persistence follows applicable Governed Execution/admission. The approved repository bridge therefore reuses the existing P6.05-L4 human/Organization context and exact P6.02 Product Contract `0.1.0`, independently verifies the retained real P6.05-L7 manifest digest, evaluates four distinct RFC-0005 gate decisions, preserves `External Reference` authority, admits through CAP-001, records RFC-0006 provenance, proves CAP-004 reconstruction, and only then persists a minimized real `canonical-governed-state` representation through P7.03.
+The bounded unblock is **not** to insert an arbitrary P7.03 record. P7.03 persistence follows applicable Governed Execution/admission. The merged repository bridge therefore reuses the existing P6.05-L4 human/Organization context and exact P6.02 Product Contract `0.1.0`, independently verifies the retained real P6.05-L7 manifest digest, evaluates four distinct RFC-0005 gate decisions, preserves `External Reference` authority, admits through CAP-001, records RFC-0006 provenance, proves CAP-004 reconstruction, and only then persists a minimized real `canonical-governed-state` representation through P7.03.
 
 Required selected-Mac entrypoint after the exact merged release is deployed:
 
@@ -214,6 +214,6 @@ The bounded concrete P6.05 notice/digest used to prove the first real item remai
 
 Selected-Mac UI1 Attempt 1 = `BLOCKED` solely because no qualifying real retained governed item existed in the persistent P7.03 store. Exact-release deployment to `3a2b561a6935a84749552f016db8d1bd69eabf9a`, Safari/loopback visibility, exact P7.04 authorization/revocation, wrong-Organization failure closed, mutation-method rejection and zero canonical/external mutation from browsing all passed for the exercised empty-state surface.
 
-The owner-approved bounded admission decision is canonical. PR `#53` prepares the exact-release real-state admission/persistence bridge and hardened retry entrypoint; repository CI/review must pass before merge, and merge still does not execute the consequential selected-Mac admission.
+The owner-approved bounded admission decision is canonical. PR `#53` merged the exact-release real-state admission/persistence bridge and hardened retry entrypoint at `419d06184e81bbd0dbd292e05a8053ed6bd6f9cc` after three functional review iterations and final `Reference Python CI` run `32144682838 = success`. That merge does not execute the consequential selected-Mac admission.
 
-Current canonical action remains inside UI1: deploy the exact merged bridge release through P7.06, establish the exact P7.04 human local admission grant, reuse/verify the existing real L7 manifest without refetch, run first admission/persistence plus idempotent retry, then complete the remaining UI1 real-item browser inspection and zero-mutation evidence. `P7.06-UI2` remains pending.
+Current canonical action remains inside UI1: deploy the exact canonical release containing the merged bridge through P7.06, establish the exact P7.04 human local admission grant, reuse/verify the existing real L7 manifest without refetch, run first admission/persistence plus idempotent retry, then complete the remaining UI1 real-item browser inspection and zero-mutation evidence. `P7.06-UI2` remains pending.
