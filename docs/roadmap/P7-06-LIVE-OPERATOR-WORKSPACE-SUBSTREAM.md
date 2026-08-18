@@ -1,7 +1,7 @@
 # P7.06 — Live Operator Workspace Substream
 
-Status: `Active / UI2 Current — UI1 Complete / PASS`
-Version: `0.1.5`
+Status: `Active / UI3 Current — UI1/UI2 Complete / PASS`
+Version: `0.1.6`
 Created: `2026-08-18`
 Updated: `2026-08-18`
 Owner: `ООО «Арвектум»`
@@ -36,16 +36,16 @@ P7.06 governed update / rollback proof
         ↓ PASS
 P7.06-UI1 live read-only workspace
         ↓ PASS
-P7.06-UI2 governed interaction / preflight  ← CURRENT
-        ↓
-P7.06-UI3 persistent local operator access
+P7.06-UI2 governed interaction / preflight
+        ↓ PASS
+P7.06-UI3 persistent local operator access  ← CURRENT
         ↓
 P7.06-UI4 owner interaction proof
         ↓ PASS
 P7.07 persistent Tender Operator contour
 ```
 
-UI1 is closed. UI3 MUST NOT start canonically before the bounded UI2 interaction/preflight boundary is implemented and reviewed.
+UI1 and UI2 are closed. The UI2 prerequisite for UI3 is satisfied by PR `#56`, five functional review/revise iterations and successful Reference Python CI on the exact implementation head.
 
 ## 3. Operating boundary
 
@@ -122,7 +122,7 @@ The UI1 adapter itself was unchanged between Attempt 1 and Attempt 2: `reference
 
 ### P7.06-UI2 — Governed interaction and preflight
 
-Status: `Current`.
+Status: `Complete / PASS`.
 
 Add bounded operator interaction without direct-write shortcuts.
 
@@ -138,6 +138,15 @@ Minimum interactive flows:
 The UI MUST NOT treat button visibility/enabled state as the security boundary.
 
 UI2 MUST preserve the UI1 read-only inspection invariants while adding only a Governed Execution entry/preflight path. No direct canonical write endpoint, ambient authority or optimistic success projection is permitted.
+
+Closure evidence:
+
+- implementation PR `#56`, merged as `a22ba781d32f64b7097aeaf05a90651308533811`;
+- exact reviewed implementation head: `305faafb790e1387cac2aaafa348fbc4ac583797`;
+- [`P7.06-UI2 Governed Interaction and Preflight Functional Review`](../reviews/P7-06-UI2-governed-interaction-functional-review.md) — `Complete / PASS`, five review/revise iterations;
+- Reference Python CI run `32159051764` / `#107`: `success`;
+- six required UI2 flows covered;
+- no UI-local direct canonical write, ambient authority, optimistic success, public/stable interface or selected-owner proof claimed.
 
 ### P7.06-UI3 — Persistent private operator access
 
@@ -224,14 +233,8 @@ The bounded concrete P6.05 notice/digest used to prove the first real item remai
 
 `P7.06 core = Complete / PASS` after selected-Mac Attempt 8.
 
-`P7.06-UI1` repository implementation = `Complete / PASS` through PR `#51`.
+`P7.06-UI1 = Complete / PASS` after repository implementation, bounded real-state admission and selected-Mac Attempt 2 real-state/browser/zero-mutation proof.
 
-`P7.06-UI1` bounded real-state admission bridge = `Complete / PASS` through PR `#53` and final `Reference Python CI` run `32144682838 = success`.
+`P7.06-UI2 = Complete / PASS` through PR `#56`, exact reviewed head `305faafb790e1387cac2aaafa348fbc4ac583797`, five functional review/revise iterations and Reference Python CI run `32159051764 = success`. The implementation preserves exact Subject/Version/provenance, authorized reconstruction, related Execution evidence, four independent RFC-0005 gate concepts, transient intent, Governed Execution-only consequential entry and evidence-derived blocked/waiting/uncertain/reconciliation-required/succeeded states.
 
-Selected-Mac UI1 Attempt 1 = `BLOCKED` solely because no qualifying real retained governed item existed in the persistent P7.03 store; all exercised empty-state browser/security/read-only paths passed.
-
-Selected-Mac UI1 Attempt 2 = `Complete / PASS` on exact canonical/local/runtime release `b1b78ed9772727dda41b2e509675691f978957ec`. One real retained governed item was validly admitted/persisted under the bounded owner decision, the second execution proved idempotency, the real Subject/exact Version/provenance was visible in the unchanged UI1 browser adapter, and before/after governed-byte digests proved zero mutation from browsing. Network/external effects were `NONE`.
-
-`P7.06-UI1 = Complete / PASS`.
-
-Current canonical action advances to **`P7.06-UI2 — Governed interaction and preflight`**. UI3/UI4 and P7.07 remain pending/downstream. No lifecycle, Product Contract, Production, public/stable interface or support commitment is promoted by UI1 closure.
+Current canonical action advances to **`P7.06-UI3 — Persistent private operator access`**. UI4 and P7.07 remain pending/downstream. The overall `P7.06-UI` substream remains `Current`; UI2 closure does not manufacture selected-owner live interaction evidence or promote lifecycle, Product Contract, Production, public/stable interface, browser support or SLA/support status.

@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.55.5`
+Version: `2.55.6`
 Created: `2026-08-07`
 Updated: `2026-08-18`
 Owner: `ООО «Арвектум»`
@@ -14,6 +14,10 @@ This document is the canonical planning source for Arvectum OS development seque
 Future roadmap content is a planning hypothesis until its phase is activated. Roadmap status does not by itself change Platform Capability lifecycle, Product Contract lifecycle, operational environment/readiness, conformance maturity, SLA/support or commercial commitments.
 
 ## 2. Version note
+
+Version `2.55.6` closes `P7.06-UI2 — Governed interaction and preflight` as `Complete / PASS` for its declared bounded repository implementation/review scope. PR `#56` merged the private loopback governed-interaction adapter and typed preflight composition at merge `a22ba781d32f64b7097aeaf05a90651308533811`; exact implementation head `305faafb790e1387cac2aaafa348fbc4ac583797` passed five functional review/revise iterations and Reference Python CI run `32159051764` / `#107 = success`. The six required UI2 flows are covered: exact Subject/Version opening; provenance plus authorized RFC-0006/CAP-004 reconstruction and related Execution evidence; four independent Authorization / Organizational Authority / Data Governance / Consequential Approval states; transient action intent; entry only through existing R10 operator-safety/Governed Execution/runtime-consistency semantics; and evidence-derived blocked/waiting/observed-uncertain/reconciliation-required/succeeded presentation.
+
+UI2 does not create a UI-local direct canonical write path, ambient authority, optimistic-success projection, browser-supplied gate/authority evidence, public/stable route/API/session/frontend contract, lifecycle/Product Contract promotion, external/customer Production, browser-support or SLA/support commitment. The overall `P7.06-UI` substream remains `Current`, advances to `50%`, live-workspace substream version `0.1.6`, active Phase 7 `1.2.9`, and the current canonical action becomes `P7.06-UI3 — Persistent private operator access`. UI4 remains responsible for the first real selected-owner interaction proof.
 
 Version `2.55.5` closes `P7.06-UI1 — Live read-only governed workspace` as `Complete / PASS` after selected-Mac Attempt 2 removed the sole blocker preserved by Attempt 1. The selected Mac advanced through the existing P7.06 governed update path to exact canonical/local/runtime release `b1b78ed9772727dda41b2e509675691f978957ec` with deployment transaction `dbaec3d61aecd13a608863b9ae1ad78570a5584d`. The approved retained P6.05-L7 exact EIS attachment-evidence manifest for notice `0344100006426000005` independently verified at SHA-256 `74e943d855406b04741f040fed271bddfaada9a9cc6e7da4501735a6e8725121`; Authorization, Organizational Authority, Data Governance and Consequential Approval remained four distinct passing gate bases; first admission returned `PASS_ADMITTED_AND_PERSISTED`; the second identical execution returned `PASS_IDEMPOTENT_EXISTING`; and the final P7.03 retained set remained exactly one real governed item and one checkpoint.
 
@@ -121,7 +125,7 @@ Phase 6 completed with two materially distinct real-product/workflow chains: Ten
 
 ## 6. Active Phase 7 — Operational / Enterprise Readiness
 
-Detailed roadmap: [`PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md`](PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md) — `Active 1.2.8`.
+Detailed roadmap: [`PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md`](PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md) — `Active 1.2.9`.
 
 Phase 7 converts validated owner-operated use into a persistent, recoverable, observable and operator-accessible internal operating baseline before considering stronger production/lifecycle claims.
 
@@ -133,7 +137,7 @@ Phase 7 converts validated owner-operated use into a persistent, recoverable, ob
 | `P7.04` | Persistent identity/operator/service access + least-privilege operations | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.05` | Health, observability, audit visibility, alerting + retention/minimization | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.06` | Governed deploy/update/rollback/version/migration path | 🟩 Complete / PASS | `██████████ 100%` |
-| `P7.06-UI` | Live operator workspace over persistent runtime | 🟨 Current — UI2 | `██░░░░░░░░ 25%` |
+| `P7.06-UI` | Live operator workspace over persistent runtime | 🟨 Current — UI3 | `█████░░░░░ 50%` |
 | `P7.07` | Persistent Tender Operator operational contour | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.08` | Persistent Discount Parser cross-host operational contour | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.09` | Operator runbook + incident/uncertain-outcome/recovery drills | ⬜ | `░░░░░░░░░░ 0%` |
@@ -141,7 +145,7 @@ Phase 7 converts validated owner-operated use into a persistent, recoverable, ob
 | `P7.11` | Scoped operational-readiness, lifecycle, conformance + stable-boundary disposition | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.12` | Phase 7 / M7 closure review | ⬜ | `░░░░░░░░░░ 0%` |
 
-Detailed operator-workspace plan: [`P7-06-LIVE-OPERATOR-WORKSPACE-SUBSTREAM.md`](P7-06-LIVE-OPERATOR-WORKSPACE-SUBSTREAM.md) — `Active / UI2 Current 0.1.5`.
+Detailed operator-workspace plan: [`P7-06-LIVE-OPERATOR-WORKSPACE-SUBSTREAM.md`](P7-06-LIVE-OPERATOR-WORKSPACE-SUBSTREAM.md) — `Active / UI3 Current 0.1.6`.
 
 Engineering/quality gates:
 
@@ -173,9 +177,9 @@ P7.06 governed deploy/update/rollback/version/migration — PASS
         ↓
 P7.06-UI1 live read-only workspace — PASS
         ↓
-P7.06-UI2 governed interaction/preflight ← current
+P7.06-UI2 governed interaction/preflight — PASS
         ↓
-P7.06-UI3 persistent private operator access
+P7.06-UI3 persistent private operator access ← current
         ↓
 P7.06-UI4 first real owner interaction proof
         ↓
@@ -184,7 +188,7 @@ P7.07–P7.12 workload expansion + hardening
 
 P7.02 passed on exact selected-Mac release `73af746f83271b14670fe22db658dfd55cacb291`. P7.03 subsequently established the bounded durable-state/checkpoint and backup/restore baseline. P7.04 is `Complete / PASS` after repository implementation, six-iteration functional review and selected-Mac Attempt 1. P7.05 is `Complete / PASS` after PR `#37`, `960/960` Reference Python CI, four-iteration functional review and selected-Mac Attempt 1 on exact canonical release `cf60e52c93bf0ef4158cf2c3e26792850a126c70`. R22 is `Complete / PASS` after remediation PR `#39` and `964/964` Reference Python CI. P7.06 is `Complete / PASS` after PR #49 repository hardening and selected-Mac Attempt 8 proved exact update, rollback and final re-update to `4df99c4c66a1b7b93a4b05d7768018b03aa4041b`.
 
-P7.06-UI1 repository implementation and cross-review passed through PR `#51`; the owner-approved bounded real-state bridge passed through PR `#53`. Selected-Mac Attempt 2 then closed the final real-state blocker on exact canonical/local/runtime release `b1b78ed9772727dda41b2e509675691f978957ec`: the approved retained manifest verified, four independent gate bases passed, one real governed item/checkpoint was admitted and persisted, the second execution was idempotent, the real Subject/exact Version/provenance was browser-visible, and before/after retained-byte digests were unchanged with no network/external effect. `P7.06-UI1 = Complete / PASS`; UI2 is now current. P7.07/P7.08 remain downstream of the declared UI substream sequencing.
+P7.06-UI1 repository implementation and cross-review passed through PR `#51`; the owner-approved bounded real-state bridge passed through PR `#53`. Selected-Mac Attempt 2 then closed the final real-state blocker on exact canonical/local/runtime release `b1b78ed9772727dda41b2e509675691f978957ec`: the approved retained manifest verified, four independent gate bases passed, one real governed item/checkpoint was admitted and persisted, the second execution was idempotent, the real Subject/exact Version/provenance was browser-visible, and before/after retained-byte digests were unchanged with no network/external effect. `P7.06-UI1 = Complete / PASS`. UI2 then passed through PR `#56`, five functional review/revise iterations and Reference Python CI run `32159051764 = success`; `P7.06-UI2 = Complete / PASS`, and UI3 is now current. P7.07/P7.08 remain downstream of the declared UI substream sequencing.
 
 ## 7. M7 milestone definition
 
@@ -226,8 +230,8 @@ A roadmap phase transition does not itself change lifecycle, production readines
 
 ## 11. Current canonical action
 
-> **P7.06-UI2 — Governed interaction and preflight.**
+> **P7.06-UI3 — Persistent private operator access.**
 
-P7.06 core is `Complete / PASS`. `P7.06-UI1` is now `Complete / PASS` after selected-Mac Attempt 2 on exact release `b1b78ed9772727dda41b2e509675691f978957ec` validly admitted/persisted one real retained governed item under the existing owner context, proved idempotent retry, exposed the real Subject/exact Version/provenance in the unchanged live browser workspace and proved zero canonical mutation from browsing and zero external effect.
+P7.06 core, UI1 and UI2 are `Complete / PASS` for their declared scopes. UI2 is closed through PR `#56`, exact reviewed head `305faafb790e1387cac2aaafa348fbc4ac583797`, five functional review/revise iterations and Reference Python CI run `32159051764 = success`; no selected-owner live proof, public/stable interface or lifecycle/Production promotion is inferred from that repository closure.
 
-The next canonical action is to implement the bounded UI2 interaction/preflight path over existing Governed Execution semantics. It must preserve explicit Organization/Actor context, exact Subject/Version/provenance, independent Authorization / Organizational Authority / Data Governance / Consequential Approval states, fail-closed blocked/waiting/uncertain/reconciliation-required outcomes and no UI-local direct-write shortcut. UI3/UI4 and P7.07/P7.08 remain downstream.
+The next canonical action is to establish persistent private operator access: supervised exact-release workspace process/adapter lifecycle, bounded listener exposure with no accidental public ingress, P7.04 least-privilege checks, secret/log minimization, restart/state-integrity behavior and reversible uninstall/rollback. UI4 remains the first real owner interaction proof, after which P7.07/P7.08 may proceed according to the declared sequence.
