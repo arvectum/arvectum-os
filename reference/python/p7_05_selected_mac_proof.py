@@ -5,6 +5,9 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
+import platform
+import subprocess
 import sys
 import uuid
 from datetime import timedelta
@@ -17,6 +20,7 @@ import p7_04_persistent_access as p704
 import p7_05_operational_visibility as p705
 
 ATTESTATION_SCHEMA = "arvectum.p7_05.selected-mac-attestation/1"
+OBSERVER_LABEL = "com.arvectum.os.p7-05-observer"
 
 
 def _identity(raw: dict[str, str]) -> Identity:
@@ -60,10 +64,32 @@ def _tree_digest(path: Path) -> str:
     return digest.hexdigest()
 
 
+def _macos_observer_loaded() -> Optional[bool]:
+    """Return launchd observer state on macOS; non-macOS proof fixtures return None."""
+    if platform.system() != "Darwin":
+        return None
+    target = f"gui/{os.getuid()}/{OBSERVER_LABEL}"
+    try:
+        completed = subprocess.run(
+            ["launchctl", "print", target],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            check=False,
+            timeout=5,
+        )
+    except (OSError, subprocess.SubprocessError) as exc:
+        raise p705.IntegrityError(f"cannot inspect P7.05 launchd observer: {exc}") from exc
+    return completed.returncode == 0
+
+
 def run_selected_mac_proof(root: Path, p6_context_file: Path, release_sha: str) -> dict[str, Any]:
     release_sha = p703._validate_release_sha(release_sha)
     root = root.expanduser().resolve()
     p705.initialize(root)
+
+    observer_loaded = _macos_observer_loaded()
+    if observer_loaded is False:
+        raise p705.IntegrityError("P7.05 selected-Mac proof requires the launchd observer to be loaded")
 
     current = p705.classify_health(root)
     if current.state != "healthy":
@@ -137,6 +163,8 @@ def run_selected_mac_proof(root: Path, p6_context_file: Path, release_sha: str) 
         "audit_projection_count": audit["count"],
         "actionable_alert_path_verified": True,
         "healthy_alert_clear_verified": True,
+        "macos_observer_loaded": observer_loaded,
+        "observer_required_on_selected_macos": platform.system() == "Darwin",
         "retention_hours": policy["retention_hours"],
         "expired_telemetry_removed": cleanup["removed_telemetry_records"],
         "governed_tree_hash_unchanged_by_cleanup": protected_before == protected_after,
