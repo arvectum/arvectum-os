@@ -10,10 +10,12 @@ class UI3MacOSOperatorTests(unittest.TestCase):
     def test_shell_syntax(self):
         subprocess.run(["sh", "-n", str(SERVICE)], check=True)
 
-    def test_listener_is_loopback_only_and_verified(self):
+    def test_listener_is_loopback_only_and_bound_to_launchd_pid(self):
         text = SERVICE.read_text(encoding="utf-8")
         self.assertIn('HOST="127.0.0.1"', text)
-        self.assertIn('lsof -nP -iTCP:"$port" -sTCP:LISTEN', text)
+        self.assertIn("service_pid()", text)
+        self.assertIn('lsof -nP -a -p "$pid" -iTCP:"$port" -sTCP:LISTEN', text)
+        self.assertIn('another process/listener shares the UI3 private port', text)
         self.assertIn('127.0.0.1:$port', text)
         self.assertNotIn('HOST="0.0.0.0"', text)
 
@@ -43,6 +45,7 @@ class UI3MacOSOperatorTests(unittest.TestCase):
         self.assertIn("remove-private-material", text)
         self.assertIn("P7.04 grants/credentials unchanged", text)
         self.assertIn("process-local browser session invalidated", text)
+        self.assertIn("wait_running", text)
 
 
 if __name__ == "__main__":
