@@ -123,6 +123,35 @@ verify_listener() {
     || fail "another process/listener shares the UI3 private port"
 }
 
+verify_private_material() {
+  rel=$1; py=$(release_python "$rel")
+  "$py" - "$ROOT" "$PLIST" "$SERVICE_COPY" "$LOG_DIR/p7-06-ui3.stdout.log" "$LOG_DIR/p7-06-ui3.stderr.log" <<'PY'
+import os, plistlib, sys
+from pathlib import Path
+root, plist, service_copy, stdout_log, stderr_log = map(Path, sys.argv[1:])
+config = root / "config" / "p7-06-ui3.json"
+secret = root / "secrets" / "p7-06-ui3" / "access.secret"
+checks = ((config, 16384), (secret, 4096), (plist, 65536), (service_copy, 65536), (stdout_log, 1048576), (stderr_log, 1048576))
+for path, limit in checks:
+    if path.is_symlink() or not path.is_file() or path.stat().st_size > limit:
+        raise SystemExit(1)
+    if os.name != "nt" and path.stat().st_mode & 0o077:
+        raise SystemExit(1)
+if plist.read_bytes() != service_copy.read_bytes():
+    raise SystemExit(1)
+with plist.open("rb") as handle:
+    payload = plistlib.load(handle)
+if payload.get("Label") != "com.arvectum.os.p7-06-ui3-operator":
+    raise SystemExit(1)
+secret_value = secret.read_text(encoding="utf-8").rstrip("\n")
+if not secret_value or "\n" in secret_value or "\r" in secret_value:
+    raise SystemExit(1)
+secret_bytes = secret_value.encode("utf-8")
+if secret_bytes in stdout_log.read_bytes() or secret_bytes in stderr_log.read_bytes():
+    raise SystemExit(1)
+PY
+}
+
 init_config() {
   rel=$1; port=$2; py=$(release_python "$rel"); script=$(release_script "$rel")
   if [ -n "$CREDENTIAL_ID" ]; then
@@ -171,6 +200,7 @@ status_service() {
   [ -f "$PLIST" ] || fail "UI3 launchd plist missing"
   verify_plist_release_pin "$rel" || fail "UI3 launchd target is not pinned to current exact release"
   "$py" "$script" verify --runtime-root "$ROOT" --exact-release >/dev/null
+  verify_private_material "$rel" || fail "UI3 private material/log minimization verification failed"
   port=$(config_port "$rel")
   verify_listener "$port" "$pid"
   info "status PASS release=$rel listener=$HOST:$port pid=$pid"
