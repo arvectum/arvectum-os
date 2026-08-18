@@ -1,7 +1,7 @@
 # Arvectum OS Phase 7 — Operational / Enterprise Readiness
 
 Status: `Active`
-Version: `1.2.5`
+Version: `1.2.6`
 Created: `2026-08-17`
 Updated: `2026-08-18`
 Owner: `ООО «Арвектум»`
@@ -46,12 +46,15 @@ P7.02 has passed. The selected Mac mini therefore operates in `Persistent Intern
 | `P7.04` | Persistent identity/operator/service access + least-privilege operations | Chat + Mac mini + GitHub | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.05` | Health, observability, audit visibility, alerting + retention/minimization | Mac mini + GitHub | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.06` | Governed deploy/update/rollback/version/migration path | Mac mini + GitHub | 🟨 Current | `░░░░░░░░░░ 0%` |
+| `P7.06-UI` | Live operator workspace over persistent runtime | Mac mini + browser + GitHub | ⬜ Planned — gated by P7.06 core | `░░░░░░░░░░ 0%` |
 | `P7.07` | Persistent Tender Operator operational contour | Mac mini + product environment + GitHub | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.08` | Persistent Discount Parser cross-host operational contour | Windows + Mac mini + GitHub | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.09` | Operator runbook + incident/uncertain-outcome/recovery drills | Mac mini + GitHub | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.10` | Portability, host-loss and restore-on-clean-environment proof | Mac mini + secondary clean environment + GitHub | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.11` | Scoped operational-readiness, lifecycle, conformance + stable-boundary disposition | Chat/GitHub + evidence | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.12` | Phase 7 / M7 closure review | Chat/GitHub | ⬜ | `░░░░░░░░░░ 0%` |
+
+`P7.06-UI` is a subordinate operator-experience substream, not a new lifecycle or public-interface claim. Detailed plan: [`P7-06-LIVE-OPERATOR-WORKSPACE-SUBSTREAM.md`](P7-06-LIVE-OPERATOR-WORKSPACE-SUBSTREAM.md).
 
 ## 5. Engineering / quality gates
 
@@ -174,7 +177,21 @@ Status: `Current`.
 
 Required evidence includes immutable deployment/release pin, pre-update backup/checkpoint, compatibility/migration checks, controlled stop/update/re-pin/start, post-update runtime and observer exact-release health verification, rollback/unsafe-rollback disposition and exact historical version references. No public release/support promise is implied.
 
-The first controlled P7.06 update MUST include the merged R22 hardening before any P7.07/P7.08 operational workload expansion. Historical replay or rollback must not re-invoke prior consequential external effects without fresh applicable authorization/authority.
+The first controlled P7.06 update MUST include the merged R22 hardening before any P7.06-UI/P7.07/P7.08 operational surface expansion. Historical replay or rollback must not re-invoke prior consequential external effects without fresh applicable authorization/authority.
+
+### P7.06-UI — Live operator workspace over persistent runtime
+
+Status: `Planned / gated by P7.06 core`.
+
+Detailed substream: [`P7-06-LIVE-OPERATOR-WORKSPACE-SUBSTREAM.md`](P7-06-LIVE-OPERATOR-WORKSPACE-SUBSTREAM.md).
+
+This substream operationalizes the already-complete Phase 4 / M4 workspace semantics instead of redesigning them. It connects explicit Organization/Actor context, Records, Executions, Evidence, Documents, Knowledge, exact-version/provenance inspection and bounded Governed Execution interaction to the persistent runtime through a private reversible operator surface.
+
+The sequence is `UI1 live read-only workspace → UI2 governed interaction/preflight → UI3 persistent private operator access → UI4 first real owner interaction proof`.
+
+`P7.06-UI = PASS` requires the owner to open the live workspace in a browser against the selected Mac mini, inspect real governed state and exact provenance/reconstruction, and exercise at least one bounded governed interaction without presentation code becoming authority or a direct canonical-mutation path.
+
+Completion creates no public/stable API, frontend framework, browser support promise, public Arvectum OS UI, Production claim, capability promotion or Stable Product Contract.
 
 ### P7.07 — Persistent Tender Operator operational contour
 
@@ -211,13 +228,14 @@ Close M7 only after declared Phase 7 work and R21–R24 findings are disposition
 3. persistent identity/access/secrets handling preserves least privilege and authority separation;
 4. actionable health/observability exists without turning telemetry into canonical authority;
 5. upgrades and rollback/migration have a tested governed path;
-6. Tender Operator can rely on the persistent runtime under its explicit Product Contract boundary;
-7. Discount Parser can use a repeatable cross-host evidence/reconstruction contour without effect replay or hidden coupling;
-8. incident/recovery procedures are executable and versioned;
-9. host-loss/portability has been tested on a clean secondary environment within declared scope;
-10. lifecycle/conformance/stable-boundary decisions are explicitly dispositioned rather than inferred;
-11. all R21–R24 material findings are closed or accepted by appropriate authority;
-12. the required M7 Milestone Code Health Gate passes before closure.
+6. the owner can inspect live governed state and perform a bounded governed interaction through the private live workspace without bypassing runtime authority/security boundaries;
+7. Tender Operator can rely on the persistent runtime under its explicit Product Contract boundary;
+8. Discount Parser can use a repeatable cross-host evidence/reconstruction contour without effect replay or hidden coupling;
+9. incident/recovery procedures are executable and versioned;
+10. host-loss/portability has been tested on a clean secondary environment within declared scope;
+11. lifecycle/conformance/stable-boundary decisions are explicitly dispositioned rather than inferred;
+12. all R21–R24 material findings are closed or accepted by appropriate authority;
+13. the required M7 Milestone Code Health Gate passes before closure.
 
 M7 does **not** inherently require external customer Production, public multi-tenancy, an `Active` capability, Stable Product Contract, public SDK/API, SLA/support promise or one mandatory storage/IAM/deployment technology.
 
@@ -225,4 +243,6 @@ M7 does **not** inherently require external customer Production, public multi-te
 
 > **P7.06 — Governed deploy/update/rollback/version/migration path.**
 
-R22 is `Complete / PASS` after two functional iterations and GitHub `Reference Python CI` run `32111920701` with `964/964 PASS`. The review closed material mixed-release observer, launchd lifecycle/status and orphan-secret detection defects at repository level without changing higher-level authority or lifecycle boundaries. The remediation is intentionally not claimed as already deployed on the live selected Mac mini: the first P7.06 controlled update must carry and verify it before P7.07/P7.08 operational workload expansion.
+R22 is `Complete / PASS` after two functional iterations and GitHub `Reference Python CI` run `32111920701` with `964/964 PASS`. The review closed material mixed-release observer, launchd lifecycle/status and orphan-secret detection defects at repository level without changing higher-level authority or lifecycle boundaries. The remediation is intentionally not claimed as already deployed on the live selected Mac mini: the first P7.06 controlled update must carry and verify it before operator-workspace or P7.07/P7.08 workload expansion.
+
+After `P7.06 core = PASS`, the next canonical operator-experience action is `P7.06-UI1 — Live read-only governed workspace`, followed by the remaining UI substream before P7.07.
