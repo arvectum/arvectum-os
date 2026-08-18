@@ -35,6 +35,10 @@ from arvectum_os_ref.governed_interaction_reconstruction import (
     build_source_reconstruction_view,
     render_source_reconstruction_html,
 )
+from arvectum_os_ref.governed_interaction_runtime_outcomes import (
+    inspect_consequential_outcome_evidence,
+    render_consequential_outcome_evidence_html,
+)
 from arvectum_os_ref.identity import Identity
 
 import p7_04_persistent_access as p704
@@ -323,6 +327,10 @@ def make_server(
             )
             return render_source_reconstruction_html(view)
 
+        def _outcome_evidence_html(self, case: GovernedInteractionCase) -> str:
+            evidence = inspect_consequential_outcome_evidence(case.runtime_state)
+            return render_consequential_outcome_evidence_html(evidence)
+
         def _get(self) -> None:
             parsed = urlsplit(self.path)
             try:
@@ -352,6 +360,7 @@ def make_server(
                 )
                 if not isinstance(preflight, GovernedInteractionBlocked):
                     body += self._reconstruction_html(case, interaction_id)
+                    body += self._outcome_evidence_html(case)
                 _write_html(self, HTTPStatus.OK, _interaction_document(snapshot, body))
             except ui1.UI1AccessDenied:
                 _write_html(self, HTTPStatus.FORBIDDEN, ui1.render_blocked_html())
@@ -403,9 +412,15 @@ def make_server(
                     reconstruction_html = self._reconstruction_html(case, interaction_id)
 
                 result = execute_governed_interaction(snapshot.workspace, case=case)
+                outcome_evidence_html = ""
+                if not isinstance(result.preflight, GovernedInteractionBlocked):
+                    outcome_evidence_html = render_consequential_outcome_evidence_html(
+                        inspect_consequential_outcome_evidence(result.runtime_state)
+                    )
                 body = (
                     render_governed_interaction_preflight_html(result.preflight)
                     + reconstruction_html
+                    + outcome_evidence_html
                     + render_governed_interaction_result_html(result)
                 )
                 _write_html(self, HTTPStatus.OK, _interaction_document(snapshot, body))
