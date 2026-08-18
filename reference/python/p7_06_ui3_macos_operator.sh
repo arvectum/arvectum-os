@@ -26,6 +26,8 @@ current_release() {
 
 release_python() { printf '%s/venvs/%s/bin/python\n' "$ROOT" "$1"; }
 release_script() { printf '%s/releases/%s/source/reference/python/p7_06_ui3_private_operator.py\n' "$ROOT" "$1"; }
+release_shell() { printf '%s/releases/%s/source/reference/python/p7_06_ui3_macos_operator.sh\n' "$ROOT" "$1"; }
+deploy_shell() { printf '%s/releases/%s/source/reference/python/p7_06_macos_deploy.sh\n' "$ROOT" "$1"; }
 
 config_port() {
   rel=$1; py=$(release_python "$rel")
@@ -137,6 +139,14 @@ stop_service() {
   fi
 }
 
+cleanup_ui3_material() {
+  rm -f "$PLIST" "$SERVICE_COPY" \
+    "$ROOT/config/p7-06-ui3.json" \
+    "$ROOT/secrets/p7-06-ui3/access.secret" \
+    "$LOG_DIR/p7-06-ui3.stdout.log" "$LOG_DIR/p7-06-ui3.stderr.log"
+  rmdir "$ROOT/secrets/p7-06-ui3" >/dev/null 2>&1 || true
+}
+
 install_service() {
   assert_macos
   rel=$(current_release)
@@ -196,22 +206,65 @@ rotate_secret() {
   info "access secret rotated; prior process/browser session invalidated"
 }
 
+reconcile_after_deploy() {
+  rel=$(current_release); next=$(release_shell "$rel")
+  if [ -f "$next" ]; then
+    sh "$next" install >/dev/null
+    sh "$next" status >/dev/null
+    info "deploy reconciliation PASS release=$rel UI3=installed"
+  else
+    cleanup_ui3_material
+    info "deploy reconciliation PASS release=$rel UI3=absent-in-release"
+  fi
+}
+
+governed_update() {
+  assert_macos
+  [ -n "${1:-}" ] || fail "governed-update requires a decision reference"
+  status_service >/dev/null
+  rel=$(current_release); deploy=$(deploy_shell "$rel")
+  [ -f "$deploy" ] || fail "exact-release P7.06 deploy adapter missing"
+  stop_service
+  rc=0
+  sh "$deploy" update "$1" || rc=$?
+  reconcile_after_deploy || fail "UI3 reconciliation failed after governed update"
+  [ "$rc" -eq 0 ] || fail "governed P7.06 update failed; source UI3 state was reconciled"
+  info "governed-update PASS"
+}
+
+governed_rollback() {
+  assert_macos
+  status_service >/dev/null
+  rel=$(current_release); deploy=$(deploy_shell "$rel")
+  [ -f "$deploy" ] || fail "exact-release P7.06 deploy adapter missing"
+  stop_service
+  rc=0
+  sh "$deploy" rollback-last || rc=$?
+  reconcile_after_deploy || fail "UI3 reconciliation failed after governed rollback"
+  [ "$rc" -eq 0 ] || fail "governed P7.06 rollback failed; current UI3 state was reconciled"
+  info "governed-rollback-last PASS"
+}
+
 uninstall_service() {
   assert_macos
   rel=$(current_release); py=$(release_python "$rel"); script=$(release_script "$rel")
   stop_service
-  rm -f "$PLIST" "$SERVICE_COPY"
   "$py" "$script" remove-private-material --runtime-root "$ROOT" >/dev/null
-  info "uninstall PASS; UI3 config/ingress secret removed; P7.04 grants/credentials unchanged"
+  cleanup_ui3_material
+  info "uninstall PASS; UI3 config/ingress secret/logs removed; P7.04 grants/credentials unchanged"
 }
 
 usage() {
   cat <<EOF2
 Usage: $0 install|status|stop|start|restart|show-access-secret|rotate-access-secret|uninstall
+       $0 governed-update <decision-ref>
+       $0 governed-rollback-last
 
 P7.06-UI3 supervises an exact-release private owner workspace on 127.0.0.1 only.
 It consumes existing P7.04 least-privilege grants and never creates authority,
 approval, canonical mutation, public ingress, or a UI4 real-interaction provider.
+Once UI3 is installed, use governed-update/governed-rollback-last so the private
+process is stopped before P7.06 mutation and re-pinned/removed after its result.
 EOF2
 }
 
@@ -222,6 +275,8 @@ case "${1:-}" in
   restart) restart_service ;;
   show-access-secret) show_secret ;;
   rotate-access-secret) rotate_secret ;;
+  governed-update) governed_update "${2:-}" ;;
+  governed-rollback-last) governed_rollback ;;
   uninstall) uninstall_service ;;
   *) usage; exit 2 ;;
 esac
