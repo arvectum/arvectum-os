@@ -7,6 +7,7 @@ import hashlib
 import json
 import os
 import platform
+import plistlib
 import subprocess
 import sys
 import uuid
@@ -64,8 +65,8 @@ def _tree_digest(path: Path) -> str:
     return digest.hexdigest()
 
 
-def _macos_observer_loaded() -> Optional[bool]:
-    """Return launchd observer state on macOS; non-macOS proof fixtures return None."""
+def _macos_observer_state(root: Path, release_sha: str) -> Optional[dict[str, Any]]:
+    """Inspect launchd state and exact-release pin on macOS; non-macOS fixtures return None."""
     if platform.system() != "Darwin":
         return None
     target = f"gui/{os.getuid()}/{OBSERVER_LABEL}"
@@ -79,7 +80,35 @@ def _macos_observer_loaded() -> Optional[bool]:
         )
     except (OSError, subprocess.SubprocessError) as exc:
         raise p705.IntegrityError(f"cannot inspect P7.05 launchd observer: {exc}") from exc
-    return completed.returncode == 0
+    if completed.returncode != 0:
+        return {"loaded": False, "exact_release_pinned": False}
+
+    plist_path = Path.home() / "Library" / "LaunchAgents" / f"{OBSERVER_LABEL}.plist"
+    try:
+        with plist_path.open("rb") as handle:
+            payload = plistlib.load(handle)
+    except (OSError, plistlib.InvalidFileException) as exc:
+        raise p705.IntegrityError(f"cannot inspect P7.05 observer LaunchAgent: {exc}") from exc
+
+    args = payload.get("ProgramArguments")
+    expected_python = str(root / "venvs" / release_sha / "bin" / "python")
+    expected_script = str(
+        root / "releases" / release_sha / "source" / "reference" / "python" /
+        "p7_05_operational_visibility.py"
+    )
+    exact = (
+        isinstance(args, list)
+        and len(args) >= 2
+        and args[0] == expected_python
+        and args[1] == expected_script
+        and "/current/" not in args[1]
+    )
+    return {
+        "loaded": True,
+        "exact_release_pinned": exact,
+        "expected_python": expected_python,
+        "expected_script": expected_script,
+    }
 
 
 def run_selected_mac_proof(root: Path, p6_context_file: Path, release_sha: str) -> dict[str, Any]:
@@ -87,13 +116,19 @@ def run_selected_mac_proof(root: Path, p6_context_file: Path, release_sha: str) 
     root = root.expanduser().resolve()
     p705.initialize(root)
 
-    observer_loaded = _macos_observer_loaded()
-    if observer_loaded is False:
+    observer = _macos_observer_state(root, release_sha)
+    if observer is not None and observer["loaded"] is False:
         raise p705.IntegrityError("P7.05 selected-Mac proof requires the launchd observer to be loaded")
+    if observer is not None and observer["exact_release_pinned"] is False:
+        raise p705.IntegrityError("P7.05 launchd observer is not pinned to the exact proof release")
 
     current = p705.classify_health(root)
     if current.state != "healthy":
         raise p705.IntegrityError(f"selected-Mac runtime is not healthy: {current.code}")
+    if current.release_sha != release_sha:
+        raise p705.IntegrityError(
+            f"selected-Mac runtime release mismatch: health={current.release_sha} proof={release_sha}"
+        )
 
     continuity = p704.bootstrap_from_p6_owner_context(root, p6_context_file)
     organization = _identity(continuity["organization"])
@@ -146,6 +181,8 @@ def run_selected_mac_proof(root: Path, p6_context_file: Path, release_sha: str) 
     status = p705.operational_status(root)
     if status["state"] != "healthy" or status["active_alert"] is not None:
         raise p705.IntegrityError("final selected-Mac status is not healthy")
+    if status["release_sha"] != release_sha:
+        raise p705.IntegrityError("final selected-Mac status no longer matches the exact proof release")
 
     policy = p705.load_policy(root)
     attestation = {
@@ -163,7 +200,8 @@ def run_selected_mac_proof(root: Path, p6_context_file: Path, release_sha: str) 
         "audit_projection_count": audit["count"],
         "actionable_alert_path_verified": True,
         "healthy_alert_clear_verified": True,
-        "macos_observer_loaded": observer_loaded,
+        "macos_observer_loaded": None if observer is None else observer["loaded"],
+        "macos_observer_exact_release_pinned": None if observer is None else observer["exact_release_pinned"],
         "observer_required_on_selected_macos": platform.system() == "Darwin",
         "retention_hours": policy["retention_hours"],
         "expired_telemetry_removed": cleanup["removed_telemetry_records"],
