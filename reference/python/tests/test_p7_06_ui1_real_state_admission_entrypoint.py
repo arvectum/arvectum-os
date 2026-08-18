@@ -95,8 +95,10 @@ class P706UI1RealStateAdmissionEntrypointTests(unittest.TestCase):
                 version_identity=self.version,
             )
 
-    def test_matching_subject_version_with_source_or_contract_drift_fails_closed(self):
+    def test_matching_subject_version_with_semantic_source_or_contract_drift_fails_closed(self):
         for key, bad in (
+            ("semantic_type", "platform.event"),
+            ("schema_version", "different-schema"),
             ("authoritative_source", "unknown"),
             ("source_manifest_sha256", "0" * 64),
             ("product_contract_version", "0.2.0"),
@@ -118,22 +120,16 @@ class P706UI1RealStateAdmissionEntrypointTests(unittest.TestCase):
                         version_identity=self.version,
                     )
 
-    def test_matching_subject_version_with_minimization_drift_fails_closed(self):
-        for key in (
-            "canonical_authority",
-            "contains_reusable_secret",
-            "raw_document_bytes_included",
-            "external_actions",
-        ):
+    def test_entrypoint_rejects_additional_minimization_drift_allowed_by_p703(self):
+        for key in ("raw_document_bytes_included", "external_actions"):
             with self.subTest(key=key):
                 root = Path(self.tmp.name) / f"runtime-{key}"
                 p703.initialize_store(root, self.release_sha)
-                bad = False if key == "canonical_authority" else True
                 p703.persist_governed_item(
                     root,
                     self.release_sha,
                     b"safe",
-                    self._metadata(**{key: bad}),
+                    self._metadata(**{key: True}),
                 )
                 with self.assertRaises(entrypoint.UI1RealStateEntrypointError):
                     entrypoint.verify_existing_retry_semantics(
@@ -142,26 +138,38 @@ class P706UI1RealStateAdmissionEntrypointTests(unittest.TestCase):
                         version_identity=self.version,
                     )
 
-    def test_matching_subject_version_without_provenance_or_admission_ref_fails_closed(self):
+    def test_p703_itself_rejects_core_canonical_secret_and_integrity_drift(self):
         for overrides in (
+            {"canonical_authority": False},
+            {"contains_reusable_secret": True},
             {"governed_admission_ref": ""},
-            {"provenance_refs": ["one"]},
             {"source_release_sha": "short"},
         ):
-            root = Path(self.tmp.name) / f"runtime-{len(list(root for root in Path(self.tmp.name).iterdir()))}"
+            root = Path(self.tmp.name) / f"p703-{len(tuple(Path(self.tmp.name).iterdir()))}"
             p703.initialize_store(root, self.release_sha)
-            p703.persist_governed_item(
-                root,
-                self.release_sha,
-                b"safe",
-                self._metadata(**overrides),
-            )
-            with self.assertRaises(entrypoint.UI1RealStateEntrypointError):
-                entrypoint.verify_existing_retry_semantics(
+            with self.assertRaises(p703.BoundaryError):
+                p703.persist_governed_item(
                     root,
-                    subject_identity=self.subject,
-                    version_identity=self.version,
+                    self.release_sha,
+                    b"safe",
+                    self._metadata(**overrides),
                 )
+
+    def test_matching_subject_version_with_bounded_but_incomplete_provenance_fails_closed(self):
+        root = Path(self.tmp.name) / "runtime-short-provenance"
+        p703.initialize_store(root, self.release_sha)
+        p703.persist_governed_item(
+            root,
+            self.release_sha,
+            b"safe",
+            self._metadata(provenance_refs=["one-valid-ref"]),
+        )
+        with self.assertRaisesRegex(entrypoint.UI1RealStateEntrypointError, "provenance"):
+            entrypoint.verify_existing_retry_semantics(
+                root,
+                subject_identity=self.subject,
+                version_identity=self.version,
+            )
 
     def test_duplicate_exact_subject_version_fails_closed(self):
         self._persist(self._metadata())
