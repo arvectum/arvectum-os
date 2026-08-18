@@ -1,6 +1,6 @@
 # P7.06 — Selected-Mac Live Remediation Review
 
-Status: `Repository remediation PASS / selected-Mac proof pending`
+Status: `Repository remediation PASS through iteration 6 / selected-Mac full proof pending`
 Date: `2026-08-18`
 Owner: `ООО «Арвектум»`
 Task classification: `platform` with bounded `governance` and operational recovery
@@ -23,7 +23,7 @@ Checked before and during remediation:
 - RFC-0005 — exact material version pinning, explicit failure/rollback semantics, governed consequential execution boundaries and no effect replay by historical recovery;
 - RFC-0006 — required operational evidence must not fail silently; telemetry remains non-canonical by default; replay/recovery does not authorize a new external effect;
 - R22 — `Complete / PASS`, with first P7.06 update still responsible for carrying the R22 hardening;
-- canonical roadmap — P7.06 remains `Current`; P7.07/P7.08 remain blocked until the first controlled update/rollback proof passes;
+- canonical roadmap — P7.06 core remains `Current`; the P7.06 Live Operator Workspace substream remains gated by core PASS, and P7.07/P7.08 remain downstream of that sequencing;
 - Accepted ADRs — none select a permanent deployment manager, service supervisor or macOS topology.
 
 No higher-authority conflict was found in the bounded owner-operated remediation scope.
@@ -138,30 +138,23 @@ Result: `REVISE`.
 
 Read-only owner-local diagnostics after Attempt 5 established two further concrete defects.
 
-### F3 — P7.02 install creates a RunAtLoad self-race
+### F3 — initial hypothesis: P7.02 install RunAtLoad replacement race
 
-Selected-Mac runtime stderr contained repeated:
+Selected-Mac cumulative runtime stderr contained repeated:
 
 `P7.02 runtime already has an active owner process`
 
 The target exact-release Python and target P7.02 runtime code successfully checked the restored source health, ruling out the observed target Python/runtime artifact as the immediate failure source. Repository comparison from `cf60e52c93bf0ef4158cf2c3e26792850a126c70` to `b218251a3885b190795ca431deebd41848fcc1d4` also confirmed that P7.02 runtime/service code itself had not changed between those releases.
 
-The concrete lifecycle defect is in the existing P7.02 install sequence:
+At iteration 3 this supported removing immediate forced replacement after RunAtLoad bootstrap. Later Attempt 7 produced time-scoped lock evidence and disproved a lock/handoff race as the remaining cause of the false-negative activation classification. The iteration-3 remediation remains valid lifecycle hardening, but it is no longer treated as the final root cause of the activation failure.
 
-1. generated plist declares `RunAtLoad=true` and `KeepAlive.SuccessfulExit=false`;
-2. `launchctl bootstrap` therefore admits and starts the runtime;
-3. install immediately executes `launchctl kickstart -k` against that newly starting job;
-4. the killed/replacement lifecycle can overlap at the P7.02 single-instance `runtime.lock`, producing the exact repeated live diagnostic and preventing stable target health.
-
-The fix must preserve `kickstart -k` for explicit restart/replacement semantics while removing it from initial install after RunAtLoad bootstrap.
-
-### F4 — P7.06 `wait_loaded()` clobbers the Git target SHA
+### F4 — P7.06 `wait_loaded()` clobbered the Git target SHA
 
 P7.06 used a POSIX-shell function assignment `target=$1` inside `wait_loaded()`. Shell function variables are process-global in this adapter. During rollback, calling `wait_loaded "$RUNTIME_TARGET"` therefore replaced the deployment Git target SHA with `gui/<uid>/com.arvectum.os.persistent-internal`.
 
 Failure transaction recording then passed that launchd target as `target_release`, producing the observed full-SHA validation error and losing required failure transaction evidence.
 
-This is an evidence-integrity defect independent of F3.
+This evidence-integrity defect was independent of the activation false negative.
 
 ## 10. Second remediation design
 
@@ -210,9 +203,136 @@ Diff review confirms:
 - failed-update payload construction continues to preserve the exact preflight Git target SHA;
 - backup-before-stop, compatibility/migration gates, exact-release pinning, rollback/recovery and no-effect-replay constraints remain intact.
 
-No material repository-side objection remains after iteration 4. The remaining closure gap is live selected-Mac proof on the merged canonical remediation target.
+No material repository-side objection remained after iteration 4. Live selected-Mac evidence was still required.
 
-## 12. Product/platform, authority and ADR disposition
+## 12. Selected-Mac Attempt 6 — contained failure with transaction evidence
+
+Attempt 6 began from exact healthy source release:
+
+`cf60e52c93bf0ef4158cf2c3e26792850a126c70`
+
+and targeted canonical release:
+
+`77701d3ffbb67d226bc674337218b37591ba8de7`.
+
+Observed evidence:
+
+- pre-update backup — `PASS`;
+- backup SHA-256 — `cdea36edd91cd38b181a3e30d622018f169449009015376848e4cce95a362ecd`;
+- target activation still returned `runtime did not become healthy after install`;
+- automatic rollback — `PASS`;
+- exact rollback transaction — `7ec98de5d0c3b1741610cb8c849022097082c1659b1d0f8fc87d0c63e9b533f7`;
+- post-rollback P7.02 runtime — healthy on exact source;
+- post-rollback P7.05 observer — healthy and exact-source pinned;
+- source/target copies of `p7_02_persistent_runtime.py` had identical SHA-256 `22d28215f255b1fa4de17599f4cd51f1ad30d60abff7da27a617668c38a1c0ae`;
+- target Python `3.14.7` and semantic import self-check — `PASS`.
+
+Attempt 6 therefore proved that failure rollback and transaction evidence were now operationally contained, while the remaining activation failure was not demonstrated to come from target runtime bytes, interpreter availability or semantic imports. Cumulative timestampless stderr was insufficient to attribute the remaining failure to a lock race.
+
+The bounded activation probe introduced after Attempt 6 passed repository CI `993/993` and was merged before another live attempt.
+
+## 13. Selected-Mac Attempt 7 — diagnostic PASS / deployment false negative localized
+
+Attempt 7 used the bounded activation probe against canonical target:
+
+`ae904fe2f4d670a3c7b54f87d63feb2e607f132e`.
+
+Exact owner-local evidence is summarized in [`P7-06-selected-mac-activation-probe-attempt-7.md`](P7-06-selected-mac-activation-probe-attempt-7.md).
+
+Key live observations:
+
+1. source PID `41775` owned `runtime.lock`, then moved through SIGTERM/stopped and released the lock;
+2. the lock was unowned before target activation;
+3. target launchd PID `44267` started from exact target `ae904fe2...`;
+4. target PID `44267` became the sole observed `runtime.lock` owner;
+5. health changed to exact target `ae904fe2...`, PID `44267`, generation `31`, state `healthy`;
+6. target remained continuously observed `running`, lock-owned and `healthy` for approximately 22 seconds — covering essentially the full P7.02 `wait_healthy()` interval;
+7. P7.02 install nevertheless returned `runtime did not become healthy after install`;
+8. P7.06 then correctly treated that non-zero install result as failure and rolled back;
+9. rollback transaction `fe97846428b92fb2d320b0b140e10cefa27e0b16c6517d35a7eb012053c41754` restored exact source health;
+10. final status returned source `cf60e52...` healthy, observer healthy/exact-source pinned, schema unchanged.
+
+Attempt 7 therefore disproved a source/target lock-handoff race as the remaining cause of the false-negative activation classification. The target itself was demonstrably healthy.
+
+## 14. Review iteration 5 — REVISE
+
+Result: `REVISE`.
+
+Attempt 7 exposed the remaining repository defect in the P7.02 release-pointer handoff.
+
+### F5 — directory-symlink `mv` leaves `current` stale while launchd runs the exact target
+
+P7.02 install used:
+
+```sh
+rm -f "$RUNTIME_ROOT/current.new"
+ln -s "$release" "$RUNTIME_ROOT/current.new"
+mv -f "$RUNTIME_ROOT/current.new" "$RUNTIME_ROOT/current"
+```
+
+`current` is itself a symbolic link to a release directory. With ordinary `mv` destination semantics, the existing destination can be treated as the referenced directory, moving `current.new` inside the old release rather than replacing the `current` symlink object.
+
+That precisely explains the Attempt 7 discrepancy:
+
+1. launchd plist pins the exact target SHA independently, so target PID `44267` starts correctly and writes healthy target telemetry;
+2. `current` can remain pinned to the old source SHA;
+3. P7.02 `wait_healthy()` derives both expected release and runtime check path from `current`;
+4. the checker therefore expects stale source while the actual target is healthy;
+5. it returns a false negative for the bounded wait interval;
+6. P7.06 correctly rolls back because its delegated install command returned non-zero.
+
+Required revision: replace the `current` symlink object atomically and verify the exact target pointer before plist generation/activation.
+
+## 15. Third remediation design
+
+Branch: `fix/p7-06-atomic-current-symlink`.
+PR: `#49 — P7.06 — Fix stale current release pointer after activation`.
+
+Bounded changes:
+
+1. replace `mv -f current.new current` with a Python `os.replace(prepared, current)` operation, which replaces the symlink object itself rather than following a directory-symlink destination;
+2. require the prepared object to be a symlink;
+3. if `current` already exists, require it to be a symlink and fail closed otherwise;
+4. immediately assert `current_release == HEAD_SHA` after replacement;
+5. perform that assertion before plist write and launchd activation;
+6. add dynamic regression evidence that replacing a directory-target symlink leaves the old release directory untouched and moves the exact pointer to the new release;
+7. retain all existing P7.02 restart/crash semantics and P7.06 backup, migration, rollback, recovery and effect boundaries unchanged.
+
+This is an implementation correction inside the already selected reversible owner-local adapter. It does not create a new deployment topology, schema, authority model, Product Contract, Platform Capability lifecycle or ADR-triggering durable mechanism.
+
+## 16. Review iteration 6 — PASS repository-side
+
+Result: `PASS / selected-Mac full proof pending`.
+
+Final code/test head before this review-evidence update:
+
+`1d001b4d64bc22b077b988f85266bbd95cc5ee0d`
+
+GitHub verification for PR #49:
+
+- Reference Python CI run `32129058858` (`#73`) — `success`;
+- job `95685937566 — Full reference test suite` — `success`;
+- PR merge-test SHA `f49e92dd28640785d316cd819248db07125316da`;
+- `998/998 PASS` (`Ran 998 tests in 11.706s — OK`);
+- existing P7.02 lifecycle/runtime tests — PASS;
+- existing P7.06 activation-probe/governed-deploy/live-remediation/deploy-shell tests — PASS;
+- new current-pointer replacement test — PASS;
+- new exact-pointer-before-activation ordering test — PASS;
+- new directory-symlink dynamic replacement test — PASS;
+- non-symlink destination fail-closed guard — PASS;
+- POSIX shell syntax — PASS.
+
+Functional diff review found no material objection:
+
+- net P7.02 code change is bounded to current-pointer replacement plus an exact-target postcondition;
+- explicit restart/crash replacement semantics are unchanged;
+- no backup, transaction, schema/migration, observer, rollback or recovery path is broadened;
+- no external/product effect or historical replay path is introduced;
+- no authority or lifecycle promotion is created.
+
+No material repository-side objection remains after iteration 6. Iteration 7 is intentionally reserved for the resulting selected-Mac full governed update → rollback → update proof and any final closure disposition.
+
+## 17. Product/platform, authority and ADR disposition
 
 Current disposition remains bounded:
 
@@ -224,12 +344,14 @@ Current disposition remains bounded:
 - no permanent service/deployment technology is selected;
 - no new ADR trigger is crossed at the current private, reversible owner-local scope.
 
-## 13. Closure state
+## 18. Closure state
 
 Until the selected-Mac full proof succeeds and canonical closure is synchronized:
 
-- `P7.06 = Current`;
-- `P7.07` and `P7.08` remain blocked;
-- source runtime `cf60e52c93bf0ef4158cf2c3e26792850a126c70` is the last live release whose post-Attempt-5 status was explicitly verified healthy;
+- `P7.06 core = Current`;
+- `P7.06-UI1` remains gated by core PASS;
+- `P7.07` and `P7.08` remain downstream;
+- source runtime `cf60e52c93bf0ef4158cf2c3e26792850a126c70` is the exact live release whose post-Attempt-7 final status was explicitly verified healthy;
+- Attempt 6 and Attempt 7 both demonstrated contained automatic rollback with exact transaction evidence;
 - no P7.06 successful deployment transaction has yet been established;
 - no Production, Active capability, Stable Product Contract, SLA/support or broader conformance claim is created.
