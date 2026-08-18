@@ -323,7 +323,6 @@ crash_proof() {
     fi
     i=$((i + 1))
   done
-  [ -n "$new_pid" ] && [ -n "$second_pid" ] || true
   [ -n "$new_pid" ] && [ "$new_pid" != "$before_pid" ] || fail "launchd did not replace crashed process"
   after_json=$($py "$runtime" check --runtime-root "$RUNTIME_ROOT" --expected-release "$rel" --max-age-seconds 20 --json)
   after_gen=$(printf '%s' "$after_json" | "$PYTHON_BIN" -c 'import json,sys; print(json.load(sys.stdin)["generation"])')
