@@ -1,6 +1,6 @@
 # P7.06 — Selected-Mac Live Remediation Review
 
-Status: `Repository remediation under review / selected-Mac recovery and proof pending`
+Status: `Repository remediation PASS / selected-Mac recovery and proof pending`
 Date: `2026-08-18`
 Owner: `ООО «Арвектум»`
 Task classification: `platform` with bounded `governance` and operational recovery
@@ -92,9 +92,33 @@ Implemented changes on branch `fix/p7-06-interrupted-rollback-recovery`:
 
 The recovery command is operational recovery only. It does not authorize a new deployment, migration or external action.
 
-## 6. Product/platform, authority and ADR disposition
+## 6. Review iteration 2 — PASS repository-side
 
-Result after design review: `PASS with live evidence pending`.
+Result: `PASS / selected-Mac recovery and proof pending`.
+
+The remediation diff and complete Reference Python suite were re-reviewed after the first PR CI run exposed one non-semantic regression-test defect: the existing backup-before-stop test searched for the first observer uninstall occurrence across the whole shell file and therefore matched the newly hardened rollback function rather than `update_runtime()`.
+
+The test was corrected to scope its ordering assertion to the `update_runtime()` block. No runtime code or governance semantics were weakened by that correction.
+
+Final repository-side evidence on code/test head `7a4094bd53bc23d15ac3e6401ffa95e8036f19cb`:
+
+- PR `#45 — P7.06 — Harden interrupted rollback and runtime quiescence`;
+- GitHub `Reference Python CI` run `32125129079`;
+- job `95673871057 — Full reference test suite`;
+- result: `984/984 PASS`;
+- PR merge-test SHA: `b1c57bbf23ef895825eb74609131569c613fce78`;
+- P7.06 shell syntax: PASS;
+- backup-before-observer-uninstall ordering inside `update_runtime()`: PASS;
+- bounded runtime-lock quiescence before target install: PASS;
+- rollback reuse of P7.02/P7.05 bounded lifecycle owners: PASS;
+- interrupted exact-source recovery/effect-free guards: PASS;
+- existing R22 bridge, space-safe backup, no-executable-bit dependency and replay-safety guards: PASS.
+
+No material repository-side objection remains after iteration 2.
+
+## 7. Product/platform, authority and ADR disposition
+
+Result after remediation review: `PASS with live evidence pending`.
 
 - no product-domain logic is added;
 - no Product Contract dependency changes;
@@ -104,16 +128,16 @@ Result after design review: `PASS with live evidence pending`.
 - no permanent service/deployment technology is selected;
 - no new ADR trigger is crossed at the current private, reversible owner-local scope.
 
-## 7. Required closure evidence for this remediation review
+## 8. Required closure evidence for this remediation review
 
 Before this remediation review can become `Complete / PASS`:
 
-1. full Reference Python CI must pass on the final remediation head;
-2. PR diff must preserve backup-before-stop, compatibility/migration gates and replay-safety constraints;
-3. remediation must merge to canonical `main`;
-4. selected Mac must run `recover-interrupted-latest` and prove exact source runtime + observer health;
-5. complete selected-Mac P7.06 proof must then execute `update → rollback → final update → final status` successfully on the merged canonical target;
-6. canonical P7.06 closure documents and both roadmaps must be synchronized only after that live proof.
+1. remediation must merge to canonical `main`;
+2. selected Mac must run `recover-interrupted-latest` and prove exact source runtime + observer health;
+3. complete selected-Mac P7.06 proof must then execute `update → rollback → final update → final status` successfully on the merged canonical target;
+4. canonical P7.06 closure documents and both roadmaps must be synchronized only after that live proof.
+
+Repository-side implementation, tests and CI are now PASS; only merged-state and selected-Mac evidence remain.
 
 Until then:
 
