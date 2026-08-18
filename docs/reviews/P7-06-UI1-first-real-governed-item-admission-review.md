@@ -1,9 +1,9 @@
 # P7.06-UI1 First Real Governed Item Admission — Functional Cross-Review
 
-Status: `Repository-side review in final verification; selected-Mac execution pending`
+Status: `Complete / PASS for repository implementation; selected-Mac execution pending`
 Date: `2026-08-18`
 Task classification: `platform` with `product_contract` and `governance`
-Review iterations: `2 / max 7` before final CI confirmation
+Review iterations: `3 / max 7`
 
 ## 1. Scope
 
@@ -77,13 +77,43 @@ Revision:
 
 This preserves the bounded implementation while removing any need to infer reconstruction completeness from a weak metadata match.
 
-## 5. Final verification gate
+## 5. Functional review iteration 3
 
-The final repository disposition requires the latest branch head to pass full `Reference Python CI` after the iteration-2 hardening and documentation/roadmap synchronization.
+Result: `PASS — no material repository-side objections remain`.
 
-If that CI passes and no new material objection appears, repository implementation is `PASS`; selected-Mac consequential execution remains separately pending.
+The post-hardening CI run `32144247462` exposed three errors in newly added test fixtures rather than in the admission implementation. Those fixtures attempted to create P7.03 canonical governed state with conditions that P7.03 already refuses at its own lower-level boundary: `canonical_authority=false`, reusable-secret presence, empty governed-admission reference or invalid exact release attribution.
 
-## 6. Selected-Mac execution boundary
+That result confirmed layered defense rather than an admission bypass. P7.03 already requires canonical governed state to carry valid Subject/Version/authority/admission/provenance metadata, `canonical_authority=true`, valid release attribution and `contains_reusable_secret=false`.
+
+Revision:
+
+- tests now assert P7.03 `BoundaryError` for conditions owned by the P7.03 persistence boundary;
+- hardened-entrypoint tests remain focused on semantically incomplete state that P7.03 may legitimately retain but that this exact UI1 admission retry must reject, including incomplete CAP-001/RFC-0006/CAP-004 validation, source/Product Contract/schema drift, raw-document/external-effect drift, bounded-but-insufficient provenance and duplicate exact Subject/Version claims.
+
+Final implementation/test branch head `ac5c340bf7e08d18d816b49feaf710d9a3207e22` passed GitHub `Reference Python CI` run `32144411176` with conclusion `success`.
+
+No material objection remains to the repository-side bridge within its declared private, one-purpose scope.
+
+## 6. Repository disposition
+
+Repository implementation = `Complete / PASS`.
+
+The bridge preserves:
+
+- exact active-release execution;
+- explicit bounded owner approval;
+- existing human/Organization continuity;
+- P7.04 least-privilege technical authorization without authority collapse;
+- four distinct RFC-0005 gate decisions and bases;
+- exact P6.02 Product Contract `0.1.0` boundary;
+- independently verified retained real P6.05-L7 evidence;
+- EIS `External Reference` authority;
+- CAP-001 admission before P7.03 persistence;
+- RFC-0006 Event/provenance and CAP-004 reconstruction;
+- minimization, idempotency and fail-closed conflict semantics;
+- no EIS/SOAP/network/product/external effect.
+
+## 7. Selected-Mac execution boundary
 
 The repository review does **not** authorize shortcuts around the approved execution path. The selected Mac must:
 
@@ -97,12 +127,13 @@ The repository review does **not** authorize shortcuts around the approved execu
 
 No raw opaque owner identity, credential/grant identifiers, credential secret, raw tender bytes or owner-local evidence payload belongs in canonical repository evidence.
 
-## 7. Non-claims
+## 8. Final non-claims
 
-This repository work does not:
+This repository PASS does not:
 
 - close `P7.06-UI1`;
 - start `P7.06-UI2`;
+- execute the approved consequential canonical admission on the selected Mac;
 - promote any capability lifecycle;
 - promote the Product Contract lifecycle;
 - establish Production readiness;
