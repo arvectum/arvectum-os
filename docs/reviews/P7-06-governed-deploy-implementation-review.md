@@ -37,14 +37,16 @@ No material repository-side objection remains. Further refinement before live ev
 
 ## 5. Validation
 
-Local focused validation before repository write:
+Repository validation:
 
-- Python P7.06 unit tests: PASS;
+- Python P7.06 focused unit tests: PASS;
 - macOS deploy adapter `sh -n`: PASS;
 - selected-Mac proof adapter `sh -n`: PASS;
-- focused combined tests: `11/11 PASS`;
-- static guard: no curl/wget/ssh/scp/nc remote transport introduced by the P7.06 macOS adapter.
+- focused P7.06 combined tests: `11/11 PASS`;
+- static guard: no curl/wget/ssh/scp/nc remote transport introduced by the P7.06 macOS adapter;
+- PR `#40` merged to canonical `main` at `70b0427379d5579e246d9566802c3795df63a46b`;
+- GitHub `Reference Python CI` run `32114967673`, job `95642307033`: `975/975 PASS` on the PR merge ref.
 
-Full repository CI and selected-Mac execution remain closure evidence still to obtain.
+Selected-Mac execution remains the only closure evidence still to obtain.
 
 Functional cross-review result: `PASS` after 3 iterations. This is not formal Production/lifecycle approval and does not substitute for the selected-Mac proof.
