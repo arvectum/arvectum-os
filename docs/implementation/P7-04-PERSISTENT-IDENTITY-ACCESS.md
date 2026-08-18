@@ -1,7 +1,8 @@
 # P7.04 — Persistent Identity / Operator / Service Access + Least-Privilege Operations
 
-Status: `Repository implementation PASS / selected-Mac closure pending`
+Status: `Complete / PASS`
 Date: `2026-08-17`
+Closed: `2026-08-18`
 Owner: `ООО «Арвектум»`
 Task classification: `platform`
 Operating classification: `Persistent Internal / owner-operated`
@@ -9,6 +10,7 @@ Parent baseline: [`P7.01 Persistent Internal Operating Boundary`](../roadmap/P7-
 Parent phase: [`Phase 7 — Operational / Enterprise Readiness`](../roadmap/PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md)
 Predecessor: [`P7.03 Durable Governed State / Backup / Restore`](P7-03-DURABLE-GOVERNED-STATE-BACKUP-RESTORE.md) — `Complete / PASS`
 Repository implementation PR: `#35`
+Selected-Mac closure: [`Attempt 1 — Complete / PASS`](../reviews/P7-04-selected-mac-proof-attempt-1.md)
 
 ## 1. Purpose
 
@@ -25,7 +27,7 @@ No role, wildcard, superuser or ambient-admin mechanism is introduced.
 
 ## 2. Authority checked
 
-Implementation was checked against:
+Implementation and closure were checked against:
 
 - Constitution `1.2.0` — `Ratified`, frozen;
 - RFC-0001 — shared platform behavior remains domain-neutral and technology-independent;
@@ -144,7 +146,7 @@ The adapter exposes the secret file path, not the secret value, from issuance. O
 
 `remote` is an explicit grant dimension, not an alternate authority path.
 
-The selected-Mac proof is designed to establish a bounded remote administrative-read path (`runtime.status` on the exact P7.02 runtime resource) while proving that remote `runtime.restart` remains denied without a separate exact grant.
+The selected-Mac proof established a bounded remote administrative-read path (`runtime.status` on the exact P7.02 runtime resource) while proving that remote `runtime.restart` remains denied without a separate exact grant.
 
 Host/OS administration remains an environment concern and does not become Organizational Authority. P7.04 does not claim that SSH/Tailscale/another transport is a stable platform interface.
 
@@ -171,22 +173,29 @@ Focused isolated validation performed while preparing PR `#35`:
 - persistent-access suite: `14/14 PASS`;
 - selected-Mac proof contract: `2/2 PASS` in an isolated proof fixture.
 
-GitHub `Reference Python CI` is the authoritative repository regression gate for the PR and must be green at the final PR head before merge.
+GitHub `Reference Python CI` was green at the final implementation/documentation head before merge. PR `#35` merged at `2b808c658c19056cef65b69e82152ae12d861679`.
 
-## 12. Selected-Mac closure gate
+## 12. Selected-Mac closure evidence
 
-P7.04 is **not Complete/PASS yet** solely from repository CI.
+Selected-Mac Attempt 1 completed `PASS` on `2026-08-18` from exact canonical `main` SHA:
 
-Closure still requires one clean execution of `p7_04_selected_mac_proof.py` on the selected ООО «Арвектум» Mac mini using:
+`218e3762975a2fd6f11e8f13d4445bce5f5d7c94`
 
-- clean canonical `main` at exact `origin/main` head;
-- existing healthy P7.02 runtime;
-- existing owner-local P6.05-L4 `organization-operator.json` context;
-- exact tool release SHA.
+The existing P7.02 persistent runtime remained healthy before and after the proof on exact runtime release:
 
-The proof must produce a PASS attestation showing human/service attribution, deny-by-default behavior, exact scopes, explicit remote path, denied ungranted remote lifecycle admin, credential rotation, grant revocation, no ambient service admin, no reusable secret emission, no Organizational Authority/consequential approval, no canonical mutation and no external effect.
+`73af746f83271b14670fe22db658dfd55cacb291`
 
-After that evidence is reviewed and recorded, the implementation review and both roadmaps may move P7.04 to `Complete / PASS` and advance the current action to P7.05.
+Canonical review record:
+
+- [`P7.04 Selected-Mac Persistent Access Proof — Attempt 1`](../reviews/P7-04-selected-mac-proof-attempt-1.md) — `Complete / PASS`;
+- owner-local attestation basename: `p7-04-selected-mac-attestation-20260818T050134Z-6a13d49b.json`;
+- attestation SHA-256: `5c0a67b15b7fb469bc5933030db0c2e90adfb47c3eb94411c43ba555b7d98659`.
+
+The reviewed proof passed human/service attribution, deny-by-default behavior, exact Organization/operation/resource scope, explicit local/remote paths, denied ungranted remote lifecycle administration, credential rotation, grant/credential revocation, absence of ambient service administration, reusable-secret minimization, authority separation, unchanged persistent-runtime release, no canonical mutation and no external/product effect.
+
+The raw attestation remains owner-local non-canonical operational evidence. Canonical history records only the minimum review facts and digest.
+
+`P7.04 = Complete / PASS` for the declared `Persistent Internal / owner-operated` scope.
 
 ## 13. Explicit non-claims
 

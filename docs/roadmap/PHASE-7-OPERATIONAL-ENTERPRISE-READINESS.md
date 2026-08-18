@@ -1,7 +1,7 @@
 # Arvectum OS Phase 7 — Operational / Enterprise Readiness
 
 Status: `Active`
-Version: `1.2.2`
+Version: `1.2.3`
 Created: `2026-08-17`
 Updated: `2026-08-18`
 Owner: `ООО «Арвектум»`
@@ -43,8 +43,8 @@ P7.02 has passed. The selected Mac mini therefore operates in `Persistent Intern
 | `P7.01` | Persistent internal operating boundary + operational requirements baseline | Chat/GitHub | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.02` | Persistent Mac mini runtime + boot/restart/service lifecycle | Mac mini + GitHub | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.03` | Durable governed state/checkpoint persistence + backup/restore baseline | Mac mini + GitHub | 🟩 Complete / PASS | `██████████ 100%` |
-| `P7.04` | Persistent identity/operator/service access + least-privilege operations | Chat + Mac mini + GitHub | 🟨 Repository implementation PASS / selected-Mac closure pending | `repository PASS; operational proof pending` |
-| `P7.05` | Health, observability, audit visibility, alerting + retention/minimization | Mac mini + GitHub | ⬜ | `░░░░░░░░░░ 0%` |
+| `P7.04` | Persistent identity/operator/service access + least-privilege operations | Chat + Mac mini + GitHub | 🟩 Complete / PASS | `██████████ 100%` |
+| `P7.05` | Health, observability, audit visibility, alerting + retention/minimization | Mac mini + GitHub | 🟨 Current | `░░░░░░░░░░ 0%` |
 | `P7.06` | Governed deploy/update/rollback/version/migration path | Mac mini + GitHub | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.07` | Persistent Tender Operator operational contour | Mac mini + product environment + GitHub | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.08` | Persistent Discount Parser cross-host operational contour | Windows + Mac mini + GitHub | ⬜ | `░░░░░░░░░░ 0%` |
@@ -106,36 +106,32 @@ Live backup/isolated restore integrity passed, restored state digest matched liv
 
 ### P7.04 — Persistent identity/operator/service access + least-privilege operations
 
-Status: `Repository implementation PASS / selected-Mac closure pending`.
+Status: `Complete / PASS`.
 
-Canonical implementation:
+Canonical evidence:
 
-- [`P7.04 Persistent Identity / Operator / Service Access + Least-Privilege Operations`](../implementation/P7-04-PERSISTENT-IDENTITY-ACCESS.md);
+- [`P7.04 Persistent Identity / Operator / Service Access + Least-Privilege Operations`](../implementation/P7-04-PERSISTENT-IDENTITY-ACCESS.md) — `Complete / PASS`;
 - repository implementation PR `#35`, merged at `2b808c658c19056cef65b69e82152ae12d861679`;
 - focused persistent-access tests: `14/14 PASS`;
 - selected-Mac proof-contract tests: `2/2 PASS`;
 - GitHub `Reference Python CI` on final implementation/documentation head `b9c46646324d5d4bccf384196efa3670b828c6af`: `success`, run `32063442269`;
-- repository functional cross-review: five iterations, no material repository-side objection remaining; selected-Mac closure remains explicitly pending.
+- [`P7.04 Persistent Access Implementation Cross-Review`](../reviews/P7-04-persistent-access-implementation-review.md) — `Complete / PASS`, six iterations;
+- [`P7.04 Selected-Mac Persistent Access Proof — Attempt 1`](../reviews/P7-04-selected-mac-proof-attempt-1.md) — `Complete / PASS`;
+- tested canonical `main`: `218e3762975a2fd6f11e8f13d4445bce5f5d7c94`;
+- exact persistent runtime release: `73af746f83271b14670fe22db658dfd55cacb291`;
+- selected-Mac attestation SHA-256: `5c0a67b15b7fb469bc5933030db0c2e90adfb47c3eb94411c43ba555b7d98659`.
 
-Repository implementation now proves/designs:
+P7.04 now establishes, for the declared bounded owner-operated scope, exact P6.05-L4 Organization/human identity continuity, a separate attributable service principal, deny-by-default exact Organization/operation/resource/access-path grants, owner-local credential issue/rotation/revocation, principal/grant revocation, explicit local/remote access scoping, and executable selected-Mac evidence that ungranted remote lifecycle administration and service ambient administration fail closed.
 
-- reuse of exact P6.05-L4 Organization/human owner identities rather than replacement identity issuance;
-- one persistent attributable service Principal where machine execution needs attribution;
-- deny-by-default access;
-- exact Organization + principal + credential + operation + resource + `local|remote` path matching;
-- no wildcard grants, roles, superuser bit or ambient-admin bypass;
-- owner-local reusable secret files with salted verifier only in the non-canonical registry;
-- credential issue/rotate/revoke, principal disablement and grant revocation;
-- explicit remote access as an ordinary grant dimension rather than hidden trusted mode;
-- every allowed access decision remains `operational_access_only=true`, with `organizational_authority_satisfied=false` and `consequential_approval_satisfied=false`.
-
-P7.04 is **not Complete / PASS yet**. Closure requires one clean run of `p7_04_selected_mac_proof.py` on exact canonical `main`, using the existing healthy P7.02 runtime and retained owner-local P6.05-L4 `organization-operator.json` context. The attestation must prove human/service attribution, deny-by-default, exact scopes, explicit remote read, denied ungranted remote restart, credential rotation, grant revocation, no ambient service admin, no reusable secret emission, no Organizational Authority/consequential approval, no canonical mutation and no external effect.
+Every allowed operational decision remains explicitly separate from Organizational Authority and consequential approval. The selected-Mac proof preserved a healthy unchanged P7.02 runtime and performed no canonical mutation or external/product effect. The raw attestation remains owner-local non-canonical operational evidence; canonical history stores only the review result and digest.
 
 ADR disposition remains `NO` at the current owner-local, single-Organization, reversible scope. Re-open the ADR/stable-boundary gate before externally relied-upon IAM behavior, cross-Organization access, public/stable access APIs, materially constraining credential technology or a long-lived remote-administration topology.
 
+P7.04 closure does not establish external/customer Production, an `Active` Platform Capability, Stable Product Contract, public/stable access API, supported remote-admin transport, SLA/support or conformance promotion.
+
 ### P7.05 — Health, observability, audit visibility, alerting + retention/minimization
 
-Status: `Pending after P7.04 closure`.
+Status: `Current`.
 
 Required evidence:
 
@@ -202,6 +198,6 @@ M7 does **not** inherently require external customer Production, public multi-te
 
 ## 8. Current canonical action
 
-> **P7.04 — selected-Mac persistent access closure proof.**
+> **P7.05 — Health, observability, audit visibility, alerting + retention/minimization.**
 
-Repository implementation is merged and its CI is green. Run the hardened proof on the selected ООО «Арвектум» Mac mini from clean exact canonical `main`, against the existing healthy P7.02 runtime and retained P6.05-L4 owner context. Preserve and canonically review the non-canonical attestation. If PASS with no material objections, close P7.04 and advance to P7.05; otherwise preserve the failure and remediate without weakening RFC-0003/RFC-0005 boundaries.
+P7.04 is `Complete / PASS` after selected-Mac Attempt 1 on exact canonical `main` with no material review objections. Continue Phase 7 by establishing actionable persistent-runtime health, observability, audit visibility, alerting and bounded retention/minimization while preserving RFC-0006 separation between canonical Events/evidence and non-canonical telemetry, RFC-0003 least-privilege/minimization requirements and the existing `Persistent Internal / owner-operated` scope. After P7.05 closure, execute `R22 — Persistent Runtime Health Review` before operational workload expansion.

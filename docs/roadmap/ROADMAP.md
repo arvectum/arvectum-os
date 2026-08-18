@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.54.6`
+Version: `2.54.7`
 Created: `2026-08-07`
 Updated: `2026-08-18`
 Owner: `ООО «Арвектум»`
@@ -15,21 +15,24 @@ Future roadmap content is a planning hypothesis until its phase is activated. Ro
 
 ## 2. Version note
 
-Version `2.54.6` synchronizes the master roadmap with active Phase 7 `1.2.2` after the P7.04 repository implementation milestone. No additional implementation or lifecycle claim is introduced by this synchronization.
+Version `2.54.7` closes `P7.04 — Persistent identity/operator/service access + least-privilege operations` after selected-Mac Attempt 1 passed on exact canonical `main` SHA `218e3762975a2fd6f11e8f13d4445bce5f5d7c94`. The proof reused the existing P6.05-L4 owner context and healthy P7.02 persistent runtime on exact release `73af746f83271b14670fe22db658dfd55cacb291`; all remaining least-privilege, attribution, rotation/revocation, remote-access and authority-separation conditions passed. The owner-local non-canonical attestation is recorded canonically only by review result and SHA-256 `5c0a67b15b7fb469bc5933030db0c2e90adfb47c3eb94411c43ba555b7d98659`. Final P7.04 functional review iteration 6 of maximum 7 is `PASS`. The current canonical action advances to P7.05.
+
+This closure does not create external/customer Production, an `Active` Platform Capability, Stable Product Contract, permanent IAM/credential-vault/remote-administration topology, public/stable access API, SLA/support or conformance promotion.
+
+Version `2.54.6` synchronized the master roadmap with active Phase 7 `1.2.2` after the P7.04 repository implementation milestone. No additional implementation or lifecycle claim was introduced by that synchronization.
 
 Version `2.54.5` recorded the repository-side implementation milestone for `P7.04 — Persistent identity/operator/service access + least-privilege operations` after PR `#35` merged at `2b808c658c19056cef65b69e82152ae12d861679`.
 
-The bounded repository implementation now provides exact P6.05-L4 Organization/human identity continuity, one attributable persistent service principal, deny-by-default exact Organization/operation/resource/access-path grants, owner-local credential issuance/rotation/revocation, principal/grant revocation, explicit local/remote access scoping and a hardened selected-Mac proof wrapper. Technical access remains explicitly separate from Organizational Authority and consequential approval. No roles, wildcard grants, superuser or ambient-admin bypass were introduced.
+The bounded repository implementation provides exact P6.05-L4 Organization/human identity continuity, one attributable persistent service principal, deny-by-default exact Organization/operation/resource/access-path grants, owner-local credential issuance/rotation/revocation, principal/grant revocation, explicit local/remote access scoping and a hardened selected-Mac proof wrapper. Technical access remains explicitly separate from Organizational Authority and consequential approval. No roles, wildcard grants, superuser or ambient-admin bypass were introduced.
 
 Repository evidence for PR `#35`:
 
 - focused persistent-access tests: `14/14 PASS`;
 - selected-Mac proof-contract tests: `2/2 PASS`;
 - GitHub `Reference Python CI` on implementation/documentation head `b9c46646324d5d4bccf384196efa3670b828c6af`: `success`, run `32063442269`;
-- canonical implementation: [`P7.04 Persistent Identity / Operator / Service Access`](../implementation/P7-04-PERSISTENT-IDENTITY-ACCESS.md) — `Repository implementation PASS / selected-Mac closure pending`;
-- repository functional cross-review: `PASS / selected-Mac closure pending`.
-
-`P7.04` is **not** `Complete / PASS` yet. The current canonical action remains the selected-Mac closure proof on clean exact canonical `main`, using the existing healthy P7.02 persistent runtime and the retained P6.05-L4 owner context. Only a passing selected-Mac operational attestation may close P7.04 and advance to P7.05.
+- canonical implementation: [`P7.04 Persistent Identity / Operator / Service Access`](../implementation/P7-04-PERSISTENT-IDENTITY-ACCESS.md) — `Complete / PASS`;
+- repository functional cross-review: [`P7.04 Persistent Access Implementation Cross-Review`](../reviews/P7-04-persistent-access-implementation-review.md) — `Complete / PASS`;
+- selected-Mac closure: [`P7.04 Selected-Mac Persistent Access Proof — Attempt 1`](../reviews/P7-04-selected-mac-proof-attempt-1.md) — `Complete / PASS`.
 
 Version `2.54.4` closed `P7.03 — Durable governed state/checkpoint persistence + backup/restore baseline` after repository implementation, proof-contract hardening, preserved failed attempts, successful hardened selected-Mac Attempt 3 and final six-iteration functional cross-review.
 
@@ -80,7 +83,7 @@ Phase 6 completed with two materially distinct real-product/workflow chains: Ten
 
 ## 6. Active Phase 7 — Operational / Enterprise Readiness
 
-Detailed roadmap: [`PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md`](PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md) — `Active 1.2.2`.
+Detailed roadmap: [`PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md`](PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md) — `Active 1.2.3`.
 
 Phase 7 converts validated owner-operated use into a persistent, recoverable and observable internal operating baseline before considering stronger production/lifecycle claims.
 
@@ -89,8 +92,8 @@ Phase 7 converts validated owner-operated use into a persistent, recoverable and
 | `P7.01` | Persistent internal operating boundary + operational requirements baseline | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.02` | Persistent Mac mini runtime + boot/restart/service lifecycle | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.03` | Durable governed state/checkpoint persistence + backup/restore baseline | 🟩 Complete / PASS | `██████████ 100%` |
-| `P7.04` | Persistent identity/operator/service access + least-privilege operations | 🟨 Repository implementation PASS / selected-Mac closure pending | `repository PASS; operational proof pending` |
-| `P7.05` | Health, observability, audit visibility, alerting + retention/minimization | ⬜ | `░░░░░░░░░░ 0%` |
+| `P7.04` | Persistent identity/operator/service access + least-privilege operations | 🟩 Complete / PASS | `██████████ 100%` |
+| `P7.05` | Health, observability, audit visibility, alerting + retention/minimization | 🟨 Current | `░░░░░░░░░░ 0%` |
 | `P7.06` | Governed deploy/update/rollback/version/migration path | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.07` | Persistent Tender Operator operational contour | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.08` | Persistent Discount Parser cross-host operational contour | ⬜ | `░░░░░░░░░░ 0%` |
@@ -121,12 +124,14 @@ P7.03 durable-state/backup-restore baseline — PASS
         ↓
 P7.04 repository implementation — PASS
         ↓
-P7.04 selected-Mac operational proof ← current
+P7.04 selected-Mac operational proof — PASS
         ↓
-P7.05–P7.12 continue hardening the live operating baseline
+P7.05 health/observability/audit/alerting + retention/minimization ← current
+        ↓
+P7.06–P7.12 continue hardening the live operating baseline
 ```
 
-P7.02 passed on exact selected-Mac release `73af746f83271b14670fe22db658dfd55cacb291`. P7.03 subsequently established the bounded durable-state/checkpoint and backup/restore baseline. P7.04 repository implementation is merged but has not yet passed the selected-Mac closure proof.
+P7.02 passed on exact selected-Mac release `73af746f83271b14670fe22db658dfd55cacb291`. P7.03 subsequently established the bounded durable-state/checkpoint and backup/restore baseline. P7.04 is now `Complete / PASS` after repository implementation, six-iteration functional review and selected-Mac Attempt 1. The current canonical action is P7.05.
 
 ## 7. M7 milestone definition
 
@@ -167,6 +172,6 @@ A roadmap phase transition does not itself change lifecycle, production readines
 
 ## 11. Current canonical action
 
-> **P7.04 — selected-Mac persistent access closure proof.**
+> **P7.05 — Health, observability, audit visibility, alerting + retention/minimization.**
 
-Repository implementation is merged and its CI is green. Execute one clean `p7_04_selected_mac_proof.py` run on the selected ООО «Арвектум» Mac mini from exact canonical `main`, against the existing healthy P7.02 runtime and retained P6.05-L4 owner context. Preserve the produced non-canonical attestation and review it canonically. If the proof passes without material objections, close P7.04 and advance to P7.05; otherwise record the failure and remediate without weakening RFC-0003/RFC-0005 authority boundaries.
+P7.04 is `Complete / PASS`. Establish actionable persistent-runtime health indicators, process/resource and restart visibility, bounded operational logging with rotation/retention, alerts for actionable failures, operator visibility into recent governed execution/reconstruction status, and documented blind spots/degradation behavior. Preserve RFC-0006 separation of canonical Events/evidence from non-canonical telemetry, RFC-0003 least privilege/minimization/secret protection, and the existing `Persistent Internal / owner-operated` boundary. `R22 — Persistent Runtime Health Review` follows P7.05 before operational workload expansion.

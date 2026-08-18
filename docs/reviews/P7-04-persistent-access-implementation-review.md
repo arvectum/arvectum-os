@@ -1,17 +1,18 @@
 # P7.04 — Persistent Access Implementation Cross-Review
 
-Status: `Repository implementation PASS / selected-Mac closure pending`
-Date: `2026-08-17`
+Status: `Complete / PASS`
+Date: `2026-08-18`
 Owner: `ООО «Арвектум»`
 Task classification: `platform`
 Reviewed scope: `P7.04 — Persistent identity/operator/service access + least-privilege operations`
 Implementation: [`P7.04 Persistent Identity / Operator / Service Access`](../implementation/P7-04-PERSISTENT-IDENTITY-ACCESS.md)
 Parent baseline: [`P7.01 Persistent Internal Operating Boundary`](../roadmap/P7-01-PERSISTENT-INTERNAL-OPERATING-BASELINE.md) `1.0.1`
 Repository implementation PR: `#35`
+Selected-Mac closure: [`Attempt 1 — Complete / PASS`](P7-04-selected-mac-proof-attempt-1.md)
 
 ## 1. Purpose
 
-This functional cross-review evaluates the P7.04 repository implementation from architecture, identity/authority, security, operations and governance perspectives before selected-Mac operational proof.
+This functional cross-review evaluates the P7.04 repository implementation from architecture, identity/authority, security, operations and governance perspectives and records the final selected-Mac operational closure.
 
 It is not R22, not an ADR acceptance, not a Platform Capability lifecycle transition and not a production-readiness approval.
 
@@ -161,38 +162,56 @@ Repository evidence:
 - GitHub `Reference Python CI` on final repository implementation head: `success`;
 - final-head CI run: `32063442269`.
 
-No material repository-side objection remains.
+No material repository-side objection remained after Iteration 5. The remaining gate was operational selected-Mac evidence.
 
-The remaining gate is operational, not architectural: execute the hardened proof on the selected ООО «Арвектум» Mac mini from a clean exact canonical `main`, with the existing healthy P7.02 runtime and the existing owner-local P6.05-L4 context.
+### Iteration 6 — selected-Mac operational closure
 
-Functional review iterations completed: `5 of maximum 7`.
+Result: `PASS`.
 
-## 4. Current disposition
+Canonical review record:
+
+- [`P7.04 Selected-Mac Persistent Access Proof — Attempt 1`](P7-04-selected-mac-proof-attempt-1.md) — `Complete / PASS`;
+- tested exact canonical `main`: `218e3762975a2fd6f11e8f13d4445bce5f5d7c94`;
+- exact P7.02 runtime release: `73af746f83271b14670fe22db658dfd55cacb291`;
+- proof exit code: `0`;
+- owner-local attestation SHA-256: `5c0a67b15b7fb469bc5933030db0c2e90adfb47c3eb94411c43ba555b7d98659`.
+
+The selected-Mac proof passed every remaining closure condition: attributable existing human owner/operator identity; attributable persistent service identity; default denial; exact Organization/operation/resource scope; explicit local and remote paths; denied ungranted remote lifecycle administration; no service ambient admin; credential rotation fail-closed; revocation fail-closed; reusable-secret minimization; Organizational Authority and consequential approval not supplied; healthy P7.02 runtime before/after with unchanged release; no canonical mutation; no external/product effect.
+
+No new IAM, credential-vault or remote-administration topology was selected. No lifecycle, Production, Stable Product Contract, SLA/support or conformance promotion follows from this result.
+
+Functional review iterations completed: `6 of maximum 7`.
+
+No material objection remains for the declared `Persistent Internal / owner-operated` P7.04 scope.
+
+## 4. Final disposition
 
 Repository implementation: `PASS`.
 
-Selected-Mac operational evidence: `PENDING`.
+Selected-Mac operational evidence: `PASS`.
 
-Therefore P7.04 MUST remain `Current` and MUST NOT yet be represented as `Complete / PASS`. P7.05 does not become the current canonical action until the selected-Mac proof, evidence review and roadmap synchronization close P7.04.
+`P7.04 = Complete / PASS`.
 
-## 5. Closure conditions still required
+The next canonical action is `P7.05 — Health, observability, audit visibility, alerting + retention/minimization`. R22 follows P7.05.
 
-P7.04 may close only after the selected-Mac proof records all required evidence:
+## 5. Closure evidence
 
-- attributable existing human owner/operator identity;
-- attributable persistent service identity;
-- deny-by-default behavior;
-- exact Organization/operation/resource scope;
-- explicit local and remote paths;
-- denied ungranted remote lifecycle administration;
-- no service ambient admin;
-- credential rotation fail-closed;
-- grant revocation fail-closed;
-- reusable credential values absent from registry/attestation;
-- Organizational Authority not provided;
-- consequential approval not provided;
-- healthy P7.02 runtime before/after with unchanged exact runtime release;
-- no canonical mutation;
-- no external/product effect.
+All P7.04 closure conditions are satisfied by the combined repository and selected-Mac evidence:
 
-After successful evidence review, this cross-review can receive the final selected-Mac iteration and move to `Complete / PASS`; only then should roadmaps advance to P7.05.
+- attributable existing human owner/operator identity — `PASS`;
+- attributable persistent service identity — `PASS`;
+- deny-by-default behavior — `PASS`;
+- exact Organization/operation/resource scope — `PASS`;
+- explicit local and remote paths — `PASS`;
+- denied ungranted remote lifecycle administration — `PASS`;
+- no service ambient admin — `PASS`;
+- credential rotation fail-closed — `PASS`;
+- grant/credential revocation fail-closed — `PASS`;
+- reusable credential values absent from canonical evidence — `PASS`;
+- Organizational Authority not provided — `PASS`;
+- consequential approval not provided — `PASS`;
+- healthy P7.02 runtime before/after with unchanged exact release — `PASS`;
+- canonical mutation during proof — `NONE`;
+- external/product effect during proof — `NONE`.
+
+The owner-local raw attestation remains non-canonical operational evidence under RFC-0006. Canonical history records the review result and its digest, not reusable secrets or raw identity material.
