@@ -91,7 +91,7 @@ class ShellTests(unittest.TestCase):
     def test_interrupted_recovery_is_exact_source_and_effect_free(self):
         text = DEPLOY.read_text()
         self.assertIn("recover_interrupted_latest()", text)
-        self.assertIn('work-*)', text.replace('"work-*"', 'work-*)'))
+        self.assertIn('root.glob("work-*")', text)
         self.assertIn('payload.get("Label") != expected_label', text)
         self.assertIn('args.index("--release-sha")', text)
         self.assertIn('restore_plist_and_start "$txdir" "$source"', text)
