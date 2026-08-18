@@ -1,0 +1,162 @@
+from pathlib import Path
+
+
+def read(path: str) -> str:
+    return Path(path).read_text(encoding="utf-8")
+
+
+def write(path: str, text: str) -> None:
+    Path(path).write_text(text, encoding="utf-8")
+
+
+def replace_once(text: str, old: str, new: str, label: str) -> str:
+    count = text.count(old)
+    if count != 1:
+        raise SystemExit(f"{label}: expected exactly one match, found {count}")
+    return text.replace(old, new, 1)
+
+
+review = '''# P7.06-UI2 — Governed Interaction and Preflight Functional Review
+
+Status: `Complete / PASS`
+Date: `2026-08-18`
+Task classification: `platform`
+Scope: repository-side bounded private governed-interaction/preflight boundary
+Architecture basis: Constitution `1.2.0`; RFC-0001, RFC-0003, RFC-0004, RFC-0005, RFC-0006 (`Accepted`); existing CAP-004 audit/reconstruction support
+Implementation PR: `#56`
+Implementation head: `305faafb790e1387cac2aaafa348fbc4ac583797`
+Merge commit: `a22ba781d32f64b7097aeaf05a90651308533811`
+Reference Python CI: run `32159051764` / `#107` = `success`
+
+## Review result
+
+Five functional review/revise iterations were completed. No material objections remain for the declared UI2 repository scope.
+
+The review closed these material findings:
+
+1. malformed-form handling, exact loopback Host / DNS-rebinding boundary and browser-evidence trust boundary were hardened;
+2. exact RFC-0006 source reconstruction was added instead of inferring reconstruction from the in-flight action;
+3. observed `Uncertain` was preserved separately from `Reconciliation required`, with blind retry blocked;
+4. reconstruction disclosure was constrained to the existing CAP-004 `AuditReconstructionView`, preserving `Redacted` / `Deleted` / `Unavailable` / `Missing` semantics;
+5. consequential outcome evidence was scoped to the related Governed Execution Subject so unrelated attempts over the same target cannot be projected into the interaction.
+
+## Exit-scope evidence
+
+The implementation proves the six UI2 flows required by the live-workspace substream:
+
+- exact governed Subject / Version opening;
+- provenance, authorized reconstruction and related Execution evidence;
+- four independent Authorization / Organizational Authority / Data Governance / Consequential Approval states;
+- transient action-intent assembly;
+- entry only through R10 `operator_safety` into the existing Governed Execution / runtime-consistency path;
+- evidence-derived `Blocked` / `Waiting` / observed `Uncertain` / `Reconciliation required` / `Succeeded` presentation.
+
+The private loopback adapter reuses UI1 exact-release, health and read-authorization invariants. A separate P7.04 `workspace.interact` human/local grant permits technical interaction access but explicitly does not satisfy Organizational Authority or consequential approval. POST re-fetches trusted governed evidence, re-runs preflight, requires exact loopback Host, same Origin, process-local CSRF and bounded form input, and accepts only transient `interaction_id` plus CSRF from the browser.
+
+No UI-local direct canonical-write primitive, ambient authority, optimistic-success projection, browser-supplied gate/authority/reconstruction evidence, public/stable route/API/session/frontend contract, lifecycle promotion, Production claim, Stable Product Contract or support/browser commitment is created.
+
+## Closure disposition
+
+`P7.06-UI2 = Complete / PASS` for its repository implementation/review scope.
+
+This does **not** close the overall `P7.06-UI` substream. `P7.06-UI3 — Persistent private operator access` is the next canonical action. `P7.06-UI4` remains responsible for the first real selected-owner interaction proof against the persistent runtime.
+'''
+review_path = Path("docs/reviews/P7-06-UI2-governed-interaction-functional-review.md")
+if review_path.exists():
+    raise SystemExit("UI2 review record already exists unexpectedly")
+review_path.write_text(review, encoding="utf-8")
+
+# Live-workspace substream.
+path = "docs/roadmap/P7-06-LIVE-OPERATOR-WORKSPACE-SUBSTREAM.md"
+text = read(path)
+text = replace_once(text, "Status: `Active / UI2 Current — UI1 Complete / PASS`", "Status: `Active / UI3 Current — UI1/UI2 Complete / PASS`", "substream status")
+text = replace_once(text, "Version: `0.1.5`", "Version: `0.1.6`", "substream version")
+text = replace_once(text, "P7.06-UI2 governed interaction / preflight  ← CURRENT\n        ↓\nP7.06-UI3 persistent local operator access", "P7.06-UI2 governed interaction / preflight\n        ↓ PASS\nP7.06-UI3 persistent local operator access  ← CURRENT", "substream sequence")
+text = replace_once(text, "UI1 is closed. UI3 MUST NOT start canonically before the bounded UI2 interaction/preflight boundary is implemented and reviewed.", "UI1 and UI2 are closed. The UI2 prerequisite for UI3 is satisfied by PR `#56`, five functional review/revise iterations and successful Reference Python CI on the exact implementation head.", "substream prerequisite")
+text = replace_once(text, "### P7.06-UI2 — Governed interaction and preflight\n\nStatus: `Current`.", "### P7.06-UI2 — Governed interaction and preflight\n\nStatus: `Complete / PASS`.", "substream UI2 status")
+anchor = "UI2 MUST preserve the UI1 read-only inspection invariants while adding only a Governed Execution entry/preflight path. No direct canonical write endpoint, ambient authority or optimistic success projection is permitted.\n"
+evidence = '''UI2 MUST preserve the UI1 read-only inspection invariants while adding only a Governed Execution entry/preflight path. No direct canonical write endpoint, ambient authority or optimistic success projection is permitted.
+
+Closure evidence:
+
+- implementation PR `#56`, merged as `a22ba781d32f64b7097aeaf05a90651308533811`;
+- exact reviewed implementation head: `305faafb790e1387cac2aaafa348fbc4ac583797`;
+- [`P7.06-UI2 Governed Interaction and Preflight Functional Review`](../reviews/P7-06-UI2-governed-interaction-functional-review.md) — `Complete / PASS`, five review/revise iterations;
+- Reference Python CI run `32159051764` / `#107`: `success`;
+- six required UI2 flows covered;
+- no UI-local direct canonical write, ambient authority, optimistic success, public/stable interface or selected-owner proof claimed.
+'''
+text = replace_once(text, anchor, evidence, "substream UI2 evidence")
+marker = "## 8. Current status\n"
+if text.count(marker) != 1:
+    raise SystemExit("substream current-status marker mismatch")
+text = text.split(marker, 1)[0] + '''## 8. Current status
+
+`P7.06 core = Complete / PASS` after selected-Mac Attempt 8.
+
+`P7.06-UI1 = Complete / PASS` after repository implementation, bounded real-state admission and selected-Mac Attempt 2 real-state/browser/zero-mutation proof.
+
+`P7.06-UI2 = Complete / PASS` through PR `#56`, exact reviewed head `305faafb790e1387cac2aaafa348fbc4ac583797`, five functional review/revise iterations and Reference Python CI run `32159051764 = success`. The implementation preserves exact Subject/Version/provenance, authorized reconstruction, related Execution evidence, four independent RFC-0005 gate concepts, transient intent, Governed Execution-only consequential entry and evidence-derived blocked/waiting/uncertain/reconciliation-required/succeeded states.
+
+Current canonical action advances to **`P7.06-UI3 — Persistent private operator access`**. UI4 and P7.07 remain pending/downstream. The overall `P7.06-UI` substream remains `Current`; UI2 closure does not manufacture selected-owner live interaction evidence or promote lifecycle, Product Contract, Production, public/stable interface, browser support or SLA/support status.
+'''
+write(path, text)
+
+# Phase 7.
+path = "docs/roadmap/PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md"
+text = read(path)
+text = replace_once(text, "Version: `1.2.8`", "Version: `1.2.9`", "phase7 version")
+text = replace_once(text, "| `P7.06-UI` | Live operator workspace over persistent runtime | Mac mini + browser + GitHub | 🟨 Current — UI2 | `██░░░░░░░░ 25%` |", "| `P7.06-UI` | Live operator workspace over persistent runtime | Mac mini + browser + GitHub | 🟨 Current — UI3 | `█████░░░░░ 50%` |", "phase7 table")
+text = replace_once(text, "Status: `Current — UI2`; UI1 is `Complete / PASS`.", "Status: `Current — UI3`; UI1 and UI2 are `Complete / PASS`.", "phase7 substream status")
+text = replace_once(text, "— `Active / UI2 Current 0.1.5`.", "— `Active / UI3 Current 0.1.6`.", "phase7 substream version")
+text = replace_once(text, "The active sequence is now `UI1 PASS → UI2 governed interaction/preflight → UI3 persistent private operator access → UI4 first real owner interaction proof`.", "The active sequence is now `UI1 PASS → UI2 PASS → UI3 persistent private operator access → UI4 first real owner interaction proof`.", "phase7 sequence")
+target = "`P7.06-UI = PASS` still requires the owner to exercise at least one bounded governed interaction without presentation code becoming authority or a direct canonical-mutation path. UI1 closure alone does not close the overall UI substream."
+replacement = '''`P7.06-UI2 — Governed interaction and preflight` is `Complete / PASS` through PR `#56`, exact reviewed head `305faafb790e1387cac2aaafa348fbc4ac583797`, five functional review/revise iterations and Reference Python CI run `32159051764 = success`. The boundary preserves four independent RFC-0005 gate concepts, authorized RFC-0006/CAP-004 reconstruction, related Execution evidence, uncertain-versus-reconciliation semantics and entry only through existing Governed Execution/operator-safety semantics.
+
+`P7.06-UI = PASS` still requires UI3 persistent private operator access and UI4 owner proof of a real bounded interaction. UI2 repository closure does not close the overall UI substream.'''
+text = replace_once(text, target, replacement, "phase7 UI2 evidence")
+marker = "## 8. Current canonical action\n"
+if text.count(marker) != 1:
+    raise SystemExit("phase7 current-action marker mismatch")
+text = text.split(marker, 1)[0] + '''## 8. Current canonical action
+
+> **P7.06-UI3 — Persistent private operator access.**
+
+P7.06 core, UI1 and UI2 are `Complete / PASS` for their declared scopes. UI2 merged through PR `#56` at `a22ba781d32f64b7097aeaf05a90651308533811`; its exact implementation head passed five functional review/revise iterations and Reference Python CI run `32159051764 = success`.
+
+The next action is to make the private workspace reachable during regular owner-operated use with an exact-release supervised process/adapter lifecycle, bounded listener exposure, no accidental public ingress, P7.04 least-privilege access, secret/log safety, restart/state-integrity behavior and an uninstall/rollback path. UI4 remains the first real owner interaction proof; P7.07/P7.08 remain downstream.
+'''
+write(path, text)
+
+# Master roadmap.
+path = "docs/roadmap/ROADMAP.md"
+text = read(path)
+text = replace_once(text, "Version: `2.55.5`", "Version: `2.55.6`", "roadmap version")
+note_marker = "## 2. Version note\n\n"
+note = '''## 2. Version note
+
+Version `2.55.6` closes `P7.06-UI2 — Governed interaction and preflight` as `Complete / PASS` for its declared bounded repository implementation/review scope. PR `#56` merged the private loopback governed-interaction adapter and typed preflight composition at merge `a22ba781d32f64b7097aeaf05a90651308533811`; exact implementation head `305faafb790e1387cac2aaafa348fbc4ac583797` passed five functional review/revise iterations and Reference Python CI run `32159051764` / `#107 = success`. The six required UI2 flows are covered: exact Subject/Version opening; provenance plus authorized RFC-0006/CAP-004 reconstruction and related Execution evidence; four independent Authorization / Organizational Authority / Data Governance / Consequential Approval states; transient action intent; entry only through existing R10 operator-safety/Governed Execution/runtime-consistency semantics; and evidence-derived blocked/waiting/observed-uncertain/reconciliation-required/succeeded presentation.
+
+UI2 does not create a UI-local direct canonical write path, ambient authority, optimistic-success projection, browser-supplied gate/authority evidence, public/stable route/API/session/frontend contract, lifecycle/Product Contract promotion, external/customer Production, browser-support or SLA/support commitment. The overall `P7.06-UI` substream remains `Current`, advances to `50%`, live-workspace substream version `0.1.6`, active Phase 7 `1.2.9`, and the current canonical action becomes `P7.06-UI3 — Persistent private operator access`. UI4 remains responsible for the first real selected-owner interaction proof.
+
+'''
+text = replace_once(text, note_marker, note, "roadmap version note")
+text = replace_once(text, "Detailed roadmap: [`PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md`](PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md) — `Active 1.2.8`.", "Detailed roadmap: [`PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md`](PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md) — `Active 1.2.9`.", "roadmap phase version")
+text = replace_once(text, "| `P7.06-UI` | Live operator workspace over persistent runtime | 🟨 Current — UI2 | `██░░░░░░░░ 25%` |", "| `P7.06-UI` | Live operator workspace over persistent runtime | 🟨 Current — UI3 | `█████░░░░░ 50%` |", "roadmap UI table")
+text = replace_once(text, "Detailed operator-workspace plan: [`P7-06-LIVE-OPERATOR-WORKSPACE-SUBSTREAM.md`](P7-06-LIVE-OPERATOR-WORKSPACE-SUBSTREAM.md) — `Active / UI2 Current 0.1.5`.", "Detailed operator-workspace plan: [`P7-06-LIVE-OPERATOR-WORKSPACE-SUBSTREAM.md`](P7-06-LIVE-OPERATOR-WORKSPACE-SUBSTREAM.md) — `Active / UI3 Current 0.1.6`.", "roadmap substream version")
+text = replace_once(text, "P7.06-UI2 governed interaction/preflight ← current\n        ↓\nP7.06-UI3 persistent private operator access", "P7.06-UI2 governed interaction/preflight — PASS\n        ↓\nP7.06-UI3 persistent private operator access ← current", "roadmap sequence")
+old = "P7.06-UI1 repository implementation and cross-review passed through PR `#51`; the owner-approved bounded real-state bridge passed through PR `#53`. Selected-Mac Attempt 2 then closed the final real-state blocker on exact canonical/local/runtime release `b1b78ed9772727dda41b2e509675691f978957ec`: the approved retained manifest verified, four independent gate bases passed, one real governed item/checkpoint was admitted and persisted, the second execution was idempotent, the real Subject/exact Version/provenance was browser-visible, and before/after retained-byte digests were unchanged with no network/external effect. `P7.06-UI1 = Complete / PASS`; UI2 is now current. P7.07/P7.08 remain downstream of the declared UI substream sequencing."
+new = old.replace("`P7.06-UI1 = Complete / PASS`; UI2 is now current.", "`P7.06-UI1 = Complete / PASS`. UI2 then passed through PR `#56`, five functional review/revise iterations and Reference Python CI run `32159051764 = success`; `P7.06-UI2 = Complete / PASS`, and UI3 is now current.")
+text = replace_once(text, old, new, "roadmap phase narrative")
+marker = "## 11. Current canonical action\n"
+if text.count(marker) != 1:
+    raise SystemExit("roadmap current-action marker mismatch")
+text = text.split(marker, 1)[0] + '''## 11. Current canonical action
+
+> **P7.06-UI3 — Persistent private operator access.**
+
+P7.06 core, UI1 and UI2 are `Complete / PASS` for their declared scopes. UI2 is closed through PR `#56`, exact reviewed head `305faafb790e1387cac2aaafa348fbc4ac583797`, five functional review/revise iterations and Reference Python CI run `32159051764 = success`; no selected-owner live proof, public/stable interface or lifecycle/Production promotion is inferred from that repository closure.
+
+The next canonical action is to establish persistent private operator access: supervised exact-release workspace process/adapter lifecycle, bounded listener exposure with no accidental public ingress, P7.04 least-privilege checks, secret/log minimization, restart/state-integrity behavior and reversible uninstall/rollback. UI4 remains the first real owner interaction proof, after which P7.07/P7.08 may proceed according to the declared sequence.
+'''
+write(path, text)
