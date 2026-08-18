@@ -1,7 +1,7 @@
 # P7.06 — Live Operator Workspace Substream
 
-Status: `Active / UI1 Current`
-Version: `0.1.1`
+Status: `Active / UI1 Current — Attempt 1 blocked on real retained governed state`
+Version: `0.1.2`
 Created: `2026-08-18`
 Updated: `2026-08-18`
 Owner: `ООО «Арвектум»`
@@ -21,14 +21,16 @@ This substream closes that operator-experience gap for the current `Persistent I
 
 ## 2. Sequencing rule
 
-The live workspace MUST NOT be attached to the selected Mac mini before the first controlled P7.06 update carries and verifies the merged R22 hardening. That prerequisite is now satisfied by [`P7.06 Selected-Mac Governed Deploy Proof — Attempt 8`](../reviews/P7-06-selected-mac-governed-deploy-proof-attempt-8.md), which completed governed update, exact rollback and final re-update on target `4df99c4c66a1b7b93a4b05d7768018b03aa4041b`.
+The live workspace MUST NOT be attached to the selected Mac mini before the first controlled P7.06 update carries and verifies the merged R22 hardening. That prerequisite is satisfied by [`P7.06 Selected-Mac Governed Deploy Proof — Attempt 8`](../reviews/P7-06-selected-mac-governed-deploy-proof-attempt-8.md), which completed governed update, exact rollback and final re-update on target `4df99c4c66a1b7b93a4b05d7768018b03aa4041b`.
 
-Therefore the active sequence is:
+UI1 selected-Mac Attempt 1 subsequently used the proven P7.06 update path to activate exact release `3a2b561a6935a84749552f016db8d1bd69eabf9a`; deployment, browser, authorization, negative-path and zero-mutation checks passed. The attempt remains `BLOCKED` solely because the persistent P7.03 store contained no real retained `canonical-governed-state` item to inspect. See [`P7.06-UI1 Selected-Mac Live-Browser Proof — Attempt 1`](../reviews/P7-06-UI1-selected-mac-proof-attempt-1.md).
+
+Therefore the active sequence remains:
 
 ```text
 P7.06 governed update / rollback proof
         ↓ PASS
-P7.06-UI1 live read-only workspace  ← CURRENT
+P7.06-UI1 live read-only workspace  ← CURRENT / real-state unblock
         ↓
 P7.06-UI2 governed interaction / preflight
         ↓
@@ -38,6 +40,8 @@ P7.06-UI4 owner interaction proof
         ↓ PASS
 P7.07 persistent Tender Operator contour
 ```
+
+UI2 MUST NOT start canonically until UI1 closes.
 
 ## 3. Operating boundary
 
@@ -59,7 +63,7 @@ An owner-controlled loopback/private access method or reversible tunnel MAY be u
 
 ### P7.06-UI1 — Live read-only governed workspace
 
-Status: `Current`.
+Status: `Current — Attempt 1 blocked on absence of real retained governed state`.
 
 Connect the M4 workspace presentation semantics to the persistent runtime through a bounded internal adapter.
 
@@ -82,10 +86,15 @@ The first implementation MAY reuse server-rendered/static HTML patterns or anoth
 Exit evidence:
 
 - browser-visible live state comes from the exact persistent runtime release rather than fixtures;
+- at least one real retained non-fixture governed item can be inspected with Subject / exact Version and provenance context;
 - wrong/unresolved Organization fails closed;
 - unauthorized content/counts do not leak;
 - presentation is demonstrably non-authoritative;
-- no canonical or external mutation occurs.
+- no canonical or external mutation occurs from browsing.
+
+Attempt 1 established all exercised browser/security/read-only conditions but could not establish the real-item inspection condition because the persistent governed-item set was empty.
+
+The current bounded unblock is **not** to insert an arbitrary P7.03 record. P7.03 persistence follows applicable Governed Execution/admission. At least one real item must first be validly admitted under the actual existing owner Organization/Actor context and applicable Product Contract/authority rules, then persisted into P7.03 and inspected through UI1.
 
 ### P7.06-UI2 — Governed interaction and preflight
 
@@ -187,4 +196,8 @@ Completion does not itself create:
 
 `P7.06 core = Complete / PASS` after selected-Mac Attempt 8.
 
-`P7.06-UI1 — Live read-only governed workspace` is the current canonical operator-experience action before P7.06-UI2/UI3/UI4 and before P7.07/P7.08 workload expansion.
+`P7.06-UI1` repository implementation = `PASS` through PR `#51`.
+
+Selected-Mac UI1 Attempt 1 = `BLOCKED` solely because no qualifying real retained governed item existed in the persistent P7.03 store. Exact-release deployment to `3a2b561a6935a84749552f016db8d1bd69eabf9a`, Safari/loopback visibility, exact P7.04 authorization/revocation, wrong-Organization failure closed, mutation-method rejection and zero canonical/external mutation from browsing all passed for the exercised empty-state surface.
+
+Current canonical action: establish at least one real retained canonical governed item through a valid applicable Governed Execution/admission path under the existing owner context, persist that admitted item to P7.03, and re-run the remaining UI1 real-item inspection evidence. `P7.06-UI2` remains pending.
