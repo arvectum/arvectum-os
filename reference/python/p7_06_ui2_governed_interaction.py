@@ -138,7 +138,10 @@ def _read_form(handler: BaseHTTPRequestHandler) -> Mapping[str, str]:
         text = payload.decode("utf-8")
     except UnicodeDecodeError as exc:
         raise UI2BoundaryError("form must be UTF-8") from exc
-    values = parse_qs(text, keep_blank_values=True, strict_parsing=True)
+    try:
+        values = parse_qs(text, keep_blank_values=True, strict_parsing=True)
+    except ValueError as exc:
+        raise UI2BoundaryError("malformed form encoding") from exc
     if set(values) != {"interaction_id", "csrf"}:
         raise UI2BoundaryError("browser submission may contain only interaction_id and csrf")
     if any(len(items) != 1 for items in values.values()):
