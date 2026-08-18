@@ -1,6 +1,6 @@
 # R22 — Persistent Runtime Health Review
 
-Status: `In Progress — remediation implemented; CI and canonical closure pending`
+Status: `Complete / PASS`
 Date: `2026-08-18`
 Owner: `ООО «Арвектум»`
 Task classification: `platform` with `governance` and bounded `product_contract` review
@@ -56,7 +56,7 @@ Review dimensions:
 8. P7.06 update/migration handoff;
 9. Product Contract and lifecycle/commercial non-claims.
 
-Functional review may iterate up to seven times. This record remains `In Progress` until remediation is merged, required CI is green, the resulting state is re-read and the canonical roadmap is synchronized.
+Functional review completed in two iterations of the maximum seven. Iteration 1 returned `REVISE`; iteration 2 returned `PASS` after remediation and full Reference Python CI.
 
 ## 4. Iteration 1 — cross-cutting implementation review
 
@@ -121,13 +121,13 @@ The fix intentionally detects and blocks silent drift rather than automatically 
 
 ## 5. Iteration 2 — post-remediation architecture/security review
 
-Status: `Repository review PASS; CI pending`.
+Result: `PASS`.
 
-The revised implementation was re-read across the R22 dimensions.
+The revised implementation was re-read across the R22 dimensions and then exercised by the complete Reference Python test suite.
 
 ### 5.1 Runtime/service and exact-version boundary
 
-Result: `PASS subject to CI`.
+Result: `PASS`.
 
 The P7.02 runtime remains exact-release pinned and the P7.05 observer now follows the same coherent-release rule. A changed `current` symlink can no longer silently redirect an already-installed observer script because the launchd plist contains an immutable release path.
 
@@ -143,7 +143,7 @@ No backup/restore path authorizes external-effect replay or converts recovery st
 
 ### 5.3 Access, secrets and authority
 
-Result: `PASS subject to CI`.
+Result: `PASS`.
 
 P7.04 still preserves exact Organization/operation/resource/access-path grants and denial by default. Operational access remains explicitly unable to satisfy Organizational Authority or consequential approval.
 
@@ -177,7 +177,28 @@ R22 creates no new product reliance. Tender Operator remains bounded by P6.02 `P
 
 No persistent Tender Operator or Discount Parser operational contour is claimed by R22. Those remain P7.07 and P7.08 work after P7.06.
 
-## 6. P7.06 handoff requirements
+## 6. Verification evidence
+
+Repository remediation and review evidence:
+
+- branch: `review/r22-persistent-runtime-health`;
+- PR: `#39 — R22 — Persistent Runtime Health Review remediation`;
+- remediation/review head tested by PR merge ref: `c8d3dfe3f5bcb22e52a3faf41e1ea630d179d027`;
+- PR merge-test SHA used by GitHub Actions: `5e89e5d46f03f0fd54b12dee2df0f46177f7a77f`;
+- GitHub `Reference Python CI` run: `32111920701`;
+- result: `964/964 PASS`;
+- architecture fitness job: `Full reference test suite` — `success`.
+
+New regression evidence observed green in that run includes:
+
+- exact-release P7.05 observer pin;
+- fail-closed observer lifecycle/unloaded-state handling;
+- selected-Mac proof rejection on runtime-release mismatch;
+- fail-closed detection of orphan/unrecognized reusable credential plaintext.
+
+No material objection remained after iteration 2.
+
+## 7. P7.06 handoff requirements
 
 R22 does not itself deploy the remediation to the live selected Mac mini, because doing so before P7.06 would turn an ad-hoc reinstall into the very update path that P7.06 exists to govern.
 
@@ -197,7 +218,7 @@ P7.06 must preserve at least:
 
 Until that first P7.06 controlled update is proven, the existing selected Mac remains in the already-proven P7.05 owner-operated state and operational workload expansion stays blocked by roadmap sequencing.
 
-## 7. ADR / stable-boundary disposition
+## 8. ADR / stable-boundary disposition
 
 `ADR required now: NO`.
 
@@ -205,19 +226,14 @@ R22 remediation does not select a permanent deployment manager, observability ba
 
 Re-open the ADR/stable-boundary gate before any of the existing R21/P7.01 triggers are crossed, including materially constraining cross-product persistence, stable/public service boundaries, shared IAM/key management, public ingress, externally relied-upon observability, Stable Product Contract transition, Active Platform Capability transition or customer Production reliance.
 
-## 8. Current gate state
+## 9. Gate result
 
-R22 cannot be declared `Complete / PASS` yet because repository CI and canonical closure are still pending.
+**R22 result: `Complete / PASS`.**
 
-Required remaining closure actions:
+The combined P7.02–P7.05 persistent-runtime boundary is sufficiently coherent and fail-closed to proceed to the governed deployment/update/rollback work of P7.06, subject to the explicit handoff constraints above.
 
-- [ ] Reference Python CI green on the R22 remediation head;
-- [ ] re-read merged/resulting implementation and review evidence;
-- [ ] update this review to final PASS with exact PR/merge/CI evidence;
-- [ ] synchronize Phase 7 roadmap and canonical `ROADMAP.md`;
-- [ ] merge to canonical `main`;
-- [ ] verify resulting `main` and CI state after merge.
+This PASS means only that the reviewed repository contour has no remaining material R22 objection. It does not claim that the R22 remediation has already been deployed to the selected Mac mini; that deployment is intentionally reserved for the first controlled P7.06 update. It also does not create Production readiness, an `Active` Platform Capability, a Stable Product Contract, a public/stable service or observability boundary, SLA/SLO/support commitments or broader conformance.
 
-If all remaining checks pass, the next canonical action becomes:
+Next canonical action:
 
 > **P7.06 — Governed deploy/update/rollback/version/migration path.**
