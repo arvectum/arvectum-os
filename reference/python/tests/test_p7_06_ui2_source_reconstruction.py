@@ -4,6 +4,11 @@ import inspect
 import unittest
 from datetime import datetime, timezone
 
+from arvectum_os_ref.audit_reconstruction_support import (
+    EvidenceAvailability,
+    EvidenceDisposition,
+    reconstruct_audit_view,
+)
 from arvectum_os_ref.canonical import AuthorityMode, CanonicalRecord
 from arvectum_os_ref.event_provenance import ReconstructionManifest
 from arvectum_os_ref.execution import GovernedVersionPin
@@ -29,6 +34,8 @@ class P706UI2SourceReconstructionTests(unittest.TestCase):
         self.historical_execution_subject = self._id("execution-subject", "historical-execution")
         self.historical_execution_v1 = self._id("execution-version", "historical-execution-v1")
         self.historical_execution_v2 = self._id("execution-version", "historical-execution-v2")
+        self.event_subject = self._id("event-subject", "historical-event")
+        self.event_version = self._id("event-version", "historical-event-v1")
         self.source = CanonicalRecord(
             subject_id=self._id("canonical-subject", "source"),
             version_id=self._id("canonical-version", "source-v2"),
@@ -51,6 +58,10 @@ class P706UI2SourceReconstructionTests(unittest.TestCase):
             predecessor_version_id=None,
         )
         self.manifest = self._manifest(self.source)
+        self.audit_view = reconstruct_audit_view(
+            manifest=self.manifest,
+            organization=self.organization,
+        )
 
     def _id(self, namespace: str, value: str) -> Identity:
         return Identity(namespace, value, self.organization.organization_id.value)
@@ -107,11 +118,9 @@ class P706UI2SourceReconstructionTests(unittest.TestCase):
             lifecycle_status="Succeeded",
         )
         result = GovernedVersionPin.from_record(source)
-        event_subject = self._id("event-subject", "historical-event")
-        event_version = self._id("event-version", "historical-event-v1")
         event = GovernedVersionPin(
-            subject_id=event_subject,
-            version_id=event_version,
+            subject_id=self.event_subject,
+            version_id=self.event_version,
             semantic_type="platform.event",
             authority_scope="platform.event/governed-outcome",
             lifecycle_status="Admitted",
@@ -137,34 +146,33 @@ class P706UI2SourceReconstructionTests(unittest.TestCase):
                 workflow.version_id,
                 source.subject_id,
                 source.version_id,
-                event_subject,
-                event_version,
+                self.event_subject,
+                self.event_version,
             ),
         )
 
-    def test_exact_rfc0006_manifest_is_bound_to_source_and_rendered_without_replay_claim(self) -> None:
+    def test_authorized_cap004_view_is_bound_to_exact_source_and_rendered_without_replay_claim(self) -> None:
         view = build_source_reconstruction_view(
             organization=self.organization,
             source_record=self.source,
-            manifest=self.manifest,
+            audit_view=self.audit_view,
         )
         self.assertEqual(view.state, SourceReconstructionState.AVAILABLE)
         self.assertEqual(view.source_subject_id, self.source.subject_id)
         self.assertEqual(view.source_version_id, self.source.version_id)
-        self.assertEqual(view.execution_subject_id, self.historical_execution_subject)
-        self.assertEqual(view.execution_version_id, self.historical_execution_v2)
+        self.assertIs(view.audit_view, self.audit_view)
         html = render_source_reconstruction_html(view)
         self.assertIn('data-source-reconstruction="available"', html)
         self.assertIn(self.source.version_id.value, html)
         self.assertIn(self.historical_execution_v2.value, html)
-        self.assertIn("platform.canonical-mutation.succeeded", html)
+        self.assertIn("CAP-004 / RFC-0006", html)
         self.assertIn("never repeats an external or consequential effect", html)
 
-    def test_absent_manifest_is_truthfully_unavailable_and_does_not_infer_current_action(self) -> None:
+    def test_absent_authorized_view_is_truthfully_unavailable_and_does_not_infer_current_action(self) -> None:
         view = build_source_reconstruction_view(
             organization=self.organization,
             source_record=self.source,
-            manifest=None,
+            audit_view=None,
         )
         self.assertEqual(view.state, SourceReconstructionState.UNAVAILABLE)
         html = render_source_reconstruction_html(view)
@@ -172,7 +180,7 @@ class P706UI2SourceReconstructionTests(unittest.TestCase):
         self.assertIn("does not infer one from the current action", html)
         self.assertNotIn(self.historical_execution_v2.value, html)
 
-    def test_manifest_for_different_exact_result_version_is_rejected(self) -> None:
+    def test_view_for_different_exact_result_version_is_rejected(self) -> None:
         other = CanonicalRecord(
             subject_id=self.source.subject_id,
             version_id=self._id("canonical-version", "source-v3"),
@@ -190,15 +198,18 @@ class P706UI2SourceReconstructionTests(unittest.TestCase):
             lifecycle_status=self.source.lifecycle_status,
             predecessor_version_id=self.source.version_id,
         )
-        wrong_manifest = self._manifest(other)
+        wrong_view = reconstruct_audit_view(
+            manifest=self._manifest(other),
+            organization=self.organization,
+        )
         with self.assertRaisesRegex(ValueError, "exact inspected source Version"):
             build_source_reconstruction_view(
                 organization=self.organization,
                 source_record=self.source,
-                manifest=wrong_manifest,
+                audit_view=wrong_view,
             )
 
-    def test_manifest_without_source_provenance_to_reconstructed_execution_is_rejected(self) -> None:
+    def test_view_without_source_provenance_to_reconstructed_execution_is_rejected(self) -> None:
         unlinked_source = CanonicalRecord(
             subject_id=self.source.subject_id,
             version_id=self.source.version_id,
@@ -220,16 +231,42 @@ class P706UI2SourceReconstructionTests(unittest.TestCase):
             build_source_reconstruction_view(
                 organization=self.organization,
                 source_record=unlinked_source,
-                manifest=self.manifest,
+                audit_view=self.audit_view,
             )
+
+    def test_redacted_reconstruction_item_does_not_disclose_hidden_source_pin(self) -> None:
+        redacted_view = reconstruct_audit_view(
+            manifest=self.manifest,
+            organization=self.organization,
+            dispositions=(
+                EvidenceDisposition(
+                    version_id=self.event_version,
+                    availability=EvidenceAvailability.REDACTED,
+                    reason="operator not entitled to Event source details",
+                ),
+            ),
+        )
+        view = build_source_reconstruction_view(
+            organization=self.organization,
+            source_record=self.source,
+            audit_view=redacted_view,
+        )
+        html = render_source_reconstruction_html(view)
+        self.assertIn("Redacted", html)
+        self.assertIn(self.event_version.value, html)
+        self.assertNotIn("event-subject:historical-event", html)
+        self.assertNotIn("semantic type platform.event", html)
+        self.assertIn("Governed source details are not disclosed", html)
+        self.assertIn("Evidence complete: no", html)
 
     def test_http_adapter_has_separate_trusted_reconstruction_provider_not_browser_field(self) -> None:
         signature = inspect.signature(ui2.make_server)
         self.assertIn("reconstruction_provider", signature.parameters)
         source = inspect.getsource(ui2)
+        self.assertIn("AuditReconstructionView", source)
         self.assertIn("build_source_reconstruction_view", source)
         self.assertIn("render_source_reconstruction_html", source)
-        self.assertNotIn('"reconstruction"}', source)
+        self.assertNotIn("ReconstructionManifest", source)
         self.assertIn(
             'set(values) != {"interaction_id", "csrf"}',
             source,
