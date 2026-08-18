@@ -5,11 +5,10 @@ on:
     paths:
       - "reference/python/**"
       - ".github/workflows/reference-python-ci.yml"
-      - "scripts/p7_06_ui2_canonical_sync.py"
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: reference-python-ci-${{ github.workflow }}-${{ github.ref }}
@@ -17,16 +16,17 @@ concurrency:
 
 jobs:
   test:
-    name: Full reference test suite and UI2 closure sync
+    name: Full reference test suite
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
+    defaults:
+      run:
+        working-directory: reference/python
+
     steps:
-      - name: Check out PR branch
+      - name: Check out repository
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref }}
-          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -34,20 +34,4 @@ jobs:
           python-version: "3.12"
 
       - name: Run architecture fitness tests
-        working-directory: reference/python
         run: python -m unittest discover -s tests -v
-
-      - name: Apply asserted canonical UI2 closure sync
-        run: python scripts/p7_06_ui2_canonical_sync.py
-
-      - name: Restore ordinary CI workflow and remove one-shot script
-        run: |
-          git fetch origin main
-          git checkout origin/main -- .github/workflows/reference-python-ci.yml
-          rm scripts/p7_06_ui2_canonical_sync.py
-          git config user.name "arvectum-roadmap-bot"
-          git config user.email "actions@users.noreply.github.com"
-          git add docs .github/workflows/reference-python-ci.yml scripts/p7_06_ui2_canonical_sync.py
-          git diff --cached --check
-          git commit -m "P7.06-UI2: close review and advance roadmap to UI3"
-          git push origin HEAD:${{ github.head_ref }}
