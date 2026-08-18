@@ -103,6 +103,12 @@ class P706CurrentPointerForensicsTests(unittest.TestCase):
             (root / "current").symlink_to(target)
             self.assertEqual(f._current_observation(root), "a" * 40)
 
+    def test_current_observation_marks_invalid_non_symlink(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            (root / "current").write_text("not-a-symlink", encoding="utf-8")
+            self.assertEqual(f._current_observation(root), "NON_SYMLINK")
+
     def test_protected_digests_detect_change(self):
         with tempfile.TemporaryDirectory() as td:
             root = Path(td)
