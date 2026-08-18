@@ -21,7 +21,13 @@ class ShellTests(unittest.TestCase):
     def test_r22_and_governed_sequence_guards_present(self):
         text = DEPLOY.read_text()
         self.assertIn("R22_SHA=", text)
-        self.assertLess(text.index('backup_preupdate "$source"'), text.index('sh "$P705" uninstall'))
+        update_start = text.index("update_runtime()")
+        update_end = text.index("rollback_last()", update_start)
+        update = text[update_start:update_end]
+        self.assertLess(
+            update.index('backup_preupdate "$source"'),
+            update.index('sh "$P705" uninstall'),
+        )
         self.assertIn("compatibility/migration preflight rejected target", text)
         self.assertIn("rollback_and_record_failure", text)
         self.assertIn("restore_plist_and_start", text)
@@ -92,6 +98,10 @@ class ShellTests(unittest.TestCase):
         text = DEPLOY.read_text()
         self.assertIn("recover_interrupted_latest()", text)
         self.assertIn('root.glob("work-*")', text)
+        self.assertIn('not any(path.glob("failure-rollback-*.json"))', text)
+        self.assertIn('not any(path.glob("rollback-payload-*.json"))', text)
+        self.assertIn('not any(path.glob("interrupted-recovery-*.json"))', text)
+        self.assertIn('not (path / "transaction-payload.json").exists()', text)
         self.assertIn('payload.get("Label") != expected_label', text)
         self.assertIn('args.index("--release-sha")', text)
         self.assertIn('restore_plist_and_start "$txdir" "$source"', text)
