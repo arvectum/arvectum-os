@@ -67,6 +67,28 @@ current_python() {
   printf '%s/venvs/%s/bin/python\n' "$RUNTIME_ROOT" "$rel"
 }
 
+replace_current_release() {
+  prepared="$RUNTIME_ROOT/current.new"
+  current="$RUNTIME_ROOT/current"
+  "$PYTHON_BIN" - "$prepared" "$current" <<'PY'
+import os
+import stat
+import sys
+
+source, destination = sys.argv[1:]
+if not os.path.islink(source):
+    raise SystemExit("prepared current release pointer is not a symbolic link")
+try:
+    mode = os.lstat(destination).st_mode
+except FileNotFoundError:
+    pass
+else:
+    if not stat.S_ISLNK(mode):
+        raise SystemExit("current release pointer exists and is not a symbolic link")
+os.replace(source, destination)
+PY
+}
+
 is_loaded() { launchctl print "$SERVICE_TARGET" >/dev/null 2>&1; }
 
 service_pid() {
@@ -214,7 +236,8 @@ EOF
 
   rm -f "$RUNTIME_ROOT/current.new"
   ln -s "$release" "$RUNTIME_ROOT/current.new"
-  mv -f "$RUNTIME_ROOT/current.new" "$RUNTIME_ROOT/current"
+  replace_current_release
+  [ "$(current_release)" = "$HEAD_SHA" ] || fail "current release pointer did not switch to exact target"
   write_plist "$HEAD_SHA"
 
   if is_loaded; then
