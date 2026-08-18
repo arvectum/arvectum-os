@@ -181,3 +181,9 @@ No capability becomes `Active` and no Product Contract becomes `Stable` through 
 Phase 8 remains `Draft / Exploratory` until Phase 7 / M7 closes and the external ecosystem boundary is revalidated against actual operational evidence, external demand, rights, Organization isolation, portability and commercial commitments.
 
 A roadmap phase transition does not itself change lifecycle, production readiness, conformance or commercial status.
+
+## 11. Current canonical action
+
+> **R22 — Persistent Runtime Health Review.**
+
+P7.05 is `Complete / PASS` after selected-Mac Attempt 1 on exact canonical `main`/persistent runtime release `cf60e52c93bf0ef4158cf2c3e26792850a126c70`, with the independent launchd observer loaded, final runtime healthy, exact P7.04-authorized metadata-only audit visibility, actionable alert creation/healthy clearing, retention isolation and minimization all passing without canonical mutation or external effects. Execute R22 before P7.06 or operational workload expansion. R22 reviews the combined P7.02–P7.05 persistent-runtime boundary: service/runtime lifecycle, durable state/recovery, least-privilege access/secrets, observability/telemetry, dependency direction, failure semantics and operator friction.
