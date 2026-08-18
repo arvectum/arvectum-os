@@ -2,10 +2,11 @@
 
 The adapter extends the UI1 read-only boundary with one narrowly scoped request
 entry point.  It does not accept candidate records, gate decisions, authority,
-approval or retry semantics from the browser.  A trusted in-process provider
-supplies a typed GovernedInteractionCase; every request reuses UI1 exact-release
-and read authorization checks, while POST additionally requires its own P7.04
-human/local grant, same-origin/CSRF checks, and a fresh governed preflight.
+approval, reconstruction evidence or retry semantics from the browser.  Trusted
+in-process providers supply a typed GovernedInteractionCase and optional exact
+RFC-0006 ReconstructionManifest; every request reuses UI1 exact-release and read
+authorization checks, while POST additionally requires its own P7.04 human/local
+grant, same-origin/CSRF checks, and a fresh governed preflight.
 
 No public/stable route, session, browser, SDK or frontend contract is created.
 P7.06-UI3 remains responsible for persistent private operator process/access.
@@ -21,12 +22,18 @@ from pathlib import Path
 from typing import Callable, Mapping
 from urllib.parse import parse_qs, urlsplit
 
+from arvectum_os_ref.event_provenance import ReconstructionManifest
 from arvectum_os_ref.governed_interaction_preflight import (
+    GovernedInteractionBlocked,
     GovernedInteractionCase,
     build_governed_interaction_preflight,
     execute_governed_interaction,
     render_governed_interaction_preflight_html,
     render_governed_interaction_result_html,
+)
+from arvectum_os_ref.governed_interaction_reconstruction import (
+    build_source_reconstruction_view,
+    render_source_reconstruction_html,
 )
 from arvectum_os_ref.identity import Identity
 
@@ -41,6 +48,7 @@ MAX_FORM_BYTES = 4096
 MAX_INTERACTION_ID_CHARS = 128
 
 InteractionProvider = Callable[[str], GovernedInteractionCase | None]
+ReconstructionProvider = Callable[[str], ReconstructionManifest | None]
 
 
 class UI2Error(RuntimeError):
@@ -104,6 +112,21 @@ def _provider_case(
     if case.interaction_id != interaction_id:
         raise UI2BoundaryError("trusted interaction identifier continuity mismatch")
     return case
+
+
+def _provider_reconstruction(
+    provider: ReconstructionProvider | None,
+    interaction_id: str,
+) -> ReconstructionManifest | None:
+    if provider is None:
+        return None
+    try:
+        manifest = provider(interaction_id)
+    except Exception as exc:
+        raise UI2BoundaryError("trusted reconstruction provider is unavailable") from exc
+    if manifest is not None and not isinstance(manifest, ReconstructionManifest):
+        raise UI2BoundaryError("trusted reconstruction provider returned invalid evidence")
+    return manifest
 
 
 def _interaction_id_from_get(path: str) -> str:
@@ -240,6 +263,7 @@ def make_server(
     credential_id: str,
     credential_file: Path,
     interaction_provider: InteractionProvider,
+    reconstruction_provider: ReconstructionProvider | None = None,
 ) -> ThreadingHTTPServer:
     """Build the bounded UI2 server; persistent supervision remains P7.06-UI3."""
 
@@ -248,6 +272,8 @@ def make_server(
         raise UI2BoundaryError("port must be between 0 and 65535")
     if not callable(interaction_provider):
         raise UI2BoundaryError("interaction_provider must be callable")
+    if reconstruction_provider is not None and not callable(reconstruction_provider):
+        raise UI2BoundaryError("reconstruction_provider must be callable when supplied")
 
     # Preserve UI1 exact-release/health/read-access startup invariants.
     ui1.build_live_snapshot(
@@ -284,6 +310,19 @@ def make_server(
                 credential_file=credential_file,
             )
 
+        def _reconstruction_html(
+            self,
+            case: GovernedInteractionCase,
+            interaction_id: str,
+        ) -> str:
+            manifest = _provider_reconstruction(reconstruction_provider, interaction_id)
+            view = build_source_reconstruction_view(
+                organization=case.organization,
+                source_record=case.source_record,
+                manifest=manifest,
+            )
+            return render_source_reconstruction_html(view)
+
         def _get(self) -> None:
             parsed = urlsplit(self.path)
             try:
@@ -311,6 +350,8 @@ def make_server(
                     interaction_id=interaction_id,
                     csrf_token=csrf_token,
                 )
+                if not isinstance(preflight, GovernedInteractionBlocked):
+                    body += self._reconstruction_html(case, interaction_id)
                 _write_html(self, HTTPStatus.OK, _interaction_document(snapshot, body))
             except ui1.UI1AccessDenied:
                 _write_html(self, HTTPStatus.FORBIDDEN, ui1.render_blocked_html())
@@ -349,12 +390,22 @@ def make_server(
                     _write_html(self, HTTPStatus.NOT_FOUND, _blocked_html())
                     return
 
-                # Security boundary: do not trust the GET/form/button state.  The
-                # governed preflight, source authorization freshness and P7.04
-                # technical access are all re-evaluated in this POST.
+                # Security boundary: do not trust GET/form/button state.  The
+                # governed preflight, source authorization freshness, optional
+                # reconstruction binding and P7.04 technical access are all
+                # re-evaluated in this POST before any governed action request.
+                preflight_for_evidence = build_governed_interaction_preflight(
+                    snapshot.workspace,
+                    case=case,
+                )
+                reconstruction_html = ""
+                if not isinstance(preflight_for_evidence, GovernedInteractionBlocked):
+                    reconstruction_html = self._reconstruction_html(case, interaction_id)
+
                 result = execute_governed_interaction(snapshot.workspace, case=case)
                 body = (
                     render_governed_interaction_preflight_html(result.preflight)
+                    + reconstruction_html
                     + render_governed_interaction_result_html(result)
                 )
                 _write_html(self, HTTPStatus.OK, _interaction_document(snapshot, body))
