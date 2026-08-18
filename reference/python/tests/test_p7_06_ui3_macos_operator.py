@@ -102,6 +102,18 @@ class UI3MacOSOperatorTests(unittest.TestCase):
         status = text[status_start:restart_start]
         self.assertIn('verify_private_material "$rel"', status)
 
+    def test_reconcile_uses_hardened_controller_for_historical_release(self):
+        text = SERVICE.read_text(encoding="utf-8")
+        start = text.index("reconcile_after_deploy()")
+        end = text.index("governed_update()", start)
+        reconcile = text[start:end]
+        self.assertIn('script=$(release_script "$rel")', reconcile)
+        self.assertIn("install_service >/dev/null", reconcile)
+        self.assertIn("status_service >/dev/null", reconcile)
+        self.assertIn("installed-exact-release", reconcile)
+        self.assertNotIn('sh "$next" install', reconcile)
+        self.assertNotIn('sh "$next" status', reconcile)
+
     def test_governed_deploy_wrapper_quiesces_and_reconciles_ui3(self):
         text = SERVICE.read_text(encoding="utf-8")
         update_start = text.index("governed_update()")
@@ -113,7 +125,7 @@ class UI3MacOSOperatorTests(unittest.TestCase):
         rollback = text[rollback_start:rollback_end]
         self.assertLess(rollback.index("stop_service"), rollback.index('sh "$deploy" rollback-last'))
         self.assertLess(rollback.index('sh "$deploy" rollback-last'), rollback.index("reconcile_after_deploy"))
-        self.assertIn('sh "$next" install', text)
+        self.assertIn("UI3=installed-exact-release", text)
         self.assertIn("UI3=absent-in-release", text)
         self.assertIn("use governed-update/governed-rollback-last", text)
 
