@@ -3,7 +3,9 @@
 The underlying runtime intentionally keeps an uncertain consequential attempt
 separate from any later reconciliation decision.  UI2 must preserve that
 separation even when action readiness correctly blocks blind retry and requires
-reconciliation before another effect can be attempted.
+reconciliation before another effect can be attempted.  Outcome inspection is
+scoped to the related Governed Execution Subject rather than the latest attempt
+for some other execution over the same canonical target lineage.
 """
 
 from __future__ import annotations
@@ -54,15 +56,24 @@ class ConsequentialOutcomeEvidence:
 
 def inspect_consequential_outcome_evidence(
     runtime_state: RuntimeConsistencyState,
+    *,
+    execution_subject_id: Identity,
 ) -> ConsequentialOutcomeEvidence:
-    """Expose the latest observed attempt without turning it into authority."""
+    """Expose the latest attempt for one exact related Execution Subject."""
 
     if not isinstance(runtime_state, RuntimeConsistencyState):
         raise ValueError("consequential outcome inspection requires RuntimeConsistencyState")
-    if not runtime_state.attempts:
+    if not isinstance(execution_subject_id, Identity):
+        raise ValueError("consequential outcome inspection requires exact Execution Subject")
+    relevant = tuple(
+        attempt
+        for attempt in runtime_state.attempts
+        if attempt.execution_subject_id == execution_subject_id
+    )
+    if not relevant:
         return ConsequentialOutcomeEvidence(state=ObservedConsequentialState.NONE)
 
-    latest = runtime_state.attempts[-1]
+    latest = relevant[-1]
     if latest.outcome is ConsequentialOutcome.UNCERTAIN:
         state = ObservedConsequentialState.UNCERTAIN
         reconciliation_required = True
@@ -94,7 +105,7 @@ def render_consequential_outcome_evidence_html(
         return (
             '<section data-observed-consequential-state="none">'
             "<h3>Observed consequential outcome</h3>"
-            "<p>No prior consequential attempt is recorded for this runtime state.</p>"
+            "<p>No prior consequential attempt is recorded for this Governed Execution.</p>"
             "</section>"
         )
 
