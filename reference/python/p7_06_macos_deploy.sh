@@ -1,0 +1,295 @@
+#!/bin/sh
+set -eu
+
+RUNTIME_ROOT=${ARVECTUM_P7_02_ROOT:-"$HOME/Library/Application Support/ArvectumOS/persistent-internal"}
+SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+REPO_ROOT=$(CDPATH= cd -- "$SCRIPT_DIR/../.." && pwd)
+P702="$SCRIPT_DIR/p7_02_macos_service.sh"
+P705="$SCRIPT_DIR/p7_05_macos_observer.sh"
+P706="$SCRIPT_DIR/p7_06_governed_deploy.py"
+RUNTIME_LABEL="com.arvectum.os.persistent-internal"
+OBSERVER_LABEL="com.arvectum.os.p7-05-observer"
+DOMAIN="gui/$(id -u)"
+RUNTIME_TARGET="$DOMAIN/$RUNTIME_LABEL"
+OBSERVER_TARGET="$DOMAIN/$OBSERVER_LABEL"
+RUNTIME_PLIST="$HOME/Library/LaunchAgents/$RUNTIME_LABEL.plist"
+OBSERVER_PLIST="$HOME/Library/LaunchAgents/$OBSERVER_LABEL.plist"
+LOCK_DIR="$RUNTIME_ROOT/run/p7-06-deploy.lock"
+R22_SHA="950a5a8e0258dd555db4a97e5622d64951bcf6fe"
+
+fail() { printf '%s\n' "P7.06 deploy FAIL: $*" >&2; exit 1; }
+info() { printf '%s\n' "P7.06 deploy: $*"; }
+assert_macos() { [ "$(uname -s)" = "Darwin" ] || fail "macOS is required for the selected-Mac adapter"; }
+
+assert_canonical_checkout() {
+  git -C "$REPO_ROOT" rev-parse --is-inside-work-tree >/dev/null 2>&1 || fail "source is not a Git checkout"
+  [ "$(git -C "$REPO_ROOT" branch --show-current)" = "main" ] || fail "canonical checkout must be on main"
+  origin=$(git -C "$REPO_ROOT" remote get-url origin 2>/dev/null || true)
+  case "$origin" in
+    *github.com/arvectum/arvectum-os.git|*github.com/arvectum/arvectum-os) ;;
+    *) fail "origin is not canonical arvectum/arvectum-os: $origin" ;;
+  esac
+  [ -z "$(git -C "$REPO_ROOT" status --porcelain)" ] || fail "canonical checkout must be clean"
+  git -C "$REPO_ROOT" fetch --quiet origin main
+  git -C "$REPO_ROOT" merge --ff-only --quiet origin/main
+  head=$(git -C "$REPO_ROOT" rev-parse HEAD)
+  [ "$head" = "$(git -C "$REPO_ROOT" rev-parse origin/main)" ] || fail "local main must equal origin/main"
+  git -C "$REPO_ROOT" merge-base --is-ancestor "$R22_SHA" "$head" || fail "target release must include merged R22 hardening"
+  printf '%s\n' "$head"
+}
+
+prepare_target() {
+  target=$1
+  release="$RUNTIME_ROOT/releases/$target"
+  tmp="$RUNTIME_ROOT/releases/.p7-06-verify-$target-$$"
+  mkdir -p "$RUNTIME_ROOT/releases" "$RUNTIME_ROOT/venvs"
+  rm -rf "$tmp"; mkdir -p "$tmp"
+  git -C "$REPO_ROOT" archive --format=tar --prefix=source/ "$target" reference/python > "$tmp/reference-python.tar"
+  archive_sha=$(shasum -a 256 "$tmp/reference-python.tar" | awk '{print $1}')
+  tar -xf "$tmp/reference-python.tar" -C "$tmp"
+  cat > "$tmp/release-manifest.json" <<EOF
+{"canonical_repository":"arvectum/arvectum-os","release_sha":"$target","reference_python_archive_sha256":"$archive_sha","runtime_classification":"Persistent Internal / owner-operated","network_listener_mode":"none"}
+EOF
+  if [ -e "$release" ]; then
+    [ -d "$release/source/reference/python" ] || fail "existing target release is incomplete"
+    stored=$(shasum -a 256 "$release/reference-python.tar" | awk '{print $1}')
+    [ "$stored" = "$archive_sha" ] || fail "existing target release archive differs from canonical Git archive"
+    cmp -s "$tmp/release-manifest.json" "$release/release-manifest.json" || fail "existing target release manifest mismatch"
+    diff -qr "$tmp/source" "$release/source" >/dev/null || fail "existing target release source mismatch"
+    rm -rf "$tmp"
+  else
+    chmod -R a-w "$tmp/source" "$tmp/reference-python.tar" "$tmp/release-manifest.json"
+    mv "$tmp" "$release"
+  fi
+  venv="$RUNTIME_ROOT/venvs/$target"
+  if [ ! -x "$venv/bin/python" ]; then python3 -m venv "$venv"; fi
+}
+
+current_release() {
+  [ -L "$RUNTIME_ROOT/current" ] || fail "current release symlink is missing"
+  basename "$(readlink "$RUNTIME_ROOT/current")"
+}
+
+release_python() { printf '%s/venvs/%s/bin/python\n' "$RUNTIME_ROOT" "$1"; }
+release_source() { printf '%s/releases/%s/source/reference/python\n' "$RUNTIME_ROOT" "$1"; }
+
+acquire_lock() {
+  mkdir -p "$RUNTIME_ROOT/run"
+  chmod 700 "$RUNTIME_ROOT/run"
+  mkdir "$LOCK_DIR" 2>/dev/null || fail "another P7.06 deployment transaction is active"
+  printf '%s\n' "$$" > "$LOCK_DIR/pid"
+  chmod 600 "$LOCK_DIR/pid"
+}
+release_lock() { rm -rf "$LOCK_DIR"; }
+
+wait_loaded() {
+  target=$1
+  i=0
+  while [ "$i" -lt 30 ]; do
+    launchctl print "$target" >/dev/null 2>&1 && return 0
+    i=$((i + 1)); sleep 0.5
+  done
+  return 1
+}
+
+restore_plist_and_start() {
+  txdir=$1
+  rel=$2
+  old_runtime="$txdir/pre-runtime.plist"
+  old_observer="$txdir/pre-observer.plist"
+  [ -f "$old_runtime" ] || fail "rollback runtime plist evidence missing"
+  [ -f "$old_observer" ] || fail "rollback observer plist evidence missing"
+  [ -d "$RUNTIME_ROOT/releases/$rel" ] || fail "rollback release is no longer installed: $rel"
+  [ -x "$(release_python "$rel")" ] || fail "rollback release Python missing"
+
+  launchctl bootout "$RUNTIME_TARGET" >/dev/null 2>&1 || true
+  launchctl bootout "$OBSERVER_TARGET" >/dev/null 2>&1 || true
+  rm -f "$RUNTIME_ROOT/current"
+  ln -s "$RUNTIME_ROOT/releases/$rel" "$RUNTIME_ROOT/current"
+
+  mkdir -p "$HOME/Library/LaunchAgents" "$RUNTIME_ROOT/service"
+  cp "$old_runtime" "$RUNTIME_PLIST"
+  cp "$old_runtime" "$RUNTIME_ROOT/service/$RUNTIME_LABEL.plist"
+  chmod 600 "$RUNTIME_PLIST" "$RUNTIME_ROOT/service/$RUNTIME_LABEL.plist"
+  launchctl bootstrap "$DOMAIN" "$RUNTIME_PLIST"
+  launchctl kickstart "$RUNTIME_TARGET" >/dev/null 2>&1
+  wait_loaded "$RUNTIME_TARGET" || fail "rollback runtime did not load"
+  py=$(release_python "$rel")
+  runtime="$(release_source "$rel")/p7_02_persistent_runtime.py"
+  i=0
+  until "$py" "$runtime" check --runtime-root "$RUNTIME_ROOT" --expected-release "$rel" --max-age-seconds 20 >/dev/null 2>&1; do
+    [ "$i" -lt 30 ] || fail "rollback runtime did not become healthy"
+    i=$((i + 1)); sleep 0.5
+  done
+
+  cp "$old_observer" "$OBSERVER_PLIST"
+  chmod 600 "$OBSERVER_PLIST"
+  launchctl bootstrap "$DOMAIN" "$OBSERVER_PLIST"
+  launchctl kickstart "$OBSERVER_TARGET" >/dev/null 2>&1
+  wait_loaded "$OBSERVER_TARGET" || fail "rollback observer did not load"
+  "$P705" status >/dev/null
+}
+
+backup_preupdate() {
+  rel=$1
+  py=$(release_python "$rel")
+  durable="$(release_source "$rel")/p7_03_durable_state.py"
+  "$py" "$durable" verify --runtime-root "$RUNTIME_ROOT" >/dev/null
+  output=$($py "$durable" backup --runtime-root "$RUNTIME_ROOT" --release-sha "$rel")
+  backup=$(printf '%s\n' "$output" | sed -n 's/^P7.03 backup PASS archive=\(.*\) sha256=[0-9a-f][0-9a-f]*$/\1/p')
+  sha=$(printf '%s\n' "$output" | sed -n 's/^P7.03 backup PASS archive=.* sha256=\([0-9a-f][0-9a-f]*\)$/\1/p')
+  [ -n "$backup" ] && [ -n "$sha" ] || fail "could not parse exact pre-update backup identity"
+  "$py" "$durable" verify-backup --archive "$backup" >/dev/null
+  [ "$(awk '{print $1}' "$backup.sha256")" = "$sha" ] || fail "backup checksum sidecar does not match backup result"
+  printf '%s|%s\n' "$backup" "$sha"
+}
+
+write_payload() {
+  path=$1; plan_id=$2; source=$3; target=$4; result=$5; backup=$6; backup_sha=$7; runtime_ok=$8; observer_ok=$9; rollback=${10}
+  python3 - "$path" "$plan_id" "$source" "$target" "$result" "$backup" "$backup_sha" "$runtime_ok" "$observer_ok" "$rollback" <<'PY'
+import json, sys
+path, plan_id, source, target, result, backup, backup_sha, runtime_ok, observer_ok, rollback = sys.argv[1:]
+payload = {
+    "plan_id": plan_id,
+    "source_release": source,
+    "target_release": target,
+    "result": result,
+    "backup_path": backup,
+    "backup_sha256": backup_sha,
+    "runtime_release_verified": runtime_ok == "true",
+    "observer_release_verified": observer_ok == "true",
+    "rollback_disposition": rollback,
+    "canonical_mutation_performed_by_deploy": False,
+    "product_external_effect_invoked": False,
+    "historical_effect_replay_invoked": False,
+}
+with open(path, "w", encoding="utf-8") as handle:
+    json.dump(payload, handle, ensure_ascii=False, sort_keys=True, indent=2); handle.write("\n")
+PY
+  chmod 600 "$path"
+}
+
+rollback_and_record_failure() {
+  reason=$1
+  restore_plist_and_start "$txdir" "$source"
+  payload="$txdir/failure-rollback-$(date -u '+%Y%m%dT%H%M%SZ').json"
+  write_payload "$payload" "$plan_id" "$source" "$target" ROLLED_BACK "$backup" "$backup_sha" true true "executed after failed update: $reason; exact source release restored; backup retained and not replayed"
+  tx=$(python3 "$P706" record --runtime-root "$RUNTIME_ROOT" --payload "$payload" --json || true)
+  if [ -n "$tx" ]; then
+    txid=$(printf '%s' "$tx" | python3 -c 'import json,sys; print(json.load(sys.stdin)["transaction_id"])' 2>/dev/null || true)
+    info "failed update rolled back transaction=${txid:-record-unreadable}"
+  else
+    info "failed update rolled back; transaction evidence recording also failed (operator investigation required)"
+  fi
+  fail "$reason; source release restored"
+}
+
+preflight() {
+  decision_ref=${1:-}
+  [ -n "$decision_ref" ] || fail "decision-ref is required"
+  assert_macos
+  target=$(assert_canonical_checkout)
+  source=$(current_release)
+  [ "$source" != "$target" ] || fail "canonical target is already the active release"
+  prepare_target "$target"
+  python3 "$P706" preflight --runtime-root "$RUNTIME_ROOT" --target-release "$target" --decision-ref "$decision_ref"
+}
+
+update_runtime() {
+  decision_ref=${1:-}
+  [ -n "$decision_ref" ] || fail "decision-ref is required"
+  assert_macos
+  command -v launchctl >/dev/null 2>&1 || fail "launchctl unavailable"
+  source=$(current_release)
+  target=$(assert_canonical_checkout)
+  [ "$source" != "$target" ] || fail "canonical target is already the active release"
+  "$P702" status >/dev/null
+  "$P705" status >/dev/null
+  prepare_target "$target"
+  plan=$(python3 "$P706" preflight --runtime-root "$RUNTIME_ROOT" --target-release "$target" --decision-ref "$decision_ref" --json) || fail "compatibility/migration preflight rejected target"
+  plan_id=$(printf '%s' "$plan" | python3 -c 'import json,sys; print(json.load(sys.stdin)["plan_id"])')
+
+  acquire_lock
+  trap 'release_lock' EXIT HUP INT TERM
+  stamp=$(date -u '+%Y%m%dT%H%M%SZ')
+  txdir="$RUNTIME_ROOT/evidence/p7-06/work-$stamp-$$"
+  mkdir -p "$txdir"; chmod 700 "$txdir"
+  cp "$RUNTIME_PLIST" "$txdir/pre-runtime.plist"
+  cp "$OBSERVER_PLIST" "$txdir/pre-observer.plist"
+  chmod 600 "$txdir/pre-runtime.plist" "$txdir/pre-observer.plist"
+
+  backup_info=$(backup_preupdate "$source")
+  backup=${backup_info%%|*}; backup_sha=${backup_info#*|}
+  info "pre-update backup PASS sha256=$backup_sha"
+
+  "$P705" uninstall
+  "$P702" stop
+  if ! "$P702" install >/dev/null; then rollback_and_record_failure "target activation failed"; fi
+  [ "$(current_release)" = "$target" ] || rollback_and_record_failure "target release did not become current"
+  if ! "$P702" status >/dev/null; then rollback_and_record_failure "target runtime exact-release health verification failed"; fi
+  if ! "$P705" install >/dev/null; then rollback_and_record_failure "observer re-pin failed"; fi
+  if ! "$P705" status >/dev/null; then rollback_and_record_failure "observer exact-release verification failed"; fi
+
+  payload="$txdir/transaction-payload.json"
+  write_payload "$payload" "$plan_id" "$source" "$target" PASS "$backup" "$backup_sha" true true "safe: unchanged P7.03 store schema; exact release re-pin available"
+  tx=$(python3 "$P706" record --runtime-root "$RUNTIME_ROOT" --payload "$payload" --json)
+  txid=$(printf '%s' "$tx" | python3 -c 'import json,sys; print(json.load(sys.stdin)["transaction_id"])')
+  python3 - "$RUNTIME_ROOT/run/p7-06-last-success.json" "$txdir" "$txid" "$source" "$target" "$plan_id" "$backup" "$backup_sha" <<'PY'
+import json, os, sys
+path, txdir, txid, source, target, plan, backup, backup_sha = sys.argv[1:]
+with open(path, "w", encoding="utf-8") as h:
+    json.dump({"transaction_id":txid,"work_dir":txdir,"source_release":source,"target_release":target,"plan_id":plan,"backup_path":backup,"backup_sha256":backup_sha}, h, sort_keys=True, indent=2); h.write("\n")
+os.chmod(path, 0o600)
+PY
+  info "update PASS source=$source target=$target transaction=$txid"
+  release_lock; trap - EXIT HUP INT TERM
+}
+
+rollback_last() {
+  assert_macos
+  pointer="$RUNTIME_ROOT/run/p7-06-last-success.json"
+  [ -f "$pointer" ] || fail "no successful P7.06 transaction is available for rollback"
+  source=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["source_release"])' "$pointer")
+  target=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["target_release"])' "$pointer")
+  txdir=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["work_dir"])' "$pointer")
+  plan_id=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["plan_id"])' "$pointer")
+  backup=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["backup_path"])' "$pointer")
+  backup_sha=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["backup_sha256"])' "$pointer")
+  [ "$(current_release)" = "$target" ] || fail "rollback source mismatch: active release is not transaction target"
+  acquire_lock; trap 'release_lock' EXIT HUP INT TERM
+  "$P705" uninstall >/dev/null || true
+  "$P702" stop >/dev/null || true
+  restore_plist_and_start "$txdir" "$source"
+  payload="$txdir/rollback-payload-$(date -u '+%Y%m%dT%H%M%SZ').json"
+  write_payload "$payload" "$plan_id" "$source" "$target" ROLLED_BACK "$backup" "$backup_sha" true true "executed: exact source release re-pin; durable schema unchanged; backup retained and not restored"
+  tx=$(python3 "$P706" record --runtime-root "$RUNTIME_ROOT" --payload "$payload" --json)
+  txid=$(printf '%s' "$tx" | python3 -c 'import json,sys; print(json.load(sys.stdin)["transaction_id"])')
+  info "rollback PASS active=$source from_target=$target transaction=$txid"
+  release_lock; trap - EXIT HUP INT TERM
+}
+
+status_runtime() {
+  assert_macos
+  "$P702" status
+  "$P705" status
+  python3 "$P706" status --runtime-root "$RUNTIME_ROOT" --json
+}
+
+usage() {
+  cat <<EOF
+Usage: $0 preflight <decision-ref>|update <decision-ref>|rollback-last|status
+
+P7.06 is a private owner-operated deployment adapter. It pins exact Git releases,
+requires a verified pre-update P7.03 backup, rejects state-format migration until a
+bounded governed executor + rollback proof exists, stops/re-pins runtime+observer
+as one release unit, and never authorizes/replays product or external effects.
+EOF
+}
+
+case "${1:-}" in
+  preflight) preflight "${2:-}" ;;
+  update) update_runtime "${2:-}" ;;
+  rollback-last) rollback_last ;;
+  status) status_runtime ;;
+  *) usage; exit 2 ;;
+esac
