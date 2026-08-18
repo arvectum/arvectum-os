@@ -222,7 +222,6 @@ EOF
   fi
   launchctl enable "$SERVICE_TARGET" >/dev/null 2>&1 || true
   launchctl bootstrap "$DOMAIN" "$LAUNCH_AGENT"
-  launchctl kickstart -k "$SERVICE_TARGET"
   wait_healthy || fail "runtime did not become healthy after install"
   info "install PASS release=$HEAD_SHA"
   status_runtime
