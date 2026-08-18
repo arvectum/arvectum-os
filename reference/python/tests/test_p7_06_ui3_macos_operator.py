@@ -19,6 +19,12 @@ class UI3MacOSOperatorTests(unittest.TestCase):
         self.assertIn('127.0.0.1:$port', text)
         self.assertNotIn('HOST="0.0.0.0"', text)
 
+    def test_listener_validation_accumulates_bad_rows_without_exit_override(self):
+        text = SERVICE.read_text(encoding="utf-8")
+        self.assertIn("bad=1", text)
+        self.assertIn("exit (seen && !bad) ? 0 : 1", text)
+        self.assertNotIn("exit 1; seen=1", text)
+
     def test_launchd_is_exact_release_pinned(self):
         text = SERVICE.read_text(encoding="utf-8")
         self.assertIn("release_python()", text)
