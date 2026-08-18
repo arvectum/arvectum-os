@@ -1,7 +1,7 @@
 # Arvectum OS Phase 7 — Operational / Enterprise Readiness
 
 Status: `Active`
-Version: `1.2.3`
+Version: `1.2.4`
 Created: `2026-08-17`
 Updated: `2026-08-18`
 Owner: `ООО «Арвектум»`
@@ -44,7 +44,7 @@ P7.02 has passed. The selected Mac mini therefore operates in `Persistent Intern
 | `P7.02` | Persistent Mac mini runtime + boot/restart/service lifecycle | Mac mini + GitHub | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.03` | Durable governed state/checkpoint persistence + backup/restore baseline | Mac mini + GitHub | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.04` | Persistent identity/operator/service access + least-privilege operations | Chat + Mac mini + GitHub | 🟩 Complete / PASS | `██████████ 100%` |
-| `P7.05` | Health, observability, audit visibility, alerting + retention/minimization | Mac mini + GitHub | 🟨 Current | `░░░░░░░░░░ 0%` |
+| `P7.05` | Health, observability, audit visibility, alerting + retention/minimization | Mac mini + GitHub | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.06` | Governed deploy/update/rollback/version/migration path | Mac mini + GitHub | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.07` | Persistent Tender Operator operational contour | Mac mini + product environment + GitHub | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.08` | Persistent Discount Parser cross-host operational contour | Windows + Mac mini + GitHub | ⬜ | `░░░░░░░░░░ 0%` |
@@ -58,7 +58,7 @@ P7.02 has passed. The selected Mac mini therefore operates in `Persistent Intern
 | Gate | Trigger | Status | Purpose |
 |---|---|---|---|
 | [`R21 — Operational Boundary Review`](../reviews/R21-operational-boundary-review.md) | after `P7.01`, before material persistent-runtime implementation | 🟩 `Complete / PASS` | prevent persistent use from silently selecting unsupported production, public API, storage, IAM or deployment commitments |
-| `R22 — Persistent Runtime Health Review` | after `P7.05`, before operational workload expansion | ⬜ | review runtime/service boundaries, durability, access, observability, secrets, dependency direction, failure semantics and operator friction |
+| `R22 — Persistent Runtime Health Review` | after `P7.05`, before operational workload expansion | 🟨 `Current` | review runtime/service boundaries, durability, access, observability, secrets, dependency direction, failure semantics and operator friction |
 | `R23 — Recovery / Portability Review` | after `P7.10`, before lifecycle/readiness decisions | ⬜ | verify backup/restore, host-loss recovery, semantic portability, exact identities/versions/provenance and absence of host-specific hidden authority |
 | `R24 — M7 Operational Hardening` | after `P7.11`, before `P7.12` | ⬜ | final bounded architecture/code/security/maintainability/fitness review and required M7 Milestone Code Health Gate |
 
@@ -131,21 +131,27 @@ P7.04 closure does not establish external/customer Production, an `Active` Platf
 
 ### P7.05 — Health, observability, audit visibility, alerting + retention/minimization
 
-Status: `Current`.
+Status: `Complete / PASS`.
 
-Required evidence:
+Canonical evidence:
 
-- liveness/readiness or equivalent health indicators;
-- process/runtime resource visibility proportionate to internal use;
-- failure/restart visibility;
-- bounded operational logs with rotation/retention;
-- separation of canonical Events/evidence from telemetry;
-- no reusable secret/raw sensitive material in ordinary logs;
-- alerts for actionable persistent-runtime failures;
-- operator ability to inspect recent governed execution/reconstruction status;
-- documented blind spots and degradation behavior.
+- [`P7.05 Health, Observability, Audit Visibility, Alerting + Retention / Minimization`](../implementation/P7-05-HEALTH-OBSERVABILITY-AUDIT-RETENTION.md) — `Complete / PASS`;
+- repository implementation PR `#37`, merged at `9999ce6f93bb2874fd4e43135abd1ffe726bbd2f`;
+- final repository implementation head: `60914ee96793cdf40896e4336ce24f5788247b37`;
+- GitHub `Reference Python CI` run `32103615123`: `960/960 PASS`;
+- [`P7.05 Operational Visibility Implementation Review`](../reviews/P7-05-operational-visibility-implementation-review.md) — `Complete / PASS`, four iterations;
+- [`P7.05 Selected-Mac Operational Visibility Proof — Attempt 1`](../reviews/P7-05-selected-mac-proof-attempt-1.md) — `Complete / PASS`;
+- exact tested canonical `main` and persistent runtime release: `cf60e52c93bf0ef4158cf2c3e26792850a126c70`;
+- selected host: `Darwin / arm64`, Python `3.14.7`;
+- selected-Mac attestation SHA-256: `882a3515d05be05742dc811eab36c2cba943f6838d465222b6e52c1be9c0e630`.
 
-**R22 follows P7.05.**
+The selected-Mac proof established an actually loaded independent P7.05 launchd observer, final healthy runtime, actionable alert creation/healthy clearing, exact P7.04-authorized metadata-only audit visibility with no payload exposure, and retention cleanup that removed expired non-canonical telemetry without changing the governed-state tree or deleting canonical state/evidence. Payload and reusable-secret logging remained disabled; no canonical mutation or external/product effect occurred.
+
+Telemetry, raw diagnostics and local alerts remain non-canonical. The `168`-hour diagnostic retention default is owner-local implementation policy rather than an organization-wide legal retention policy. The launchd/stdlib observer remains private and reversible; no observability ADR is required at the current bounded scope.
+
+P7.05 closure does not establish external/customer Production, an `Active` Platform Capability, Stable Product Contract, public/stable observability API, permanent monitoring backend/topology, remote paging, automatic remediation, SLA/SLO/support or conformance promotion.
+
+**R22 follows P7.05 and is now the current canonical action.**
 
 ### P7.06 — Governed deploy/update/rollback/version/migration path
 
@@ -198,6 +204,6 @@ M7 does **not** inherently require external customer Production, public multi-te
 
 ## 8. Current canonical action
 
-> **P7.05 — Health, observability, audit visibility, alerting + retention/minimization.**
+> **R22 — Persistent Runtime Health Review.**
 
-P7.04 is `Complete / PASS` after selected-Mac Attempt 1 on exact canonical `main` with no material review objections. Continue Phase 7 by establishing actionable persistent-runtime health, observability, audit visibility, alerting and bounded retention/minimization while preserving RFC-0006 separation between canonical Events/evidence and non-canonical telemetry, RFC-0003 least-privilege/minimization requirements and the existing `Persistent Internal / owner-operated` scope. After P7.05 closure, execute `R22 — Persistent Runtime Health Review` before operational workload expansion.
+P7.05 is `Complete / PASS` after repository implementation (`960/960 PASS`) and selected-Mac Attempt 1 on exact canonical `main`/persistent runtime release `cf60e52c93bf0ef4158cf2c3e26792850a126c70`. The proof verified the actual independent launchd observer, healthy final runtime, actionable alert path, authorized metadata-only audit visibility, retention isolation, minimization and absence of canonical mutation/external effects. Execute R22 before advancing to P7.06 or expanding operational workload reliance.
