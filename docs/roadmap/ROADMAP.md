@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.55.3`
+Version: `2.55.4`
 Created: `2026-08-07`
 Updated: `2026-08-18`
 Owner: `ООО «Арвектум»`
@@ -14,6 +14,10 @@ This document is the canonical planning source for Arvectum OS development seque
 Future roadmap content is a planning hypothesis until its phase is activated. Roadmap status does not by itself change Platform Capability lifecycle, Product Contract lifecycle, operational environment/readiness, conformance maturity, SLA/support or commercial commitments.
 
 ## 2. Version note
+
+Version `2.55.4` records `P7.06-UI1` selected-Mac live-browser Attempt 1 as `BLOCKED` solely on absence of a qualifying real retained canonical governed item in the persistent P7.03 store. The selected Mac successfully advanced from active release `4df99c4c66a1b7b93a4b05d7768018b03aa4041b` to exact canonical UI1 release `3a2b561a6935a84749552f016db8d1bd69eabf9a` through the existing P7.06 governed update path; preflight/update, verified backup, exact runtime/observer pin, P7.04 human least-privilege access, Safari loopback rendering, wrong-Organization failure closed, grant revocation/re-grant without restart, mutation-method rejection, security headers and zero canonical/external mutation from browsing all passed. Deployment transaction `0a858c2b44709516f49829cde7c8a45c4df6e9316303066ce879f341cbda25c5` and owner-local proof digest `ee153d84917839fb7566794f4227c19ae7eb4efd0de25596a3eaf3dcbb8f5364` preserve bounded non-secret evidence.
+
+The live workspace correctly displayed an authorized empty state: no real `canonical-governed-state` item was available, no `governed-test-fixture` was substituted, and no arbitrary P7.03 record is admitted merely to satisfy UI closure. P7.03 persistence follows applicable Governed Execution/admission; it does not itself create authority or canonical truth. `P7.06-UI1` therefore remains `Current`, `P7.06-UI2` remains `Pending`, and the current canonical action is to establish at least one real retained governed item through a valid applicable Governed Execution/admission path under the existing owner context, persist the admitted item to P7.03, then re-run only the remaining UI1 real-item inspection/closure evidence. The live-workspace substream is synchronized to `0.1.2`. This milestone creates no lifecycle promotion, Product Contract expansion, public/stable UI/API, Production claim, browser matrix or SLA/support commitment.
 
 Version `2.55.3` records the repository-side implementation milestone for `P7.06-UI1 — Live read-only governed workspace` through PR `#51`. The bounded implementation reuses M4 workspace semantics over exact persistent P7.03/P7.05 state, requires an explicit P7.04 human Organization/operation/resource/local grant before protected reads, pins execution to the exact activated P7.06 release, exposes `Discover / Records / Executions / Evidence / Documents / Knowledge`, distinguishes Subject from Exact Version, excludes governed test fixtures, renders no payload bytes, binds only to loopback, exposes only `GET/HEAD`, and fails closed without protected counts/content when authorization, exact release or store integrity is unavailable. Functional repository review required two iterations: iteration 1 found that missing store roots could be represented as empty state and unexpected checkpoint-store entries could be skipped; iteration 2 remediated both conditions and added regression coverage. GitHub `Reference Python CI` run `32132213609` on implementation head `83fb21f19ae99552c8a1a665a94a32e9f008da4c` completed with `success`.
 
@@ -123,7 +127,7 @@ Phase 7 converts validated owner-operated use into a persistent, recoverable, ob
 | `P7.04` | Persistent identity/operator/service access + least-privilege operations | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.05` | Health, observability, audit visibility, alerting + retention/minimization | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.06` | Governed deploy/update/rollback/version/migration path | 🟩 Complete / PASS | `██████████ 100%` |
-| `P7.06-UI` | Live operator workspace over persistent runtime | 🟨 Current — UI1 selected-Mac proof | `░░░░░░░░░░ 0%` |
+| `P7.06-UI` | Live operator workspace over persistent runtime | 🟨 Current — UI1 real-state unblock | `░░░░░░░░░░ 0%` |
 | `P7.07` | Persistent Tender Operator operational contour | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.08` | Persistent Discount Parser cross-host operational contour | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.09` | Operator runbook + incident/uncertain-outcome/recovery drills | ⬜ | `░░░░░░░░░░ 0%` |
@@ -131,7 +135,7 @@ Phase 7 converts validated owner-operated use into a persistent, recoverable, ob
 | `P7.11` | Scoped operational-readiness, lifecycle, conformance + stable-boundary disposition | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.12` | Phase 7 / M7 closure review | ⬜ | `░░░░░░░░░░ 0%` |
 
-Detailed operator-workspace plan: [`P7-06-LIVE-OPERATOR-WORKSPACE-SUBSTREAM.md`](P7-06-LIVE-OPERATOR-WORKSPACE-SUBSTREAM.md) — `Active / UI1 Current 0.1.1`.
+Detailed operator-workspace plan: [`P7-06-LIVE-OPERATOR-WORKSPACE-SUBSTREAM.md`](P7-06-LIVE-OPERATOR-WORKSPACE-SUBSTREAM.md) — `Active / UI1 Current 0.1.2`.
 
 Engineering/quality gates:
 
@@ -161,7 +165,7 @@ R22 Persistent Runtime Health Review — PASS
         ↓
 P7.06 governed deploy/update/rollback/version/migration — PASS
         ↓
-P7.06-UI1 live read-only workspace ← current: selected-Mac proof
+P7.06-UI1 live read-only workspace ← current: real-state admission/persistence unblock
         ↓
 P7.06-UI2 governed interaction/preflight
         ↓
@@ -174,7 +178,7 @@ P7.07–P7.12 workload expansion + hardening
 
 P7.02 passed on exact selected-Mac release `73af746f83271b14670fe22db658dfd55cacb291`. P7.03 subsequently established the bounded durable-state/checkpoint and backup/restore baseline. P7.04 is `Complete / PASS` after repository implementation, six-iteration functional review and selected-Mac Attempt 1. P7.05 is `Complete / PASS` after PR `#37`, `960/960` Reference Python CI, four-iteration functional review and selected-Mac Attempt 1 on exact canonical release `cf60e52c93bf0ef4158cf2c3e26792850a126c70`. R22 is `Complete / PASS` after remediation PR `#39` and `964/964` Reference Python CI. P7.06 is `Complete / PASS` after PR #49 repository hardening and selected-Mac Attempt 8 proved exact update, rollback and final re-update to `4df99c4c66a1b7b93a4b05d7768018b03aa4041b`.
 
-P7.06-UI1 repository implementation and repository cross-review are `PASS` through PR `#51`; selected-Mac live-browser closure evidence remains outstanding. The R22 obligation has been discharged through the controlled P7.06 path rather than ad-hoc deployment. P7.07/P7.08 remain downstream of the declared UI substream sequencing.
+P7.06-UI1 repository implementation and repository cross-review are `PASS` through PR `#51`. Selected-Mac Attempt 1 subsequently proved exact-release deployment to `3a2b561a6935a84749552f016db8d1bd69eabf9a`, real Safari loopback visibility, exact least-privilege authorization and revocation, wrong-Organization failure closed, mutation-method rejection and zero canonical/external mutation from browsing, but the persistent P7.03 governed-item store contained no qualifying real non-fixture item. UI1 therefore remains `Current`; the remaining closure work is to validly admit and persist one real governed item under the actual owner context, then inspect it through UI1. P7.07/P7.08 remain downstream of the declared UI substream sequencing.
 
 ## 7. M7 milestone definition
 
@@ -216,8 +220,10 @@ A roadmap phase transition does not itself change lifecycle, production readines
 
 ## 11. Current canonical action
 
-> **P7.06-UI1 — Selected-Mac live-browser closure proof for the read-only governed workspace.**
+> **P7.06-UI1 — establish first real retained governed item, then finish selected-Mac live-browser closure.**
 
-P7.06 core is `Complete / PASS` for the declared `Persistent Internal / owner-operated` scope. Selected-Mac Attempt 8 completed the exact source→target update, target→source rollback and final source→target update, retained two verified pre-update backups, recorded all three exact transactions, left the selected Mac on exact target `4df99c4c66a1b7b93a4b05d7768018b03aa4041b`, and produced owner-local attestation SHA-256 `3dec1d1dd34aff960753105e72aa60739c01fb61c0af091a554e93f344418e69`.
+P7.06 core is `Complete / PASS` for the declared `Persistent Internal / owner-operated` scope. The selected Mac is now on exact UI1 release `3a2b561a6935a84749552f016db8d1bd69eabf9a` after successful governed P7.06 update transaction `0a858c2b44709516f49829cde7c8a45c4df6e9316303066ce879f341cbda25c5`.
 
-The repository-side UI1 implementation and two-iteration cross-review are `PASS` through PR `#51` and `Reference Python CI` run `32132213609`. The next canonical action remains inside UI1: activate the exact merged UI1 release on the selected Mac through the governed P7.06 path, establish the exact local P7.04 human workspace-inspection grant, open the private loopback workspace in a real browser, inspect real retained governed state/provenance, and prove the read path causes no canonical or external mutation. Only after that evidence is reviewed may UI1 be closed and sequencing advance to P7.06-UI2. P7.07/P7.08 workload expansion remains downstream.
+UI1 repository implementation and two-iteration cross-review are `PASS` through PR `#51` and `Reference Python CI` run `32132213609`. Selected-Mac Attempt 1 also passed the deployment, browser, P7.04 authorization/revocation, wrong-Organization fail-closed, HTTP read-only/security-header and zero-mutation checks. The only remaining exit blocker is that no real retained `canonical-governed-state` item exists in P7.03, so actual Subject/exact-Version/provenance inspection could not be demonstrated.
+
+The next canonical action remains inside UI1: use an already-applicable Governed Execution/admission path under the existing owner Organization/Actor context to admit one real governed item, preserve applicable Product Contract, external-authority and provenance semantics, persist the admitted item through P7.03, and re-run only the remaining UI1 real-item inspection/closure evidence. Do not create a test fixture, arbitrary storage record, competing source of truth or replay an external effect merely to satisfy the UI proof. Only after that evidence is reviewed may UI1 be closed and sequencing advance to P7.06-UI2. P7.07/P7.08 workload expansion remains downstream.
