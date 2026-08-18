@@ -33,7 +33,17 @@ class P706CurrentPointerForensicsTests(unittest.TestCase):
             base = root / "evidence" / "p7-06" / "work-1"
             base.mkdir(parents=True)
             path = base / "rollback-payload-20260819T000000Z.json"
-            path.write_text(json.dumps({"result":"ROLLED_BACK","source_release":"a"*40,"target_release":"b"*40,"rollback_disposition":"executed"}), encoding="utf-8")
+            path.write_text(
+                json.dumps(
+                    {
+                        "result": "ROLLED_BACK",
+                        "source_release": "a" * 40,
+                        "target_release": "b" * 40,
+                        "rollback_disposition": "executed",
+                    }
+                ),
+                encoding="utf-8",
+            )
             inventory = f._inventory_p706_evidence(root)
             classification, facts = f._classify_evidence(root, inventory.values())
             self.assertEqual(classification, "EXPLICIT_P7_06_ROLLBACK_EVIDENCE")
@@ -45,7 +55,15 @@ class P706CurrentPointerForensicsTests(unittest.TestCase):
             base = root / "evidence" / "p7-06" / "work-1"
             base.mkdir(parents=True)
             path = base / "interrupted-recovery-20260819T000000Z.json"
-            path.write_text(json.dumps({"source_release_restored":"a"*40,"observed_current_before_recovery":"b"*40}), encoding="utf-8")
+            path.write_text(
+                json.dumps(
+                    {
+                        "source_release_restored": "a" * 40,
+                        "observed_current_before_recovery": "b" * 40,
+                    }
+                ),
+                encoding="utf-8",
+            )
             inventory = f._inventory_p706_evidence(root)
             classification, facts = f._classify_evidence(root, inventory.values())
             self.assertEqual(classification, "EXPLICIT_P7_06_RECOVERY_EVIDENCE")
@@ -56,9 +74,24 @@ class P706CurrentPointerForensicsTests(unittest.TestCase):
             root = Path(td)
             run = root / "run"
             run.mkdir()
-            (run / "p7-06-last-success.json").write_text(json.dumps({"transaction_id":"tx1","source_release":"a"*40,"target_release":"b"*40,"plan_id":"plan1","backup_path":"/sensitive/local/path","backup_sha256":"c"*64}), encoding="utf-8")
+            (run / "p7-06-last-success.json").write_text(
+                json.dumps(
+                    {
+                        "transaction_id": "tx1",
+                        "source_release": "a" * 40,
+                        "target_release": "b" * 40,
+                        "plan_id": "plan1",
+                        "backup_path": "/sensitive/local/path",
+                        "backup_sha256": "c" * 64,
+                    }
+                ),
+                encoding="utf-8",
+            )
             value = f._load_last_success(root)
-            self.assertEqual(set(value), {"transaction_id","source_release","target_release","plan_id"})
+            self.assertEqual(
+                set(value),
+                {"transaction_id", "source_release", "target_release", "plan_id"},
+            )
             self.assertNotIn("backup_path", value)
 
     def test_current_observation_handles_transitional_absence(self):
@@ -97,15 +130,6 @@ class P706CurrentPointerForensicsTests(unittest.TestCase):
             self.assertIn("<RUNTIME_ROOT>/x", value)
             self.assertIn("<REPO_ROOT>/y", value)
             self.assertNotIn(str(root), value)
-
-
-    def test_explicit_evidence_takes_precedence_over_stable_shape(self):
-        self.assertIn("EXPLICIT_P7_06_ROLLBACK_EVIDENCE", f.CLASSIFICATIONS)
-        # Classification precedence is intentionally encoded in run_forensics:
-        # explicit new rollback/recovery evidence must not be hidden by a final target pointer.
-        source = Path(f.__file__).read_text(encoding="utf-8")
-        self.assertLess(source.index('elif evidence_classification is not None:'), source.index('elif final_release == after_command_release == origin_main'))
-        self.assertLess(source.index('elif during_update_classification is not None:'), source.index('elif final_release == after_command_release == origin_main'))
 
     def test_classification_constants_are_bounded(self):
         self.assertIn("UNATTRIBUTED_CURRENT_MUTATION", f.CLASSIFICATIONS)

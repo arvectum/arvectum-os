@@ -85,7 +85,6 @@ def _sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
-
 def _digest_paths(root: Path, paths: Iterable[Path]) -> str:
     digest = hashlib.sha256()
     for base in paths:
@@ -220,7 +219,6 @@ def _run_bounded(args: list[str], *, cwd: Path | None = None, timeout: float = 1
     return completed.returncode, completed.stdout[-32768:], completed.stderr[-32768:]
 
 
-
 def _sanitize_tail(value: str, root: Path, repo_root: Path) -> str:
     replacements = (
         (str(root), "<RUNTIME_ROOT>"),
@@ -300,4 +298,164 @@ def _write_attestation(root: Path, value: dict[str, Any]) -> tuple[Path, str]:
     evidence_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
     if os.name != "nt":
         os.chmod(evidence_dir, 0o700)
-    path = evidence_dir / f"p7-06-current-pointer-forensics-{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%Z%hœ¥ôµíÕÕ¥¹ÕÕ¥Ð ¤¹¡•álèáuô¹©Í½¸ˆ(€€€É…Ü€ô€¡©Í½¸¹‘ÕµÁÌ¡Ù…±Õ”°•¹ÍÕÉ•}…Í¥¤õ…±Í”°Í½ÉÑ}­•åÌõQÉÕ”°¥¹‘•¹ÐôÈ¤€¬€‰q¸ˆ¤¹•¹½‘” ‰ÕÑ˜´àˆ¤(€€€™€ô½Ì¹½Á•¸¡Á…Ñ °½Ì¹=}]I=91dð½Ì¹=}IPð½Ì¹=}a0°€Á¼ØÀÀ¤(€€€Ý¥Ñ ½Ì¹™‘½Á•¸¡™°€‰Ýˆˆ¤…Ì¡…¹‘±”è(€€€€€€€¡…¹‘±”¹ÝÉ¥Ñ”¡É…Ü¤(€€€€€€€¡…¹‘±”¹™±ÕÍ  ¤(€€€€€€€½Ì¹™Íå¹Œ¡¡…¹‘±”¹™¥±•¹¼ ¤¤(€€€‘¥•ÍÐ€ô}Í¡„ÈÔÙ}™¥±”¡Á…Ñ ¤(€€€Í¥‘•…È€ôÁ…Ñ ¹Ý¥Ñ¡}ÍÕ™™¥à¡Á…Ñ ¹ÍÕ™™¥à€¬€ˆ¹Í¡„ÈÔØˆ¤(€€€™€ô½Ì¹½Á•¸¡Í¥‘•…È°½Ì¹=}]I=91dð½Ì¹=}IPð½Ì¹=}a0°€Á¼ØÀÀ¤(€€€Ý¥Ñ ½Ì¹™‘½Á•¸¡™°€‰Üˆ°•¹½‘¥¹œô‰ÕÑ˜´àˆ¤…Ì¡…¹‘±”è(€€€€€€€¡…¹‘±”¹ÝÉ¥Ñ”¡˜‰í‘¥•ÍÑô€íÁ…Ñ ¹¹…µ•õq¸ˆ¤(€€€€€€€¡…¹‘±”¹™±ÕÍ  ¤(€€€€€€€½Ì¹™Íå¹Œ¡¡…¹‘±”¹™¥±•¹¼ ¤¤(€€€É•ÑÕÉ¸Á…Ñ °‘¥•ÍÐ(()‘•˜ÉÕ¹}™½É•¹Í¥Ì¡É½½ÐèA…Ñ °É•Á½}É½½ÐèA…Ñ °‘•¥Í¥½¹}É•˜èÍÑÈ°Ý…Ñ¡}Í•½¹‘Ìè™±½…Ð¤€´ø‘¥ÑmÍÑÈ°¹åtè(€€€¥˜ÍåÌ¹Á±…Ñ™½É´€„ô€‰‘…ÉÝ¥¸ˆè(€€€€€€€É…¥Í”½É•¹Í¥ÍÉÉ½È ‰µ…=L¥ÌÉ•ÅÕ¥É•ˆ¤(€€€É½½Ð€ôÉ½½Ð¹•áÁ…¹‘ÕÍ•È ¤¹É•Í½±Ù” ¤(€€€É•Á½}É½½Ð€ôÉ•Á½}É½½Ð¹•áÁ…¹‘ÕÍ•È ¤¹É•Í½±Ù” ¤(€€€¥˜¹½ÐÉ½½Ð¹¥Í}‘¥È ¤è(€€€€€€€É…¥Í”½É•¹Í¥ÍÉÉ½È ‰ÉÕ¹Ñ¥µ”É½½Ð¥ÌÕ¹…Ù…¥±…‰±”ˆ¤(€€€¥˜¹½Ð€ Ä¸À€ðôÝ…Ñ¡}Í•½¹‘Ì€ðô€ØÀ¸À¤è(€€€€€€€É…¥Í”½É•¹Í¥ÍÉÉ½È ‰Ý…Ñ Ý¥¹‘½ÜµÕÍÐ‰”‰•ÑÝ••¸€Ä…¹€ØÀÍ•½¹‘Ìˆ¤(€€€‘•¥Í¥½¹}É•˜€ô‘•¥Í¥½¹}É•˜¹ÍÑÉ¥À ¤(€€€¥˜¹½Ð‘•¥Í¥½¹}É•˜½È±•¸¡‘•¥Í¥½¹}É•˜¤€ø€ÈÔØ½È…¹ä¡ ¥¸‘•¥Í¥½¹}É•˜™½È ¥¸€‰qÉq¹pÀˆ¤è(€€€€€€€É…¥Í”½É•¹Í¥ÍÉÉ½È ‰‘•¥Í¥½¸É•™•É•¹”¥Ì¥¹Ù…±¥ˆ¤((€€€½É¥¥¹}µ…¥¸€ô}…¹½¹¥…±}µ…¥¸¡É•Á½}É½½Ð¤(€€€‰•™½É•}É•±•…Í”€ô}ÕÉÉ•¹Ñ}É•±•…Í”¡É½½Ð¤(€€€¥˜‰•™½É•}É•±•…Í”€ôô½É¥¥¹}µ…¥¸è(€€€€€€€É…¥Í”½É•¹Í¥ÍÉÉ½È ‰…¹½¹¥…°Ñ…É•Ð¥Ì…±É•…‘ä…Ñ¥Ù”ì¹¼ÑÉ…¹Í¥Ñ¥½¸¥Ì…Ù…¥±…‰±”Ñ¼‘¥…¹½Í”ˆ¤((€€€‰•™½É•}•Ù¥‘•¹”€ô}¥¹Ù•¹Ñ½Éå}ÀÜÀÙ}•Ù¥‘•¹”¡É½½Ð¤(€€€ÀÜÀÍ}‰•™½É”€ô}ÀÜÀÍ}‘¥•ÍÐ¡É½½Ð¤(€€€ÀÜÀÑ}‰•™½É”€ô}ÀÜÀÑ}‘¥•ÍÐ¡É½½Ð¤(€€€‰•™½É•}Á½¥¹Ñ•È€ô}±½…‘}±…ÍÑ}ÍÕ•ÍÌ¡É½½Ð¤(€€€‰•™½É•}ÁÉ½•ÍÍ•Ì€ô}ÁÉ½•ÍÍ}™…ÑÌ ¤(€€€‰•™½É•}±…Õ¹¡€ôm}±…Õ¹¡Ñ±}™…Ð¡±…‰•°¤™½È±…‰•°¥¸1	1Mt((€€€‘•Á±½ä€ôÉ•Á½}É½½Ð€¼€‰É•™•É•¹”ˆ€¼€‰ÁåÑ¡½¸ˆ€¼€‰ÀÝ|ÀÙ}µ…½Í}‘•Á±½ä¹Í ˆ(€€€¥˜‘•Á±½ä¹¥Í}Íåµ±¥¹¬ ¤½È¹½Ð‘•Á±½ä¹¥Í}™¥±” ¤è(€€€€€€€É…¥Í”½É•¹Í¥ÍÉÉ½È ‰…¹½¹¥…°@Ü¸ÀØ‘•Á±½ä…‘…ÁÑ•È¥Ìµ¥ÍÍ¥¹œˆ¤((€€€ÉŒ°ÍÑ‘½ÕÐ°ÍÑ‘•ÉÈ€ô}ÉÕ¹}‰½Õ¹‘•¡l‰Í ˆ°ÍÑÈ¡‘•Á±½ä¤°€‰ÕÁ‘…Ñ”ˆ°‘•¥Í¥½¹}É•™t°ÝõÉ•Á½}É½½Ð°Ñ¥µ•½ÕÐôÈÐÀ¤((€€€…™Ñ•É}½µµ…¹‘}É•±•…Í”€ô}ÕÉÉ•¹Ñ}½‰Í•ÉÙ…Ñ¥½¸¡É½½Ð¤(€€€…™Ñ•É}½µµ…¹‘}•Ù¥‘•¹”€ô}¥¹Ù•¹Ñ½Éå}ÀÜÀÙ}•Ù¥‘•¹”¡É½½Ð¤(€€€¡…¹•‘}‘ÕÉ¥¹}ÕÁ‘…Ñ”€ô}¹•Ý}•Ù¥‘•¹”¡‰•™½É•}•Ù¥‘•¹”°…™Ñ•É}½µµ…¹‘}•Ù¥‘•¹”¤(€€€‘ÕÉ¥¹}ÕÁ‘…Ñ•}±…ÍÍ¥™¥…Ñ¥½¸°‘ÕÉ¥¹}ÕÁ‘…Ñ•}™…ÑÌ€ô}±…ÍÍ¥™å}•Ù¥‘•¹”¡É½½Ð°¡…¹•‘}‘ÕÉ¥¹}ÕÁ‘…Ñ”¤(€€€…™Ñ•É}½µµ…¹‘}Á½¥¹Ñ•È€ô}±½…‘}±…ÍÑ}ÍÕ•ÍÌ¡É½½Ð¤((€€€ÑÉ…¹Í¥Ñ¥½¹Ìè±¥ÍÑm‘¥ÑmÍÑÈ°¹åut€ômt(€€€½‰Í•ÉÙ•€ô…™Ñ•É}½µµ…¹‘}É•±•…Í”(€€€‘•…‘±¥¹”€ôÑ¥µ”¹µ½¹½Ñ½¹¥Œ ¤€¬Ý…Ñ¡}Í•½¹‘Ì(€€€Ý¡¥±”Ñ¥µ”¹µ½¹½Ñ½¹¥Œ ¤€ð‘•…‘±¥¹”è(€€€€€€€ÕÉÉ•¹Ð€ô}ÕÉÉ•¹Ñ}½‰Í•ÉÙ…Ñ¥½¸¡É½½Ð¤(€€€€€€€¥˜ÕÉÉ•¹Ð€„ô½‰Í•ÉÙ•è(€€€€€€€€€€€ÑÉ…¹Í¥Ñ¥½¹Ì¹…ÁÁ•¹¡ì(€€€€€€€€€€€€€€€€‰™É½´ˆè½‰Í•ÉÙ•°(€€€€€€€€€€€€€€€€‰Ñ¼ˆèÕÉÉ•¹Ð°(€€€€€€€€€€€€€€€€‰½‰Í•ÉÙ•‘}…Ðˆè}ÕÑ}¹½Ü ¤°(€€€€€€€€€€€€€€€€‰ÀÝ|ÀÙ}‘•Á±½å}±½­}ÁÉ•Í•¹Ðˆè€¡É½½Ð€¼€‰ÉÕ¸ˆ€¼€‰ÀÜ´ÀØµ‘•Á±½ä¹±½¬ˆ¤¹¥Í}‘¥È ¤°(€€€€€€€€€€€€€€€€‰É•±•Ù…¹Ñ}ÁÉ½•ÍÍ•Ìˆè}ÁÉ½•ÍÍ}™…ÑÌ ¤°(€€€€€€€€€€€ô¤(€€€€€€€€€€€½‰Í•ÉÙ•€ôÕÉÉ•¹Ð(€€€€€€€Ñ¥µ”¹Í±••À À¸ÈÔ¤((€€€™¥¹…±}É•±•…Í”€ô}ÕÉÉ•¹Ñ}½‰Í•ÉÙ…Ñ¥½¸¡É½½Ð¤(€€€™¥¹…±}•Ù¥‘•¹”€ô}¥¹Ù•¹Ñ½Éå}ÀÜÀÙ}•Ù¥‘•¹”¡É½½Ð¤(€€€™¥¹…±}Á½¥¹Ñ•È€ô}±½…‘}±…ÍÑ}ÍÕ•ÍÌ¡É½½Ð¤(€€€ÀÜÀÍ}™¥¹…°€ô}ÀÜÀÍ}‘¥•ÍÐ¡É½½Ð¤(€€€ÀÜÀÑ}™¥¹…°€ô}ÀÜÀÑ}‘¥•ÍÐ¡É½½Ð¤(€€€¡…¹•‘}…™Ñ•É}½µµ…¹€ô}¹•Ý}•Ù¥‘•¹”¡…™Ñ•É}½µµ…¹‘}•Ù¥‘•¹”°™¥¹…±}•Ù¥‘•¹”¤(€€€•Ù¥‘•¹•}±…ÍÍ¥™¥…Ñ¥½¸°É½±±‰…­}™…ÑÌ€ô}±…ÍÍ¥™å}•Ù¥‘•¹”¡É½½Ð°¡…¹•‘}…™Ñ•É}½µµ…¹¤((€€€¥˜ÉŒ€„ô€Àè(€€€€€€€±…ÍÍ¥™¥…Ñ¥½¸€ô€‰UAQ}=559}%1ˆ(€€€•±¥˜•Ù¥‘•¹•}±…ÍÍ¥™¥…Ñ¥½¸¥Ì¹½Ð9½¹”è(€€€€€€€±…ÍÍ¥™¥…Ñ¥½¸€ô•Ù¥‘•¹•}±…ÍÍ¥™¥…Ñ¥½¸(€€€•±¥˜‘ÕÉ¥¹}ÕÁ‘…Ñ•}±…ÍÍ¥™¥…Ñ¥½¸¥Ì¹½Ð9½¹”è(€€€€€€€±…ÍÍ¥™¥…Ñ¥½¸€ô‘ÕÉ¥¹}ÕÁ‘…Ñ•}±…ÍÍ¥™¥…Ñ¥½¸(€€€•±¥˜™¥¹…±}É•±•…Í”€ôô…™Ñ•É}½µµ…¹‘}É•±•…Í”€ôô½É¥¥¹}µ…¥¸…¹¹½ÐÑÉ…¹Í¥Ñ¥½¹Ìè(€€€€€€€±…ÍÍ¥™¥…Ñ¥½¸€ô€‰MQ	1}QI}UAQˆ(€€€•±Í”è(€€€€€€€±…ÍÍ¥™¥…Ñ¥½¸€ô€‰U9QQI%	UQ}UII9Q}5UQQ%=8ˆ((€€€É•ÍÕ±Ð€ôì(€€€€€€€€‰Í¡•µ„ˆè€‰…ÉÙ•ÑÕ´¹ÀÝ|ÀØ¹ÕÉÉ•¹ÐµÁ½¥¹Ñ•Èµ™½É•¹Í¥Ì¼Äˆ°(€€€€€€€€‰ÍÑ…ÑÕÌˆè€‰AMLˆ¥˜±…ÍÍ¥™¥…Ñ¥½¸€ôô€‰MQ	1}QI}UAQˆ•±Í”€‰=	MIYˆ°(€€€€€€€€‰±…ÍÍ¥™¥…Ñ¥½¸ˆè±…ÍÍ¥™¥…Ñ¥½¸°(€€€€€€€€‰•Ù¥‘•¹•}±…ÍÍ¥™¥…Ñ¥½¸ˆè€‰¹½¸µ…¹½¹¥…°½Ý¹•Èµ±½…°½Á•É…Ñ¥½¹…°‘¥…¹½ÍÑ¥Œˆ°(€€€€€€€€‰½É¥¥¹}µ…¥¸ˆè½É¥¥¹}µ…¥¸°(€€€€€€€€‰‰•™½É•}É•±•…Í”ˆè‰•™½É•}É•±•…Í”°(€€€€€€€€‰ÕÁ‘…Ñ•}•á¥Ñ}½‘”ˆèÉŒ°(€€€€€€€€‰ÕÁ‘…Ñ•}ÍÑ‘½ÕÑ}Ñ…¥°ˆè}Í…¹¥Ñ¥é•}Ñ…¥°¡ÍÑ‘½ÕÐ°É½½Ð°É•Á½}É½½Ð¤°(€€€€€€€€‰ÕÁ‘…Ñ•}ÍÑ‘•ÉÉ}Ñ…¥°ˆè}Í…¹¥Ñ¥é•}Ñ…¥°¡ÍÑ‘•ÉÈ°É½½Ð°É•Á½}É½½Ð¤°(€€€€€€€€‰…™Ñ•É}ÕÁ‘…Ñ•}½µµ…¹‘}É•±•…Í”ˆè…™Ñ•É}½µµ…¹‘}É•±•…Í”°(€€€€€€€€‰Ý…Ñ¡}Í•½¹‘ÌˆèÝ…Ñ¡}Í•½¹‘Ì°(€€€€€€€€‰ÑÉ…¹Í¥Ñ¥½¹ÌˆèÑÉ…¹Í¥Ñ¥½¹Ì°(€€€€€€€€‰™¥¹…±}É•±•…Í”ˆè™¥¹…±}É•±•…Í”°(€€€€€€€€‰±…ÍÑ}ÍÕ•ÍÍ}‰•™½É”ˆè‰•™½É•}Á½¥¹Ñ•È°(€€€€€€€€‰±…ÍÑ}ÍÕ•ÍÍ}…™Ñ•É}ÕÁ‘…Ñ•}½µµ…¹ˆè…™Ñ•É}½µµ…¹‘}Á½¥¹Ñ•È°(€€€€€€€€‰±…ÍÑ}ÍÕ•ÍÍ}™¥¹…°ˆè™¥¹…±}Á½¥¹Ñ•È°(€€€€€€€€‰¹•Ý}ÀÜÀÙ}•Ù¥‘•¹•}‘ÕÉ¥¹}ÕÁ‘…Ñ”ˆèmì‰™¥±”ˆè”¹É•±…Ñ¥Ù•}Á…Ñ °€‰Í¡„ÈÔØˆè”¹Í¡„ÈÔØ°€‰Í¥é”ˆè”¹Í¥é•ô™½È”¥¸¡…¹•‘}‘ÕÉ¥¹}ÕÁ‘…Ñ•t°(€€€€€€€€‰‘ÕÉ¥¹}ÕÁ‘…Ñ•}É½±±‰…­}½É}É•½Ù•Éå}±…ÍÍ¥™¥…Ñ¥½¸ˆè‘ÕÉ¥¹}ÕÁ‘…Ñ•}±…ÍÍ¥™¥…Ñ¥½¸°(€€€€€€€€‰‘ÕÉ¥¹}ÕÁ‘…Ñ•}É½±±‰…­}½É}É•½Ù•Éå}™…ÑÌˆè‘ÕÉ¥¹}ÕÁ‘…Ñ•}™…ÑÌ°(€€€€€€€€‰¹•Ý}ÀÜÀÙ}•Ù¥‘•¹•}…™Ñ•É}ÕÁ‘…Ñ•}½µµ…¹ˆèmì‰™¥±”ˆè”¹É•±…Ñ¥Ù•}Á…Ñ °€‰Í¡„ÈÔØˆè”¹Í¡„ÈÔØ°€‰Í¥é”ˆè”¹Í¥é•ô™½È”¥¸¡…¹•‘}…™Ñ•É}½µµ…¹‘t°(€€€€€€€€‰É½±±‰…­}½É}É•½Ù•Éå}™…ÑÌˆèÉ½±±‰…­}™…ÑÌ°(€€€€€€€€‰±…Õ¹¡‘}‰•™½É”ˆè‰•™½É•}±…Õ¹¡°(€€€€€€€€‰±…Õ¹¡‘}™¥¹…°ˆèm}±…Õ¹¡Ñ±}™…Ð¡±…‰•°¤™½È±…‰•°¥¸1	1Mt°(€€€€€€€€‰É•±•Ù…¹Ñ}ÁÉ½•ÍÍ•Í}‰•™½É”ˆè‰•™½É•}ÁÉ½•ÍÍ•Ì°(€€€€€€€€‰É•±•Ù…¹Ñ}ÁÉ½•ÍÍ•Í}™¥¹…°ˆè}ÁÉ½•ÍÍ}™…ÑÌ ¤°(€€€€€€€€‰ÀÜÀÍ}‘¥•ÍÑ}‰•™½É”ˆèÀÜÀÍ}‰•™½É”°(€€€€€€€€‰ÀÜÀÍ}‘¥•ÍÑ}™¥¹…°ˆèÀÜÀÍ}™¥¹…°°(€€€€€€€€‰ÀÜÀÍ}Õ¹¡…¹•ˆèÀÜÀÍ}‰•™½É”€ôôÀÜÀÍ}™¥¹…°°(€€€€€€€€‰ÀÜÀÑ}‘¥•ÍÑ}‰•™½É”ˆèÀÜÀÑ}‰•™½É”°(€€€€€€€€‰ÀÜÀÑ}‘¥•ÍÑ}™¥¹…°ˆèÀÜÀÑ}™¥¹…°°(€€€€€€€€‰ÀÜÀÑ}Õ¹¡…¹•ˆèÀÜÀÑ}‰•™½É”€ôôÀÜÀÑ}™¥¹…°°(€€€€€€€€‰ÀÜÀÍ}½É}ÀÜÀÑ}µÕÑ…Ñ¥½¹}Á•É™½Éµ•‘}‰å}™½É•¹Í¥Ìˆè…±Í”°(€€€€€€€€‰É½±±‰…­}¥¹Ù½­•‘}‰å}™½É•¹Í¥Ìˆè…±Í”°(€€€€€€€€‰É•½Ù•Éå}¥¹Ù½­•‘}‰å}™½É•¹Í¥Ìˆè…±Í”°(€€€€€€€€‰Õ¤Í}±¥™•å±•}¥¹Ù½­•‘}‰å}™½É•¹Í¥Ìˆè…±Í”°(€€€€€€€€‰½É…¹¥é…Ñ¥½¹…±}…ÕÑ¡½É¥Ñå}ÁÉ½Ù¥‘•ˆè…±Í”°(€€€€€€€€‰½¹Í•ÅÕ•¹Ñ¥…±}…ÁÁÉ½Ù…±}ÁÉ½Ù¥‘•ˆè…±Í”°(€€€€€€€€‰ÁÉ½‘ÕÑ}•áÑ•É¹…±}•™™•Ñ}¥¹Ù½­•ˆè…±Í”°(€€€€€€€€‰É•ÕÍ…‰±•}Í•É•Ñ}•µ¥ÑÑ•ˆè…±Í”°(€€€€€€€€‰É•…Ñ•‘}…Ðˆè}ÕÑ}¹½Ü ¤°(€€€ô(€€€Á…Ñ °‘¥•ÍÐ€ô}ÝÉ¥Ñ•}…ÑÑ•ÍÑ…Ñ¥½¸¡É½½Ð°É•ÍÕ±Ð¤(€€€É•ÍÕ±Ñl‰…ÑÑ•ÍÑ…Ñ¥½¹}‰…Í•¹…µ”‰t€ôÁ…Ñ ¹¹…µ”(€€€É•ÍÕ±Ñl‰…ÑÑ•ÍÑ…Ñ¥½¹}Í¡„ÈÔØ‰t€ô‘¥•ÍÐ(€€€É•ÑÕÉ¸É•ÍÕ±Ð(()‘•˜‰Õ¥±‘}Á…ÉÍ•È ¤€´ø…ÉÁ…ÉÍ”¹ÉÕµ•¹ÑA…ÉÍ•Èè(€€€Á…ÉÍ•È€ô…ÉÁ…ÉÍ”¹ÉÕµ•¹ÑA…ÉÍ•È¡‘•ÍÉ¥ÁÑ¥½¸ô‰@Ü¸ÀØÍ•±•Ñ•µ5…ŒÕÉÉ•¹ÐµÁ½¥¹Ñ•È™½É•¹Í¥Ìˆ¤(€€€Á…ÉÍ•È¹…‘‘}…ÉÕµ•¹Ð ˆ´µÉÕ¹Ñ¥µ”µÉ½½Ðˆ°É•ÅÕ¥É•õQÉÕ”¤(€€€Á…ÉÍ•È¹…‘‘}…ÉÕµ•¹Ð ˆ´µÉ•Á¼µÉ½½Ðˆ°É•ÅÕ¥É•õQÉÕ”¤(€€€Á…ÉÍ•È¹…‘‘}…ÉÕµ•¹Ð ˆ´µ‘•¥Í¥½¸µÉ•˜ˆ°É•ÅÕ¥É•õQÉÕ”¤(€€€Á…ÉÍ•È¹…‘‘}…ÉÕµ•¹Ð ˆ´µÝ…Ñ µÍ•½¹‘Ìˆ°ÑåÁ”õ™±½…Ð°‘•™…Õ±ÐôÄÔ¸À¤(€€€Á…ÉÍ•È¹…‘‘}…ÉÕµ•¹Ð ˆ´µ©Í½¸ˆ°…Ñ¥½¸ô‰ÍÑ½É•}ÑÉÕ”ˆ¤(€€€É•ÑÕÉ¸Á…ÉÍ•È(()‘•˜µ…¥¸¡…ÉØè±¥ÍÑmÍÑÉtð9½¹”€ô9½¹”¤€´ø¥¹Ðè(€€€…ÉÌ€ô‰Õ¥±‘}Á…ÉÍ•È ¤¹Á…ÉÍ•}…ÉÌ¡…ÉØ¤(€€€ÑÉäè(€€€€€€€É•ÍÕ±Ð€ôÉÕ¹}™½É•¹Í¥Ì¡A…Ñ ¡…ÉÌ¹ÉÕ¹Ñ¥µ•}É½½Ð¤°A…Ñ ¡…ÉÌ¹É•Á½}É½½Ð¤°…ÉÌ¹‘•¥Í¥½¹}É•˜°…ÉÌ¹Ý…Ñ¡}Í•½¹‘Ì¤(€€€•á•ÁÐ€¡½É•¹Í¥ÍÉÉ½È°=MÉÉ½È°Y…±Õ•ÉÉ½È°©Í½¸¹)M=9•½‘•ÉÉ½È¤…Ì•áŒè(€€€€€€€ÁÉ¥¹Ð¡˜‰@Ü¸ÀØÕÉÉ•¹ÐµÁ½¥¹Ñ•È™½É•¹Í¥Ì%0èí•áôˆ°™¥±”õÍåÌ¹ÍÑ‘•ÉÈ¤(€€€€€€€É•ÑÕÉ¸€Ä(€€€¥˜…ÉÌ¹©Í½¸è(€€€€€€€ÁÉ¥¹Ð¡©Í½¸¹‘ÕµÁÌ¡É•ÍÕ±Ð°•¹ÍÕÉ•}…Í¥¤õ…±Í”°Í½ÉÑ}­•åÌõQÉÕ”¤¤(€€€•±Í”è(€€€€€€€ÁÉ¥¹Ð¡˜‰@Ü¸ÀØÕÉÉ•¹ÐµÁ½¥¹Ñ•È™½É•¹Í¥ÌíÉ•ÍÕ±Ñl±…ÍÍ¥™¥…Ñ¥½¸uô™¥¹…°õíÉ•ÍÕ±Ñl™¥¹…±}É•±•…Í”uô…ÑÑ•ÍÑ…Ñ¥½¸õíÉ•ÍÕ±Ñl…ÑÑ•ÍÑ…Ñ¥½¹}‰…Í•¹…µ”uôˆ¤(€€€É•ÑÕÉ¸€À¥˜É•ÍÕ±Ñl‰±…ÍÍ¥™¥…Ñ¥½¸‰t€ôô€‰MQ	1}QI}UAQˆ•±Í”€È(()¥˜}}¹…µ•}|€ôô€‰}}µ…¥¹}|ˆè(€€€É…¥Í”MåÍÑ•µá¥Ð¡µ…¥¸ ¤¤(
+    path = evidence_dir / f"p7-06-current-pointer-forensics-{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}-{uuid.uuid4().hex[:8]}.json"
+    raw = (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
+    fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    with os.fdopen(fd, "wb") as handle:
+        handle.write(raw)
+        handle.flush()
+        os.fsync(handle.fileno())
+    digest = _sha256_file(path)
+    sidecar = path.with_suffix(path.suffix + ".sha256")
+    fd = os.open(sidecar, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    with os.fdopen(fd, "w", encoding="utf-8") as handle:
+        handle.write(f"{digest}  {path.name}\n")
+        handle.flush()
+        os.fsync(handle.fileno())
+    return path, digest
+
+
+def run_forensics(root: Path, repo_root: Path, decision_ref: str, watch_seconds: float) -> dict[str, Any]:
+    if sys.platform != "darwin":
+        raise ForensicsError("macOS is required")
+    root = root.expanduser().resolve()
+    repo_root = repo_root.expanduser().resolve()
+    if not root.is_dir():
+        raise ForensicsError("runtime root is unavailable")
+    if not (1.0 <= watch_seconds <= 60.0):
+        raise ForensicsError("watch window must be between 1 and 60 seconds")
+    decision_ref = decision_ref.strip()
+    if not decision_ref or len(decision_ref) > 256 or any(ch in decision_ref for ch in "\r\n\0"):
+        raise ForensicsError("decision reference is invalid")
+
+    origin_main = _canonical_main(repo_root)
+    before_release = _current_release(root)
+    if before_release == origin_main:
+        raise ForensicsError("canonical target is already active; no transition is available to diagnose")
+
+    before_evidence = _inventory_p706_evidence(root)
+    p703_before = _p703_digest(root)
+    p704_before = _p704_digest(root)
+    before_pointer = _load_last_success(root)
+    before_processes = _process_facts()
+    before_launchd = [_launchctl_fact(label) for label in LABELS]
+
+    deploy = repo_root / "reference" / "python" / "p7_06_macos_deploy.sh"
+    if deploy.is_symlink() or not deploy.is_file():
+        raise ForensicsError("canonical P7.06 deploy adapter is missing")
+
+    rc, stdout, stderr = _run_bounded(["sh", str(deploy), "update", decision_ref], cwd=repo_root, timeout=240)
+
+    after_command_release = _current_observation(root)
+    after_command_evidence = _inventory_p706_evidence(root)
+    changed_during_update = _new_evidence(before_evidence, after_command_evidence)
+    during_update_classification, during_update_facts = _classify_evidence(root, changed_during_update)
+    after_command_pointer = _load_last_success(root)
+
+    transitions: list[dict[str, Any]] = []
+    observed = after_command_release
+    deadline = time.monotonic() + watch_seconds
+    while time.monotonic() < deadline:
+        current = _current_observation(root)
+        if current != observed:
+            transitions.append({
+                "from": observed,
+                "to": current,
+                "observed_at": _utc_now(),
+                "p7_06_deploy_lock_present": (root / "run" / "p7-06-deploy.lock").is_dir(),
+                "relevant_processes": _process_facts(),
+            })
+            observed = current
+        time.sleep(0.25)
+
+    final_release = _current_observation(root)
+    final_evidence = _inventory_p706_evidence(root)
+    final_pointer = _load_last_success(root)
+    p703_final = _p703_digest(root)
+    p704_final = _p704_digest(root)
+    changed_after_command = _new_evidence(after_command_evidence, final_evidence)
+    evidence_classification, rollback_facts = _classify_evidence(root, changed_after_command)
+
+    if rc != 0:
+        classification = "UPDATE_COMMAND_FAILED"
+    elif final_release == after_command_release == origin_main and not transitions:
+        classification = "STABLE_AFTER_UPDATE"
+    elif evidence_classification is not None:
+        classification = evidence_classification
+    else:
+        classification = "UNATTRIBUTED_CURRENT_MUTATION"
+
+    result = {
+        "schema": "arvectum.p7_06.current-pointer-forensics/1",
+        "status": "PASS" if classification == "STABLE_AFTER_UPDATE" else "OBSERVED",
+        "classification": classification,
+        "evidence_classification": "non-canonical owner-local operational diagnostic",
+        "origin_main": origin_main,
+        "before_release": before_release,
+        "update_exit_code": rc,
+        "update_stdout_tail": _sanitize_tail(stdout, root, repo_root),
+        "update_stderr_tail": _sanitize_tail(stderr, root, repo_root),
+        "after_update_command_release": after_command_release,
+        "watch_seconds": watch_seconds,
+        "transitions": transitions,
+        "final_release": final_release,
+        "last_success_before": before_pointer,
+        "last_success_after_update_command": after_command_pointer,
+        "last_success_final": final_pointer,
+        "new_p706_evidence_during_update": [{"file": e.relative_path, "sha256": e.sha256, "size": e.size} for e in changed_during_update],
+        "during_update_rollback_or_recovery_classification": during_update_classification,
+        "during_update_rollback_or_recovery_facts": during_update_facts,
+        "new_p706_evidence_after_update_command": [{"file": e.relative_path, "sha256": e.sha256, "size": e.size} for e in changed_after_command],
+        "rollback_or_recovery_facts": rollback_facts,
+        "launchd_before": before_launchd,
+        "launchd_final": [_launchctl_fact(label) for label in LABELS],
+        "relevant_processes_before": before_processes,
+        "relevant_processes_final": _process_facts(),
+        "p703_digest_before": p703_before,
+        "p703_digest_final": p703_final,
+        "p703_unchanged": p703_before == p703_final,
+        "p704_digest_before": p704_before,
+        "p704_digest_final": p704_final,
+        "p704_unchanged": p704_before == p704_final,
+        "p703_or_p704_mutation_performed_by_forensics": False,
+        "rollback_invoked_by_forensics": False,
+        "recovery_invoked_by_forensics": False,
+        "ui3_lifecycle_invoked_by_forensics": False,
+        "organizational_authority_provided": False,
+        "consequential_approval_provided": False,
+        "product_external_effect_invoked": False,
+        "reusable_secret_emitted": False,
+        "created_at": _utc_now(),
+    }
+    path, digest = _write_attestation(root, result)
+    result["attestation_basename"] = path.name
+    result["attestation_sha256"] = digest
+    return result
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description="P7.06 selected-Mac current-pointer forensics")
+    parser.add_argument("--runtime-root", required=True)
+    parser.add_argument("--repo-root", required=True)
+    parser.add_argument("--decision-ref", required=True)
+    parser.add_argument("--watch-seconds", type=float, default=15.0)
+    parser.add_argument("--json", action="store_true")
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = build_parser().parse_args(argv)
+    try:
+        result = run_forensics(Path(args.runtime_root), Path(args.repo_root), args.decision_ref, args.watch_seconds)
+    except (ForensicsError, OSError, ValueError, json.JSONDecodeError) as exc:
+        print(f"P7.06 current-pointer forensics FAIL: {exc}", file=sys.stderr)
+        return 1
+    if args.json:
+        print(json.dumps(result, ensure_ascii=False, sort_keys=True))
+    else:
+        print(f"P7.06 current-pointer forensics {result['classification']} final={result['final_release']} attestation={result['attestation_basename']}")
+    return 0 if result["classification"] == "STABLE_AFTER_UPDATE" else 2
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
