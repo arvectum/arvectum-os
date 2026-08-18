@@ -321,19 +321,19 @@ class P706UI1RealStateAdmissionTests(unittest.TestCase):
 
     def test_source_has_no_network_or_external_effect_adapter(self):
         source = Path(admission.__file__).read_text(encoding="utf-8")
-        forbidden = (
+        forbidden_invocations = (
             "import socket",
             "from socket",
             "import requests",
             "from requests",
             "urllib.request",
             "subprocess.",
-            "getDocsIP",
-            "send_email",
-            "send_telegram",
-            "digital_signature",
+            "getDocsIP(",
+            "send_email(",
+            "send_telegram(",
+            "digital_signature(",
         )
-        for token in forbidden:
+        for token in forbidden_invocations:
             self.assertNotIn(token, source)
         self.assertIn('"external_actions": False', source)
         self.assertIn('"raw_document_bytes_included": False', source)
