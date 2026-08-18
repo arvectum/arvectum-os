@@ -23,8 +23,9 @@ import json
 import os
 import stat
 import sys
+import shutil
 import tempfile
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Mapping, Optional, Sequence
@@ -312,6 +313,55 @@ def classify_health(root: Path, *, max_age_seconds: float = DEFAULT_HEALTH_MAX_A
                         "no operator action required", release, age)
 
 
+def _read_health_record(root: Path) -> dict[str, Any]:
+    path = _paths(root)["health"]
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    return value if isinstance(value, dict) else {}
+
+
+def _resource_snapshot(root: Path) -> dict[str, Any]:
+    paths = _paths(root)
+    usage = shutil.disk_usage(paths["root"])
+    diagnostic_bytes = 0
+    for name in RAW_DIAGNOSTIC_NAMES:
+        path = paths["raw_logs"] / name
+        if path.exists() and path.is_file() and not path.is_symlink():
+            diagnostic_bytes += path.stat().st_size
+    telemetry_bytes = paths["telemetry"].stat().st_size if paths["telemetry"].exists() else 0
+    governed_count = 0
+    if paths["governed_items"].exists():
+        governed_count = sum(1 for item in paths["governed_items"].iterdir() if item.is_dir() and not item.is_symlink())
+    checkpoints = paths["root"] / "state" / "checkpoints"
+    checkpoint_count = 0
+    if checkpoints.exists():
+        checkpoint_count = sum(1 for item in checkpoints.iterdir() if item.is_file() and item.suffix == ".json" and not item.is_symlink())
+    return {
+        "filesystem_total_bytes": usage.total,
+        "filesystem_free_bytes": usage.free,
+        "telemetry_jsonl_bytes": telemetry_bytes,
+        "raw_diagnostic_bytes": diagnostic_bytes,
+        "governed_storage_items": governed_count,
+        "recovery_checkpoints": checkpoint_count,
+        "threshold_claims": "none; visibility only",
+    }
+
+
+def _process_snapshot(root: Path) -> dict[str, Any]:
+    health = _read_health_record(root)
+    generation = health.get("generation")
+    return {
+        "pid": health.get("pid") if isinstance(health.get("pid"), int) else None,
+        "generation": generation if isinstance(generation, int) else None,
+        "started_at": health.get("started_at") if isinstance(health.get("started_at"), str) else None,
+        "previous_instance_id_present": isinstance(health.get("previous_instance_id"), str),
+        "restart_count_observed_minimum": max(generation - 1, 0) if isinstance(generation, int) and generation >= 1 else None,
+        "restart_semantics": "P7.02 generation visibility; not an SLA/reliability claim",
+    }
+
+
 def _alert_payload(status: HealthStatus) -> dict[str, Any]:
     severity = "critical" if status.state == "down" else "warning"
     return {
@@ -361,6 +411,8 @@ def operational_status(root: Path, *, max_age_seconds: float = DEFAULT_HEALTH_MA
         "operator_action": status.action,
         "release_sha": status.release_sha,
         "heartbeat_age_seconds": status.heartbeat_age_seconds,
+        "process": _process_snapshot(root),
+        "resources": _resource_snapshot(root),
         "active_alert": alert,
         "telemetry_retention_hours": policy["retention_hours"],
     }
@@ -380,47 +432,83 @@ def _require_audit_decision(decision: p704.AccessDecision) -> None:
 
 
 def audit_visibility(root: Path, decision: p704.AccessDecision, *, limit: int = 100) -> dict[str, Any]:
+    """Return authorized metadata-only views of governed records and recovery checkpoints.
+
+    Filesystem mtimes are exposed only as non-authoritative storage observations;
+    canonical event/execution time remains whatever the governed source records say.
+    """
     _require_audit_decision(decision)
     if limit <= 0 or limit > 1000:
         raise BoundaryError("audit visibility limit must be 1..1000")
     items_root = _paths(root)["governed_items"]
     entries: list[dict[str, Any]] = []
+    candidates: list[tuple[float, Path]] = []
     if items_root.exists():
-        for item_dir in sorted(items_root.iterdir()):
-            if len(entries) >= limit:
-                break
-            if not item_dir.is_dir() or item_dir.is_symlink():
-                continue
-            manifest = p703.verify_item(item_dir)
-            metadata = manifest["metadata"]
-            if metadata.get("state_class") != "canonical-governed-state":
-                continue
-            entries.append({
-                "storage_item_id": manifest["storage_item_id"],
-                "semantic_type": metadata.get("semantic_type"),
-                "schema_version": metadata.get("schema_version"),
-                "classification": metadata.get("classification"),
-                "authority_mode": metadata.get("authority_mode"),
-                "subject_identity": metadata.get("subject_identity"),
-                "version_identity": metadata.get("version_identity"),
-                "provenance_refs": list(metadata.get("provenance_refs", []))[:20],
-                "payload_exposed": False,
-            })
+        for item_dir in items_root.iterdir():
+            if item_dir.is_dir() and not item_dir.is_symlink():
+                candidates.append((item_dir.stat().st_mtime, item_dir))
+    for observed_mtime, item_dir in sorted(candidates, key=lambda value: value[0], reverse=True):
+        if len(entries) >= limit:
+            break
+        manifest = p703.verify_item(item_dir)
+        metadata = manifest["metadata"]
+        if metadata.get("state_class") != "canonical-governed-state":
+            continue
+        entries.append({
+            "storage_item_id": manifest["storage_item_id"],
+            "semantic_type": metadata.get("semantic_type"),
+            "schema_version": metadata.get("schema_version"),
+            "classification": metadata.get("classification"),
+            "authority_mode": metadata.get("authority_mode"),
+            "subject_identity": metadata.get("subject_identity"),
+            "version_identity": metadata.get("version_identity"),
+            "provenance_refs": list(metadata.get("provenance_refs", []))[:20],
+            "storage_observed_at": datetime.fromtimestamp(observed_mtime, tz=timezone.utc).isoformat().replace("+00:00", "Z"),
+            "storage_observed_at_authority": "non-canonical filesystem observation",
+            "payload_exposed": False,
+        })
+
+    checkpoint_root = _paths(root)["root"] / "state" / "checkpoints"
+    checkpoints: list[dict[str, Any]] = []
+    checkpoint_candidates: list[tuple[float, Path]] = []
+    if checkpoint_root.exists():
+        for path in checkpoint_root.iterdir():
+            if path.is_file() and path.suffix == ".json" and not path.is_symlink():
+                checkpoint_candidates.append((path.stat().st_mtime, path))
+    for observed_mtime, path in sorted(checkpoint_candidates, key=lambda value: value[0], reverse=True)[:limit]:
+        checkpoint = p703.verify_checkpoint(_paths(root)["root"], path)
+        checkpoints.append({
+            "checkpoint_id": checkpoint.get("checkpoint_id"),
+            "execution_subject_identity": checkpoint.get("execution_subject_identity"),
+            "execution_version_identity": checkpoint.get("execution_version_identity"),
+            "classification": checkpoint.get("classification"),
+            "reason": checkpoint.get("reason"),
+            "created_at": checkpoint.get("created_at"),
+            "governed_storage_item_count": len(checkpoint.get("governed_storage_item_ids", [])),
+            "canonical_authority": checkpoint.get("canonical_authority"),
+            "external_effect_replay_authorized": checkpoint.get("external_effect_replay_authorized"),
+            "storage_observed_at": datetime.fromtimestamp(observed_mtime, tz=timezone.utc).isoformat().replace("+00:00", "Z"),
+            "payload_exposed": False,
+        })
+
     emit_telemetry(root, event="audit.visibility", attributes={
         "operation": decision.operation,
         "resource": decision.resource,
         "access_path": decision.access_path,
         "principal_kind": decision.principal_kind,
         "allowed": True,
-        "count": len(entries),
+        "count": len(entries) + len(checkpoints),
     })
     return {
         "schema": AUDIT_SCHEMA,
-        "classification": "authorized audit metadata projection; source records remain canonical",
+        "classification": "authorized audit/reconstruction metadata projection; source records remain authoritative",
         "projection_canonical_authority": False,
+        "storage_recency_canonical_authority": False,
         "payload_bytes_exposed": False,
         "count": len(entries),
+        "checkpoint_count": len(checkpoints),
         "items": entries,
+        "recovery_checkpoints": checkpoints,
     }
 
 
