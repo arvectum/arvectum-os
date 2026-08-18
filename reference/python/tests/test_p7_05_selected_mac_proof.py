@@ -8,6 +8,7 @@ import p7_05_selected_mac_proof as proof
 
 
 SHA = "b" * 40
+OTHER_SHA = "c" * 40
 
 
 class P705SelectedMacProofContractTests(unittest.TestCase):
@@ -31,10 +32,10 @@ class P705SelectedMacProofContractTests(unittest.TestCase):
             "product_effects_enabled": False,
             "canonical_state_written": False,
         }
-        health_path = self.root / "run" / "health.json"
-        health_path.write_text(json.dumps(health), encoding="utf-8")
+        self.health_path = self.root / "run" / "health.json"
+        self.health_path.write_text(json.dumps(health), encoding="utf-8")
         if os.name != "nt":
-            health_path.chmod(0o600)
+            self.health_path.chmod(0o600)
 
         self.context = base / "p6-context.json"
         context = {
@@ -66,6 +67,8 @@ class P705SelectedMacProofContractTests(unittest.TestCase):
     def test_bounded_selected_mac_contract_passes_without_canonical_mutation(self):
         result = proof.run_selected_mac_proof(self.root, self.context, SHA)
         self.assertEqual(result["status"], "PASS")
+        self.assertEqual(result["tool_release_sha"], SHA)
+        self.assertEqual(result["persistent_runtime_release_sha"], SHA)
         self.assertEqual(result["final_runtime_state"], "healthy")
         self.assertTrue(result["actionable_alert_path_verified"])
         self.assertTrue(result["governed_tree_hash_unchanged_by_cleanup"])
@@ -77,6 +80,18 @@ class P705SelectedMacProofContractTests(unittest.TestCase):
         self.assertFalse(result["external_effects"])
         self.assertTrue((self.root / "evidence" / result["attestation_basename"]).exists())
         self.assertFalse((self.root / "run" / "p7-05-alert.json").exists())
+
+    def test_selected_mac_contract_fails_on_runtime_release_mismatch(self):
+        health = json.loads(self.health_path.read_text(encoding="utf-8"))
+        health["release_sha"] = OTHER_SHA
+        health["heartbeat_at"] = proof.p705._utc_now()
+        self.health_path.write_text(json.dumps(health), encoding="utf-8")
+        if os.name != "nt":
+            self.health_path.chmod(0o600)
+
+        with self.assertRaises(proof.p705.IntegrityError) as ctx:
+            proof.run_selected_mac_proof(self.root, self.context, SHA)
+        self.assertIn("runtime release mismatch", str(ctx.exception))
 
 
 if __name__ == "__main__":
