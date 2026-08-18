@@ -1,10 +1,11 @@
 """P7.06-UI2 exact source-reconstruction presentation.
 
-RFC-0006 reconstruction is evidence reconstruction, not side-effect replay.  This
-module consumes the existing ``ReconstructionManifest`` primitive and binds it
-to the exact canonical source Version being inspected by UI2.  It deliberately
-does not construct reconstruction manifests from browser/UI data and does not
-infer reconstruction when governed evidence is absent.
+RFC-0006 reconstruction is evidence reconstruction, not side-effect replay.
+UI2 consumes the existing CAP-004 ``AuditReconstructionView`` rather than
+rendering a raw ReconstructionManifest, so current redaction/retention evidence
+availability remains authoritative for disclosure.  The view is additionally
+bound to the exact canonical source Version being inspected; UI2 never invents
+reconstruction evidence from the current action Execution.
 """
 
 from __future__ import annotations
@@ -13,8 +14,12 @@ from dataclasses import dataclass
 from enum import Enum
 from html import escape
 
+from .audit_reconstruction_support import (
+    AuditEvidenceItem,
+    AuditReconstructionView,
+    EvidenceAvailability,
+)
 from .canonical import CanonicalRecord
-from .event_provenance import ReconstructionManifest
 from .identity import Identity
 from .security import OrganizationScope
 
@@ -26,19 +31,12 @@ class SourceReconstructionState(str, Enum):
 
 @dataclass(frozen=True, slots=True)
 class SourceReconstructionView:
-    """Non-authoritative, exact-reference view over RFC-0006 reconstruction."""
+    """Non-authoritative exact source binding over a CAP-004 audit view."""
 
     state: SourceReconstructionState
     source_subject_id: Identity
     source_version_id: Identity
-    operation_name: str | None = None
-    execution_subject_id: Identity | None = None
-    execution_version_id: Identity | None = None
-    workflow_subject_id: Identity | None = None
-    workflow_version_id: Identity | None = None
-    event_versions: tuple[tuple[Identity, Identity, str, str], ...] = ()
-    result_versions: tuple[tuple[Identity, Identity], ...] = ()
-    provenance_refs: tuple[Identity, ...] = ()
+    audit_view: AuditReconstructionView | None = None
 
     def __post_init__(self) -> None:
         if not isinstance(self.state, SourceReconstructionState):
@@ -47,39 +45,25 @@ class SourceReconstructionView:
             self.source_version_id, Identity
         ):
             raise ValueError("source reconstruction must preserve exact source identity")
-        details = (
-            self.operation_name,
-            self.execution_subject_id,
-            self.execution_version_id,
-            self.workflow_subject_id,
-            self.workflow_version_id,
-        )
         if self.state is SourceReconstructionState.UNAVAILABLE:
-            if any(value is not None for value in details):
-                raise ValueError("unavailable reconstruction must not manufacture governed details")
-            if self.event_versions or self.result_versions or self.provenance_refs:
-                raise ValueError("unavailable reconstruction must not manufacture evidence")
+            if self.audit_view is not None:
+                raise ValueError("unavailable reconstruction must not carry audit evidence")
             return
-        if not isinstance(self.operation_name, str) or not self.operation_name.strip():
-            raise ValueError("available reconstruction requires an exact operation")
-        if any(not isinstance(value, Identity) for value in details[1:]):
-            raise ValueError("available reconstruction requires exact governed versions")
-        if not self.result_versions or not self.event_versions or not self.provenance_refs:
-            raise ValueError("available reconstruction requires result, Event and provenance evidence")
+        if not isinstance(self.audit_view, AuditReconstructionView):
+            raise ValueError("available reconstruction requires CAP-004 AuditReconstructionView")
 
 
 def build_source_reconstruction_view(
     *,
     organization: OrganizationScope,
     source_record: CanonicalRecord,
-    manifest: ReconstructionManifest | None,
+    audit_view: AuditReconstructionView | None,
 ) -> SourceReconstructionView:
-    """Bind optional RFC-0006 reconstruction evidence to one exact source Version.
+    """Bind optional authorized reconstruction evidence to one exact source Version.
 
-    ``None`` means the runtime has not established a reusable reconstruction
-    manifest for this exact source Version.  That is rendered truthfully as
-    unavailable; UI2 never fabricates a manifest from the current in-flight
-    action Execution.
+    ``None`` means the trusted runtime has not established a currently viewable
+    reconstruction for this exact source Version.  UI2 renders that state as
+    unavailable and does not infer evidence from the in-flight action.
     """
 
     if not isinstance(organization, OrganizationScope):
@@ -88,58 +72,78 @@ def build_source_reconstruction_view(
         raise ValueError("source reconstruction requires an exact CanonicalRecord")
     if source_record.organization != organization:
         raise ValueError("source reconstruction source must share Organization scope")
-    if manifest is None:
+    if audit_view is None:
         return SourceReconstructionView(
             state=SourceReconstructionState.UNAVAILABLE,
             source_subject_id=source_record.subject_id,
             source_version_id=source_record.version_id,
         )
-    if not isinstance(manifest, ReconstructionManifest):
-        raise ValueError("source reconstruction evidence must be an RFC-0006 ReconstructionManifest")
-    if manifest.organization != organization:
-        raise ValueError("source reconstruction manifest must share Organization scope")
+    if not isinstance(audit_view, AuditReconstructionView):
+        raise ValueError("source reconstruction evidence must be a CAP-004 AuditReconstructionView")
+    if audit_view.organization != organization:
+        raise ValueError("source reconstruction view must share Organization scope")
 
-    exact_source_result = any(
-        pin.subject_id == source_record.subject_id and pin.version_id == source_record.version_id
-        for pin in manifest.results
+    exact_result = next(
+        (
+            item
+            for item in audit_view.evidence
+            if item.role == "result" and item.version_id == source_record.version_id
+        ),
+        None,
     )
-    if not exact_source_result:
-        raise ValueError("reconstruction manifest does not reconstruct the exact inspected source Version")
+    if exact_result is None:
+        raise ValueError("reconstruction view does not reconstruct the exact inspected source Version")
+    if (
+        exact_result.availability is EvidenceAvailability.AVAILABLE
+        and exact_result.source is not None
+        and exact_result.source.subject_id != source_record.subject_id
+    ):
+        raise ValueError("available reconstruction result does not preserve source Subject Identity")
 
     execution_refs = {
-        manifest.execution_subject_id,
-        *(pin.version_id for pin in manifest.execution_versions),
+        audit_view.execution_subject_id,
+        *(
+            item.version_id
+            for item in audit_view.evidence
+            if item.role == "execution-version"
+        ),
     }
     if not execution_refs.intersection(source_record.provenance_refs):
         raise ValueError("source Version provenance does not preserve the reconstructed Execution")
 
-    terminal_pin = manifest.execution_versions[-1]
-    event_versions = tuple(
-        (pin.subject_id, pin.version_id, event_type, schema_version)
-        for pin, (event_type, schema_version) in zip(
-            manifest.events,
-            manifest.event_types,
-            strict=True,
-        )
-    )
-    result_versions = tuple((pin.subject_id, pin.version_id) for pin in manifest.results)
     return SourceReconstructionView(
         state=SourceReconstructionState.AVAILABLE,
         source_subject_id=source_record.subject_id,
         source_version_id=source_record.version_id,
-        operation_name=manifest.operation_name,
-        execution_subject_id=manifest.execution_subject_id,
-        execution_version_id=terminal_pin.version_id,
-        workflow_subject_id=manifest.workflow.subject_id,
-        workflow_version_id=manifest.workflow.version_id,
-        event_versions=event_versions,
-        result_versions=result_versions,
-        provenance_refs=manifest.provenance_refs,
+        audit_view=audit_view,
     )
 
 
 def _identity_text(identity: Identity) -> str:
     return f"{identity.namespace}:{identity.value} [{identity.scope}]"
+
+
+def _evidence_html(item: AuditEvidenceItem) -> str:
+    availability = escape(item.availability.value)
+    if item.availability is EvidenceAvailability.AVAILABLE:
+        assert item.source is not None
+        return (
+            "<li>"
+            f"Role {escape(item.role)} — <strong>{availability}</strong>; "
+            f"Subject {escape(_identity_text(item.source.subject_id))}; "
+            f"exact Version {escape(_identity_text(item.source.version_id))}; "
+            f"semantic type {escape(item.source.semantic_type)}; "
+            f"authority scope {escape(item.source.authority_scope)}"
+            "</li>"
+        )
+    assert item.reason is not None
+    return (
+        "<li>"
+        f"Role {escape(item.role)} — <strong>{availability}</strong>; "
+        f"exact Version {escape(_identity_text(item.version_id))}; "
+        f"reason {escape(item.reason)}. Governed source details are not disclosed."
+        "</li>"
+    )
 
 
 def render_source_reconstruction_html(view: SourceReconstructionView) -> str:
@@ -150,42 +154,33 @@ def render_source_reconstruction_html(view: SourceReconstructionView) -> str:
             '<section data-source-reconstruction="unavailable">'
             "<h4>Source reconstruction</h4>"
             "<p><strong>Unavailable for this exact source Version.</strong> "
-            "No reusable RFC-0006 ReconstructionManifest was established by the trusted runtime. "
+            "No authorized CAP-004 reconstruction view was established by the trusted runtime. "
             "UI2 does not infer one from the current action and does not replay side effects.</p>"
             "</section>"
         )
 
-    assert view.operation_name is not None
-    assert view.execution_subject_id is not None
-    assert view.execution_version_id is not None
-    assert view.workflow_subject_id is not None
-    assert view.workflow_version_id is not None
-    events = "".join(
-        "<li>"
-        f"Event Subject {escape(_identity_text(subject))}; exact Version {escape(_identity_text(version))}; "
-        f"type {escape(event_type)}; schema {escape(schema_version)}"
-        "</li>"
-        for subject, version, event_type, schema_version in view.event_versions
+    audit = view.audit_view
+    assert audit is not None
+    evidence = "".join(_evidence_html(item) for item in audit.evidence)
+    correlations = "".join(
+        f"<li>{escape(_identity_text(ref))}</li>" for ref in audit.correlation_refs
     )
-    results = "".join(
-        f"<li>Subject {escape(_identity_text(subject))}; exact Version {escape(_identity_text(version))}</li>"
-        for subject, version in view.result_versions
-    )
-    provenance = "".join(
-        f"<li>{escape(_identity_text(ref))}</li>" for ref in view.provenance_refs
+    causations = "".join(
+        f"<li>{escape(_identity_text(ref))}</li>" for ref in audit.causation_refs
     )
     return (
         '<section data-source-reconstruction="available">'
         "<h4>Source reconstruction</h4>"
-        "<p><strong>Available from exact RFC-0006 governed evidence.</strong><br>"
-        f"Operation: {escape(view.operation_name)}<br>"
-        f"Execution Subject: {escape(_identity_text(view.execution_subject_id))}<br>"
-        f"Exact reconstructed Execution Version: {escape(_identity_text(view.execution_version_id))}<br>"
-        f"Workflow Subject: {escape(_identity_text(view.workflow_subject_id))}<br>"
-        f"Exact Workflow Version: {escape(_identity_text(view.workflow_version_id))}</p>"
-        f"<h5>Exact results</h5><ul>{results}</ul>"
-        f"<h5>Admitted canonical Events</h5><ul>{events}</ul>"
-        f"<h5>Reconstruction provenance</h5><ul>{provenance}</ul>"
+        "<p><strong>Available from authorized CAP-004 / RFC-0006 governed evidence.</strong><br>"
+        f"Operation: {escape(audit.operation_name)}<br>"
+        f"Execution Subject: {escape(_identity_text(audit.execution_subject_id))}<br>"
+        f"Initiating Actor: {escape(_identity_text(audit.initiating_actor_id))}<br>"
+        f"Evidence complete: {'yes' if audit.complete else 'no'}</p>"
+        f"<h5>Governed reconstruction evidence</h5><ul>{evidence}</ul>"
+        f"<h5>Correlation references</h5><ul>{correlations}</ul>"
+        f"<h5>Causation references</h5><ul>{causations}</ul>"
+        "<p>Unavailable/redacted/deleted evidence remains unavailable in this UI; "
+        "UI2 does not recover or disclose its hidden governed source pin.</p>"
         "<p>Reconstruction is read-only evidence reconstruction. Historical inspection never "
         "repeats an external or consequential effect.</p>"
         "</section>"
