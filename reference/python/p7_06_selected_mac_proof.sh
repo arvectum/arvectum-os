@@ -8,14 +8,14 @@ fail() { printf '%s\n' "P7.06 selected-Mac proof FAIL: $*" >&2; exit 1; }
 current_release() { [ -L "$RUNTIME_ROOT/current" ] || fail "current release symlink missing"; basename "$(readlink "$RUNTIME_ROOT/current")"; }
 [ "$(uname -s)" = "Darwin" ] || fail "macOS required"
 source=$(current_release)
-"$DEPLOY" update "$DECISION_REF:update"
+sh "$DEPLOY" update "$DECISION_REF:update"
 target=$(current_release)
 [ "$target" != "$source" ] || fail "update did not change exact release"
-"$DEPLOY" rollback-last
+sh "$DEPLOY" rollback-last
 [ "$(current_release)" = "$source" ] || fail "rollback did not restore source release"
-"$DEPLOY" update "$DECISION_REF:final-update"
+sh "$DEPLOY" update "$DECISION_REF:final-update"
 [ "$(current_release)" = "$target" ] || fail "final update did not restore target release"
-"$DEPLOY" status >/dev/null
+sh "$DEPLOY" status >/dev/null
 stamp=$(date -u '+%Y%m%dT%H%M%SZ')
 summary="$RUNTIME_ROOT/evidence/p7-06/p7-06-selected-mac-proof-$stamp.json"
 mkdir -p "$(dirname "$summary")"
@@ -48,4 +48,6 @@ with open(path, "w", encoding="utf-8") as h:
 os.chmod(path, 0o600)
 PY
 digest=$(shasum -a 256 "$summary" | awk '{print $1}')
+printf '%s  %s\n' "$digest" "$(basename "$summary")" > "$summary.sha256"
+chmod 600 "$summary.sha256"
 printf '%s\n' "P7.06 selected-Mac proof PASS source=$source target=$target evidence=$summary sha256=$digest"
