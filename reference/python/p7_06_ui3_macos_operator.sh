@@ -56,10 +56,10 @@ listener_matches() {
   port=$1; pid=$2
   own=$(lsof -nP -a -p "$pid" -iTCP:"$port" -sTCP:LISTEN 2>/dev/null || true)
   [ -n "$own" ] || return 1
-  printf '%s\n' "$own" | awk -v port="$port" 'NR>1 { if ($2 !~ /^[0-9]+$/ || $9 != "127.0.0.1:" port) exit 1; seen=1 } END { exit seen ? 0 : 1 }' \
+  printf '%s\n' "$own" | awk -v port="$port" 'NR>1 { seen=1; if ($2 !~ /^[0-9]+$/ || $9 != "127.0.0.1:" port) bad=1 } END { exit (seen && !bad) ? 0 : 1 }' \
     || return 1
   all=$(lsof -nP -iTCP:"$port" -sTCP:LISTEN 2>/dev/null || true)
-  printf '%s\n' "$all" | awk -v port="$port" -v pid="$pid" 'NR>1 { if ($2 != pid || $9 != "127.0.0.1:" port) exit 1; seen=1 } END { exit seen ? 0 : 1 }'
+  printf '%s\n' "$all" | awk -v port="$port" -v pid="$pid" 'NR>1 { seen=1; if ($2 != pid || $9 != "127.0.0.1:" port) bad=1 } END { exit (seen && !bad) ? 0 : 1 }'
 }
 
 wait_listener_ready() {
@@ -145,10 +145,10 @@ verify_listener() {
     [ -z "$all" ] || fail "configured UI3 private port $HOST:$port is owned by another listener"
     fail "UI3 launchd process has no private listener"
   fi
-  printf '%s\n' "$own" | awk -v port="$port" 'NR>1 { if ($2 !~ /^[0-9]+$/ || $9 != "127.0.0.1:" port) exit 1; seen=1 } END { exit seen ? 0 : 1 }' \
+  printf '%s\n' "$own" | awk -v port="$port" 'NR>1 { seen=1; if ($2 !~ /^[0-9]+$/ || $9 != "127.0.0.1:" port) bad=1 } END { exit (seen && !bad) ? 0 : 1 }' \
     || fail "UI3 process listener exposure is not exactly 127.0.0.1:$port"
   all=$(lsof -nP -iTCP:"$port" -sTCP:LISTEN 2>/dev/null || true)
-  printf '%s\n' "$all" | awk -v port="$port" -v pid="$pid" 'NR>1 { if ($2 != pid || $9 != "127.0.0.1:" port) exit 1; seen=1 } END { exit seen ? 0 : 1 }' \
+  printf '%s\n' "$all" | awk -v port="$port" -v pid="$pid" 'NR>1 { seen=1; if ($2 != pid || $9 != "127.0.0.1:" port) bad=1 } END { exit (seen && !bad) ? 0 : 1 }' \
     || fail "another process/listener shares the UI3 private port"
 }
 
