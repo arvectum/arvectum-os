@@ -4,6 +4,7 @@ import hashlib
 import http.client
 import json
 import os
+import shutil
 import tempfile
 import threading
 import unittest
@@ -177,9 +178,7 @@ class P706UI1LiveWorkspaceTests(unittest.TestCase):
         snapshot = self._snapshot()
         for destination in ui1.WORKSPACE_DESTINATIONS:
             with self.subTest(destination=destination):
-                html = ui1.render_live_workspace_html(
-                    snapshot, destination=destination
-                )
+                html = ui1.render_live_workspace_html(snapshot, destination=destination)
                 self.assertIn(f"<h2>{destination.value}</h2>", html)
                 self.assertIn("Organization:", html)
                 self.assertIn("Actor:", html)
@@ -331,6 +330,34 @@ class P706UI1LiveWorkspaceTests(unittest.TestCase):
                 server.server_close()
                 thread.join(timeout=5)
 
+    def test_missing_governed_store_is_unavailable_not_zero_records(self) -> None:
+        shutil.rmtree(self.root / "state" / "governed" / "items")
+        with patch.object(ui1, "_verify_exact_release", return_value=RELEASE):
+            with self.assertRaises(ui1.UI1IntegrityError) as ctx:
+                ui1.build_live_snapshot(
+                    self.root,
+                    organization=self.org,
+                    principal=self.human,
+                    credential_id=self.credential_id,
+                    credential_file=self.credential_file,
+                )
+        self.assertIn("unavailable", str(ctx.exception))
+
+    def test_unexpected_checkpoint_store_entry_fails_closed(self) -> None:
+        unexpected = self.root / "state" / "checkpoints" / "README.txt"
+        unexpected.write_text("not a governed checkpoint", encoding="utf-8")
+        if os.name != "nt":
+            unexpected.chmod(0o600)
+        with patch.object(ui1, "_verify_exact_release", return_value=RELEASE):
+            with self.assertRaises(ui1.UI1IntegrityError):
+                ui1.build_live_snapshot(
+                    self.root,
+                    organization=self.org,
+                    principal=self.human,
+                    credential_id=self.credential_id,
+                    credential_file=self.credential_file,
+                )
+
     def test_non_loopback_bind_is_rejected(self) -> None:
         for host in ("0.0.0.0", "192.0.2.10", "localhost", "::1"):
             with self.subTest(host=host):
@@ -353,8 +380,12 @@ class P706UI1LiveWorkspaceTests(unittest.TestCase):
         for token in forbidden_calls:
             with self.subTest(token=token):
                 self.assertNotIn(token, source)
-        for token in ("do_POST = _reject_mutation", "do_PUT = _reject_mutation",
-                      "do_PATCH = _reject_mutation", "do_DELETE = _reject_mutation"):
+        for token in (
+            "do_POST = _reject_mutation",
+            "do_PUT = _reject_mutation",
+            "do_PATCH = _reject_mutation",
+            "do_DELETE = _reject_mutation",
+        ):
             self.assertIn(token, source)
 
 
