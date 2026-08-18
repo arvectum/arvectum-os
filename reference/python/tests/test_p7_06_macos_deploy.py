@@ -33,5 +33,17 @@ class ShellTests(unittest.TestCase):
         self.assertIn("historical_effect_replay_invoked", text)
         self.assertIn("product_external_effect_invoked", text)
 
+    def test_selected_mac_proof_does_not_require_executable_git_mode(self):
+        text = PROOF.read_text()
+        self.assertIn('sh "$DEPLOY" update "$DECISION_REF:update"', text)
+        self.assertIn('sh "$DEPLOY" rollback-last', text)
+        self.assertIn('sh "$DEPLOY" update "$DECISION_REF:final-update"', text)
+        self.assertIn('sh "$DEPLOY" status', text)
+
+    def test_selected_mac_proof_retains_digest_sidecar(self):
+        text = PROOF.read_text()
+        self.assertIn('> "$summary.sha256"', text)
+        self.assertIn('chmod 600 "$summary.sha256"', text)
+
 if __name__ == "__main__":
     unittest.main()
