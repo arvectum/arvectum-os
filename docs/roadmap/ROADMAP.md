@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.55.1`
+Version: `2.55.2`
 Created: `2026-08-07`
 Updated: `2026-08-18`
 Owner: `ООО «Арвектум»`
@@ -14,6 +14,12 @@ This document is the canonical planning source for Arvectum OS development seque
 Future roadmap content is a planning hypothesis until its phase is activated. Roadmap status does not by itself change Platform Capability lifecycle, Product Contract lifecycle, operational environment/readiness, conformance maturity, SLA/support or commercial commitments.
 
 ## 2. Version note
+
+Version `2.55.2` closes `P7.06 — Governed deploy/update/rollback/version/migration path` for the declared `Persistent Internal / owner-operated` scope after selected-Mac Attempt 8 completed the required exact `update → rollback → final update` proof. The proof moved from historical source `cf60e52c93bf0ef4158cf2c3e26792850a126c70` to canonical target/final active release `4df99c4c66a1b7b93a4b05d7768018b03aa4041b`, with first update transaction `a33209268d34b25c1bb8db9c63e835bf6149a404af57f8e77952177f22c5ffb3`, rollback transaction `589f282e3e062c1b5aa298f841f044d4d9c6227214c862d45044673a5ce9e951`, final update transaction `34470ac05993465155b8048405d1dbb712ffb9387b90a29666b927fcfb9dfdc4`, and owner-local attestation SHA-256 `3dec1d1dd34aff960753105e72aa60739c01fb61c0af091a554e93f344418e69`.
+
+The first governed P7.06 transition has therefore carried and verified the R22 exact-release runtime/observer hardening through successful update, exact historical rollback and final re-update. No schema-changing migration, durable backup restore, canonical organizational-state mutation by deployment, product/external effect or historical effect replay occurred. P7.06 is `Complete / PASS`, active Phase 7 is synchronized to `1.2.7`, the live workspace substream is activated at `0.1.1`, and `P7.06-UI1 — Live read-only governed workspace` becomes the current canonical action before P7.07/P7.08 workload expansion.
+
+This closure creates no external/customer Production, `Active` Platform Capability, Stable Product Contract, public/stable deployment or UI API, supported macOS/browser matrix, generalized migration framework, SLA/SLO/support or broader conformance claim.
 
 Version `2.55.1` adds the bounded `P7.06-UI — Live operator workspace over persistent runtime` substream and synchronizes active Phase 7 to `1.2.6`. Phase 4 / M4 already proved the domain-neutral workspace semantics and supplied an inspectable static HTML reference, but it deliberately did not establish a persistent browser application or stable frontend/API boundary. The new Phase 7 substream operationalizes those existing semantics against the live selected-Mac runtime rather than redesigning the workspace.
 
@@ -101,7 +107,7 @@ Phase 6 completed with two materially distinct real-product/workflow chains: Ten
 
 ## 6. Active Phase 7 — Operational / Enterprise Readiness
 
-Detailed roadmap: [`PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md`](PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md) — `Active 1.2.6`.
+Detailed roadmap: [`PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md`](PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md) — `Active 1.2.7`.
 
 Phase 7 converts validated owner-operated use into a persistent, recoverable, observable and operator-accessible internal operating baseline before considering stronger production/lifecycle claims.
 
@@ -112,8 +118,8 @@ Phase 7 converts validated owner-operated use into a persistent, recoverable, ob
 | `P7.03` | Durable governed state/checkpoint persistence + backup/restore baseline | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.04` | Persistent identity/operator/service access + least-privilege operations | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.05` | Health, observability, audit visibility, alerting + retention/minimization | 🟩 Complete / PASS | `██████████ 100%` |
-| `P7.06` | Governed deploy/update/rollback/version/migration path | 🟨 Current | `░░░░░░░░░░ 0%` |
-| `P7.06-UI` | Live operator workspace over persistent runtime | ⬜ Planned — gated by P7.06 core | `░░░░░░░░░░ 0%` |
+| `P7.06` | Governed deploy/update/rollback/version/migration path | 🟩 Complete / PASS | `██████████ 100%` |
+| `P7.06-UI` | Live operator workspace over persistent runtime | 🟨 Current — UI1 | `░░░░░░░░░░ 0%` |
 | `P7.07` | Persistent Tender Operator operational contour | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.08` | Persistent Discount Parser cross-host operational contour | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.09` | Operator runbook + incident/uncertain-outcome/recovery drills | ⬜ | `░░░░░░░░░░ 0%` |
@@ -121,7 +127,7 @@ Phase 7 converts validated owner-operated use into a persistent, recoverable, ob
 | `P7.11` | Scoped operational-readiness, lifecycle, conformance + stable-boundary disposition | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.12` | Phase 7 / M7 closure review | ⬜ | `░░░░░░░░░░ 0%` |
 
-Detailed operator-workspace plan: [`P7-06-LIVE-OPERATOR-WORKSPACE-SUBSTREAM.md`](P7-06-LIVE-OPERATOR-WORKSPACE-SUBSTREAM.md) — `Planned / gated by P7.06 core 0.1.0`.
+Detailed operator-workspace plan: [`P7-06-LIVE-OPERATOR-WORKSPACE-SUBSTREAM.md`](P7-06-LIVE-OPERATOR-WORKSPACE-SUBSTREAM.md) — `Active / UI1 Current 0.1.1`.
 
 Engineering/quality gates:
 
@@ -149,9 +155,9 @@ P7.05 operational visibility — PASS
         ↓
 R22 Persistent Runtime Health Review — PASS
         ↓
-P7.06 governed deploy/update/rollback/version/migration ← current
+P7.06 governed deploy/update/rollback/version/migration — PASS
         ↓
-P7.06-UI1 live read-only workspace
+P7.06-UI1 live read-only workspace ← current
         ↓
 P7.06-UI2 governed interaction/preflight
         ↓
@@ -162,9 +168,9 @@ P7.06-UI4 first real owner interaction proof
 P7.07–P7.12 workload expansion + hardening
 ```
 
-P7.02 passed on exact selected-Mac release `73af746f83271b14670fe22db658dfd55cacb291`. P7.03 subsequently established the bounded durable-state/checkpoint and backup/restore baseline. P7.04 is `Complete / PASS` after repository implementation, six-iteration functional review and selected-Mac Attempt 1. P7.05 is `Complete / PASS` after PR `#37`, `960/960` Reference Python CI, four-iteration functional review and selected-Mac Attempt 1 on exact canonical release `cf60e52c93bf0ef4158cf2c3e26792850a126c70`. R22 is `Complete / PASS` after remediation PR `#39` and `964/964` Reference Python CI; P7.06 is current.
+P7.02 passed on exact selected-Mac release `73af746f83271b14670fe22db658dfd55cacb291`. P7.03 subsequently established the bounded durable-state/checkpoint and backup/restore baseline. P7.04 is `Complete / PASS` after repository implementation, six-iteration functional review and selected-Mac Attempt 1. P7.05 is `Complete / PASS` after PR `#37`, `960/960` Reference Python CI, four-iteration functional review and selected-Mac Attempt 1 on exact canonical release `cf60e52c93bf0ef4158cf2c3e26792850a126c70`. R22 is `Complete / PASS` after remediation PR `#39` and `964/964` Reference Python CI. P7.06 is `Complete / PASS` after PR #49 repository hardening and selected-Mac Attempt 8 proved exact update, rollback and final re-update to `4df99c4c66a1b7b93a4b05d7768018b03aa4041b`.
 
-R22 intentionally did not ad-hoc redeploy its hardening to the selected Mac mini. The first controlled P7.06 update must carry that hardening and establish exact runtime/observer release pinning, migration/update health and rollback disposition before the live operator workspace or P7.07/P7.08 workload expansion.
+The R22 obligation has now been discharged through the controlled P7.06 path rather than ad-hoc deployment. `P7.06-UI1` is current; P7.07/P7.08 remain downstream of the declared UI substream sequencing.
 
 ## 7. M7 milestone definition
 
@@ -206,8 +212,8 @@ A roadmap phase transition does not itself change lifecycle, production readines
 
 ## 11. Current canonical action
 
-> **P7.06 — Governed deploy/update/rollback/version/migration path.**
+> **P7.06-UI1 — Live read-only governed workspace.**
 
-R22 is `Complete / PASS` after two functional review iterations and GitHub `Reference Python CI` run `32111920701` with `964/964 PASS`. The review closed mixed-release observer execution, ambiguous/fail-open launchd observer lifecycle/status and orphan-secret verification gaps at repository level. P7.06 must now implement and prove the controlled update path, using the merged R22 hardening as the first update candidate and verifying exact release pins, pre-update recovery evidence, compatibility/migration, controlled stop/update/re-pin/start, post-update health and rollback/unsafe-rollback disposition.
+P7.06 core is `Complete / PASS` for the declared `Persistent Internal / owner-operated` scope. Selected-Mac Attempt 8 completed the exact source→target update, target→source rollback and final source→target update, retained two verified pre-update backups, recorded all three exact transactions, left the selected Mac on exact target `4df99c4c66a1b7b93a4b05d7768018b03aa4041b`, and produced owner-local attestation SHA-256 `3dec1d1dd34aff960753105e72aa60739c01fb61c0af091a554e93f344418e69`.
 
-After `P7.06 core = PASS`, `P7.06-UI1 — Live read-only governed workspace` becomes the next canonical operator-experience action before P7.07/P7.08. No operator-workspace or product workload expansion should precede the P7.06 controlled update proof.
+The next canonical action is therefore the first private read-only live workspace over exact persistent runtime state, reusing the completed M4 workspace semantics without creating a public/stable UI or API boundary. P7.07/P7.08 workload expansion remains downstream until the P7.06-UI sequence reaches its declared completion boundary.
