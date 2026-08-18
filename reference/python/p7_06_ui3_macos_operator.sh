@@ -42,10 +42,15 @@ print(port)
 PY
 }
 
-wait_loaded() {
+service_pid() {
+  launchctl print "$TARGET" 2>/dev/null | awk '$1 == "pid" && $2 == "=" && $3 ~ /^[0-9]+$/ { print $3; exit }'
+}
+
+wait_running() {
   i=0
   while [ "$i" -lt 30 ]; do
-    launchctl print "$TARGET" >/dev/null 2>&1 && return 0
+    pid=$(service_pid || true)
+    if [ -n "$pid" ] && kill -0 "$pid" >/dev/null 2>&1; then return 0; fi
     i=$((i + 1)); sleep 0.2
   done
   return 1
@@ -105,12 +110,15 @@ PY
 }
 
 verify_listener() {
-  port=$1
+  port=$1; pid=$2
   command -v lsof >/dev/null 2>&1 || fail "lsof is required for bounded listener verification"
-  lines=$(lsof -nP -iTCP:"$port" -sTCP:LISTEN 2>/dev/null || true)
-  [ -n "$lines" ] || fail "private UI3 listener is not active"
-  printf '%s\n' "$lines" | awk -v port="$port" 'NR>1 { if ($9 != "127.0.0.1:" port) exit 1; seen=1 } END { exit seen ? 0 : 1 }' \
-    || fail "UI3 listener exposure is not exactly 127.0.0.1:$port"
+  own=$(lsof -nP -a -p "$pid" -iTCP:"$port" -sTCP:LISTEN 2>/dev/null || true)
+  [ -n "$own" ] || fail "UI3 launchd process has no private listener"
+  printf '%s\n' "$own" | awk -v port="$port" 'NR>1 { if ($2 !~ /^[0-9]+$/ || $9 != "127.0.0.1:" port) exit 1; seen=1 } END { exit seen ? 0 : 1 }' \
+    || fail "UI3 process listener exposure is not exactly 127.0.0.1:$port"
+  all=$(lsof -nP -iTCP:"$port" -sTCP:LISTEN 2>/dev/null || true)
+  printf '%s\n' "$all" | awk -v port="$port" -v pid="$pid" 'NR>1 { if ($2 != pid || $9 != "127.0.0.1:" port) exit 1; seen=1 } END { exit seen ? 0 : 1 }' \
+    || fail "another process/listener shares the UI3 private port"
 }
 
 init_config() {
@@ -139,7 +147,7 @@ install_service() {
   verify_plist_release_pin "$rel" || fail "launchd plist is not exact-release pinned"
   launchctl bootstrap "$DOMAIN" "$PLIST"
   launchctl kickstart -k "$TARGET" >/dev/null 2>&1
-  wait_loaded || fail "UI3 launchd target did not load"
+  wait_running || fail "UI3 launchd process did not become running"
   status_service >/dev/null
   info "install PASS release=$rel listener=$HOST:$port"
 }
@@ -148,18 +156,21 @@ status_service() {
   assert_macos
   rel=$(current_release); py=$(release_python "$rel"); script=$(release_script "$rel")
   launchctl print "$TARGET" >/dev/null 2>&1 || fail "UI3 launchd target is not loaded"
+  pid=$(service_pid || true)
+  [ -n "$pid" ] && kill -0 "$pid" >/dev/null 2>&1 || fail "UI3 launchd process is not running"
   [ -f "$PLIST" ] || fail "UI3 launchd plist missing"
   verify_plist_release_pin "$rel" || fail "UI3 launchd target is not pinned to current exact release"
   "$py" "$script" verify --runtime-root "$ROOT" --exact-release >/dev/null
   port=$(config_port "$rel")
-  verify_listener "$port"
-  info "status PASS release=$rel listener=$HOST:$port"
+  verify_listener "$port" "$pid"
+  info "status PASS release=$rel listener=$HOST:$port pid=$pid"
 }
 
 restart_service() {
   assert_macos
   status_service >/dev/null
   launchctl kickstart -k "$TARGET" >/dev/null 2>&1
+  wait_running || fail "UI3 launchd process did not restart"
   status_service >/dev/null
   info "restart PASS; process-local browser session invalidated"
 }
@@ -179,6 +190,7 @@ rotate_secret() {
   "$py" "$script" rotate-secret --runtime-root "$ROOT" >/dev/null
   if launchctl print "$TARGET" >/dev/null 2>&1; then
     launchctl kickstart -k "$TARGET" >/dev/null 2>&1
+    wait_running || fail "UI3 launchd process did not restart after secret rotation"
     status_service >/dev/null
   fi
   info "access secret rotated; prior process/browser session invalidated"
