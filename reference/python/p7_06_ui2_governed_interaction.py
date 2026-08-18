@@ -328,7 +328,11 @@ def make_server(
             return render_source_reconstruction_html(view)
 
         def _outcome_evidence_html(self, case: GovernedInteractionCase) -> str:
-            evidence = inspect_consequential_outcome_evidence(case.runtime_state)
+            execution = case.execution_lineage.head()
+            evidence = inspect_consequential_outcome_evidence(
+                case.runtime_state,
+                execution_subject_id=execution.execution_subject_id,
+            )
             return render_consequential_outcome_evidence_html(evidence)
 
         def _get(self) -> None:
@@ -415,7 +419,12 @@ def make_server(
                 outcome_evidence_html = ""
                 if not isinstance(result.preflight, GovernedInteractionBlocked):
                     outcome_evidence_html = render_consequential_outcome_evidence_html(
-                        inspect_consequential_outcome_evidence(result.runtime_state)
+                        inspect_consequential_outcome_evidence(
+                            result.runtime_state,
+                            execution_subject_id=(
+                                case.execution_lineage.head().execution_subject_id
+                            ),
+                        )
                     )
                 body = (
                     render_governed_interaction_preflight_html(result.preflight)
