@@ -48,6 +48,18 @@ class UI3MacOSOperatorTests(unittest.TestCase):
         self.assertIn("process-local browser session invalidated", text)
         self.assertIn("wait_running", text)
 
+    def test_status_verifies_private_material_modes_and_secret_log_minimization(self):
+        text = SERVICE.read_text(encoding="utf-8")
+        self.assertIn("verify_private_material()", text)
+        self.assertIn("path.stat().st_mode & 0o077", text)
+        self.assertIn("plist.read_bytes() != service_copy.read_bytes()", text)
+        self.assertIn("secret_bytes in stdout_log.read_bytes()", text)
+        self.assertIn("secret_bytes in stderr_log.read_bytes()", text)
+        status_start = text.index("status_service()")
+        restart_start = text.index("restart_service()", status_start)
+        status = text[status_start:restart_start]
+        self.assertIn('verify_private_material "$rel"', status)
+
     def test_governed_deploy_wrapper_quiesces_and_reconciles_ui3(self):
         text = SERVICE.read_text(encoding="utf-8")
         update_start = text.index("governed_update()")
