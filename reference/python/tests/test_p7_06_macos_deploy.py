@@ -39,6 +39,33 @@ class ShellTests(unittest.TestCase):
         self.assertIn('sh "$P705" uninstall', text)
         self.assertIn('sh "$P705" install', text)
 
+    def test_first_r22_upgrade_admits_only_exact_proven_legacy_observer_shape(self):
+        text = DEPLOY.read_text()
+        self.assertIn(
+            'P705_LEGACY_PROVEN_SHA="cf60e52c93bf0ef4158cf2c3e26792850a126c70"',
+            text,
+        )
+        self.assertIn('verify_source_observer_preupdate "$source"', text)
+        self.assertIn('rel" = "$P705_LEGACY_PROVEN_SHA', text)
+        self.assertIn('payload.get("ProgramArguments") != expected', text)
+        self.assertIn(
+            "pre-R22 observer plist does not match the exact historically proven P7.05 shape",
+            text,
+        )
+        self.assertIn("source observer legacy R22 carry-forward status PASS", text)
+
+    def test_rollback_reinstalls_safe_exact_observer_instead_of_unsafe_legacy_plist(self):
+        text = DEPLOY.read_text()
+        self.assertNotIn('cp "$old_observer" "$OBSERVER_PLIST"', text)
+        self.assertIn(
+            'if ! sh "$P705" install >/dev/null; then fail "rollback observer exact-release re-pin failed"; fi',
+            text,
+        )
+        self.assertIn(
+            'if ! sh "$P705" status >/dev/null; then fail "rollback observer exact-release verification failed"; fi',
+            text,
+        )
+
     def test_selected_mac_proof_orders_update_rollback_reupdate(self):
         text = PROOF.read_text()
         self.assertLess(text.index('update "$DECISION_REF:update"'), text.index("rollback-last"))

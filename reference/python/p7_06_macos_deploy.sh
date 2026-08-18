@@ -16,6 +16,7 @@ RUNTIME_PLIST="$HOME/Library/LaunchAgents/$RUNTIME_LABEL.plist"
 OBSERVER_PLIST="$HOME/Library/LaunchAgents/$OBSERVER_LABEL.plist"
 LOCK_DIR="$RUNTIME_ROOT/run/p7-06-deploy.lock"
 R22_SHA="950a5a8e0258dd555db4a97e5622d64951bcf6fe"
+P705_LEGACY_PROVEN_SHA="cf60e52c93bf0ef4158cf2c3e26792850a126c70"
 
 fail() { printf '%s\n' "P7.06 deploy FAIL: $*" >&2; exit 1; }
 info() { printf '%s\n' "P7.06 deploy: $*"; }
@@ -92,6 +93,45 @@ wait_loaded() {
   return 1
 }
 
+verify_source_observer_preupdate() {
+  rel=$1
+  if sh "$P705" status >/dev/null 2>&1; then
+    info "source observer exact-release status PASS release=$rel"
+    return 0
+  fi
+
+  [ "$rel" = "$P705_LEGACY_PROVEN_SHA" ] || fail "source observer exact-release verification failed outside the one admitted pre-R22 release"
+  launchctl print "$OBSERVER_TARGET" >/dev/null 2>&1 || fail "admitted pre-R22 observer is not loaded"
+  [ -f "$OBSERVER_PLIST" ] || fail "admitted pre-R22 observer plist is missing"
+  py=$(release_python "$rel")
+  legacy_script="$RUNTIME_ROOT/current/source/reference/python/p7_05_operational_visibility.py"
+  [ -x "$py" ] || fail "admitted pre-R22 observer Python is missing"
+  [ -f "$legacy_script" ] || fail "admitted pre-R22 observer script is missing"
+
+  python3 - "$OBSERVER_PLIST" "$py" "$legacy_script" "$RUNTIME_ROOT" <<'PY'
+import plistlib
+import sys
+
+path, expected_python, expected_script, root = sys.argv[1:]
+with open(path, "rb") as handle:
+    payload = plistlib.load(handle)
+expected = [
+    expected_python,
+    expected_script,
+    "observe",
+    "--runtime-root",
+    root,
+    "--max-age-seconds",
+    "20",
+]
+if payload.get("ProgramArguments") != expected:
+    raise SystemExit("pre-R22 observer plist does not match the exact historically proven P7.05 shape")
+PY
+
+  "$py" "$legacy_script" status --runtime-root "$RUNTIME_ROOT" --max-age-seconds 20 >/dev/null
+  info "source observer legacy R22 carry-forward status PASS release=$rel"
+}
+
 restore_plist_and_start() {
   txdir=$1
   rel=$2
@@ -122,12 +162,9 @@ restore_plist_and_start() {
     i=$((i + 1)); sleep 0.5
   done
 
-  cp "$old_observer" "$OBSERVER_PLIST"
-  chmod 600 "$OBSERVER_PLIST"
-  launchctl bootstrap "$DOMAIN" "$OBSERVER_PLIST"
-  launchctl kickstart "$OBSERVER_TARGET" >/dev/null 2>&1
-  wait_loaded "$OBSERVER_TARGET" || fail "rollback observer did not load"
-  sh "$P705" status >/dev/null
+  rm -f "$OBSERVER_PLIST"
+  if ! sh "$P705" install >/dev/null; then fail "rollback observer exact-release re-pin failed"; fi
+  if ! sh "$P705" status >/dev/null; then fail "rollback observer exact-release verification failed"; fi
 }
 
 backup_preupdate() {
@@ -204,7 +241,7 @@ update_runtime() {
   target=$(assert_canonical_checkout)
   [ "$source" != "$target" ] || fail "canonical target is already the active release"
   sh "$P702" status >/dev/null
-  sh "$P705" status >/dev/null
+  verify_source_observer_preupdate "$source"
   prepare_target "$target"
   plan=$(python3 "$P706" preflight --runtime-root "$RUNTIME_ROOT" --target-release "$target" --decision-ref "$decision_ref" --json) || fail "compatibility/migration preflight rejected target"
   plan_id=$(printf '%s' "$plan" | python3 -c 'import json,sys; print(json.load(sys.stdin)["plan_id"])')
