@@ -346,7 +346,7 @@ def run_forensics(root: Path, repo_root: Path, decision_ref: str, watch_seconds:
 
     rc, stdout, stderr = _run_bounded(["sh", str(deploy), "update", decision_ref], cwd=repo_root, timeout=240)
 
-    after_command_release = _current_release(root)
+    after_command_release = _current_observation(root)
     after_command_evidence = _inventory_p706_evidence(root)
     changed_during_update = _new_evidence(before_evidence, after_command_evidence)
     during_update_classification, during_update_facts = _classify_evidence(root, changed_during_update)
