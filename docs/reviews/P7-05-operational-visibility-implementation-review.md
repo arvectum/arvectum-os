@@ -1,13 +1,14 @@
 # P7.05 — Operational Visibility Implementation Review
 
-Status: `Repository implementation / PASS; selected-Mac closure pending`
+Status: `Complete / PASS`
 Date: `2026-08-18`
 Task classification: `platform`
 PR: `#37`
+Selected-Mac closure: [`Attempt 1 — PASS`](P7-05-selected-mac-proof-attempt-1.md)
 
 ## Authority baseline
 
-Checked before implementation:
+Checked before implementation and re-checked at selected-host closure:
 
 - Constitution `1.2.0` — `Ratified`, frozen;
 - RFC-0001 — Arvectum OS Architecture;
@@ -15,7 +16,7 @@ Checked before implementation:
 - RFC-0005 — Governed Execution / Workflow Model;
 - RFC-0006 — Event, Provenance & Observability Model;
 - RFC-0007 — Memory, Knowledge & Governed Learning Lifecycle;
-- canonical roadmap `2.54.7` and Phase 7 detailed roadmap.
+- canonical roadmap `2.54.8` and Phase 7 detailed roadmap.
 
 No relevant Accepted ADR currently selects an observability/logging/alerting backend or stable monitoring topology. P7.05 therefore remains a bounded owner-local implementation and does not create such a commitment.
 
@@ -63,9 +64,31 @@ Revision:
 
 Disposition: `resolved`.
 
-## Final repository evidence
+### Iteration 4 — selected-Mac operational closure
 
-Final code evidence before documentation-only commits:
+Material objection carried from repository review: repository CI cannot establish actual launchd state, live selected-host health, alert behavior or retention isolation on the designated owner-operated Mac.
+
+Selected-host evidence on exact canonical `main` SHA `cf60e52c93bf0ef4158cf2c3e26792850a126c70` established:
+
+- P7.02 persistent runtime loaded and healthy;
+- P7.05 observer loaded at `gui/501/com.arvectum.os.p7-05-observer`;
+- existing P6.05-L4 owner context reused; no replacement context created;
+- exact P7.04 audit grant authorized metadata-only visibility with `audit_projection_payload_bytes_exposed=false`;
+- actionable alert path created and cleared correctly;
+- one expired telemetry record removed;
+- governed-state tree hash unchanged;
+- canonical state/evidence deletion both false;
+- payload/reusable-secret logging both false;
+- canonical mutation and external effects both false;
+- final runtime healthy, observer loaded, active alert absent and checkout clean.
+
+Attestation digest: `882a3515d05be05742dc811eab36c2cba943f6838d465222b6e52c1be9c0e630`.
+
+Disposition: `resolved / PASS`.
+
+## Repository evidence
+
+Final code evidence before documentation-only closure commits:
 
 - implementation head: `60914ee96793cdf40896e4336ce24f5788247b37`;
 - GitHub Actions workflow: `Reference Python CI`;
@@ -86,22 +109,22 @@ The passing set includes:
 - macOS observer shell/no-network-client guards;
 - all accumulated prior reference architecture tests.
 
-No material repository-side functional objection remains after the three review/revision iterations.
+No material repository-side functional objection remained after the first three review/revision iterations; selected-host Iteration 4 closes the live-host evidence gap.
 
-## Remaining closure evidence
+## Selected-Mac evidence
 
-Repository CI cannot prove the actual launchd state or current runtime state of the designated owner-operated Mac. The selected-Mac execution remains required before canonical `P7.05 = Complete / PASS` closure.
+Canonical selected-host review:
 
-The selected-host proof must establish:
+- [`P7.05 Selected-Mac Operational Visibility Proof — Attempt 1`](P7-05-selected-mac-proof-attempt-1.md) — `Complete / PASS`;
+- tested canonical `main`: `cf60e52c93bf0ef4158cf2c3e26792850a126c70`;
+- persistent runtime release: `cf60e52c93bf0ef4158cf2c3e26792850a126c70`;
+- host: `Darwin / arm64`;
+- Python: `3.14.7`;
+- proof exit code: `0`;
+- final runtime state: `healthy`;
+- owner-local attestation SHA-256: `882a3515d05be05742dc811eab36c2cba943f6838d465222b6e52c1be9c0e630`.
 
-- exact deployed release is current and healthy;
-- independent P7.05 launchd observer is loaded;
-- actionable alert path works and clears on healthy state;
-- authorized audit/reconstruction visibility works without payload exposure or authority elevation;
-- retention removes expired diagnostics without changing governed-state tree contents or deleting evidence;
-- no canonical mutation, external product effect, reusable-secret logging or payload logging occurs.
-
-Raw selected-host attestation is non-canonical operational evidence. Canonical closure should retain only the minimum reviewed result/digest necessary for auditability, following the P7.03/P7.04 precedent.
+The raw selected-host attestation remains non-canonical operational evidence. Canonical history retains only the reviewed result and digest, following the P7.03/P7.04 precedent.
 
 ## Non-claims
 
@@ -120,8 +143,8 @@ This review does not establish or promote:
 
 ## Review conclusion
 
-`Repository implementation: PASS`.
+`P7.05 = Complete / PASS`.
 
-`Selected-Mac closure: PENDING`.
+Functional cross-review completed at iteration 4 of maximum 7 with no remaining material objection for the declared `Persistent Internal / owner-operated` scope.
 
-Therefore P7.05 must remain the current Phase 7 task until selected-host evidence is produced and canonically reviewed; R22 must not advance yet.
+Next canonical action: `R22 — Persistent Runtime Health Review`. `P7.06` remains blocked from advancement until R22 is completed/dispositioned.
