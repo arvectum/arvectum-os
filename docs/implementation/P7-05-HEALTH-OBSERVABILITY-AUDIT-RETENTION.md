@@ -1,6 +1,6 @@
 # P7.05 — Health, Observability, Audit Visibility, Alerting + Retention / Minimization
 
-Status: `Repository implementation / PASS; selected-Mac closure pending`
+Status: `Complete / PASS`
 Date: `2026-08-18`
 Owner: `ООО «Арвектум»`
 Task classification: `platform`
@@ -8,7 +8,7 @@ Operating classification: `Persistent Internal / owner-operated`
 Parent phase: [`Phase 7 — Operational / Enterprise Readiness`](../roadmap/PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md)
 Predecessor: [`P7.04 Persistent Identity / Operator / Service Access`](P7-04-PERSISTENT-IDENTITY-ACCESS.md) — `Complete / PASS`
 Repository implementation PR: `#37`
-Selected-Mac closure: `Pending`
+Selected-Mac closure: [`Attempt 1 — Complete / PASS`](../reviews/P7-05-selected-mac-proof-attempt-1.md)
 
 ## 1. Purpose
 
@@ -18,7 +18,7 @@ The implementation remains owner-local, reversible and technology-light. It does
 
 ## 2. Authority checked
 
-Implementation was checked against:
+Implementation and selected-host closure were checked against:
 
 - Constitution `1.2.0` — `Ratified`, frozen;
 - RFC-0001 — Observability remains distinct from canonical organizational state and shared platform behavior remains domain-neutral;
@@ -198,23 +198,49 @@ The launchd observer interval is an operational detection interval, not an avail
 
 ## 12. Repository validation
 
-GitHub `Reference Python CI` on hardened implementation commit `8e40f80aad577fa6cc4580ada80b480faa7eb687` passed `958/958` tests (run `32103561028`). That run includes the P7.05 operational visibility and selected-Mac proof-contract regressions.
+Repository implementation PR `#37` merged at `9999ce6f93bb2874fd4e43135abd1ffe726bbd2f`.
 
-A final adapter-specific regression was then added for the macOS observer shell contract; its final CI result is recorded in the implementation review before merge.
+Final code head `60914ee96793cdf40896e4336ce24f5788247b37` passed GitHub `Reference Python CI` run `32103615123`, job `95608711370`, with `960/960 PASS` (`Ran 960 tests in 11.366s`, `OK`).
 
-## 13. Selected-Mac closure contract
+That passing set includes P7.05 health, security/minimization, audit projection, alert behavior, retention isolation, proof-contract and macOS observer shell/no-network-client regressions together with all accumulated prior reference tests.
 
-Repository CI cannot establish the actual selected-host launchd state. P7.05 is therefore not canonically complete until the owner-operated selected Mac executes the exact merged release and produces a PASS attestation showing, at minimum:
+## 13. Selected-Mac closure
 
-- live P7.02 runtime remains healthy;
-- P7.05 launchd observer is loaded;
-- healthy/degraded/down classification works;
-- exact P7.04-authorized audit projection works without payload exposure or authority elevation;
-- actionable alert creation and healthy clearing work;
-- expired telemetry cleanup occurs;
-- governed-state tree hash is unchanged by cleanup;
-- canonical state and audit evidence are not deleted;
-- no reusable secret/payload logging is enabled;
-- no canonical mutation or external/product effect occurs.
+Selected-Mac Attempt 1 completed `PASS` on exact canonical `main` SHA and persistent runtime release:
 
-The raw attestation remains owner-local non-canonical operational evidence. Canonical closure should store only the minimum reviewed result and digest, consistent with P7.03/P7.04 precedent.
+`cf60e52c93bf0ef4158cf2c3e26792850a126c70`.
+
+Observed closure facts:
+
+- host: `Darwin / arm64`, Python `3.14.7`;
+- P7.02 launchd runtime loaded and final health `healthy`;
+- `com.arvectum.os.p7-05-observer` loaded;
+- existing P6.05-L4 owner context reused, with no new context creation or raw identity emission;
+- exact P7.04-authorized audit projection succeeded without payload exposure;
+- actionable alert creation and healthy clearing succeeded;
+- one deliberately expired telemetry record was removed;
+- governed-state tree hash remained unchanged;
+- canonical state and evidence deletion remained false;
+- payload and reusable-secret logging remained false;
+- canonical mutation and external effects remained false;
+- post-proof runtime remained healthy, observer remained loaded and active alert was absent.
+
+Canonical review: [`P7.05 Selected-Mac Operational Visibility Proof — Attempt 1`](../reviews/P7-05-selected-mac-proof-attempt-1.md) — `Complete / PASS`.
+
+Owner-local non-canonical attestation basename:
+
+`p7-05-selected-mac-attestation-20260818T065457Z-3af8b996.json`
+
+SHA-256:
+
+`882a3515d05be05742dc811eab36c2cba943f6838d465222b6e52c1be9c0e630`
+
+The raw attestation remains owner-local and is not copied into canonical history.
+
+## 14. Closure
+
+`P7.05 = Complete / PASS` for the declared `Persistent Internal / owner-operated` scope.
+
+Functional cross-review closed at iteration 4 of maximum 7 with no remaining material objection. This closure establishes the required actionable health/observability baseline without turning telemetry into canonical authority and without introducing a permanent observability topology or lifecycle/commercial commitment.
+
+Next canonical action: `R22 — Persistent Runtime Health Review`. `P7.06` remains sequenced after R22.
