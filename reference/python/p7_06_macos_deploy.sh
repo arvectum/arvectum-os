@@ -86,10 +86,10 @@ acquire_lock() {
 release_lock() { rm -rf "$LOCK_DIR"; }
 
 wait_loaded() {
-  target=$1
+  wait_target=$1
   i=0
   while [ "$i" -lt 30 ]; do
-    launchctl print "$target" >/dev/null 2>&1 && return 0
+    launchctl print "$wait_target" >/dev/null 2>&1 && return 0
     i=$((i + 1)); sleep 0.5
   done
   return 1
