@@ -127,7 +127,7 @@ restore_plist_and_start() {
   launchctl bootstrap "$DOMAIN" "$OBSERVER_PLIST"
   launchctl kickstart "$OBSERVER_TARGET" >/dev/null 2>&1
   wait_loaded "$OBSERVER_TARGET" || fail "rollback observer did not load"
-  "$P705" status >/dev/null
+  sh "$P705" status >/dev/null
 }
 
 backup_preupdate() {
@@ -203,8 +203,8 @@ update_runtime() {
   source=$(current_release)
   target=$(assert_canonical_checkout)
   [ "$source" != "$target" ] || fail "canonical target is already the active release"
-  "$P702" status >/dev/null
-  "$P705" status >/dev/null
+  sh "$P702" status >/dev/null
+  sh "$P705" status >/dev/null
   prepare_target "$target"
   plan=$(python3 "$P706" preflight --runtime-root "$RUNTIME_ROOT" --target-release "$target" --decision-ref "$decision_ref" --json) || fail "compatibility/migration preflight rejected target"
   plan_id=$(printf '%s' "$plan" | python3 -c 'import json,sys; print(json.load(sys.stdin)["plan_id"])')
@@ -222,13 +222,13 @@ update_runtime() {
   backup=${backup_info%%|*}; backup_sha=${backup_info#*|}
   info "pre-update backup PASS sha256=$backup_sha"
 
-  "$P705" uninstall
-  "$P702" stop
-  if ! "$P702" install >/dev/null; then rollback_and_record_failure "target activation failed"; fi
+  sh "$P705" uninstall
+  sh "$P702" stop
+  if ! sh "$P702" install >/dev/null; then rollback_and_record_failure "target activation failed"; fi
   [ "$(current_release)" = "$target" ] || rollback_and_record_failure "target release did not become current"
-  if ! "$P702" status >/dev/null; then rollback_and_record_failure "target runtime exact-release health verification failed"; fi
-  if ! "$P705" install >/dev/null; then rollback_and_record_failure "observer re-pin failed"; fi
-  if ! "$P705" status >/dev/null; then rollback_and_record_failure "observer exact-release verification failed"; fi
+  if ! sh "$P702" status >/dev/null; then rollback_and_record_failure "target runtime exact-release health verification failed"; fi
+  if ! sh "$P705" install >/dev/null; then rollback_and_record_failure "observer re-pin failed"; fi
+  if ! sh "$P705" status >/dev/null; then rollback_and_record_failure "observer exact-release verification failed"; fi
 
   payload="$txdir/transaction-payload.json"
   write_payload "$payload" "$plan_id" "$source" "$target" PASS "$backup" "$backup_sha" true true "safe: unchanged P7.03 store schema; exact release re-pin available"
@@ -257,8 +257,8 @@ rollback_last() {
   backup_sha=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["backup_sha256"])' "$pointer")
   [ "$(current_release)" = "$target" ] || fail "rollback source mismatch: active release is not transaction target"
   acquire_lock; trap 'release_lock' EXIT HUP INT TERM
-  "$P705" uninstall >/dev/null || true
-  "$P702" stop >/dev/null || true
+  sh "$P705" uninstall >/dev/null || true
+  sh "$P702" stop >/dev/null || true
   restore_plist_and_start "$txdir" "$source"
   payload="$txdir/rollback-payload-$(date -u '+%Y%m%dT%H%M%SZ').json"
   write_payload "$payload" "$plan_id" "$source" "$target" ROLLED_BACK "$backup" "$backup_sha" true true "executed: exact source release re-pin; durable schema unchanged; backup retained and not restored"
@@ -270,8 +270,8 @@ rollback_last() {
 
 status_runtime() {
   assert_macos
-  "$P702" status
-  "$P705" status
+  sh "$P702" status
+  sh "$P705" status
   python3 "$P706" status --runtime-root "$RUNTIME_ROOT" --json
 }
 

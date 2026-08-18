@@ -21,10 +21,23 @@ class ShellTests(unittest.TestCase):
     def test_r22_and_governed_sequence_guards_present(self):
         text = DEPLOY.read_text()
         self.assertIn("R22_SHA=", text)
-        self.assertLess(text.index('backup_preupdate "$source"'), text.index('"$P705" uninstall'))
+        self.assertLess(text.index('backup_preupdate "$source"'), text.index('sh "$P705" uninstall'))
         self.assertIn("compatibility/migration preflight rejected target", text)
         self.assertIn("rollback_and_record_failure", text)
         self.assertIn("restore_plist_and_start", text)
+
+    def test_sibling_shell_adapters_do_not_require_executable_git_mode(self):
+        text = DEPLOY.read_text()
+        self.assertNotIn('\n  "$P702" ', text)
+        self.assertNotIn('\n  "$P705" ', text)
+        self.assertNotIn('if ! "$P702" ', text)
+        self.assertNotIn('if ! "$P705" ', text)
+        self.assertIn('sh "$P702" status', text)
+        self.assertIn('sh "$P702" stop', text)
+        self.assertIn('sh "$P702" install', text)
+        self.assertIn('sh "$P705" status', text)
+        self.assertIn('sh "$P705" uninstall', text)
+        self.assertIn('sh "$P705" install', text)
 
     def test_selected_mac_proof_orders_update_rollback_reupdate(self):
         text = PROOF.read_text()
