@@ -108,6 +108,9 @@ def verify_existing_retry_semantics(
 
 def run_selected_mac_admission(**kwargs):
     """Run hardened selected-Mac admission with strict pre-existing state semantics."""
+    if kwargs.get("owner_approval") != admission.OWNER_APPROVAL_ASSERTION:
+        raise UI1RealStateEntrypointError("exact bounded owner approval assertion is required")
+
     runtime_root = Path(kwargs["runtime_root"])
     release_sha, repo_root = admission._verify_exact_release(runtime_root)
     organization, principal, _decision = admission._authorize_operator(
