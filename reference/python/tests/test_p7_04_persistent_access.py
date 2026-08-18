@@ -274,6 +274,15 @@ class P704PersistentAccessTests(unittest.TestCase):
             self.assertEqual(Path(issued["secret_path"]).stat().st_mode & 0o777, 0o600)
             self.assertEqual((self.root / "config" / "p7-04-access.json").stat().st_mode & 0o777, 0o600)
 
+    def test_orphaned_secret_plaintext_is_detected_fail_closed(self):
+        orphan = self.root / "secrets" / "p7-04" / "orphan.secret"
+        orphan.write_text("unbound-reusable-secret\n", encoding="utf-8")
+        if os.name != "nt":
+            orphan.chmod(0o600)
+        with self.assertRaises(p704.IntegrityError) as ctx:
+            p704.verify_store(self.root)
+        self.assertIn("orphan or unrecognized credential plaintext", str(ctx.exception))
+
     def test_tampered_policy_claiming_ambient_admin_fails_closed(self):
         path = self.root / "config" / "p7-04-access.json"
         state = json.loads(path.read_text(encoding="utf-8"))

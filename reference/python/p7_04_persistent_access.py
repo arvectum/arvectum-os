@@ -446,6 +446,17 @@ def authorize_from_credential_file(root: Path, *, organization: Identity, princi
 
 def verify_store(root: Path) -> dict[str, Any]:
     state = load_access_store(root); active = 0
+    secret_dir = root.expanduser() / "secrets" / "p7-04"
+    _assert_no_symlink(secret_dir)
+    if not secret_dir.is_dir(): raise IntegrityError("P7.04 secret directory missing/unsafe")
+    _owner_only(secret_dir)
+    known_credentials = set(state["credentials"])
+    for secret_file in secret_dir.iterdir():
+        if secret_file.is_symlink() or not secret_file.is_file():
+            raise IntegrityError("unexpected non-file entry in P7.04 secret directory")
+        if secret_file.suffix != ".secret" or secret_file.stem not in known_credentials:
+            raise IntegrityError("orphan or unrecognized credential plaintext remains")
+        _owner_only(secret_file)
     for cid, c in state["credentials"].items():
         path = _secret_path(root, cid)
         if c["status"] == "active":
