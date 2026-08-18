@@ -1,7 +1,7 @@
 # Arvectum OS Phase 7 — Operational / Enterprise Readiness
 
 Status: `Active`
-Version: `1.2.6`
+Version: `1.2.7`
 Created: `2026-08-17`
 Updated: `2026-08-18`
 Owner: `ООО «Арвектум»`
@@ -45,8 +45,8 @@ P7.02 has passed. The selected Mac mini therefore operates in `Persistent Intern
 | `P7.03` | Durable governed state/checkpoint persistence + backup/restore baseline | Mac mini + GitHub | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.04` | Persistent identity/operator/service access + least-privilege operations | Chat + Mac mini + GitHub | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.05` | Health, observability, audit visibility, alerting + retention/minimization | Mac mini + GitHub | 🟩 Complete / PASS | `██████████ 100%` |
-| `P7.06` | Governed deploy/update/rollback/version/migration path | Mac mini + GitHub | 🟨 Current | `░░░░░░░░░░ 0%` |
-| `P7.06-UI` | Live operator workspace over persistent runtime | Mac mini + browser + GitHub | ⬜ Planned — gated by P7.06 core | `░░░░░░░░░░ 0%` |
+| `P7.06` | Governed deploy/update/rollback/version/migration path | Mac mini + GitHub | 🟩 Complete / PASS | `██████████ 100%` |
+| `P7.06-UI` | Live operator workspace over persistent runtime | Mac mini + browser + GitHub | 🟨 Current — UI1 | `░░░░░░░░░░ 0%` |
 | `P7.07` | Persistent Tender Operator operational contour | Mac mini + product environment + GitHub | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.08` | Persistent Discount Parser cross-host operational contour | Windows + Mac mini + GitHub | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.09` | Operator runbook + incident/uncertain-outcome/recovery drills | Mac mini + GitHub | ⬜ | `░░░░░░░░░░ 0%` |
@@ -167,27 +167,43 @@ Canonical evidence:
 
 R22 found and remediated three material cross-cutting defects before P7.06: mutable-`current` mixed-release observer execution, fail-open/ambiguous launchd observer lifecycle/status behavior, and incomplete detection of orphan reusable P7.04 secret plaintext. The revised observer is pinned as one coherent exact-release unit; observer lifecycle/status and selected-Mac release matching fail closed; P7.04 verification inspects the complete secret directory for unknown plaintext.
 
-R22 did not deploy this remediation ad hoc to the selected Mac mini. The first controlled P7.06 update MUST carry the merged R22 hardening and prove the update/re-pin/health/rollback path before operational workload expansion. This preserves P7.06 as the governed owner of deployment/update semantics rather than silently inventing an update mechanism inside the review gate.
+R22 deliberately did not deploy this remediation ad hoc to the selected Mac mini. [`P7.06 Selected-Mac Governed Deploy Proof — Attempt 8`](../reviews/P7-06-selected-mac-governed-deploy-proof-attempt-8.md) has now carried and verified the merged R22 hardening through governed update, exact rollback and final re-update before operator-workspace or product workload expansion.
 
 No ADR is required at the current private, reversible owner-local scope. R22 creates no Production, `Active` capability, Stable Product Contract, public/stable interface, permanent IAM/observability/deployment topology, SLA/SLO/support or broader conformance claim.
 
 ### P7.06 — Governed deploy/update/rollback/version/migration path
 
-Status: `Current`.
+Status: `Complete / PASS`.
 
-Required evidence includes immutable deployment/release pin, pre-update backup/checkpoint, compatibility/migration checks, controlled stop/update/re-pin/start, post-update runtime and observer exact-release health verification, rollback/unsafe-rollback disposition and exact historical version references. No public release/support promise is implied.
+Canonical evidence:
 
-The first controlled P7.06 update MUST include the merged R22 hardening before any P7.06-UI/P7.07/P7.08 operational surface expansion. Historical replay or rollback must not re-invoke prior consequential external effects without fresh applicable authorization/authority.
+- [`P7.06 Governed Deploy / Update / Rollback / Version / Migration Path`](../implementation/P7-06-GOVERNED-DEPLOY-UPDATE-ROLLBACK-MIGRATION.md) — `Complete / PASS`;
+- [`P7.06 Governed Deploy / Update / Rollback Implementation Cross-Review`](../reviews/P7-06-governed-deploy-implementation-review.md) — `Complete / PASS`, configured seven-iteration repository/live-readiness review;
+- [`P7.06 Selected-Mac Live Remediation Review`](../reviews/P7-06-live-remediation-review.md) — `Complete / PASS`, seven bounded remediation iterations;
+- [`P7.06 Selected-Mac Governed Deploy Proof — Attempt 8`](../reviews/P7-06-selected-mac-governed-deploy-proof-attempt-8.md) — `Complete / PASS`;
+- exact source release: `cf60e52c93bf0ef4158cf2c3e26792850a126c70`;
+- exact target/final active release: `4df99c4c66a1b7b93a4b05d7768018b03aa4041b`;
+- first update transaction: `a33209268d34b25c1bb8db9c63e835bf6149a404af57f8e77952177f22c5ffb3`;
+- rollback transaction: `589f282e3e062c1b5aa298f841f044d4d9c6227214c862d45044673a5ce9e951`;
+- final update transaction: `34470ac05993465155b8048405d1dbb712ffb9387b90a29666b927fcfb9dfdc4`;
+- selected-Mac attestation SHA-256: `3dec1d1dd34aff960753105e72aa60739c01fb61c0af091a554e93f344418e69`;
+- final PR #49 repository CI before merge: `998/998 PASS`.
+
+Attempt 8 proved fresh verified backup before both update transitions, exact source→target update, exact target→source rollback with hardened observer re-pin, healthy source recovery, final controlled source→target re-update and final exact target health. No schema-changing migration or backup restore occurred; the deploy path performed no canonical organizational-state mutation, product/external effect or historical effect replay.
+
+The R22 first-update obligation is therefore satisfied. The current private owner-local adapter remains reversible and does not establish a permanent deployment technology or public updater contract.
+
+P7.06 closure does not establish external/customer Production, an `Active` Platform Capability, Stable Product Contract, supported macOS matrix, public/stable deployment API, generalized migration framework, automatic fleet rollout, SLA/SLO/support or broader conformance.
 
 ### P7.06-UI — Live operator workspace over persistent runtime
 
-Status: `Planned / gated by P7.06 core`.
+Status: `Current — UI1`.
 
-Detailed substream: [`P7-06-LIVE-OPERATOR-WORKSPACE-SUBSTREAM.md`](P7-06-LIVE-OPERATOR-WORKSPACE-SUBSTREAM.md).
+Detailed substream: [`P7-06-LIVE-OPERATOR-WORKSPACE-SUBSTREAM.md`](P7-06-LIVE-OPERATOR-WORKSPACE-SUBSTREAM.md) — `Active / UI1 Current`.
 
 This substream operationalizes the already-complete Phase 4 / M4 workspace semantics instead of redesigning them. It connects explicit Organization/Actor context, Records, Executions, Evidence, Documents, Knowledge, exact-version/provenance inspection and bounded Governed Execution interaction to the persistent runtime through a private reversible operator surface.
 
-The sequence is `UI1 live read-only workspace → UI2 governed interaction/preflight → UI3 persistent private operator access → UI4 first real owner interaction proof`.
+The active sequence is `UI1 live read-only workspace → UI2 governed interaction/preflight → UI3 persistent private operator access → UI4 first real owner interaction proof`.
 
 `P7.06-UI = PASS` requires the owner to open the live workspace in a browser against the selected Mac mini, inspect real governed state and exact provenance/reconstruction, and exercise at least one bounded governed interaction without presentation code becoming authority or a direct canonical-mutation path.
 
@@ -241,8 +257,8 @@ M7 does **not** inherently require external customer Production, public multi-te
 
 ## 8. Current canonical action
 
-> **P7.06 — Governed deploy/update/rollback/version/migration path.**
+> **P7.06-UI1 — Live read-only governed workspace.**
 
-R22 is `Complete / PASS` after two functional iterations and GitHub `Reference Python CI` run `32111920701` with `964/964 PASS`. The review closed material mixed-release observer, launchd lifecycle/status and orphan-secret detection defects at repository level without changing higher-level authority or lifecycle boundaries. The remediation is intentionally not claimed as already deployed on the live selected Mac mini: the first P7.06 controlled update must carry and verify it before operator-workspace or P7.07/P7.08 workload expansion.
+P7.06 core is `Complete / PASS` after selected-Mac Attempt 8 proved exact update → rollback → final update from source `cf60e52c93bf0ef4158cf2c3e26792850a126c70` to final active target `4df99c4c66a1b7b93a4b05d7768018b03aa4041b`, with verified pre-update backups, exact deployment transactions, final owner-local attestation SHA-256 `3dec1d1dd34aff960753105e72aa60739c01fb61c0af091a554e93f344418e69`, no schema-changing migration and no product/external effect replay.
 
-After `P7.06 core = PASS`, the next canonical operator-experience action is `P7.06-UI1 — Live read-only governed workspace`, followed by the remaining UI substream before P7.07.
+The R22 hardening gate is now satisfied through the governed deployment path. The next action is therefore the first private read-only live workspace over exact persistent runtime state. P7.07/P7.08 remain downstream until the P7.06-UI sequence reaches its declared completion boundary.
