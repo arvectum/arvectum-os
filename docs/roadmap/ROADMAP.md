@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.55.2`
+Version: `2.55.3`
 Created: `2026-08-07`
 Updated: `2026-08-18`
 Owner: `ООО «Арвектум»`
@@ -14,6 +14,10 @@ This document is the canonical planning source for Arvectum OS development seque
 Future roadmap content is a planning hypothesis until its phase is activated. Roadmap status does not by itself change Platform Capability lifecycle, Product Contract lifecycle, operational environment/readiness, conformance maturity, SLA/support or commercial commitments.
 
 ## 2. Version note
+
+Version `2.55.3` records the repository-side implementation milestone for `P7.06-UI1 — Live read-only governed workspace` through PR `#51`. The bounded implementation reuses M4 workspace semantics over exact persistent P7.03/P7.05 state, requires an explicit P7.04 human Organization/operation/resource/local grant before protected reads, pins execution to the exact activated P7.06 release, exposes `Discover / Records / Executions / Evidence / Documents / Knowledge`, distinguishes Subject from Exact Version, excludes governed test fixtures, renders no payload bytes, binds only to loopback, exposes only `GET/HEAD`, and fails closed without protected counts/content when authorization, exact release or store integrity is unavailable. Functional repository review required two iterations: iteration 1 found that missing store roots could be represented as empty state and unexpected checkpoint-store entries could be skipped; iteration 2 remediated both conditions and added regression coverage. GitHub `Reference Python CI` run `32132213609` on implementation head `83fb21f19ae99552c8a1a665a94a32e9f008da4c` completed with `success`.
+
+`P7.06-UI1` remains `Current`, not `Complete / PASS`, because the canonical exit criteria still require the selected Mac to activate the merged exact release through P7.06, open the loopback workspace in a real browser, inspect real non-fixture governed state/provenance, prove wrong/unresolved Organization and revoked-grant failure closed, and prove that browsing causes zero canonical/external mutation. The current canonical action is therefore the selected-Mac UI1 live-browser closure proof; `P7.06-UI2` has not started. This milestone creates no public/stable UI/API, Production claim, `Active` capability, Stable Product Contract, browser support matrix or SLA/support commitment.
 
 Version `2.55.2` closes `P7.06 — Governed deploy/update/rollback/version/migration path` for the declared `Persistent Internal / owner-operated` scope after selected-Mac Attempt 8 completed the required exact `update → rollback → final update` proof. The proof moved from historical source `cf60e52c93bf0ef4158cf2c3e26792850a126c70` to canonical target/final active release `4df99c4c66a1b7b93a4b05d7768018b03aa4041b`, with first update transaction `a33209268d34b25c1bb8db9c63e835bf6149a404af57f8e77952177f22c5ffb3`, rollback transaction `589f282e3e062c1b5aa298f841f044d4d9c6227214c862d45044673a5ce9e951`, final update transaction `34470ac05993465155b8048405d1dbb712ffb9387b90a29666b927fcfb9dfdc4`, and owner-local attestation SHA-256 `3dec1d1dd34aff960753105e72aa60739c01fb61c0af091a554e93f344418e69`.
 
@@ -39,7 +43,7 @@ Version `2.54.8` records the repository-side implementation milestone for `P7.05
 
 P7.05 remained `Current` rather than `Complete / PASS` at version `2.54.8` because the required selected-Mac proof had not yet established the actual live launchd observer state, alert path and cleanup invariants on the designated owner-operated Mac. That gap was closed by version `2.54.9`.
 
-Version `2.54.7` closes `P7.04 — Persistent identity/operator/service access + least-privilege operations` after selected-Mac Attempt 1 passed on exact canonical `main` SHA `218e3762975a2fd6f11e8f13d4445bce5f5d7c94`. The proof reused the existing P6.05-L4 owner context and healthy P7.02 persistent runtime on exact release `73af746f83271b14670fe22db658dfd55cacb291`; all remaining least-privilege, attribution, rotation/revocation, remote-access and authority-separation conditions passed. The owner-local non-canonical attestation is recorded canonically only by review result and SHA-256 `5c0a67b15b7fb469bc5933030db0c2e90adfb47c3eb94411c43ba555b7d98659`. Final P7.04 functional review iteration 6 of maximum 7 is `PASS`. The current canonical action advances to P7.05.
+Version `2.54.7` closes `P7.04 — Persistent identity/operator/service access + least-privilege operations` after selected-Mac Attempt 1 passed on exact canonical `main` SHA `218e3762975a2fd6f11e8f13d4445bce5d7c94`. The proof reused the existing P6.05-L4 owner context and healthy P7.02 persistent runtime on exact release `73af746f83271b14670fe22db658dfd55cacb291`; all remaining least-privilege, attribution, rotation/revocation, remote-access and authority-separation conditions passed. The owner-local non-canonical attestation is recorded canonically only by review result and SHA-256 `5c0a67b15b7fb469bc5933030db0c2e90adfb47c3eb94411c43ba555b7d98659`. Final P7.04 functional review iteration 6 of maximum 7 is `PASS`. The current canonical action advances to P7.05.
 
 This closure does not create external/customer Production, an `Active` Platform Capability, Stable Product Contract, permanent IAM/credential-vault/remote-administration topology, public/stable access API, SLA/support or conformance promotion.
 
@@ -119,7 +123,7 @@ Phase 7 converts validated owner-operated use into a persistent, recoverable, ob
 | `P7.04` | Persistent identity/operator/service access + least-privilege operations | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.05` | Health, observability, audit visibility, alerting + retention/minimization | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.06` | Governed deploy/update/rollback/version/migration path | 🟩 Complete / PASS | `██████████ 100%` |
-| `P7.06-UI` | Live operator workspace over persistent runtime | 🟨 Current — UI1 | `░░░░░░░░░░ 0%` |
+| `P7.06-UI` | Live operator workspace over persistent runtime | 🟨 Current — UI1 selected-Mac proof | `░░░░░░░░░░ 0%` |
 | `P7.07` | Persistent Tender Operator operational contour | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.08` | Persistent Discount Parser cross-host operational contour | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.09` | Operator runbook + incident/uncertain-outcome/recovery drills | ⬜ | `░░░░░░░░░░ 0%` |
@@ -157,7 +161,7 @@ R22 Persistent Runtime Health Review — PASS
         ↓
 P7.06 governed deploy/update/rollback/version/migration — PASS
         ↓
-P7.06-UI1 live read-only workspace ← current
+P7.06-UI1 live read-only workspace ← current: selected-Mac proof
         ↓
 P7.06-UI2 governed interaction/preflight
         ↓
@@ -170,7 +174,7 @@ P7.07–P7.12 workload expansion + hardening
 
 P7.02 passed on exact selected-Mac release `73af746f83271b14670fe22db658dfd55cacb291`. P7.03 subsequently established the bounded durable-state/checkpoint and backup/restore baseline. P7.04 is `Complete / PASS` after repository implementation, six-iteration functional review and selected-Mac Attempt 1. P7.05 is `Complete / PASS` after PR `#37`, `960/960` Reference Python CI, four-iteration functional review and selected-Mac Attempt 1 on exact canonical release `cf60e52c93bf0ef4158cf2c3e26792850a126c70`. R22 is `Complete / PASS` after remediation PR `#39` and `964/964` Reference Python CI. P7.06 is `Complete / PASS` after PR #49 repository hardening and selected-Mac Attempt 8 proved exact update, rollback and final re-update to `4df99c4c66a1b7b93a4b05d7768018b03aa4041b`.
 
-The R22 obligation has now been discharged through the controlled P7.06 path rather than ad-hoc deployment. `P7.06-UI1` is current; P7.07/P7.08 remain downstream of the declared UI substream sequencing.
+P7.06-UI1 repository implementation and repository cross-review are `PASS` through PR `#51`; selected-Mac live-browser closure evidence remains outstanding. The R22 obligation has been discharged through the controlled P7.06 path rather than ad-hoc deployment. P7.07/P7.08 remain downstream of the declared UI substream sequencing.
 
 ## 7. M7 milestone definition
 
@@ -212,8 +216,8 @@ A roadmap phase transition does not itself change lifecycle, production readines
 
 ## 11. Current canonical action
 
-> **P7.06-UI1 — Live read-only governed workspace.**
+> **P7.06-UI1 — Selected-Mac live-browser closure proof for the read-only governed workspace.**
 
 P7.06 core is `Complete / PASS` for the declared `Persistent Internal / owner-operated` scope. Selected-Mac Attempt 8 completed the exact source→target update, target→source rollback and final source→target update, retained two verified pre-update backups, recorded all three exact transactions, left the selected Mac on exact target `4df99c4c66a1b7b93a4b05d7768018b03aa4041b`, and produced owner-local attestation SHA-256 `3dec1d1dd34aff960753105e72aa60739c01fb61c0af091a554e93f344418e69`.
 
-The next canonical action is therefore the first private read-only live workspace over exact persistent runtime state, reusing the completed M4 workspace semantics without creating a public/stable UI or API boundary. P7.07/P7.08 workload expansion remains downstream until the P7.06-UI sequence reaches its declared completion boundary.
+The repository-side UI1 implementation and two-iteration cross-review are `PASS` through PR `#51` and `Reference Python CI` run `32132213609`. The next canonical action remains inside UI1: activate the exact merged UI1 release on the selected Mac through the governed P7.06 path, establish the exact local P7.04 human workspace-inspection grant, open the private loopback workspace in a real browser, inspect real retained governed state/provenance, and prove the read path causes no canonical or external mutation. Only after that evidence is reviewed may UI1 be closed and sequencing advance to P7.06-UI2. P7.07/P7.08 workload expansion remains downstream.
