@@ -54,26 +54,39 @@ class P706UI2RuntimeOutcomeTests(unittest.TestCase):
     def _id(self, namespace: str, value: str) -> Identity:
         return Identity(namespace, value, self.organization.organization_id.value)
 
-    def _state(self, outcome: ConsequentialOutcome) -> RuntimeConsistencyState:
-        attempt = ConsequentialAttempt(
-            execution_subject_id=self.execution_subject,
-            execution_version_id=self.execution_version,
+    def _attempt(
+        self,
+        outcome: ConsequentialOutcome,
+        *,
+        execution_subject_id: Identity | None = None,
+        execution_version_id: Identity | None = None,
+        token: str = "ui2-outcome-token",
+    ) -> ConsequentialAttempt:
+        return ConsequentialAttempt(
+            execution_subject_id=execution_subject_id or self.execution_subject,
+            execution_version_id=execution_version_id or self.execution_version,
             operation_name="update-target",
             side_effect_class=OperationSideEffectClass.CANONICAL_MUTATION,
             retry_semantics=RetrySemantics.KEYED_IDEMPOTENT,
-            retry_token="ui2-outcome-token",
-            fingerprint=("ui2", "outcome"),
+            retry_token=token,
+            fingerprint=("ui2", "outcome", token),
             outcome=outcome,
         )
+
+    def _state(self, outcome: ConsequentialOutcome) -> RuntimeConsistencyState:
         return RuntimeConsistencyState(
             canonical_records=(self.record,),
-            attempts=(attempt,),
+            attempts=(self._attempt(outcome),),
+        )
+
+    def _inspect(self, state: RuntimeConsistencyState):
+        return inspect_consequential_outcome_evidence(
+            state,
+            execution_subject_id=self.execution_subject,
         )
 
     def test_uncertain_is_rendered_as_observed_uncertain_and_separate_reconciliation_requirement(self) -> None:
-        evidence = inspect_consequential_outcome_evidence(
-            self._state(ConsequentialOutcome.UNCERTAIN)
-        )
+        evidence = self._inspect(self._state(ConsequentialOutcome.UNCERTAIN))
         self.assertEqual(evidence.state, ObservedConsequentialState.UNCERTAIN)
         self.assertTrue(evidence.reconciliation_required)
         html = render_consequential_outcome_evidence_html(evidence)
@@ -83,9 +96,7 @@ class P706UI2RuntimeOutcomeTests(unittest.TestCase):
         self.assertIn("does not permit a blind retry", html)
 
     def test_succeeded_attempt_does_not_infer_reconciliation(self) -> None:
-        evidence = inspect_consequential_outcome_evidence(
-            self._state(ConsequentialOutcome.SUCCEEDED)
-        )
+        evidence = self._inspect(self._state(ConsequentialOutcome.SUCCEEDED))
         self.assertEqual(evidence.state, ObservedConsequentialState.SUCCEEDED)
         self.assertFalse(evidence.reconciliation_required)
         html = render_consequential_outcome_evidence_html(evidence)
@@ -93,9 +104,7 @@ class P706UI2RuntimeOutcomeTests(unittest.TestCase):
         self.assertNotIn("<strong>Reconciliation required.</strong>", html)
 
     def test_no_attempt_is_explicit_and_does_not_manufacture_execution_identity(self) -> None:
-        evidence = inspect_consequential_outcome_evidence(
-            RuntimeConsistencyState(canonical_records=(self.record,))
-        )
+        evidence = self._inspect(RuntimeConsistencyState(canonical_records=(self.record,)))
         self.assertEqual(evidence.state, ObservedConsequentialState.NONE)
         self.assertIsNone(evidence.execution_subject_id)
         self.assertIsNone(evidence.execution_version_id)
@@ -103,11 +112,34 @@ class P706UI2RuntimeOutcomeTests(unittest.TestCase):
         self.assertIn("No prior consequential attempt", html)
         self.assertNotIn(self.execution_version.value, html)
 
-    def test_http_adapter_renders_runtime_outcome_evidence_from_governed_state(self) -> None:
+    def test_unrelated_newer_execution_attempt_is_not_projected_into_current_execution(self) -> None:
+        unrelated_subject = self._id("execution-subject", "unrelated-execution")
+        unrelated_version = self._id("execution-version", "unrelated-execution-v9")
+        state = RuntimeConsistencyState(
+            canonical_records=(self.record,),
+            attempts=(
+                self._attempt(ConsequentialOutcome.UNCERTAIN),
+                self._attempt(
+                    ConsequentialOutcome.SUCCEEDED,
+                    execution_subject_id=unrelated_subject,
+                    execution_version_id=unrelated_version,
+                    token="unrelated-token",
+                ),
+            ),
+        )
+        evidence = self._inspect(state)
+        self.assertEqual(evidence.state, ObservedConsequentialState.UNCERTAIN)
+        self.assertEqual(evidence.execution_subject_id, self.execution_subject)
+        self.assertNotEqual(evidence.execution_subject_id, unrelated_subject)
+        html = render_consequential_outcome_evidence_html(evidence)
+        self.assertNotIn(unrelated_version.value, html)
+
+    def test_http_adapter_renders_runtime_outcome_evidence_from_related_execution(self) -> None:
         source = inspect.getsource(ui2)
         self.assertIn("inspect_consequential_outcome_evidence", source)
         self.assertIn("render_consequential_outcome_evidence_html", source)
         self.assertIn("result.runtime_state", source)
+        self.assertIn("execution_subject_id", source)
 
 
 if __name__ == "__main__":
