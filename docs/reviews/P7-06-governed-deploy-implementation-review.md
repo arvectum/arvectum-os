@@ -140,7 +140,7 @@ Repository validation accumulated across the review:
 - initial implementation PR `#40`: full CI `975/975 PASS`;
 - executable-bit remediation PR `#42`: `Reference Python CI` run `32121769448`, job `95663550077`, `978/978 PASS`;
 - bounded R22 first-upgrade bridge PR `#43`: `Reference Python CI` run `32122402442`, job `95665496605`, `980/980 PASS` on the PR merge ref before its review-note update;
-- path-with-spaces remediation adds a regression guard for quoted release-Python backup invocation against the real `Application Support` default root; final PR/CI evidence is to be recorded after the remediation PR completes.
+- path-with-spaces remediation PR `#44`: `Reference Python CI` run `32123420416`, job `95668636686`, `981/981 PASS`; the new `test_release_python_command_substitution_is_space_safe` regression is green against the real `Application Support` default-root form.
 
 Selected-Mac execution remains the only closure evidence still to obtain after the iteration-7 remediation is merged and pulled to the host.
 
