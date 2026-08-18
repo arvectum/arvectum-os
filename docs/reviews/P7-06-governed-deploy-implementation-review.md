@@ -1,6 +1,6 @@
 # P7.06 — Governed Deploy / Update / Rollback Implementation Cross-Review
 
-Status: `Repository/live-readiness review PASS / selected-Mac proof pending`
+Status: `Complete / PASS — repository/live-readiness review closed; selected-Mac closure recorded separately`
 Date: `2026-08-18`
 Owner: `ООО «Арвектум»`
 Task classification: `platform` with bounded `governance`
@@ -9,7 +9,7 @@ Task classification: `platform` with bounded `governance`
 
 Functional review covers the repository-side P7.06 deployment/version/migration boundary and the defects surfaced while attempting the selected-Mac proof. Roles considered materially relevant: architecture/governance, engineering, operations/recovery, security/data governance and product/platform boundary.
 
-The review result is a repository/live-readiness result only until the complete selected-Mac `update → rollback → final update` proof passes and is canonically recorded.
+The configured maximum seven iterations applied to this review artifact. Material defects discovered after iteration 7 were intentionally handled in the separate [`P7.06 Selected-Mac Live Remediation Review`](P7-06-live-remediation-review.md), preserving the review cap rather than creating an invalid iteration 8 here.
 
 ## 2. Iteration 1 — REVISE
 
@@ -142,6 +142,27 @@ Repository validation accumulated across the review:
 - bounded R22 first-upgrade bridge PR `#43`: `Reference Python CI` run `32122402442`, job `95665496605`, `980/980 PASS` on the PR merge ref before its review-note update;
 - path-with-spaces remediation PR `#44`: `Reference Python CI` run `32123420416`, job `95668636686`, `981/981 PASS`; the new `test_release_python_command_substitution_is_space_safe` regression is green against the real `Application Support` default-root form.
 
-Selected-Mac execution remains the only closure evidence still to obtain after the iteration-7 remediation is merged and pulled to the host.
+Functional cross-review result: `PASS` after 7 iterations for repository/live-readiness scope. This is not formal Production/lifecycle approval.
 
-Functional cross-review result: `PASS` after 7 iterations for repository/live-readiness scope. This is not formal Production/lifecycle approval and does not substitute for the selected-Mac proof.
+## 10. Post-review live-remediation and closure evidence
+
+Material defects discovered after the configured iteration-7 maximum were handled in the separate [`P7.06 Selected-Mac Live Remediation Review`](P7-06-live-remediation-review.md). That review preserves the original review cap and records the subsequent runtime-quiescence/rollback hardening, target-evidence preservation, bounded activation diagnostics and exact `current` symlink replacement remediation.
+
+Repository remediation culminated in PR `#49 — P7.06 — Fix stale current release pointer after activation`, merged as canonical `main` commit `4df99c4c66a1b7b93a4b05d7768018b03aa4041b`. The final pre-merge Reference Python CI on the reviewed PR merge ref passed `998/998` tests.
+
+The selected Mac then completed [`P7.06 Selected-Mac Governed Deploy Proof — Attempt 8`](P7-06-selected-mac-governed-deploy-proof-attempt-8.md) with exact sequence `update → rollback → final update` and final `PASS` on target `4df99c4c66a1b7b93a4b05d7768018b03aa4041b`.
+
+Live closure identities:
+
+- source release: `cf60e52c93bf0ef4158cf2c3e26792850a126c70`;
+- first update transaction: `a33209268d34b25c1bb8db9c63e835bf6149a404af57f8e77952177f22c5ffb3`;
+- exact rollback transaction: `589f282e3e062c1b5aa298f841f044d4d9c6227214c862d45044673a5ce9e951`;
+- final update transaction: `34470ac05993465155b8048405d1dbb712ffb9387b90a29666b927fcfb9dfdc4`;
+- final active target: `4df99c4c66a1b7b93a4b05d7768018b03aa4041b`;
+- selected-Mac proof attestation SHA-256: `3dec1d1dd34aff960753105e72aa60739c01fb61c0af091a554e93f344418e69`.
+
+No schema-changing migration, canonical mutation by deployment, product/external effect replay or durable backup restore occurred.
+
+Closure disposition: repository/live-readiness review `PASS`; live selected-Mac closure `PASS`; no material objection remains for the declared `Persistent Internal / owner-operated` P7.06 scope.
+
+No Production, `Active` capability, Stable Product Contract, SLA/support, public/stable deployment interface or broader conformance claim follows from this review.

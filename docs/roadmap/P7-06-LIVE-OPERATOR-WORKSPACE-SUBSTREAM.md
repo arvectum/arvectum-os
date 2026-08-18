@@ -1,12 +1,13 @@
 # P7.06 — Live Operator Workspace Substream
 
-Status: `Planned / gated by P7.06 core`
-Version: `0.1.0`
+Status: `Active / UI1 Current`
+Version: `0.1.1`
 Created: `2026-08-18`
+Updated: `2026-08-18`
 Owner: `ООО «Арвектум»`
 Task classification: `platform` with `governance`
 Parent phase: [`PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md`](PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md)
-Predecessor: `P7.06 — Governed deploy/update/rollback/version/migration path`
+Predecessor: `P7.06 — Governed deploy/update/rollback/version/migration path` — `Complete / PASS`
 Architecture basis: Constitution `1.2.0`; RFC-0001 through RFC-0008 `1.0.0` (`Accepted`)
 Workspace basis: Phase 4 / M4 coherent governed workspace baseline
 
@@ -20,14 +21,14 @@ This substream closes that operator-experience gap for the current `Persistent I
 
 ## 2. Sequencing rule
 
-The live workspace MUST NOT be attached to the selected Mac mini before the first controlled P7.06 update carries and verifies the merged R22 hardening. R22 explicitly requires that exact-release runtime/observer integrity and orphan-secret detection be deployed through P7.06 before operational surface expansion.
+The live workspace MUST NOT be attached to the selected Mac mini before the first controlled P7.06 update carries and verifies the merged R22 hardening. That prerequisite is now satisfied by [`P7.06 Selected-Mac Governed Deploy Proof — Attempt 8`](../reviews/P7-06-selected-mac-governed-deploy-proof-attempt-8.md), which completed governed update, exact rollback and final re-update on target `4df99c4c66a1b7b93a4b05d7768018b03aa4041b`.
 
-Therefore the sequence is:
+Therefore the active sequence is:
 
 ```text
 P7.06 governed update / rollback proof
         ↓ PASS
-P7.06-UI1 live read-only workspace
+P7.06-UI1 live read-only workspace  ← CURRENT
         ↓
 P7.06-UI2 governed interaction / preflight
         ↓
@@ -58,7 +59,7 @@ An owner-controlled loopback/private access method or reversible tunnel MAY be u
 
 ### P7.06-UI1 — Live read-only governed workspace
 
-Status: `Pending — after P7.06 core PASS`.
+Status: `Current`.
 
 Connect the M4 workspace presentation semantics to the persistent runtime through a bounded internal adapter.
 
@@ -184,6 +185,6 @@ Completion does not itself create:
 
 ## 8. Current status
 
-This substream is planned and gated by the current canonical action `P7.06`.
+`P7.06 core = Complete / PASS` after selected-Mac Attempt 8.
 
-After `P7.06 core = PASS`, `P7.06-UI1` becomes the next canonical operator-experience action before P7.07/P7.08 workload expansion.
+`P7.06-UI1 — Live read-only governed workspace` is the current canonical operator-experience action before P7.06-UI2/UI3/UI4 and before P7.07/P7.08 workload expansion.

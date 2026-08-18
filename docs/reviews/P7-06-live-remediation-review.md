@@ -1,6 +1,6 @@
 # P7.06 — Selected-Mac Live Remediation Review
 
-Status: `Repository remediation PASS through iteration 6 / selected-Mac full proof pending`
+Status: `Complete / PASS — selected-Mac full proof closed at iteration 7`
 Date: `2026-08-18`
 Owner: `ООО «Арвектум»`
 Task classification: `platform` with bounded `governance` and operational recovery
@@ -22,8 +22,8 @@ Checked before and during remediation:
 - RFC-0001 — operationally significant behavior, exact versioning, technology independence and no implicit production/stable-boundary claim;
 - RFC-0005 — exact material version pinning, explicit failure/rollback semantics, governed consequential execution boundaries and no effect replay by historical recovery;
 - RFC-0006 — required operational evidence must not fail silently; telemetry remains non-canonical by default; replay/recovery does not authorize a new external effect;
-- R22 — `Complete / PASS`, with first P7.06 update still responsible for carrying the R22 hardening;
-- canonical roadmap — P7.06 core remains `Current`; the P7.06 Live Operator Workspace substream remains gated by core PASS, and P7.07/P7.08 remain downstream of that sequencing;
+- R22 — `Complete / PASS`, with first P7.06 update responsible for carrying the R22 hardening;
+- canonical roadmap — P7.06 core remains the current closure target until this review, implementation evidence and roadmap are published consistently; P7.06-UI1 follows core PASS;
 - Accepted ADRs — none select a permanent deployment manager, service supervisor or macOS topology.
 
 No higher-authority conflict was found in the bounded owner-operated remediation scope.
@@ -330,11 +330,52 @@ Functional diff review found no material objection:
 - no external/product effect or historical replay path is introduced;
 - no authority or lifecycle promotion is created.
 
-No material repository-side objection remains after iteration 6. Iteration 7 is intentionally reserved for the resulting selected-Mac full governed update → rollback → update proof and any final closure disposition.
+No material repository-side objection remained after iteration 6. Iteration 7 was reserved for the resulting selected-Mac full governed update → rollback → update proof and final closure disposition.
 
-## 17. Product/platform, authority and ADR disposition
+## 17. Review iteration 7 — PASS after selected-Mac Attempt 8
 
-Current disposition remains bounded:
+Result: `PASS / closure`.
+
+Attempt 8 executed from canonical `main` target:
+
+`4df99c4c66a1b7b93a4b05d7768018b03aa4041b`
+
+with exact source:
+
+`cf60e52c93bf0ef4158cf2c3e26792850a126c70`.
+
+Canonical live proof artifact: [`P7.06 Selected-Mac Governed Deploy Proof — Attempt 8`](P7-06-selected-mac-governed-deploy-proof-attempt-8.md).
+
+Observed sequence:
+
+1. source observer exact-release status — `PASS`;
+2. first pre-update backup — `PASS`, SHA-256 `904374591e1de92cf9dbd868f285b728ec78e9dcb5e849f39f632daab833c9d6`;
+3. observer uninstall — `PASS`;
+4. runtime stop — `PASS`;
+5. update source → target — `PASS`, transaction `a33209268d34b25c1bb8db9c63e835bf6149a404af57f8e77952177f22c5ffb3`;
+6. exact rollback target → source — `PASS`, transaction `589f282e3e062c1b5aa298f841f044d4d9c6227214c862d45044673a5ce9e951`;
+7. source observer exact-release status after rollback — `PASS`;
+8. second pre-update backup — `PASS`, SHA-256 `aa3336b8d16937c36f517aaed8202148ed9ce79aace0aab2fa6461ff58be5e92`;
+9. observer uninstall — `PASS`;
+10. runtime stop — `PASS`;
+11. final re-update source → target — `PASS`, transaction `34470ac05993465155b8048405d1dbb712ffb9387b90a29666b927fcfb9dfdc4`;
+12. selected-Mac proof wrapper — `PASS`;
+13. final active exact release — `4df99c4c66a1b7b93a4b05d7768018b03aa4041b`;
+14. owner-local proof attestation SHA-256 — `3dec1d1dd34aff960753105e72aa60739c01fb61c0af091a554e93f344418e69`.
+
+Functional cross-review by role:
+
+- architecture/governance — PASS: exact version identity, bounded R22 carry-forward and replay-safe semantics remain intact; no higher-authority source is changed;
+- engineering — PASS: the atomic `current` replacement removed the false-negative activation defect and the full update/rollback/re-update lifecycle completed;
+- operations/recovery — PASS: each destructive transition had a verified pre-update backup, rollback restored the exact historical release, and the final update left the host healthy on the exact target;
+- security/data governance — PASS: no schema-changing migration, canonical mutation by deployment, product/external effect replay or durable backup restore occurred; operational evidence remains owner-local and non-authoritative;
+- product/platform — PASS: deployment behavior remains domain-neutral and does not alter Product Contract or Platform Capability lifecycle.
+
+No material objection remains within the declared P7.06 `Persistent Internal / owner-operated` scope. Review iteration 7 closes this remediation review at the configured maximum.
+
+## 18. Product/platform, authority and ADR disposition
+
+Final disposition remains bounded:
 
 - no product-domain logic is added;
 - no Product Contract dependency changes;
@@ -344,14 +385,23 @@ Current disposition remains bounded:
 - no permanent service/deployment technology is selected;
 - no new ADR trigger is crossed at the current private, reversible owner-local scope.
 
-## 18. Closure state
+## 19. Closure state
 
-Until the selected-Mac full proof succeeds and canonical closure is synchronized:
+`P7.06 core = Complete / PASS` for the declared `Persistent Internal / owner-operated` scope once this review, the implementation closure and roadmap synchronization are canonically merged and read-after-write verified.
 
-- `P7.06 core = Current`;
-- `P7.06-UI1` remains gated by core PASS;
-- `P7.07` and `P7.08` remain downstream;
-- source runtime `cf60e52c93bf0ef4158cf2c3e26792850a126c70` is the exact live release whose post-Attempt-7 final status was explicitly verified healthy;
-- Attempt 6 and Attempt 7 both demonstrated contained automatic rollback with exact transaction evidence;
-- no P7.06 successful deployment transaction has yet been established;
-- no Production, Active capability, Stable Product Contract, SLA/support or broader conformance claim is created.
+Closure evidence:
+
+- PR `#49` atomic release-pointer remediation — merged target `4df99c4c66a1b7b93a4b05d7768018b03aa4041b`;
+- repository Reference Python CI on final PR review state — `998/998 PASS`;
+- selected-Mac Attempt 8 — `Complete / PASS`;
+- first update transaction — `a33209268d34b25c1bb8db9c63e835bf6149a404af57f8e77952177f22c5ffb3`;
+- rollback transaction — `589f282e3e062c1b5aa298f841f044d4d9c6227214c862d45044673a5ce9e951`;
+- final update transaction — `34470ac05993465155b8048405d1dbb712ffb9387b90a29666b927fcfb9dfdc4`;
+- final active target — `4df99c4c66a1b7b93a4b05d7768018b03aa4041b`;
+- attestation SHA-256 — `3dec1d1dd34aff960753105e72aa60739c01fb61c0af091a554e93f344418e69`.
+
+The first controlled P7.06 update has now carried and verified the R22 hardening through governed update, exact rollback and final re-update. The operator-workspace gate may therefore advance after canonical closure publication.
+
+Next canonical action: `P7.06-UI1 — Live read-only governed workspace`.
+
+No Production, `Active` capability, Stable Product Contract, SLA/support or broader conformance claim is created.

@@ -1,18 +1,19 @@
 # P7.06 — Governed Deploy / Update / Rollback / Version / Migration Path
 
-Status: `Repository implementation ready / selected-Mac proof pending`
+Status: `Complete / PASS`
 Date: `2026-08-18`
 Owner: `ООО «Арвектум»`
 Task classification: `platform` with bounded `governance`
 Operating classification: `Persistent Internal / owner-operated`
 Parent phase: [`Phase 7 — Operational / Enterprise Readiness`](../roadmap/PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md)
 Predecessor gate: [`R22 — Persistent Runtime Health Review`](../reviews/R22-persistent-runtime-health-review.md) — `Complete / PASS`
+Selected-Mac closure: [`P7.06 Selected-Mac Governed Deploy Proof — Attempt 8`](../reviews/P7-06-selected-mac-governed-deploy-proof-attempt-8.md) — `Complete / PASS`
 
 ## 1. Purpose
 
 P7.06 introduces the first explicit owner-operated deployment boundary for the persistent Arvectum OS runtime. It governs exact release identity, update preparation, pre-update durable backup, runtime/observer re-pin, post-update health verification, rollback, historical release reconstruction and state-format migration disposition without creating a public deployment API or Production/support promise.
 
-The first live P7.06 proof is intentionally the vehicle that carries the merged R22 hardening to the selected Mac mini.
+The first successful live P7.06 proof carried the merged R22 hardening to the selected Mac mini through the governed update path.
 
 ## 2. Authority baseline
 
@@ -37,9 +38,11 @@ A deployable version is the full canonical Git commit SHA. Every admitted releas
 
 The selected runtime and observer must resolve to the same exact SHA after every successful update and after rollback. Mutable `current` is only a selector; it is not a version identity.
 
+The P7.02 owner-local adapter replaces the `current` symlink object atomically and verifies that it resolves to the exact target SHA before plist generation and launchd activation. This prevents a directory-symlink destination from leaving the selector stale while a target runtime starts independently from its exact plist.
+
 ### 4.1 Bounded pre-R22 first-upgrade bridge
 
-R22 deliberately did not deploy its observer hardening to the already-proven selected-Mac P7.05 release, because that deployment belongs to P7.06. Therefore the first governed update has one narrowly admitted historical source condition:
+R22 deliberately did not deploy its observer hardening to the already-proven selected-Mac P7.05 release, because that deployment belongs to P7.06. Therefore the first governed update had one narrowly admitted historical source condition:
 
 - exact source release MUST be the canonical P7.05 selected-Mac release `cf60e52c93bf0ef4158cf2c3e26792850a126c70`;
 - the observer MUST actually be loaded;
@@ -47,7 +50,7 @@ R22 deliberately did not deploy its observer hardening to the already-proven sel
 - the historical observer implementation MUST still report healthy operational status;
 - any different release, different plist shape, missing observer or different mismatch fails closed.
 
-This is a one-release compatibility bridge for the R22 handoff, not a general relaxation of exact-release verification. After the first successful target activation, observer execution must use the R22 exact-release pin. No arbitrary pre-R22 or unknown mixed-version observer state is admitted.
+This was a one-release compatibility bridge for the R22 handoff, not a general relaxation of exact-release verification. Attempt 8 successfully crossed the handoff. After the successful target activation and subsequent rollback/re-update proof, observer execution uses the hardened exact-release pin. No arbitrary pre-R22 or unknown mixed-version observer state is admitted.
 
 ## 5. Controlled update sequence
 
@@ -61,12 +64,15 @@ P7.06 requires this order:
 6. retain the exact pre-change runtime and observer plists as historical rollback evidence;
 7. verify P7.03 live store and create+verify a new minimized pre-update backup with exact archive SHA-256;
 8. stop the observer, then stop the runtime;
-9. activate the target using the existing P7.02 canonical install primitive;
-10. verify target runtime exact-release health;
-11. install/re-pin the R22-hardened observer and verify loaded exact-release consistency;
-12. record immutable transaction evidence and the bounded latest-transaction pointer.
+9. prove deployment-specific runtime-process quiescence at the existing P7.02 single-instance lock;
+10. activate the target using the existing P7.02 canonical install primitive;
+11. verify target runtime exact-release health;
+12. install/re-pin the R22-hardened observer and verify loaded exact-release consistency;
+13. record immutable transaction evidence and the bounded latest-transaction pointer.
 
 If activation or post-update verification fails after the update has begun, the adapter restores the prior exact runtime release and then re-installs the observer through the current P7.05 semantic owner so that the rollback observer is pinned to the restored exact source release. The old observer plist is retained as evidence but is not blindly restored when it contains the known pre-R22 mutable-`current` path. A rollback failure is not represented as success.
+
+The bounded live-remediation sequence also added an operational `recover-interrupted-latest` path for an interrupted transition whose source can be established from retained exact pre-update evidence. Recovery does not fabricate a successful deployment transaction or restore a durable backup unless separately required and authorized.
 
 ## 6. Rollback
 
@@ -74,7 +80,7 @@ If activation or post-update verification fails after the update has begun, the 
 
 For the current P7.03 store schema, rollback restores the exact prior runtime release, re-pins the observer to that exact prior release, and retains the pre-update backup; it does not restore the backup because no state-format migration occurred. This avoids erasing legitimate state created after deployment.
 
-For the first R22-carry-forward proof, rollback to `cf60e52…` intentionally does **not** recreate the historical unsafe observer plist that referenced mutable `/current/`. The source release is restored exactly, while the observer launchd configuration is regenerated as an exact-release pin to the restored source implementation. This allows the rollback proof to demonstrate both historical release recovery and the R22 mixed-release safety invariant.
+For the first R22-carry-forward proof, rollback to `cf60e52…` intentionally did **not** recreate the historical unsafe observer plist that referenced mutable `/current/`. The source release was restored exactly, while the observer launchd configuration was regenerated as an exact-release pin to the restored source implementation. Attempt 8 proved both historical release recovery and the R22 mixed-release safety invariant.
 
 Application rollback never means deleting or rewriting canonical Event history. Historical replay, rollback and retry do not authorize re-execution of prior product/external consequential effects.
 
@@ -100,7 +106,7 @@ A deployment that merely changes runtime code/configuration must not replay exte
 
 ## 9. Selected-Mac closure contract
 
-P7.06 is not `Complete / PASS` until the selected Mac mini runs `p7_06_selected_mac_proof.sh` from canonical `main` and proves:
+P7.06 required the selected Mac mini to run `p7_06_selected_mac_proof.sh` from canonical `main` and prove:
 
 - real transition from the already-proven P7.05 release to a target containing R22;
 - bounded recognition of the exact historically proven pre-R22 observer state on the first transition, with no general mixed-version exception;
@@ -112,8 +118,32 @@ P7.06 is not `Complete / PASS` until the selected Mac mini runs `p7_06_selected_
 - no schema-changing migration, canonical mutation or product/external effect replay by the deployment path;
 - retained owner-local attestation digest.
 
-Until that proof passes, P7.07/P7.08 workload expansion remains blocked by roadmap sequencing.
+### 9.1 Attempt 8 closure evidence
 
-## 10. Non-claims
+[`P7.06 Selected-Mac Governed Deploy Proof — Attempt 8`](../reviews/P7-06-selected-mac-governed-deploy-proof-attempt-8.md) completed `PASS` on `2026-08-18`.
+
+Exact live evidence:
+
+- source release: `cf60e52c93bf0ef4158cf2c3e26792850a126c70`;
+- target release: `4df99c4c66a1b7b93a4b05d7768018b03aa4041b`;
+- first pre-update backup SHA-256: `904374591e1de92cf9dbd868f285b728ec78e9dcb5e849f39f632daab833c9d6`;
+- first update transaction: `a33209268d34b25c1bb8db9c63e835bf6149a404af57f8e77952177f22c5ffb3`;
+- exact rollback transaction: `589f282e3e062c1b5aa298f841f044d4d9c6227214c862d45044673a5ce9e951`;
+- second pre-update backup SHA-256: `aa3336b8d16937c36f517aaed8202148ed9ce79aace0aab2fa6461ff58be5e92`;
+- final update transaction: `34470ac05993465155b8048405d1dbb712ffb9387b90a29666b927fcfb9dfdc4`;
+- final active exact release: `4df99c4c66a1b7b93a4b05d7768018b03aa4041b`;
+- owner-local proof attestation SHA-256: `3dec1d1dd34aff960753105e72aa60739c01fb61c0af091a554e93f344418e69`.
+
+No schema-changing migration or backup restore occurred. The proof wrapper reported final `P7.06 selected-Mac proof PASS` after update, exact rollback, source verification, final update and exact target verification.
+
+The selected-Mac closure contract is therefore satisfied for the declared bounded operating classification.
+
+## 10. Closure result
+
+`P7.06 = Complete / PASS` for `Persistent Internal / owner-operated` scope, subject to canonical publication of this closure state together with the review and roadmap synchronization and successful final repository CI/read-after-write verification.
+
+The next canonical action after publication is `P7.06-UI1 — Live read-only governed workspace`.
+
+## 11. Non-claims
 
 P7.06 does not establish external/customer Production, an `Active` Platform Capability, Stable Product Contract, public/stable installer/updater API, supported macOS matrix, permanent deployment manager, generalized database migration framework, automatic remote rollout, SLA/SLO/support or broader conformance.
