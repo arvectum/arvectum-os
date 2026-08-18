@@ -269,11 +269,15 @@ rotate_secret() {
 }
 
 reconcile_after_deploy() {
-  rel=$(current_release); next=$(release_shell "$rel")
-  if [ -f "$next" ]; then
-    sh "$next" install >/dev/null
-    sh "$next" status >/dev/null
-    info "deploy reconciliation PASS release=$rel UI3=installed"
+  rel=$(current_release); script=$(release_script "$rel")
+  if [ -f "$script" ]; then
+    # This controller may be newer than the resulting release after rollback.
+    # Keep lifecycle hardening in the invoking controller while pinning the
+    # actual service Python/module/config verification to the exact current
+    # release. Historical UI3 shell bugs must not be replayed as migration logic.
+    install_service >/dev/null
+    status_service >/dev/null
+    info "deploy reconciliation PASS release=$rel UI3=installed-exact-release"
   else
     cleanup_ui3_material
     info "deploy reconciliation PASS release=$rel UI3=absent-in-release"
