@@ -94,9 +94,42 @@ Security/data governance: PASS. No broadened execution surface, secret handling,
 
 Product/platform: PASS. The change remains owner-local, domain-neutral and independent of product business logic or hidden product state.
 
-No material repository/live-readiness objection remains after iteration 6. The remaining evidence gap is execution of the complete selected-Mac proof against the merged remediation.
+The remaining evidence gap after iteration 6 was execution of the complete selected-Mac proof against the merged remediation.
 
-## 8. Validation
+## 8. Iteration 7 — REVISE → PASS after selected-Mac attempt 3
+
+Observed live sequence on canonical `main` `1a6fd740ab3398aedbbe8f30c9a56d04467cf33b`:
+
+- bounded legacy R22 carry-forward verification passed for source `cf60e52c93bf0ef4158cf2c3e26792850a126c70`;
+- the adapter then failed in `backup_preupdate()` with:
+
+`.../p7_06_macos_deploy.sh: line 175: /Users/master/Library/Application: No such file or directory`
+
+Material engineering/portability finding: the P7.03 backup command used `output=$($py ...)`. The selected-Mac runtime Python path is under the default owner-local root `$HOME/Library/Application Support/ArvectumOS/persistent-internal`, so unquoted command-position expansion split the executable path at the space in `Application Support`. The immediately preceding P7.03 verify command already quoted the same executable correctly; the defect was isolated to the backup command substitution.
+
+Disposition:
+
+- execute the release Python inside command substitution as `output=$("$py" "$durable" backup ...)`;
+- retain the exact source release and P7.03 release-owned backup implementation;
+- add a regression guard that rejects the unquoted `output=$($py ...)` form and requires the quoted form while preserving the real default runtime root containing `Application Support`;
+- no path relocation, symlink workaround, operator-side escaping, alternate Python or weakening of the owner-local runtime-root contract is introduced.
+
+Failure position and safety disposition:
+
+- source runtime health had already passed;
+- bounded legacy observer verification had passed;
+- target preparation and compatibility/migration preflight had completed;
+- deployment lock and work evidence directory had been created;
+- the P7.03 live-store verification command passed far enough to reach the subsequent backup invocation;
+- the backup executable itself was never started because shell command resolution failed first;
+- observer uninstall, runtime stop, target activation and canonical/product/external effects had not begun;
+- the EXIT trap remains responsible for releasing the P7.06 single-writer lock; retained work-directory material is owner-local non-canonical operational evidence.
+
+Post-remediation review result: PASS for repository/live-readiness scope. The quoting correction changes no authority, schema, migration, replay, product/platform or lifecycle semantics; it makes the existing governed backup-before-stop sequence executable on the actual selected-Mac default path.
+
+Iteration 7 reaches the configured maximum functional-review iteration count. Any materially new defect discovered after this point must be recorded in a new bounded remediation/live-proof review artifact rather than extending this cross-review beyond seven iterations.
+
+## 9. Validation
 
 Repository validation accumulated across the review:
 
@@ -106,9 +139,9 @@ Repository validation accumulated across the review:
 - static guard: no curl/wget/ssh/scp/nc remote transport introduced by the P7.06 macOS adapter;
 - initial implementation PR `#40`: full CI `975/975 PASS`;
 - executable-bit remediation PR `#42`: `Reference Python CI` run `32121769448`, job `95663550077`, `978/978 PASS`;
-- bounded R22 first-upgrade bridge PR `#43`: `Reference Python CI` run `32122402442`, job `95665496605`, `980/980 PASS` on the PR merge ref before this review-note update;
-- new P7.06 regressions observed green include exact-one-release legacy admission, exact historical plist-shape validation, safe rollback observer re-pin, and no executable-bit reliance.
+- bounded R22 first-upgrade bridge PR `#43`: `Reference Python CI` run `32122402442`, job `95665496605`, `980/980 PASS` on the PR merge ref before its review-note update;
+- path-with-spaces remediation PR `#44`: `Reference Python CI` run `32123420416`, job `95668636686`, `981/981 PASS`; the new `test_release_python_command_substitution_is_space_safe` regression is green against the real `Application Support` default-root form.
 
-Selected-Mac execution remains the only closure evidence still to obtain after PR `#43` is merged and pulled to the host.
+Selected-Mac execution remains the only closure evidence still to obtain after the iteration-7 remediation is merged and pulled to the host.
 
-Functional cross-review result: `PASS` after 6 iterations for repository/live-readiness scope. This is not formal Production/lifecycle approval and does not substitute for the selected-Mac proof.
+Functional cross-review result: `PASS` after 7 iterations for repository/live-readiness scope. This is not formal Production/lifecycle approval and does not substitute for the selected-Mac proof.

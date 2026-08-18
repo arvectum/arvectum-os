@@ -172,7 +172,7 @@ backup_preupdate() {
   py=$(release_python "$rel")
   durable="$(release_source "$rel")/p7_03_durable_state.py"
   "$py" "$durable" verify --runtime-root "$RUNTIME_ROOT" >/dev/null
-  output=$($py "$durable" backup --runtime-root "$RUNTIME_ROOT" --release-sha "$rel")
+  output=$("$py" "$durable" backup --runtime-root "$RUNTIME_ROOT" --release-sha "$rel")
   backup=$(printf '%s\n' "$output" | sed -n 's/^P7.03 backup PASS archive=\(.*\) sha256=[0-9a-f][0-9a-f]*$/\1/p')
   sha=$(printf '%s\n' "$output" | sed -n 's/^P7.03 backup PASS archive=.* sha256=\([0-9a-f][0-9a-f]*\)$/\1/p')
   [ -n "$backup" ] && [ -n "$sha" ] || fail "could not parse exact pre-update backup identity"

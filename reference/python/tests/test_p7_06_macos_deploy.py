@@ -39,6 +39,18 @@ class ShellTests(unittest.TestCase):
         self.assertIn('sh "$P705" uninstall', text)
         self.assertIn('sh "$P705" install', text)
 
+    def test_release_python_command_substitution_is_space_safe(self):
+        text = DEPLOY.read_text()
+        self.assertNotIn('output=$($py ', text)
+        self.assertIn(
+            'output=$("$py" "$durable" backup --runtime-root "$RUNTIME_ROOT" --release-sha "$rel")',
+            text,
+        )
+        self.assertIn(
+            'RUNTIME_ROOT=${ARVECTUM_P7_02_ROOT:-"$HOME/Library/Application Support/ArvectumOS/persistent-internal"}',
+            text,
+        )
+
     def test_first_r22_upgrade_admits_only_exact_proven_legacy_observer_shape(self):
         text = DEPLOY.read_text()
         self.assertIn(
