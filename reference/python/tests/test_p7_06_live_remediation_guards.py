@@ -34,7 +34,7 @@ class P706LiveRemediationGuardTests(unittest.TestCase):
         wait_loaded = function_block(text, "wait_loaded", "runtime_lock_available")
         self.assertIn("wait_target=$1", wait_loaded)
         self.assertIn('launchctl print "$wait_target"', wait_loaded)
-        self.assertNotIn("target=$1", wait_loaded)
+        self.assertNotIn("\n  target=$1\n", wait_loaded)
 
         failure = function_block(text, "rollback_and_record_failure", "preflight")
         self.assertIn('write_payload "$payload" "$plan_id" "$source" "$target" ROLLED_BACK', failure)
