@@ -201,7 +201,9 @@ def _security_headers(handler: BaseHTTPRequestHandler) -> None:
         "Content-Security-Policy",
         "default-src 'none'; style-src 'unsafe-inline'; form-action 'self'; base-uri 'none'",
     )
-    handler.send_header("Referrer-Policy", "no-referrer")
+    # Keep strict Origin validation usable for ordinary same-origin browser form
+    # POSTs while still suppressing Referrer disclosure to every other origin.
+    handler.send_header("Referrer-Policy", "same-origin")
     handler.send_header("X-Content-Type-Options", "nosniff")
     handler.send_header("X-Frame-Options", "DENY")
 
