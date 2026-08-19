@@ -175,6 +175,33 @@ class P710PortabilityProofTests(unittest.TestCase):
                 host_marker="clean-secondary-host",
             )
 
+    @unittest.skipIf(os.name == "nt", "POSIX owner-only directory modes are not applicable on Windows")
+    def test_restore_requires_owner_only_immediate_parent_then_passes_under_private_parent(self):
+        self._prepare()
+        shared_parent = self.base / "shared-parent"
+        shared_parent.mkdir()
+        shared_parent.chmod(0o750)
+        blocked_target = shared_parent / "clean-target"
+
+        with self.assertRaises(p703.IntegrityError):
+            p710.restore_on_clean_environment(
+                self.package,
+                blocked_target,
+                TOOL_SHA,
+                host_marker="clean-secondary-host",
+            )
+        self.assertFalse(blocked_target.exists())
+
+        shared_parent.chmod(0o700)
+        receipt = p710.restore_on_clean_environment(
+            self.package,
+            blocked_target,
+            TOOL_SHA,
+            host_marker="clean-secondary-host",
+        )
+        self.assertEqual(receipt["result"], "PASS")
+        self.assertEqual(p703.verify_store(blocked_target)["integrity"], "PASS")
+
     def test_handoff_must_be_physically_outside_source_root(self):
         nested = self.source / "handoff"
         with self.assertRaises(p710.PortabilityError):
