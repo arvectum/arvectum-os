@@ -1,0 +1,193 @@
+name: P7.10 Closure Roadmap Sync
+
+on:
+  push:
+    branches:
+      - p7-10-canonical-closure
+    paths:
+      - .github/workflows/p7-10-closure-sync.yml
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out closure branch
+        uses: actions/checkout@v4
+        with:
+          ref: p7-10-canonical-closure
+          fetch-depth: 0
+
+      - name: Apply bounded roadmap synchronization
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          def replace_once(text: str, old: str, new: str, label: str) -> str:
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f"{label}: expected exactly one match, found {count}")
+              return text.replace(old, new, 1)
+
+          roadmap_path = Path("docs/roadmap/ROADMAP.md")
+          roadmap = roadmap_path.read_text(encoding="utf-8")
+
+          roadmap = replace_once(
+              roadmap,
+              "Version: `2.56.2`",
+              "Version: `2.56.3`",
+              "master version",
+          )
+
+          version_note = """Version `2.56.3` closes `P7.10 — Portability, host-loss and restore-on-clean-environment proof` as `Complete / PASS` for the declared `Persistent Internal / owner-operated` scope. The real selected-Mac P7.03 governed store crossed the host-loss boundary through the unchanged verified four-member handoff and was restored on a separate clean MacBook Air environment at the handoff's exact embedded canonical release `fbab170ab337c1631b40d0d36ea58a02f6512f6e`. The retained handoff re-verified byte-for-byte with archive SHA-256 `074f2a4e84e222bd26d6ed21a829aa0dcc1c91834479345cfa652405b721bfbd` and manifest SHA-256 `fe0d2c7d9460f9da4356a3a3f7419b825b8aef3a8d18123ab35fb0281db3ada9`; clean restore returned P7.03 integrity `PASS`, governed-state SHA-256 `da558333e0d98beac96298703326ca9d660db9098a3b0f2aa94b18c14d5a07a1`, selected historical reconstruction `PASS`, no reusable-secret restore, no external-effect replay, no Organizational Authority grant and no excluded runtime/secrets paths. Owner-local receipt basename `p7-10-clean-restore-receipt-attempt-3.json`, SHA-256 `ab7bf132d3d3a1304e3582c25fbd80a783d36c7bee9e5e6439ed4c54780aa341`.
+
+Attempt 2 remains preserved as `FAIL-CLOSED` on the secondary home-directory `0750` immediate-parent boundary; PR `#86` retained the P7.03 owner-only rule, corrected the operational procedure and passed `1192 tests / OK` plus the automated P7.10 cross-host proof. PR `#87` preserved the stronger exact-release binding for the already transferred handoff. The P7.09 `/var` ↔ `/private/var` discrepancy is closed as a host path-presentation/environment issue only when physical filesystem identity proves equivalence; it is not semantic-state divergence and did not require weakening P7.03. Canonical closure is recorded in [`P7.10 — Canonical Closure`](../reviews/P7-10-canonical-closure.md).
+
+`P7.10 = Complete / PASS`; M7 criterion 10 is satisfied for the declared scope. Active Phase 7 advances to `1.2.15`, and the current canonical action becomes `R23 — Recovery / Portability Review` before P7.11 lifecycle/readiness disposition. This closure creates no external/customer Production, lifecycle promotion, Stable Product Contract, Active Platform Capability, public/stable backup/restore/export format, SLA/SLO/RPO/RTO/support or broader conformance claim.
+
+"""
+          roadmap = replace_once(
+              roadmap,
+              "Version `2.56.2` records the repository-side implementation",
+              version_note + "Version `2.56.2` records the repository-side implementation",
+              "master version note insertion",
+          )
+
+          roadmap = replace_once(
+              roadmap,
+              "Detailed roadmap: [`PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md`](PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md) — `Active 1.2.14`.",
+              "Detailed roadmap: [`PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md`](PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md) — `Active 1.2.15`.",
+              "master phase version",
+          )
+
+          roadmap = replace_once(
+              roadmap,
+              "| `P7.10` | Portability, host-loss and restore-on-clean-environment proof | 🟨 Current | `░░░░░░░░░░ 0%` |",
+              "| `P7.10` | Portability, host-loss and restore-on-clean-environment proof | 🟩 Complete / PASS | `██████████ 100%` |",
+              "master P7.10 row",
+          )
+
+          roadmap = replace_once(
+              roadmap,
+              "- `R23 — Recovery / Portability Review` — after P7.10;",
+              "- `R23 — Recovery / Portability Review` — 🟨 Current after P7.10;",
+              "master R23 gate",
+          )
+
+          roadmap = replace_once(
+              roadmap,
+              "P7.10 portability / host-loss / clean-environment restore proof ← current\n        ↓\nP7.11–P7.12 readiness disposition + hardening + closure",
+              "P7.10 portability / host-loss / clean-environment restore proof — PASS\n        ↓\nR23 Recovery / Portability Review ← current\n        ↓\nP7.11–P7.12 readiness disposition + hardening + closure",
+              "master transition",
+          )
+
+          p710_summary = """
+
+P7.10 is `Complete / PASS`. The same unchanged real selected-Mac handoff that had already crossed the host-loss boundary in Attempt 2 was re-verified on the clean secondary host and restored at its exact embedded release `fbab170ab337c1631b40d0d36ea58a02f6512f6e` beneath a dedicated non-symlink `0700` restore parent. P7.03 integrity and the governed-state digest passed; selected historical reconstruction passed; the restored set retained two governed items and two checkpoints; reusable secrets, external-effect replay, Organizational Authority grant and forbidden runtime/secrets paths remained absent. Receipt SHA-256: `ab7bf132d3d3a1304e3582c25fbd80a783d36c7bee9e5e6439ed4c54780aa341`. Canonical closure: [`P7.10 — Canonical Closure`](../reviews/P7-10-canonical-closure.md).
+"""
+          roadmap = replace_once(
+              roadmap,
+              "\n## 7. M7 milestone definition",
+              p710_summary + "\n## 7. M7 milestone definition",
+              "master P7.10 summary insertion",
+          )
+
+          marker = "## 11. Current canonical action\n"
+          if roadmap.count(marker) != 1:
+              raise SystemExit("master current-action marker mismatch")
+          roadmap = roadmap.split(marker, 1)[0] + marker + """
+
+> **R23 — Recovery / Portability Review.**
+
+`P7.10 = Complete / PASS` for the declared `Persistent Internal / owner-operated` scope. The actual selected-Mac governed store crossed the host-loss boundary and restored successfully on a clean secondary environment with exact-release, integrity, governed-state, selected-history, exclusion, no-replay and no-authority checks all passing. M7 criterion 10 is satisfied.
+
+The next canonical action is R23: review the accumulated P7.03/P7.06/P7.09/P7.10 backup, recovery, exact-release, semantic-portability and host-specific-configuration evidence before P7.11 makes lifecycle, conformance and stable-boundary dispositions. Criteria 11–13 remain downstream. R23 is an engineering/governance review, not a Production approval or lifecycle transition.
+""".lstrip("\n")
+
+          roadmap_path.write_text(roadmap, encoding="utf-8")
+
+          phase_path = Path("docs/roadmap/PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md")
+          phase = phase_path.read_text(encoding="utf-8")
+
+          phase = replace_once(phase, "Version: `1.2.14`", "Version: `1.2.15`", "phase version")
+          phase = replace_once(
+              phase,
+              "| `P7.10` | Portability, host-loss and restore-on-clean-environment proof | Mac mini + secondary clean environment + GitHub | 🟨 Current | `░░░░░░░░░░ 0%` |",
+              "| `P7.10` | Portability, host-loss and restore-on-clean-environment proof | Mac mini + secondary clean environment + GitHub | 🟩 Complete / PASS | `██████████ 100%` |",
+              "phase P7.10 row",
+          )
+          phase = replace_once(
+              phase,
+              "| `R23 — Recovery / Portability Review` | after `P7.10`, before lifecycle/readiness decisions | ⬜ | verify backup/restore, host-loss recovery, semantic portability, exact identities/versions/provenance and absence of host-specific hidden authority |",
+              "| `R23 — Recovery / Portability Review` | after `P7.10`, before lifecycle/readiness decisions | 🟨 `Current` | verify backup/restore, host-loss recovery, semantic portability, exact identities/versions/provenance and absence of host-specific hidden authority |",
+              "phase R23 gate",
+          )
+
+          start = phase.index("### P7.10 — Portability, host-loss and restore-on-clean-environment proof")
+          end = phase.index("### P7.11 — Scoped operational-readiness, lifecycle, conformance + stable-boundary disposition")
+          phase_p710 = """### P7.10 — Portability, host-loss and restore-on-clean-environment proof
+
+Status: `Complete / PASS`.
+
+Canonical evidence:
+
+- [`P7.10 — Implementation Readiness Review`](../reviews/P7-10-implementation-readiness.md) — repository implementation/automated mechanism proof;
+- [`P7.10 — Selected-Mac Operational Attempt 2`](../reviews/P7-10-selected-mac-attempt-2-clean-parent-failure.md) — preserved fail-closed secondary-parent failure;
+- [`P7.10 — Canonical Closure`](../reviews/P7-10-canonical-closure.md) — final operational closure;
+- implementation PR `#83`, canonical merge `393cc5bff98cc87553b96d282f4bf618621fd87a`;
+- owner-parent/instruction remediation PR `#86`, merge `16621a1abc814a92e8fed0d0a3451946be6f8303`, final full CI `1192 tests / OK`;
+- exact-release procedure correction PR `#87`, merge `de59771281ce1b4c58d943bd003560384e332270`;
+- exact retained handoff/tool release `fbab170ab337c1631b40d0d36ea58a02f6512f6e`;
+- handoff archive SHA-256 `074f2a4e84e222bd26d6ed21a829aa0dcc1c91834479345cfa652405b721bfbd`;
+- handoff manifest SHA-256 `fe0d2c7d9460f9da4356a3a3f7419b825b8aef3a8d18123ab35fb0281db3ada9`;
+- owner-local clean-restore receipt basename `p7-10-clean-restore-receipt-attempt-3.json`, SHA-256 `ab7bf132d3d3a1304e3582c25fbd80a783d36c7bee9e5e6439ed4c54780aa341`.
+
+The actual selected-Mac P7.03 governed store crossed the host-loss boundary through an unchanged verified four-member handoff and restored successfully on a separate clean MacBook Air environment. P7.03 integrity remained `PASS`; governed-state SHA-256 `da558333e0d98beac96298703326ca9d660db9098a3b0f2aa94b18c14d5a07a1` matched the source handoff; selected historical reconstruction passed; two governed items and two checkpoints were retained; reusable secrets, excluded runtime paths, external-effect replay and Organizational Authority grant remained absent.
+
+Attempt 2 remains canonical fail-closed evidence: placing the target directly beneath a macOS home directory with mode `0750` correctly failed before target publication. Closure used a dedicated existing/created non-symlink owner-only `0700` immediate restore parent without weakening the ordinary home-directory policy. The same handoff was retained and restored at its own exact embedded release rather than rebuilt or relabelled after documentation/test-only corrections.
+
+The P7.09 `/var` versus `/private/var` observation is explicitly dispositioned as a host path-presentation/environment issue only when physical filesystem identity proves equivalence. Lexical aliases resolving to different filesystem objects remain material and fail closed where same-location identity is required. The selected-Mac runtime root itself remains the established owner-local persistent root, not `/var/lib/arvectum-os`.
+
+P7.10 satisfies M7 criterion 10 for the declared scope. Host/service-manager paths, machine-local credentials/secrets, network/proxy/TLS configuration and OS-specific ownership plumbing remain explicit target-environment reprovisioning responsibilities rather than portable semantic state.
+
+P7.10 closure creates no Production claim, lifecycle promotion, Stable Product Contract, Active Platform Capability, public/stable recovery/export format, permanent persistence technology, SLA/SLO/RPO/RTO/support commitment or broader conformance claim.
+
+**R23 follows P7.10 and is now Current.**
+
+"""
+          phase = phase[:start] + phase_p710 + phase[end:]
+
+          phase = replace_once(
+              phase,
+              "M7 criterion 9 is satisfied by P7.09 for the declared `Persistent Internal / owner-operated` scope. Criteria 10–13 remain downstream.",
+              "M7 criteria 9 and 10 are satisfied by P7.09 and P7.10 respectively for the declared `Persistent Internal / owner-operated` scope. Criteria 11–13 remain downstream.",
+              "phase M7 criteria",
+          )
+
+          marker = "## 8. Current canonical action\n"
+          if phase.count(marker) != 1:
+              raise SystemExit("phase current-action marker mismatch")
+          phase = phase.split(marker, 1)[0] + marker + """
+
+> **R23 — Recovery / Portability Review.**
+
+P7.10 is `Complete / PASS`: the real selected-Mac governed store was handed off beyond the host-loss boundary and restored on a separate clean secondary environment with exact-release binding, P7.03 integrity, governed-state digest, selected historical reconstruction, exclusions, no-effect-replay and no-authority checks all passing. M7 criterion 10 is satisfied.
+
+R23 now reviews the accumulated recovery/portability evidence before P7.11 performs scoped operational-readiness, lifecycle, conformance and stable-boundary disposition. R23 does not itself promote a capability, stabilize a Product Contract or approve Production.
+""".lstrip("\n")
+
+          phase_path.write_text(phase, encoding="utf-8")
+          PY
+
+      - name: Commit synchronized roadmaps
+        shell: bash
+        run: |
+          git config user.name "Arvectum Roadmap Sync"
+          git config user.email "arvectum@gmail.com"
+          git add docs/roadmap/ROADMAP.md docs/roadmap/PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md
+          git diff --cached --check
+          git commit -m "docs: close P7.10 and advance to R23"
+          git push origin HEAD:p7-10-canonical-closure
