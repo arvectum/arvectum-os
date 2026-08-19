@@ -82,6 +82,8 @@ P7.10 resolves the classification without hiding the observation:
 
 The P7.10 macOS CI job explicitly proves the real `/var` alias behavior; unit coverage also reproduces it with a symlink fixture.
 
+The `/var` finding is only a portability/path-alias classification. It is not the selected-Mac runtime location. The selected-Mac P7.03 store for the real operational proof is the existing P7.02 runtime root already established and verified by P7.09: `${HOME}/Library/Application Support/ArvectumOS/persistent-internal`.
+
 ## 7. Repository evidence
 
 Final PR head: `d79defc54a3276e616bf72037b0dea14efd6e9bc`.
@@ -115,11 +117,15 @@ Cross-review of authority separation, security/exclusions, persistence ownership
 
 Use of the P7.03 internal archive-reader inside the same internal reference implementation is bounded and does not establish a public/stable interface. P7.03 remains the semantic owner of the archive format.
 
+### Operational-instruction correction before selected-Mac proof
+
+The first owner-operated Stage 1 attempt on `2026-08-19` stopped fail-closed because the P7.10 implementation document incorrectly used `/var/lib/arvectum-os` as the selected-Mac source example. The operator correctly did not synthesize or substitute state. Review against the already-closed P7.09 runbook and selected-Mac evidence established that the real persistent runtime/P7.03 store is `${HOME}/Library/Application Support/ArvectumOS/persistent-internal`; the `/var` versus `/private/var` observation concerns macOS path-alias behavior in portability tests, not the runtime root. The implementation documentation was corrected before retry. This was an operator-instruction/documentation defect, not evidence of P7.03 store loss and not a failed portability mechanism result.
+
 ## 9. Remaining P7.10 operational proof
 
 Before P7.10 can become `Complete / PASS`, all of the following remain required:
 
-1. use the real selected Mac's P7.03 governed store as source;
+1. use the real selected Mac's P7.03 governed store at `${HOME}/Library/Application Support/ArvectumOS/persistent-internal` as source;
 2. create and verify the P7.10 handoff without reusable secrets;
 3. physically transfer the package beyond the selected-Mac runtime/host-loss boundary through an owner-controlled medium;
 4. on a genuinely clean secondary environment at the exact canonical release, restore into an absent target;
