@@ -139,6 +139,7 @@ jobs:
 
       - name: Prove source runtime is unavailable on clean runner
         run: |
+          chmod 700 "$RUNNER_TEMP"
           test ! -e "$RUNNER_TEMP/p710-source-runtime"
           test ! -e "$RUNNER_TEMP/p710-clean-target"
 
