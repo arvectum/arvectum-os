@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 """P7.10 portability, host-loss and clean-environment restore proof.
 
-This module composes the P7.03 governed backup/restore primitive.  It does not
-create a second backup format or grant authority to replay external effects.
-A P7.10 handoff copies an already verified P7.03 archive and checksum into an
-off-host package, adds semantic/path/host evidence, and verifies that evidence
-before restoring into an absent target root.
+P7.10 composes the P7.03 governed backup/restore primitive. It does not create
+another canonical-state format, grant authority, or authorize external-effect
+replay. The handoff adds off-host transfer evidence and a clean-host receipt.
 """
 
 from __future__ import annotations
@@ -18,6 +16,7 @@ import platform
 import shutil
 import socket
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Iterable
 
@@ -33,12 +32,15 @@ class PortabilityError(RuntimeError):
     """P7.10 portability proof failed closed."""
 
 
-def _canonical_json_bytes(value: Any) -> bytes:
-    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+def _utc_now() -> str:
+    return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 
 
-def _sha256_bytes(value: bytes) -> str:
-    return hashlib.sha256(value).hexdigest()
+def _validate_release_sha(value: str) -> str:
+    value = value.strip().lower()
+    if len(value) != 40 or any(ch not in "0123456789abcdef" for ch in value):
+        raise PortabilityError("release SHA must be exactly 40 lowercase/uppercase hexadecimal characters")
+    return value
 
 
 def _sha256_file(path: Path) -> str:
@@ -54,12 +56,7 @@ def _lexical_absolute(path: Path) -> Path:
 
 
 def path_identity(path: Path) -> Dict[str, Any]:
-    """Record both operator-visible and filesystem-resolved path identities.
-
-    The distinction is intentional.  On macOS, for example, /var is commonly a
-    symlink to /private/var.  Lexical inequality alone is therefore not proof of
-    a different storage location.
-    """
+    """Preserve operator-visible path and resolved filesystem identity."""
 
     lexical = _lexical_absolute(path)
     physical = lexical.resolve(strict=False)
@@ -123,7 +120,7 @@ def _state_files(root: Path) -> Iterable[Path]:
 
 
 def governed_state_digest(root: Path) -> str:
-    """Semantic byte digest independent of the host's absolute root path."""
+    """Digest state by relative names+bytes, independent of absolute host path."""
 
     digest = hashlib.sha256()
     state = root / "state"
@@ -138,11 +135,7 @@ def governed_state_digest(root: Path) -> str:
 
 
 def selected_historical_evidence(root: Path) -> Dict[str, Any]:
-    """Reconstruct one deterministic historical governed record.
-
-    P7.10 deliberately requires at least one governed record.  A successful
-    empty-store restore would prove archive plumbing, not historical continuity.
-    """
+    """Reconstruct one deterministic governed record for continuity evidence."""
 
     items_dir = root / "state" / "governed" / "items"
     items = sorted(path for path in items_dir.iterdir() if path.is_dir()) if items_dir.is_dir() else []
@@ -159,9 +152,15 @@ def selected_historical_evidence(root: Path) -> Dict[str, Any]:
     return {
         "item_id": item_dir.name,
         "payload_sha256": _sha256_file(payload),
+        "semantic_type": metadata.get("semantic_type"),
+        "schema_version": metadata.get("schema_version"),
+        "classification": metadata.get("classification"),
+        "retention_policy_ref": metadata.get("retention_policy_ref"),
         "subject_identity": metadata.get("subject_identity"),
         "version_identity": metadata.get("version_identity"),
         "authority_mode": metadata.get("authority_mode"),
+        "authority_scope": metadata.get("authority_scope"),
+        "governed_admission_ref": metadata.get("governed_admission_ref"),
         "source_release_sha": metadata.get("source_release_sha"),
         "provenance_refs": metadata.get("provenance_refs", []),
     }
@@ -219,6 +218,7 @@ def prepare_handoff(
 ) -> Dict[str, Any]:
     """Create a verified off-host handoff from an existing P7.03 store."""
 
+    release_sha = _validate_release_sha(release_sha)
     source_lex = _lexical_absolute(source_root)
     source = source_lex.resolve(strict=False)
     off_host_lex = _lexical_absolute(off_host_dir)
@@ -255,6 +255,7 @@ def prepare_handoff(
     source_identity = path_identity(source_lex)
     manifest = {
         "schema": HANDOFF_SCHEMA,
+        "created_at": _utc_now(),
         "scope": "P7.10 internal portability proof; no Production, lifecycle, support, or public API claim",
         "organization_scope": p703.ORGANIZATION_SCOPE,
         "tool_release_sha": release_sha,
@@ -300,9 +301,16 @@ def verify_handoff(package_dir: Path) -> Dict[str, Any]:
         raise PortabilityError(f"handoff package directory missing: {package_dir}")
     if os.name != "nt":
         package.chmod(0o700)
+
+    entries = list(package.iterdir())
+    if any(entry.is_symlink() or not entry.is_file() for entry in entries):
+        raise PortabilityError("handoff package may contain regular files only; no symlinks/directories")
+
     manifest = _verify_manifest_checksum(package)
     if manifest.get("organization_scope") != p703.ORGANIZATION_SCOPE:
         raise PortabilityError("handoff Organization scope mismatch")
+    handoff_release = _validate_release_sha(str(manifest.get("tool_release_sha", "")))
+
     authority = manifest.get("authority_and_exclusions")
     if not isinstance(authority, dict):
         raise PortabilityError("handoff authority/exclusions evidence missing")
@@ -327,17 +335,32 @@ def verify_handoff(package_dir: Path) -> Dict[str, Any]:
         raise PortabilityError("handoff backup filenames are invalid")
     if Path(archive_name).name != archive_name or checksum_name != archive_name + ".sha256":
         raise PortabilityError("handoff backup filenames escape or mismatch package boundary")
+
+    expected_names = {MANIFEST_NAME, MANIFEST_SHA_NAME, archive_name, checksum_name}
+    actual_names = {entry.name for entry in entries}
+    if actual_names != expected_names:
+        raise PortabilityError(
+            f"handoff package member set mismatch extra={sorted(actual_names - expected_names)} "
+            f"missing={sorted(expected_names - actual_names)}"
+        )
+
     archive = package / archive_name
     checksum = package / checksum_name
-    if not archive.is_file() or not checksum.is_file():
-        raise PortabilityError("handoff backup archive/checksum missing")
     _private_file(archive)
     _private_file(checksum)
     verified = p703.verify_backup(archive)
     if verified.get("archive_sha256") != backup.get("archive_sha256"):
         raise PortabilityError("handoff archive digest differs from manifest")
+    if verified.get("integrity") != "PASS" or backup.get("p7_03_integrity") != "PASS":
+        raise PortabilityError("P7.03 backup integrity claim is not PASS")
     if verified.get("reusable_secrets_included") is not False:
         raise PortabilityError("P7.03 backup secret boundary violated")
+
+    # P7.03's archive manifest is the backup-format authority. Bind the P7.10
+    # envelope release claim to the release identity actually embedded there.
+    backup_manifest, _ = p703._read_backup_members(archive)
+    if backup_manifest.get("tool_release_sha") != handoff_release:
+        raise PortabilityError("handoff tool release SHA differs from P7.03 archive tool release SHA")
     return manifest
 
 
@@ -351,6 +374,7 @@ def restore_on_clean_environment(
 ) -> Dict[str, Any]:
     """Restore an off-host handoff into an absent target and verify semantics."""
 
+    release_sha = _validate_release_sha(release_sha)
     target_lex = _lexical_absolute(target_root)
     target = target_lex.resolve(strict=False)
     if target_lex.exists() or target.exists():
@@ -387,9 +411,9 @@ def restore_on_clean_environment(
     if any(path.exists() for path in forbidden):
         raise PortabilityError("clean restore recreated an explicitly excluded runtime/secrets path")
 
-    target_identity = path_identity(target_lex)
     receipt = {
         "schema": RECEIPT_SCHEMA,
+        "created_at": _utc_now(),
         "result": "PASS",
         "scope": "clean-environment semantic restore proof; technical recovery grants no Organizational Authority",
         "organization_scope": p703.ORGANIZATION_SCOPE,
@@ -397,7 +421,7 @@ def restore_on_clean_environment(
         "source_host": source_host,
         "target_host": target_host,
         "source_root": manifest.get("source_root"),
-        "target_root": target_identity,
+        "target_root": path_identity(target_lex),
         "source_target_markers_distinct": True,
         "target_was_absent_before_restore": True,
         "archive_sha256": backup["archive_sha256"],
