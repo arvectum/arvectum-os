@@ -27,6 +27,7 @@ jobs:
       - name: Create clean roadmap branch
         shell: bash
         run: |
+          # One-shot branch preparation; helper/workflow are removed from the generated branch.
           git config user.name "Arvectum Roadmap Sync"
           git config user.email "arvectum@gmail.com"
           git checkout -b p7-10-roadmap-final
