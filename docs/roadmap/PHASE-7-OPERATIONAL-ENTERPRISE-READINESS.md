@@ -1,7 +1,7 @@
 # Arvectum OS Phase 7 — Operational / Enterprise Readiness
 
 Status: `Active`
-Version: `1.2.13`
+Version: `1.2.14`
 Created: `2026-08-17`
 Updated: `2026-08-19`
 Owner: `ООО «Арвектум»`
@@ -49,8 +49,8 @@ P7.02 has passed. The selected Mac mini therefore operates in `Persistent Intern
 | `P7.06-UI` | Live operator workspace over persistent runtime | Mac mini + browser + GitHub | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.07` | Persistent Tender Operator operational contour | Mac mini + product environment + GitHub | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.08` | Persistent Discount Parser cross-host operational contour | Windows + Mac mini + GitHub | 🟩 Complete / PASS | `██████████ 100%` |
-| `P7.09` | Operator runbook + incident/uncertain-outcome/recovery drills | Mac mini + GitHub | 🟨 Current | `░░░░░░░░░░ 0%` |
-| `P7.10` | Portability, host-loss and restore-on-clean-environment proof | Mac mini + secondary clean environment + GitHub | ⬜ | `░░░░░░░░░░ 0%` |
+| `P7.09` | Operator runbook + incident/uncertain-outcome/recovery drills | Mac mini + GitHub | 🟩 Complete / PASS | `██████████ 100%` |
+| `P7.10` | Portability, host-loss and restore-on-clean-environment proof | Mac mini + secondary clean environment + GitHub | 🟨 Current | `░░░░░░░░░░ 0%` |
 | `P7.11` | Scoped operational-readiness, lifecycle, conformance + stable-boundary disposition | Chat/GitHub + evidence | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.12` | Phase 7 / M7 closure review | Chat/GitHub | ⬜ | `░░░░░░░░░░ 0%` |
 
@@ -260,13 +260,35 @@ P7.08 closure does not promote P6.06 beyond `Provisional 0.1.0`, does not promot
 
 ### P7.09 — Operator runbook + incident/uncertain-outcome/recovery drills
 
-Status: `Current`.
+Status: `Complete / PASS`.
 
-Minimum scenarios: runtime crash, Mac restart, unavailable persistent state/backup, network/proxy/TLS failure, product host unavailable, uncertain external effect, partial evidence path, credential revocation/rotation and failed update/rollback. Technical recovery must remain distinct from consequential re-authorization.
+Canonical evidence:
+
+- [`P7.09 — Canonical Closure`](../reviews/P7-09-canonical-closure.md) — `Complete / PASS`;
+- versioned runbook: [`P7.09 Operator Runbook`](../implementation/P7-09-OPERATOR-RUNBOOK-INCIDENT-RECOVERY.md) `1.0.0`;
+- implementation/review PR `#81`, canonical merge `e67af1c45b91eb265d36f8dd4fda440c0ff36b12`;
+- final implementation head `c1dcc6d18f7f1f98204ec21c4c28db0dbb06fa02`;
+- Reference Python CI `#160` / run `32248311483` — `success`;
+- focused P7.09 tests: `23/23 PASS`;
+- repository functional cross-review: four iterations, no remaining material objection;
+- aggregate selected-Mac attestation basename `p7-09-selected-mac-drill-attestation-20260819T145500Z-aa5d.json`, SHA-256 `39b7987fc9d3e85926ba89125d2eb045f6e474995bd605284975628213ab6e34`;
+- actual owner-initiated reboot receipt basename `p7-09-drill-mac-restart-20260819T152141Z-412ee082.json`, SHA-256 `bf54e903c9fae0d5468fa8b08acdee1f0c4354b549c8753d82357d0f7621a16a`.
+
+The selected-Mac drill package covers runtime crash, actual Mac restart/login continuity, unavailable state/backup, network/proxy/TLS failure, product-host outage, uncertain external effect, partial evidence, credential rotation/revocation and failed-update/rollback behavior. The actual restart advanced runtime PID `35508 → 787` and generation `61 → 62` while preserving exact active release `b0c18fba15de6b5abac83a4f583d89eedb5c03d1`, automatically loaded P7.05 observer, P7.03 integrity `PASS` and consistent P7.06 state. No manual service start was needed after reboot.
+
+Unknown external outcomes remain `RECONCILIATION_REQUIRED`; incomplete/unverifiable evidence fails closed; technical recovery grants neither Organizational Authority nor consequential approval; historical reconstruction/replay never repeats an external effect; no real consequential external effect was manufactured for a drill. The aggregate attestation's earlier simulated restart observation remains preserved rather than rewritten and is superseded for restart closure only by the actual-reboot receipt.
+
+The selected Mac's local full unittest discovery reported environment-specific `/var` symlink/path failures while the exact implementation head passed the canonical full Reference Python CI. The discrepancy is non-blocking for P7.09 and is carried into P7.10 as portability evidence to test explicitly on the clean secondary environment.
+
+P7.09 closure satisfies M7 criterion 9 for the declared scope. It creates no Production claim, lifecycle promotion, Stable Product Contract, public/stable recovery API, SLA/SLO/support commitment or clean-host portability claim.
 
 ### P7.10 — Portability, host-loss and restore-on-clean-environment proof
 
+Status: `Current`.
+
 Prove organizational continuity beyond the selected Mac mini through an export/backup package, clean secondary restore, selected historical reconstruction, explicit host-specific adapters/configuration and honest portability gaps without copying non-exportable secrets merely to claim portability.
+
+P7.10 must explicitly include the P7.09-selected-Mac `/var` symlink/path full-suite discrepancy in the portability evidence matrix: determine whether it is a test-environment-only path presentation issue, a host-specific assumption requiring an adapter, or a material portability defect. Do not normalize it away without evidence.
 
 **R23 follows P7.10.**
 
@@ -296,12 +318,14 @@ Close M7 only after declared Phase 7 work and R21–R24 findings are disposition
 12. all R21–R24 material findings are closed or accepted by appropriate authority;
 13. the required M7 Milestone Code Health Gate passes before closure.
 
+M7 criterion 9 is satisfied by P7.09 for the declared `Persistent Internal / owner-operated` scope. Criteria 10–13 remain downstream.
+
 M7 does **not** inherently require external customer Production, public multi-tenancy, an `Active` capability, Stable Product Contract, public SDK/API, SLA/support promise or one mandatory storage/IAM/deployment technology.
 
 ## 8. Current canonical action
 
-> **P7.09 — Operator runbook + incident/uncertain-outcome/recovery drills.**
+> **P7.10 — Portability, host-loss and restore-on-clean-environment proof.**
 
-P7.08 is `Complete / PASS` for the declared `Persistent Internal / owner-operated` scope. The exact P6.06 `Provisional 0.1.0` Product Contract boundary and CAP-004-only dependency survive the repeatable Mac → Windows → Mac evidence/reconstruction path; identity-bearing platform evidence stays Mac-private, raw product evidence stays Windows-local, transferred evidence is minimized and digest-bound, historical reconstruction is read-only, and uncertain/conflicting replay paths fail closed without external-effect repetition.
+P7.09 is `Complete / PASS` for the declared `Persistent Internal / owner-operated` scope. The versioned runbook/evaluator and selected-Mac evidence cover the required failure semantics and recovery decisions, including actual owner-initiated host restart continuity. Technical recovery remains distinct from Organizational Authority and consequential approval, uncertain external effects remain reconciliation-required, and historical effects are not replayed.
 
-The next action is P7.09: turn the already-proven persistent-runtime and product-contour failure semantics into executable operator runbooks and incident/uncertain-outcome/recovery drills. P7.10 remains downstream.
+The next action is P7.10: prove organizational continuity beyond the selected Mac mini on a clean secondary environment, including explicit treatment of the observed `/var` path/symlink portability discrepancy. R23 follows P7.10.
