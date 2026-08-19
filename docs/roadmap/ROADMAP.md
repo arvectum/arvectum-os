@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.56.2`
+Version: `2.56.3`
 Created: `2026-08-07`
 Updated: `2026-08-19`
 Owner: `ООО «Арвектум»`
@@ -14,6 +14,10 @@ This document is the canonical planning source for Arvectum OS development seque
 Future roadmap content is a planning hypothesis until its phase is activated. Roadmap status does not by itself change Platform Capability lifecycle, Product Contract lifecycle, operational environment/readiness, conformance maturity, SLA/support or commercial commitments.
 
 ## 2. Version note
+
+Version `2.56.3` closes `P7.10 — Portability, host-loss and restore-on-clean-environment proof` as `Complete / PASS` for the declared `Persistent Internal / owner-operated` scope. The unchanged verified four-member handoff from the real selected-Mac P7.03 store crossed the host-loss boundary and restored successfully on a separate clean MacBook Air environment at exact embedded release `fbab170ab337c1631b40d0d36ea58a02f6512f6e`. Archive SHA-256 `074f2a4e84e222bd26d6ed21a829aa0dcc1c91834479345cfa652405b721bfbd`, manifest SHA-256 `fe0d2c7d9460f9da4356a3a3f7419b825b8aef3a8d18123ab35fb0281db3ada9`, restored governed-state SHA-256 `da558333e0d98beac96298703326ca9d660db9098a3b0f2aa94b18c14d5a07a1`, owner-local receipt basename `p7-10-clean-restore-receipt-attempt-3.json`, receipt SHA-256 `ab7bf132d3d3a1304e3582c25fbd80a783d36c7bee9e5e6439ed4c54780aa341`. P7.03 integrity and selected historical reconstruction passed; reusable secrets, external-effect replay, Organizational Authority grant and excluded runtime/secrets paths remained absent. Attempt 2 remains preserved as `FAIL-CLOSED`; PR `#86` retained the P7.03 owner-only restore-parent boundary and passed `1192 tests / OK`; PR `#87` preserved exact handoff-release binding. Canonical closure: [`P7.10 — Canonical Closure`](../reviews/P7-10-canonical-closure.md).
+
+`P7.10 = Complete / PASS`; M7 criterion 10 is satisfied. Active Phase 7 advances to `1.2.15`; `R23 — Recovery / Portability Review` becomes the current canonical action. No Production/lifecycle/Product Contract/capability/SLA/SLO/RPO/RTO/support/conformance promotion is created.
 
 Version `2.56.2` records the repository-side implementation and automated mechanism-proof milestone for `P7.10 — Portability, host-loss and restore-on-clean-environment proof` without claiming operational closure. PR `#83` merged at canonical implementation merge `393cc5bff98cc87553b96d282f4bf618621fd87a`; final implementation head `d79defc54a3276e616bf72037b0dea14efd6e9bc` passed two functional review/revise iterations with no remaining material repository-design objection. `Reference Python CI #164` / run `32274126879` completed with `success` and `1191 tests / OK`; final `P7.10 Portability Proof #4` / run `32274126875` completed with `success`, transferring only the verified handoff from a macOS source job to an independent Linux clean-restore job.
 
@@ -167,7 +171,7 @@ Phase 6 completed with two materially distinct real-product/workflow chains: Ten
 
 ## 6. Active Phase 7 — Operational / Enterprise Readiness
 
-Detailed roadmap: [`PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md`](PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md) — `Active 1.2.14`.
+Detailed roadmap: [`PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md`](PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md) — `Active 1.2.15`.
 
 Phase 7 converts validated owner-operated use into a persistent, recoverable, observable and operator-accessible internal operating baseline before considering stronger production/lifecycle claims.
 
@@ -183,7 +187,7 @@ Phase 7 converts validated owner-operated use into a persistent, recoverable, ob
 | `P7.07` | Persistent Tender Operator operational contour | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.08` | Persistent Discount Parser cross-host operational contour | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.09` | Operator runbook + incident/uncertain-outcome/recovery drills | 🟩 Complete / PASS | `██████████ 100%` |
-| `P7.10` | Portability, host-loss and restore-on-clean-environment proof | 🟨 Current | `░░░░░░░░░░ 0%` |
+| `P7.10` | Portability, host-loss and restore-on-clean-environment proof | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.11` | Scoped operational-readiness, lifecycle, conformance + stable-boundary disposition | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.12` | Phase 7 / M7 closure review | ⬜ | `░░░░░░░░░░ 0%` |
 
@@ -193,7 +197,7 @@ Engineering/quality gates:
 
 - [`R21 — Operational Boundary Review`](../reviews/R21-operational-boundary-review.md) — 🟩 `Complete / PASS` after P7.01;
 - [`R22 — Persistent Runtime Health Review`](../reviews/R22-persistent-runtime-health-review.md) — 🟩 `Complete / PASS` after P7.05, two functional iterations, remediation PR `#39`, `964/964 PASS`;
-- `R23 — Recovery / Portability Review` — after P7.10;
+- `R23 — Recovery / Portability Review` — 🟨 Current after P7.10;
 - `R24 — M7 Operational Hardening + required Milestone Code Health Gate` — after P7.11 and before P7.12.
 
 ### Persistent Mac mini and operator interaction transition
@@ -231,7 +235,9 @@ P7.08 persistent Discount Parser cross-host operational contour — PASS
         ↓
 P7.09 operator runbook + incident/uncertain-outcome/recovery drills — PASS
         ↓
-P7.10 portability / host-loss / clean-environment restore proof ← current
+P7.10 portability / host-loss / clean-environment restore proof — PASS
+        ↓
+R23 Recovery / Portability Review ← current
         ↓
 P7.11–P7.12 readiness disposition + hardening + closure
 ```
@@ -249,6 +255,9 @@ P7.07 is `Complete / PASS`. Repository implementation merged through PR `#75`; s
 P7.08 is `Complete / PASS`. PR `#78` merged the repeatable owner-operated Discount Parser Windows ↔ Mac mini contour at `fefbea71a1f3941275faa6313e162f0040fecb8d`; final implementation head `8934b44c8156faf937fc3e1cfaf793d05508414e` passed Reference Python CI `#159`. The identity-bearing Stage 2A ticket remains Mac-private; Windows receives only minimized immutable dispatch evidence, retains raw product pre-effect/outcome evidence locally, and returns only verified references/digests. Mac verifies exact dispatch/ticket/handoff continuity and reconstructs through CAP-004 read-only support. Exact P6.06 `Provisional 0.1.0` and CAP-004-only reliance are preserved; reusable-secret/raw identity over-transfer, hidden mutable shared state, uncertain-outcome acceptance and Telegram/external-effect replay are all excluded or fail closed. Canonical closure is recorded in [`P7.08 — Canonical Closure`](../reviews/P7-08-canonical-closure.md).
 
 P7.09 is `Complete / PASS`. PR `#81` merged runbook `1.0.0`, deterministic evaluator, `23/23` focused regressions and four functional review/revise iterations at canonical merge `e67af1c45b91eb265d36f8dd4fda440c0ff36b12`; exact implementation head `c1dcc6d18f7f1f98204ec21c4c28db0dbb06fa02` passed full Reference Python CI `#160`. Selected-Mac evidence covered all nine required scenarios. The final actual host-restart proof changed runtime PID `35508 → 787` and generation `61 → 62` while preserving exact release `b0c18fba15de6b5abac83a4f583d89eedb5c03d1`, loaded observer, durable-state integrity and consistent deployment state without manual service start or historical effect replay. Aggregate attestation SHA-256: `39b7987fc9d3e85926ba89125d2eb045f6e474995bd605284975628213ab6e34`; actual-reboot receipt SHA-256: `bf54e903c9fae0d5468fa8b08acdee1f0c4354b549c8753d82357d0f7621a16a`. The selected-Mac local full-suite `/var` path/symlink discrepancy is carried forward as P7.10 portability evidence; it does not override canonical CI success. Canonical closure: [`P7.09 — Canonical Closure`](../reviews/P7-09-canonical-closure.md).
+
+
+P7.10 is `Complete / PASS`. The actual selected-Mac governed store was re-verified from the unchanged off-host handoff and restored on the clean secondary host at exact release `fbab170ab337c1631b40d0d36ea58a02f6512f6e`; P7.03 integrity, governed-state digest, selected historical reconstruction, exclusions, no-effect-replay and no-authority checks all passed. Canonical closure: [`P7.10 — Canonical Closure`](../reviews/P7-10-canonical-closure.md).
 
 ## 7. M7 milestone definition
 
@@ -289,9 +298,8 @@ Phase 8 remains `Draft / Exploratory` until Phase 7 / M7 closes and the external
 A roadmap phase transition does not itself change lifecycle, production readiness, conformance or commercial status.
 
 ## 11. Current canonical action
+> **R23 — Recovery / Portability Review.**
 
-> **P7.10 — Portability, host-loss and restore-on-clean-environment proof.**
+`P7.10 = Complete / PASS` for the declared `Persistent Internal / owner-operated` scope. The real selected-Mac governed store crossed the host-loss boundary and restored successfully on a clean secondary environment with exact-release, integrity, governed-state, selected-history, exclusion, no-replay and no-authority checks all passing. M7 criterion 10 is satisfied.
 
-Repository implementation and automated cross-host mechanism proof are complete through PR `#83`, canonical merge `393cc5bff98cc87553b96d282f4bf618621fd87a`, `Reference Python CI #164 = success` and `P7.10 Portability Proof #4 = success`. The mechanism composes P7.03, preserves governed-state/historical semantics, excludes reusable secrets and external-effect replay, and has explicitly classified the observed macOS `/var` ↔ `/private/var` discrepancy as a path-presentation alias only when physical filesystem identity proves equivalence.
-
-`P7.10` is **not** `Complete / PASS`: the actual selected Mac's governed store has not yet been handed off beyond the host-loss boundary and restored on a genuinely clean secondary environment. The next canonical action is that real selected-Mac off-host handoff and exact-release clean restore, followed by `PASS` receipt review and final P7.10 closure synchronization. M7 criterion 10 remains unsatisfied and R23 follows only after P7.10 closes.
+R23 now reviews the accumulated P7.03/P7.06/P7.09/P7.10 recovery and portability evidence before P7.11 performs lifecycle, conformance and stable-boundary disposition. Criteria 11–13 remain downstream. R23 is an engineering/governance review, not a Production approval or lifecycle transition.
