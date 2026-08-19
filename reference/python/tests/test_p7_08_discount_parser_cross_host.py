@@ -305,7 +305,7 @@ class P708DiscountParserCrossHostContourTests(unittest.TestCase):
         self.assertEqual(ticket["product_contract"]["shared_dependencies"], ["CAP-004"])
         self.assertEqual(ticket["product_contract"]["version"], PRODUCT_CONTRACT_VERSION)
         self.assertEqual(ticket["product_contract"]["blob_sha"], P6_06_CANONICAL_BLOB_SHA)
-        self.assertEqual(CAP_004_AUDIT_RECONSTRUCTION, "CAP-004")
+        self.assertEqual(CAP_004_AUDIT_RECONSTRUCTION.value, "CAP-004")
 
 
 if __name__ == "__main__":
