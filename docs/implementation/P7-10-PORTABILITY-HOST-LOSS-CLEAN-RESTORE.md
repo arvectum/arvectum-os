@@ -46,15 +46,23 @@ This proves the **mechanism** is not coupled to one OS process tree, absolute ru
 
 Automated CI does not impersonate the actual selected Mac mini. Canonical P7.10 closure therefore also requires one real off-host handoff from the selected Mac's P7.03 store and restoration on an actually clean secondary environment.
 
+The selected-Mac persistent runtime root is the same root already used and verified by the P7.09 selected-Mac closure:
+
+```bash
+export ARVECTUM_P7_02_ROOT="${HOME}/Library/Application Support/ArvectumOS/persistent-internal"
+```
+
 The source command is intentionally separate from the clean-host command:
 
 ```bash
 PYTHONPATH=reference/python python reference/python/p7_10_portability_proof.py prepare \
-  --source-root /var/lib/arvectum-os \
+  --source-root "${ARVECTUM_P7_02_ROOT}" \
   --off-host-dir /PATH/OUTSIDE/THE/PRIMARY/HOST/RUNTIME/p7-10-handoff \
   --release-sha <exact-canonical-release-sha> \
   --host-marker <selected-mac-host-marker>
 ```
+
+Do not substitute `/var/lib/arvectum-os` for the selected-Mac runtime root. The `/var` versus `/private/var` case discussed in §5 is portability/path-alias evidence from the macOS environment and is **not** the selected-Mac persistent runtime location.
 
 Transfer the resulting directory through the chosen owner-controlled off-host medium. Do **not** copy the live runtime tree or secrets as a shortcut.
 
