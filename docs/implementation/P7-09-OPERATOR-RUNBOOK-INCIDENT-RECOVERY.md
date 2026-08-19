@@ -133,6 +133,8 @@ python3 reference/python/p7_05_operational_visibility.py \
   --runtime-root "${ARVECTUM_P7_02_ROOT}" \
   --json
 
+sh reference/python/p7_05_macos_observer.sh status
+
 python3 reference/python/p7_03_durable_state.py \
   verify \
   --runtime-root "${ARVECTUM_P7_02_ROOT}"
@@ -212,6 +214,7 @@ Use:
 sh reference/python/p7_02_macos_service.sh status
 python3 reference/python/p7_05_operational_visibility.py status \
   --runtime-root "${ARVECTUM_P7_02_ROOT}" --json
+sh reference/python/p7_05_macos_observer.sh status
 ```
 
 P7.02 already provides supervised crash replacement and a `crash-proof` operation.
@@ -274,6 +277,8 @@ python3 reference/python/p7_05_operational_visibility.py \
   --runtime-root "${ARVECTUM_P7_02_ROOT}" \
   --json
 
+sh reference/python/p7_05_macos_observer.sh status
+
 python3 reference/python/p7_03_durable_state.py \
   verify \
   --runtime-root "${ARVECTUM_P7_02_ROOT}"
@@ -284,7 +289,7 @@ sh reference/python/p7_06_macos_deploy.sh status
 PASS requires:
 
 - P7.02 healthy;
-- P7.05 observer/operational health available;
+- P7.05 observer loaded on the exact release and operational health available;
 - same expected exact release unit;
 - durable-state integrity verified;
 - no historical effect replay caused by restart.
@@ -401,7 +406,7 @@ Examples:
 1. Mark the affected execution/attempt as uncertain or reconciliation-required through the applicable product/governed mechanism.
 2. Preserve retained evidence and exact material/version references.
 3. **Do not repeat the historical effect.**
-4. Reconcile against the authoritative external/product source.
+4. Reconcile against the applicable authoritative external/product source.
 5. Do not treat telemetry as proof of success/failure.
 6. Do not fabricate confirmation.
 
