@@ -1,7 +1,7 @@
 # P7.06 — Live Operator Workspace Substream
 
-Status: `Active / UI4 Current — UI3 selected-Mac operational closure PASS`
-Version: `0.1.10`
+Status: `Complete / PASS — UI4 selected-owner interaction closure PASS`
+Version: `0.1.11`
 Created: `2026-08-18`
 Updated: `2026-08-19`
 Owner: `ООО «Арвектум»`
@@ -21,7 +21,7 @@ This substream closes that operator-experience gap for the current `Persistent I
 
 ## 2. Sequencing rule
 
-The P7.06 governed deploy/update/rollback prerequisite is complete. UI1, UI2 and UI3 are complete. UI4 is now the current action and must close before P7.07/P7.08 operational workload expansion.
+The P7.06 governed deploy/update/rollback prerequisite and UI1 through UI4 are complete. The operator-workspace substream is closed and P7.07 is now the next canonical Phase 7 action.
 
 ```text
 P7.06 governed update / rollback proof
@@ -32,12 +32,16 @@ P7.06-UI2 governed interaction / preflight
         ↓ PASS
 P7.06-UI3 persistent private operator access
         ↓ PASS
-P7.06-UI4 first real owner interaction proof  ← CURRENT
+P7.06-UI4 first real owner interaction proof
         ↓ PASS
-P7.07 persistent Tender Operator contour
+P7.07 persistent Tender Operator contour  ← NEXT
 ```
 
-UI3 selected-Mac operational closure passed on exact canonical/runtime release `8451a5cb85c15ceb798438524f46cec87eacc981` after bounded runtime-consistency recovery, canonical-checkout governed update, 20-second exact-release stability verification and the complete supported UI3 proof. P7.03 and P7.04 remained unchanged; no Organizational Authority, consequential approval, real UI4 interaction, product/external effect or historical-effect replay occurred. The overall `P7.06-UI` substream therefore advances to `75%`, with UI4 remaining responsible for the first real owner interaction proof.
+UI3 selected-Mac operational closure passed on exact canonical/runtime release `8451a5cb85c15ceb798438524f46cec87eacc981` after bounded runtime-consistency recovery, canonical-checkout governed update, 20-second exact-release stability verification and the complete supported UI3 proof. P7.03 and P7.04 remained unchanged; no Organizational Authority, consequential approval, real UI4 interaction, product/external effect or historical-effect replay occurred.
+
+UI4 then closed the remaining `P7.06-UI` requirement on exact canonical/runtime release `1da5600963dcba982d3b1969480fd3f725133e12`. The owner successfully entered the real private workspace in Safari, confirmed Organization/Actor/runtime health, navigated Records, Executions, Evidence and Documents over the retained real `platform.document`, inspected exact Subject/Version plus Execution/Event/checkpoint provenance/reconstruction, observed all four action gates independently `Waiting`, and executed one browser preflight with result `WAITING / fail-closed`. The exact-release technical verifier independently passed with `browser_preflight_post_observed = true`, no Organizational Authority or consequential approval, no canonical mutation and no product/external effect. Owner-local minimized preflight evidence SHA-256: `63416f1862168d9a464a30d1824198ad52be4439e9f43fba71360c7ac34a9f91`.
+
+The real owner session also exposed one material Safari unlock interoperability defect. PR `#73` remediated it without accepting missing/`null`/foreign Origin or weakening loopback Host/CSRF/P7.04 boundaries; final Reference Python CI `#150` passed and the selected Mac re-proof succeeded on the merged exact release. The overall `P7.06-UI` substream is therefore `100% / Complete / PASS`.
 
 ## 3. Operating boundary
 
@@ -144,21 +148,29 @@ UI3 closure creates no external/customer Production, public/stable UI/API/sessio
 
 ### P7.06-UI4 — First real owner interaction proof
 
-Status: `Current`.
+Status: `Complete / PASS`.
 
-The owner performs a real interaction session against the selected Mac mini persistent runtime.
+The owner completed the required real interaction session against the selected Mac mini persistent runtime on exact canonical/runtime release `1da5600963dcba982d3b1969480fd3f725133e12`.
 
-Minimum proof:
+Closure evidence:
 
-- open the live Arvectum OS workspace in a browser;
-- visibly confirm Organization/Actor and runtime health context;
-- navigate at least Records, Executions, Evidence and one Document or Knowledge surface using real retained governed state;
-- inspect one exact-version/provenance/reconstruction chain;
-- execute one bounded governed interaction or preflight without bypassing required runtime gates;
-- record operator friction and material security/authority/usability defects;
-- perform functional cross-review until no material objections remain or the seven-iteration cap is reached.
+- live Safari workspace unlock and session — `PASS` after bounded PR `#73` browser-Origin remediation;
+- explicit Organization `aa4e760c379c8952aba6c6c335f3e233`, attributable human Actor `e4fc60984850106dbfc922ba30ec2332` and healthy exact runtime visibly confirmed;
+- Records, Executions, Evidence and Documents navigated using real retained governed state;
+- retained `platform.document` Subject `document-subject/eis-0344100006426000005-exact-attachment-evidence@aa4e760c379c8952aba6c6c335f3e233` and exact Version `document-version/eis-0344100006426000005-74e943d855406b04@aa4e760c379c8952aba6c6c335f3e233` inspected;
+- authority remained `External Reference`, authoritative source remained `ЕИС / zakupki.gov.ru`;
+- exact Execution Version `execution-version/p7-06-ui1-real-state-74e943d855406b04-v5@aa4e760c379c8952aba6c6c335f3e233`, admitted Event Version `event-version/p7-06-ui1-document-admitted-74e943d855406b04-v1@aa4e760c379c8952aba6c6c335f3e233`, checkpoint `582ec80686ce5d2bb3b1eb5779c2fdce3b6899379161e9a953c64e4dcf11d5f7` and `CAP-004 reconstruction complete` were visible;
+- Authorization, Organizational Authority, Data Governance and Consequential Approval all remained independently `Waiting`;
+- the owner clicked `Run governed preflight` once and received `Preflight executed: WAITING / fail-closed. No canonical mutation or external effect was requested.`;
+- exact-release technical verifier returned `PASS`, `browser_preflight_post_observed = true`, technical interaction access true, Organizational Authority/approval false, canonical mutation false and product/external effect false;
+- owner-local minimized evidence basename `p7-06-ui4-owner-preflight-last.json`, SHA-256 `63416f1862168d9a464a30d1824198ad52be4439e9f43fba71360c7ac34a9f91`;
+- [`P7.06-UI4 — First real owner interaction closure`](../reviews/P7.06-UI4-first-real-owner-interaction-closure.md) — `Complete / PASS`, four functional review/revise iterations, no remaining material objection.
 
-`P7.06-UI = Complete / PASS` only when the owner can both see live governed state and exercise at least one real bounded interaction through the workspace.
+The technical verifier intentionally cannot self-attest human visual navigation or operator-friction judgment. The canonical closure review combines its exact machine evidence with the owner's direct visual observations rather than treating automation as authority over the human-proof requirement.
+
+The material operator-friction defect found by the real owner proof was preserved rather than hidden: the original Safari unlock attempt failed before secret validation; a secret-safe direct HTTP diagnostic isolated the browser metadata boundary; PR `#73` changed only `Referrer-Policy: no-referrer` to `same-origin` while preserving exact Host/Origin/CSRF/P7.04 fail-closed checks; final Reference Python CI `#150` passed; selected-Mac governed update and Safari re-proof then succeeded.
+
+`P7.06-UI = Complete / PASS` because the owner can now both inspect live real governed state and exercise a real bounded interaction through the existing runtime authority/security boundary.
 
 ## 5. Relationship to Phase 4
 
@@ -168,11 +180,11 @@ The new work is operational connection and interaction, not a new semantic works
 
 ## 6. ADR and stable-boundary disposition
 
-No Accepted ADR currently applies to this bounded private reversible UI3 adapter, the pointer diagnostic, bounded runtime-consistency recovery helper or canonical-checkout governed lifecycle controller. Re-open the ADR/stable-boundary gate before materially relying on a public/stable HTTP/websocket API, externally relied-upon route/deep-link schema, durable shared frontend package/framework, stable BFF/service topology, public authentication/session protocol, customer-facing browser matrix or externally relied-upon remote administration surface.
+No Accepted ADR currently applies to this bounded private reversible UI adapter, the pointer diagnostic, bounded runtime-consistency recovery helper or canonical-checkout governed lifecycle controller. Re-open the ADR/stable-boundary gate before materially relying on a public/stable HTTP/websocket API, externally relied-upon route/deep-link schema, durable shared frontend package/framework, stable BFF/service topology, public authentication/session protocol, customer-facing browser matrix or externally relied-upon remote administration surface.
 
 ## 7. Non-claims
 
-Current progress does not create:
+This closure does not create:
 
 - external/customer Production;
 - a public Arvectum OS product UI;
@@ -182,8 +194,10 @@ Current progress does not create:
 - SLA/support/browser-compatibility commitments;
 - a final frontend or deployment architecture.
 
+Successful Safari proof in the selected owner environment is bounded closure evidence, not a general browser-support promise.
+
 ## 8. Current canonical action
 
-> **P7.06-UI4 — First real owner interaction proof.**
+> **P7.07 — Persistent Tender Operator operational contour.**
 
-UI1, UI2 and UI3 are `Complete / PASS`; the overall `P7.06-UI` substream is `Current` at `75%`. UI4 must prove one real owner-operated interaction session against the selected persistent runtime before the UI substream may close. P7.07 and P7.08 remain downstream.
+UI1 through UI4 are `Complete / PASS`; the overall `P7.06-UI` substream is `Complete / PASS` at `100%` for the declared `Persistent Internal / owner-operated` scope. The next Phase 7 action is P7.07; P7.08 remains downstream.
