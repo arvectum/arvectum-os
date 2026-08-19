@@ -93,8 +93,10 @@ Before Attempt 3:
 1. keep the already transferred four-member handoff immutable and re-verify it;
 2. use a dedicated existing non-symlink restore parent with POSIX mode `0700` on the clean secondary host;
 3. place a fresh absent target beneath that parent;
-4. perform restore at the exact canonical release that contains this correction and its regression test;
+4. restore the retained handoff using the **exact release embedded in that handoff**, `fbab170ab337c1631b40d0d36ea58a02f6512f6e`; do not relabel the retained archive with a later documentation/test-only release;
 5. preserve Attempt 2 as failed evidence; do not rewrite or delete it to manufacture a single-pass narrative;
 6. obtain a new `PASS` receipt only from the separate Attempt 3 restore.
+
+The subsequent correction merge changed only P7.10 documentation, this Attempt 2 review, and regression-test coverage; it did not change `p7_10_portability_proof.py` or `p7_03_durable_state.py`. Therefore retaining the already transferred package and restoring it from an exact checkout of its own canonical release preserves stronger release identity than rebuilding or relabelling evidence solely because operator instructions were corrected later.
 
 P7.10 remains `Current`; M7 criterion 10 remains unsatisfied; R23 remains downstream until clean-secondary restore and final closure review pass.
