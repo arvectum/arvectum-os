@@ -2,7 +2,7 @@
 """P7.06-UI4 selected-Mac technical proof verifier.
 
 The verifier consumes the minimized non-canonical browser-preflight evidence and
-re-evaluates the current exact-release UI3/UI4/P7.04/P7.03/P7.05 boundaries.  It
+re-evaluates the current exact-release UI3/UI4/P7.04/P7.03/P7.05 boundaries. It
 cannot attest what the human visually inspected; owner visual/navigation/friction
 observations remain a separate UI4 closure input.
 """
@@ -40,11 +40,28 @@ def _owner_json(path: Path, *, limit: int = 128 * 1024) -> tuple[Mapping[str, An
     return value, hashlib.sha256(raw).hexdigest()
 
 
+def _verify_self_exact_release(root: Path) -> str:
+    release_sha = ui3.verify_exact_release(root)
+    pinned = root / "releases" / release_sha / "source" / "reference" / "python" / Path(__file__).name
+    if (
+        not pinned.is_file()
+        or pinned.is_symlink()
+        or Path(__file__).resolve() != pinned.resolve()
+    ):
+        raise UI4SelectedMacProofError(
+            "selected-Mac UI4 verifier itself is not pinned to the exact current release"
+        )
+    return release_sha
+
+
 def verify_selected_mac(runtime_root: Path) -> Mapping[str, Any]:
     root = runtime_root.expanduser().resolve()
+    release_sha = _verify_self_exact_release(root)
     ui3_status = ui3.verify_private_access(root, exact=True)
     if ui3_status.get("status") != "PASS" or ui3_status.get("ui4_preflight_enabled") is not True:
         raise UI4SelectedMacProofError("exact-release private owner/UI4 preflight access is unavailable")
+    if ui3_status.get("release_sha") != release_sha:
+        raise UI4SelectedMacProofError("UI3/UI4 proof release continuity mismatch")
     if ui3_status.get("organizational_authority_provided") is not False:
         raise UI4SelectedMacProofError("UI3 unexpectedly claims Organizational Authority")
     if ui3_status.get("consequential_approval_provided") is not False:
@@ -61,6 +78,8 @@ def verify_selected_mac(runtime_root: Path) -> Mapping[str, Any]:
         credential_id=access.credential_id,
         credential_file=access.credential_file,
     )
+    if current.release_sha != release_sha:
+        raise UI4SelectedMacProofError("current UI4 retained-state view is not exact-release continuous")
     evidence_path = root / "evidence" / ui4.EVIDENCE_BASENAME
     evidence, evidence_sha256 = _owner_json(evidence_path)
 
