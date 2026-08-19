@@ -7,6 +7,14 @@ on:
       - "reference/python/p7_10_portability_proof.py"
       - "reference/python/tests/test_p7_10_portability_proof.py"
       - ".github/workflows/p7-10-portability-proof.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "reference/python/p7_03_durable_state.py"
+      - "reference/python/p7_10_portability_proof.py"
+      - "reference/python/tests/test_p7_10_portability_proof.py"
+      - ".github/workflows/p7-10-portability-proof.yml"
   workflow_dispatch:
 
 permissions:
