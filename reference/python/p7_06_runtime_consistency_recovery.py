@@ -11,6 +11,7 @@ import plistlib
 import re
 import subprocess
 import sys
+import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable
@@ -63,7 +64,15 @@ def _canonical_head(repo_root: Path) -> str:
         raise RecoveryError("canonical checkout must be clean")
     rc, origin, _ = _run(["git", "remote", "get-url", "origin"], cwd=repo_root, timeout=15)
     origin = origin.strip()
-    if rc != 0 or "github.com/arvectum/arvectum-os" not in origin:
+    allowed_origins = {
+        "https://github.com/arvectum/arvectum-os",
+        "https://github.com/arvectum/arvectum-os.git",
+        "git@github.com:arvectum/arvectum-os",
+        "git@github.com:arvectum/arvectum-os.git",
+        "ssh://git@github.com/arvectum/arvectum-os",
+        "ssh://git@github.com/arvectum/arvectum-os.git",
+    }
+    if rc != 0 or origin not in allowed_origins:
         raise RecoveryError("origin is not canonical arvectum/arvectum-os")
     rc, _, _ = _run(["git", "fetch", "--quiet", "origin", "main"], cwd=repo_root, timeout=60)
     if rc != 0:
@@ -266,7 +275,10 @@ def _write_evidence(root: Path, value: dict[str, Any]) -> tuple[Path, str]:
     directory.mkdir(parents=True, exist_ok=True, mode=0o700)
     if os.name != "nt":
         os.chmod(directory, 0o700)
-    path = directory / f"p7-06-runtime-consistency-recovery-{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}.json"
+    path = directory / (
+        "p7-06-runtime-consistency-recovery-"
+        f"{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}-{uuid.uuid4().hex[:8]}.json"
+    )
     raw = (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode()
     fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
     with os.fdopen(fd, "wb") as handle:
@@ -327,33 +339,72 @@ def recover(root: Path, repo_root: Path, decision_ref: str) -> dict[str, Any]:
         p703_before = _p703_digest(root)
         p704_before = _p704_digest(root)
 
+        current_before_dir = root / "releases" / current_before
+        if not current_before_dir.is_dir() or current_before_dir.is_symlink():
+            raise RecoveryError("pre-recovery current release directory is unavailable or unsafe")
+
         _atomic_replace_current(root, runtime_release)
+        pointer_mutated = True
+        try:
+            p702 = repo_root / "reference/python/p7_02_macos_service.sh"
+            p705 = repo_root / "reference/python/p7_05_macos_observer.sh"
+            rc, _, err = _run(["sh", str(p702), "status"], cwd=repo_root, timeout=30)
+            if rc != 0:
+                detail = err.strip().splitlines()[-1] if err.strip() else "unknown"
+                raise RecoveryError(f"P7.02 status failed after pointer reconciliation: {detail}")
+            rc, _, err = _run(["sh", str(p705), "status"], cwd=repo_root, timeout=30)
+            if rc != 0:
+                detail = err.strip().splitlines()[-1] if err.strip() else "unknown"
+                raise RecoveryError(f"P7.05 observer status failed after pointer reconciliation: {detail}")
 
-        p702 = repo_root / "reference/python/p7_02_macos_service.sh"
-        p705 = repo_root / "reference/python/p7_05_macos_observer.sh"
-        rc, _, err = _run(["sh", str(p702), "status"], cwd=repo_root, timeout=30)
-        if rc != 0:
-            detail = err.strip().splitlines()[-1] if err.strip() else "unknown"
-            raise RecoveryError(f"P7.02 status failed after pointer reconciliation: {detail}")
-        rc, _, err = _run(["sh", str(p705), "status"], cwd=repo_root, timeout=30)
-        if rc != 0:
-            detail = err.strip().splitlines()[-1] if err.strip() else "unknown"
-            raise RecoveryError(f"P7.05 observer status failed after pointer reconciliation: {detail}")
+            current_after = _current_release(root)
+            if current_after != runtime_release:
+                raise RecoveryError("current pointer did not remain on proven running release")
 
-        current_after = _current_release(root)
-        if current_after != runtime_release:
-            raise RecoveryError("current pointer did not remain on proven running release")
-
-        p703_after = _p703_digest(root)
-        p704_after = _p704_digest(root)
-        if p703_before != p703_after:
-            raise RecoveryError("P7.03 governed/checkpoint state changed during recovery")
-        if p704_before != p704_after:
-            raise RecoveryError("P7.04 access state changed during recovery")
+            p703_after = _p703_digest(root)
+            p704_after = _p704_digest(root)
+            if p703_before != p703_after:
+                raise RecoveryError("P7.03 governed/checkpoint state changed during recovery")
+            if p704_before != p704_after:
+                raise RecoveryError("P7.04 access state changed during recovery")
+        except (RecoveryError, OSError, ValueError, json.JSONDecodeError) as exc:
+            if pointer_mutated:
+                try:
+                    _atomic_replace_current(root, current_before)
+                    pointer_mutated = False
+                except (RecoveryError, OSError) as restore_exc:
+                    raise RecoveryError(
+                        "post-reconciliation verification failed and pre-recovery pointer restoration also failed"
+                    ) from restore_exc
+            failure = {
+                "schema": "arvectum.p7_06.runtime-consistency-recovery/1",
+                "classification": "owner-local operational recovery evidence; non-canonical",
+                "result": "FAILED_ROLLED_BACK",
+                "decision_ref": decision_ref,
+                "canonical_repository": CANONICAL_REPO,
+                "canonical_head": canonical_head,
+                "current_before": current_before,
+                "proven_running_release": runtime_release,
+                "current_after_failure": _current_release(root),
+                "failure_reason": "post-reconciliation verification failed; pre-recovery pointer restored",
+                "p703_unchanged": _p703_digest(root) == p703_before,
+                "p704_unchanged": _p704_digest(root) == p704_before,
+                "canonical_state_mutated": False,
+                "product_external_effect_invoked": False,
+                "historical_external_effect_replayed": False,
+                "reusable_secret_emitted": False,
+                "recorded_at": _utc_now(),
+            }
+            try:
+                _write_evidence(root, failure)
+            except OSError:
+                pass
+            raise exc
 
         result = {
             "schema": "arvectum.p7_06.runtime-consistency-recovery/1",
             "classification": "owner-local operational recovery evidence; non-canonical",
+            "result": "PASS",
             "decision_ref": decision_ref,
             "canonical_repository": CANONICAL_REPO,
             "canonical_head": canonical_head,
