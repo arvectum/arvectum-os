@@ -22,6 +22,27 @@ class RuntimeConsistencyRecoveryTests(unittest.TestCase):
         with self.assertRaises(r.RecoveryError):
             r._validate_decision_ref("bad\nref")
 
+    def test_canonical_origin_is_exact_allow_list(self):
+        responses_good = [
+            (0, "main\n", ""),
+            (0, "", ""),
+            (0, "https://github.com/arvectum/arvectum-os.git\n", ""),
+            (0, "", ""),
+            (0, SHA_A + "\n", ""),
+            (0, SHA_A + "\n", ""),
+        ]
+        with mock.patch.object(r, "_run", side_effect=responses_good):
+            self.assertEqual(r._canonical_head(Path("/tmp/repo")), SHA_A)
+
+        responses_bad = [
+            (0, "main\n", ""),
+            (0, "", ""),
+            (0, "https://github.com/arvectum/arvectum-os-evil.git\n", ""),
+        ]
+        with mock.patch.object(r, "_run", side_effect=responses_bad):
+            with self.assertRaises(r.RecoveryError):
+                r._canonical_head(Path("/tmp/repo"))
+
     def test_current_release_requires_exact_symlink(self):
         with tempfile.TemporaryDirectory() as td:
             root = Path(td)
@@ -191,6 +212,8 @@ class RuntimeConsistencyRecoveryTests(unittest.TestCase):
         self.assertIn("p7-06-deploy.lock", text)
         self.assertIn("runtime and observer exact-release pins disagree", text)
         self.assertIn("runtime health pid does not match launchd pid", text)
+        self.assertIn("FAILED_ROLLED_BACK", text)
+        self.assertIn("pre-recovery pointer restoration also failed", text)
 
 
 if __name__ == "__main__":
