@@ -10,6 +10,7 @@ import p7_04_persistent_access as p704
 import p7_06_ui1_live_workspace as ui1
 import p7_06_ui2_governed_interaction as ui2
 import p7_06_ui3_private_operator as ui3
+import p7_06_ui4_owner_preflight as ui4
 
 
 class UI3PrivateOperatorTests(unittest.TestCase):
@@ -65,12 +66,13 @@ class UI3PrivateOperatorTests(unittest.TestCase):
             self.root, credential_id=access.credential_id, host="127.0.0.1", port=8765
         )
         self.assertEqual(result["status"], "PASS")
+        self.assertTrue(result["ui4_preflight_enabled"])
         config_path = self.root / "config" / "p7-06-ui3.json"
         secret_path = self.root / "secrets" / "p7-06-ui3" / "access.secret"
         config = json.loads(config_path.read_text(encoding="utf-8"))
         self.assertEqual(config["listener_scope"], "ipv4-loopback-only")
         self.assertEqual(config["listener_host"], "127.0.0.1")
-        self.assertEqual(config["interaction_provider"], "none-until-p7-06-ui4")
+        self.assertEqual(config["interaction_provider"], ui3.UI4_PROVIDER)
         self.assertFalse(config["organizational_authority_provided"])
         self.assertFalse(config["consequential_approval_provided"])
         self.assertFalse(config["canonical_mutation_performed"])
@@ -80,6 +82,25 @@ class UI3PrivateOperatorTests(unittest.TestCase):
         secret = secret_path.read_text(encoding="utf-8").strip()
         self.assertGreater(len(secret), 32)
         self.assertNotIn(secret, config_path.read_text(encoding="utf-8"))
+
+    def test_legacy_ui3_config_migrates_provider_without_rotating_secret_or_p704(self):
+        self._grant_ui1_ui2()
+        access = ui3.resolve_operator_access(self.root, self.credential_id)
+        ui3.initialize_private_access(self.root, credential_id=access.credential_id)
+        config_path = self.root / "config" / "p7-06-ui3.json"
+        secret_path = self.root / "secrets" / "p7-06-ui3" / "access.secret"
+        config = json.loads(config_path.read_text(encoding="utf-8"))
+        config["interaction_provider"] = ui3.LEGACY_PROVIDER
+        config_path.write_text(json.dumps(config, ensure_ascii=False, sort_keys=True, indent=2) + "\n", encoding="utf-8")
+        if os.name != "nt":
+            os.chmod(config_path, 0o600)
+        secret_before = secret_path.read_bytes()
+        access_before = (self.root / "config" / "p7-04-access.json").read_bytes()
+        ui3.initialize_private_access(self.root, credential_id=access.credential_id)
+        migrated = json.loads(config_path.read_text(encoding="utf-8"))
+        self.assertEqual(migrated["interaction_provider"], ui3.UI4_PROVIDER)
+        self.assertEqual(secret_before, secret_path.read_bytes())
+        self.assertEqual(access_before, (self.root / "config" / "p7-04-access.json").read_bytes())
 
     def test_listener_is_strictly_ipv4_loopback_and_non_privileged(self):
         self.assertEqual(ui3._listener("127.0.0.1", 8765), ("127.0.0.1", 8765))
@@ -105,13 +126,17 @@ class UI3PrivateOperatorTests(unittest.TestCase):
         self.assertTrue((self.root / "secrets" / "p7-04" / f"{self.credential_id}.secret").is_file())
         self.assertFalse((self.root / "config" / "p7-06-ui3.json").exists())
 
-    def test_source_keeps_ui4_real_provider_out_of_ui3(self):
+    def test_ui4_preflight_does_not_activate_ui2_canonical_mutation_provider(self):
         text = pathlib.Path(ui3.__file__).read_text(encoding="utf-8")
         self.assertIn("interaction_provider=lambda _interaction_id: None", text)
-        self.assertIn('"none-until-p7-06-ui4"', text)
+        self.assertIn("UI4_PROVIDER", text)
+        self.assertIn("ui4.PREFLIGHT_PATH", text)
+        self.assertIn("ui4.RUN_PATH", text)
         self.assertIn("HttpOnly; SameSite=Strict; Path=/", text)
         self.assertNotIn('"organizational_authority_provided":True', text)
         self.assertNotIn('"consequential_approval_provided":True', text)
+        self.assertNotIn("GovernedInteractionCase(", text)
+        self.assertEqual(ui4.PREFLIGHT_ID, "p7-06-ui4:first-real-owner-preflight")
 
 
 if __name__ == "__main__":
