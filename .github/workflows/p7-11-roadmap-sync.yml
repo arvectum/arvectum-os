@@ -155,3 +155,5 @@ M7 criterion 11 is satisfied. R24 must now perform the final bounded operational
           git diff --cached --check
           git commit -m "docs: synchronize roadmaps after P7.11"
           git push origin HEAD:main
+
+# Same-repository pull-request trigger; never merged.
