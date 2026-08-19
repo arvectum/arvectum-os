@@ -1,10 +1,11 @@
 # P7.07 — Persistent Tender Operator operational contour
 
-Status: `Repository implementation ready; selected-Mac closure proof pending`
+Status: `Complete / PASS`
 Date: `2026-08-19`
 Task classification: `product_contract` with `platform` and `product_specific`
 Canonical Product Contract: `P6-02-FIRST-REAL-PRODUCT-CONTRACT.md` — `Provisional 0.1.0`
 Owner decision: `docs/governance/decisions/DECISION-2026-08-19-P7-07-PERSISTENT-TENDER-OPERATOR-CONTOUR.md`
+Operational closure: `docs/reviews/P7-07-selected-mac-operational-closure.md`
 
 ## 1. Purpose
 
@@ -121,12 +122,21 @@ Repository-level coverage includes:
 - read-only P7.03 state behavior;
 - product-bridge AST hardening;
 - rollback of newly-created privileges on failed setup;
-- selected-Mac restart-proof invariants and canonical product-origin checks.
+- selected-Mac restart-proof invariants and canonical product-origin checks;
+- regression coverage for real dynamic loading of the product-owned `@dataclass(frozen=True, slots=True)` bridge after PR `#76`.
 
-Repository CI success is necessary but not sufficient to close P7.07.
+Initial implementation merged through PR `#75` at `bf1a3047aadf03384c9525eacd4e186a53092c11`. The selected-Mac Attempt 1 loader defect was remediated through PR `#76`, merged at `b0c18fba15de6b5abac83a4f583d89eedb5c03d1`; Reference Python CI `#157` completed with `success`.
 
-## 9. Closure condition
+## 9. Operational closure
 
-P7.07 remains `Current` until the merged exact release is activated on the selected Mac and the guarded real-product restart proof passes with retained bounded evidence.
+P7.07 is `Complete / PASS` for the declared selected-Mac `Persistent Internal / owner-operated` scope.
 
-Only after that proof and canonical roadmap synchronization may P7.07 be marked `Complete / PASS`.
+Selected-Mac Attempt 2 activated exact release `b0c18fba15de6b5abac83a4f583d89eedb5c03d1` through the existing P7.06 governed update path, reused the existing exact governed item through `PASS_IDEMPOTENT_EXISTING`, retained zero active temporary setup grants and the exact item-scoped persistent read grant, then proved real CAP-001 reliance through the canonical product-owned bridge both before and after an actual supervised P7.02 restart.
+
+The restart advanced generation `59 → 60`, replaced the runtime instance, preserved `previous_instance_id` continuity and left the P7.03 governed-state digest byte-stable at `da558333e0d98beac96298703326ca9d660db9098a3b0f2aa94b18c14d5a07a1`.
+
+Before/after reliance preserved the same exact storage item, Document Subject, Document Version, Artifact, integrity reference, P6.02 `0.1.0`, `External Reference` authority and authoritative source `ЕИС / zakupki.gov.ru`. No EIS/SOAP retrieval, contour network action, ordinary-read canonical mutation, external product effect, raw tender-byte exposure or credential-secret exposure occurred.
+
+Owner-local proof evidence remains outside Git. Canonical history records basename `selected-mac-restart-proof.json` and submitted SHA-256 `9613637b06c5d192311bda1eb3096a9cd0b49c016134af887697637a668cf0f8` through [`P7.07 — Selected-Mac Operational Closure`](../reviews/P7-07-selected-mac-operational-closure.md).
+
+Completion does not promote P6.02 beyond `Provisional 0.1.0`, does not promote a Platform Capability, does not establish Production, public/stable API/SDK/persistence semantics, SLA/SLO/support or broader conformance.
