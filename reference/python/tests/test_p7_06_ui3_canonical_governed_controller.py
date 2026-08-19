@@ -1,4 +1,3 @@
-import os
 import tempfile
 import unittest
 from pathlib import Path
@@ -18,6 +17,7 @@ class CanonicalGovernedControllerTests(unittest.TestCase):
 
     def test_canonical_head_requires_exact_origin_and_synced_main(self):
         good = [
+            mock.Mock(returncode=0, stdout="true\n", stderr=""),
             mock.Mock(returncode=0, stdout="main\n", stderr=""),
             mock.Mock(returncode=0, stdout="", stderr=""),
             mock.Mock(returncode=0, stdout="https://github.com/arvectum/arvectum-os.git\n", stderr=""),
@@ -27,11 +27,11 @@ class CanonicalGovernedControllerTests(unittest.TestCase):
         ]
         with tempfile.TemporaryDirectory() as td:
             repo = Path(td)
-            (repo / ".git").mkdir()
             with mock.patch.object(c, "_run", side_effect=good):
                 self.assertEqual(c.canonical_head(repo), SHA_A)
 
             bad = [
+                mock.Mock(returncode=0, stdout="true\n", stderr=""),
                 mock.Mock(returncode=0, stdout="main\n", stderr=""),
                 mock.Mock(returncode=0, stdout="", stderr=""),
                 mock.Mock(returncode=0, stdout="https://github.com/arvectum/arvectum-os-evil.git\n", stderr=""),
