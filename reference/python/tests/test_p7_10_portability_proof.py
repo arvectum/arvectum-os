@@ -1,3 +1,4 @@
+import hashlib
 import json
 import os
 import shutil
@@ -70,11 +71,30 @@ class P710PortabilityProofTests(unittest.TestCase):
             host_marker="source-host",
         )
 
+    def _rewrite_manifest(self, mutate):
+        manifest_path = self.package / p710.MANIFEST_NAME
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        mutate(manifest)
+        manifest_path.write_text(
+            json.dumps(manifest, ensure_ascii=False, sort_keys=True, indent=2) + "\n",
+            encoding="utf-8",
+        )
+        if os.name != "nt":
+            manifest_path.chmod(0o600)
+        digest = hashlib.sha256(manifest_path.read_bytes()).hexdigest()
+        sidecar = self.package / p710.MANIFEST_SHA_NAME
+        sidecar.write_text(f"{digest}  {p710.MANIFEST_NAME}\n", encoding="ascii")
+        if os.name != "nt":
+            sidecar.chmod(0o600)
+
     def test_host_loss_restore_on_clean_environment_preserves_semantics(self):
         before = p710.governed_state_digest(self.source)
         historical = p710.selected_historical_evidence(self.source)
         manifest = self._prepare()
         self.assertEqual(manifest["semantic_evidence"]["governed_state_sha256"], before)
+        self.assertEqual(historical["classification"], "internal")
+        self.assertEqual(historical["retention_policy_ref"], "p7.10-test-retention")
+        self.assertEqual(historical["authority_scope"], "p7.10-test")
 
         # Simulate primary-host loss: only the transferred package survives.
         shutil.rmtree(self.source)
@@ -126,6 +146,12 @@ class P710PortabilityProofTests(unittest.TestCase):
                 host_marker="clean-secondary-host",
             )
 
+    def test_handoff_release_claim_is_bound_to_p703_archive(self):
+        self._prepare()
+        self._rewrite_manifest(lambda manifest: manifest.__setitem__("tool_release_sha", "c" * 40))
+        with self.assertRaises(p710.PortabilityError):
+            p710.verify_handoff(self.package)
+
     def test_restore_requires_distinct_host_marker(self):
         self._prepare()
         with self.assertRaises(p710.PortabilityError):
@@ -159,7 +185,16 @@ class P710PortabilityProofTests(unittest.TestCase):
                 host_marker="source-host",
             )
 
-    def test_tampered_handoff_manifest_fails_closed(self):
+    def test_unexpected_handoff_file_fails_closed(self):
+        self._prepare()
+        extra = self.package / "unexpected.txt"
+        extra.write_text("not declared", encoding="utf-8")
+        if os.name != "nt":
+            extra.chmod(0o600)
+        with self.assertRaises(p710.PortabilityError):
+            p710.verify_handoff(self.package)
+
+    def test_tampered_handoff_manifest_checksum_fails_closed(self):
         self._prepare()
         manifest_path = self.package / p710.MANIFEST_NAME
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -167,6 +202,16 @@ class P710PortabilityProofTests(unittest.TestCase):
         manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
         if os.name != "nt":
             manifest_path.chmod(0o600)
+        with self.assertRaises(p710.PortabilityError):
+            p710.verify_handoff(self.package)
+
+    def test_rechecks_authority_boundary_after_valid_manifest_rechecksum(self):
+        self._prepare()
+        self._rewrite_manifest(
+            lambda manifest: manifest["authority_and_exclusions"].__setitem__(
+                "external_effect_replay_authorized", True
+            )
+        )
         with self.assertRaises(p710.PortabilityError):
             p710.verify_handoff(self.package)
 
