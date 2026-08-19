@@ -1,7 +1,7 @@
 # P7.06 — Live Operator Workspace Substream
 
-Status: `Active / UI3 Current — runtime consistency recovery required before selected-Mac closure`
-Version: `0.1.8`
+Status: `Active / UI3 Current — repository remediations complete; selected-Mac recovery/update/proof pending`
+Version: `0.1.9`
 Created: `2026-08-18`
 Updated: `2026-08-19`
 Owner: `ООО «Арвектум»`
@@ -37,7 +37,7 @@ P7.06-UI4 first real owner interaction proof
 P7.07 persistent Tender Operator contour
 ```
 
-UI3 repository implementation and the full functional review/revise loop are complete, but selected-Mac operational closure is not. The bounded current-pointer forensic run has now classified the selected-Mac blocker as `UPDATE_COMMAND_FAILED`: the runtime `current` pointer named release `d5cb521bf2565c42ad8ccf47565dda18cf9106c6` while the live P7.02 runtime health and launchd process remained on exact release `6d4d07aead603841ecce3c469dd46f5e0d58ccd5`. No new rollback/recovery evidence or P7.03/P7.04 mutation accompanied the failed update attempt. The bounded runtime-consistency recovery and hardened proof-runner remediations are merged. The immediate evidence step is therefore recovery of pointer/runtime consistency, followed by the ordinary P7.06 governed update and the complete UI3 proof.
+UI3 repository implementation and the full functional review/revise loop are complete, but selected-Mac operational closure is not. The bounded current-pointer forensic run classified the selected-Mac blocker as `UPDATE_COMMAND_FAILED`: the runtime `current` pointer named release `d5cb521bf2565c42ad8ccf47565dda18cf9106c6` while the live P7.02 runtime health and launchd process remained on exact release `6d4d07aead603841ecce3c469dd46f5e0d58ccd5`. No new rollback/recovery evidence or P7.03/P7.04 mutation accompanied the failed update attempt. Runtime-consistency recovery, hardened historical-controller handling and canonical-checkout UI3 governed lifecycle routing are now merged and repository-tested. The immediate evidence step is therefore selected-Mac recovery of pointer/runtime consistency, followed by the ordinary canonical P7.06 governed update and the complete UI3 proof.
 
 ## 3. Operating boundary
 
@@ -106,7 +106,8 @@ Repository implementation is merged and reviewed. It provides:
 - private material/log permission and secret-minimization checks;
 - reversible install/start/status/restart/stop/uninstall;
 - governed P7.06 update/rollback reconciliation without forking deployment semantics;
-- hardened reconciliation that keeps the invoking controller while pinning service Python/module/plist to the actual resulting release, avoiding replay of a known historical lifecycle race.
+- hardened reconciliation that keeps the invoking controller while pinning service Python/module/plist to the actual resulting release, avoiding replay of a known historical lifecycle race;
+- canonical-checkout deployment control for UI3 governed update/rollback, so the P7.06 deploy adapter runs only from the real canonical Git checkout while the private service remains exact-current pinned.
 
 Canonical functional review: [`P7.06-UI3 — Functional cross-review`](../reviews/P7.06-UI3-functional-cross-review.md) — repository implementation review complete, maximum `7/7` review/revise iterations, no remaining material repository-scope objection. This is engineering evidence only; it is not selected-Mac closure or lifecycle/readiness approval.
 
@@ -119,25 +120,29 @@ Selected-Mac progression:
 5. The merged PR `#65` forensic runner then classified the actual selected-Mac condition as `UPDATE_COMMAND_FAILED`, not background rollback: `origin/main = ec649b8df8b90444162590dbaeed0b2b79aeaae6`, `current = d5cb521bf2565c42ad8ccf47565dda18cf9106c6`, live P7.02 health release `6d4d07aead603841ecce3c469dd46f5e0d58ccd5`, update exit code `7`, no new rollback/recovery evidence, no observed pointer transition during the watch window, P7.03 unchanged and P7.04 unchanged. Owner-local forensic attestation SHA-256: `89d1786f8dff7ebb0b745620701d1d7437f6c6d02e34bba0c37617468b1b365a`.
 6. PR `#67`, merged as `fa8e0729974462a44d688f77194d7080d621e2ba`, adds the supported proof entry point that keeps the hardened target UI3 controller across historical rollback while preserving exact-release service pins. `Reference Python CI #138` passed.
 7. PR `#66`, merged as `e586084ea1292a3c0e22f888dc8ed5524c748732`, adds bounded P7.06 runtime-consistency recovery. The helper has no arbitrary target-release argument: it requires matching P7.02 launchd pin, live health release/PID, P7.05 observer pin and exact installed release manifest before atomically reconciling only `current` to the already-running proven release. P7.03/P7.04 digests must remain unchanged; failed post-reconciliation verification restores the exact original pointer. The final combined branch head `9b20b5b9b3f9d7da5d35bd8b9156142d7749755d` passed `Reference Python CI #141` after the proof-harness merge was included.
+8. Read-after-write review found that historical UI3 governed lifecycle still resolved `p7_06_macos_deploy.sh` from immutable runtime release snapshots, while the deploy adapter itself requires a real canonical Git checkout. PR `#69`, reviewed through three bounded remediation iterations and merged as `d4a675aed96a0358d0434a6bf7c50fc0f258b4e9`, adds `p7_06_ui3_canonical_governed_controller.py` and upgrades the supported proof runner to require the canonical repo root, route all P7.06 deploy/rollback calls through the real checkout, preserve exact-current service pins and attest that no release-snapshot deploy controller was invoked. Exact reviewed head `0410bb64674a2f7ba6074bdb37af878631c01f44` passed `Reference Python CI #142` / run `32216759667`.
 
-The former Attempt 4 hypothesis of an unexplained background rollback is therefore not the current diagnosis. The proven blocker is an inconsistent runtime pointer/live-release state that prevents P7.06 update from passing its initial P7.02 health gate. The recovery helper restores only internal consistency to the release already executing; it does not advance to canonical main and does not bypass governed deployment.
+The former Attempt 4 hypothesis of an unexplained background rollback is therefore not the current diagnosis. The proven blocker was an inconsistent runtime pointer/live-release state that prevents P7.06 update from passing its initial P7.02 health gate. The recovery helper restores only internal consistency to the release already executing; it does not advance to canonical main and does not bypass governed deployment. The subsequent proof now uses an explicit canonical-checkout deployment control plane, removing the deterministic runtime-snapshot Git-checkout failure before another selected-Mac run.
 
 Diagnostic evidence: [`P7.06-UI3 — Selected-Mac runtime-pointer investigation`](../reviews/P7.06-UI3-selected-mac-runtime-pointer-investigation.md).
 
 Recovery review: [`P7.06 — Runtime consistency recovery review`](../reviews/P7.06-runtime-consistency-recovery-review.md).
 
-Proof-harness review: [`P7.06-UI3 — Proof harness historical-controller review`](../reviews/P7.06-UI3-proof-harness-historical-controller-review.md).
+Historical-controller proof-harness review: [`P7.06-UI3 — Proof harness historical-controller review`](../reviews/P7.06-UI3-proof-harness-historical-controller-review.md).
+
+Canonical governed-controller review: [`P7.06-UI3 — Canonical governed controller review`](../reviews/P7.06-UI3-canonical-governed-controller-review.md) — `Complete / PASS` for repository remediation; selected-Mac execution pending.
 
 Immediate UI3 closure path:
 
 1. execute `p7_06_runtime_consistency_recovery.py` on the selected Mac and require `PASS`, exact runtime/observer/live-health agreement and unchanged P7.03/P7.04 state;
 2. verify P7.02 and P7.05 exact-release status on the recovered running release;
 3. stop any stale UI3 launchd job without modifying P7.04 or governed state;
-4. execute the ordinary P7.06 governed update from the recovered release to current canonical `main` and require exact target activation;
+4. execute the ordinary P7.06 governed update from the recovered release through the **canonical checkout** `p7_06_macos_deploy.sh` to current canonical `main` and require exact target activation;
 5. re-check runtime/observer exact-release stability after a bounded observation interval;
-6. run the supported `p7_06_ui3_selected_mac_proof_runner.py` against the exact active release, using the selected host's explicit private loopback port configuration;
-7. perform read-after-write/runtime verification and record minimized owner-local evidence;
-8. only then mark UI3 `Complete / PASS` and advance to UI4.
+6. run the supported exact-release `p7_06_ui3_selected_mac_proof_runner.py` with `--repo-root` set to that same canonical checkout and the selected host's explicit private loopback port configuration;
+7. require proof attestation facts `canonical_checkout_deploy_controller_verified = true`, `release_snapshot_deploy_controller_invoked = false`, `historical_ui3_controller_replayed = false` and unchanged P7.03/P7.04 state;
+8. perform read-after-write/runtime verification and record minimized owner-local evidence;
+9. only then mark UI3 `Complete / PASS` and advance to UI4.
 
 ### P7.06-UI4 — First real owner interaction proof
 
@@ -165,7 +170,7 @@ The new work is operational connection and interaction, not a new semantic works
 
 ## 6. ADR and stable-boundary disposition
 
-No Accepted ADR currently applies to this bounded private reversible UI3 adapter, the pointer diagnostic or the bounded runtime-consistency recovery helper. Re-open the ADR/stable-boundary gate before materially relying on a public/stable HTTP/websocket API, externally relied-upon route/deep-link schema, durable shared frontend package/framework, stable BFF/service topology, public authentication/session protocol, customer-facing browser matrix or externally relied-upon remote administration surface.
+No Accepted ADR currently applies to this bounded private reversible UI3 adapter, the pointer diagnostic, bounded runtime-consistency recovery helper or canonical-checkout governed lifecycle controller. Re-open the ADR/stable-boundary gate before materially relying on a public/stable HTTP/websocket API, externally relied-upon route/deep-link schema, durable shared frontend package/framework, stable BFF/service topology, public authentication/session protocol, customer-facing browser matrix or externally relied-upon remote administration surface.
 
 ## 7. Non-claims
 
@@ -181,6 +186,6 @@ Current progress does not create:
 
 ## 8. Current canonical action
 
-> **P7.06-UI3 — execute selected-Mac runtime-consistency recovery, perform the ordinary governed update to current canonical main, verify stable exact-release runtime/observer state, then run the supported complete UI3 operational proof.**
+> **P7.06-UI3 — execute selected-Mac runtime-consistency recovery, perform the ordinary governed update through the canonical checkout to current canonical main, verify stable exact-release runtime/observer state, then run the supported complete UI3 operational proof with the same canonical repo root.**
 
 UI4 and P7.07 remain pending/downstream. UI3 must not be marked `Complete / PASS` from repository CI, functional review or remediation merge alone.
