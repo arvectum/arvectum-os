@@ -1,7 +1,7 @@
 # Arvectum OS Phase 7 — Operational / Enterprise Readiness
 
 Status: `Active`
-Version: `1.2.12`
+Version: `1.2.13`
 Created: `2026-08-17`
 Updated: `2026-08-19`
 Owner: `ООО «Арвектум»`
@@ -48,8 +48,8 @@ P7.02 has passed. The selected Mac mini therefore operates in `Persistent Intern
 | `P7.06` | Governed deploy/update/rollback/version/migration path | Mac mini + GitHub | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.06-UI` | Live operator workspace over persistent runtime | Mac mini + browser + GitHub | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.07` | Persistent Tender Operator operational contour | Mac mini + product environment + GitHub | 🟩 Complete / PASS | `██████████ 100%` |
-| `P7.08` | Persistent Discount Parser cross-host operational contour | Windows + Mac mini + GitHub | 🟨 Current | `░░░░░░░░░░ 0%` |
-| `P7.09` | Operator runbook + incident/uncertain-outcome/recovery drills | Mac mini + GitHub | ⬜ | `░░░░░░░░░░ 0%` |
+| `P7.08` | Persistent Discount Parser cross-host operational contour | Windows + Mac mini + GitHub | 🟩 Complete / PASS | `██████████ 100%` |
+| `P7.09` | Operator runbook + incident/uncertain-outcome/recovery drills | Mac mini + GitHub | 🟨 Current | `░░░░░░░░░░ 0%` |
 | `P7.10` | Portability, host-loss and restore-on-clean-environment proof | Mac mini + secondary clean environment + GitHub | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.11` | Scoped operational-readiness, lifecycle, conformance + stable-boundary disposition | Chat/GitHub + evidence | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.12` | Phase 7 / M7 closure review | Chat/GitHub | ⬜ | `░░░░░░░░░░ 0%` |
@@ -241,11 +241,26 @@ P7.07 closure does not promote P6.02 beyond `Provisional 0.1.0`, does not promot
 
 ### P7.08 — Persistent Discount Parser cross-host operational contour
 
-Status: `Current`.
+Status: `Complete / PASS`.
 
-Make the Windows product ↔ Mac mini evidence/reconstruction path operationally repeatable while preserving the exact Product Contract or justified revision, CAP-004-only boundary unless evidence proves otherwise, minimized evidence transfer, replay safety, no secret/identity over-transfer and no hidden shared state.
+Canonical evidence:
+
+- [`P7.08 — Canonical Closure`](../reviews/P7-08-canonical-closure.md) — `Complete / PASS`;
+- implementation/review PR `#78`, canonical merge `fefbea71a1f3941275faa6313e162f0040fecb8d`;
+- final implementation head `8934b44c8156faf937fc3e1cfaf793d05508414e`;
+- Reference Python CI `#159` / run `32245986650` — `success`;
+- exact P6.06 Discount Parser Product Contract remains `Provisional 0.1.0`;
+- shared platform dependency set remains exactly `{CAP-004}`.
+
+The repeatable contour is explicitly asymmetric. Mac mini creates and retains the identity-bearing P6.07-compatible Stage 2A ticket, sending Windows only an immutable minimized dispatch containing execution/ticket digest, exact Product Contract pin and safety boundary. Windows verifies owner-local raw pre-effect/outcome evidence by SHA-256, retains those raw files and product database state locally, and returns only minimized exact references and digests. Mac mini verifies exact dispatch/ticket/handoff continuity and performs CAP-004 reconstruction as `ReadOnly` without calling Telegram, Discount Parser publication code or any other external mutation.
+
+Organization/Actor identity, reusable secrets, raw Windows evidence and mutable product state do not cross the host boundary. No shared mutable database/filesystem/broker, platform transport service or stable cross-host API is introduced. Same verified completed handoff is idempotent; uncertain outcome, digest mismatch, partial reconstruction state and conflicting completed-execution replay fail closed. Historical reconstruction never replays the external effect and does not fabricate a retroactive platform gate decision.
+
+P7.08 closure does not promote P6.06 beyond `Provisional 0.1.0`, does not promote CAP-004 or any Platform Capability, and does not establish external/customer Production, public/stable transport/API/persistence format, SLA/SLO/support or broader conformance.
 
 ### P7.09 — Operator runbook + incident/uncertain-outcome/recovery drills
+
+Status: `Current`.
 
 Minimum scenarios: runtime crash, Mac restart, unavailable persistent state/backup, network/proxy/TLS failure, product host unavailable, uncertain external effect, partial evidence path, credential revocation/rotation and failed update/rollback. Technical recovery must remain distinct from consequential re-authorization.
 
@@ -285,8 +300,8 @@ M7 does **not** inherently require external customer Production, public multi-te
 
 ## 8. Current canonical action
 
-> **P7.08 — Persistent Discount Parser cross-host operational contour.**
+> **P7.09 — Operator runbook + incident/uncertain-outcome/recovery drills.**
 
-P7.07 is `Complete / PASS` for the declared selected-Mac `Persistent Internal / owner-operated` scope. The exact P6.02 `Provisional 0.1.0` boundary, attributable persistent owner context, `External Reference` EIS authority, exact item-scoped P7.04 read grant, real product-owned bridge, exact CAP-001 reliance and byte-stable P7.03 governed state survived an actual supervised restart without unauthorized canonical or external effect.
+P7.08 is `Complete / PASS` for the declared `Persistent Internal / owner-operated` scope. The exact P6.06 `Provisional 0.1.0` Product Contract boundary and CAP-004-only dependency survive the repeatable Mac → Windows → Mac evidence/reconstruction path; identity-bearing platform evidence stays Mac-private, raw product evidence stays Windows-local, transferred evidence is minimized and digest-bound, historical reconstruction is read-only, and uncertain/conflicting replay paths fail closed without external-effect repetition.
 
-The next action is P7.08: make the Windows product ↔ Mac mini evidence/reconstruction path operationally repeatable while preserving the exact Product Contract or justified revision, CAP-004-only boundary unless evidence proves otherwise, minimized evidence transfer, replay safety, no secret/identity over-transfer and no hidden shared state. P7.09 remains downstream.
+The next action is P7.09: turn the already-proven persistent-runtime and product-contour failure semantics into executable operator runbooks and incident/uncertain-outcome/recovery drills. P7.10 remains downstream.
