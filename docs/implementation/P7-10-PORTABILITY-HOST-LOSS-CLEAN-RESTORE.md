@@ -66,16 +66,36 @@ Do not substitute `/var/lib/arvectum-os` for the selected-Mac runtime root. The 
 
 Transfer the resulting directory through the chosen owner-controlled off-host medium. Do **not** copy the live runtime tree or secrets as a shortcut.
 
-On a clean secondary checkout at the exact release SHA:
+On a clean secondary checkout at the exact release SHA, create or verify an **owner-only immediate parent** for the restore target. P7.03 stages and atomically publishes the restored store inside `target_root.parent`; an existing parent with group/other permissions therefore fails closed. A normal macOS home directory may be `0750`, so do not place the restore target directly under `$HOME` merely for convenience.
+
+Example:
 
 ```bash
+RESTORE_PARENT="${HOME}/p7-10-proof"
+
+if [ ! -e "${RESTORE_PARENT}" ]; then
+  mkdir -m 700 "${RESTORE_PARENT}"
+fi
+
+test -d "${RESTORE_PARENT}"
+test ! -L "${RESTORE_PARENT}"
+test "$(stat -f '%Lp' "${RESTORE_PARENT}" 2>/dev/null || stat -c '%a' "${RESTORE_PARENT}")" = "700"
+
+TARGET="${RESTORE_PARENT}/clean-arvectum-os-runtime"
+RECEIPT="${RESTORE_PARENT}/p7-10-clean-restore-receipt.json"
+
+test ! -e "${TARGET}"
+test ! -e "${RECEIPT}"
+
 PYTHONPATH=reference/python python reference/python/p7_10_portability_proof.py restore \
   --package-dir /PATH/TO/TRANSFERRED/p7-10-handoff \
-  --target-root /PATH/TO/ABSENT/clean-arvectum-os-runtime \
+  --target-root "${TARGET}" \
   --release-sha <exact-canonical-release-sha> \
   --host-marker <clean-secondary-host-marker> \
-  --receipt /PATH/TO/p7-10-clean-restore-receipt.json
+  --receipt "${RECEIPT}"
 ```
+
+Do not weaken the P7.03 owner-only parent rule by changing a system/user home-directory permission policy merely to make the proof pass. Do not silently `chmod` an existing restore parent to force a pass. Use a bounded owner-only restore parent under the operator-controlled environment and fail closed if an existing parent does not already satisfy the required boundary.
 
 The receipt is evidence, not approval. It should be minimized before canonical publication if hostnames or local absolute paths disclose unnecessary operator information.
 
@@ -118,6 +138,7 @@ Disposition: when the two names identify the same filesystem object, the discrep
 A restore passes only when all of the following hold:
 
 - the target root is absent before restoration;
+- the immediate restore parent is an existing owner-only, non-symlink directory on POSIX hosts, or is created by the bounded operator procedure with equivalent owner-only semantics;
 - the source and target host markers are distinct;
 - the exact release SHA matches the handoff;
 - manifest and archive checksums verify;
