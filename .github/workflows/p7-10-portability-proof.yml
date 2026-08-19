@@ -1,0 +1,176 @@
+name: P7.10 Portability Proof
+
+on:
+  pull_request:
+    paths:
+      - "reference/python/p7_03_durable_state.py"
+      - "reference/python/p7_10_portability_proof.py"
+      - "reference/python/tests/test_p7_10_portability_proof.py"
+      - ".github/workflows/p7-10-portability-proof.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: p7-10-portability-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  source-package:
+    name: macOS source handoff
+    runs-on: macos-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Prove macOS /var path alias semantics
+        env:
+          PYTHONPATH: reference/python
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import p7_10_portability_proof as p710
+
+          lexical = p710.path_identity(Path("/var"))
+          assert lexical["lexical"] == "/var", lexical
+          assert lexical["lexical_differs_from_physical"], lexical
+          assert p710.paths_refer_same_location(Path("/var"), Path("/private/var")), lexical
+          print(lexical)
+          PY
+
+      - name: Build governed-state fixture
+        env:
+          PYTHONPATH: reference/python
+          P7_SOURCE_ROOT: ${{ runner.temp }}/p710-source-runtime
+          RELEASE_SHA: ${{ github.sha }}
+        run: |
+          chmod 700 "$RUNNER_TEMP"
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          import p7_03_durable_state as p703
+
+          root = Path(os.environ["P7_SOURCE_ROOT"])
+          sha = os.environ["RELEASE_SHA"]
+          p703.initialize_store(root, sha)
+          item = p703.persist_governed_item(
+              root,
+              sha,
+              b"P7.10 cross-host historical reconstruction fixture",
+              {
+                  "state_class": "canonical-governed-state",
+                  "organization_scope": p703.ORGANIZATION_SCOPE,
+                  "semantic_type": "p7.10.ci.fixture",
+                  "schema_version": "1",
+                  "classification": "internal",
+                  "retention_policy_ref": "p7.10-ci-ephemeral",
+                  "source_release_sha": sha,
+                  "canonical_authority": True,
+                  "contains_reusable_secret": False,
+                  "subject_identity": "subject:p7-10:ci-fixture",
+                  "version_identity": "version:p7-10:ci-fixture:1",
+                  "authority_mode": "Native",
+                  "authority_scope": "P7.10 mechanism proof only",
+                  "governed_admission_ref": "execution:p7-10:ci-fixture:1",
+                  "provenance_refs": ["event:p7-10:ci-fixture:1"],
+              },
+          )
+          p703.create_checkpoint(
+              root,
+              sha,
+              execution_subject_identity="execution:p7-10:ci-fixture",
+              execution_version_identity="execution:p7-10:ci-fixture:v1",
+              governed_storage_item_ids=[item],
+              classification="internal",
+              retention_policy_ref="p7.10-ci-ephemeral",
+              reason="cross-host portability mechanism proof",
+          )
+          PY
+
+      - name: Prepare verified off-host handoff
+        env:
+          PYTHONPATH: reference/python
+          RELEASE_SHA: ${{ github.sha }}
+        run: |
+          python reference/python/p7_10_portability_proof.py prepare \
+            --source-root "$RUNNER_TEMP/p710-source-runtime" \
+            --off-host-dir "$RUNNER_TEMP/p710-handoff" \
+            --release-sha "$RELEASE_SHA" \
+            --host-marker "gha-macos-source-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          python reference/python/p7_10_portability_proof.py verify \
+            --package-dir "$RUNNER_TEMP/p710-handoff"
+
+      - name: Upload only the off-host package
+        uses: actions/upload-artifact@v4
+        with:
+          name: p7-10-off-host-handoff
+          path: ${{ runner.temp }}/p710-handoff
+          if-no-files-found: error
+          retention-days: 7
+
+  clean-restore:
+    name: Linux clean secondary restore
+    needs: source-package
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out exact proof release
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Download transferred handoff only
+        uses: actions/download-artifact@v4
+        with:
+          name: p7-10-off-host-handoff
+          path: ${{ runner.temp }}/p710-handoff
+
+      - name: Prove source runtime is unavailable on clean runner
+        run: |
+          test ! -e "$RUNNER_TEMP/p710-source-runtime"
+          test ! -e "$RUNNER_TEMP/p710-clean-target"
+
+      - name: Restore and reconstruct selected history
+        env:
+          PYTHONPATH: reference/python
+          RELEASE_SHA: ${{ github.sha }}
+        run: |
+          python reference/python/p7_10_portability_proof.py restore \
+            --package-dir "$RUNNER_TEMP/p710-handoff" \
+            --target-root "$RUNNER_TEMP/p710-clean-target" \
+            --release-sha "$RELEASE_SHA" \
+            --host-marker "gha-linux-clean-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" \
+            --receipt "$RUNNER_TEMP/p7-10-clean-restore-receipt.json"
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          receipt = json.loads((Path(os.environ["RUNNER_TEMP"]) / "p7-10-clean-restore-receipt.json").read_text())
+          assert receipt["result"] == "PASS", receipt
+          assert receipt["source_target_markers_distinct"] is True, receipt
+          assert receipt["target_was_absent_before_restore"] is True, receipt
+          assert receipt["external_effect_replay_performed"] is False, receipt
+          assert receipt["organizational_authority_granted_by_restore"] is False, receipt
+          assert receipt["reusable_secrets_restored"] is False, receipt
+          print(json.dumps(receipt, indent=2, sort_keys=True))
+          PY
+
+      - name: Upload minimized clean-restore receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: p7-10-clean-restore-receipt
+          path: ${{ runner.temp }}/p7-10-clean-restore-receipt.json
+          if-no-files-found: error
+          retention-days: 7
