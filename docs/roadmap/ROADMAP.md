@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.56.1`
+Version: `2.56.2`
 Created: `2026-08-07`
 Updated: `2026-08-19`
 Owner: `ООО «Арвектум»`
@@ -14,6 +14,12 @@ This document is the canonical planning source for Arvectum OS development seque
 Future roadmap content is a planning hypothesis until its phase is activated. Roadmap status does not by itself change Platform Capability lifecycle, Product Contract lifecycle, operational environment/readiness, conformance maturity, SLA/support or commercial commitments.
 
 ## 2. Version note
+
+Version `2.56.2` records the repository-side implementation and automated mechanism-proof milestone for `P7.10 — Portability, host-loss and restore-on-clean-environment proof` without claiming operational closure. PR `#83` merged at canonical implementation merge `393cc5bff98cc87553b96d282f4bf618621fd87a`; final implementation head `d79defc54a3276e616bf72037b0dea14efd6e9bc` passed two functional review/revise iterations with no remaining material repository-design objection. `Reference Python CI #164` / run `32274126879` completed with `success` and `1191 tests / OK`; final `P7.10 Portability Proof #4` / run `32274126875` completed with `success`, transferring only the verified handoff from a macOS source job to an independent Linux clean-restore job.
+
+The bounded implementation composes P7.03 rather than introducing a competing persistence or authority path; requires an exact four-member handoff package; binds the P7.10 release claim to the release identity inside the P7.03 archive; preserves host-independent governed-state and selected historical identity/version/authority/provenance evidence; excludes reusable secrets, telemetry/runtime cache/logs and external-effect replay; and treats `/var` versus `/private/var` as a host path-presentation alias only when filesystem identity proves they are the same object. Repository readiness is recorded in [`P7.10 — Implementation Readiness Review`](../reviews/P7-10-implementation-readiness.md).
+
+This automated evidence proves the mechanism across independent clean runners; it does **not** prove loss of the actual selected Mac mini. `P7.10` therefore remains `Current`, M7 criterion 10 remains unsatisfied, and R23 remains downstream. The current canonical action is the real selected-Mac off-host handoff from the P7.03 governed store followed by restore on a genuinely clean secondary environment at the exact canonical release, a `PASS` receipt, minimized evidence review and final P7.10 closure synchronization. No Production/lifecycle/Product Contract/capability/SLA/support/conformance claim is created by this milestone.
 
 Version `2.56.1` closes `P7.09 — Operator runbook + incident/uncertain-outcome/recovery drills` as `Complete / PASS` for the declared `Persistent Internal / owner-operated` scope. Repository implementation merged through PR `#81` at canonical merge `e67af1c45b91eb265d36f8dd4fda440c0ff36b12`; final implementation head `c1dcc6d18f7f1f98204ec21c4c28db0dbb06fa02` passed Reference Python CI `#160` / run `32248311483` with `success`, and the focused P7.09 suite passed `23/23`. Four repository functional review/revise iterations closed all material implementation objections.
 
@@ -286,6 +292,6 @@ A roadmap phase transition does not itself change lifecycle, production readines
 
 > **P7.10 — Portability, host-loss and restore-on-clean-environment proof.**
 
-P7.09 is `Complete / PASS` for the declared `Persistent Internal / owner-operated` scope. The versioned runbook and evaluator cover the required failure/recovery semantics; selected-Mac evidence proves supervised crash recovery, actual owner-initiated host restart continuity, durable-state/backup recovery behavior, fail-closed network/product-host/evidence paths, credential rotation/revocation and bounded failed-update recovery. Unknown external effects remain reconciliation-required, technical recovery grants no Organizational Authority or consequential approval, and historical effects are not replayed.
+Repository implementation and automated cross-host mechanism proof are complete through PR `#83`, canonical merge `393cc5bff98cc87553b96d282f4bf618621fd87a`, `Reference Python CI #164 = success` and `P7.10 Portability Proof #4 = success`. The mechanism composes P7.03, preserves governed-state/historical semantics, excludes reusable secrets and external-effect replay, and has explicitly classified the observed macOS `/var` ↔ `/private/var` discrepancy as a path-presentation alias only when physical filesystem identity proves equivalence.
 
-The next canonical action is P7.10: prove organizational continuity beyond the selected Mac through a clean secondary environment, explicitly carrying forward the observed macOS `/var` path/symlink test-environment discrepancy as portability evidence. R23 follows P7.10.
+`P7.10` is **not** `Complete / PASS`: the actual selected Mac's governed store has not yet been handed off beyond the host-loss boundary and restored on a genuinely clean secondary environment. The next canonical action is that real selected-Mac off-host handoff and exact-release clean restore, followed by `PASS` receipt review and final P7.10 closure synchronization. M7 criterion 10 remains unsatisfied and R23 follows only after P7.10 closes.
