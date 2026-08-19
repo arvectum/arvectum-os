@@ -24,6 +24,7 @@ import hashlib
 import importlib.util
 import json
 import os
+import sys
 import tempfile
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
@@ -1070,6 +1071,7 @@ def _load_product_bridge(product_repo: Path, adapters) -> tuple[Any, str]:
         raise P707Error("cannot load Tender Agent product bridge")
     module = importlib.util.module_from_spec(spec)
     assert isinstance(module, ModuleType)
+    sys.modules[module_name] = module
     spec.loader.exec_module(module)
     bridge_cls = getattr(module, PRODUCT_BRIDGE_CLASS, None)
     if bridge_cls is None:
