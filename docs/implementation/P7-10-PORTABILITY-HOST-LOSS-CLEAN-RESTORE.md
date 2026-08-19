@@ -72,15 +72,20 @@ Example:
 
 ```bash
 RESTORE_PARENT="${HOME}/p7-10-proof"
-mkdir -p "${RESTORE_PARENT}"
-chmod 700 "${RESTORE_PARENT}"
+
+if [ ! -e "${RESTORE_PARENT}" ]; then
+  mkdir -m 700 "${RESTORE_PARENT}"
+fi
+
+test -d "${RESTORE_PARENT}"
+test ! -L "${RESTORE_PARENT}"
+test "$(stat -f '%Lp' "${RESTORE_PARENT}" 2>/dev/null || stat -c '%a' "${RESTORE_PARENT}")" = "700"
 
 TARGET="${RESTORE_PARENT}/clean-arvectum-os-runtime"
 RECEIPT="${RESTORE_PARENT}/p7-10-clean-restore-receipt.json"
 
-test ! -L "${RESTORE_PARENT}"
-test "$(stat -f '%Lp' "${RESTORE_PARENT}" 2>/dev/null || stat -c '%a' "${RESTORE_PARENT}")" = "700"
 test ! -e "${TARGET}"
+test ! -e "${RECEIPT}"
 
 PYTHONPATH=reference/python python reference/python/p7_10_portability_proof.py restore \
   --package-dir /PATH/TO/TRANSFERRED/p7-10-handoff \
@@ -90,7 +95,7 @@ PYTHONPATH=reference/python python reference/python/p7_10_portability_proof.py r
   --receipt "${RECEIPT}"
 ```
 
-Do not weaken the P7.03 owner-only parent rule by changing a system/user home-directory permission policy merely to make the proof pass. Use a bounded owner-only restore parent under the operator-controlled environment instead.
+Do not weaken the P7.03 owner-only parent rule by changing a system/user home-directory permission policy merely to make the proof pass. Do not silently `chmod` an existing restore parent to force a pass. Use a bounded owner-only restore parent under the operator-controlled environment and fail closed if an existing parent does not already satisfy the required boundary.
 
 The receipt is evidence, not approval. It should be minimized before canonical publication if hostnames or local absolute paths disclose unnecessary operator information.
 
