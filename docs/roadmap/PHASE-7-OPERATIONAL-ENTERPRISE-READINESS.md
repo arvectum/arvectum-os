@@ -1,9 +1,9 @@
 # Arvectum OS Phase 7 — Operational / Enterprise Readiness
 
 Status: `Active`
-Version: `1.2.16`
+Version: `1.2.17`
 Created: `2026-08-17`
-Updated: `2026-08-19`
+Updated: `2026-08-20`
 Owner: `ООО «Арвектум»`
 Task classification: `platform` with `governance` and `product_contract`
 Parent roadmap: [`ROADMAP.md`](ROADMAP.md)
@@ -51,7 +51,7 @@ P7.02 has passed. The selected Mac mini therefore operates in `Persistent Intern
 | `P7.08` | Persistent Discount Parser cross-host operational contour | Windows + Mac mini + GitHub | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.09` | Operator runbook + incident/uncertain-outcome/recovery drills | Mac mini + GitHub | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.10` | Portability, host-loss and restore-on-clean-environment proof | Mac mini + secondary clean environment + GitHub | 🟩 Complete / PASS | `██████████ 100%` |
-| `P7.11` | Scoped operational-readiness, lifecycle, conformance + stable-boundary disposition | Chat/GitHub + evidence | 🟨 Current | `░░░░░░░░░░ 0%` |
+| `P7.11` | Scoped operational-readiness, lifecycle, conformance + stable-boundary disposition | Chat/GitHub + evidence | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.12` | Phase 7 / M7 closure review | Chat/GitHub | ⬜ | `░░░░░░░░░░ 0%` |
 
 `P7.06-UI` is a subordinate operator-experience substream, not a new lifecycle or public-interface claim. Detailed plan: [`P7-06-LIVE-OPERATOR-WORKSPACE-SUBSTREAM.md`](P7-06-LIVE-OPERATOR-WORKSPACE-SUBSTREAM.md).
@@ -63,7 +63,7 @@ P7.02 has passed. The selected Mac mini therefore operates in `Persistent Intern
 | [`R21 — Operational Boundary Review`](../reviews/R21-operational-boundary-review.md) | after `P7.01`, before material persistent-runtime implementation | 🟩 `Complete / PASS` | prevent persistent use from silently selecting unsupported production, public API, storage, IAM or deployment commitments |
 | [`R22 — Persistent Runtime Health Review`](../reviews/R22-persistent-runtime-health-review.md) | after `P7.05`, before operational workload expansion | 🟩 `Complete / PASS` | review runtime/service boundaries, durability, access, observability, secrets, dependency direction, failure semantics and operator friction |
 | [`R23 — Recovery / Portability Review`](../reviews/R23-recovery-portability-review.md) | after `P7.10`, before lifecycle/readiness decisions | 🟩 `Complete / PASS` | verify backup/restore, host-loss recovery, semantic portability, exact identities/versions/provenance and absence of host-specific hidden authority |
-| `R24 — M7 Operational Hardening` | after `P7.11`, before `P7.12` | ⬜ | final bounded architecture/code/security/maintainability/fitness review and required M7 Milestone Code Health Gate |
+| `R24 — M7 Operational Hardening` | after `P7.11`, before `P7.12` | 🟨 `Current` | final bounded architecture/code/security/maintainability/fitness review and required M7 Milestone Code Health Gate |
 
 These gates are engineering/governance checkpoints, not lifecycle transitions or formal Production approvals.
 
@@ -329,7 +329,20 @@ R23 found no remaining material recovery/portability defect requiring implementa
 
 ### P7.11 — Scoped operational-readiness, lifecycle, conformance + stable-boundary disposition
 
-Use accumulated evidence to decide whether the internal environment is fit for its declared scope; whether Product Contracts remain Provisional or justify separate Stable transitions; whether any CAP-001..CAP-004 capability justifies a separate `Active` admission process; which concrete boundaries crossed ADR/stable-boundary thresholds; and what Production/customer readiness remains unproven. No lifecycle transition occurs automatically inside P7.11.
+Status: `Complete / PASS`.
+
+Canonical evidence:
+
+- [`P7.11 — Scoped Operational-Readiness, Lifecycle, Conformance + Stable-Boundary Disposition`](../reviews/P7-11-scoped-operational-readiness-lifecycle-conformance-stable-boundary-disposition.md) — `Complete / PASS`, four functional review/revise iterations;
+- [`P7.11 — Persistent Internal Scoped Conformance Statement`](../reviews/P7-11-persistent-internal-conformance-statement.md) — conformance maturity `Scoped` for operational environment `Local` / operating classification `Persistent Internal / owner-operated`.
+
+P7.11 confirms that the declared one-Organization owner-operated contour is fit for ongoing internal governed use. The conformance subject is the deployment contour, so subject lifecycle is `Not Applicable`; capability and Product Contract lifecycles remain independently unchanged. CAP-001 through CAP-004 remain `Incubating / Provisional`, and P6.02/P6.06 remain `Provisional 0.1.0`.
+
+All ten P7.01 ADR/stable-boundary triggers were rechecked. No current private persistence, launchd, identity/access, observability, deploy/update, operator-UI, cross-host handoff or recovery mechanism has become a stable/public/cross-product physical contract or an expensive-to-reverse external dependency. No new ADR is required at the current scope.
+
+Exact-release recovery now explicitly depends on the required canonical release being retrievable from canonical Git history or another owner-controlled integrity-verifiable source copy. The primary supported operating contour remains the selected Mac mini; clean-secondary macOS and Linux CI evidence do not create a general supported-host matrix. Credentials/secrets, service-manager configuration, runtime roots, network/proxy/TLS and OS-specific filesystem/ownership remain separately reprovisioned prerequisites.
+
+No external/customer Production, `Active` capability, Stable Product Contract, public/stable API/recovery format, SLA/SLO/RPO/RTO/support or certification claim is created. M7 criterion 11 is satisfied; R24 and the M7 Milestone Code Health Gate remain downstream.
 
 ### P7.12 — Phase 7 / M7 closure review
 
@@ -353,13 +366,13 @@ Close M7 only after declared Phase 7 work and R21–R24 findings are disposition
 12. all R21–R24 material findings are closed or accepted by appropriate authority;
 13. the required M7 Milestone Code Health Gate passes before closure.
 
-M7 criteria 9 and 10 are satisfied by P7.09 and P7.10 respectively for the declared `Persistent Internal / owner-operated` scope. R23 is `Complete / PASS`. Criteria 11–13 remain downstream.
+M7 criteria 9, 10 and 11 are satisfied by P7.09, P7.10 and P7.11 respectively for the declared `Persistent Internal / owner-operated` scope. R23 is `Complete / PASS`; P7.11 is `Complete / PASS`. Criteria 12 and 13 remain downstream through R24 and the required M7 Milestone Code Health Gate.
 
 M7 does **not** inherently require external customer Production, public multi-tenancy, an `Active` capability, Stable Product Contract, public SDK/API, SLA/support promise or one mandatory storage/IAM/deployment technology.
 
 ## 8. Current canonical action
-> **P7.11 — Scoped operational-readiness, lifecycle, conformance + stable-boundary disposition.**
+> **R24 — M7 Operational Hardening + required Milestone Code Health Gate.**
 
-R23 is `Complete / PASS`: the accumulated P7.03/P7.06/P7.09/P7.10 evidence forms a coherent, fail-closed recovery and semantic-portability model for the declared `Persistent Internal / owner-operated` scope. Governed state survives ordinary recovery paths and actual selected-host loss without implicit secret transfer, Organizational Authority grant, consequential approval or historical external-effect replay.
+P7.11 is `Complete / PASS`. The declared `Persistent Internal / owner-operated` contour is explicitly dispositioned fit for ongoing internal use; its RFC-0001 conformance maturity is `Scoped` for operational environment `Local`, while all Platform Capabilities remain `Incubating / Provisional` and P6.02/P6.06 remain `Provisional 0.1.0`. No P7.01 ADR/stable-boundary trigger is currently crossed, and no external/customer Production, stable/public interface, SLA/SLO/RPO/RTO/support or broader conformance commitment is created.
 
-P7.11 now performs the explicit scoped operational-readiness, lifecycle, conformance and stable-boundary disposition. It must address private/reversible recovery mechanisms, release-source retention/availability assumptions, supported recovery-environment boundaries and separately reprovisioned host prerequisites without inferring Production, lifecycle promotion, Stable Product Contracts, `Active` capabilities, SLA/SLO/RPO/RTO/support or broader conformance from R23.
+R24 must now perform the final bounded architecture/code/security/maintainability/fitness review and the required M7 Milestone Code Health Gate. P7.12 remains downstream until M7 criteria 12 and 13 are satisfied.
