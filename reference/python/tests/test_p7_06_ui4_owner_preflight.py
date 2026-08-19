@@ -184,7 +184,6 @@ class UI4OwnerPreflightTests(unittest.TestCase):
         item_dir = self.root / "state" / "governed" / "items" / self.item_id
         payload = dict(self.payload)
         payload["external_actions"] = True
-        # Re-persist a second valid immutable item and expose only it through the snapshot.
         bad_id = p703.persist_governed_item(
             self.root,
             RELEASE,
@@ -262,8 +261,12 @@ class UI4OwnerPreflightTests(unittest.TestCase):
         self.assertFalse(value["canonical_mutation_performed"])
         self.assertFalse(value["product_or_external_effect_performed"])
         self.assertFalse(value["reusable_secret_recorded"])
-        self.assertNotIn("credential", json.dumps(value).lower())
-        self.assertNotIn("session", json.dumps(value).lower())
+        self.assertFalse(value["browser_session_recorded"])
+        serialized = json.dumps(value).lower()
+        self.assertNotIn("credential", serialized)
+        self.assertNotIn("cookie", serialized)
+        self.assertNotIn("csrf", serialized)
+        self.assertNotIn("session=", serialized)
         if os.name != "nt":
             self.assertEqual(stat.S_IMODE(receipt.path.stat().st_mode), 0o600)
 
