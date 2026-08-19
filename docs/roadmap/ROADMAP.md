@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.56.3`
+Version: `2.56.4`
 Created: `2026-08-07`
 Updated: `2026-08-19`
 Owner: `ООО «Арвектум»`
@@ -14,6 +14,10 @@ This document is the canonical planning source for Arvectum OS development seque
 Future roadmap content is a planning hypothesis until its phase is activated. Roadmap status does not by itself change Platform Capability lifecycle, Product Contract lifecycle, operational environment/readiness, conformance maturity, SLA/support or commercial commitments.
 
 ## 2. Version note
+
+Version `2.56.4` closes [`R23 — Recovery / Portability Review`](../reviews/R23-recovery-portability-review.md) as `Complete / PASS` after three functional review/revise iterations. The accumulated P7.03/P7.06/P7.09/P7.10 evidence composes into one fail-closed recovery and semantic-portability model for the declared `Persistent Internal / owner-operated` scope: durable governed-state integrity and isolated restore, exact governed update/rollback/re-update, executable incident and uncertainty handling, and actual selected-host-loss recovery onto a clean secondary environment all preserve exact governed identity/version/provenance without silently transferring reusable secrets, Organizational Authority, consequential approval or permission to replay historical external effects.
+
+R23 explicitly bounds portability to governed organizational state plus separately reprovisioned host/runtime prerequisites. Machine-local credentials, service-manager configuration, runtime roots, network/proxy/TLS and OS-specific filesystem/ownership plumbing remain outside the handoff; no Production, lifecycle, Product Contract/capability, supported-host matrix, stable/public backup/export/migration interface, SLA/SLO/RPO/RTO/support or broader conformance promotion is created. `P7.11 — Scoped operational-readiness, lifecycle, conformance + stable-boundary disposition` becomes the current canonical action; M7 criteria 11–13 remain downstream.
 
 Version `2.56.3` closes `P7.10 — Portability, host-loss and restore-on-clean-environment proof` as `Complete / PASS` for the declared `Persistent Internal / owner-operated` scope. The unchanged verified four-member handoff from the real selected-Mac P7.03 store crossed the host-loss boundary and restored successfully on a separate clean MacBook Air environment at exact embedded release `fbab170ab337c1631b40d0d36ea58a02f6512f6e`. Archive SHA-256 `074f2a4e84e222bd26d6ed21a829aa0dcc1c91834479345cfa652405b721bfbd`, manifest SHA-256 `fe0d2c7d9460f9da4356a3a3f7419b825b8aef3a8d18123ab35fb0281db3ada9`, restored governed-state SHA-256 `da558333e0d98beac96298703326ca9d660db9098a3b0f2aa94b18c14d5a07a1`, owner-local receipt basename `p7-10-clean-restore-receipt-attempt-3.json`, receipt SHA-256 `ab7bf132d3d3a1304e3582c25fbd80a783d36c7bee9e5e6439ed4c54780aa341`. P7.03 integrity and selected historical reconstruction passed; reusable secrets, external-effect replay, Organizational Authority grant and excluded runtime/secrets paths remained absent. Attempt 2 remains preserved as `FAIL-CLOSED`; PR `#86` retained the P7.03 owner-only restore-parent boundary and passed `1192 tests / OK`; PR `#87` preserved exact handoff-release binding. Canonical closure: [`P7.10 — Canonical Closure`](../reviews/P7-10-canonical-closure.md).
 
@@ -188,7 +192,7 @@ Phase 7 converts validated owner-operated use into a persistent, recoverable, ob
 | `P7.08` | Persistent Discount Parser cross-host operational contour | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.09` | Operator runbook + incident/uncertain-outcome/recovery drills | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.10` | Portability, host-loss and restore-on-clean-environment proof | 🟩 Complete / PASS | `██████████ 100%` |
-| `P7.11` | Scoped operational-readiness, lifecycle, conformance + stable-boundary disposition | ⬜ | `░░░░░░░░░░ 0%` |
+| `P7.11` | Scoped operational-readiness, lifecycle, conformance + stable-boundary disposition | 🟨 Current | `░░░░░░░░░░ 0%` |
 | `P7.12` | Phase 7 / M7 closure review | ⬜ | `░░░░░░░░░░ 0%` |
 
 Detailed operator-workspace plan: [`P7-06-LIVE-OPERATOR-WORKSPACE-SUBSTREAM.md`](P7-06-LIVE-OPERATOR-WORKSPACE-SUBSTREAM.md) — `Complete / PASS 0.1.11`.
@@ -197,7 +201,7 @@ Engineering/quality gates:
 
 - [`R21 — Operational Boundary Review`](../reviews/R21-operational-boundary-review.md) — 🟩 `Complete / PASS` after P7.01;
 - [`R22 — Persistent Runtime Health Review`](../reviews/R22-persistent-runtime-health-review.md) — 🟩 `Complete / PASS` after P7.05, two functional iterations, remediation PR `#39`, `964/964 PASS`;
-- `R23 — Recovery / Portability Review` — 🟨 Current after P7.10;
+- [`R23 — Recovery / Portability Review`](../reviews/R23-recovery-portability-review.md) — 🟩 `Complete / PASS` after P7.10, three functional review/revise iterations;
 - `R24 — M7 Operational Hardening + required Milestone Code Health Gate` — after P7.11 and before P7.12.
 
 ### Persistent Mac mini and operator interaction transition
@@ -237,9 +241,13 @@ P7.09 operator runbook + incident/uncertain-outcome/recovery drills — PASS
         ↓
 P7.10 portability / host-loss / clean-environment restore proof — PASS
         ↓
-R23 Recovery / Portability Review ← current
+R23 Recovery / Portability Review — PASS
         ↓
-P7.11–P7.12 readiness disposition + hardening + closure
+P7.11 scoped readiness / lifecycle / conformance / stable-boundary disposition ← current
+        ↓
+R24 hardening + M7 code-health gate
+        ↓
+P7.12 Phase 7 / M7 closure review
 ```
 
 P7.02 passed on exact selected-Mac release `73af746f83271b14670fe22db658dfd55cacb291`. P7.03 subsequently established the bounded durable-state/checkpoint and backup/restore baseline. P7.04 is `Complete / PASS` after repository implementation, six-iteration functional review and selected-Mac Attempt 1. P7.05 is `Complete / PASS` after PR `#37`, `960/960` Reference Python CI, four-iteration functional review and selected-Mac Attempt 1 on exact canonical release `cf60e52c93bf0ef4158cf2c3e26792850a126c70`. R22 is `Complete / PASS` after remediation PR `#39` and `964/964` Reference Python CI. P7.06 is `Complete / PASS` after PR #49 repository hardening and selected-Mac Attempt 8 proved exact update, rollback and final re-update to `4df99c4c66a1b7b93a4b05d7768018b03aa4041b`.
@@ -256,8 +264,9 @@ P7.08 is `Complete / PASS`. PR `#78` merged the repeatable owner-operated Discou
 
 P7.09 is `Complete / PASS`. PR `#81` merged runbook `1.0.0`, deterministic evaluator, `23/23` focused regressions and four functional review/revise iterations at canonical merge `e67af1c45b91eb265d36f8dd4fda440c0ff36b12`; exact implementation head `c1dcc6d18f7f1f98204ec21c4c28db0dbb06fa02` passed full Reference Python CI `#160`. Selected-Mac evidence covered all nine required scenarios. The final actual host-restart proof changed runtime PID `35508 → 787` and generation `61 → 62` while preserving exact release `b0c18fba15de6b5abac83a4f583d89eedb5c03d1`, loaded observer, durable-state integrity and consistent deployment state without manual service start or historical effect replay. Aggregate attestation SHA-256: `39b7987fc9d3e85926ba89125d2eb045f6e474995bd605284975628213ab6e34`; actual-reboot receipt SHA-256: `bf54e903c9fae0d5468fa8b08acdee1f0c4354b549c8753d82357d0f7621a16a`. The selected-Mac local full-suite `/var` path/symlink discrepancy is carried forward as P7.10 portability evidence; it does not override canonical CI success. Canonical closure: [`P7.09 — Canonical Closure`](../reviews/P7-09-canonical-closure.md).
 
-
 P7.10 is `Complete / PASS`. The actual selected-Mac governed store was re-verified from the unchanged off-host handoff and restored on the clean secondary host at exact release `fbab170ab337c1631b40d0d36ea58a02f6512f6e`; P7.03 integrity, governed-state digest, selected historical reconstruction, exclusions, no-effect-replay and no-authority checks all passed. Canonical closure: [`P7.10 — Canonical Closure`](../reviews/P7-10-canonical-closure.md).
+
+R23 is `Complete / PASS`. The cross-cutting review confirms that P7.03/P7.06/P7.09/P7.10 form a coherent recovery chain and that portability is correctly scoped to governed organizational state and historical meaning rather than a promise of whole-host cloning. Recovery remains fail-closed, secret-minimized, authority-neutral and side-effect safe. Remaining readiness, lifecycle, conformance, stable-boundary, release-source-retention, supported-environment and RTO/RPO/SLA questions are explicitly downstream in P7.11. Canonical review: [`R23 — Recovery / Portability Review`](../reviews/R23-recovery-portability-review.md).
 
 ## 7. M7 milestone definition
 
@@ -298,8 +307,8 @@ Phase 8 remains `Draft / Exploratory` until Phase 7 / M7 closes and the external
 A roadmap phase transition does not itself change lifecycle, production readiness, conformance or commercial status.
 
 ## 11. Current canonical action
-> **R23 — Recovery / Portability Review.**
+> **P7.11 — Scoped operational-readiness, lifecycle, conformance + stable-boundary disposition.**
 
-`P7.10 = Complete / PASS` for the declared `Persistent Internal / owner-operated` scope. The real selected-Mac governed store crossed the host-loss boundary and restored successfully on a clean secondary environment with exact-release, integrity, governed-state, selected-history, exclusion, no-replay and no-authority checks all passing. M7 criterion 10 is satisfied.
+`R23 = Complete / PASS` after review of the accumulated P7.03/P7.06/P7.09/P7.10 recovery and portability evidence. The declared `Persistent Internal / owner-operated` contour now has a coherent fail-closed recovery model covering durable backup/restore, governed update/rollback, executable incident recovery and real host-loss clean-secondary reconstruction of governed organizational state. Recovery preserves exact governed meaning and historical provenance while remaining distinct from secrets, Organizational Authority, consequential approval and historical external-effect replay.
 
-R23 now reviews the accumulated P7.03/P7.06/P7.09/P7.10 recovery and portability evidence before P7.11 performs lifecycle, conformance and stable-boundary disposition. Criteria 11–13 remain downstream. R23 is an engineering/governance review, not a Production approval or lifecycle transition.
+P7.11 must now make the explicit scoped operational-readiness, lifecycle, conformance and stable-boundary dispositions, including the current private/reversible recovery mechanisms, release-source availability assumptions, supported recovery-environment boundaries and host prerequisites that remain separately reprovisioned. M7 criteria 11–13 remain downstream; no Production/lifecycle/Product Contract/capability/SLA/SLO/RPO/RTO/support/conformance promotion is implied by R23.
