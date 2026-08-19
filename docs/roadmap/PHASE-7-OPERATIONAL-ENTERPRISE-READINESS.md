@@ -1,7 +1,7 @@
 # Arvectum OS Phase 7 — Operational / Enterprise Readiness
 
 Status: `Active`
-Version: `1.2.15`
+Version: `1.2.16`
 Created: `2026-08-17`
 Updated: `2026-08-19`
 Owner: `ООО «Арвектум»`
@@ -51,7 +51,7 @@ P7.02 has passed. The selected Mac mini therefore operates in `Persistent Intern
 | `P7.08` | Persistent Discount Parser cross-host operational contour | Windows + Mac mini + GitHub | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.09` | Operator runbook + incident/uncertain-outcome/recovery drills | Mac mini + GitHub | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.10` | Portability, host-loss and restore-on-clean-environment proof | Mac mini + secondary clean environment + GitHub | 🟩 Complete / PASS | `██████████ 100%` |
-| `P7.11` | Scoped operational-readiness, lifecycle, conformance + stable-boundary disposition | Chat/GitHub + evidence | ⬜ | `░░░░░░░░░░ 0%` |
+| `P7.11` | Scoped operational-readiness, lifecycle, conformance + stable-boundary disposition | Chat/GitHub + evidence | 🟨 Current | `░░░░░░░░░░ 0%` |
 | `P7.12` | Phase 7 / M7 closure review | Chat/GitHub | ⬜ | `░░░░░░░░░░ 0%` |
 
 `P7.06-UI` is a subordinate operator-experience substream, not a new lifecycle or public-interface claim. Detailed plan: [`P7-06-LIVE-OPERATOR-WORKSPACE-SUBSTREAM.md`](P7-06-LIVE-OPERATOR-WORKSPACE-SUBSTREAM.md).
@@ -62,7 +62,7 @@ P7.02 has passed. The selected Mac mini therefore operates in `Persistent Intern
 |---|---|---|---|
 | [`R21 — Operational Boundary Review`](../reviews/R21-operational-boundary-review.md) | after `P7.01`, before material persistent-runtime implementation | 🟩 `Complete / PASS` | prevent persistent use from silently selecting unsupported production, public API, storage, IAM or deployment commitments |
 | [`R22 — Persistent Runtime Health Review`](../reviews/R22-persistent-runtime-health-review.md) | after `P7.05`, before operational workload expansion | 🟩 `Complete / PASS` | review runtime/service boundaries, durability, access, observability, secrets, dependency direction, failure semantics and operator friction |
-| `R23 — Recovery / Portability Review` | after `P7.10`, before lifecycle/readiness decisions | 🟨 `Current` | verify backup/restore, host-loss recovery, semantic portability, exact identities/versions/provenance and absence of host-specific hidden authority |
+| [`R23 — Recovery / Portability Review`](../reviews/R23-recovery-portability-review.md) | after `P7.10`, before lifecycle/readiness decisions | 🟩 `Complete / PASS` | verify backup/restore, host-loss recovery, semantic portability, exact identities/versions/provenance and absence of host-specific hidden authority |
 | `R24 — M7 Operational Hardening` | after `P7.11`, before `P7.12` | ⬜ | final bounded architecture/code/security/maintainability/fitness review and required M7 Milestone Code Health Gate |
 
 These gates are engineering/governance checkpoints, not lifecycle transitions or formal Production approvals.
@@ -309,7 +309,23 @@ P7.10 satisfies M7 criterion 10. Host/service-manager paths, machine-local crede
 
 P7.10 closure creates no Production claim, lifecycle promotion, Stable Product Contract, Active Platform Capability, public/stable recovery/export format, permanent persistence technology, SLA/SLO/RPO/RTO/support commitment or broader conformance claim.
 
-**R23 follows P7.10 and is now Current.**
+**R23 follows P7.10 and is `Complete / PASS`; P7.11 is now Current.**
+
+### R23 — Recovery / Portability Review
+
+Status: `Complete / PASS`.
+
+Canonical evidence:
+
+- [`R23 — Recovery / Portability Review`](../reviews/R23-recovery-portability-review.md) — `Complete / PASS`, three functional review/revise iterations;
+- reviewed contour: P7.03, P7.06, P7.09 and P7.10;
+- no Accepted ADR was required for the current private/reversible owner-operated recovery mechanisms.
+
+R23 confirms that the accumulated recovery evidence composes into one fail-closed model: P7.03 owns durable governed-state backup/isolated restore semantics; P7.06 owns exact governed update/rollback/re-update behavior; P7.09 makes ordinary incident, uncertainty and recovery procedures executable; and P7.10 proves semantic governed-state portability beyond loss of the selected source host onto a clean secondary environment.
+
+Portability is intentionally bounded to governed organizational state and historical identity/version/authority/provenance meaning. Machine-local credentials/secrets, service-manager configuration, runtime roots, network/proxy/TLS setup and OS-specific filesystem/ownership plumbing remain separately reprovisioned host prerequisites. Recovery does not grant Organizational Authority or consequential approval and never authorizes replay of a historical external effect.
+
+R23 found no remaining material recovery/portability defect requiring implementation before P7.11. Release-source availability/retention, supported recovery-environment scope, any stable/public recovery boundary, lifecycle/conformance status and any RTO/RPO/SLO/SLA/support commitment are explicitly downstream P7.11 disposition questions rather than inferred R23 outcomes.
 
 ### P7.11 — Scoped operational-readiness, lifecycle, conformance + stable-boundary disposition
 
@@ -337,13 +353,13 @@ Close M7 only after declared Phase 7 work and R21–R24 findings are disposition
 12. all R21–R24 material findings are closed or accepted by appropriate authority;
 13. the required M7 Milestone Code Health Gate passes before closure.
 
-M7 criteria 9 and 10 are satisfied by P7.09 and P7.10 respectively for the declared `Persistent Internal / owner-operated` scope. Criteria 11–13 remain downstream.
+M7 criteria 9 and 10 are satisfied by P7.09 and P7.10 respectively for the declared `Persistent Internal / owner-operated` scope. R23 is `Complete / PASS`. Criteria 11–13 remain downstream.
 
 M7 does **not** inherently require external customer Production, public multi-tenancy, an `Active` capability, Stable Product Contract, public SDK/API, SLA/support promise or one mandatory storage/IAM/deployment technology.
 
 ## 8. Current canonical action
-> **R23 — Recovery / Portability Review.**
+> **P7.11 — Scoped operational-readiness, lifecycle, conformance + stable-boundary disposition.**
 
-P7.10 is `Complete / PASS`: the real selected-Mac governed store was handed off beyond the host-loss boundary and restored on a separate clean secondary environment with exact-release binding, P7.03 integrity, governed-state digest, selected historical reconstruction, exclusions, no-effect-replay and no-authority checks all passing. M7 criterion 10 is satisfied.
+R23 is `Complete / PASS`: the accumulated P7.03/P7.06/P7.09/P7.10 evidence forms a coherent, fail-closed recovery and semantic-portability model for the declared `Persistent Internal / owner-operated` scope. Governed state survives ordinary recovery paths and actual selected-host loss without implicit secret transfer, Organizational Authority grant, consequential approval or historical external-effect replay.
 
-R23 now reviews the accumulated recovery/portability evidence before P7.11 performs scoped operational-readiness, lifecycle, conformance and stable-boundary disposition. R23 does not itself promote a capability, stabilize a Product Contract or approve Production.
+P7.11 now performs the explicit scoped operational-readiness, lifecycle, conformance and stable-boundary disposition. It must address private/reversible recovery mechanisms, release-source retention/availability assumptions, supported recovery-environment boundaries and separately reprovisioned host prerequisites without inferring Production, lifecycle promotion, Stable Product Contracts, `Active` capabilities, SLA/SLO/RPO/RTO/support or broader conformance from R23.
