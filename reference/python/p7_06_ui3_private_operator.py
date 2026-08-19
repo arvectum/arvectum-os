@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""P7.06-UI3 persistent private operator access.
+"""P7.06-UI3 persistent private operator access with bounded UI4 preflight.
 
-Owner-local, exact-release and reversible. UI3 adds a supervised loopback process
-around UI2 plus an owner-local ingress secret/process session. It consumes only
-existing exact P7.04 grants, creates no authority/approval/canonical mutation,
-and intentionally provides no real interaction case before UI4.
+Owner-local, exact-release and reversible. UI3 provides the supervised loopback
+process, owner-local ingress secret/process session and existing exact P7.04
+technical access. UI4 adds one preflight-only route over real retained state.
+Neither layer creates Organizational Authority, consequential approval or a
+canonical mutation shortcut.
 """
 from __future__ import annotations
 
@@ -21,12 +22,15 @@ import p7_04_persistent_access as p704
 import p7_06_governed_deploy as p706
 import p7_06_ui1_live_workspace as ui1
 import p7_06_ui2_governed_interaction as ui2
+import p7_06_ui4_owner_preflight as ui4
 
 SCHEMA="arvectum.p7_06_ui3.private-operator/1"
 MODE="Persistent Internal / owner-operated"
 HOST="127.0.0.1"; PORT=8765; MIN_PORT=1024; MAX_PORT=65535
 COOKIE="arvectum_ui3_session"; UNLOCK="/ui3/unlock"
 MAX_CONFIG=16384; MAX_FORM=4096; SECRET_BYTES=48
+LEGACY_PROVIDER="none-until-p7-06-ui4"
+UI4_PROVIDER="p7-06-ui4-preflight-only"
 
 class UI3Error(RuntimeError): pass
 class UI3BoundaryError(UI3Error): pass
@@ -96,8 +100,8 @@ def _mapping(path: Path)->dict[str,Any]:
     if not isinstance(value,dict) or set(value)!=keys: raise UI3IntegrityError("invalid UI3 configuration shape")
     if value["schema"]!=SCHEMA or value["operating_mode"]!=MODE: raise UI3IntegrityError("invalid UI3 configuration identity")
     if value["listener_scope"]!="ipv4-loopback-only" or value["ingress_authentication"]!="owner-local-secret-to-process-session": raise UI3IntegrityError("invalid private ingress mode")
-    if value["interaction_provider"]!="none-until-p7-06-ui4": raise UI3IntegrityError("UI3 must not introduce a UI4 provider")
-    if any(value[k] is not False for k in ("organizational_authority_provided","consequential_approval_provided","canonical_mutation_performed")): raise UI3IntegrityError("UI3 may not claim authority/approval/mutation")
+    if value["interaction_provider"] not in {LEGACY_PROVIDER,UI4_PROVIDER}: raise UI3IntegrityError("invalid bounded interaction provider mode")
+    if any(value[k] is not False for k in ("organizational_authority_provided","consequential_approval_provided","canonical_mutation_performed")): raise UI3IntegrityError("UI3/UI4 may not claim authority/approval/mutation")
     _listener(value["listener_host"],value["listener_port"]); _cid(value["credential_id"])
     return value
 
@@ -132,15 +136,20 @@ def resolve_operator_access(root: Path, credential_id: Optional[str]=None)->Acce
 
 def initialize_private_access(root: Path, *, host=HOST, port=PORT, credential_id: Optional[str]=None)->dict[str,Any]:
     root=root.expanduser().resolve(); host,port=_listener(host,port); credential_id=_cid(credential_id)
-    desired={"schema":SCHEMA,"operating_mode":MODE,"listener_host":host,"listener_port":port,"credential_id":credential_id,"listener_scope":"ipv4-loopback-only","ingress_authentication":"owner-local-secret-to-process-session","interaction_provider":"none-until-p7-06-ui4","organizational_authority_provided":False,"consequential_approval_provided":False,"canonical_mutation_performed":False}
+    desired={"schema":SCHEMA,"operating_mode":MODE,"listener_host":host,"listener_port":port,"credential_id":credential_id,"listener_scope":"ipv4-loopback-only","ingress_authentication":"owner-local-secret-to-process-session","interaction_provider":UI4_PROVIDER,"organizational_authority_provided":False,"consequential_approval_provided":False,"canonical_mutation_performed":False}
     path=_config(root)
     if path.exists():
-        if _mapping(path)!=desired: raise UI3IntegrityError("existing UI3 configuration differs; explicit uninstall/reconfigure required")
+        existing=_mapping(path)
+        legacy=dict(desired); legacy["interaction_provider"]=LEGACY_PROVIDER
+        if existing==legacy:
+            _atomic(path,json.dumps(desired,ensure_ascii=False,sort_keys=True,indent=2)+"\n")
+        elif existing!=desired:
+            raise UI3IntegrityError("existing UI3 configuration differs; explicit uninstall/reconfigure required")
     else: _atomic(path,json.dumps(desired,ensure_ascii=False,sort_keys=True,indent=2)+"\n")
     secret=_secret(root)
     if secret.exists(): _read_secret(secret)
     else: _atomic(secret,secrets.token_urlsafe(SECRET_BYTES)+"\n",exclusive=True); _read_secret(secret)
-    return {"status":"PASS","listener":f"{host}:{port}","credential_id":credential_id,"secret_returned":False,"organizational_authority_provided":False,"canonical_mutation_performed":False}
+    return {"status":"PASS","listener":f"{host}:{port}","credential_id":credential_id,"secret_returned":False,"ui4_preflight_enabled":True,"organizational_authority_provided":False,"canonical_mutation_performed":False}
 
 def rotate_access_secret(root: Path)->dict[str,Any]:
     _mapping(_config(root)); _read_secret(_secret(root)); _atomic(_secret(root),secrets.token_urlsafe(SECRET_BYTES)+"\n")
@@ -154,14 +163,14 @@ def remove_private_material(root: Path)->None:
 def verify_exact_release(root: Path)->str:
     root=root.expanduser().resolve(); rel=p706.current_release(root); p706.verify_release(root,rel)
     base=root/"releases"/rel/"source"/"reference"/"python"
-    for module in (Path(__file__),Path(p706.__file__),Path(ui1.__file__),Path(ui2.__file__)):
+    for module in (Path(__file__),Path(p706.__file__),Path(ui1.__file__),Path(ui2.__file__),Path(ui4.__file__)):
         pinned=base/module.name
         if not pinned.is_file() or pinned.is_symlink() or module.resolve()!=pinned.resolve(): raise UI3IntegrityError(f"exact-release module pin failed: {module.name}")
     return rel
 
 def verify_private_access(root: Path, *, exact=False)->dict[str,Any]:
-    cfg=load_config(root); _read_secret(_secret(root)); access=resolve_operator_access(root,cfg.credential_id)
-    return {"status":"PASS","listener":f"{cfg.host}:{cfg.port}","release_sha":verify_exact_release(root) if exact else None,"credential_id":access.credential_id,"inspect_grant_id":access.inspect_grant_id,"interaction_grant_id":access.interaction_grant_id,"organizational_authority_provided":False,"consequential_approval_provided":False,"canonical_mutation_performed":False}
+    cfg=load_config(root); config=_mapping(_config(root)); _read_secret(_secret(root)); access=resolve_operator_access(root,cfg.credential_id)
+    return {"status":"PASS","listener":f"{cfg.host}:{cfg.port}","release_sha":verify_exact_release(root) if exact else None,"credential_id":access.credential_id,"inspect_grant_id":access.inspect_grant_id,"interaction_grant_id":access.interaction_grant_id,"ui4_preflight_enabled":config["interaction_provider"]==UI4_PROVIDER,"organizational_authority_provided":False,"consequential_approval_provided":False,"canonical_mutation_performed":False}
 
 def _cookie(header: Optional[str])->Optional[str]:
     if not header: return None
@@ -186,9 +195,12 @@ def _form(handler: Any)->dict[str,str]:
     return result
 
 def make_private_server(root: Path):
-    root=root.expanduser().resolve(); rel=verify_exact_release(root); cfg=load_config(root); access=resolve_operator_access(root,cfg.credential_id); ingress=_read_secret(_secret(root))
+    root=root.expanduser().resolve(); rel=verify_exact_release(root); cfg=load_config(root); config=_mapping(_config(root)); access=resolve_operator_access(root,cfg.credential_id); ingress=_read_secret(_secret(root))
+    if config["interaction_provider"]!=UI4_PROVIDER: raise UI3IntegrityError("UI4 preflight provider has not been activated by exact-release init")
+    # UI2's canonical-mutation interaction provider intentionally remains empty.
+    # UI4 is a separate preflight-only route and cannot manufacture a candidate.
     server=ui2.make_server(host=cfg.host,port=cfg.port,root=root,organization=access.organization,principal=access.principal,credential_id=access.credential_id,credential_file=access.credential_file,interaction_provider=lambda _interaction_id: None)
-    base=server.RequestHandlerClass; session=secrets.token_urlsafe(SECRET_BYTES); csrf=secrets.token_urlsafe(32)
+    base=server.RequestHandlerClass; session=secrets.token_urlsafe(SECRET_BYTES); csrf=secrets.token_urlsafe(32); ui4_csrf=secrets.token_urlsafe(32)
     class Handler(base):
         def _auth(self):
             value=_cookie(self.headers.get("Cookie")); return bool(value) and hmac.compare_digest(value,session)
@@ -200,12 +212,24 @@ def make_private_server(root: Path):
             except ui2.UI2BoundaryError: self._unlock(HTTPStatus.BAD_REQUEST,body=body); return False
             if not self._auth(): self._unlock(HTTPStatus.UNAUTHORIZED,body=body); return False
             return True
+        def _ui4(self, *, ran=False):
+            try:
+                preflight=ui4.build_owner_preflight(root,organization=access.organization,principal=access.principal,credential_id=access.credential_id,credential_file=access.credential_file)
+                if ran: ui4.record_browser_preflight(root,preflight)
+                ui4.write_html(self,HTTPStatus.OK,ui4.render_owner_preflight_html(preflight,csrf_token=ui4_csrf,ran=ran))
+            except (ui4.UI4Error,ui1.UI1Error,ui2.UI2Error,p704.P704Error,OSError,ValueError):
+                ui4.write_html(self,HTTPStatus.SERVICE_UNAVAILABLE,ui2._blocked_html("Owner preflight is unavailable."))
         def do_GET(self):
-            if urlsplit(self.path).path==UNLOCK:
-                if urlsplit(self.path).query: return self._unlock(HTTPStatus.BAD_REQUEST)
+            parsed=urlsplit(self.path)
+            if parsed.path==UNLOCK:
+                if parsed.query: return self._unlock(HTTPStatus.BAD_REQUEST)
                 try: ui2._require_loopback_host(self)
                 except ui2.UI2BoundaryError: return self._unlock(HTTPStatus.BAD_REQUEST)
                 return self._unlock()
+            if parsed.path==ui4.PREFLIGHT_PATH:
+                if parsed.query: return self._unlock(HTTPStatus.BAD_REQUEST)
+                if self._gate(): return self._ui4()
+                return
             if self._gate(): super().do_GET()
         def do_HEAD(self):
             parsed=urlsplit(self.path)
@@ -214,13 +238,26 @@ def make_private_server(root: Path):
                 try: ui2._require_loopback_host(self)
                 except ui2.UI2BoundaryError: return self._unlock(HTTPStatus.BAD_REQUEST,body=False)
                 return self._unlock(body=False)
+            if parsed.path==ui4.PREFLIGHT_PATH:
+                if parsed.query: return self._unlock(HTTPStatus.BAD_REQUEST,body=False)
+                if self._gate(False): return self._ui4()
+                return
             if self._gate(False): super().do_HEAD()
         def do_POST(self):
-            if urlsplit(self.path).path==UNLOCK:
+            parsed=urlsplit(self.path)
+            if parsed.path==UNLOCK:
                 try: ui2._require_same_origin(self); fields=_form(self)
                 except (ui2.UI2BoundaryError,UI3BoundaryError): return self._unlock(HTTPStatus.BAD_REQUEST)
                 if not hmac.compare_digest(fields["csrf"],csrf) or not hmac.compare_digest(fields["access_secret"],ingress): return self._unlock(HTTPStatus.UNAUTHORIZED,True)
                 self.send_response(HTTPStatus.SEE_OTHER.value); ui2._security_headers(self); self.send_header("Set-Cookie",f"{COOKIE}={session}; HttpOnly; SameSite=Strict; Path=/"); self.send_header("Location","/"); self.send_header("Content-Length","0"); self.end_headers(); return
+            if parsed.path==ui4.RUN_PATH:
+                if not self._gate(): return
+                try:
+                    ui2._require_same_origin(self); fields=ui4.read_run_form(self)
+                    if not hmac.compare_digest(fields["csrf"],ui4_csrf): raise ui4.UI4BoundaryError("UI4 CSRF continuity mismatch")
+                except (ui2.UI2BoundaryError,ui4.UI4BoundaryError):
+                    return ui4.write_html(self,HTTPStatus.FORBIDDEN,ui2._blocked_html("Owner preflight is unavailable."))
+                return self._ui4(ran=True)
             if self._gate(): super().do_POST()
         def do_PUT(self):
             if self._gate(): super().do_PUT()
@@ -228,7 +265,7 @@ def make_private_server(root: Path):
             if self._gate(): super().do_PATCH()
         def do_DELETE(self):
             if self._gate(): super().do_DELETE()
-    server.RequestHandlerClass=Handler; server.ui3_release_sha=rel; server.ui3_session_resets_on_restart=True
+    server.RequestHandlerClass=Handler; server.ui3_release_sha=rel; server.ui3_session_resets_on_restart=True; server.ui4_preflight_only=True
     return server
 
 def parser()->argparse.ArgumentParser:
@@ -254,7 +291,7 @@ def main(argv=None)->int:
             try: server.serve_forever(poll_interval=.5)
             finally: server.server_close()
             return 0
-    except (UI3Error,p704.P704Error,p706.P706Error,ui1.UI1Error,ui2.UI2Error) as exc:
+    except (UI3Error,ui4.UI4Error,p704.P704Error,p706.P706Error,ui1.UI1Error,ui2.UI2Error) as exc:
         print("P7.06-UI3 unavailable" if a.command=="serve" else f"P7.06-UI3 FAIL: {exc}",file=os.sys.stderr); return 1
     print(json.dumps(value,ensure_ascii=False,sort_keys=True) if getattr(a,"json",False) else "P7.06-UI3 PASS"); return 0
 
