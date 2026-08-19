@@ -1,9 +1,9 @@
 # Arvectum OS Phase 7 — Operational / Enterprise Readiness
 
 Status: `Active`
-Version: `1.2.9`
+Version: `1.2.10`
 Created: `2026-08-17`
-Updated: `2026-08-18`
+Updated: `2026-08-19`
 Owner: `ООО «Арвектум»`
 Task classification: `platform` with `governance` and `product_contract`
 Parent roadmap: [`ROADMAP.md`](ROADMAP.md)
@@ -46,7 +46,7 @@ P7.02 has passed. The selected Mac mini therefore operates in `Persistent Intern
 | `P7.04` | Persistent identity/operator/service access + least-privilege operations | Chat + Mac mini + GitHub | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.05` | Health, observability, audit visibility, alerting + retention/minimization | Mac mini + GitHub | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.06` | Governed deploy/update/rollback/version/migration path | Mac mini + GitHub | 🟩 Complete / PASS | `██████████ 100%` |
-| `P7.06-UI` | Live operator workspace over persistent runtime | Mac mini + browser + GitHub | 🟨 Current — UI3 | `█████░░░░░ 50%` |
+| `P7.06-UI` | Live operator workspace over persistent runtime | Mac mini + browser + GitHub | 🟨 Current — UI4 | `███████░░░ 75%` |
 | `P7.07` | Persistent Tender Operator operational contour | Mac mini + product environment + GitHub | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.08` | Persistent Discount Parser cross-host operational contour | Windows + Mac mini + GitHub | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.09` | Operator runbook + incident/uncertain-outcome/recovery drills | Mac mini + GitHub | ⬜ | `░░░░░░░░░░ 0%` |
@@ -197,19 +197,21 @@ P7.06 closure does not establish external/customer Production, an `Active` Platf
 
 ### P7.06-UI — Live operator workspace over persistent runtime
 
-Status: `Current — UI3`; UI1 and UI2 are `Complete / PASS`.
+Status: `Current — UI4`; UI1, UI2 and UI3 are `Complete / PASS`.
 
-Detailed substream: [`P7-06-LIVE-OPERATOR-WORKSPACE-SUBSTREAM.md`](P7-06-LIVE-OPERATOR-WORKSPACE-SUBSTREAM.md) — `Active / UI3 Current 0.1.6`.
+Detailed substream: [`P7-06-LIVE-OPERATOR-WORKSPACE-SUBSTREAM.md`](P7-06-LIVE-OPERATOR-WORKSPACE-SUBSTREAM.md) — `Active / UI4 Current 0.1.10`.
 
 This substream operationalizes the already-complete Phase 4 / M4 workspace semantics instead of redesigning them. It connects explicit Organization/Actor context, Records, Executions, Evidence, Documents, Knowledge, exact-version/provenance inspection and bounded Governed Execution interaction to the persistent runtime through a private reversible operator surface.
 
 `P7.06-UI1 — Live read-only governed workspace` is `Complete / PASS` after selected-Mac Attempt 2 on exact canonical/local/runtime release `b1b78ed9772727dda41b2e509675691f978957ec`. The approved retained P6.05-L7 manifest was verified at SHA-256 `74e943d855406b04741f040fed271bddfaada9a9cc6e7da4501735a6e8725121`; four distinct Governed Execution gate bases passed; one real P7.03 item/checkpoint was admitted/persisted; the second identical execution was idempotent; the real Subject/exact Version/provenance was browser-visible; and before/after governed-byte digests were unchanged. Network/external effects were `NONE`. Canonical closure evidence is [`P7.06-UI1 Selected-Mac Live-Browser Proof — Attempt 2`](../reviews/P7-06-UI1-selected-mac-proof-attempt-2.md).
 
-The active sequence is now `UI1 PASS → UI2 PASS → UI3 persistent private operator access → UI4 first real owner interaction proof`.
-
 `P7.06-UI2 — Governed interaction and preflight` is `Complete / PASS` through PR `#56`, exact reviewed head `305faafb790e1387cac2aaafa348fbc4ac583797`, five functional review/revise iterations and Reference Python CI run `32159051764 = success`. The boundary preserves four independent RFC-0005 gate concepts, authorized RFC-0006/CAP-004 reconstruction, related Execution evidence, uncertain-versus-reconciliation semantics and entry only through existing Governed Execution/operator-safety semantics.
 
-`P7.06-UI = PASS` still requires UI3 persistent private operator access and UI4 owner proof of a real bounded interaction. UI2 repository closure does not close the overall UI substream.
+`P7.06-UI3 — Persistent private operator access` is `Complete / PASS` after the final selected-Mac operational proof on exact canonical/runtime release `8451a5cb85c15ceb798438524f46cec87eacc981`. Bounded recovery first reconciled the previously inconsistent pointer to proven live release `6d4d07aead603841ecce3c469dd46f5e0d58ccd5`, with recovery SHA-256 `0df255294f8cc17f91aca0fc0ac4eb6eb95eb6085be1a78aeaac85d7c2d39ba3`; the ordinary P7.06 governed update then advanced to target `8451a5cb85c15ceb798438524f46cec87eacc981` under transaction `5de0529aa4c8d478ae13639b12588815c7dfbe9714f6254a6e7dcfd61344ed4c` and passed the bounded stability window. The final UI3 proof passed least-privilege reuse, private loopback listener/PID attribution, HTTP/session negative and positive paths, uninstall/reinstall, governed rollback, historical reconciliation and final re-update. P7.03/P7.04 remained unchanged; no real UI4 interaction, Organizational Authority, consequential approval, product/external effect or historical-effect replay occurred. Final UI3 attestation SHA-256: `05a30e20d1d6813ae786620fff8eb00544a04b87dfe5dabc07c2078d19b90f66`. Canonical closure: [`P7.06-UI3 — Selected-Mac Operational Closure`](../reviews/P7.06-UI3-selected-mac-operational-closure.md).
+
+The active sequence is now `UI1 PASS → UI2 PASS → UI3 PASS → UI4 first real owner interaction proof`.
+
+`P7.06-UI = PASS` still requires UI4 owner proof of a real bounded interaction. UI3 closure advances the substream to `75%` but does not close it.
 
 Completion creates no public/stable API, frontend framework, browser support promise, public Arvectum OS UI, Production claim, capability promotion or Stable Product Contract.
 
@@ -261,8 +263,8 @@ M7 does **not** inherently require external customer Production, public multi-te
 
 ## 8. Current canonical action
 
-> **P7.06-UI3 — Persistent private operator access.**
+> **P7.06-UI4 — First real owner interaction proof.**
 
-P7.06 core, UI1 and UI2 are `Complete / PASS` for their declared scopes. UI2 merged through PR `#56` at `a22ba781d32f64b7097aeaf05a90651308533811`; its exact implementation head passed five functional review/revise iterations and Reference Python CI run `32159051764 = success`.
+P7.06 core and UI1–UI3 are `Complete / PASS` for their declared scopes. UI3 selected-Mac closure passed on exact release `8451a5cb85c15ceb798438524f46cec87eacc981` after bounded runtime-consistency recovery, canonical-checkout governed update, exact-release stability and the complete private-access proof; P7.03/P7.04 remained unchanged and no authority or external-effect claim was introduced.
 
-The next action is to make the private workspace reachable during regular owner-operated use with an exact-release supervised process/adapter lifecycle, bounded listener exposure, no accidental public ingress, P7.04 least-privilege access, secret/log safety, restart/state-integrity behavior and an uninstall/rollback path. UI4 remains the first real owner interaction proof; P7.07/P7.08 remain downstream.
+The next action is UI4: perform the first real owner-operated interaction session through the private live workspace, inspect real governed state/provenance and exercise at least one bounded governed interaction through the existing runtime authority/security boundaries. P7.07/P7.08 remain downstream until UI4 closes.
