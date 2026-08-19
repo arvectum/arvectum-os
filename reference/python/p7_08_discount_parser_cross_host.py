@@ -513,6 +513,12 @@ def _descriptor_fields(descriptor: dict[str, Any]) -> dict[str, Any]:
     roles = {item["role"] for item in material_refs}
     if "telegram-target" not in roles or "authorization-evidence" not in roles:
         raise P708ContourError("target and authorization material references are required")
+    telegram_targets = {item["reference"] for item in material_refs if item["role"] == "telegram-target"}
+    template_refs = {item["reference"] for item in material_refs if item["role"] == "template-version"}
+    if telegram_targets != {target_ref}:
+        raise P708ContourError("telegram-target material reference must match the exact target_ref")
+    if template_refs != {template_version}:
+        raise P708ContourError("template-version material reference must match the exact template_version")
 
     return {
         "product": {"repository": PRODUCT_REPOSITORY, "repository_sha": product_sha},
@@ -995,23 +1001,38 @@ def reconstruct_on_mac(
         / execution_id
     )
     reconstruction_root = run_root / "reconstruction"
+    report_path_existing = reconstruction_root / REPORT_FILENAME
+    report_digest_path_existing = reconstruction_root / REPORT_DIGEST_FILENAME
     receipt_path = reconstruction_root / RECEIPT_FILENAME
     receipt_digest_path = reconstruction_root / RECEIPT_DIGEST_FILENAME
-    if receipt_path.exists() or receipt_digest_path.exists():
-        if not (receipt_path.exists() and receipt_digest_path.exists()):
-            raise P708ContourError("partial reconstruction receipt exists; operator reconciliation required")
+    existing_flags = (
+        report_path_existing.exists(),
+        report_digest_path_existing.exists(),
+        receipt_path.exists(),
+        receipt_digest_path.exists(),
+    )
+    if any(existing_flags):
+        if not all(existing_flags):
+            raise P708ContourError("partial reconstruction state exists; operator reconciliation required")
         receipt, _ = _load_verified_json(
             json_path=receipt_path,
             digest_path=receipt_digest_path,
             expected_filename=RECEIPT_FILENAME,
         )
+        report_existing, report_digest = _load_verified_json(
+            json_path=report_path_existing,
+            digest_path=report_digest_path_existing,
+            expected_filename=REPORT_FILENAME,
+        )
         if receipt.get("handoff_sha256") != handoff_digest:
             raise P708ContourError("execution already reconstructed from different evidence; refusing ambiguous replay")
+        if receipt.get("report_sha256") != report_digest or report_existing.get("execution_id") != execution_id:
+            raise P708ContourError("completed reconstruction receipt/report continuity is invalid")
         return {
             "status": "ALREADY_RECONSTRUCTED",
             "execution_id": execution_id,
-            "report_path": reconstruction_root / REPORT_FILENAME,
-            "report_digest_path": reconstruction_root / REPORT_DIGEST_FILENAME,
+            "report_path": report_path_existing,
+            "report_digest_path": report_digest_path_existing,
             "receipt_path": receipt_path,
             "receipt_digest_path": receipt_digest_path,
         }
