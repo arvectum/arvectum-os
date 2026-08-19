@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.55.8`
+Version: `2.55.9`
 Created: `2026-08-07`
 Updated: `2026-08-19`
 Owner: `ООО «Арвектум»`
@@ -15,6 +15,14 @@ Future roadmap content is a planning hypothesis until its phase is activated. Ro
 
 ## 2. Version note
 
+Version `2.55.9` closes `P7.07 — Persistent Tender Operator operational contour` as `Complete / PASS` for the declared selected-Mac `Persistent Internal / owner-operated` scope. Initial repository implementation merged through PR `#75` at `bf1a3047aadf03384c9525eacd4e186a53092c11`. Selected-Mac Attempt 1 passed governed setup but failed closed before the first real product read on a private dynamic-module registration defect; no local release/product/interpreter workaround was accepted. PR `#76` remediated that loader defect by registering the bounded product bridge module in `sys.modules` before execution, added unmocked `@dataclass(frozen=True, slots=True)` regression coverage, merged at `b0c18fba15de6b5abac83a4f583d89eedb5c03d1`, and Reference Python CI `#157` completed with `success`.
+
+Selected-Mac Attempt 2 then advanced the persistent runtime to exact release `b0c18fba15de6b5abac83a4f583d89eedb5c03d1` through P7.06 transaction `7826f811cce4bc88a0e9a915e3806f6d23cb456428f8c53424d024342ebc33ec`, reused the already-admitted exact P7.07 governed item through `PASS_IDEMPOTENT_EXISTING`, retained zero active temporary setup grants and the exact item-scoped persistent read grant, and completed real CAP-001 reliance through the canonical `arvectum/tender-agent` product bridge before and after an actual supervised P7.02 restart. Runtime generation advanced `59 → 60`, instance replacement and `previous_instance_id` continuity passed, and the P7.03 governed-state digest remained byte-stable at `da558333e0d98beac96298703326ca9d660db9098a3b0f2aa94b18c14d5a07a1`.
+
+Before/after reliance preserved the same exact storage item, Document Subject, exact Version, Artifact, integrity reference, P6.02 Product Contract `0.1.0`, `External Reference` authority and authoritative source `ЕИС / zakupki.gov.ru`. No EIS/SOAP retrieval, P7.07 network action, ordinary-read canonical mutation, tender/email/Telegram/payment/signature or other external effect, raw tender-byte exposure, credential-secret exposure or AI authority expansion occurred. Owner-local evidence remains outside Git; canonical closure records basename `selected-mac-restart-proof.json` and submitted SHA-256 `9613637b06c5d192311bda1eb3096a9cd0b49c016134af887697637a668cf0f8` in [`P7.07 — Selected-Mac Operational Closure`](../reviews/P7-07-selected-mac-operational-closure.md).
+
+`P7.07 = Complete / PASS`; M7 criterion 7 is satisfied for the declared scope. Active Phase 7 advances to `1.2.12`, and the current canonical action becomes `P7.08 — Persistent Discount Parser cross-host operational contour`. This closure does not promote P6.02 beyond `Provisional 0.1.0`, does not promote a Platform Capability, and creates no external/customer Production, public/stable API/SDK/persistence format, SLA/SLO/support or broader conformance claim.
+
 Version `2.55.8` closes `P7.06-UI4 — First real owner interaction proof` and the parent `P7.06-UI — Live operator workspace over persistent runtime` as `Complete / PASS` for the declared selected-Mac `Persistent Internal / owner-operated` scope. Final proof ran on exact canonical/runtime release `1da5600963dcba982d3b1969480fd3f725133e12`. The owner entered the live private workspace in Safari, visibly confirmed Organization `aa4e760c379c8952aba6c6c335f3e233`, attributable human Actor `e4fc60984850106dbfc922ba30ec2332` and healthy exact runtime, navigated Records, Executions, Evidence and Documents, and inspected the real retained `platform.document` from the approved EIS evidence path with distinct Subject/exact Version, `External Reference` authority, ЕИС authoritative source, exact Execution/Event/checkpoint continuity and `CAP-004 reconstruction complete`.
 
 The owner saw Authorization, Organizational Authority, Data Governance and Consequential Approval remain independently `Waiting`, then clicked `Run governed preflight` once. Browser result was `WAITING / fail-closed`; no canonical mutation or external effect was requested. The exact-release selected-Mac technical verifier independently returned `PASS`, observed the browser preflight POST and confirmed technical interaction access without Organizational Authority, consequential approval, canonical mutation or product/external effect. Owner-local minimized evidence is retained canonically only by basename and SHA-256 `63416f1862168d9a464a30d1824198ad52be4439e9f43fba71360c7ac34a9f91`.
@@ -25,7 +33,7 @@ The overall `P7.06-UI` substream therefore advances from `75%` to `100% / Comple
 
 Version `2.55.7` closes `P7.06-UI3 — Persistent private operator access` as `Complete / PASS` for the declared selected-Mac `Persistent Internal / owner-operated` scope. The final operational proof ran on exact canonical checkout/runtime release `8451a5cb85c15ceb798438524f46cec87eacc981` after the bounded P7.06 consistency-recovery path repaired the previously forensically classified `UPDATE_COMMAND_FAILED` pointer/live-runtime mismatch. Recovery reconciled `current` from `d5cb521bf2565c42ad8ccf47565dda18cf9106c6` to proven live runtime/observer release `6d4d07aead603841ecce3c469dd46f5e0d58ccd5` without changing P7.03 or P7.04; owner-local recovery evidence is retained canonically only by SHA-256 `0df255294f8cc17f91aca0fc0ac4eb6eb95eb6085be1a78aeaac85d7c2d39ba3`.
 
-The ordinary canonical-checkout P7.06 governed update then advanced source `6d4d07aead603841ecce3c469dd46f5e0d58ccd5` to exact target `8451a5cb85c15ceb798438524f46cec87eacc981` under transaction `5de0529aa4c8d478ae13639b12588815c7dfbe9714f6254a6e7dcfd61344ed4c`; bounded 20-second P7.02/P7.05 stability passed. The complete UI3 proof then passed existing exact P7.04 human UI1/UI2 grant reuse with exactly one active selected human credential, supervised private launchd lifecycle, exact `127.0.0.1:8766` listener/PID attribution, owner-only private material/log minimization, unauthenticated/wrong-secret denial, owner-local unlock, bounded session and restart invalidation, uninstall/reinstall, governed rollback, historical reconciliation and final governed re-update. Controller evidence confirmed `hardened_controller_runner_verified = true`, `historical_ui3_controller_replayed = false`, `canonical_checkout_deploy_controller_verified = true` and `release_snapshot_deploy_controller_invoked = false`. Final active release, P7.02, P7.05 and UI3 status all passed; P7.03/P7.04 remained unchanged; no real UI4 interaction, Organizational Authority, consequential approval, product/external effect or historical-effect replay occurred. Owner-local UI3 attestation is retained canonically only by SHA-256 `05a30e20d1d6813ae786620fff8eb00544a04b87dfe5dabc07c2078d19b90f66`.
+The ordinary canonical-checkout P7.06 governed update then advanced source `6d4d07aead603841ecce3c469dd46f5e0d58ccd5` to exact target `8451a5cb85c15ceb798438524f46cec87eacc981` under transaction `5de0529aa4c8d478ae13639b12588815c7dfbe9714f6254a6e7dcfd61344ed4c`; bounded 20-second P7.02/P7.05 stability passed. The complete UI3 proof then passed existing exact P7.04 human UI1/UI2 grant reuse with exactly one active selected human credential, supervised private launchd lifecycle, exact `127.0.0.1:8766` listener/PID attribution, owner-only private material/log minimization, unauthenticated/wrong-secret denial, owner-local unlock, bounded session and restart invalidation, uninstall/reinstall, governed rollback, historical reconciliation and final re-update. Controller evidence confirmed `hardened_controller_runner_verified = true`, `historical_ui3_controller_replayed = false`, `canonical_checkout_deploy_controller_verified = true` and `release_snapshot_deploy_controller_invoked = false`. Final active release, P7.02, P7.05 and UI3 status all passed; P7.03/P7.04 remained unchanged; no real UI4 interaction, Organizational Authority, consequential approval, product/external effect or historical-effect replay occurred. Owner-local UI3 attestation is retained canonically only by SHA-256 `05a30e20d1d6813ae786620fff8eb00544a04b87dfe5dabc07c2078d19b90f66`.
 
 Canonical closure is recorded in [`P7.06-UI3 — Selected-Mac Operational Closure`](../reviews/P7.06-UI3-selected-mac-operational-closure.md). The overall `P7.06-UI` substream remains `Current`, advances from `50%` to `75%`, live-workspace substream advances to `0.1.10`, active Phase 7 to `1.2.10`, and the current canonical action becomes `P7.06-UI4 — First real owner interaction proof`. This closure creates no public/stable UI/API/session contract, external/customer Production, Platform Capability lifecycle promotion, Stable Product Contract, browser support matrix, SLA/support or broader conformance claim.
 
@@ -71,7 +79,7 @@ Version `2.54.8` records the repository-side implementation milestone for `P7.05
 
 P7.05 remained `Current` rather than `Complete / PASS` at version `2.54.8` because the required selected-Mac proof had not yet established the actual live launchd observer state, alert path and cleanup invariants on the designated owner-operated Mac. That gap was closed by version `2.54.9`.
 
-Version `2.54.7` closes `P7.04 — Persistent identity/operator/service access + least-privilege operations` after selected-Mac Attempt 1 passed on exact canonical `main` SHA `218e3762975a2fd6f11e8f13d4445bce5d7c94`. The proof reused the existing P6.05-L4 owner context and healthy P7.02 persistent runtime on exact release `73af746f83271b14670fe22db658dfd55cacb291`; all remaining least-privilege, attribution, rotation/revocation, remote-access and authority-separation conditions passed. The owner-local non-canonical attestation is recorded canonically only by review result and SHA-256 `5c0a67b15b7fb469bc5933030db0c2e90adfb47c3eb94411c43ba555b7d98659`. Final P7.04 functional review iteration 6 of maximum 7 is `PASS`. The current canonical action advances to P7.05.
+Version `2.54.7` closes `P7.04 — Persistent identity/operator/service access + least-privilege operations` after selected-Mac Attempt 1 passed on exact canonical `main` SHA `218e3762975a2fd6f11e8f13d4445bce5f5d7c94`. The proof reused the existing P6.05-L4 owner context and healthy P7.02 persistent runtime on exact release `73af746f83271b14670fe22db658dfd55cacb291`; all remaining least-privilege, attribution, rotation/revocation, remote-access and authority-separation conditions passed. The owner-local non-canonical attestation is recorded canonically only by review result and SHA-256 `5c0a67b15b7fb469bc5933030db0c2e90adfb47c3eb94411c43ba555b7d98659`. Final P7.04 functional review iteration 6 of maximum 7 is `PASS`. The current canonical action advances to P7.05.
 
 This closure does not create external/customer Production, an `Active` Platform Capability, Stable Product Contract, permanent IAM/credential-vault/remote-administration topology, public/stable access API, SLA/support or conformance promotion.
 
@@ -139,7 +147,7 @@ Phase 6 completed with two materially distinct real-product/workflow chains: Ten
 
 ## 6. Active Phase 7 — Operational / Enterprise Readiness
 
-Detailed roadmap: [`PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md`](PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md) — `Active 1.2.11`.
+Detailed roadmap: [`PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md`](PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md) — `Active 1.2.12`.
 
 Phase 7 converts validated owner-operated use into a persistent, recoverable, observable and operator-accessible internal operating baseline before considering stronger production/lifecycle claims.
 
@@ -152,8 +160,8 @@ Phase 7 converts validated owner-operated use into a persistent, recoverable, ob
 | `P7.05` | Health, observability, audit visibility, alerting + retention/minimization | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.06` | Governed deploy/update/rollback/version/migration path | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.06-UI` | Live operator workspace over persistent runtime | 🟩 Complete / PASS | `██████████ 100%` |
-| `P7.07` | Persistent Tender Operator operational contour | 🟨 Current | `░░░░░░░░░░ 0%` |
-| `P7.08` | Persistent Discount Parser cross-host operational contour | ⬜ | `░░░░░░░░░░ 0%` |
+| `P7.07` | Persistent Tender Operator operational contour | 🟩 Complete / PASS | `██████████ 100%` |
+| `P7.08` | Persistent Discount Parser cross-host operational contour | 🟨 Current | `░░░░░░░░░░ 0%` |
 | `P7.09` | Operator runbook + incident/uncertain-outcome/recovery drills | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.10` | Portability, host-loss and restore-on-clean-environment proof | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.11` | Scoped operational-readiness, lifecycle, conformance + stable-boundary disposition | ⬜ | `░░░░░░░░░░ 0%` |
@@ -197,9 +205,11 @@ P7.06-UI3 persistent private operator access — PASS
         ↓
 P7.06-UI4 first real owner interaction proof — PASS
         ↓
-P7.07 persistent Tender Operator operational contour ← current
+P7.07 persistent Tender Operator operational contour — PASS
         ↓
-P7.08–P7.12 workload expansion + hardening
+P7.08 persistent Discount Parser cross-host operational contour ← current
+        ↓
+P7.09–P7.12 hardening + closure
 ```
 
 P7.02 passed on exact selected-Mac release `73af746f83271b14670fe22db658dfd55cacb291`. P7.03 subsequently established the bounded durable-state/checkpoint and backup/restore baseline. P7.04 is `Complete / PASS` after repository implementation, six-iteration functional review and selected-Mac Attempt 1. P7.05 is `Complete / PASS` after PR `#37`, `960/960` Reference Python CI, four-iteration functional review and selected-Mac Attempt 1 on exact canonical release `cf60e52c93bf0ef4158cf2c3e26792850a126c70`. R22 is `Complete / PASS` after remediation PR `#39` and `964/964` Reference Python CI. P7.06 is `Complete / PASS` after PR #49 repository hardening and selected-Mac Attempt 8 proved exact update, rollback and final re-update to `4df99c4c66a1b7b93a4b05d7768018b03aa4041b`.
@@ -209,6 +219,8 @@ P7.06-UI1 repository implementation and cross-review passed through PR `#51`; th
 UI3 is `Complete / PASS`. The selected-Mac final proof first recovered the pointer/live-runtime mismatch without changing P7.03/P7.04, then used the ordinary canonical-checkout P7.06 governed update to exact target `8451a5cb85c15ceb798438524f46cec87eacc981`, passed exact-release stability, and completed private listener/access/session/lifecycle/rollback/re-update evidence with final UI3 SHA-256 `05a30e20d1d6813ae786620fff8eb00544a04b87dfe5dabc07c2078d19b90f66`.
 
 UI4 is also `Complete / PASS`. On exact canonical/runtime release `1da5600963dcba982d3b1969480fd3f725133e12`, the owner successfully entered the private Safari workspace after PR `#73` remediation, confirmed Organization/Actor/healthy exact runtime, navigated Records/Executions/Evidence/Documents, inspected the retained EIS `platform.document` exact Subject/Version plus Execution/Event/checkpoint provenance/reconstruction, saw all four action gates independently `Waiting`, and executed a real browser preflight with `WAITING / fail-closed`. The technical verifier independently passed and confirmed browser POST observation, technical interaction access only, no Organizational Authority or consequential approval, no canonical mutation and no product/external effect. Owner-local minimized evidence SHA-256: `63416f1862168d9a464a30d1824198ad52be4439e9f43fba71360c7ac34a9f91`. The material Safari unlock defect found during proof was remediated, regression-covered, CI-passed, governed-update deployed and re-proved. `P7.06-UI = Complete / PASS` at `100%`.
+
+P7.07 is `Complete / PASS`. Repository implementation merged through PR `#75`; selected-Mac Attempt 1 correctly failed closed on a dynamic product-bridge module-registration defect; remediation PR `#76` merged at `b0c18fba15de6b5abac83a4f583d89eedb5c03d1` with Reference Python CI `#157 = success`. Attempt 2 then governed-updated the selected Mac to that exact release, reused the exact existing P7.07 governed item idempotently, proved the actual canonical Tender Agent bridge and CAP-001 exact reliance before and after supervised restart, advanced runtime generation `59 → 60`, preserved `previous_instance_id`, left the P7.03 governed-state digest unchanged, preserved exact P6.02 `0.1.0` and EIS `External Reference` authority, and produced no network/EIS retrieval, ordinary-read canonical mutation or external effect. Owner-local evidence SHA-256: `9613637b06c5d192311bda1eb3096a9cd0b49c016134af887697637a668cf0f8`.
 
 ## 7. M7 milestone definition
 
@@ -250,8 +262,8 @@ A roadmap phase transition does not itself change lifecycle, production readines
 
 ## 11. Current canonical action
 
-> **P7.07 — Persistent Tender Operator operational contour.**
+> **P7.08 — Persistent Discount Parser cross-host operational contour.**
 
-P7.06 core and the entire P7.06-UI1 through UI4 live operator-workspace substream are `Complete / PASS` for their declared scopes. UI4 closed on exact canonical/runtime release `1da5600963dcba982d3b1969480fd3f725133e12` with real owner browser navigation, exact retained-state/provenance/reconstruction inspection and a real fail-closed browser preflight. The material Safari unlock defect found during owner proof was remediated through PR `#73`, regression-covered, CI-passed, deployed through the existing governed update path and successfully re-proved.
+P7.07 is `Complete / PASS` for the declared selected-Mac `Persistent Internal / owner-operated` scope. The exact P6.02 `Provisional 0.1.0` boundary, attributable persistent owner context, `External Reference` EIS authority, item-scoped P7.04 read authorization, real product-owned bridge, exact CAP-001 Subject/Version/Artifact/integrity reliance and byte-stable P7.03 state survived an actual supervised runtime restart with no unauthorized canonical or external effect.
 
-The next canonical action is P7.07: make Tender Operator a repeatable ongoing consumer of the persistent internal Arvectum OS runtime while preserving the exact applicable Product Contract boundary, external EIS authority, attributable persistent context and ordinary RFC-0003/RFC-0005 governance. P7.08 remains downstream.
+The next canonical action is P7.08: make the Discount Parser Windows ↔ Mac mini evidence/reconstruction path operationally repeatable while preserving the exact applicable Product Contract boundary or justified revision, CAP-004-only reliance unless evidence proves otherwise, minimized evidence transfer, replay safety, no secret/identity over-transfer and no hidden shared state. P7.09 remains downstream.

@@ -1,7 +1,7 @@
 # Arvectum OS Phase 7 — Operational / Enterprise Readiness
 
 Status: `Active`
-Version: `1.2.11`
+Version: `1.2.12`
 Created: `2026-08-17`
 Updated: `2026-08-19`
 Owner: `ООО «Арвектум»`
@@ -47,8 +47,8 @@ P7.02 has passed. The selected Mac mini therefore operates in `Persistent Intern
 | `P7.05` | Health, observability, audit visibility, alerting + retention/minimization | Mac mini + GitHub | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.06` | Governed deploy/update/rollback/version/migration path | Mac mini + GitHub | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.06-UI` | Live operator workspace over persistent runtime | Mac mini + browser + GitHub | 🟩 Complete / PASS | `██████████ 100%` |
-| `P7.07` | Persistent Tender Operator operational contour | Mac mini + product environment + GitHub | 🟨 Current | `░░░░░░░░░░ 0%` |
-| `P7.08` | Persistent Discount Parser cross-host operational contour | Windows + Mac mini + GitHub | ⬜ | `░░░░░░░░░░ 0%` |
+| `P7.07` | Persistent Tender Operator operational contour | Mac mini + product environment + GitHub | 🟩 Complete / PASS | `██████████ 100%` |
+| `P7.08` | Persistent Discount Parser cross-host operational contour | Windows + Mac mini + GitHub | 🟨 Current | `░░░░░░░░░░ 0%` |
 | `P7.09` | Operator runbook + incident/uncertain-outcome/recovery drills | Mac mini + GitHub | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.10` | Portability, host-loss and restore-on-clean-environment proof | Mac mini + secondary clean environment + GitHub | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.11` | Scoped operational-readiness, lifecycle, conformance + stable-boundary disposition | Chat/GitHub + evidence | ⬜ | `░░░░░░░░░░ 0%` |
@@ -217,11 +217,31 @@ The Safari defect found by the owner proof is part of the closure evidence rathe
 
 ### P7.07 — Persistent Tender Operator operational contour
 
-Status: `Current`.
+Status: `Complete / PASS`.
 
-Run the first real product as an ongoing consumer of the persistent internal Arvectum OS runtime, preserving the exact Product Contract boundary or creating a justified new version before reliance, external EIS authority, persistent attributable context, restart survivability and no unauthorized external mutation or procurement-domain leakage.
+Canonical evidence:
+
+- [`P7.07 implementation`](../implementation/P7-07-PERSISTENT-TENDER-OPERATOR-CONTOUR.md) — `Complete / PASS`;
+- [`P7.07 functional cross-review`](../reviews/P7-07-persistent-tender-operator-contour-review.md) — repository review complete with no remaining material repository-design objection;
+- [`P7.07 Selected-Mac Attempt 1 product-bridge loader blocker`](../reviews/P7-07-selected-mac-attempt-1-loader-blocker.md) — fail-closed blocker preserved and remediated canonically;
+- initial implementation PR `#75`, merge `bf1a3047aadf03384c9525eacd4e186a53092c11`;
+- loader remediation PR `#76`, merge `b0c18fba15de6b5abac83a4f583d89eedb5c03d1`;
+- Reference Python CI `#157 = success`;
+- [`P7.07 — Selected-Mac Operational Closure`](../reviews/P7-07-selected-mac-operational-closure.md) — `Complete / PASS`;
+- exact selected-Mac active release: `b0c18fba15de6b5abac83a4f583d89eedb5c03d1`;
+- P7.06 update transaction: `7826f811cce4bc88a0e9a915e3806f6d23cb456428f8c53424d024342ebc33ec`;
+- exact retained P7.07 storage item: `53061324eec2b46fefd04d6f19bddbcc42d2a3ebfc5e7120f10a616e693a0795`;
+- selected-Mac evidence SHA-256: `9613637b06c5d192311bda1eb3096a9cd0b49c016134af887697637a668cf0f8`.
+
+Selected-Mac Attempt 2 reused the existing persistent Organization/human Principal and exact item-scoped P7.04 read grant, returned `PASS_IDEMPOTENT_EXISTING` without creating a new governed item/checkpoint, loaded the real canonical product-owned bridge and returned `PASS_EXACT_CAP001_RELIANCE` both before and after an actual supervised P7.02 restart. Runtime generation advanced `59 → 60`, the runtime instance changed, `previous_instance_id` continuity passed, and P7.03 governed-state digest remained byte-stable at `da558333e0d98beac96298703326ca9d660db9098a3b0f2aa94b18c14d5a07a1`.
+
+The two reads preserved the same exact storage item, Document Subject, exact Version, Artifact, integrity reference, P6.02 `0.1.0`, `External Reference` authority and authoritative source `ЕИС / zakupki.gov.ru`. No new EIS/SOAP retrieval, contour network action, ordinary-read canonical mutation, external effect, raw tender-byte exposure, credential-secret exposure or AI authority expansion occurred.
+
+P7.07 closure does not promote P6.02 beyond `Provisional 0.1.0`, does not promote a Platform Capability and does not establish external/customer Production, public/stable persistence/API/SDK boundaries, SLA/SLO/support or broader conformance.
 
 ### P7.08 — Persistent Discount Parser cross-host operational contour
+
+Status: `Current`.
 
 Make the Windows product ↔ Mac mini evidence/reconstruction path operationally repeatable while preserving the exact Product Contract or justified revision, CAP-004-only boundary unless evidence proves otherwise, minimized evidence transfer, replay safety, no secret/identity over-transfer and no hidden shared state.
 
@@ -265,8 +285,8 @@ M7 does **not** inherently require external customer Production, public multi-te
 
 ## 8. Current canonical action
 
-> **P7.07 — Persistent Tender Operator operational contour.**
+> **P7.08 — Persistent Discount Parser cross-host operational contour.**
 
-P7.06 core and the complete P7.06-UI1 through UI4 operator-workspace substream are `Complete / PASS` for their declared scopes. UI4 closed on exact canonical/runtime release `1da5600963dcba982d3b1969480fd3f725133e12` with real owner browser navigation, exact retained-state/provenance inspection, a real browser preflight POST and `WAITING / fail-closed` result. The selected-owner technical verifier independently passed, and the material Safari unlock defect discovered during proof was remediated, regression-covered, governed-update deployed and re-proved.
+P7.07 is `Complete / PASS` for the declared selected-Mac `Persistent Internal / owner-operated` scope. The exact P6.02 `Provisional 0.1.0` boundary, attributable persistent owner context, `External Reference` EIS authority, exact item-scoped P7.04 read grant, real product-owned bridge, exact CAP-001 reliance and byte-stable P7.03 governed state survived an actual supervised restart without unauthorized canonical or external effect.
 
-The next action is P7.07: make Tender Operator a repeatable ongoing consumer of the persistent internal Arvectum OS runtime while preserving its explicit Product Contract, external EIS authority and ordinary RFC-0003/RFC-0005 governance. P7.08 remains downstream.
+The next action is P7.08: make the Windows product ↔ Mac mini evidence/reconstruction path operationally repeatable while preserving the exact Product Contract or justified revision, CAP-004-only boundary unless evidence proves otherwise, minimized evidence transfer, replay safety, no secret/identity over-transfer and no hidden shared state. P7.09 remains downstream.
