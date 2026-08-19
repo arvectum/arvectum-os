@@ -63,7 +63,8 @@ def _validate_sha(value: str, label: str) -> str:
 
 def canonical_head(repo_root: Path) -> str:
     repo_root = repo_root.expanduser().resolve()
-    if not (repo_root / ".git").exists():
+    inside = _run(["git", "rev-parse", "--is-inside-work-tree"], cwd=repo_root, timeout=15)
+    if inside.returncode != 0 or inside.stdout.strip() != "true":
         raise UI3GovernedControllerError("canonical repository checkout is unavailable")
 
     branch = _run(["git", "branch", "--show-current"], cwd=repo_root, timeout=15)
@@ -95,7 +96,7 @@ def canonical_head(repo_root: Path) -> str:
 
 def _runtime_root(root: Path) -> Path:
     value = root.expanduser().resolve()
-    if not value.is_dir() or value.is_symlink():
+    if not value.is_dir():
         raise UI3GovernedControllerError("runtime root is unavailable or unsafe")
     return value
 
