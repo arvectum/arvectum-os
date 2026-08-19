@@ -1,7 +1,7 @@
 # Arvectum OS Phase 7 — Operational / Enterprise Readiness
 
 Status: `Active`
-Version: `1.2.14`
+Version: `1.2.15`
 Created: `2026-08-17`
 Updated: `2026-08-19`
 Owner: `ООО «Арвектум»`
@@ -50,7 +50,7 @@ P7.02 has passed. The selected Mac mini therefore operates in `Persistent Intern
 | `P7.07` | Persistent Tender Operator operational contour | Mac mini + product environment + GitHub | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.08` | Persistent Discount Parser cross-host operational contour | Windows + Mac mini + GitHub | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.09` | Operator runbook + incident/uncertain-outcome/recovery drills | Mac mini + GitHub | 🟩 Complete / PASS | `██████████ 100%` |
-| `P7.10` | Portability, host-loss and restore-on-clean-environment proof | Mac mini + secondary clean environment + GitHub | 🟨 Current | `░░░░░░░░░░ 0%` |
+| `P7.10` | Portability, host-loss and restore-on-clean-environment proof | Mac mini + secondary clean environment + GitHub | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.11` | Scoped operational-readiness, lifecycle, conformance + stable-boundary disposition | Chat/GitHub + evidence | ⬜ | `░░░░░░░░░░ 0%` |
 | `P7.12` | Phase 7 / M7 closure review | Chat/GitHub | ⬜ | `░░░░░░░░░░ 0%` |
 
@@ -62,7 +62,7 @@ P7.02 has passed. The selected Mac mini therefore operates in `Persistent Intern
 |---|---|---|---|
 | [`R21 — Operational Boundary Review`](../reviews/R21-operational-boundary-review.md) | after `P7.01`, before material persistent-runtime implementation | 🟩 `Complete / PASS` | prevent persistent use from silently selecting unsupported production, public API, storage, IAM or deployment commitments |
 | [`R22 — Persistent Runtime Health Review`](../reviews/R22-persistent-runtime-health-review.md) | after `P7.05`, before operational workload expansion | 🟩 `Complete / PASS` | review runtime/service boundaries, durability, access, observability, secrets, dependency direction, failure semantics and operator friction |
-| `R23 — Recovery / Portability Review` | after `P7.10`, before lifecycle/readiness decisions | ⬜ | verify backup/restore, host-loss recovery, semantic portability, exact identities/versions/provenance and absence of host-specific hidden authority |
+| `R23 — Recovery / Portability Review` | after `P7.10`, before lifecycle/readiness decisions | 🟨 `Current` | verify backup/restore, host-loss recovery, semantic portability, exact identities/versions/provenance and absence of host-specific hidden authority |
 | `R24 — M7 Operational Hardening` | after `P7.11`, before `P7.12` | ⬜ | final bounded architecture/code/security/maintainability/fitness review and required M7 Milestone Code Health Gate |
 
 These gates are engineering/governance checkpoints, not lifecycle transitions or formal Production approvals.
@@ -284,13 +284,32 @@ P7.09 closure satisfies M7 criterion 9 for the declared scope. It creates no Pro
 
 ### P7.10 — Portability, host-loss and restore-on-clean-environment proof
 
-Status: `Current`.
+Status: `Complete / PASS`.
 
-Prove organizational continuity beyond the selected Mac mini through an export/backup package, clean secondary restore, selected historical reconstruction, explicit host-specific adapters/configuration and honest portability gaps without copying non-exportable secrets merely to claim portability.
+Canonical evidence:
 
-P7.10 must explicitly include the P7.09-selected-Mac `/var` symlink/path full-suite discrepancy in the portability evidence matrix: determine whether it is a test-environment-only path presentation issue, a host-specific assumption requiring an adapter, or a material portability defect. Do not normalize it away without evidence.
+- [`P7.10 — Implementation Readiness Review`](../reviews/P7-10-implementation-readiness.md) — repository implementation and automated mechanism proof;
+- [`P7.10 — Selected-Mac Operational Attempt 2`](../reviews/P7-10-selected-mac-attempt-2-clean-parent-failure.md) — preserved fail-closed secondary-parent failure;
+- [`P7.10 — Canonical Closure`](../reviews/P7-10-canonical-closure.md) — final operational closure;
+- implementation PR `#83`, merge `393cc5bff98cc87553b96d282f4bf618621fd87a`;
+- restore-parent remediation PR `#86`, merge `16621a1abc814a92e8fed0d0a3451946be6f8303`, final full CI `1192 tests / OK`;
+- exact-release procedure correction PR `#87`, merge `de59771281ce1b4c58d943bd003560384e332270`;
+- exact retained handoff/tool release `fbab170ab337c1631b40d0d36ea58a02f6512f6e`;
+- archive SHA-256 `074f2a4e84e222bd26d6ed21a829aa0dcc1c91834479345cfa652405b721bfbd`;
+- handoff manifest SHA-256 `fe0d2c7d9460f9da4356a3a3f7419b825b8aef3a8d18123ab35fb0281db3ada9`;
+- owner-local receipt basename `p7-10-clean-restore-receipt-attempt-3.json`, SHA-256 `ab7bf132d3d3a1304e3582c25fbd80a783d36c7bee9e5e6439ed4c54780aa341`.
 
-**R23 follows P7.10.**
+The actual selected-Mac P7.03 governed store crossed the host-loss boundary through the unchanged verified four-member handoff and restored successfully on a separate clean MacBook Air environment. P7.03 integrity remained `PASS`; governed-state SHA-256 `da558333e0d98beac96298703326ca9d660db9098a3b0f2aa94b18c14d5a07a1` matched the source handoff; selected historical reconstruction passed; two governed items and two checkpoints were retained; reusable secrets, excluded runtime paths, external-effect replay and Organizational Authority grant remained absent.
+
+Attempt 2 remains fail-closed evidence: a target directly beneath a macOS home directory with mode `0750` was rejected before publication. Closure used a dedicated non-symlink `0700` immediate restore parent without weakening the home-directory policy. The same handoff was restored at its exact embedded release rather than rebuilt or relabelled after documentation/test-only corrections.
+
+The P7.09 `/var` versus `/private/var` discrepancy is dispositioned as a host path-presentation/environment issue only when physical filesystem identity proves equivalence. Lexical aliases resolving to different objects remain material and fail closed where same-location identity is required. The actual selected-Mac persistent source was the established owner-local runtime root, not `/var/lib/arvectum-os`.
+
+P7.10 satisfies M7 criterion 10. Host/service-manager paths, machine-local credentials/secrets, network/proxy/TLS configuration and OS-specific ownership plumbing remain target-environment reprovisioning responsibilities rather than portable semantic state.
+
+P7.10 closure creates no Production claim, lifecycle promotion, Stable Product Contract, Active Platform Capability, public/stable recovery/export format, permanent persistence technology, SLA/SLO/RPO/RTO/support commitment or broader conformance claim.
+
+**R23 follows P7.10 and is now Current.**
 
 ### P7.11 — Scoped operational-readiness, lifecycle, conformance + stable-boundary disposition
 
@@ -318,14 +337,13 @@ Close M7 only after declared Phase 7 work and R21–R24 findings are disposition
 12. all R21–R24 material findings are closed or accepted by appropriate authority;
 13. the required M7 Milestone Code Health Gate passes before closure.
 
-M7 criterion 9 is satisfied by P7.09 for the declared `Persistent Internal / owner-operated` scope. Criteria 10–13 remain downstream.
+M7 criteria 9 and 10 are satisfied by P7.09 and P7.10 respectively for the declared `Persistent Internal / owner-operated` scope. Criteria 11–13 remain downstream.
 
 M7 does **not** inherently require external customer Production, public multi-tenancy, an `Active` capability, Stable Product Contract, public SDK/API, SLA/support promise or one mandatory storage/IAM/deployment technology.
 
 ## 8. Current canonical action
+> **R23 — Recovery / Portability Review.**
 
-> **P7.10 — Portability, host-loss and restore-on-clean-environment proof.**
+P7.10 is `Complete / PASS`: the real selected-Mac governed store was handed off beyond the host-loss boundary and restored on a separate clean secondary environment with exact-release binding, P7.03 integrity, governed-state digest, selected historical reconstruction, exclusions, no-effect-replay and no-authority checks all passing. M7 criterion 10 is satisfied.
 
-P7.09 is `Complete / PASS` for the declared `Persistent Internal / owner-operated` scope. The versioned runbook/evaluator and selected-Mac evidence cover the required failure semantics and recovery decisions, including actual owner-initiated host restart continuity. Technical recovery remains distinct from Organizational Authority and consequential approval, uncertain external effects remain reconciliation-required, and historical effects are not replayed.
-
-The next action is P7.10: prove organizational continuity beyond the selected Mac mini on a clean secondary environment, including explicit treatment of the observed `/var` path/symlink portability discrepancy. R23 follows P7.10.
+R23 now reviews the accumulated recovery/portability evidence before P7.11 performs scoped operational-readiness, lifecycle, conformance and stable-boundary disposition. R23 does not itself promote a capability, stabilize a Product Contract or approve Production.
