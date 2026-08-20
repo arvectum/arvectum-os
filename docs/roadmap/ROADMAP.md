@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.66.0`
+Version: `2.67.0`
 Created: `2026-08-07`
 Updated: `2026-08-20`
 Owner: `ООО «Арвектум»`
@@ -16,6 +16,8 @@ Roadmap status does not itself change Platform Capability lifecycle, Product Con
 Detailed completed-phase history remains in the corresponding phase roadmaps, reviews and repository history rather than being duplicated indefinitely in this master roadmap.
 
 ## 2. Version note
+
+Version `2.67.0` completes P8.09 External operator/developer integration experience + documentation as `Complete / PASS`, synchronizes the detailed Phase 8 roadmap to `1.7.0`, records the bounded Creative Test Agent integration runbook and five documentation/behavior regression tests, and advances the current canonical action to R27. The documented path pins exact external source/declaration/Product Contract/CAP-004/provider-governance evidence, includes executable source verification, preserves exact dependency and least-privilege checks, keeps reusable secrets outside declarations/contracts/receipts/logs/prompts/exports, makes fail-closed errors and evidence/reconstruction inspection explicit, and documents lifecycle-aware upgrade/deprecation/disable/remove/termination behavior. `Reference Python CI` run `#199` passed with `1264 tests / OK`. The result remains bounded reference evidence rather than a public/stable SDK/API/manifest/registry/general compatibility promise; Creative Test Agent business semantics remain product-owned and P8.08 realistic multi-Organization isolation remains `NOT ACTIVATED / NOT PROVEN`. No Platform Capability/Product Contract lifecycle, external/customer readiness, conformance or commercial status changes.
 
 Version `2.66.0` dispositions P8.08 Multi-Organization isolation + cross-organization security validation as `Complete / NOT ACTIVATED`, synchronizes the detailed Phase 8 roadmap to `1.6.0` and advances the current canonical action to P8.09. The canonical Phase 8 scope still contains exactly one governing Organization and no genuine second Organization/customer rights scope, so no synthetic Organization was fabricated and no realistic two-Organization isolation claim is made. Existing fail-closed Organization-mismatch, authority/access, external-transfer and cross-Organization reuse guards remain the bounded evidence available today. Realistic storage/query/index/cache/background/observability/admin/AI-context isolation remains explicitly unproven until a genuine second Organization is canonically activated through an applicable governed basis. No Platform Capability/Product Contract lifecycle, external/customer readiness, conformance, public/stable surface or commercial status changes.
 
@@ -116,6 +118,19 @@ P8.08 then revalidated the multi-Organization activation condition without fabri
 - re-entry requires a genuine second Organization plus explicit rights/scope/authority and a fresh governed evidence path;
 - review evidence: [`P8-08-multi-organization-isolation-cross-organization-security-validation.md`](../reviews/P8-08-multi-organization-isolation-cross-organization-security-validation.md).
 
+P8.09 then made the already validated external-consumer boundary repeatable for operators/developers without generalizing it into a stable platform surface:
+
+- bounded runbook: [`P8-09-EXTERNAL-OPERATOR-DEVELOPER-INTEGRATION-RUNBOOK.md`](../implementation/P8-09-EXTERNAL-OPERATOR-DEVELOPER-INTEGRATION-RUNBOOK.md) `1.0.0`;
+- exact external source/declaration/Product Contract/CAP-004/provider-governance pins and copyable source-hash verification;
+- exact contract/dependency validation, least-privilege access context and fail-closed no-fallback behavior;
+- reusable secrets kept outside declarations/contracts/receipts/logs/prompts/exports, with separate reprovision/revocation guidance;
+- ordered evidence/reconstruction inspection and explicit point-in-time receipt non-authority semantics;
+- explicit upgrade/deprecation/disable/remove/termination path;
+- five regression tests lock documentation to executable P8.06 behavior;
+- `Reference Python CI` run `#199`: `1264 tests / OK`;
+- functional cross-review: four iterations, no material objection after three usability/drift fixes;
+- review evidence: [`P8-09-external-operator-developer-integration-experience-documentation.md`](../reviews/P8-09-external-operator-developer-integration-experience-documentation.md).
+
 Activation boundary:
 
 - governing Organization: `ООО «Арвектум»` only;
@@ -128,7 +143,8 @@ Activation boundary:
 - R25 and R26: `Complete / PASS`;
 - P8.07 external customer/cross-Organization transfer: `NOT ACTIVATED`;
 - P8.08 realistic two-Organization isolation: `NOT ACTIVATED / NOT PROVEN`;
-- no second Organization, customer Production, Stable Product Contract, Active Platform Capability, public/stable connector/API/manifest/registry/export format, SLA/support or redistribution-right claim is created.
+- P8.09 external operator/developer experience: `Complete / PASS` for the exact bounded case only;
+- no second Organization, customer Production, Stable Product Contract, Active Platform Capability, public/stable connector/API/SDK/manifest/registry/export format, SLA/support or redistribution-right claim is created.
 
 Canonical facts preserved from `2.59.0`:
 
@@ -279,7 +295,7 @@ Telegram remains product-local on current evidence. The Discount Parser public-s
 
 ## 8. Active Phase 8 — Ecosystem and External Integration
 
-Detailed roadmap: [`PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md`](PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md) — `Active 1.6.0`.
+Detailed roadmap: [`PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md`](PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md) — `Active 1.7.0`.
 
 | ID | Work item | Status |
 |---|---|---:|
@@ -293,8 +309,8 @@ Detailed roadmap: [`PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md`](PHASE-8-ECOSYSTE
 | `R26` | Cross-Organization Security / Integration Health Review | 🟩 Complete / PASS |
 | `P8.07` | Portability/export/migration/customer-handover interoperability proof | 🟩 Complete / PASS |
 | `P8.08` | Multi-Organization isolation + cross-organization security validation | 🟩 Complete / NOT ACTIVATED |
-| `P8.09` | External operator/developer integration experience + documentation | 🟨 Current |
-| `R27` | Portability / Ecosystem Reuse Review | ⬜ Pending gate |
+| `P8.09` | External operator/developer integration experience + documentation | 🟩 Complete / PASS |
+| `R27` | Portability / Ecosystem Reuse Review | 🟨 Current |
 | `P8.10` | Scoped external conformance/commercial/support boundary review | ⬜ Pending |
 | `P8.11` | Ecosystem architecture hardening + ADR/refactoring/lifecycle disposition | ⬜ Pending |
 | `R28` | M8 Ecosystem Hardening + Milestone Code Health Gate | ⬜ Pending gate |
@@ -312,7 +328,9 @@ Completed active-phase preparation/evidence:
 - [`P8.06 external consumer onboarding/dependency-resolution review`](../reviews/P8-06-external-product-extension-onboarding-governed-dependency-resolution.md);
 - [`R26 Cross-Organization Security / Integration Health Review`](../reviews/R26-cross-organization-security-integration-health-review.md);
 - [`P8.07 portability/export/migration/customer-handover interoperability proof`](../reviews/P8-07-portability-export-migration-customer-handover-interoperability-proof.md);
-- [`P8.08 multi-Organization isolation activation disposition`](../reviews/P8-08-multi-organization-isolation-cross-organization-security-validation.md).
+- [`P8.08 multi-Organization isolation activation disposition`](../reviews/P8-08-multi-organization-isolation-cross-organization-security-validation.md);
+- [`P8.09 external operator/developer integration runbook`](../implementation/P8-09-EXTERNAL-OPERATOR-DEVELOPER-INTEGRATION-RUNBOOK.md);
+- [`P8.09 integration experience review`](../reviews/P8-09-external-operator-developer-integration-experience-documentation.md).
 
 ### Current critical path
 
@@ -339,9 +357,9 @@ P8.07 portability / handover proof          PASS (bounded; external transfer not
         ↓
 P8.08 cross-Organization isolation validation NOT ACTIVATED (no second Organization in canonical scope)
         ↓
-P8.09 external integration UX/docs          CURRENT
+P8.09 external integration UX/docs          PASS
         ↓
-R27 Portability / Ecosystem Reuse Review
+R27 Portability / Ecosystem Reuse Review    CURRENT
         ↓
 P8.10 external claims boundary
         ↓
@@ -352,7 +370,7 @@ R28 M8 hardening + code-health gate
 P8.12 M8 closure
 ```
 
-P8.04 was the first current task requiring the real owner-operated Tender Operator/EIS runtime, existing credentials/trust path and owner-only raw artifacts; it completed with a verified live `NO_CHANGE`. P8.05, P8.06, R26 and P8.07 then completed repository-side semantic/evidence/review work without expanding the P8.03 read-only EIS rights boundary, inventing a customer/recipient or requiring new local execution. P8.08 revalidated the conditional multi-Organization gate and closed as `NOT ACTIVATED` because canonical scope still has one governing Organization; no synthetic Organization was introduced and realistic two-Organization isolation remains explicitly unproven. Actual external customer/cross-Organization handover remains unactivated.
+P8.04 was the first current task requiring the real owner-operated Tender Operator/EIS runtime, existing credentials/trust path and owner-only raw artifacts; it completed with a verified live `NO_CHANGE`. P8.05, P8.06, R26, P8.07 and P8.09 then completed repository-side semantic/evidence/review work without expanding the P8.03 read-only EIS rights boundary, inventing a customer/recipient or requiring new local execution. P8.08 revalidated the conditional multi-Organization gate and closed as `NOT ACTIVATED` because canonical scope still has one governing Organization; no synthetic Organization was introduced and realistic two-Organization isolation remains explicitly unproven. Actual external customer/cross-Organization handover remains unactivated.
 
 ## 9. M8 milestone definition
 
@@ -373,7 +391,7 @@ P8.04 was the first current task requiring the real owner-operated Tender Operat
 13. R25–R28 material findings are dispositioned;
 14. the M8 Milestone Code Health Gate passes before closure.
 
-If the activated scope does not include a second Organization, public API, customer deployment or handover recipient, M8 closure must state those limitations and must not imply validation of those classes. P8.06 provides one real external consumer proof only for its bounded read-only Provisional contract; R26 does not broaden that scope; P8.07 proves only bounded interoperability mechanics and leaves actual external customer/cross-Organization transfer `NOT ACTIVATED`; P8.08 confirms that realistic two-Organization isolation is likewise `NOT ACTIVATED / NOT PROVEN` under the current one-Organization scope.
+If the activated scope does not include a second Organization, public API, customer deployment or handover recipient, M8 closure must state those limitations and must not imply validation of those classes. P8.06 provides one real external consumer proof only for its bounded read-only Provisional contract; R26 does not broaden that scope; P8.07 proves only bounded interoperability mechanics and leaves actual external customer/cross-Organization transfer `NOT ACTIVATED`; P8.08 confirms that realistic two-Organization isolation is likewise `NOT ACTIVATED / NOT PROVEN` under the current one-Organization scope; P8.09 makes only that exact existing external-consumer integration repeatable and does not create general compatibility.
 
 ## 10. Non-goals and invariant guardrails
 
@@ -414,6 +432,6 @@ Successful integration is evidence, not automatic lifecycle promotion.
 
 ## 12. Current canonical action
 
-> **P8.09 — External operator/developer integration experience + documentation.**
+> **R27 — Portability / Ecosystem Reuse Review.**
 
-P8.08 is `Complete / NOT ACTIVATED`: no genuine second Organization is canonically in scope, no synthetic Organization/customer/rights grant was fabricated, and realistic two-Organization isolation remains explicitly unproven until the documented re-entry trigger is satisfied. Existing bounded fail-closed cross-Organization guards remain in force. P8.09 is now the current canonical action; this sequencing change does not alter lifecycle/readiness/conformance/public-surface/commercial status.
+P8.09 is `Complete / PASS` for the exact bounded Creative Test Agent integration experience, with `Reference Python CI #199` at `1264 tests / OK`. P8.08 remains `Complete / NOT ACTIVATED`: no genuine second Organization is canonically in scope, no synthetic Organization/customer/rights grant was fabricated, and realistic two-Organization isolation remains explicitly unproven until the documented re-entry trigger is satisfied. R27 is now the current canonical action; this sequencing change does not alter lifecycle/readiness/conformance/public-surface/commercial status.

@@ -1,7 +1,7 @@
 # Arvectum OS Phase 8 — Ecosystem and External Integration
 
 Status: `Active`
-Version: `1.6.0`
+Version: `1.7.0`
 Created: `2026-08-17`
 Updated: `2026-08-20`
 Activated: `2026-08-20`
@@ -14,6 +14,8 @@ Predecessor: `Phase 7 / M7 — Complete / PASS`
 Restoration decision: [`DECISION-2026-08-17-PHASE-7-8-ROADMAP-RESTORATION`](../governance/decisions/DECISION-2026-08-17-PHASE-7-8-ROADMAP-RESTORATION.md)
 Pre-activation plan: [`P8-00-PHASE-8-ACTIVATION-BOUNDARY-REVALIDATION.md`](P8-00-PHASE-8-ACTIVATION-BOUNDARY-REVALIDATION.md) — `Complete / PASS 1.3.0`
 Activation decision: [`DECISION-2026-08-20-PHASE-8-ACTIVATION`](../governance/decisions/DECISION-2026-08-20-PHASE-8-ACTIVATION.md) — `Approved`
+
+Version `1.7.0` completes P8.09 External operator/developer integration experience + documentation as `Complete / PASS`: the already validated P8.06 Creative Test Agent external-consumer boundary now has a bounded operator/developer runbook with exact source/declaration/Product Contract/CAP-004/provider-governance pins, executable source verification, contract/dependency validation, safe secret/configuration rules, predictable fail-closed outcomes, evidence/reconstruction inspection and explicit upgrade/deprecation/disable/remove/termination guidance. Five regression tests keep the runbook aligned with executable P8.06 semantics; repository `Reference Python CI` run `#199` passed with `1264 tests / OK`. The runbook remains reference evidence rather than a public/stable SDK/API/manifest/registry or general compatibility promise, preserves Creative Test Agent product ownership and P8.08 `NOT ACTIVATED / NOT PROVEN` realistic multi-Organization isolation, and advances the current canonical action to R27 without changing Platform Capability/Product Contract lifecycle, readiness, conformance or commercial status.
 
 Version `1.6.0` dispositions P8.08 as `Complete / NOT ACTIVATED`: canonical Phase 8 still contains exactly one governing Organization and no second Organization/customer rights scope, so realistic two-Organization isolation cannot be truthfully exercised. No synthetic Organization, customer, rights record or tenant grant was created. Existing fail-closed Organization-mismatch, authority/access, transfer and cross-Organization reuse guards remain the bounded evidence available today; realistic storage/query/index/cache/background/observability/admin/AI-context isolation remains explicitly unproven until a genuine second Organization is canonically activated. The review defines a concrete re-entry trigger and minimum future proof and advances the current canonical action to P8.09 without changing Platform Capability/Product Contract lifecycle, readiness, conformance, public-surface or commercial status.
 
@@ -91,8 +93,8 @@ No second Organization, customer or portability recipient is implied by activati
 | `R26` | Cross-Organization Security / Integration Health Review | P8.06 | 🟩 Complete / PASS | bounded security/isolation/integration-health review |
 | `P8.07` | Portability/export/migration/customer-handover interoperability proof | R26 | 🟩 Complete / PASS | bounded governed interoperability proof; external transfer not activated |
 | `P8.08` | Multi-Organization isolation + cross-organization security validation | P8.07 | 🟩 Complete / NOT ACTIVATED | activation-condition disposition + explicit unproven realistic isolation scope |
-| `P8.09` | External operator/developer integration experience + documentation | P8.08 | 🟨 Current | bounded repeatable integration experience |
-| `R27` | Portability / Ecosystem Reuse Review | P8.09 | ⬜ Pending gate | reuse/portability/no-speculative-generalization review |
+| `P8.09` | External operator/developer integration experience + documentation | P8.08 | 🟩 Complete / PASS | bounded repeatable integration experience |
+| `R27` | Portability / Ecosystem Reuse Review | P8.09 | 🟨 Current | reuse/portability/no-speculative-generalization review |
 | `P8.10` | Scoped external conformance/commercial/support boundary review | R27 | ⬜ Pending | exact justified external claims and non-claims |
 | `P8.11` | Ecosystem architecture hardening + ADR/refactoring/lifecycle disposition | P8.10 | ⬜ Pending | material debt, ADR and lifecycle dispositions |
 | `R28` | M8 Ecosystem Hardening + Milestone Code Health Gate | P8.11 | ⬜ Pending gate | pre-closure engineering/code-health PASS |
@@ -290,23 +292,33 @@ A fresh P8.08 validation may re-enter only when a genuine second Organization is
 
 ### P8.09 — External operator/developer integration experience + documentation
 
-**Status: Current.**
+**Status: Complete / PASS — bounded repeatable operator/developer experience.**
 
-Make the actually validated external integration repeatable without exposing private platform internals.
+Runbook: [`P8-09-EXTERNAL-OPERATOR-DEVELOPER-INTEGRATION-RUNBOOK.md`](../implementation/P8-09-EXTERNAL-OPERATOR-DEVELOPER-INTEGRATION-RUNBOOK.md) — `Validated bounded reference experience 1.0.0`.
 
-Required outputs:
+Evidence: [`P8-09-external-operator-developer-integration-experience-documentation.md`](../reviews/P8-09-external-operator-developer-integration-experience-documentation.md) — `Complete / PASS`.
 
-- bounded onboarding/integration runbook;
-- explicit prerequisites and version pins;
-- contract/dependency validation instructions;
-- safe credential/configuration handling;
-- predictable error/fail-closed states;
-- evidence/reconstruction inspection path;
-- upgrade/deprecation/termination guidance appropriate to lifecycle;
-- examples that do not imply unsupported general compatibility;
-- clear separation of platform and product responsibilities.
+P8.09 makes the already validated P8.06 Creative Test Agent integration repeatable without creating a public integration surface:
+
+- exact external repository/source commit/declaration blob, Product Contract Version Identity, CAP-004 `1.0.0`, operation and provider-governance reference are documented and regression-locked;
+- copyable Git verification commands fail closed on source/declaration drift;
+- Product Contract/dependency validation keeps exact-version/no-fallback semantics and current Organization/purpose/right/classification plus Authorization/DataGovernance requirements;
+- no reusable credential is needed for this bounded proof; future secrets remain separately provisioned, minimized, omitted from declaration/contract/receipt/log/prompt/export evidence, reprovisioned after recovery/export and revoked separately on termination;
+- predictable version/scope/deprecation/reliance-state/upgrade failures are documented as safety behavior rather than downgraded into compatibility;
+- evidence inspection follows source → boundary → dependency/provider evidence → current security context → reliance receipt → derived CAP-004 reconstruction → provenance/incompleteness;
+- upgrade requires new immutable consumer/source/Product Contract versions plus fresh dependency/access validation; disable/remove remains `Onboarded → Disabled → Removed` reliance state only;
+- Creative Test Agent schemas, scoring, workflows, approvals, reports/UX and model/prompt choices remain product-owned;
+- the example explicitly does not imply arbitrary-product compatibility, Stable Product Contract, Active Platform Capability, external/customer Production or realistic multi-Organization isolation.
+
+Executable evidence: `reference/python/tests/test_p8_09_external_operator_developer_experience.py`; repository `Reference Python CI` run `#199` — `1264 tests / OK`.
+
+Functional cross-review completed in four iterations; three practical issues were corrected (provider-governance pin, executable external-source verification and reference-harness discoverability) and the fourth iteration found no material objection.
+
+P8.09 adds no new RFC/ADR, public/stable SDK/API/manifest/registry/package protocol, lifecycle promotion, readiness/conformance expansion or commercial promise. P8.08 remains `NOT ACTIVATED / NOT PROVEN` for realistic two-Organization isolation.
 
 ### R27 — Portability / Ecosystem Reuse Review
+
+**Status: Current.**
 
 Determine what is genuinely reusable and what must remain contained.
 
@@ -423,9 +435,9 @@ P8.07 portability / handover proof            PASS (bounded; external transfer n
    ↓
 P8.08 multi-Organization isolation validation NOT ACTIVATED (no second Organization in canonical scope)
    ↓
-P8.09 external integration UX/docs            CURRENT
+P8.09 external integration UX/docs            PASS
    ↓
-R27 Portability / Ecosystem Reuse Review
+R27 Portability / Ecosystem Reuse Review      CURRENT
    ↓
 P8.10 external claims boundary
    ↓
@@ -436,7 +448,7 @@ R28 M8 hardening + code-health gate
 P8.12 M8 closure
 ```
 
-P8.04 is the first action in this sequence that required the real owner-operated local Tender Operator/EIS runtime, existing credentials/trust path and owner-only raw execution artifacts. P8.05, P8.06, R26 and P8.07 completed repository-side semantic/evidence/review work without expanding the P8.03 read-only EIS rights boundary or requiring a fabricated external recipient/second Organization. P8.08 then revalidated the activation condition and closed as `NOT ACTIVATED` because no second Organization exists in the canonical scope; realistic two-Organization isolation remains unproven and may be re-entered only after genuine activation. Actual external customer handover remains unactivated.
+P8.04 is the first action in this sequence that required the real owner-operated local Tender Operator/EIS runtime, existing credentials/trust path and owner-only raw execution artifacts. P8.05, P8.06, R26, P8.07 and P8.09 completed repository-side semantic/evidence/review work without expanding the P8.03 read-only EIS rights boundary or requiring a fabricated external recipient/second Organization. P8.08 revalidated the activation condition and closed as `NOT ACTIVATED` because no second Organization exists in the canonical scope; realistic two-Organization isolation remains unproven and may be re-entered only after genuine activation. Actual external customer handover remains unactivated.
 
 ## 8. M8 exit criteria
 
@@ -479,6 +491,6 @@ Phase 8 does not inherently establish:
 
 ## 10. Current canonical action
 
-> **P8.09 — External operator/developer integration experience + documentation.**
+> **R27 — Portability / Ecosystem Reuse Review.**
 
-P8.00, P8.01, P8.02, P8.03, R25, P8.04, P8.05, P8.06, R26 and P8.07 are `Complete / PASS` within their declared bounded scopes. P8.08 is `Complete / NOT ACTIVATED`: no genuine second Organization is canonically in scope, no synthetic one was fabricated, and realistic two-Organization isolation remains explicitly unproven until the documented re-entry trigger is satisfied. P8.09 is now the current canonical action. This sequencing change creates no lifecycle/readiness/conformance/public-surface/commercial claim.
+P8.00, P8.01, P8.02, P8.03, R25, P8.04, P8.05, P8.06, R26, P8.07 and P8.09 are `Complete / PASS` within their declared bounded scopes. P8.08 is `Complete / NOT ACTIVATED`: no genuine second Organization is canonically in scope, no synthetic one was fabricated, and realistic two-Organization isolation remains explicitly unproven until the documented re-entry trigger is satisfied. R27 is now the current canonical action. This sequencing change creates no lifecycle/readiness/conformance/public-surface/commercial claim.
