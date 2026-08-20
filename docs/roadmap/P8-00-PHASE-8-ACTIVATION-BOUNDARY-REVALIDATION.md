@@ -90,7 +90,7 @@ A2 explicitly dispositioned the other current candidates:
 - **Telegram controlled publication effect boundary** — `CONTAIN_PRODUCT_LOCAL / NOT_SHORTLISTED`; the material external-effect/reconstruction pressure is already substantially validated by M6/M7 and no current evidence justifies a broader generic Telegram/notification platform boundary;
 - **Discount Parser public discount/promo source set** — `DEFER_RIGHTS_GAP / NOT_SHORTLISTED`; source-specific permitted-use/redistribution/retention scope is not canonically established and product-owned adapter/normalization behavior remains sufficient for the current contour.
 
-The shortlist does not platformize the EIS connector. A3 must identify a materially new bounded external outcome beyond the prior M6 retrieval proof or record `DEFER` rather than replay old evidence.
+The shortlist does not platformize the EIS connector and does not convert technical access into legal/contractual rights. A3 must identify a materially new bounded external outcome beyond the prior M6 retrieval proof or record `DEFER` rather than replay old evidence.
 
 **Exit:** satisfied — shortlist contains one candidate, and contained/deferred candidates are explicitly dispositioned.
 
@@ -109,7 +109,7 @@ The selected outcome MUST identify:
 - what failure must do;
 - explicit non-goals.
 
-For the current A2 shortlist, A3 must either define a materially new bounded EIS-related outcome within evidenced rights/authority constraints or record `DEFER`. Repeating the existing P6 exact-document retrieval alone is not sufficient Phase 8 activation evidence.
+For the current A2 shortlist, A3 must either define a materially new bounded EIS-related outcome under deny-by-default unresolved-rights assumptions pending A4 or record `DEFER`. Repeating the existing P6 exact-document retrieval alone is not sufficient Phase 8 activation evidence, and technical access/token possession must not be treated as a broader permission basis.
 
 **Exit:** one selected Phase 8 validation outcome or explicit `DEFER` when no materially new bounded outcome is justified.
 
@@ -211,4 +211,4 @@ If no candidate satisfies these criteria, the correct result is `DEFER / Phase 8
 
 > **P8.00-A3 — Select one bounded external outcome.**
 
-A1 and A2 are complete. A3 must work only from the A2 shortlist, currently the ЕИС / `zakupki.gov.ru` authoritative tender-document boundary. It must define a materially new bounded external outcome beyond the existing M6 retrieval proof or record `DEFER`; it must not activate Phase 8, platformize the product-owned EIS connector, widen rights/authority by assumption or select P8.01 implementation.
+A1 and A2 are complete. A3 must work only from the A2 shortlist, currently the ЕИС / `zakupki.gov.ru` authoritative tender-document boundary. It must define a materially new bounded external outcome under deny-by-default unresolved-rights assumptions pending A4 or record `DEFER`; it must not activate Phase 8, platformize the product-owned EIS connector, treat technical access as broader rights/authority, or select P8.01 implementation.
