@@ -46,6 +46,13 @@ The platform remains technology-independent at the semantic level. Current Pytho
 
 Phases 0 through 7 are closed at their scoped milestones. Phase 8 — **Ecosystem and External Integration** — is the active workstream; exact current action and sequencing are maintained only in the [Canonical Roadmap](docs/roadmap/ROADMAP.md) and the [Phase 8 workstream](docs/roadmap/PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md).
 
+Stable historical milestone continuity remains explicit:
+
+- `Phase 3 — Shared Platform Capabilities` — `Complete`, `M3 — Validated shared capability baseline` achieved for the bounded shared-capability reference scope;
+- `Phase 4 — Workspace / Operator Experience` — closed at its scoped milestone;
+- those historical milestone records do **not** promote any capability to `Active`;
+- The P4.08 bounded Product Contract remains `Provisional 0.1.0`; later implementation and reuse evidence do not silently convert it to `Stable`.
+
 Phase 8 has validated, within the existing owner-operated internal contour:
 
 - a bounded read-only EIS / `zakupki.gov.ru` external-authority revalidation case;
