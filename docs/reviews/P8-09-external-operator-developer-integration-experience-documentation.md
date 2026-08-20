@@ -1,6 +1,6 @@
 # P8.09 — External Operator/Developer Integration Experience + Documentation
 
-Status: `Validation pending`
+Status: `Complete / PASS — bounded external operator/developer integration experience`
 Date: `2026-08-20`
 Owner: `ООО «Арвектум»`
 Task classification: `platform` with `product_contract` and `governance` boundary implications
@@ -11,7 +11,7 @@ Roadmap source: `docs/roadmap/PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md`
 Predecessor: `P8.08 — Complete / NOT ACTIVATED`
 Pull request: `#106`
 
-## 1. Decision under review
+## 1. Decision
 
 P8.09 documents and regression-proves the operator/developer experience for the **already validated P8.06** Creative Test Agent external-consumer integration. It does not create a new integration architecture.
 
@@ -117,16 +117,39 @@ No material functional objection remains.
 
 Functional cross-review is not formal RFC/ADR acceptance, lifecycle promotion, operational-readiness approval, customer authorization or broad conformance approval.
 
-## 7. Validation gate
+## 7. Validation evidence
 
-Repository `Reference Python CI` run `#199` for the final reference-code/README change set is the closure gate. Until it concludes `success`, this review remains `Validation pending` and P8.09 must not be marked complete in the canonical roadmaps.
+Repository `Reference Python CI` run `#199` (`32410927320`) completed `success` for reference-code/README head `2886db4290195a93a150f93aa494aa71b8587409`.
 
-The expected suite size is `1264` tests: the P8.08/P8.07 inherited baseline is `1259`, and P8.09 adds five new unittest cases. The count must not be presented as successful evidence unless CI is green.
+The inherited `1259`-test baseline plus five P8.09 unittest cases yields `1264 tests / OK`. Subsequent commits in PR `#106` change review/roadmap documentation only and do not alter the reference-code revision validated by run `#199`.
 
-## 8. Intended completion disposition
+The P8.09 tests verify:
 
-If the validation gate passes, P8.09 may be dispositioned `Complete / PASS — bounded external operator/developer integration experience`.
+- exact runbook source/Product Contract/dependency/provider pins;
+- exact point-in-time onboarding receipt continuity;
+- fail-closed provider-version and scope drift;
+- deprecated dependency refusal;
+- explicit disable/remove/upgrade rules;
+- absence of reusable-secret fields in source/receipt evidence and documented reprovisioning discipline.
 
-That disposition means only that the exact already-validated external integration can be reproduced, inspected and safely operated by following a documented bounded path. It does not prove arbitrary external integration compatibility, realistic multi-Organization isolation, external customer Production, stable/public interface support, SLA/support, certification or full-platform conformance.
+## 8. Result and non-claims
 
-The next canonical action after successful closure is `R27 — Portability / Ecosystem Reuse Review`.
+`P8.09 = Complete / PASS — bounded external operator/developer integration experience` means only that the exact already-validated external integration can be reproduced, inspected and safely operated by following a documented bounded path.
+
+It does **not** prove or create:
+
+- arbitrary external integration compatibility;
+- realistic multi-Organization isolation;
+- external customer Production readiness;
+- a public/stable SDK, API, manifest, registry or package protocol;
+- Stable Product Contract or Active Platform Capability lifecycle status;
+- SLA/support/certification commitments;
+- full-platform conformance.
+
+P8.08 remains `NOT ACTIVATED / NOT PROVEN` for realistic two-Organization isolation.
+
+## 9. Next canonical action
+
+After canonical roadmap synchronization and merge, Phase 8 proceeds to:
+
+> `R27 — Portability / Ecosystem Reuse Review`.
