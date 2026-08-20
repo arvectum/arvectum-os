@@ -1,10 +1,11 @@
 # R24 — M7 Operational Hardening Review
 
-Status: `Review complete / CI pending`
+Status: `Complete / PASS`
 Date: `2026-08-20`
 Task classification: `platform` (secondary: `governance`)
 Roadmap criterion: `M7 criterion 12`
 Review base: `bbc58231ef513e825cdf733216305816750f1de2`
+Validated remediation revision: `81fe9ba4ee1706c67f65c212186b70a5ba5003d5`
 
 ## 1. Purpose
 
@@ -61,9 +62,9 @@ R21–R23 evidence remains consistent with RFC-0005/RFC-0006: canonical provenan
 
 **Severity:** material for milestone hygiene, not an architecture defect.
 
-The canonical tree tracked `reference/python/__pycache__/` containing interpreter-generated `.pyc` files from Python 3.12/3.14. The repository also lacked a root `.gitignore` protection for this class of generated artifact.
+The canonical tree tracked interpreter-generated Python bytecode under multiple `reference/python/**/__pycache__/` trees from Python 3.12/3.14. The repository also lacked root ignore/CI protection for this class of generated artifact.
 
-**Disposition:** resolved in the R24 branch by deleting the tracked cache tree, adding Python generated-artifact ignore rules, and adding a CI guard that fails if bytecode/cache paths become tracked again.
+**Disposition:** resolved in the R24 branch by deleting every tracked cache tree identified by the new fail-closed CI guard, adding Python generated-artifact ignore rules, and retaining the guard so future tracked `__pycache__`, `.pyc`/`.pyo` or `.pytest_cache` artifacts fail CI.
 
 ### Finding R24-02 — stale reference-harness status documentation
 
@@ -81,15 +82,16 @@ Several P7 proof modules are intentionally substantial. The approved Engineering
 
 No R24 correction weakens tenant/Organization scoping, least privilege, credential handling, data minimization, retention boundaries, provenance, portability or default-denial behavior. The hygiene and documentation corrections are repository-local and do not change governed runtime state or external effects.
 
-## 7. Cross-review
+## 7. Cross-review and resulting-state verification
 
 - **Iteration 1 — architecture/security/maintainability:** raised R24-01 and R24-02; both were remediated in the R24 change set.
 - **Iteration 2 — minimal-change/CI review:** found that the first remediation draft unnecessarily replaced existing workflow controls (`workflow_dispatch`, `permissions`, `concurrency`, timeout and verbose suite invocation). The patch was revised to preserve those controls and add only the required `.gitignore` trigger plus generated-artifact guard.
+- **Iteration 3 — CI/resulting-state review:** CI run `Reference Python CI #169` correctly failed closed and exposed residual tracked bytecode in seven additional cache trees. Those exact trees were removed atomically in revision `81fe9ba4ee1706c67f65c212186b70a5ba5003d5`. `Reference Python CI #170` / run `32337239681` then completed with `success`: the tracked-generated-artifact guard passed and the full reference unittest discovery ran `1192 tests` with `OK`.
 
-After iteration 2 no further material architecture, security, product/platform or workflow-governance objection remains before automated validation. A final read-after-write/CI review is still required before changing this record to `Complete / PASS`.
+Read-after-write review confirms the remediation is represented in the PR diff, the anti-regression guard is active, and no unresolved material architecture, security, product/platform, authority, maintainability or workflow-governance objection remains within R24 scope.
 
 ## 8. Verdict
 
-`R24 criterion-12 review = CONDITIONALLY PASSING, awaiting exact PR CI and resulting-state verification.`
+`R24 criterion-12 review = Complete / PASS.`
 
-Criterion 13 is intentionally not claimed here. The separate `M7-milestone-code-health-gate.md` record must pass after the R24 fixes and exact CI evidence are verified.
+The separate M7 Milestone Code Health Gate is recorded in `M7-milestone-code-health-gate.md`. This R24 result does not imply external/customer Production readiness, lifecycle promotion, a Stable Product Contract, an Active Platform Capability, broad conformance, stable/public interfaces or SLA/SLO/RPO/RTO/support commitments.
