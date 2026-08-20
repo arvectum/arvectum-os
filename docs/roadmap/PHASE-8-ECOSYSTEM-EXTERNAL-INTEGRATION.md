@@ -1,7 +1,7 @@
 # Arvectum OS Phase 8 — Ecosystem and External Integration
 
 Status: `Active`
-Version: `1.1.0`
+Version: `1.1.1`
 Created: `2026-08-17`
 Updated: `2026-08-20`
 Activated: `2026-08-20`
@@ -14,6 +14,8 @@ Predecessor: `Phase 7 / M7 — Complete / PASS`
 Restoration decision: [`DECISION-2026-08-17-PHASE-7-8-ROADMAP-RESTORATION`](../governance/decisions/DECISION-2026-08-17-PHASE-7-8-ROADMAP-RESTORATION.md)
 Pre-activation plan: [`P8-00-PHASE-8-ACTIVATION-BOUNDARY-REVALIDATION.md`](P8-00-PHASE-8-ACTIVATION-BOUNDARY-REVALIDATION.md) — `Complete / PASS 1.3.0`
 Activation decision: [`DECISION-2026-08-20-PHASE-8-ACTIVATION`](../governance/decisions/DECISION-2026-08-20-PHASE-8-ACTIVATION.md) — `Approved`
+
+Version `1.1.1` is a post-merge synchronization correction only: it updates the lower critical-path rendering to match the already canonical `P8.04 = Complete / PASS` and `P8.05 = Current` state; no lifecycle, readiness, conformance or commercial status changes.
 
 ## 1. Purpose
 
@@ -379,9 +381,9 @@ P8.03 explicit integration contract           PASS
    ↓
 R25 External Boundary Review                  PASS
    ↓
-P8.04 real external connector validation      CURRENT / LOCAL
+P8.04 real external connector validation      PASS
    ↓
-P8.05 duplicate / replay / uncertainty semantics
+P8.05 duplicate / replay / uncertainty          CURRENT
    ↓
 P8.06 external product / extension onboarding
    ↓
