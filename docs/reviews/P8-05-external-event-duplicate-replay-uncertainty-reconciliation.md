@@ -1,6 +1,6 @@
 # P8.05 — External ingress/egress Event, duplicate, replay, uncertainty + reconciliation semantics
 
-Status: `In review — implementation complete; executable CI evidence pending`
+Status: `Complete / PASS`
 Date: `2026-08-20`
 Owner: `ООО «Арвектум»`
 Task classification: `platform` with `product_contract`
@@ -38,7 +38,7 @@ P8.05 reuses, without repeating, the real external evidence established by P8.04
 - comparison manifest SHA-256: `06ca91f5689d449b2bfba95ca0ec62386e215261df74ec769b234030cc610f7b`;
 - live outcome: `NO_CHANGE`, 7/7 material documents byte-identical.
 
-No additional live EIS call is required by P8.05. The P8.03 contract does not authorize EIS mutation, submission, signature, messaging or another consequential external write, so P8.05 does not fabricate or perform one merely to exercise egress semantics.
+No additional live EIS call was required. The P8.03 contract does not authorize EIS mutation, submission, signature, messaging or another consequential external write, so P8.05 does not fabricate or perform one merely to exercise egress semantics.
 
 ## 3. Implementation boundary
 
@@ -48,223 +48,142 @@ Implemented as a bounded Phase 8 reference/evidence harness:
 - `reference/python/tests/test_p8_05_external_boundary_evidence.py`;
 - `reference/python/tests/test_p8_05_reconciliation_monotonic.py`.
 
-The harness composes existing P2.05 Event/provenance semantics and P2.06 runtime consistency/idempotency/uncertainty primitives rather than duplicating them or turning a task-specific implementation into a platform capability.
+The harness composes existing P2.05 Event/provenance semantics and P2.06 runtime consistency/idempotency/uncertainty primitives. It does not define a permanent transport, broker, durable inbox/outbox, distributed exactly-once guarantee, reconciliation service topology, public/stable external Event API, Stable Product Contract or Active Platform Capability.
 
-It does **not** define or select:
+## 4. Ingress semantics
 
-- an external Event transport or wire protocol;
-- a broker/topic model;
-- a durable inbox/outbox;
-- a distributed transaction or exactly-once transport guarantee;
-- a reconciliation service topology;
-- a public/stable external Event API;
-- a Stable Product Contract;
-- an Active Platform Capability.
+`ExternalDelivery` is transient transport evidence. Receipt alone does not create canonical history; canonical admission is a separate explicit governed operation through P2.05.
 
-## 4. Ingress Event and delivery semantics
+The admitted Event is `Native` evidence that Arvectum OS observed/admitted an external occurrence. It does not make the underlying EIS fact Native: the source remains `External Reference` and the Event preserves source identity, authority scope/mode, exact governed source references and integrity evidence.
 
-### 4.1 Receipt is not admission
-
-`ExternalDelivery` is transient transport evidence. Constructing or receiving it does not create canonical history.
-
-Canonical Event admission is a separate explicit governed operation through the existing P2.05 `EventReceipt` / `admit_event` boundary.
-
-### 4.2 External authority remains external
-
-The admitted ingress Event is `Native` evidence of the statement:
-
-> Arvectum OS observed and admitted this external occurrence under the governed execution.
-
-It does not convert the underlying EIS fact to Native authority. The linked source record remains `External Reference`, and the admitted Event preserves source system, source object, source occurrence identity, source authority mode/scope, exact external-reference Version Identity and integrity evidence.
-
-### 4.3 Duplicate is defined by occurrence identity, not by payload equality
-
-The bounded occurrence key is contract-scoped external identity:
+Duplicate identity is contract-scoped external occurrence identity:
 
 `source_system + source_object_ref + source_occurrence_id`.
 
-Consequences:
+Therefore:
 
-- repeated delivery of the exact same occurrence adds no second canonical Event;
-- a later transport delivery may have a different delivery identity/receipt time without rewriting the first admitted Event;
-- reuse of one delivery identity for different transport evidence fails closed;
-- reuse of one external occurrence identity with materially different immutable evidence fails closed;
-- a genuinely new source occurrence creates a new Event even if its payload digest is byte-identical to an earlier occurrence.
+- repeated delivery of the same occurrence creates no second canonical Event;
+- later transport delivery metadata does not rewrite the first Event;
+- reuse of one delivery identity for different evidence fails closed;
+- reuse of one occurrence identity with different immutable evidence fails closed;
+- a genuinely new source occurrence creates a new Event even when payload bytes/hash are identical.
 
-This avoids the unsafe assumption that equal bytes imply the same historical occurrence.
+`occurred_at` remains source occurrence time; `recorded_at` is first governed admission time. Late/out-of-order delivery remains append-only and does not rewrite history into a fictitious global order.
 
-### 4.4 Time and ordering
+## 5. Egress uncertainty and reconciliation
 
-The harness keeps distinct:
+P8.05 preserves the existing P2.06 retry contract:
 
-- `occurred_at` — source occurrence time;
-- `received_at` / canonical `recorded_at` — first governed admission time.
-
-Late/out-of-order delivery remains append-only. Historical Events are not resequenced or rewritten to create a fictitious global order.
-
-## 5. Egress idempotency, uncertainty and reconciliation
-
-P8.05 deliberately does not perform a real external mutation. It exercises the domain-neutral governed semantics over controlled external-effect evidence while preserving the P8.03 read-only rights boundary.
-
-The existing P2.06 retry contract remains authoritative:
-
-- retry semantics are explicit: naturally idempotent, keyed idempotent, or non-idempotent;
+- retry semantics are explicit;
 - keyed/non-idempotent attempts require explicit duplicate-protection identity;
-- materially conflicting retry-token reuse fails closed;
-- an unknown external outcome is `Uncertain`, not `Succeeded`;
+- conflicting token reuse fails closed;
+- unknown outcome is `Uncertain`, never synthetic `Succeeded`;
 - an uncertain attempt blocks blind retry.
 
-P8.05 adds the boundary-specific reconciliation proof:
+P8.05 adds attributable append-only reconciliation evidence that pins the exact uncertain attempt fingerprint/token, has its own Subject/Version identities, uses a distinct Governed Execution identity/version and retains an explicit evidence reference.
 
-- reconciliation is append-only evidence;
-- it pins the exact uncertain attempt fingerprint and retry token;
-- it records its own Subject/Version Identities;
-- it uses a distinct attributable Governed Execution Identity and exact Execution version;
-- it preserves an explicit governed evidence reference;
-- resolutions are `ConfirmedSucceeded`, `ConfirmedNotApplied`, or `StillUncertain`.
+Resolution states are:
+
+- `ConfirmedSucceeded`;
+- `ConfirmedNotApplied`;
+- `StillUncertain`.
 
 Retry behavior is fail-closed:
 
 - no reconciliation → retry prohibited;
 - `StillUncertain` → retry prohibited;
-- `ConfirmedSucceeded` → retry prohibited as a duplicate risk;
-- `ConfirmedNotApplied` → retry may proceed only as a **new Governed Execution** with a **new retry token**;
+- `ConfirmedSucceeded` → retry prohibited;
+- `ConfirmedNotApplied` → retry may proceed only as a new Governed Execution with a new retry token;
 - once any attributable reconciliation confirms success for the original attempt, later contradictory evidence cannot silently reopen retry.
 
-The original `Uncertain` attempt is never rewritten. A later retry is a new attempt with explicit causation through the reconciliation record.
+The original `Uncertain` attempt is never rewritten. Any allowed retry is a new attempt with explicit reconciliation lineage.
 
-## 6. Outcome Event semantics
+## 6. Event outcome and replay semantics
 
-An external-effect outcome Event reports exactly what is known:
+An external-effect outcome Event reports exactly what is known: `Succeeded`, `Failed`, or `Uncertain`. An intent, timeout or acknowledgement is not upgraded to proof of success.
 
-- `Succeeded` only when success is the recorded outcome;
-- `Failed` only when failure is the recorded outcome;
-- `Uncertain` when the external result cannot be established.
-
-An intent, timeout or acknowledgement is never upgraded to proof of successful external effect.
-
-## 7. Replay and reconstruction
-
-Historical reconstruction is a pure operation over retained governed evidence.
-
-The P8.05 replay manifest preserves:
-
-- admitted ingress Event identities;
-- delivery-evidence identities;
-- external-effect attempt fingerprints and outcomes;
-- reconciliation identities;
-- post-reconciliation retry lineage.
-
-The reconstruction API has no live-retrieval or external-effect callback, and its result explicitly records:
+Historical reconstruction is pure over retained evidence. The replay manifest preserves ingress Event IDs, delivery evidence IDs, external-effect attempt fingerprints/outcomes, reconciliation IDs and retry lineage, and explicitly reports:
 
 - `live_retrievals_executed = False`;
 - `external_effects_executed = False`.
 
-Therefore projection/history replay cannot silently repeat the P8.04 live EIS retrieval or create a new external consequence. An intentionally new consequential operation would remain subject to a new Governed Execution and normal gates under RFC-0005/RFC-0006.
+The reconstruction API has no transport/effect callback. A new consequential operation after replay would require a new Governed Execution, normal gates and causation under RFC-0005/RFC-0006.
 
-## 8. Partial, incomplete and unverifiable evidence
+## 7. Partial / unverifiable evidence
 
-P8.05 does not create a synthetic success state for incomplete evidence.
+The external boundary fails closed:
 
-At the external boundary:
-
-- identity/evidence conflicts fail closed;
-- an unknown effect outcome remains `Uncertain`;
+- identity/evidence conflicts are errors;
+- unknown effect outcome remains `Uncertain`;
 - unresolved reconciliation remains `StillUncertain`;
 - no exactly-once claim is made;
-- the retained reconstruction cannot claim stronger evidence than it contains.
+- reconstruction cannot claim stronger evidence than retained history contains.
 
-P8.04 already established that missing/incomplete source evidence cannot be represented as `NO_CHANGE`; P8.05 preserves that fail-closed posture.
+P8.04 already established that incomplete current source evidence cannot be represented as `NO_CHANGE`; P8.05 preserves that posture.
 
-## 9. Product/platform boundary
+## 8. Product/platform and security boundary
 
-The Tender Operator EIS connector, SOAP/archive handling and procurement-specific semantics remain product-owned under the P8.03 Provisional integration contract.
+Tender Operator EIS connector/SOAP/archive/procurement semantics remain product-owned under the P8.03 Provisional contract. P8.05 proves only the domain-neutral envelope around Event admission versus delivery, duplicate identity, timing/resequencing, idempotency declaration, uncertainty, reconciliation, replay safety and provenance/reconstruction.
 
-P8.05 validates only the reusable domain-neutral semantic envelope around:
+The activated scope remains one Organization: `ООО «Арвектум»`. Event, delivery, execution, reconciliation and evidence identities remain Organization-scoped. No second tenant, cross-Organization relationship, credential, private key, raw tender payload or external mutation capability is introduced.
 
-- Event admission versus delivery;
-- duplicate identity;
-- timing/resequencing;
-- idempotency declaration;
-- uncertainty;
-- reconciliation;
-- replay safety;
-- provenance/reconstruction.
-
-No successful mechanism is promoted to a Platform Capability by this review.
-
-## 10. Security, Organization and data handling
-
-The activated scope remains one Organization: `ООО «Арвектум»`.
-
-The proof does not create a second tenant or cross-Organization relationship. Organization-scoped Event, delivery, execution, reconciliation and evidence identities are required to remain in the same Organization scope.
-
-Only minimized identifiers, exact governed references and integrity digests are needed. No reusable secret, credential, raw tender payload, private key or external mutation capability is introduced by P8.05.
-
-## 11. Functional cross-review
+## 9. Functional cross-review
 
 ### Iteration 1 — architecture / reuse
 
-Finding: do not expand P2.05 into a speculative public external-Event API and do not duplicate P2.06 retry/uncertainty semantics.
+Finding: do not create a speculative public external-Event API or duplicate P2.06 semantics.
 
-Resolution: contained P8.05 harness composes the existing P2.05/P2.06 primitives. No ADR/public surface/lifecycle transition.
+Resolution: bounded harness composes P2.05/P2.06; no ADR/public surface/lifecycle transition.
 
 ### Iteration 2 — authority / source of truth
 
 Finding: an ingress Event must not make the externally authoritative EIS fact Native.
 
-Resolution: the Event is Native evidence of Arvectum OS observation/admission; the underlying source record stays `External Reference` and is linked by exact governed references.
+Resolution: Native Event records local observation/admission only; linked source remains `External Reference`.
 
 ### Iteration 3 — rights / external-effect scope
 
-Finding: a real mutating egress test would exceed P8.03, whose validated EIS boundary is read-only.
+Finding: a real mutating EIS egress test would exceed P8.03 read-only rights.
 
-Resolution: retain the real P8.04 ingress anchor; exercise egress uncertainty/reconciliation with controlled reference semantics only. No new EIS mutation or unsupported rights claim.
+Resolution: retain P8.04 as real ingress anchor; exercise egress uncertainty/reconciliation with controlled evidence only.
 
 ### Iteration 4 — execution contract
 
-Finding: initial synthetic ingress/reconciliation test workflows omitted an explicit side-effect class, violating the existing Workflow contract.
+Finding: initial synthetic ingress/reconciliation workflows lacked an explicit side-effect class.
 
-Resolution: both were corrected to explicit `ReadOnly`; egress/retry workflows remain explicit `ExternalMutation`.
+Resolution: both corrected to explicit `ReadOnly`; egress/retry remain explicit `ExternalMutation`.
 
 ### Iteration 5 — reconciliation monotonicity
 
-Finding: selecting only the latest reconciliation could allow a later contradictory `ConfirmedNotApplied` observation to reopen retry after a prior `ConfirmedSucceeded` proof.
+Finding: latest-only reconciliation selection could reopen retry after prior `ConfirmedSucceeded` evidence.
 
-Resolution: any retained `ConfirmedSucceeded` for the exact uncertain attempt permanently blocks retry in the bounded ledger; focused regression coverage was added.
+Resolution: any retained `ConfirmedSucceeded` for the exact uncertain attempt blocks retry; focused regression added.
 
 ### Iteration 6 — executable verification
 
-Pending: full Reference Python CI on the final PR head.
+Result: repository `Reference Python CI` PASS on the implementation head; `1235 tests / OK`.
 
-No material architecture, authority, security, product-boundary or replay objection remains before executable verification.
+No material architecture, authority, security, product-boundary, duplicate, replay or reconciliation objection remains.
 
-## 12. P8.05 Definition of Done mapping
+## 10. Definition of Done
 
 | Requirement | Evidence | Disposition |
 |---|---|---|
-| transport receipt is not automatically canonical Event | `ExternalDelivery` separate from explicit admission | PASS |
+| receipt is not automatically canonical Event | delivery/admission separation | PASS |
 | canonical admission explicit and attributable | P2.05 admission under Governed Execution | PASS |
 | duplicate delivery does not duplicate canonical truth | exact occurrence duplicate tests | PASS |
 | idempotency scope explicit | P2.06 `RetrySemantics` + explicit token | PASS |
-| replay does not replay live retrieval/external effect | pure reconstruction manifest, no effect hook | PASS |
-| timeout/unknown becomes uncertain/reconciliation-required | `ConsequentialOutcome.UNCERTAIN` + retry block | PASS |
-| reconciliation attributable and versioned | `ExternalReconciliation` + distinct governed Execution | PASS |
+| replay never repeats live retrieval/external effect automatically | pure reconstruction, no effect hook | PASS |
+| unknown/timeout outcome becomes uncertain/reconciliation-required | `Uncertain` + retry block | PASS |
+| reconciliation attributable and versioned | exact attempt + distinct Governed Execution + evidence ref | PASS |
 | partial/unverifiable evidence fails closed/remains incomplete | conflict + uncertainty paths | PASS |
 | contradictory reconciliation cannot reopen duplicate-risk retry | monotonic confirmed-success guard | PASS |
-| full executable regression | Reference Python CI | PENDING |
+| executable regression | Reference Python CI — `1235 tests / OK` | PASS |
 
-## 13. Closure boundary
+## 11. Closure
 
-P8.05 may be marked `Complete / PASS` only after the final PR head passes the repository Reference Python CI and read-after-write verification confirms the review, implementation and roadmap state.
+**P8.05 = Complete / PASS.**
 
-Completion of P8.05 will not imply:
+This closure does not imply customer/external Production, Stable Product Contract, Active Platform Capability, public/stable Event API or connector surface, universal exactly-once delivery, selected broker/inbox/outbox/reconciliation infrastructure, multi-Organization validation, or SLA/support/certification/redistribution commitments.
 
-- customer/external Production;
-- Stable Product Contract;
-- Active Platform Capability;
-- public/stable Event API or connector surface;
-- universal exactly-once delivery;
-- selected broker/inbox/outbox/reconciliation infrastructure;
-- multi-Organization validation;
-- SLA/support/certification/redistribution commitments.
+Next roadmap action: `P8.06 — External product/extension onboarding + governed dependency resolution`.
