@@ -50,9 +50,9 @@ The harness emits only transient proof material:
 
 The proof format is task-local reference evidence. It is **not** a public/stable API, SDK, wire format, customer export standard, compatibility promise or Product Contract surface.
 
-Focused local execution before repository write: `11 tests / OK`.
+Focused P8.07 execution: `11 tests / OK`.
 
-Repository `Reference Python CI` is the merge gate for the complete reference suite.
+GitHub Actions evidence for PR `#104`: `Reference Python CI`, run `32407644939`, `1259 tests / OK` on commit `60fdf08fcdcb17186b06477249397e90789ee3bc`.
 
 ## 4. Requirement-to-evidence mapping
 
