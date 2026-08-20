@@ -1,7 +1,7 @@
 # P8.00 — Phase 8 Activation / External-Ecosystem Boundary Revalidation
 
 Status: `Current / Pre-activation`
-Version: `1.1.0`
+Version: `1.2.0`
 Created: `2026-08-20`
 Updated: `2026-08-20`
 Owner: `ООО «Арвектум»`
@@ -66,9 +66,11 @@ The candidate register preserves external authority, distinguishes known from un
 
 ### P8.00-A2 — Candidate triage and value test
 
-Status: `Current / next`.
+Status: `Complete / PASS`.
 
-For each candidate, score qualitatively:
+Evidence: [`P8-00-A2-candidate-triage-and-value-test.md`](../reviews/P8-00-A2-candidate-triage-and-value-test.md).
+
+A2 qualitatively evaluated all three A1 candidates against:
 
 - real organizational value now;
 - consequence and reversibility;
@@ -79,9 +81,22 @@ For each candidate, score qualitatively:
 - cost of keeping the mechanism product-local;
 - risk of premature stable/public commitment.
 
-**Exit:** shortlist of no more than three candidates, with rejected/contained candidates explicitly dispositioned.
+A2 produced one shortlisted candidate:
+
+1. **ЕИС / `zakupki.gov.ru` authoritative tender-document boundary** — `SHORTLIST_FOR_A3`.
+
+A2 explicitly dispositioned the other current candidates:
+
+- **Telegram controlled publication effect boundary** — `CONTAIN_PRODUCT_LOCAL / NOT_SHORTLISTED`; the material external-effect/reconstruction pressure is already substantially validated by M6/M7 and no current evidence justifies a broader generic Telegram/notification platform boundary;
+- **Discount Parser public discount/promo source set** — `DEFER_RIGHTS_GAP / NOT_SHORTLISTED`; source-specific permitted-use/redistribution/retention scope is not canonically established and product-owned adapter/normalization behavior remains sufficient for the current contour.
+
+The shortlist does not platformize the EIS connector. A3 must identify a materially new bounded external outcome beyond the prior M6 retrieval proof or record `DEFER` rather than replay old evidence.
+
+**Exit:** satisfied — shortlist contains one candidate, and contained/deferred candidates are explicitly dispositioned.
 
 ### P8.00-A3 — Select one bounded activation outcome
+
+Status: `Current / next`.
 
 Select one concrete outcome, not a generic technology goal.
 
@@ -94,7 +109,9 @@ The selected outcome MUST identify:
 - what failure must do;
 - explicit non-goals.
 
-**Exit:** one selected Phase 8 validation outcome.
+For the current A2 shortlist, A3 must either define a materially new bounded EIS-related outcome within evidenced rights/authority constraints or record `DEFER`. Repeating the existing P6 exact-document retrieval alone is not sufficient Phase 8 activation evidence.
+
+**Exit:** one selected Phase 8 validation outcome or explicit `DEFER` when no materially new bounded outcome is justified.
 
 ### P8.00-A4 — Organization / identity / authority / data-rights map
 
@@ -192,6 +209,6 @@ If no candidate satisfies these criteria, the correct result is `DEFER / Phase 8
 
 ## 6. Current action
 
-> **P8.00-A2 — Candidate triage and value test.**
+> **P8.00-A3 — Select one bounded external outcome.**
 
-A1 is complete. A2 must compare only the evidence-backed A1 candidates, keep unresolved rights explicit, disposition contained/rejected candidates honestly and produce a shortlist of no more than three. It must not activate Phase 8, select P8.01 implementation or promote a product-local connector merely because it already works.
+A1 and A2 are complete. A3 must work only from the A2 shortlist, currently the ЕИС / `zakupki.gov.ru` authoritative tender-document boundary. It must define a materially new bounded external outcome beyond the existing M6 retrieval proof or record `DEFER`; it must not activate Phase 8, platformize the product-owned EIS connector, widen rights/authority by assumption or select P8.01 implementation.
