@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.56.5`
+Version: `2.56.6`
 Created: `2026-08-07`
 Updated: `2026-08-20`
 Owner: `ООО «Арвектум»`
@@ -14,6 +14,10 @@ This document is the canonical planning source for Arvectum OS development seque
 Future roadmap content is a planning hypothesis until its phase is activated. Roadmap status does not by itself change Platform Capability lifecycle, Product Contract lifecycle, operational environment/readiness, conformance maturity, SLA/support or commercial commitments.
 
 ## 2. Version note
+
+Version `2.56.6` closes [`R24 — M7 Operational Hardening Review`](../reviews/R24-m7-operational-hardening-review.md) and the required [`M7 Milestone Code Health Gate`](../reviews/M7-milestone-code-health-gate.md) as `Complete / PASS`. R24 found and remediated two material milestone-hygiene issues: tracked interpreter-generated Python bytecode across the reference tree and stale reference-harness status/validation guidance. The remediation removes every cache tree exposed by the fail-closed generated-artifact guard, adds root ignore and CI regression protection, and makes the reference documentation roadmap-neutral.
+
+The exact remediation revision `81fe9ba4ee1706c67f65c212186b70a5ba5003d5` passed `Reference Python CI #170` / run `32337239681`: the tracked-generated-artifact guard succeeded and full unittest discovery ran `1192 tests` with `OK`. Three functional review/revise iterations closed the material architecture/security/maintainability objections, and no new materially constraining ADR boundary was identified. `R24 = Complete / PASS`; M7 criteria 12 and 13 are satisfied. `P7.12 — Phase 7 / M7 closure review` becomes the current canonical action. M7 itself is not yet claimed closed, and no external/customer Production, capability/Product Contract lifecycle promotion, public/stable interface, broader conformance, SLA/SLO/RPO/RTO/support or commercial commitment is created by R24.
 
 Version `2.56.5` closes [`P7.11 — Scoped Operational-Readiness, Lifecycle, Conformance + Stable-Boundary Disposition`](../reviews/P7-11-scoped-operational-readiness-lifecycle-conformance-stable-boundary-disposition.md) as `Complete / PASS` after four functional review/revise iterations and records the companion [`Persistent Internal Scoped Conformance Statement`](../reviews/P7-11-persistent-internal-conformance-statement.md). The one-Organization `Persistent Internal / owner-operated` contour is fit for ongoing internal governed use; RFC-0001 conformance maturity is `Scoped` for operational environment `Local` with subject lifecycle `Not Applicable` for the deployment contour.
 
@@ -199,7 +203,7 @@ Phase 7 converts validated owner-operated use into a persistent, recoverable, ob
 | `P7.09` | Operator runbook + incident/uncertain-outcome/recovery drills | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.10` | Portability, host-loss and restore-on-clean-environment proof | 🟩 Complete / PASS | `██████████ 100%` |
 | `P7.11` | Scoped operational-readiness, lifecycle, conformance + stable-boundary disposition | 🟩 Complete / PASS | `██████████ 100%` |
-| `P7.12` | Phase 7 / M7 closure review | ⬜ | `░░░░░░░░░░ 0%` |
+| `P7.12` | Phase 7 / M7 closure review | 🟨 Current | `░░░░░░░░░░ 0%` |
 
 Detailed operator-workspace plan: [`P7-06-LIVE-OPERATOR-WORKSPACE-SUBSTREAM.md`](P7-06-LIVE-OPERATOR-WORKSPACE-SUBSTREAM.md) — `Complete / PASS 0.1.11`.
 
@@ -208,7 +212,7 @@ Engineering/quality gates:
 - [`R21 — Operational Boundary Review`](../reviews/R21-operational-boundary-review.md) — 🟩 `Complete / PASS` after P7.01;
 - [`R22 — Persistent Runtime Health Review`](../reviews/R22-persistent-runtime-health-review.md) — 🟩 `Complete / PASS` after P7.05, two functional iterations, remediation PR `#39`, `964/964 PASS`;
 - [`R23 — Recovery / Portability Review`](../reviews/R23-recovery-portability-review.md) — 🟩 `Complete / PASS` after P7.10, three functional review/revise iterations;
-- `R24 — M7 Operational Hardening + required Milestone Code Health Gate` — after P7.11 and before P7.12.
+- [`R24 — M7 Operational Hardening Review`](../reviews/R24-m7-operational-hardening-review.md) — 🟩 `Complete / PASS` after P7.11, three functional review/revise iterations; required [`M7 Milestone Code Health Gate`](../reviews/M7-milestone-code-health-gate.md) — 🟩 `Complete / PASS`.
 
 ### Persistent Mac mini and operator interaction transition
 
@@ -251,9 +255,9 @@ R23 Recovery / Portability Review — PASS
         ↓
 P7.11 scoped readiness / lifecycle / conformance / stable-boundary disposition — PASS
         ↓
-R24 hardening + M7 code-health gate ← current
+R24 hardening + M7 code-health gate — PASS
         ↓
-P7.12 Phase 7 / M7 closure review
+P7.12 Phase 7 / M7 closure review ← current
 ```
 
 P7.02 passed on exact selected-Mac release `73af746f83271b14670fe22db658dfd55cacb291`. P7.03 subsequently established the bounded durable-state/checkpoint and backup/restore baseline. P7.04 is `Complete / PASS` after repository implementation, six-iteration functional review and selected-Mac Attempt 1. P7.05 is `Complete / PASS` after PR `#37`, `960/960` Reference Python CI, four-iteration functional review and selected-Mac Attempt 1 on exact canonical release `cf60e52c93bf0ef4158cf2c3e26792850a126c70`. R22 is `Complete / PASS` after remediation PR `#39` and `964/964` Reference Python CI. P7.06 is `Complete / PASS` after PR #49 repository hardening and selected-Mac Attempt 8 proved exact update, rollback and final re-update to `4df99c4c66a1b7b93a4b05d7768018b03aa4041b`.
@@ -273,6 +277,8 @@ P7.09 is `Complete / PASS`. PR `#81` merged runbook `1.0.0`, deterministic evalu
 P7.10 is `Complete / PASS`. The actual selected-Mac governed store was re-verified from the unchanged off-host handoff and restored on the clean secondary host at exact release `fbab170ab337c1631b40d0d36ea58a02f6512f6e`; P7.03 integrity, governed-state digest, selected historical reconstruction, exclusions, no-effect-replay and no-authority checks all passed. Canonical closure: [`P7.10 — Canonical Closure`](../reviews/P7-10-canonical-closure.md).
 
 R23 is `Complete / PASS`. The cross-cutting review confirms that P7.03/P7.06/P7.09/P7.10 form a coherent recovery chain and that portability is correctly scoped to governed organizational state and historical meaning rather than a promise of whole-host cloning. Recovery remains fail-closed, secret-minimized, authority-neutral and side-effect safe. Remaining readiness, lifecycle, conformance, stable-boundary, release-source-retention, supported-environment and RTO/RPO/SLA questions are explicitly downstream in P7.11. Canonical review: [`R23 — Recovery / Portability Review`](../reviews/R23-recovery-portability-review.md).
+
+R24 and the M7 Milestone Code Health Gate are `Complete / PASS`. The accumulated M7 implementation remains within the existing architecture/governance boundaries; tracked generated Python artifacts are removed and fail closed in CI if reintroduced; reference validation/status guidance is roadmap-neutral; no new ADR-triggering material constraint was found. Exact remediation revision `81fe9ba4ee1706c67f65c212186b70a5ba5003d5` passed `Reference Python CI #170` / run `32337239681`, including the generated-artifact guard and `1192 tests / OK`. M7 criteria 12 and 13 are satisfied; P7.12 remains responsible for the explicit whole-milestone closure decision.
 
 ## 7. M7 milestone definition
 
@@ -313,8 +319,8 @@ Phase 8 remains `Draft / Exploratory` until Phase 7 / M7 closes and the external
 A roadmap phase transition does not itself change lifecycle, production readiness, conformance or commercial status.
 
 ## 11. Current canonical action
-> **R24 — M7 Operational Hardening + required Milestone Code Health Gate.**
+> **P7.12 — Phase 7 / M7 closure review.**
 
-`P7.11 = Complete / PASS` after explicit operational-readiness, lifecycle, scoped-conformance and stable-boundary disposition for the declared `Persistent Internal / owner-operated` contour. The internal deployment is `Scoped` conformant for RFC-0001 operational environment `Local`; deployment-contour subject lifecycle is `Not Applicable`; CAP-001 through CAP-004 remain `Incubating / Provisional`; P6.02 and P6.06 remain `Provisional 0.1.0`; and no P7.01 ADR/stable-boundary trigger is currently crossed.
+`R24 = Complete / PASS` and the required M7 Milestone Code Health Gate is `Complete / PASS`. M7 criteria 12 and 13 are therefore satisfied alongside previously closed criteria 1–11. `P7.12` must now perform the explicit whole-milestone closure review, verify resulting canonical state and evidence coherence, and decide whether Phase 7 / M7 can be closed for the already declared `Persistent Internal / owner-operated` scoped baseline.
 
-M7 criterion 11 is satisfied. R24 must now perform the final bounded operational hardening review and required M7 Milestone Code Health Gate. M7 criteria 12 and 13 remain unsatisfied until R24 closes; P7.12 remains downstream. No external/customer Production, capability/Product Contract promotion, public/stable API/recovery boundary, SLA/SLO/RPO/RTO/support or broader conformance promise is implied.
+Until P7.12 closes, M7 remains open and Phase 8 remains `Draft / Exploratory`. No external/customer Production, capability/Product Contract lifecycle promotion, public/stable API/recovery boundary, SLA/SLO/RPO/RTO/support or broader conformance promise is implied.
