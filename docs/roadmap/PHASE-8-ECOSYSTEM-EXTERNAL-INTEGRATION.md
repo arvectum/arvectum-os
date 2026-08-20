@@ -1,7 +1,7 @@
 # Arvectum OS Phase 8 — Ecosystem and External Integration
 
 Status: `Active`
-Version: `1.5.0`
+Version: `1.6.0`
 Created: `2026-08-17`
 Updated: `2026-08-20`
 Activated: `2026-08-20`
@@ -14,6 +14,8 @@ Predecessor: `Phase 7 / M7 — Complete / PASS`
 Restoration decision: [`DECISION-2026-08-17-PHASE-7-8-ROADMAP-RESTORATION`](../governance/decisions/DECISION-2026-08-17-PHASE-7-8-ROADMAP-RESTORATION.md)
 Pre-activation plan: [`P8-00-PHASE-8-ACTIVATION-BOUNDARY-REVALIDATION.md`](P8-00-PHASE-8-ACTIVATION-BOUNDARY-REVALIDATION.md) — `Complete / PASS 1.3.0`
 Activation decision: [`DECISION-2026-08-20-PHASE-8-ACTIVATION`](../governance/decisions/DECISION-2026-08-20-PHASE-8-ACTIVATION.md) — `Approved`
+
+Version `1.6.0` dispositions P8.08 as `Complete / NOT ACTIVATED`: canonical Phase 8 still contains exactly one governing Organization and no second Organization/customer rights scope, so realistic two-Organization isolation cannot be truthfully exercised. No synthetic Organization, customer, rights record or tenant grant was created. Existing fail-closed Organization-mismatch, authority/access, transfer and cross-Organization reuse guards remain the bounded evidence available today; realistic storage/query/index/cache/background/observability/admin/AI-context isolation remains explicitly unproven until a genuine second Organization is canonically activated. The review defines a concrete re-entry trigger and minimum future proof and advances the current canonical action to P8.09 without changing Platform Capability/Product Contract lifecycle, readiness, conformance, public-surface or commercial status.
 
 Version `1.5.0` completes P8.07 with a bounded portability/export/migration/customer-handover interoperability `PASS`: a deterministic machine-readable package is independently receiver-validated for integrity, identity/version/relationship/history semantics, handling constraints, explicit secret omissions/reprovisioning, historical reconstruction without effect replay, explicit termination/revocation controls and fail-closed migration authority conflicts. Because no concrete permitted external customer/portability recipient exists in the activated scope, actual customer/cross-Organization transfer remains `NOT ACTIVATED`; the harness rejects any external-transfer activation attempt and does not define a universal/stable customer export format. Repository `Reference Python CI` passed `1259 tests / OK`. It advances the current canonical action to P8.08 without changing Platform Capability/Product Contract lifecycle, readiness, conformance, public-surface or commercial status.
 
@@ -88,8 +90,8 @@ No second Organization, customer or portability recipient is implied by activati
 | `P8.06` | External product/extension onboarding + governed dependency resolution | P8.05 | 🟩 Complete / PASS | repeatable explicit onboarding/dependency proof |
 | `R26` | Cross-Organization Security / Integration Health Review | P8.06 | 🟩 Complete / PASS | bounded security/isolation/integration-health review |
 | `P8.07` | Portability/export/migration/customer-handover interoperability proof | R26 | 🟩 Complete / PASS | bounded governed interoperability proof; external transfer not activated |
-| `P8.08` | Multi-Organization isolation + cross-organization security validation | P8.07 | 🟨 Current | realistic isolation/failure-closed evidence when a second Organization is actually in scope |
-| `P8.09` | External operator/developer integration experience + documentation | P8.08 | ⬜ Pending | bounded repeatable integration experience |
+| `P8.08` | Multi-Organization isolation + cross-organization security validation | P8.07 | 🟩 Complete / NOT ACTIVATED | activation-condition disposition + explicit unproven realistic isolation scope |
+| `P8.09` | External operator/developer integration experience + documentation | P8.08 | 🟨 Current | bounded repeatable integration experience |
 | `R27` | Portability / Ecosystem Reuse Review | P8.09 | ⬜ Pending gate | reuse/portability/no-speculative-generalization review |
 | `P8.10` | Scoped external conformance/commercial/support boundary review | R27 | ⬜ Pending | exact justified external claims and non-claims |
 | `P8.11` | Ecosystem architecture hardening + ADR/refactoring/lifecycle disposition | P8.10 | ⬜ Pending | material debt, ADR and lifecycle dispositions |
@@ -274,26 +276,21 @@ P8.07 does not prove or authorize actual customer handover, cross-Organization t
 
 ### P8.08 — Multi-Organization isolation + cross-organization security validation
 
-**Status: Current.**
+**Status: Complete / NOT ACTIVATED — realistic two-Organization isolation remains unproven.**
 
-This step requires realistic evidence only if a second Organization is actually activated into scope.
+Evidence: [`P8-08-multi-organization-isolation-cross-organization-security-validation.md`](../reviews/P8-08-multi-organization-isolation-cross-organization-security-validation.md) — `Complete / NOT ACTIVATED`.
 
-When applicable, test at minimum:
+P8.08 revalidated the actual canonical activation state and found no genuine second Organization in scope after P8.07. The Creative Test Agent external consumer remains inside the same governing Organization; no customer rights record, Product Contract, tenant grant or external-recipient activation creates another sovereignty boundary. Consequently the task does not fabricate Organization B merely to satisfy sequencing.
 
-- Organization A identity cannot enumerate/read Organization B protected state;
-- same external email/directory identifier does not merge authority scopes;
-- relationship/contract presence does not grant content access;
-- admin/support access is not ambient content access;
-- logs/metrics/errors do not leak foreign identifiers/content;
-- cache/index/search/projection boundaries do not cross Organization scope;
-- export/import/handover cannot widen rights;
-- revoked/deleted/grant-expired state fails closed;
-- external callback/ingress cannot spoof Organization scope;
-- cross-Organization operations require explicit governed grants/contracts.
+Existing bounded guards remain valid evidence: unknown/mismatched Organization scope fails closed; Product Contract/extension presence grants no ambient access; external source/transport/replay creates no cross-Organization authority; P8.07 export/handover creates no authority/access/credential transfer; cross-Organization Knowledge/data reuse remains denied by default.
 
-No second Organization may be fabricated merely to satisfy the roadmap.
+Realistic two-Organization storage/read-model, query/search/index/vector/embedding, cache, queue/background-work, logs/metrics/errors, same-external-identifier, admin/support/break-glass, authorized import/handover, revocation, ingress-spoofing, AI-context/derived-artifact and per-Organization retention/deletion isolation remain explicitly `NOT PROVEN`.
+
+A fresh P8.08 validation may re-enter only when a genuine second Organization is canonically in scope through an applicable owner-approved/product/customer/legal/contractual basis. The review defines the minimum future proof and requires later M8/conformance/commercial reviews to preserve the limitation until such evidence exists.
 
 ### P8.09 — External operator/developer integration experience + documentation
+
+**Status: Current.**
 
 Make the actually validated external integration repeatable without exposing private platform internals.
 
@@ -424,9 +421,9 @@ R26 Integration Health / Cross-Org Security   PASS
    ↓
 P8.07 portability / handover proof            PASS (bounded; external transfer not activated)
    ↓
-P8.08 multi-Organization isolation validation CURRENT
+P8.08 multi-Organization isolation validation NOT ACTIVATED (no second Organization in canonical scope)
    ↓
-P8.09 external integration UX/docs
+P8.09 external integration UX/docs            CURRENT
    ↓
 R27 Portability / Ecosystem Reuse Review
    ↓
@@ -439,7 +436,7 @@ R28 M8 hardening + code-health gate
 P8.12 M8 closure
 ```
 
-P8.04 is the first action in this sequence that required the real owner-operated local Tender Operator/EIS runtime, existing credentials/trust path and owner-only raw execution artifacts. P8.05, P8.06, R26 and P8.07 completed repository-side semantic/evidence/review work without expanding the P8.03 read-only EIS rights boundary or requiring a fabricated external recipient/second Organization. Actual external customer handover remains unactivated.
+P8.04 is the first action in this sequence that required the real owner-operated local Tender Operator/EIS runtime, existing credentials/trust path and owner-only raw execution artifacts. P8.05, P8.06, R26 and P8.07 completed repository-side semantic/evidence/review work without expanding the P8.03 read-only EIS rights boundary or requiring a fabricated external recipient/second Organization. P8.08 then revalidated the activation condition and closed as `NOT ACTIVATED` because no second Organization exists in the canonical scope; realistic two-Organization isolation remains unproven and may be re-entered only after genuine activation. Actual external customer handover remains unactivated.
 
 ## 8. M8 exit criteria
 
@@ -482,6 +479,6 @@ Phase 8 does not inherently establish:
 
 ## 10. Current canonical action
 
-> **P8.08 — Multi-Organization isolation + cross-organization security validation.**
+> **P8.09 — External operator/developer integration experience + documentation.**
 
-P8.00, P8.01, P8.02, P8.03, R25, P8.04, P8.05, P8.06, R26 and P8.07 are `Complete / PASS` within their declared bounded scopes. P8.07 proves the portability/handover interoperability mechanics while keeping external customer/cross-Organization transfer `NOT ACTIVATED`, rejecting authority/access implication and dual-authority migration. P8.08 is now current, but its realistic multi-Organization proof is conditional: no second Organization may be fabricated merely to satisfy sequencing.
+P8.00, P8.01, P8.02, P8.03, R25, P8.04, P8.05, P8.06, R26 and P8.07 are `Complete / PASS` within their declared bounded scopes. P8.08 is `Complete / NOT ACTIVATED`: no genuine second Organization is canonically in scope, no synthetic one was fabricated, and realistic two-Organization isolation remains explicitly unproven until the documented re-entry trigger is satisfied. P8.09 is now the current canonical action. This sequencing change creates no lifecycle/readiness/conformance/public-surface/commercial claim.
