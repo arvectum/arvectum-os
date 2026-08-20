@@ -1,8 +1,9 @@
 # P8.00 — Phase 8 Activation / External-Ecosystem Boundary Revalidation
 
 Status: `Current / Pre-activation`
-Version: `1.0.0`
+Version: `1.1.0`
 Created: `2026-08-20`
+Updated: `2026-08-20`
 Owner: `ООО «Арвектум»`
 Task classification: `governance` with `platform` and `product_contract`
 Parent: [`PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md`](PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md)
@@ -47,18 +48,25 @@ Existing product-local connectors are evidence candidates, not automatic platfor
 
 ### P8.00-A1 — External-demand evidence inventory
 
-Collect only concrete evidence that exists at activation time:
+Status: `Complete / PASS`.
 
-- named external systems/organizations/products involved;
-- current business or operational outcome;
-- current manual/product-local integration path;
-- pain/risk/duplication actually observed;
-- contractual/legal/data-rights constraints known at this stage;
-- whether the external party/system is authoritative for any data or decision.
+Evidence: [`P8-00-A1-external-demand-evidence-inventory.md`](../reviews/P8-00-A1-external-demand-evidence-inventory.md).
 
-**Exit:** candidate register with evidence references and no invented demand/SLA/value metrics.
+A1 established three current evidence-backed candidates without ranking or selecting them:
+
+1. ЕИС / `zakupki.gov.ru` authoritative tender-document boundary;
+2. Telegram controlled external publication effect boundary;
+3. Discount Parser public discount/promo source set, with unresolved source-specific rights details.
+
+A1 also records that no named second partner/customer Organization, external portability/handover recipient or new external product/extension consumer beyond the existing owner-operated M6/M7 baseline is currently evidenced. Those absences must not be filled by assumption.
+
+The candidate register preserves external authority, distinguishes known from unresolved rights, leaves product-local connectors product-owned, and contains no invented demand/SLA/value metrics.
+
+**Exit:** satisfied — candidate register with evidence references and no invented demand/SLA/value metrics.
 
 ### P8.00-A2 — Candidate triage and value test
+
+Status: `Current / next`.
 
 For each candidate, score qualitatively:
 
@@ -184,6 +192,6 @@ If no candidate satisfies these criteria, the correct result is `DEFER / Phase 8
 
 ## 6. Current action
 
-> **P8.00-A1 — External-demand evidence inventory.**
+> **P8.00-A2 — Candidate triage and value test.**
 
-This work should begin by gathering current concrete external-integration candidates and evidence. It must not select infrastructure, create public APIs, promote capabilities/contracts or make customer/Production claims merely to advance the roadmap.
+A1 is complete. A2 must compare only the evidence-backed A1 candidates, keep unresolved rights explicit, disposition contained/rejected candidates honestly and produce a shortlist of no more than three. It must not activate Phase 8, select P8.01 implementation or promote a product-local connector merely because it already works.

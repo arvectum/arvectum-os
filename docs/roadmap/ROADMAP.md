@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.57.0`
+Version: `2.58.0`
 Created: `2026-08-07`
 Updated: `2026-08-20`
 Owner: `ООО «Арвектум»`
@@ -17,9 +17,17 @@ Detailed completed-phase history remains in the corresponding phase roadmaps, re
 
 ## 2. Version note
 
-Version `2.57.0` normalizes the master roadmap after successful Phase 7 / M7 closure and expands the next-governed-action boundary for Phase 8.
+Version `2.58.0` closes `P8.00-A1 — External-demand evidence inventory` as `Complete / PASS` and advances the current pre-activation action to `P8.00-A2 — Candidate triage and value test`.
 
-Canonical facts preserved from `2.56.7`:
+A1 canonically records three evidence-backed external candidates without ranking or selecting them:
+
+- ЕИС / `zakupki.gov.ru` authoritative tender-document boundary;
+- Telegram controlled external publication effect boundary;
+- Discount Parser public discount/promo source set, with unresolved source-specific rights details.
+
+A1 also records that the reviewed evidence does not yet identify a named second partner/customer Organization, an external portability/handover recipient, or a new external product/extension consumer beyond the existing owner-operated M6/M7 baseline. No missing candidate class is filled by assumption.
+
+Canonical facts preserved from `2.57.0`:
 
 - `Phase 7 = Complete / PASS`;
 - `M7 = achieved` for the declared `Persistent Internal / owner-operated` scope;
@@ -29,13 +37,10 @@ Canonical facts preserved from `2.56.7`:
 - CAP-001 through CAP-004 remain `Incubating / Provisional`;
 - P6.02 and P6.06 Product Contracts remain `Provisional 0.1.0`;
 - conformance remains `Scoped` for the local persistent-internal contour;
-- no external/customer Production, Stable Product Contract, Active Platform Capability, public/stable API/wire/deployment surface, SLA/support or certification claim exists.
+- no external/customer Production, Stable Product Contract, Active Platform Capability, public/stable API/wire/deployment surface, SLA/support or certification claim exists;
+- Phase 8 remains `Draft / Exploratory` and has not been activated.
 
-Phase 8 remains `Draft / Exploratory`, but its activation handoff is now explicit and executable:
-
-- [`P8.00 — Phase 8 Activation / External-Ecosystem Boundary Revalidation`](P8-00-PHASE-8-ACTIVATION-BOUNDARY-REVALIDATION.md) is the current pre-activation work item;
-- active Phase 8 execution does not begin until P8.00 selects one concrete external outcome, defines Organization/authority/data-rights scope, proves that platform responsibility is actually required, dispositions stable/readiness/ADR gates and receives fresh owner activation approval;
-- detailed Phase 8 planning is [`PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md`](PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md) `0.2.0`.
+Phase 8 activation still requires completion of P8.00-A2 through A8, including one bounded outcome, explicit Organization/authority/data-rights scope, justified platform responsibility, stable/readiness/ADR gate disposition and fresh owner activation approval.
 
 This planning update does not itself activate Phase 8 or create any external commitment.
 
@@ -168,16 +173,18 @@ Status: `Current / Pre-activation`.
 
 P8.00 is deliberately outside active P8 execution. It decides whether the external ecosystem work is justified and what exact boundary may be activated.
 
-| Substep | Work | Exit |
-|---|---|---|
-| `P8.00-A1` | External-demand evidence inventory | concrete candidate register |
-| `P8.00-A2` | Candidate triage + value/platform-need test | shortlist ≤ 3 candidates |
-| `P8.00-A3` | Select one bounded external outcome | named activation outcome |
-| `P8.00-A4` | Organization / identity / authority / data-rights map | explicit deny-by-default boundary |
-| `P8.00-A5` | Platform-responsibility necessity test | `PLATFORM_REQUIRED`, `PRODUCT_LOCAL` or `DEFER` |
-| `P8.00-A6` | Stable/readiness/ADR gate scan | explicit required governance or `NO-GATE` |
-| `P8.00-A7` | Activation success/failure/rollback/containment envelope | executable validation scope |
-| `P8.00-A8` | Fresh owner activation decision | Phase 8 `Active` or explicit `DEFER` |
+| Substep | Work | Status | Exit |
+|---|---|---|---|
+| `P8.00-A1` | External-demand evidence inventory | 🟩 Complete / PASS | concrete candidate register |
+| `P8.00-A2` | Candidate triage + value/platform-need test | 🟨 Current / next | shortlist ≤ 3 candidates |
+| `P8.00-A3` | Select one bounded external outcome | ⬜ Pending | named activation outcome |
+| `P8.00-A4` | Organization / identity / authority / data-rights map | ⬜ Pending | explicit deny-by-default boundary |
+| `P8.00-A5` | Platform-responsibility necessity test | ⬜ Pending | `PLATFORM_REQUIRED`, `PRODUCT_LOCAL` or `DEFER` |
+| `P8.00-A6` | Stable/readiness/ADR gate scan | ⬜ Pending | explicit required governance or `NO-GATE` |
+| `P8.00-A7` | Activation success/failure/rollback/containment envelope | ⬜ Pending | executable validation scope |
+| `P8.00-A8` | Fresh owner activation decision | ⬜ Pending | Phase 8 `Active` or explicit `DEFER` |
+
+A1 evidence: [`P8-00-A1-external-demand-evidence-inventory.md`](../reviews/P8-00-A1-external-demand-evidence-inventory.md).
 
 Candidate classes include:
 
@@ -311,6 +318,6 @@ Successful integration is evidence, not automatic lifecycle promotion.
 
 ## 12. Current canonical action
 
-> **P8.00-A1 — External-demand evidence inventory.**
+> **P8.00-A2 — Candidate triage and value test.**
 
-The immediate next action is to inventory concrete current external ecosystem candidates and evidence, then proceed through P8.00-A2…A8. No P8.01 implementation should begin until one selected outcome passes the platform-responsibility and authority/data-rights gates and fresh owner activation approval is recorded.
+A1 is `Complete / PASS`. The immediate next action is to qualitatively triage only the evidence-backed A1 candidates, produce a shortlist of no more than three and disposition contained/rejected candidates without inventing value, rights or external demand. No P8.01 implementation may begin until one selected outcome passes the remaining P8.00 gates and fresh owner activation approval is recorded.
