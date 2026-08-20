@@ -71,7 +71,7 @@ class P805ExternalBoundaryTests(unittest.TestCase):
         self.ingress_execution = self._running_execution(
             "ingress",
             target=self.base,
-            side_effects=(),
+            side_effects=(OperationSideEffectClass.READ_ONLY,),
         )
         self.external_execution = self._running_execution(
             "external-effect",
@@ -81,7 +81,7 @@ class P805ExternalBoundaryTests(unittest.TestCase):
         self.reconciliation_execution = self._running_execution(
             "reconciliation",
             target=self.base,
-            side_effects=(),
+            side_effects=(OperationSideEffectClass.READ_ONLY,),
         )
         self.retry_execution = self._running_execution(
             "external-effect-retry",
