@@ -26,12 +26,12 @@ P8.11 rechecked the minimum-authority decision level against:
 
 1. Constitution `1.2.0` — product/platform separation, security/privacy/isolation, organizational sovereignty, portability, AI authority limits, evidence over intuition and minimum sufficient governance level;
 2. RFC-0001 — validated reuse, Capability lifecycle, Product/Platform boundary, operational-readiness requirements, technology independence, scoped conformance and commercial-commitment integrity;
-3. RFC-0002 — stable Subject/Version identity, authority modes and non-authoritative projections;
+3. RFC-0002 — stable Subject/Version identity, Canonical Record semantics, authority modes and non-authoritative projections;
 4. RFC-0003 — deny-by-default authorization, Organization sovereignty, cross-Organization isolation, data governance and portability/handover;
 5. RFC-0004 — Product Contract lifecycle, explicit dependencies, no hidden coupling and separate capability lifecycle;
 6. RFC-0005 — Governed Execution for consequential canonical mutation and side-effect-safe execution/replay boundaries;
 7. RFC-0006 — append-only Events, provenance, uncertainty/reconciliation and non-canonical telemetry;
-8. RFC-0007 — Observation/Memory/Knowledge separation and cross-Organization learning restrictions;
+8. RFC-0007 — Observation/Memory/Knowledge separation, governed promotion and cross-Organization learning restrictions;
 9. RFC-0008 — Document/Artifact portability and generated/transient-output boundaries;
 10. `docs/catalogs/PLATFORM-CAPABILITY-CANDIDATE-CATALOG.md`;
 11. `docs/contracts/PHASE-3-PROVISIONAL-CAPABILITY-CONTRACTS.md`;
@@ -39,7 +39,8 @@ P8.11 rechecked the minimum-authority decision level against:
 13. P8.01 through P8.10 plus R25, R26 and R27;
 14. P8.06/P8.09 external-consumer reference implementation and executable evidence;
 15. P8.07 portability/handover proof and P8.08 non-activation disposition;
-16. current repository navigation state, including the root README.
+16. current repository navigation state, including the root README;
+17. Phase 3/M3 continuity regression evidence and the Phase 8 sequencing chain through R28 and P8.12.
 
 No conflict with Constitution `1.2.0` or Accepted RFC-0001 through RFC-0008 was found.
 
@@ -125,10 +126,21 @@ The root README is refactored into a concise repository entry point that:
 - identifies the canonical authority order;
 - points to `docs/roadmap/ROADMAP.md` as the only source for current action and sequencing;
 - summarizes Phase 8 without duplicating a mutable action pointer;
+- preserves stable historical milestone continuity required by regression evidence;
 - preserves current lifecycle/non-claim boundaries;
 - links to the P8.11 disposition and relevant Phase 8 evidence.
 
 This removes a recurring drift class rather than merely replacing one stale action label with another. The README remains subordinate and does not become a competing roadmap.
+
+### 5.3 P8.11-F2 — hardening-test formatting brittleness
+
+Severity: `Low / test-quality`, found by CI.
+
+Finding: the first P8.11 guard compared a semantically continuous module-docstring phrase across a physical line break as a raw substring.
+
+Disposition: `Remediated in P8.11`.
+
+The guard now normalizes whitespace before asserting the bounded onboarding non-claims. This protects semantics rather than source formatting.
 
 ## 6. Lifecycle disposition
 
@@ -190,13 +202,14 @@ The guard fails if later unguided edits silently:
 - turn the P8.07 task-local package into claimed customer-transfer activation;
 - erase P8.08's `NOT ACTIVATED / NOT PROVEN` limitation;
 - introduce an ADR file without updating the P8.11 governed disposition;
-- reintroduce a root README current-action pointer that competes with the canonical roadmap.
+- reintroduce a root README current-action pointer that competes with the canonical roadmap;
+- skip the mandatory R28 code-health gate in P8.11 sequencing.
 
 The guard is not intended to prohibit future governed change. A later valid lifecycle/ADR/public-surface decision must update the canonical decision record and this guard together.
 
 ## 9. Functional cross-review
 
-Functional cross-review completed in four iterations of the maximum seven.
+Functional cross-review completed in five iterations of the maximum seven.
 
 ### Iteration 1 — architecture / generalization
 
@@ -233,28 +246,49 @@ No material objection remains.
 
 ### Iteration 4 — repository navigation / closure integrity
 
-Result: `REVISE → PASS`.
+Result: `REVISE`.
 
 Material objection: root README planning content had drifted two phases behind canonical roadmap state and could misdirect contributors even though it had lower authority.
 
-Revision: refactor README to a concise non-competing navigation/current-phase summary and keep exact action sequencing solely in the canonical roadmap.
+Revision: refactor README to a non-competing navigation/current-phase summary and keep exact action sequencing solely in the canonical roadmap.
 
-No material functional objection remains after revision.
+Disposition: `provisionally resolved`, subject to full regression CI.
+
+### Iteration 5 — CI regression continuity + sequencing
+
+Result: `REVISE → PASS`.
+
+CI run `Reference Python CI #204` exposed two regressions in the first P8.11 branch state:
+
+1. README refactoring removed an exact Phase 3/M3 historical closure marker protected by the existing P3.12 regression suite;
+2. the new onboarding guard compared raw docstring whitespace and failed on a physical line break.
+
+Independent sequencing recheck also found that the first draft incorrectly named P8.12 as the immediate successor and skipped the canonical R28 gate.
+
+Revisions:
+
+- restored the stable Phase 3/M3 and Phase 4/Product Contract continuity markers in README without restoring a mutable current-action pointer;
+- normalized docstring whitespace in the P8.11 semantic guard;
+- corrected the next canonical action to R28 and retained P8.12 only after R28 passes;
+- required final green CI after these corrections and roadmap synchronization before canonical P8.11 closure.
+
+Disposition: `resolved subject to final green CI`.
 
 Functional cross-review is not formal RFC/ADR acceptance, lifecycle promotion, operational-readiness approval, conformance certification or commercial authority.
 
 ## 10. Result and non-claims
 
-`P8.11 = Complete / PASS` means:
+`P8.11 = Complete / PASS` means, once final branch CI is green and the synchronized roadmap state is merged:
 
 - complete Phase 8 architecture/evidence set was reviewed;
 - minimum governance level was reassessed;
 - no ADR threshold is currently crossed;
 - no material runtime refactor/generalization is justified;
 - repository navigation drift is hardened without creating a competing roadmap;
+- historical milestone continuity remains regression-protected;
 - every affected capability/shared abstraction has an explicit retain/contain/defer/product-owned disposition;
 - security/privacy/isolation/authority/Event/provenance/Governed Execution/portability boundaries remain intact;
-- executable guards protect the current bounded decision.
+- executable guards protect the current bounded decision and sequencing.
 
 It does **not** mean:
 
@@ -264,12 +298,15 @@ It does **not** mean:
 - realistic multi-Organization isolation is proven;
 - customer handover or cross-Organization transfer is activated;
 - external/customer Production is approved;
-- SLA/support/certification/full-platform conformance is established.
+- SLA/support/certification/full-platform conformance is established;
+- Phase 8/M8 is closed before R28 and P8.12 complete their own gates.
 
 ## 11. Next canonical action
 
 After P8.11 branch CI succeeds, the change is merged and both canonical roadmaps are synchronized, proceed to:
 
-> **`P8.12 — Phase 8 / M8 closure review`.**
+> **`R28 — M8 Ecosystem Hardening + Milestone Code Health Gate`.**
 
-P8.12 must decide milestone closure from accumulated evidence and explicit non-claims. It must not use closure to manufacture missing two-Organization, customer-handover, Stable/Active, Production, support or compatibility evidence.
+R28 must run the full architecture/code-health regression and confirm that Phase 8 hardening did not create hidden lifecycle, product/platform, security, portability or compatibility drift.
+
+**P8.12 remains after R28** and may start only if R28 passes. P8.12 then decides Phase 8 / M8 closure from accumulated evidence and explicit non-claims; it must not manufacture missing two-Organization, customer-handover, Stable/Active, Production, support or compatibility evidence.
