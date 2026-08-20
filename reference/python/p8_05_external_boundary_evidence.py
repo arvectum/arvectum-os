@@ -588,20 +588,40 @@ def require_retry_allowed_after_reconciliation(
     ledger: ExternalEffectLedger,
     uncertain_attempt: ConsequentialAttempt,
 ) -> ExternalReconciliation:
-    """Fail closed unless reconciliation confirms that the prior effect was not applied."""
+    """Fail closed unless retained reconciliation safely proves no prior effect.
 
-    reconciliation = latest_reconciliation_for(ledger, uncertain_attempt)
-    if reconciliation is None:
+    A confirmed success is monotonic duplicate-safety evidence for this bounded
+    attempt: once any attributable reconciliation confirms that the effect did
+    occur, later contradictory evidence cannot silently re-open retry.  If no
+    confirmed success exists, the latest attributable reconciliation must be
+    ``ConfirmedNotApplied``; ``StillUncertain`` remains blocked.
+    """
+
+    matches = tuple(
+        item
+        for item in ledger.reconciliations
+        if item.uncertain_attempt_fingerprint == uncertain_attempt.fingerprint
+        and item.uncertain_retry_token == uncertain_attempt.retry_token
+    )
+    if not matches:
         raise ReconciliationRequiredError(
             "uncertain external outcome requires attributable reconciliation before retry"
         )
+    if any(
+        item.resolution is ReconciliationResolution.CONFIRMED_SUCCEEDED
+        for item in matches
+    ):
+        raise RetryAfterReconciliationNotAllowedError(
+            "reconciliation confirmed prior effect succeeded; a duplicate retry is prohibited"
+        )
+    reconciliation = matches[-1]
     if reconciliation.resolution is ReconciliationResolution.STILL_UNCERTAIN:
         raise ReconciliationRequiredError(
             "reconciliation remains uncertain; retry is still prohibited"
         )
-    if reconciliation.resolution is ReconciliationResolution.CONFIRMED_SUCCEEDED:
-        raise RetryAfterReconciliationNotAllowedError(
-            "reconciliation confirmed prior effect succeeded; a duplicate retry is prohibited"
+    if reconciliation.resolution is not ReconciliationResolution.CONFIRMED_NOT_APPLIED:
+        raise ReconciliationRequiredError(
+            "reconciliation does not establish that the prior external effect was not applied"
         )
     return reconciliation
 
