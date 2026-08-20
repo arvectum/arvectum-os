@@ -9,9 +9,9 @@ import unittest
 import arvectum_os_ref.external_consumer_onboarding as onboarding_module
 from arvectum_os_ref.cross_capability_enforcement import AccessRequest
 from arvectum_os_ref.external_consumer_onboarding import (
-    ExternalConsumerLifecycle,
-    ExternalConsumerLifecycleError,
     ExternalConsumerOnboardingError,
+    ExternalConsumerRelianceState,
+    ExternalConsumerRelianceStateError,
     disable_external_consumer,
     onboard_external_consumer,
     remove_external_consumer,
@@ -109,13 +109,14 @@ class P806ExternalProductExtensionOnboardingTests(unittest.TestCase):
         )
 
     def _onboard(self, **overrides):
+        contract = overrides.get("contract", self.contract)
         return onboard_external_consumer(
             source=overrides.get("source", self.source),
-            contract=overrides.get("contract", self.contract),
+            contract=contract,
             request=overrides.get("request", self.request),
             effective_product_contract=overrides.get(
                 "effective_product_contract",
-                overrides.get("contract", self.contract).version_pin,
+                contract.version_pin,
             ),
             governed_versions=overrides.get("governed_versions", self._provider_evidence()),
         )
@@ -151,7 +152,7 @@ class P806ExternalProductExtensionOnboardingTests(unittest.TestCase):
     def test_onboarding_resolves_exact_product_contract_provider_version_and_operation(self) -> None:
         receipt = self._onboard()
 
-        self.assertEqual(receipt.lifecycle, ExternalConsumerLifecycle.ONBOARDED)
+        self.assertEqual(receipt.state, ExternalConsumerRelianceState.ONBOARDED)
         self.assertEqual(receipt.repository, SOURCE_REPOSITORY)
         self.assertEqual(receipt.source_commit_sha, SOURCE_COMMIT_SHA)
         self.assertEqual(receipt.declaration_blob_sha, SOURCE_DECLARATION_BLOB_SHA)
@@ -242,21 +243,22 @@ class P806ExternalProductExtensionOnboardingTests(unittest.TestCase):
             "approval",
             "capability_lifecycle",
             "active",
+            "lifecycle",
         ):
             self.assertNotIn(forbidden, receipt_fields)
 
     def test_disable_and_remove_are_explicit_reversible_reliance_transitions(self) -> None:
         onboarded = self._onboard()
         disabled = disable_external_consumer(onboarded, reason="operator-disabled-optional-extension")
-        self.assertEqual(disabled.lifecycle, ExternalConsumerLifecycle.DISABLED)
-        with self.assertRaises(ExternalConsumerLifecycleError):
+        self.assertEqual(disabled.state, ExternalConsumerRelianceState.DISABLED)
+        with self.assertRaises(ExternalConsumerRelianceStateError):
             require_external_consumer_enabled(disabled)
 
         removed = remove_external_consumer(disabled, reason="integration-removed")
-        self.assertEqual(removed.lifecycle, ExternalConsumerLifecycle.REMOVED)
-        with self.assertRaises(ExternalConsumerLifecycleError):
+        self.assertEqual(removed.state, ExternalConsumerRelianceState.REMOVED)
+        with self.assertRaises(ExternalConsumerRelianceStateError):
             require_external_consumer_enabled(removed)
-        with self.assertRaises(ExternalConsumerLifecycleError):
+        with self.assertRaises(ExternalConsumerRelianceStateError):
             remove_external_consumer(onboarded, reason="must-disable-first")
 
     def test_upgrade_requires_new_source_and_product_contract_versions_then_reresolves(self) -> None:
@@ -290,12 +292,12 @@ class P806ExternalProductExtensionOnboardingTests(unittest.TestCase):
             effective_product_contract=new_contract.version_pin,
             governed_versions=self._provider_evidence(),
         )
-        self.assertEqual(upgraded.lifecycle, ExternalConsumerLifecycle.ONBOARDED)
+        self.assertEqual(upgraded.state, ExternalConsumerRelianceState.ONBOARDED)
         self.assertEqual(upgraded.consumer_version, "0.2.0")
         self.assertEqual(upgraded.source_commit_sha, "a" * 40)
         self.assertEqual(upgraded.product_contract, new_contract.version_pin)
 
-        with self.assertRaises(ExternalConsumerLifecycleError):
+        with self.assertRaises(ExternalConsumerRelianceStateError):
             upgrade_external_consumer(
                 previous=previous,
                 source=replace(new_source, consumer_version=EXTENSION_VERSION),
@@ -320,6 +322,7 @@ class P806ExternalProductExtensionOnboardingTests(unittest.TestCase):
         self.assertIn("internal reference slice", source)
         self.assertIn("not define a public sdk/api", source)
         self.assertIn("not a platform manifest", source)
+        self.assertIn("not a governed lifecycle model", source)
         self.assertNotIn("auto-fallback", source)
 
 
