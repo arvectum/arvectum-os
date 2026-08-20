@@ -75,6 +75,21 @@ Before onboarding or revalidation:
 8. Keep reusable credentials/secrets outside declarations, Product Contracts, receipts, logs, prompts and portable evidence.
 9. Treat the integration as disabled until exact validation succeeds and reliance state is explicitly `Onboarded`.
 
+### Verify the external source pin
+
+In a local checkout of `arvectum/creative-test-agent`, verify the immutable source and declaration before using the evidence:
+
+```bash
+git fetch origin
+git checkout --detach 8dd5aab83beb29be10629f06a2c4e3255e51f06c
+test "$(git rev-parse HEAD)" = "8dd5aab83beb29be10629f06a2c4e3255e51f06c"
+test "$(git hash-object integrations/arvectum_os_p8_06_onboarding.json)" = "67d6e4cfe5f32577c82a3f35aff3c33fe2f71fd3"
+```
+
+Any mismatch is a stop condition. Do not replace the expected SHA with the current branch head merely to make verification pass.
+
+For Arvectum OS itself, record the exact reviewed commit used for the run and verify it with `git rev-parse HEAD`; the canonical P8.09 review/PR evidence identifies which repository state was reviewed. Do not present `main` or another moving branch name as an immutable version pin.
+
 ## 5. Reproduce the validated reference path
 
 From `reference/python/`:
