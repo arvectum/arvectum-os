@@ -1,7 +1,7 @@
 # Arvectum OS Phase 8 — Ecosystem and External Integration
 
 Status: `Active`
-Version: `1.2.0`
+Version: `1.3.0`
 Created: `2026-08-17`
 Updated: `2026-08-20`
 Activated: `2026-08-20`
@@ -15,7 +15,7 @@ Restoration decision: [`DECISION-2026-08-17-PHASE-7-8-ROADMAP-RESTORATION`](../g
 Pre-activation plan: [`P8-00-PHASE-8-ACTIVATION-BOUNDARY-REVALIDATION.md`](P8-00-PHASE-8-ACTIVATION-BOUNDARY-REVALIDATION.md) — `Complete / PASS 1.3.0`
 Activation decision: [`DECISION-2026-08-20-PHASE-8-ACTIVATION`](../governance/decisions/DECISION-2026-08-20-PHASE-8-ACTIVATION.md) — `Approved`
 
-Version `1.2.0` completes P8.05 external ingress/egress Event, duplicate, replay, uncertainty and reconciliation semantics with `1235 tests / OK`, and advances the current canonical action to P8.06. No lifecycle, readiness, conformance or commercial status changes.
+Version `1.3.0` completes P8.06 external product/extension onboarding and governed dependency resolution using the separately maintained `arvectum/creative-test-agent` consumer, an exact Provisional Product Contract, exact CAP-004 `1.0.0` resolution, fail-closed least-privilege/private-coupling checks and a `1248 tests / OK` reference baseline; it advances the current canonical action to R26. No Platform Capability/Product Contract lifecycle, readiness, conformance, public-surface or commercial status changes.
 
 ## 1. Purpose
 
@@ -49,6 +49,7 @@ Lifecycle/readiness boundaries remain unchanged:
 - CAP-001 through CAP-004: `Incubating / Provisional`;
 - P6.02 and P6.06 Product Contracts: `Provisional 0.1.0`;
 - P8.03 EIS revalidation integration contract: `Provisional 0.1.0`;
+- P8.06 Creative Test Agent Product Contract: `Provisional 0.1.0`;
 - conformance remains scoped to evidence actually proven;
 - no external/customer Production, Stable Product Contract, Active Platform Capability, public/stable API/wire/deployment boundary, SLA/support or certification claim exists.
 
@@ -67,7 +68,7 @@ The activation gate established:
 7. A6 `NO-GATE` for the bounded internal read-only validation;
 8. fresh owner activation approval.
 
-No second Organization, customer, portability recipient or external product consumer is implied by activation.
+No second Organization, customer or portability recipient is implied by activation. P8.06 later adds one separately maintained external product/extension consumer only for its explicitly bounded Provisional contract scope.
 
 ## 4. Roadmap work breakdown
 
@@ -80,8 +81,8 @@ No second Organization, customer, portability recipient or external product cons
 | `R25` | External Boundary Review | P8.03 | 🟩 Complete / PASS | no material boundary blocker |
 | `P8.04` | External authoritative-system connector pattern validation | R25 | 🟩 Complete / PASS | real external authority integration evidence |
 | `P8.05` | External ingress/egress Event, duplicate, replay, uncertainty + reconciliation semantics | P8.04 | 🟩 Complete / PASS | fail-closed external effect/evidence semantics |
-| `P8.06` | External product/extension onboarding + governed dependency resolution | P8.05 | 🟨 Current | repeatable explicit onboarding/dependency proof |
-| `R26` | Cross-Organization Security / Integration Health Review | P8.06 | ⬜ Pending gate | security/isolation/integration-health review |
+| `P8.06` | External product/extension onboarding + governed dependency resolution | P8.05 | 🟩 Complete / PASS | repeatable explicit onboarding/dependency proof |
+| `R26` | Cross-Organization Security / Integration Health Review | P8.06 | 🟨 Current | security/isolation/integration-health review |
 | `P8.07` | Portability/export/migration/customer-handover interoperability proof | R26 | ⬜ Pending | governed external handover/export evidence |
 | `P8.08` | Multi-Organization isolation + cross-organization security validation | P8.07 | ⬜ Pending | realistic isolation/failure-closed evidence when a second Organization is actually in scope |
 | `P8.09` | External operator/developer integration experience + documentation | P8.08 | ⬜ Pending | bounded repeatable integration experience |
@@ -205,25 +206,35 @@ P8.05 does not select a transport/broker/inbox/outbox/reconciliation topology, c
 
 ### P8.06 — External product/extension onboarding + governed dependency resolution
 
-**Status: Current.**
+**Status: Complete / PASS.**
 
-Prove a separately maintained external consumer can enter through explicit governed boundaries without private coupling when a real qualifying consumer is available.
+Evidence: [`P8-06-external-product-extension-onboarding-governed-dependency-resolution.md`](../reviews/P8-06-external-product-extension-onboarding-governed-dependency-resolution.md) — `Complete / PASS`.
 
-Required evidence:
+Contract: [`P8-06-CREATIVE-TEST-AGENT-PROVISIONAL-PRODUCT-CONTRACT.md`](../contracts/P8-06-CREATIVE-TEST-AGENT-PROVISIONAL-PRODUCT-CONTRACT.md) — `Provisional 0.1.0`.
 
-- product/extension identity and owner;
-- Product Contract/integration-contract resolution;
-- exact capability/provider compatibility evidence;
-- least-privilege access and Organization scope;
-- rejection of undeclared dependency/version/operation;
-- no direct internal-table/private-module/private-stream reliance;
-- no hidden shared mutable state;
-- clear install/onboard/disable/remove/upgrade path;
-- product-specific schemas/workflows remain product-owned.
+P8.06 used the real separately maintained `arvectum/creative-test-agent` consumer rather than fabricating a platform-local mock:
 
-If no new external product/extension consumer exists beyond the M6/M7 owner-operated products, P8.06 must not invent one; the roadmap may require explicit defer/re-scope before proceeding.
+- consumer PR `arvectum/creative-test-agent#2` merged at exact commit `8dd5aab83beb29be10629f06a2c4e3255e51f06c` after green consumer CI;
+- product-owned declaration blob `67d6e4cfe5f32577c82a3f35aff3c33fe2f71fd3` is pinned as immutable source evidence;
+- exact extension identity is `extension:creative-test-agent-audit-reconstruction@arvectum`, version `0.1.0`;
+- exact Provisional Product Contract Version Identity is `product-contract-version:creative-test-agent-audit-reconstruction-pc-v0.1.0@arvectum`;
+- the only declared platform dependency is `platform-capability:CAP-004@platform`, exact contract version `1.0.0`, exact operation `p3.08.reconstruct-execution`;
+- compatibility is resolved through existing governed P5.03 semantics: exact version only, no semver inference or auto-fallback;
+- least privilege is exactly Organization `arvectum`, purpose `creative-test-audit-reconstruction`, right `read`, classification `internal`, with Authorization and DataGovernance preserved;
+- undeclared dependency/operation, nearby provider version, cross-Organization scope, excessive rights/classification, internal-table/private-module/undocumented-endpoint/private-stream/implicit-shared-state reliance all fail closed;
+- install/declaration alone does not activate reliance; `Onboarded`, `Disabled`, `Removed` are operational reliance states, explicitly not a new governed lifecycle model;
+- removal requires prior disable; upgrade requires a new immutable consumer version/source commit/Product Contract Version plus fresh exact dependency resolution;
+- creative schemas, scoring, workflows, reports/UX and model/prompt choices remain Creative Test Agent-owned.
+
+Functional cross-review completed in six iterations; two material issues were found and resolved: exact dependency scope was added to the product-owned declaration, and onboarding `lifecycle` terminology was replaced by non-governance `reliance state` terminology. No material objection remains.
+
+Executable evidence: repository `Reference Python CI` — `1248 tests / OK`.
+
+P8.06 does not make CAP-004 `Active`, make the Product Contract `Stable`, create a public SDK/API/manifest/registry/marketplace, add a second Organization, make Arvectum OS mandatory for Creative Test Agent core operation or expand readiness/conformance/commercial claims.
 
 ### R26 — Cross-Organization Security / Integration Health Review
+
+**Status: Current.**
 
 Review P8.01–P8.06 with emphasis on:
 
@@ -398,9 +409,9 @@ P8.04 real external connector validation      PASS
    ↓
 P8.05 duplicate / replay / uncertainty        PASS
    ↓
-P8.06 external product / extension onboarding CURRENT
+P8.06 external product / extension onboarding PASS
    ↓
-R26 Integration Health / Cross-Org Security
+R26 Integration Health / Cross-Org Security   CURRENT
    ↓
 P8.07 portability / handover proof
    ↓
@@ -419,7 +430,7 @@ R28 M8 hardening + code-health gate
 P8.12 M8 closure
 ```
 
-P8.04 is the first action in this sequence that required the real owner-operated local Tender Operator/EIS runtime, existing credentials/trust path and owner-only raw execution artifacts. P8.05 completed repository-side semantic/evidence validation without expanding the P8.03 read-only rights boundary.
+P8.04 is the first action in this sequence that required the real owner-operated local Tender Operator/EIS runtime, existing credentials/trust path and owner-only raw execution artifacts. P8.05 and P8.06 completed repository-side semantic/evidence validation without expanding the P8.03 read-only EIS rights boundary or requiring new local execution.
 
 ## 8. M8 exit criteria
 
@@ -462,6 +473,6 @@ Phase 8 does not inherently establish:
 
 ## 10. Current canonical action
 
-> **P8.06 — External product/extension onboarding + governed dependency resolution.**
+> **R26 — Cross-Organization Security / Integration Health Review.**
 
-P8.00, P8.01, P8.02, P8.03, R25, P8.04 and P8.05 are `Complete / PASS`. P8.05 proved the bounded RFC-0005/RFC-0006 external Event/duplicate/replay/uncertainty/reconciliation semantics with `1235 tests / OK`, without a real EIS mutation, public/stable surface or lifecycle promotion. P8.06 is now current and must use a real qualifying external consumer if one exists; it must not fabricate one merely to satisfy sequencing.
+P8.00, P8.01, P8.02, P8.03, R25, P8.04, P8.05 and P8.06 are `Complete / PASS`. P8.06 proved governed onboarding/dependency resolution for the real separately maintained Creative Test Agent extension through an exact Provisional Product Contract and exact CAP-004 `1.0.0` evidence, with `1248 tests / OK`, no private coupling/shared mutable state, no lifecycle promotion and no public/stable platform surface. R26 is now current.
