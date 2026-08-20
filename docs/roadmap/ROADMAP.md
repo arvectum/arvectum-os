@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.61.0`
+Version: `2.61.1`
 Created: `2026-08-07`
 Updated: `2026-08-20`
 Owner: `ООО «Арвектум»`
@@ -16,6 +16,8 @@ Roadmap status does not itself change Platform Capability lifecycle, Product Con
 Detailed completed-phase history remains in the corresponding phase roadmaps, reviews and repository history rather than being duplicated indefinitely in this master roadmap.
 
 ## 2. Version note
+
+Version `2.61.1` is a post-merge roadmap synchronization correction: it aligns the detailed Phase 8 roadmap reference with `1.1.1` and preserves `P8.04 = Complete / PASS` / `P8.05 = Current`; it changes no lifecycle, readiness, conformance or commercial status.
 
 Version `2.61.0` completes the bounded real P8.04 external authoritative-system connector validation (`NO_CHANGE` on the live EIS revalidation with immutable-baseline verification) and advances the current canonical action to P8.05.
 
@@ -200,7 +202,7 @@ Telegram remains product-local on current evidence. The Discount Parser public-s
 
 ## 8. Active Phase 8 — Ecosystem and External Integration
 
-Detailed roadmap: [`PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md`](PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md) — `Active 1.0.0`.
+Detailed roadmap: [`PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md`](PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md) — `Active 1.1.1`.
 
 | ID | Work item | Status |
 |---|---|---:|
