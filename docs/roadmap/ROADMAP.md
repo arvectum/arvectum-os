@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.61.1`
+Version: `2.62.0`
 Created: `2026-08-07`
 Updated: `2026-08-20`
 Owner: `ООО «Арвектум»`
@@ -17,9 +17,11 @@ Detailed completed-phase history remains in the corresponding phase roadmaps, re
 
 ## 2. Version note
 
-Version `2.61.1` is a post-merge roadmap synchronization correction: it aligns the detailed Phase 8 roadmap reference with `1.1.1` and preserves `P8.04 = Complete / PASS` / `P8.05 = Current`; it changes no lifecycle, readiness, conformance or commercial status.
+Version `2.62.0` completes P8.05 external ingress/egress Event, duplicate, replay, uncertainty and reconciliation semantics with repository `Reference Python CI` at `1235 tests / OK`, synchronizes the detailed Phase 8 roadmap to `1.2.0`, and advances the current canonical action to P8.06. It changes no Platform Capability or Product Contract lifecycle, external/customer readiness, conformance or commercial status.
 
-Version `2.61.0` completes the bounded real P8.04 external authoritative-system connector validation (`NO_CHANGE` on the live EIS revalidation with immutable-baseline verification) and advances the current canonical action to P8.05.
+Version `2.61.1` was a post-merge roadmap synchronization correction aligning the detailed Phase 8 roadmap with the already canonical `P8.04 = Complete / PASS` / `P8.05 = Current` state.
+
+Version `2.61.0` completed the bounded real P8.04 external authoritative-system connector validation (`NO_CHANGE` on the live EIS revalidation with immutable-baseline verification) and advanced the current canonical action to P8.05.
 
 Version `2.60.0` completed the remaining P8.00 activation gates, recorded fresh owner activation of Phase 8, completed P8.01–P8.03 and R25, and advanced the current canonical action to the first real local external-validation step:
 
@@ -42,6 +44,20 @@ P8.04 executed that bounded case in the owner-operated runtime and returned a ve
 - independent byte/manifest re-verification and network-free deterministic re-comparison passed;
 - governed evidence admission + reconstruction complete without external-effect replay;
 - review evidence: [`P8-04-eis-authoritative-system-live-validation.md`](../reviews/P8-04-eis-authoritative-system-live-validation.md).
+
+P8.05 then proved the domain-neutral external-boundary semantics without expanding P8.03 rights:
+
+- transport delivery is distinct from explicit canonical Event admission;
+- EIS source authority remains `External Reference`; the Native Event records only Arvectum OS observation/admission;
+- duplicate occurrence delivery does not create duplicate canonical truth;
+- equal payload bytes do not collapse distinct source occurrences;
+- occurrence and recording times remain distinct under late/out-of-order delivery;
+- unknown external outcome is explicit `Uncertain` and blocks blind retry;
+- reconciliation is append-only, attributable and versioned;
+- `ConfirmedSucceeded` permanently blocks duplicate-risk retry for the bounded attempt; `ConfirmedNotApplied` allows only a new Governed Execution with a new retry token;
+- historical reconstruction is pure and never repeats live retrieval/external effect automatically;
+- executable evidence: `1235 tests / OK`;
+- review evidence: [`P8-05-external-event-duplicate-replay-uncertainty-reconciliation.md`](../reviews/P8-05-external-event-duplicate-replay-uncertainty-reconciliation.md).
 
 Activation boundary:
 
@@ -202,7 +218,7 @@ Telegram remains product-local on current evidence. The Discount Parser public-s
 
 ## 8. Active Phase 8 — Ecosystem and External Integration
 
-Detailed roadmap: [`PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md`](PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md) — `Active 1.1.1`.
+Detailed roadmap: [`PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md`](PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md) — `Active 1.2.0`.
 
 | ID | Work item | Status |
 |---|---|---:|
@@ -211,8 +227,8 @@ Detailed roadmap: [`PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md`](PHASE-8-ECOSYSTE
 | `P8.03` | External Product Contract / integration-contract + stable-surface disposition | 🟩 Complete / PASS |
 | `R25` | External Boundary Review | 🟩 Complete / PASS |
 | `P8.04` | External authoritative-system connector pattern validation | 🟩 Complete / PASS |
-| `P8.05` | External ingress/egress Event, duplicate, replay, uncertainty + reconciliation semantics | 🟨 Current |
-| `P8.06` | External product/extension onboarding + governed dependency resolution | ⬜ Pending |
+| `P8.05` | External ingress/egress Event, duplicate, replay, uncertainty + reconciliation semantics | 🟩 Complete / PASS |
+| `P8.06` | External product/extension onboarding + governed dependency resolution | 🟨 Current |
 | `R26` | Cross-Organization Security / Integration Health Review | ⬜ Pending gate |
 | `P8.07` | Portability/export/migration/customer-handover interoperability proof | ⬜ Pending |
 | `P8.08` | Multi-Organization isolation + cross-organization security validation | ⬜ Pending |
@@ -223,13 +239,14 @@ Detailed roadmap: [`PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md`](PHASE-8-ECOSYSTE
 | `R28` | M8 Ecosystem Hardening + Milestone Code Health Gate | ⬜ Pending gate |
 | `P8.12` | Phase 8 / M8 closure review | ⬜ Pending |
 
-Completed active-phase preparation:
+Completed active-phase preparation/evidence:
 
 - [`P8.01 evidence baseline`](../reviews/P8-01-eis-revalidation-target-evidence-baseline.md);
 - [`P8.02 identity/trust/rights boundary`](../reviews/P8-02-identity-trust-rights-data-governance-boundary.md);
 - [`P8.03 Provisional integration contract`](../contracts/P8-03-EIS-EXTERNAL-AUTHORITY-REVALIDATION-CONTRACT.md);
 - [`R25 External Boundary Review`](../reviews/R25-external-boundary-review.md);
-- [`P8.04 live authoritative-system validation`](../reviews/P8-04-eis-authoritative-system-live-validation.md).
+- [`P8.04 live authoritative-system validation`](../reviews/P8-04-eis-authoritative-system-live-validation.md);
+- [`P8.05 external Event/duplicate/replay/uncertainty/reconciliation review`](../reviews/P8-05-external-event-duplicate-replay-uncertainty-reconciliation.md).
 
 ### Current critical path
 
@@ -246,9 +263,9 @@ R25 External Boundary Review                PASS
         ↓
 P8.04 real external connector validation    PASS
         ↓
-P8.05 duplicate/replay/uncertainty         CURRENT
+P8.05 duplicate/replay/uncertainty          PASS
         ↓
-P8.06 external consumer onboarding
+P8.06 external consumer onboarding          CURRENT
         ↓
 R26 Security / Integration Health Review
         ↓
@@ -269,7 +286,7 @@ R28 M8 hardening + code-health gate
 P8.12 M8 closure
 ```
 
-P8.04 was the first current task requiring the real owner-operated Tender Operator/EIS runtime, existing credentials/trust path and owner-only raw artifacts; it completed with a verified live `NO_CHANGE`. Repository-only execution covers offline verification; the live P8.04 call has already been performed and its evidence recorded.
+P8.04 was the first current task requiring the real owner-operated Tender Operator/EIS runtime, existing credentials/trust path and owner-only raw artifacts; it completed with a verified live `NO_CHANGE`. P8.05 then completed repository-side semantic/evidence validation without expanding the P8.03 read-only EIS rights boundary.
 
 ## 9. M8 milestone definition
 
@@ -331,8 +348,8 @@ Successful integration is evidence, not automatic lifecycle promotion.
 
 ## 12. Current canonical action
 
-> **P8.05 — External ingress/egress Event, duplicate, replay, uncertainty + reconciliation semantics.**
+> **P8.06 — External product/extension onboarding + governed dependency resolution.**
 
-P8.04 executed the bounded real EIS temporal-revalidation case defined by P8.01/P8.03 and passed by R25, and returned a verified live `NO_CHANGE` with complete governed evidence. P8.04 is `Complete / PASS`.
+P8.05 is `Complete / PASS`: the bounded RFC-0005/RFC-0006 external ingress/egress Event, duplicate, replay, uncertainty and reconciliation semantics passed repository `Reference Python CI` with `1235 tests / OK`; no real EIS mutation, public/stable external Event API, exactly-once guarantee or lifecycle promotion was introduced.
 
-P8.05 validates RFC-0005/RFC-0006 behavior at the external boundary: explicit canonical admission, duplicate/replay safety, timeout/unknown-outcome uncertainty and attributable reconciliation — without external-effect replay.
+P8.06 is now the current canonical action. It must prove explicit governed onboarding/dependency resolution for a real qualifying separately maintained external consumer if one exists; the roadmap must not fabricate such a consumer merely to satisfy sequencing.
