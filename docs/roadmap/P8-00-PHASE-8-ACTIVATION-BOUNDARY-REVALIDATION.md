@@ -1,214 +1,179 @@
 # P8.00 — Phase 8 Activation / External-Ecosystem Boundary Revalidation
 
-Status: `Current / Pre-activation`
-Version: `1.2.0`
+Status: `Complete / PASS`
+Version: `1.3.0`
 Created: `2026-08-20`
 Updated: `2026-08-20`
 Owner: `ООО «Арвектум»`
 Task classification: `governance` with `platform` and `product_contract`
 Parent: [`PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md`](PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md)
 Predecessor: `Phase 7 / M7 — Complete / PASS`
+Activation decision: [`DECISION-2026-08-20-PHASE-8-ACTIVATION`](../governance/decisions/DECISION-2026-08-20-PHASE-8-ACTIVATION.md) — `Approved`
 Architecture baseline: Constitution `1.2.0`; RFC-0001 through RFC-0008 `1.0.0` (`Accepted`)
 
 ## 1. Purpose
 
-P8.00 is the explicit pre-activation gate between the completed internal operating baseline and any external ecosystem reliance.
+P8.00 was the explicit pre-activation gate between the completed owner-operated internal M7 baseline and Phase 8 external-ecosystem validation.
 
-Its job is not to build an integration. Its job is to determine whether there is a concrete external outcome worth validating, whether Arvectum OS should own any part of that boundary, what Organization/authority/data-rights constraints apply, and what stronger stable/readiness commitments would be crossed if the work proceeds.
+It required a real external outcome, explicit Organization/authority/data-rights constraints, justified platform responsibility, disposition of stable/readiness/ADR gates, a bounded success/failure/rollback envelope and fresh owner approval before Phase 8 could become Active.
 
-P8.00 exists so that Phase 8 is activated by real external value and bounded evidence rather than by roadmap momentum.
+P8.00 is now closed. Detailed evidence remains in the referenced A1–A7 reviews and A8 owner decision.
 
-## 2. Starting evidence
+## 2. Starting baseline preserved
 
-P8.00 inherits, but does not widen, the M7 baseline:
+P8.00 did not widen the M7 claims baseline:
 
-- persistent `Persistent Internal / owner-operated` Arvectum OS runtime on the selected Mac mini;
-- durable governed state with tested backup/restore and host-loss recovery;
-- persistent least-privilege identity/access/secrets operations;
-- operational health/observability and incident/recovery procedures;
-- governed deploy/update/rollback/version/migration path;
-- live private operator workspace with a real owner interaction proof;
-- persistent Tender Operator and Discount Parser product reliance through Provisional Product Contracts;
+- M7 remains `Complete / PASS` for `Persistent Internal / owner-operated` scope;
 - CAP-001 through CAP-004 remain `Incubating / Provisional`;
 - P6.02 and P6.06 Product Contracts remain `Provisional 0.1.0`;
-- no external/customer Production, Stable Product Contract, Active Platform Capability, public/stable interface, SLA/support or broad conformance claim.
+- no external/customer Production, Stable Product Contract, Active Platform Capability, public/stable API/wire/deployment surface, SLA/support or broad conformance claim is created by P8.00.
 
-## 3. Candidate classes
+## 3. Candidate evidence and triage
 
-P8.00 may evaluate one or more candidate classes, but MUST select only an outcome with real organizational value and actual rights/constraints:
-
-1. **External authoritative system** — ERP, CRM, 1С, government registry/system or other external system of record;
-2. **External product/extension** — a separately maintained product or extension that must consume governed platform behavior through an explicit boundary;
-3. **Partner/customer Organization** — a real second Organization relying on an Arvectum OS integration with explicit sovereignty, trust and data-rights constraints;
-4. **Portability/handover recipient** — a real external recipient requiring governed export, migration or handover without transferring hidden authority or non-exportable secrets.
-
-Existing product-local connectors are evidence candidates, not automatic platform responsibilities. In particular, an integration MUST remain product-local when platform ownership is not justified by reuse, governance, security, identity, provenance, interoperability or strategic necessity.
-
-## 4. Work breakdown
-
-### P8.00-A1 — External-demand evidence inventory
+### A1 — External-demand evidence inventory
 
 Status: `Complete / PASS`.
 
 Evidence: [`P8-00-A1-external-demand-evidence-inventory.md`](../reviews/P8-00-A1-external-demand-evidence-inventory.md).
 
-A1 established three current evidence-backed candidates without ranking or selecting them:
+A1 admitted three evidence-backed candidates:
 
 1. ЕИС / `zakupki.gov.ru` authoritative tender-document boundary;
 2. Telegram controlled external publication effect boundary;
-3. Discount Parser public discount/promo source set, with unresolved source-specific rights details.
+3. Discount Parser public discount/promo source set with unresolved source-specific rights details.
 
-A1 also records that no named second partner/customer Organization, external portability/handover recipient or new external product/extension consumer beyond the existing owner-operated M6/M7 baseline is currently evidenced. Those absences must not be filled by assumption.
+No named second partner/customer Organization, portability/handover recipient or new external product/extension consumer was invented to fill missing candidate classes.
 
-The candidate register preserves external authority, distinguishes known from unresolved rights, leaves product-local connectors product-owned, and contains no invented demand/SLA/value metrics.
-
-**Exit:** satisfied — candidate register with evidence references and no invented demand/SLA/value metrics.
-
-### P8.00-A2 — Candidate triage and value test
+### A2 — Candidate triage and value test
 
 Status: `Complete / PASS`.
 
 Evidence: [`P8-00-A2-candidate-triage-and-value-test.md`](../reviews/P8-00-A2-candidate-triage-and-value-test.md).
 
-A2 qualitatively evaluated all three A1 candidates against:
+Disposition:
 
-- real organizational value now;
-- consequence and reversibility;
-- external dependency maturity/readiness;
-- authority/data-rights clarity;
-- distinctness from M6/M7 internal validation;
-- ability to generate reusable platform evidence;
-- cost of keeping the mechanism product-local;
-- risk of premature stable/public commitment.
+- ЕИС authoritative tender-document boundary — `SHORTLIST_FOR_A3`;
+- Telegram external publication effect — `CONTAIN_PRODUCT_LOCAL / NOT_SHORTLISTED` because M6/M7 already materially validate the same pressure and no broader generic notification-platform need is evidenced;
+- Discount Parser public source set — `DEFER_RIGHTS_GAP / NOT_SHORTLISTED` because permitted-use/redistribution/retention rights remain unresolved and the current adapter behavior is product-owned.
 
-A2 produced one shortlisted candidate:
+## 4. Activation work breakdown and result
 
-1. **ЕИС / `zakupki.gov.ru` authoritative tender-document boundary** — `SHORTLIST_FOR_A3`.
+| Substep | Work | Status | Canonical result |
+|---|---|---|---|
+| `P8.00-A1` | External-demand evidence inventory | 🟩 Complete / PASS | three evidence-backed candidates |
+| `P8.00-A2` | Candidate triage + value test | 🟩 Complete / PASS | one-item shortlist: ЕИС |
+| `P8.00-A3` | Select one bounded external outcome | 🟩 Complete / PASS | temporal EIS authoritative-source revalidation |
+| `P8.00-A4` | Organization / identity / authority / data-rights map | 🟩 Complete / PASS | one Organization, deny-by-default rights boundary |
+| `P8.00-A5` | Platform-responsibility necessity test | 🟩 Complete / PASS | `PLATFORM_REQUIRED` for narrow governed reliance envelope only |
+| `P8.00-A6` | Stable/readiness/ADR gate scan | 🟩 Complete / PASS | `NO-GATE` for bounded internal read-only validation |
+| `P8.00-A7` | Activation success/failure/rollback/containment envelope | 🟩 Complete / PASS | executable bounded validation scope |
+| `P8.00-A8` | Fresh owner activation decision | 🟩 Complete / APPROVED | Phase 8 `Draft / Exploratory → Active` |
 
-A2 explicitly dispositioned the other current candidates:
+## 5. A3 — Selected bounded external outcome
 
-- **Telegram controlled publication effect boundary** — `CONTAIN_PRODUCT_LOCAL / NOT_SHORTLISTED`; the material external-effect/reconstruction pressure is already substantially validated by M6/M7 and no current evidence justifies a broader generic Telegram/notification platform boundary;
-- **Discount Parser public discount/promo source set** — `DEFER_RIGHTS_GAP / NOT_SHORTLISTED`; source-specific permitted-use/redistribution/retention scope is not canonically established and product-owned adapter/normalization behavior remains sufficient for the current contour.
+Evidence: [`P8-00-A3-bounded-external-outcome-selection.md`](../reviews/P8-00-A3-bounded-external-outcome-selection.md).
 
-The shortlist does not platformize the EIS connector and does not convert technical access into legal/contractual rights. A3 must identify a materially new bounded external outcome beyond the prior M6 retrieval proof or record `DEFER` rather than replay old evidence.
+Selected outcome:
 
-**Exit:** satisfied — shortlist contains one candidate, and contained/deferred candidates are explicitly dispositioned.
+> For real EIS notice `0344100006426000005`, make a later independent read-only source observation, compare the fresh exact source/document snapshot with the immutable P6 baseline, and prove external-authority freshness/version-drift semantics without rewriting historical evidence.
 
-### P8.00-A3 — Select one bounded activation outcome
+This differs materially from P6.05-L7 because P6 proved one point-in-time exact retrieval; Phase 8 tests temporal external state, explicit freshness and historical non-mutation.
 
-Status: `Current / next`.
+A valid live outcome may be `NO_CHANGE` or `CHANGE_DETECTED`. Actual EIS change is not required.
 
-Select one concrete outcome, not a generic technology goal.
+## 6. A4 — Organization / authority / data-rights boundary
 
-The selected outcome MUST identify:
+Evidence: [`P8-00-A4-organization-authority-data-rights-map.md`](../reviews/P8-00-A4-organization-authority-data-rights-map.md).
 
-- external system/organization/product/recipient;
-- exact organizational result to validate;
-- why the outcome is materially external to the current owner-operated internal contour;
-- what success looks like;
-- what failure must do;
-- explicit non-goals.
+Boundary:
 
-For the current A2 shortlist, A3 must either define a materially new bounded EIS-related outcome under deny-by-default unresolved-rights assumptions pending A4 or record `DEFER`. Repeating the existing P6 exact-document retrieval alone is not sufficient Phase 8 activation evidence, and technical access/token possession must not be treated as a broader permission basis.
+- governing Organization: `ООО «Арвектум»` only;
+- external system: ЕИС / `zakupki.gov.ru`;
+- authority mode: `External Reference`;
+- EIS connector: Tender Operator product-owned;
+- technical access/token possession does not establish Authorization, Organizational Authority or broad legal/contractual rights;
+- mutation, redistribution, customer-facing service and cross-Organization reuse are denied unless separately governed;
+- secrets remain outside canonical history;
+- unresolved rights fail closed.
 
-**Exit:** one selected Phase 8 validation outcome or explicit `DEFER` when no materially new bounded outcome is justified.
+This activation does not validate a second Organization.
 
-### P8.00-A4 — Organization / identity / authority / data-rights map
+## 7. A5 — Platform-responsibility necessity
 
-Define the minimum cross-boundary control model before any external data or authority crosses it:
+Evidence: [`P8-00-A5-platform-responsibility-necessity-test.md`](../reviews/P8-00-A5-platform-responsibility-necessity-test.md).
 
-- governing Organization(s);
-- external identities/aliases and trust source;
-- Authentication evidence required;
-- Authorization owner/rules;
-- Organizational Authority and approval owner;
-- Data Governance purpose, classification, disclosure, retention, deletion and export constraints;
-- legal/contractual rights known at this stage;
-- secrets/credentials and non-exportable material;
-- external authoritative source and Authority Mode (`External Reference`, `Governed Replica`, or `Native` only where justified).
+Disposition: `PLATFORM_REQUIRED`, narrowly scoped.
 
-**Exit:** explicit boundary map with deny-by-default unresolved cases.
+Platform responsibility is limited to reusable domain-neutral semantics for:
 
-### P8.00-A5 — Platform-responsibility necessity test
+- external authority/source attribution;
+- observation time/freshness;
+- exact materially relied-upon version/integrity references;
+- provenance and immutable execution history;
+- explicit stale/missing/ambiguous evidence;
+- reconstruction of which external observation/version a governed execution relied upon.
 
-Answer whether the selected outcome actually belongs in Phase 8 platform work.
+EIS retrieval/SOAP/archive handling and procurement business semantics remain product-owned.
 
-Platform responsibility is justified only if one or more are materially true:
+No new Platform Capability or lifecycle transition is created.
 
-- reuse across products/integrations is evidenced or strategically required;
-- shared identity/security/Organization isolation is required;
-- shared provenance/reconstruction/replay safety is required;
-- governed portability/interoperability is required;
-- hidden coupling would otherwise be created;
-- constitutional/Accepted RFC invariants require platform ownership.
+## 8. A6 — Stable/readiness/ADR gate scan
 
-If a bounded product-local adapter is sufficient, Phase 8 MUST NOT absorb the business integration merely to create roadmap work.
+Evidence: [`P8-00-A6-stable-readiness-adr-gate-scan.md`](../reviews/P8-00-A6-stable-readiness-adr-gate-scan.md).
 
-**Exit:** `PLATFORM_REQUIRED`, `PRODUCT_LOCAL`, or `DEFER` disposition with rationale.
+Disposition: `NO-GATE` for the selected bounded internal read-only validation.
 
-### P8.00-A6 — Stable/readiness/ADR gate scan
+No new RFC/ADR/Stable surface/Active capability/external Production approval is required before the bounded validation, provided it stays inside the declared scope.
 
-Check whether the selected outcome would materially rely on any concrete long-lived boundary:
+Before live P8.04 execution, the following remained mandatory and are now separately tracked in the active Phase 8 roadmap:
 
-- public/stable API or wire format;
-- external authentication/trust protocol;
-- multi-Organization persistence/isolation topology;
-- external Event transport/broker;
-- connector/plugin packaging/discovery protocol;
-- durable customer-facing export/migration format;
-- external Production environment;
-- support/SLA/compatibility commitment.
+- P8.01 exact evidence baseline;
+- P8.02 identity/trust/rights/data-governance boundary;
+- P8.03 Provisional integration contract;
+- R25 External Boundary Review.
 
-Use the lowest sufficient decision level. A crossed threshold MUST stop at the applicable ADR/RFC/policy/Product Contract/governance decision before implementation relies on it.
+Any later public/stable API, platform auth protocol, multi-Organization topology, external broker/connector protocol, customer export, external Production, SLA/support/compatibility or lifecycle-promotion threshold reopens the appropriate governance gate.
 
-**Exit:** explicit `NO-GATE` or named required governance artifacts.
+## 9. A7 — Activation evidence envelope
 
-### P8.00-A7 — Activation evidence and success/failure envelope
+Evidence: [`P8-00-A7-activation-evidence-envelope.md`](../reviews/P8-00-A7-activation-evidence-envelope.md).
 
-Define Phase 8 activation evidence:
+The bounded validation permits one owner-operated read-only EIS revalidation path, minimized governed source/version/freshness/provenance evidence and deterministic comparison with the P6 baseline.
 
-- selected outcome and accountable owner;
-- exact external boundary;
-- initial Product Contract/integration-contract need;
-- permitted data/effects;
-- prohibited data/effects;
-- failure-closed behavior;
-- required provenance/reconstruction evidence;
-- rollout/rollback/containment path;
-- review cadence/trigger;
-- activation success criteria;
-- conditions that return the work to product-local containment or defer it.
+It prohibits EIS mutation, submission/signature, messaging, cross-Organization movement, redistribution, customer Production, stable/public exposure, secret persistence and stale-history substitution.
 
-### P8.00-A8 — Owner activation decision
+Required failure states include explicit `FAIL_CLOSED`, `INCOMPLETE` or uncertainty/reconciliation status when current authoritative evidence cannot be established.
 
-A separate canonical owner decision activates Phase 8 only after A1–A7 are complete.
+## 10. A8 — Owner activation decision
 
-The decision MUST state:
+Decision: [`DECISION-2026-08-20-PHASE-8-ACTIVATION`](../governance/decisions/DECISION-2026-08-20-PHASE-8-ACTIVATION.md) — `Approved`.
 
-- selected outcome;
-- Organization/authority/data-rights scope;
-- platform-responsibility rationale;
-- required governance artifacts before implementation;
-- Phase 8 status transition `Draft / Exploratory → Active`;
-- current action `P8.01`;
-- explicit non-claims.
+Approved transition:
 
-## 5. Exit criteria
+`Phase 8: Draft / Exploratory → Active`
 
-P8.00 is `Complete / PASS` only when:
+Approval is limited to the exact bounded EIS temporal revalidation program above.
 
-1. at least one concrete external candidate has evidence;
-2. one bounded activation outcome is selected;
+It does not create M8 achievement, customer/external Production, Stable Product Contracts, Active Platform Capabilities, public/stable connector/API surfaces, SLA/support obligations, certification, cross-Organization validation or redistribution rights.
+
+## 11. Exit criteria
+
+P8.00 exit criteria are satisfied:
+
+1. concrete external evidence exists;
+2. one bounded outcome is selected;
 3. Organization/identity/authority/data-rights scope is explicit;
-4. platform responsibility is justified rather than assumed;
+4. platform responsibility is justified and narrow;
 5. stable/readiness/ADR gates are dispositioned;
 6. success/failure/rollback/containment criteria are explicit;
 7. fresh owner activation approval is recorded canonically.
 
-If no candidate satisfies these criteria, the correct result is `DEFER / Phase 8 remains Draft`, not artificial activation.
+Result: `Complete / PASS`.
 
-## 6. Current action
+## 12. Handoff
 
-> **P8.00-A3 — Select one bounded external outcome.**
+P8.00 is closed. Phase 8 is Active under the bounded activation decision.
 
-A1 and A2 are complete. A3 must work only from the A2 shortlist, currently the ЕИС / `zakupki.gov.ru` authoritative tender-document boundary. It must define a materially new bounded external outcome under deny-by-default unresolved-rights assumptions pending A4 or record `DEFER`; it must not activate Phase 8, platformize the product-owned EIS connector, treat technical access as broader rights/authority, or select P8.01 implementation.
+The active Phase 8 roadmap now governs sequencing. After completion of P8.01–P8.03 and R25, the next live action is:
+
+> **P8.04 — External authoritative-system connector pattern validation.**
