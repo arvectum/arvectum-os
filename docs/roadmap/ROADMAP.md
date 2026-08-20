@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.59.0`
+Version: `2.60.0`
 Created: `2026-08-07`
 Updated: `2026-08-20`
 Owner: `ООО «Арвектум»`
@@ -17,35 +17,37 @@ Detailed completed-phase history remains in the corresponding phase roadmaps, re
 
 ## 2. Version note
 
-Version `2.59.0` closes `P8.00-A2 — Candidate triage and value test` as `Complete / PASS` and advances the current pre-activation action to `P8.00-A3 — Select one bounded external outcome`.
+Version `2.60.0` completes the remaining P8.00 activation gates, records fresh owner activation of Phase 8, completes P8.01–P8.03 and R25, and advances the current canonical action to the first real local external-validation step:
 
-A2 qualitatively triaged only the three evidence-backed A1 candidates and produced one-item shortlist:
+> `P8.04 — External authoritative-system connector pattern validation`.
 
-- ЕИС / `zakupki.gov.ru` authoritative tender-document boundary — `SHORTLIST_FOR_A3`.
+P8.00 selected one bounded Phase 8 outcome:
 
-A2 explicitly contains/defer the remaining candidates on current evidence:
+- real notice `0344100006426000005` in ЕИС / `zakupki.gov.ru`;
+- make a later independent read-only source observation;
+- compare the fresh exact source/document snapshot with the immutable P6 baseline manifest SHA-256 `74e943d855406b04741f040fed271bddfaada9a9cc6e7da4501735a6e8725121`;
+- validate explicit external authority, observation freshness/version drift, provenance and historical non-mutation;
+- accept `NO_CHANGE` or `CHANGE_DETECTED` as valid live outcomes when evidenced correctly.
 
-- Telegram controlled external publication effect boundary — `CONTAIN_PRODUCT_LOCAL / NOT_SHORTLISTED` because M6/M7 already materially validated the same external-effect/reconstruction pressure and no broader generic Telegram/notification platform need is evidenced;
-- Discount Parser public discount/promo source set — `DEFER_RIGHTS_GAP / NOT_SHORTLISTED` because source-specific permitted-use/redistribution/retention scope is not canonically established and the current adapter/normalization behavior remains product-owned.
+Activation boundary:
 
-The A2 shortlist does not platformize the EIS connector. A3 must define a materially new bounded EIS-related external outcome beyond the existing M6 retrieval proof or record `DEFER` rather than recycle old evidence.
+- governing Organization: `ООО «Арвектум»` only;
+- authority mode: `External Reference` for EIS source facts/documents;
+- EIS connector remains Tender Operator product-owned;
+- `PLATFORM_REQUIRED` applies only to the reusable external-authority/freshness/provenance/reconstruction envelope;
+- A6 disposition: `NO-GATE` for this bounded internal read-only validation;
+- P8.03 contract: `Provisional 0.1.0`, `PROVISIONAL_INTERNAL_ONLY / NO_STABLE_SURFACE`;
+- R25: `Complete / PASS`;
+- no second Organization, customer Production, Stable Product Contract, Active Platform Capability, public/stable connector/API, SLA/support or redistribution-right claim is created.
 
-Canonical facts preserved from `2.58.0`:
+Canonical facts preserved from `2.59.0`:
 
 - `Phase 7 = Complete / PASS`;
 - `M7 = achieved` for the declared `Persistent Internal / owner-operated` scope;
-- all P7.01–P7.12 work, R21–R24 and the M7 Milestone Code Health Gate are complete;
-- the selected Mac mini remains a persistent owner-operated Arvectum OS environment;
-- the live private operator workspace is proven through real owner inspection and fail-closed governed interaction;
 - CAP-001 through CAP-004 remain `Incubating / Provisional`;
 - P6.02 and P6.06 Product Contracts remain `Provisional 0.1.0`;
-- conformance remains `Scoped` for the local persistent-internal contour;
-- no external/customer Production, Stable Product Contract, Active Platform Capability, public/stable API/wire/deployment surface, SLA/support or certification claim exists;
-- Phase 8 remains `Draft / Exploratory` and has not been activated.
-
-Phase 8 activation still requires completion of P8.00-A3 through A8, including one bounded outcome, explicit Organization/authority/data-rights scope, justified platform responsibility, stable/readiness/ADR gate disposition and fresh owner activation approval.
-
-This planning update does not itself activate Phase 8 or create any external commitment.
+- M7 conformance remains scoped to its declared owner-operated contour;
+- lifecycle, operational environment/readiness, conformance maturity and commercial claims remain distinct.
 
 ## 3. Architecture and governance baseline
 
@@ -56,7 +58,8 @@ This planning update does not itself activate Phase 8 or create any external com
 - Approved Engineering Quality and Refactoring Gates remain binding;
 - CAP-001 through CAP-004 remain `Incubating / Provisional`;
 - P6.02 and P6.06 real Product Contracts remain `Provisional 0.1.0`;
-- no Platform Capability is `Active` merely because M3–M7 completed;
+- P8.03 EIS revalidation integration contract is `Provisional 0.1.0`;
+- no Platform Capability is `Active` merely because M3–M7 completed or Phase 8 activated;
 - no Product Contract becomes `Stable` through roadmap progress alone;
 - phase status, capability lifecycle, Product Contract lifecycle, operational environment/readiness, conformance maturity and commercial claims remain distinct.
 
@@ -72,17 +75,17 @@ This planning update does not itself activate Phase 8 or create any external com
 | `Phase 5` | SDK, Contracts and Extension Experience | 🟩 Complete | `M5` Repeatable product/extension integration |
 | `Phase 6` | Product-driven Platform Validation | 🟩 Complete / PASS | `M6` Real-product validation across materially distinct workflows |
 | `Phase 7` | Operational / Enterprise Readiness | 🟩 Complete / PASS | `M7` Scoped production-grade operating baseline |
-| `Phase 8` | Ecosystem and External Integration | ⬜ Draft / Exploratory | `M8` Governed external ecosystem baseline |
+| `Phase 8` | Ecosystem and External Integration | 🟨 Active | `M8` Governed external ecosystem baseline — not yet achieved |
 
 ## 5. Completed platform progression
 
 ### Phase 0 / M0 — Architecture Bootstrap
 
-Established the constitutional and RFC architecture baseline and the governance hierarchy used by all later phases.
+Established the constitutional and RFC architecture baseline and governance hierarchy.
 
 ### Phase 1 / M1 — Reference Implementation
 
-Proved the first executable architectural spine without turning the reference technology into the platform contract.
+Proved the first executable architectural spine without turning reference technology into platform contract.
 
 ### Phase 2 / M2 — Core Runtime
 
@@ -94,7 +97,7 @@ Validated the bounded shared-capability baseline. CAP-001 through CAP-004 remain
 
 ### Phase 4 / M4 — Workspace / Operator Experience
 
-Established the domain-neutral operator workspace model covering Organization/Actor context, Records, Executions, Evidence, Documents, Knowledge and authority-safe governed actions without selecting a stable frontend/API technology.
+Established the domain-neutral operator workspace model for Organization/Actor context, Records, Executions, Evidence, Documents, Knowledge and authority-safe governed actions without selecting a stable frontend/API technology.
 
 ### Phase 5 / M5 — SDK, Contracts and Extension Experience
 
@@ -113,143 +116,122 @@ M6 proved real-product value and reuse while keeping product business semantics 
 
 Detailed roadmap: [`PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md`](PHASE-7-OPERATIONAL-ENTERPRISE-READINESS.md) — `Complete / PASS 1.2.18`.
 
-M7 established the declared `Persistent Internal / owner-operated` operating baseline:
+M7 established the declared `Persistent Internal / owner-operated` baseline:
 
-- persistent supervised Arvectum OS runtime on the selected Mac mini;
+- persistent supervised runtime on the selected Mac mini;
 - durable governed state/checkpoint persistence;
-- tested backup/restore and real selected-host-loss recovery;
+- tested backup/restore and selected-host-loss recovery;
 - persistent least-privilege identity/operator/service access;
 - health, observability, audit visibility and alerting;
 - governed deploy/update/rollback/version/migration;
-- live private operator workspace with real owner interaction;
+- private live operator workspace;
 - persistent Tender Operator reliance;
 - repeatable Discount Parser Windows ↔ Mac mini reconstruction contour;
-- executable incident/uncertain-outcome/recovery drills;
+- incident/recovery drills;
 - scoped readiness/lifecycle/conformance/stable-boundary disposition;
-- R21 through R24 and M7 Milestone Code Health Gate `Complete / PASS`.
+- R21–R24 and M7 Milestone Code Health Gate `Complete / PASS`.
 
-Final M7 code-health evidence included `1192 tests / OK` on the hardening baseline.
+Final M7 code-health evidence included `1192 tests / OK`.
 
-M7 did **not** create external/customer Production, Active Platform Capabilities, Stable Product Contracts, public/stable interfaces, SLA/SLO/RPO/RTO/support commitments or certification.
+M7 did not create external/customer Production, Active Platform Capabilities, Stable Product Contracts, public/stable interfaces, SLA/SLO/RPO/RTO/support commitments or certification.
 
 ## 6. Current operating state
 
-Arvectum OS is no longer only a reference or proof runtime.
-
-For the declared internal scope it currently has:
+For the declared internal scope:
 
 ```text
 Selected Mac mini
     ↓
-Persistent Arvectum OS runtime            PASS
+Persistent Arvectum OS runtime             PASS
     ↓
-Durable governed state + backup/restore  PASS
+Durable governed state + backup/restore   PASS
     ↓
-Least-privilege identity/access          PASS
+Least-privilege identity/access           PASS
     ↓
 Health / observability / audit visibility PASS
     ↓
-Governed update / rollback               PASS
+Governed update / rollback                PASS
     ↓
-Private live operator workspace          PASS
+Private live operator workspace           PASS
     ↓
-Tender Operator persistent contour       PASS
+Tender Operator persistent contour        PASS
     ↓
-Discount Parser cross-host contour       PASS
+Discount Parser cross-host contour        PASS
     ↓
-Incident / recovery drills               PASS
+Incident / recovery drills                PASS
     ↓
-Clean-host portability proof             PASS
+Clean-host portability proof              PASS
     ↓
-M7 operational/code-health gates         PASS
+M7 operational/code-health gates          PASS
 ```
 
-The internal operating contour is fit for ongoing governed use within its declared scope. It must not be described as broader external/customer Production or general platform availability.
+The owner-operated contour remains the operational baseline. Phase 8 activation adds a bounded external-validation program; it does not broaden the operating environment into external/customer Production.
 
-## 7. Phase 8 pre-activation — current work
+## 7. Phase 8 activation closure
 
-Detailed plan: [`P8.00-PHASE-8-ACTIVATION-BOUNDARY-REVALIDATION.md`](P8-00-PHASE-8-ACTIVATION-BOUNDARY-REVALIDATION.md).
+Detailed pre-activation plan: [`P8-00-PHASE-8-ACTIVATION-BOUNDARY-REVALIDATION.md`](P8-00-PHASE-8-ACTIVATION-BOUNDARY-REVALIDATION.md) — `Complete / PASS 1.3.0`.
 
-### P8.00 — Phase 8 activation / external-ecosystem boundary revalidation
+Owner decision: [`DECISION-2026-08-20-PHASE-8-ACTIVATION`](../governance/decisions/DECISION-2026-08-20-PHASE-8-ACTIVATION.md) — `Approved`.
 
-Status: `Current / Pre-activation`.
-
-P8.00 is deliberately outside active P8 execution. It decides whether the external ecosystem work is justified and what exact boundary may be activated.
-
-| Substep | Work | Status | Exit |
+| Substep | Work | Status | Result |
 |---|---|---|---|
 | `P8.00-A1` | External-demand evidence inventory | 🟩 Complete / PASS | concrete candidate register |
-| `P8.00-A2` | Candidate triage + value/platform-need test | 🟩 Complete / PASS | shortlist ≤ 3 candidates |
-| `P8.00-A3` | Select one bounded external outcome | 🟨 Current / next | named activation outcome or explicit `DEFER` |
-| `P8.00-A4` | Organization / identity / authority / data-rights map | ⬜ Pending | explicit deny-by-default boundary |
-| `P8.00-A5` | Platform-responsibility necessity test | ⬜ Pending | `PLATFORM_REQUIRED`, `PRODUCT_LOCAL` or `DEFER` |
-| `P8.00-A6` | Stable/readiness/ADR gate scan | ⬜ Pending | explicit required governance or `NO-GATE` |
-| `P8.00-A7` | Activation success/failure/rollback/containment envelope | ⬜ Pending | executable validation scope |
-| `P8.00-A8` | Fresh owner activation decision | ⬜ Pending | Phase 8 `Active` or explicit `DEFER` |
+| `P8.00-A2` | Candidate triage + value test | 🟩 Complete / PASS | EIS one-item shortlist |
+| `P8.00-A3` | Select one bounded external outcome | 🟩 Complete / PASS | temporal EIS revalidation |
+| `P8.00-A4` | Organization / identity / authority / data-rights map | 🟩 Complete / PASS | one-Organization deny-by-default boundary |
+| `P8.00-A5` | Platform-responsibility necessity test | 🟩 Complete / PASS | narrow `PLATFORM_REQUIRED` |
+| `P8.00-A6` | Stable/readiness/ADR gate scan | 🟩 Complete / PASS | `NO-GATE` for bounded internal read-only scope |
+| `P8.00-A7` | Success/failure/rollback/containment envelope | 🟩 Complete / PASS | executable activation envelope |
+| `P8.00-A8` | Fresh owner activation decision | 🟩 Approved | Phase 8 `Active` |
 
-A1 evidence: [`P8-00-A1-external-demand-evidence-inventory.md`](../reviews/P8-00-A1-external-demand-evidence-inventory.md).
+Telegram remains product-local on current evidence. The Discount Parser public-source set remains deferred pending source-specific rights clarity and new external value evidence.
 
-A2 evidence: [`P8-00-A2-candidate-triage-and-value-test.md`](../reviews/P8-00-A2-candidate-triage-and-value-test.md).
+## 8. Active Phase 8 — Ecosystem and External Integration
 
-Current A2 shortlist:
-
-1. ЕИС / `zakupki.gov.ru` authoritative tender-document boundary.
-
-Contained/deferred on current evidence:
-
-- Telegram controlled external publication effect boundary — product-local containment;
-- Discount Parser public discount/promo source set — deferred pending source-specific rights clarity and new external value evidence.
-
-Candidate classes include:
-
-1. external authoritative system such as ERP/CRM/1С/government system;
-2. separately maintained external product/extension;
-3. real partner/customer Organization;
-4. governed external portability/migration/handover recipient.
-
-Existing product-local connectors are evidence candidates, not automatic reasons to move business integration logic into Arvectum OS.
-
-## 8. Draft Phase 8 — Ecosystem and External Integration
-
-Detailed roadmap: [`PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md`](PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md) — `Draft / Exploratory 0.2.0`.
-
-P8.01–P8.12 remain planning hypotheses until P8.00 PASS and fresh owner activation approval.
+Detailed roadmap: [`PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md`](PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md) — `Active 1.0.0`.
 
 | ID | Work item | Status |
 |---|---|---:|
-| `P8.01` | External ecosystem target execution baseline + evidence package | ⬜ Draft |
-| `P8.02` | Cross-Organization identity, trust, rights + data-governance boundary | ⬜ Draft |
-| `P8.03` | External Product Contract / integration-contract + stable-surface disposition | ⬜ Draft |
-| `R25` | External Boundary Review | ⬜ Draft gate |
-| `P8.04` | External authoritative-system connector pattern validation | ⬜ Draft |
-| `P8.05` | External ingress/egress Event, duplicate, replay, uncertainty + reconciliation semantics | ⬜ Draft |
-| `P8.06` | External product/extension onboarding + governed dependency resolution | ⬜ Draft |
-| `R26` | Cross-Organization Security / Integration Health Review | ⬜ Draft gate |
-| `P8.07` | Portability/export/migration/customer-handover interoperability proof | ⬜ Draft |
-| `P8.08` | Multi-Organization isolation + cross-organization security validation | ⬜ Draft |
-| `P8.09` | External operator/developer integration experience + documentation | ⬜ Draft |
-| `R27` | Portability / Ecosystem Reuse Review | ⬜ Draft gate |
-| `P8.10` | Scoped external conformance/commercial/support boundary review | ⬜ Draft |
-| `P8.11` | Ecosystem architecture hardening + ADR/refactoring/lifecycle disposition | ⬜ Draft |
-| `R28` | M8 Ecosystem Hardening + Milestone Code Health Gate | ⬜ Draft gate |
-| `P8.12` | Phase 8 / M8 closure review | ⬜ Draft |
+| `P8.01` | External ecosystem target execution baseline + evidence package | 🟩 Complete / PASS |
+| `P8.02` | Cross-Organization identity, trust, rights + data-governance boundary | 🟩 Complete / PASS |
+| `P8.03` | External Product Contract / integration-contract + stable-surface disposition | 🟩 Complete / PASS |
+| `R25` | External Boundary Review | 🟩 Complete / PASS |
+| `P8.04` | External authoritative-system connector pattern validation | 🟨 Current / local execution required |
+| `P8.05` | External ingress/egress Event, duplicate, replay, uncertainty + reconciliation semantics | ⬜ Pending |
+| `P8.06` | External product/extension onboarding + governed dependency resolution | ⬜ Pending |
+| `R26` | Cross-Organization Security / Integration Health Review | ⬜ Pending gate |
+| `P8.07` | Portability/export/migration/customer-handover interoperability proof | ⬜ Pending |
+| `P8.08` | Multi-Organization isolation + cross-organization security validation | ⬜ Pending |
+| `P8.09` | External operator/developer integration experience + documentation | ⬜ Pending |
+| `R27` | Portability / Ecosystem Reuse Review | ⬜ Pending gate |
+| `P8.10` | Scoped external conformance/commercial/support boundary review | ⬜ Pending |
+| `P8.11` | Ecosystem architecture hardening + ADR/refactoring/lifecycle disposition | ⬜ Pending |
+| `R28` | M8 Ecosystem Hardening + Milestone Code Health Gate | ⬜ Pending gate |
+| `P8.12` | Phase 8 / M8 closure review | ⬜ Pending |
 
-### Draft critical path after activation
+Completed active-phase preparation:
+
+- [`P8.01 evidence baseline`](../reviews/P8-01-eis-revalidation-target-evidence-baseline.md);
+- [`P8.02 identity/trust/rights boundary`](../reviews/P8-02-identity-trust-rights-data-governance-boundary.md);
+- [`P8.03 Provisional integration contract`](../contracts/P8-03-EIS-EXTERNAL-AUTHORITY-REVALIDATION-CONTRACT.md);
+- [`R25 External Boundary Review`](../reviews/R25-external-boundary-review.md).
+
+### Current critical path
 
 ```text
-P8.00 PASS + owner activation
+P8.00 PASS + owner activation                DONE
         ↓
-P8.01 exact external target/evidence baseline
+P8.01 exact external target/evidence        PASS
         ↓
-P8.02 Organization/authority/data-rights boundary
+P8.02 Organization/authority/data-rights    PASS
         ↓
-P8.03 explicit integration contract
+P8.03 explicit integration contract         PASS
         ↓
-R25 External Boundary Review
+R25 External Boundary Review                PASS
         ↓
-P8.04 real external connector validation
+P8.04 real external connector validation    CURRENT / LOCAL
         ↓
-P8.05 duplicate/replay/uncertainty/reconciliation
+P8.05 duplicate/replay/uncertainty
         ↓
 P8.06 external consumer onboarding
         ↓
@@ -261,7 +243,7 @@ P8.08 cross-Organization isolation validation
         ↓
 P8.09 external integration UX/docs
         ↓
-R27 Ecosystem Reuse Review
+R27 Portability / Ecosystem Reuse Review
         ↓
 P8.10 external claims boundary
         ↓
@@ -271,6 +253,8 @@ R28 M8 hardening + code-health gate
         ↓
 P8.12 M8 closure
 ```
+
+P8.04 is the first current task requiring the real owner-operated Tender Operator/EIS runtime, existing credentials/trust path and owner-only raw artifacts. Repository-only execution stops before the live call.
 
 ## 9. M8 milestone definition
 
@@ -282,20 +266,20 @@ P8.12 M8 closure
 4. external authoritative-system semantics preserve the actual source of truth;
 5. explicit Product Contract/integration-contract boundaries replace hidden coupling;
 6. duplicate/replay/uncertain-outcome/reconciliation semantics are proven;
-7. external consumer/dependency reliance is explicit and version-governed where in scope;
-8. governed portability/export/handover is proven where in scope;
-9. realistic cross-Organization isolation is proven if the activated scope includes more than one Organization;
+7. external consumer/dependency reliance is explicit and version-governed where actually in scope;
+8. governed portability/export/handover is proven where actually in scope;
+9. realistic cross-Organization isolation is proven if a second Organization is actually activated;
 10. external integration experience is repeatable within declared lifecycle scope;
 11. conformance/commercial/support claims are exactly bounded to evidence;
 12. reuse versus containment recommendations are evidence-backed;
 13. R25–R28 material findings are dispositioned;
 14. the M8 Milestone Code Health Gate passes before closure.
 
-If the activated scope does not include a second Organization, public API, customer deployment or other relationship class, M8 closure must state that limitation and must not imply validation of that class.
+If the activated scope does not include a second Organization, public API, customer deployment, external consumer or handover recipient, M8 closure must state those limitations and must not imply validation of those classes.
 
 ## 10. Non-goals and invariant guardrails
 
-Neither P8.00 nor Phase 8 automatically establishes:
+Neither Phase 8 activation nor current progress automatically establishes:
 
 - public SaaS or general availability;
 - universal multi-tenancy;
@@ -332,6 +316,6 @@ Successful integration is evidence, not automatic lifecycle promotion.
 
 ## 12. Current canonical action
 
-> **P8.00-A3 — Select one bounded external outcome.**
+> **P8.04 — External authoritative-system connector pattern validation.**
 
-A1 and A2 are `Complete / PASS`. The immediate next action is to work from the one-item A2 shortlist and either define a materially new bounded EIS-related external outcome beyond the existing M6 retrieval proof or record `DEFER`. No P8.01 implementation may begin until one selected outcome passes the remaining P8.00 gates and fresh owner activation approval is recorded.
+P8.04 must execute the bounded real EIS temporal-revalidation case defined by P8.01/P8.03 and passed by R25. It requires local owner-operated execution; do not advance to P8.05 until P8.04 returns verified `PASS`, explicit `FAIL/DEFER`, or another governed disposition supported by evidence.
