@@ -1,0 +1,42 @@
+name: P8.04 reviewed-file materializer
+
+on:
+  push:
+    branches:
+      - p8-04-final-closure
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Materialize exact reviewed files
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .p8-transfer/part-* > /tmp/p8.b64
+          base64 -d /tmp/p8.b64 > /tmp/p8.tar.gz
+          echo '9a8bcd8ae455eda6c64718667617d0e6c29caa731b8e54193f5d0197ce85e45a  /tmp/p8.tar.gz' | sha256sum -c -
+          tar -xzf /tmp/p8.tar.gz -C .
+          cat > /tmp/p8.sha256 <<'EOF'
+          dc659b04d1c77fccca2d6a0a9b29fcc7877288597b1ea88eb10a1d1856b183ad  docs/roadmap/ROADMAP.md
+          55b5a398b17498b15263089b5a6e92b6bd40bd9973e4c76fe7f2384bdf9a6db8  docs/roadmap/PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md
+          b6c653443126b35059ca4b294158cb822a49034dbcbec134a77d7a53a8de6840  docs/reviews/P8-04-eis-authoritative-system-live-validation.md
+          8fa780b5ddd6836a9e4defba5230657864822cc0ef8f4ac01bc26a526ae946d1  reference/python/p8_04_eis_authoritative_system_evidence.py
+          463c54ef080448f382f57657b42aee431f418844a759545e240ed2b8cabb33e4  reference/python/tests/test_p8_04_eis_authoritative_system_evidence.py
+          d5f9aadc55341923dace765863a3115063a9309a670ba3bfc802bde36827f08c  reference/python/tests/test_p3_12_phase_3_m3_closure.py
+          EOF
+          sed -i 's/^          //' /tmp/p8.sha256
+          sha256sum -c /tmp/p8.sha256
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/roadmap/ROADMAP.md docs/roadmap/PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md docs/reviews/P8-04-eis-authoritative-system-live-validation.md reference/python/p8_04_eis_authoritative_system_evidence.py reference/python/tests/test_p8_04_eis_authoritative_system_evidence.py reference/python/tests/test_p3_12_phase_3_m3_closure.py
+          git diff --cached --check
+          git commit -m 'materialize reviewed P8.04 closure files'
+          git push origin HEAD:p8-04-final-closure
