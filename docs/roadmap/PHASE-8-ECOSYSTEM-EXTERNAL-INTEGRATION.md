@@ -1,9 +1,10 @@
 # Arvectum OS Phase 8 — Ecosystem and External Integration
 
-Status: `Draft / Exploratory`
-Version: `0.2.0`
+Status: `Active`
+Version: `1.0.0`
 Created: `2026-08-17`
 Updated: `2026-08-20`
+Activated: `2026-08-20`
 Owner: `ООО «Арвектум»`
 Task classification: `platform` with `product_contract` and `governance`
 Parent roadmap: [`ROADMAP.md`](ROADMAP.md)
@@ -11,19 +12,20 @@ Milestone: `M8 — Governed external ecosystem baseline`
 Architecture baseline: Constitution `1.2.0`; RFC-0001 through RFC-0008 `1.0.0` (`Accepted`)
 Predecessor: `Phase 7 / M7 — Complete / PASS`
 Restoration decision: [`DECISION-2026-08-17-PHASE-7-8-ROADMAP-RESTORATION`](../governance/decisions/DECISION-2026-08-17-PHASE-7-8-ROADMAP-RESTORATION.md)
-Pre-activation plan: [`P8-00-PHASE-8-ACTIVATION-BOUNDARY-REVALIDATION.md`](P8-00-PHASE-8-ACTIVATION-BOUNDARY-REVALIDATION.md)
+Pre-activation plan: [`P8-00-PHASE-8-ACTIVATION-BOUNDARY-REVALIDATION.md`](P8-00-PHASE-8-ACTIVATION-BOUNDARY-REVALIDATION.md) — `Complete / PASS 1.3.0`
+Activation decision: [`DECISION-2026-08-20-PHASE-8-ACTIVATION`](../governance/decisions/DECISION-2026-08-20-PHASE-8-ACTIVATION.md) — `Approved`
 
 ## 1. Purpose
 
-Phase 8 is the governed continuation after Arvectum OS has proved a persistent internal operating baseline through M7.
+Phase 8 is the governed continuation after Arvectum OS proved the persistent internal M7 operating baseline.
 
-Its purpose is to validate interaction beyond the current owner-operated internal contour: external authoritative systems, separately maintained products/extensions, partner/customer Organizations and governed portability/handover boundaries.
+Its purpose is to validate interaction beyond the prior point-in-time owner-operated product evidence through a concrete external authoritative-system boundary while preserving Organization sovereignty, explicit contracts, external authority, provenance, failure-closed behavior and proportionality.
 
-The phase is deliberately still `Draft / Exploratory`. M7 proves that Arvectum OS can operate persistently and recoverably for ООО «Арвектум»; it does not prove that any specific external boundary should become platform responsibility or that a public/stable integration surface is justified.
+Phase 8 is now `Active` only for the bounded outcome approved by P8.00/A8:
 
-Phase 8 therefore begins with a separate pre-activation work item, P8.00. Phase 8 becomes `Active` only after a concrete external outcome, rights/authority scope and platform-responsibility rationale have been owner-approved.
+> **EIS authoritative-source revalidation across time for notice `0344100006426000005`, comparing a fresh exact external observation with the immutable P6 baseline and proving freshness/version-drift semantics without rewriting historical evidence.**
 
-Phase 8 does not assume public SaaS, universal multi-tenancy, a public marketplace, one mandatory API/SDK, or migration of product business logic into the platform.
+The activation does not assume public SaaS, universal multi-tenancy, a public marketplace, one mandatory API/SDK, customer Production, or migration of product business logic into the platform.
 
 ## 2. Starting state inherited from M7
 
@@ -44,177 +46,152 @@ Lifecycle/readiness boundaries remain unchanged:
 
 - CAP-001 through CAP-004: `Incubating / Provisional`;
 - P6.02 and P6.06 Product Contracts: `Provisional 0.1.0`;
-- conformance: `Scoped` for the local `Persistent Internal / owner-operated` contour;
-- no external/customer Production, Stable Product Contract, Active Platform Capability, public/stable API/wire/deployment boundary, SLA/support or certification claim.
+- P8.03 EIS revalidation integration contract: `Provisional 0.1.0`;
+- conformance remains scoped to evidence actually proven;
+- no external/customer Production, Stable Product Contract, Active Platform Capability, public/stable API/wire/deployment boundary, SLA/support or certification claim exists.
 
-## 3. Activation rule
+## 3. Activation result
 
-### P8.00 — Phase 8 activation / external-ecosystem boundary revalidation
+P8.00 is `Complete / PASS`.
 
-Status: `Current / Pre-activation`.
+The activation gate established:
 
-Detailed plan: [`P8-00-PHASE-8-ACTIVATION-BOUNDARY-REVALIDATION.md`](P8-00-PHASE-8-ACTIVATION-BOUNDARY-REVALIDATION.md).
-
-P8.00 must complete before any P8.01–P8.12 execution item becomes Current.
-
-Activation requires:
-
-1. M7 closure — already satisfied;
-2. concrete external-demand evidence;
-3. one selected bounded external ecosystem outcome;
-4. explicit Organization/identity/authority/data-rights scope;
-5. evidence that platform responsibility is required rather than a product-local adapter alone;
-6. disposition of crossed ADR/stable/readiness/Production gates;
-7. success/failure/rollback/containment envelope;
+1. one evidence-backed selected external system: ЕИС / `zakupki.gov.ru`;
+2. one exact outcome: later source revalidation of real notice `0344100006426000005` against the immutable P6 baseline;
+3. one governing Organization: `ООО «Арвектум»`;
+4. deny-by-default identity/authority/data-rights scope;
+5. `PLATFORM_REQUIRED` only for the domain-neutral external-authority/freshness/provenance/reconstruction envelope;
+6. EIS connector/SOAP/archive/procurement semantics remain product-owned;
+7. A6 `NO-GATE` for the bounded internal read-only validation;
 8. fresh owner activation approval.
 
-If those conditions are not satisfied, Phase 8 remains Draft. `DEFER` is a valid result.
+No second Organization, customer, portability recipient or external product consumer is implied by activation.
 
 ## 4. Roadmap work breakdown
 
 | ID | Work item | Dependency | Status | Intended output |
 |---|---|---|---:|---|
-| `P8.00` | Phase 8 activation / external-ecosystem boundary revalidation | M7 | 🟨 Current / Pre-activation | approved selected external outcome or `DEFER` |
-| `P8.01` | External ecosystem target execution baseline + evidence package | P8.00 PASS | ⬜ Draft | exact external target/outcome/evidence baseline |
-| `P8.02` | Cross-Organization identity, trust, rights + data-governance boundary | P8.01 | ⬜ Draft | deny-by-default authority/data-sharing boundary |
-| `P8.03` | External Product Contract / integration-contract boundary + stable-surface disposition | P8.02 | ⬜ Draft | explicit versioned integration contract and stable-boundary decision |
-| `R25` | External Boundary Review | P8.03 | ⬜ Draft gate | boundary/security/authority/product-leakage review |
-| `P8.04` | External authoritative-system connector pattern validation | R25 | ⬜ Draft | real external authority integration evidence |
-| `P8.05` | External ingress/egress Event, duplicate, replay, uncertainty + reconciliation semantics | P8.04 | ⬜ Draft | fail-closed external effect/evidence semantics |
-| `P8.06` | External product/extension onboarding + governed dependency resolution | P8.05 | ⬜ Draft | repeatable explicit onboarding/dependency proof |
-| `R26` | Cross-Organization Security / Integration Health Review | P8.06 | ⬜ Draft gate | security/isolation/integration-health review |
-| `P8.07` | Portability/export/migration/customer-handover interoperability proof | R26 | ⬜ Draft | governed external handover/export evidence |
-| `P8.08` | Multi-Organization isolation + cross-organization security validation | P8.07 | ⬜ Draft | realistic isolation/failure-closed evidence |
-| `P8.09` | External operator/developer integration experience + documentation | P8.08 | ⬜ Draft | bounded repeatable integration experience |
-| `R27` | Portability / Ecosystem Reuse Review | P8.09 | ⬜ Draft gate | reuse/portability/no-speculative-generalization review |
-| `P8.10` | Scoped external conformance/commercial/support boundary review | R27 | ⬜ Draft | exact justified external claims and non-claims |
-| `P8.11` | Ecosystem architecture hardening + ADR/refactoring/lifecycle disposition | P8.10 | ⬜ Draft | material debt, ADR and lifecycle dispositions |
-| `R28` | M8 Ecosystem Hardening + Milestone Code Health Gate | P8.11 | ⬜ Draft gate | pre-closure engineering/code-health PASS |
-| `P8.12` | Phase 8 / M8 closure review | R28 | ⬜ Draft | exact M8 closure scope or explicit non-closure |
+| `P8.00` | Phase 8 activation / external-ecosystem boundary revalidation | M7 | 🟩 Complete / PASS | bounded outcome + approved activation |
+| `P8.01` | External ecosystem target execution baseline + evidence package | P8.00 PASS | 🟩 Complete / PASS | exact EIS temporal revalidation baseline |
+| `P8.02` | Cross-Organization identity, trust, rights + data-governance boundary | P8.01 | 🟩 Complete / PASS | one-Organization deny-by-default boundary |
+| `P8.03` | External Product Contract / integration-contract boundary + stable-surface disposition | P8.02 | 🟩 Complete / PASS | Provisional EIS revalidation contract `0.1.0` |
+| `R25` | External Boundary Review | P8.03 | 🟩 Complete / PASS | no material boundary blocker |
+| `P8.04` | External authoritative-system connector pattern validation | R25 | 🟨 Current / local execution required | real external authority integration evidence |
+| `P8.05` | External ingress/egress Event, duplicate, replay, uncertainty + reconciliation semantics | P8.04 | ⬜ Pending | fail-closed external effect/evidence semantics |
+| `P8.06` | External product/extension onboarding + governed dependency resolution | P8.05 | ⬜ Pending | repeatable explicit onboarding/dependency proof |
+| `R26` | Cross-Organization Security / Integration Health Review | P8.06 | ⬜ Pending gate | security/isolation/integration-health review |
+| `P8.07` | Portability/export/migration/customer-handover interoperability proof | R26 | ⬜ Pending | governed external handover/export evidence |
+| `P8.08` | Multi-Organization isolation + cross-organization security validation | P8.07 | ⬜ Pending | realistic isolation/failure-closed evidence when a second Organization is actually in scope |
+| `P8.09` | External operator/developer integration experience + documentation | P8.08 | ⬜ Pending | bounded repeatable integration experience |
+| `R27` | Portability / Ecosystem Reuse Review | P8.09 | ⬜ Pending gate | reuse/portability/no-speculative-generalization review |
+| `P8.10` | Scoped external conformance/commercial/support boundary review | R27 | ⬜ Pending | exact justified external claims and non-claims |
+| `P8.11` | Ecosystem architecture hardening + ADR/refactoring/lifecycle disposition | P8.10 | ⬜ Pending | material debt, ADR and lifecycle dispositions |
+| `R28` | M8 Ecosystem Hardening + Milestone Code Health Gate | P8.11 | ⬜ Pending gate | pre-closure engineering/code-health PASS |
+| `P8.12` | Phase 8 / M8 closure review | R28 | ⬜ Pending | exact M8 closure scope or explicit non-closure |
 
-P8.00 is a pre-activation governance item and does not by itself count as execution evidence toward M8 external validation.
-
-## 5. Detailed execution intent
+## 5. Completed active-phase preparation
 
 ### P8.01 — External ecosystem target execution baseline + evidence package
 
-After activation, turn the selected P8.00 outcome into an executable evidence baseline.
+Evidence: [`P8-01-eis-revalidation-target-evidence-baseline.md`](../reviews/P8-01-eis-revalidation-target-evidence-baseline.md) — `Complete / PASS`.
 
-Required outputs:
+Exact case:
 
-- exact external system/Organization/product/recipient identity;
-- accountable internal owner;
-- externally authoritative source or decision owner where applicable;
-- current integration/manual path and observed limitation;
-- exact data/effect boundary;
-- classification/purpose/retention constraints;
-- external dependency/version/freshness assumptions;
-- measurable technical success criteria without invented business/SLA metrics;
-- failure-closed criteria;
-- explicit non-goals;
-- evidence-retention and minimization plan.
+- Organization: `ООО «Арвектум»`;
+- Product: Tender Operator;
+- external authority: ЕИС / `zakupki.gov.ru`;
+- notice: `0344100006426000005`;
+- immutable P6 baseline manifest SHA-256: `74e943d855406b04741f040fed271bddfaada9a9cc6e7da4501735a6e8725121`;
+- live P8 outcome must establish a new observation and deterministic `NO_CHANGE` or `CHANGE_DETECTED` comparison, or an explicit non-success state.
 
-**Exit:** one bounded external validation case ready for contract/security design.
+P8.01 does not perform the live EIS request.
 
-### P8.02 — Cross-Organization identity, trust, rights + data-governance boundary
+### P8.02 — Identity, trust, rights + data-governance boundary
 
-Define every authority layer independently:
+Evidence: [`P8-02-identity-trust-rights-data-governance-boundary.md`](../reviews/P8-02-identity-trust-rights-data-governance-boundary.md) — `Complete / PASS`.
 
-1. Identity — who/what is referenced;
-2. Authentication — what evidence supports the actor claim;
-3. Authorization — what operation/resource/scope is permitted;
-4. Organizational Authority — who may approve consequential organizational outcomes;
-5. Data Governance — whether collection/use/disclosure/retention/export/deletion is permitted.
+The activated case validates one Organization only.
 
-Required evidence:
+The boundary keeps separate:
 
-- governing Organization(s) and technical tenant/isolation scope;
-- external aliases/trust-source mapping without silently merging identities;
-- deny-by-default cross-Organization behavior;
-- explicit grants/delegations where applicable;
-- purpose/classification/right/retention/deletion/export rules;
-- privileged/support-access restrictions;
-- secrets/non-exportable credential boundaries;
-- failure behavior for unresolved trust, rights or authority.
+1. Identity;
+2. Authentication;
+3. Authorization;
+4. Organizational Authority;
+5. Data Governance.
 
-No shared deployment or universal role hierarchy is implied.
+Verified TLS is mandatory; secrets remain local; technical token access creates no broader rights; cross-Organization access, redistribution, mutation and customer-facing use remain deny-by-default.
 
-### P8.03 — External Product Contract / integration-contract + stable-surface disposition
+### P8.03 — EIS external-authority revalidation integration contract
 
-Create the minimum explicit versioned boundary needed for the selected external reliance.
+Contract: [`P8-03-EIS-EXTERNAL-AUTHORITY-REVALIDATION-CONTRACT.md`](../contracts/P8-03-EIS-EXTERNAL-AUTHORITY-REVALIDATION-CONTRACT.md) — `Provisional 0.1.0`.
 
-The contract should declare, as applicable:
+Stable-surface disposition:
 
-- external party/system and Organization scope;
-- platform dependencies/capability versions;
-- permitted operations and side-effect classes;
-- authoritative-system semantics;
-- exact-version/freshness/compatibility assumptions;
-- data classification and handling constraints;
-- required authorization/authority/data-governance gates;
-- ingress/egress and failure semantics;
-- provenance/reconstruction obligations;
-- portability/termination expectations;
-- compatibility/migration and rollback expectations;
-- explicit product-owned semantics that remain outside the platform.
+`PROVISIONAL_INTERNAL_ONLY / NO_STABLE_SURFACE`.
 
-Stable-surface gate:
+Platform dependencies are limited to existing Kernel/Execution/Event semantics plus the bounded Provisional CAP-001/CAP-004 reliance required for exact document/provenance/reconstruction semantics.
 
-- default to bounded `Provisional`/internal surfaces while evidence is limited;
-- if an external party materially relies on a long-lived API/wire/package/auth/deployment contract, stop at the required stable-boundary/ADR/governance decision before commitment.
-
-**R25 follows P8.03.**
+The EIS adapter and procurement-specific behavior remain product-owned.
 
 ### R25 — External Boundary Review
 
-Review the selected boundary before real external implementation pressure hardens it.
+Evidence: [`R25-external-boundary-review.md`](../reviews/R25-external-boundary-review.md) — `Complete / PASS`.
 
-Must examine:
+No material blocker remains in:
 
-- product-specific leakage into platform behavior;
-- competing source-of-truth risk;
-- cross-Organization authority or data-rights ambiguity;
-- accidental permission via identity/relationship/contract presence;
-- premature public/stable API or protocol commitments;
-- unsupported lifecycle/readiness claims;
-- missing exit/rollback/termination path.
+- product/platform boundary;
+- external authority/source of truth;
+- identity/authorization/Organizational Authority;
+- rights/minimization/secrets;
+- stable/public surface;
+- lifecycle/readiness claims;
+- failure/rollback/termination.
 
-Material findings must be remediated before P8.04.
+P8.04 may proceed only within the bounded contract and requires real owner-operated local execution.
+
+## 6. Current and future execution intent
 
 ### P8.04 — External authoritative-system connector pattern validation
 
-Exercise the real external source/effect boundary while preserving authority.
+**Status: Current / local execution required.**
+
+Exercise the real EIS source boundary while preserving authority.
 
 Required behavior:
 
-- choose `External Reference`, `Governed Replica`, or `Native` only from actual authority semantics;
-- never create competing local authority merely for convenience;
-- bind external object/version/freshness evidence where material;
-- explicit retry/rate-limit/unavailable/degraded behavior;
-- secrets outside canonical history and ordinary logs;
-- exact transformation/provenance where data is converted, normalized or redacted;
-- read/write/effect scope matches the explicit contract;
-- connector implementation remains replaceable unless separately stabilized.
+- use the real product-owned EIS retrieval path for the exact selected notice;
+- keep EIS as `External Reference` authority;
+- establish one fresh observation time and exact current source/document snapshot;
+- independently verify the new snapshot from owner-only runtime state;
+- compare deterministically with the immutable P6 baseline;
+- classify material items as `UNCHANGED`, `ADDED`, `REMOVED` or `CHANGED`;
+- produce overall `NO_CHANGE`, `CHANGE_DETECTED`, or explicit fail/incomplete/uncertain state;
+- preserve verified TLS and explicit unavailable/degraded behavior;
+- keep secrets outside canonical history and ordinary logs;
+- bind exact external object/version/freshness evidence where material;
+- preserve required provenance/Execution Context/Event evidence;
+- keep connector implementation replaceable/product-owned;
+- perform no EIS/ETP mutation, submission, signature, customer/supplier messaging, redistribution or cross-Organization action.
 
-A product-local connector may remain product-owned; Phase 8 validates shared platform responsibilities around the boundary, not domain-specific parsing/workflow logic.
+A failed current retrieval must never be represented as `NO_CHANGE` by falling back to the historical P6 snapshot.
 
 ### P8.05 — External ingress/egress Event, duplicate, replay, uncertainty + reconciliation semantics
 
-Validate RFC-0005/RFC-0006 behavior at the external boundary:
+After P8.04 PASS, validate RFC-0005/RFC-0006 behavior at the external boundary:
 
 - transport receipt is not automatically a canonical Event;
 - canonical admission is explicit and attributable;
-- duplicate delivery/request does not duplicate canonical truth or external effects;
-- idempotency scope is explicit;
-- historical replay never replays an external effect without new authorization;
-- timeout/unknown effect outcome enters `uncertain/reconciliation-required` rather than optimistic success;
+- duplicate retrieval/delivery does not duplicate canonical truth;
+- idempotency scope is explicit where materially relevant;
+- historical replay never replays an external effect or live retrieval automatically;
+- timeout/unknown outcome becomes explicit uncertain/reconciliation-required state;
 - reconciliation is attributable and versioned;
-- partial/unverifiable evidence fails closed or remains explicitly incomplete;
-- external effect confirmation is distinguished from internal intent.
+- partial/unverifiable evidence fails closed or remains explicitly incomplete.
 
 ### P8.06 — External product/extension onboarding + governed dependency resolution
 
-Prove a separately maintained external consumer can enter through explicit governed boundaries without private coupling.
+Prove a separately maintained external consumer can enter through explicit governed boundaries without private coupling when a real qualifying consumer is available.
 
 Required evidence:
 
@@ -228,11 +205,11 @@ Required evidence:
 - clear install/onboard/disable/remove/upgrade path;
 - product-specific schemas/workflows remain product-owned.
 
-**R26 follows P8.06.**
+If no new external product/extension consumer exists beyond the M6/M7 owner-operated products, P8.06 must not invent one; the roadmap may require explicit defer/re-scope before proceeding.
 
 ### R26 — Cross-Organization Security / Integration Health Review
 
-Cross-review P8.01–P8.06 with emphasis on:
+Review P8.01–P8.06 with emphasis on:
 
 - Organization isolation;
 - least privilege/default denial;
@@ -246,11 +223,11 @@ Cross-review P8.01–P8.06 with emphasis on:
 
 ### P8.07 — Portability/export/migration/customer-handover interoperability proof
 
-Exercise organization control beyond the owner-operated deployment.
+Exercise organization control beyond the owner-operated deployment only when a concrete permitted external recipient/scope exists.
 
-Required evidence:
+Required evidence where activated:
 
-- governed export/handover package preserves identities, versions, authority, provenance, relationships and explicit omissions where applicable;
+- governed export/handover package preserves identities, versions, authority, provenance, relationships and explicit omissions;
 - classification/rights/retention constraints survive handover;
 - non-exportable secrets are omitted and reprovisioned separately;
 - receiver can validate integrity and interpret scope/version metadata;
@@ -259,13 +236,13 @@ Required evidence:
 - termination/revocation path is explicit;
 - migration failure cannot silently create two competing authoritative systems.
 
-No universal customer export format is implied unless separately stabilized.
+No universal customer export format is implied.
 
 ### P8.08 — Multi-Organization isolation + cross-organization security validation
 
-Validate realistic cross-Organization failure and attack paths.
+This step requires realistic evidence only if a second Organization is actually activated into scope.
 
-At minimum test:
+When applicable, test at minimum:
 
 - Organization A identity cannot enumerate/read Organization B protected state;
 - same external email/directory identifier does not merge authority scopes;
@@ -278,9 +255,11 @@ At minimum test:
 - external callback/ingress cannot spoof Organization scope;
 - cross-Organization operations require explicit governed grants/contracts.
 
+No second Organization may be fabricated merely to satisfy the roadmap.
+
 ### P8.09 — External operator/developer integration experience + documentation
 
-Make the selected external integration repeatable without exposing private platform internals.
+Make the actually validated external integration repeatable without exposing private platform internals.
 
 Required outputs:
 
@@ -290,15 +269,13 @@ Required outputs:
 - safe credential/configuration handling;
 - predictable error/fail-closed states;
 - evidence/reconstruction inspection path;
-- upgrade/deprecation/termination guidance appropriate to current lifecycle;
+- upgrade/deprecation/termination guidance appropriate to lifecycle;
 - examples that do not imply unsupported general compatibility;
 - clear separation of platform and product responsibilities.
 
-**R27 follows P8.09.**
-
 ### R27 — Portability / Ecosystem Reuse Review
 
-Determine what is genuinely reusable from the external case and what must remain contained.
+Determine what is genuinely reusable and what must remain contained.
 
 Review questions:
 
@@ -309,7 +286,7 @@ Review questions:
 - whether portability/handover preserves organizational meaning across implementation changes;
 - whether any extension/onboarding helper has enough evidence for shared platform ownership.
 
-The result may explicitly recommend `contain`, `defer`, or `return to product` rather than promotion.
+`contain`, `defer` and `return to product` are valid results.
 
 ### P8.10 — Scoped external conformance/commercial/support boundary review
 
@@ -378,32 +355,30 @@ The closure must state:
 - contracts and lifecycle status;
 - isolation/security evidence;
 - replay/uncertainty/reconciliation evidence;
-- portability/handover evidence;
+- portability/handover evidence where actually in scope;
 - reusable versus contained mechanisms;
 - external conformance/support/commercial scope;
 - all R25–R28 findings;
 - exact remaining non-goals and unproven claims.
 
-## 6. Sequencing and parallelization
+## 7. Sequencing and local-execution boundary
 
-Default critical path:
+Current critical path:
 
 ```text
-M7 COMPLETE
+P8.00 activation boundary revalidation        PASS
    ↓
-P8.00 activation boundary revalidation ← CURRENT
+OWNER ACTIVATION DECISION                     APPROVED
    ↓
-OWNER ACTIVATION DECISION
+P8.01 target execution baseline               PASS
    ↓
-P8.01 target execution baseline
+P8.02 authority / rights / data boundary      PASS
    ↓
-P8.02 authority / rights / data boundary
+P8.03 explicit integration contract           PASS
    ↓
-P8.03 explicit integration contract
+R25 External Boundary Review                  PASS
    ↓
-R25 External Boundary Review
-   ↓
-P8.04 real external connector validation
+P8.04 real external connector validation      CURRENT / LOCAL
    ↓
 P8.05 duplicate / replay / uncertainty semantics
    ↓
@@ -428,9 +403,9 @@ R28 M8 hardening + code-health gate
 P8.12 M8 closure
 ```
 
-Safe parallel work after activation MAY include documentation/test-harness preparation, threat-model scenarios and portability fixture preparation, provided these do not predetermine a stable/public contract before P8.03/R25.
+P8.04 is the first action in the current sequence requiring the real owner-operated local Tender Operator/EIS runtime, existing credentials/trust path and owner-only raw execution artifacts. Repository-only execution stops before P8.04 live calls.
 
-## 7. M8 exit criteria
+## 8. M8 exit criteria
 
 `M8 — Governed external ecosystem baseline` is achieved only for the declared activated scope when:
 
@@ -442,16 +417,16 @@ Safe parallel work after activation MAY include documentation/test-harness prepa
 6. duplicate/replay/uncertain-outcome/reconciliation semantics are proven;
 7. external consumer/onboarding reliance is explicit and version-governed where in scope;
 8. governed portability/export/handover is demonstrated where in scope;
-9. realistic cross-Organization isolation/security evidence passes when cross-Organization scope is activated;
+9. realistic cross-Organization isolation/security evidence passes when cross-Organization scope is actually activated;
 10. external operator/developer integration is repeatable within declared lifecycle scope;
 11. conformance/commercial/support claims remain exactly bounded to evidence;
 12. reuse versus containment recommendations are evidence-backed;
 13. R25–R28 material findings are dispositioned;
 14. the M8 Milestone Code Health Gate passes before closure.
 
-If the activated case does not exercise a particular external relationship class (for example, no second Organization exists), the closure must state that limitation explicitly and must not claim validation of that class.
+If the activated case does not exercise a particular external relationship class, closure must state that limitation explicitly and must not claim validation of that class.
 
-## 8. Non-goals
+## 9. Non-goals
 
 Phase 8 does not inherently establish:
 
@@ -469,8 +444,8 @@ Phase 8 does not inherently establish:
 - cross-customer data/Knowledge sharing;
 - AI authority to approve external access, contracts, policies or consequential effects.
 
-## 9. Current canonical action
+## 10. Current canonical action
 
-> **P8.00-A1 — External-demand evidence inventory.**
+> **P8.04 — External authoritative-system connector pattern validation.**
 
-Phase 8 remains `Draft / Exploratory` until P8.00 completes and a fresh owner activation decision records the selected external outcome and exact boundary. P8.01–P8.12 remain planning hypotheses until then.
+P8.00, P8.01, P8.02, P8.03 and R25 are `Complete / PASS`; Phase 8 is `Active` only for the bounded EIS temporal revalidation outcome. P8.04 requires real local owner-operated execution. Do not advance to P8.05 until P8.04 produces verified evidence or an explicit fail/defer disposition.
