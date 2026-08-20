@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-from pathlib import Path
 import unittest
-
+from pathlib import Path
 
 TEST_ROOT = Path(__file__).resolve().parent
 REPO_ROOT = TEST_ROOT.parents[2]
@@ -44,15 +43,24 @@ class P312Phase3M3ClosureTests(unittest.TestCase):
     def test_canonical_roadmap_preserves_m3_scope_as_later_phases_progress(self) -> None:
         roadmap = (DOCS_ROOT / "roadmap" / "ROADMAP.md").read_text(encoding="utf-8")
 
-        self.assertIn(
-            "| `Phase 3` | Shared Platform Capabilities | Executed | 🟩 Complete | `M3` Validated shared capability baseline |",
-            roadmap,
-        )
-        self.assertIn("| `Phase 4` | Workspace / Operator Experience |", roadmap)
+        rows = [
+            line
+            for line in roadmap.splitlines()
+            if line.startswith("| `Phase ")
+        ]
+        phase_3_rows = [line for line in rows if line.startswith("| `Phase 3` |")]
+        phase_4_rows = [line for line in rows if line.startswith("| `Phase 4` |")]
+        self.assertEqual(len(phase_3_rows), 1)
+        self.assertEqual(len(phase_4_rows), 1)
+        phase_3 = phase_3_rows[0]
+        self.assertIn("Shared Platform Capabilities", phase_3)
+        self.assertIn("🟩 Complete", phase_3)
+        self.assertIn("`M3` Validated shared capability baseline", phase_3)
+        self.assertNotIn("Active", phase_3)
         self.assertIn("CAP-001 through CAP-004 remain `Incubating / Provisional`", roadmap)
         self.assertIn("no Platform Capability is `Active`", roadmap)
         self.assertIn(
-            "Phase status, Platform Capability lifecycle, Product Contract lifecycle, operational environment/readiness and conformance maturity remain distinct.",
+            "phase status, capability lifecycle, Product Contract lifecycle, operational environment/readiness, conformance maturity and commercial claims remain distinct.",
             roadmap,
         )
 

@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.60.0`
+Version: `2.61.0`
 Created: `2026-08-07`
 Updated: `2026-08-20`
 Owner: `ООО «Арвектум»`
@@ -17,7 +17,9 @@ Detailed completed-phase history remains in the corresponding phase roadmaps, re
 
 ## 2. Version note
 
-Version `2.60.0` completes the remaining P8.00 activation gates, records fresh owner activation of Phase 8, completes P8.01–P8.03 and R25, and advances the current canonical action to the first real local external-validation step:
+Version `2.61.0` completes the bounded real P8.04 external authoritative-system connector validation (`NO_CHANGE` on the live EIS revalidation with immutable-baseline verification) and advances the current canonical action to P8.05.
+
+Version `2.60.0` completed the remaining P8.00 activation gates, recorded fresh owner activation of Phase 8, completed P8.01–P8.03 and R25, and advanced the current canonical action to the first real local external-validation step:
 
 > `P8.04 — External authoritative-system connector pattern validation`.
 
@@ -28,6 +30,16 @@ P8.00 selected one bounded Phase 8 outcome:
 - compare the fresh exact source/document snapshot with the immutable P6 baseline manifest SHA-256 `74e943d855406b04741f040fed271bddfaada9a9cc6e7da4501735a6e8725121`;
 - validate explicit external authority, observation freshness/version drift, provenance and historical non-mutation;
 - accept `NO_CHANGE` or `CHANGE_DETECTED` as valid live outcomes when evidenced correctly.
+
+P8.04 executed that bounded case in the owner-operated runtime and returned a verified live `NO_CHANGE`:
+
+- single live read-only run `toa-run-20260820083457-21337c`; fresh observation `2026-08-20T08:34:57.365770+00:00`;
+- immutable P6 baseline SHA-256 `74e943d855406b04741f040fed271bddfaada9a9cc6e7da4501735a6e8725121` verified fail-closed;
+- fresh manifest SHA-256 `4113935e43291f820a43fa2efad49663103a86408788b571d7d0e6dac4974a54`; comparison manifest SHA-256 `06ca91f5689d449b2bfba95ca0ec62386e215261df74ec769b234030cc610f7b`;
+- aggregate `NO_CHANGE`; all 7 material documents byte-identical;
+- independent byte/manifest re-verification and network-free deterministic re-comparison passed;
+- governed evidence admission + reconstruction complete without external-effect replay;
+- review evidence: [`P8-04-eis-authoritative-system-live-validation.md`](../reviews/P8-04-eis-authoritative-system-live-validation.md).
 
 Activation boundary:
 
@@ -196,8 +208,8 @@ Detailed roadmap: [`PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md`](PHASE-8-ECOSYSTE
 | `P8.02` | Cross-Organization identity, trust, rights + data-governance boundary | 🟩 Complete / PASS |
 | `P8.03` | External Product Contract / integration-contract + stable-surface disposition | 🟩 Complete / PASS |
 | `R25` | External Boundary Review | 🟩 Complete / PASS |
-| `P8.04` | External authoritative-system connector pattern validation | 🟨 Current / local execution required |
-| `P8.05` | External ingress/egress Event, duplicate, replay, uncertainty + reconciliation semantics | ⬜ Pending |
+| `P8.04` | External authoritative-system connector pattern validation | 🟩 Complete / PASS |
+| `P8.05` | External ingress/egress Event, duplicate, replay, uncertainty + reconciliation semantics | 🟨 Current |
 | `P8.06` | External product/extension onboarding + governed dependency resolution | ⬜ Pending |
 | `R26` | Cross-Organization Security / Integration Health Review | ⬜ Pending gate |
 | `P8.07` | Portability/export/migration/customer-handover interoperability proof | ⬜ Pending |
@@ -214,7 +226,8 @@ Completed active-phase preparation:
 - [`P8.01 evidence baseline`](../reviews/P8-01-eis-revalidation-target-evidence-baseline.md);
 - [`P8.02 identity/trust/rights boundary`](../reviews/P8-02-identity-trust-rights-data-governance-boundary.md);
 - [`P8.03 Provisional integration contract`](../contracts/P8-03-EIS-EXTERNAL-AUTHORITY-REVALIDATION-CONTRACT.md);
-- [`R25 External Boundary Review`](../reviews/R25-external-boundary-review.md).
+- [`R25 External Boundary Review`](../reviews/R25-external-boundary-review.md);
+- [`P8.04 live authoritative-system validation`](../reviews/P8-04-eis-authoritative-system-live-validation.md).
 
 ### Current critical path
 
@@ -229,9 +242,9 @@ P8.03 explicit integration contract         PASS
         ↓
 R25 External Boundary Review                PASS
         ↓
-P8.04 real external connector validation    CURRENT / LOCAL
+P8.04 real external connector validation    PASS
         ↓
-P8.05 duplicate/replay/uncertainty
+P8.05 duplicate/replay/uncertainty         CURRENT
         ↓
 P8.06 external consumer onboarding
         ↓
@@ -254,7 +267,7 @@ R28 M8 hardening + code-health gate
 P8.12 M8 closure
 ```
 
-P8.04 is the first current task requiring the real owner-operated Tender Operator/EIS runtime, existing credentials/trust path and owner-only raw artifacts. Repository-only execution stops before the live call.
+P8.04 was the first current task requiring the real owner-operated Tender Operator/EIS runtime, existing credentials/trust path and owner-only raw artifacts; it completed with a verified live `NO_CHANGE`. Repository-only execution covers offline verification; the live P8.04 call has already been performed and its evidence recorded.
 
 ## 9. M8 milestone definition
 
@@ -316,6 +329,8 @@ Successful integration is evidence, not automatic lifecycle promotion.
 
 ## 12. Current canonical action
 
-> **P8.04 — External authoritative-system connector pattern validation.**
+> **P8.05 — External ingress/egress Event, duplicate, replay, uncertainty + reconciliation semantics.**
 
-P8.04 must execute the bounded real EIS temporal-revalidation case defined by P8.01/P8.03 and passed by R25. It requires local owner-operated execution; do not advance to P8.05 until P8.04 returns verified `PASS`, explicit `FAIL/DEFER`, or another governed disposition supported by evidence.
+P8.04 executed the bounded real EIS temporal-revalidation case defined by P8.01/P8.03 and passed by R25, and returned a verified live `NO_CHANGE` with complete governed evidence. P8.04 is `Complete / PASS`.
+
+P8.05 validates RFC-0005/RFC-0006 behavior at the external boundary: explicit canonical admission, duplicate/replay safety, timeout/unknown-outcome uncertainty and attributable reconciliation — without external-effect replay.

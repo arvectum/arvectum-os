@@ -1,7 +1,7 @@
 # Arvectum OS Phase 8 — Ecosystem and External Integration
 
 Status: `Active`
-Version: `1.0.0`
+Version: `1.1.0`
 Created: `2026-08-17`
 Updated: `2026-08-20`
 Activated: `2026-08-20`
@@ -76,8 +76,8 @@ No second Organization, customer, portability recipient or external product cons
 | `P8.02` | Cross-Organization identity, trust, rights + data-governance boundary | P8.01 | 🟩 Complete / PASS | one-Organization deny-by-default boundary |
 | `P8.03` | External Product Contract / integration-contract boundary + stable-surface disposition | P8.02 | 🟩 Complete / PASS | Provisional EIS revalidation contract `0.1.0` |
 | `R25` | External Boundary Review | P8.03 | 🟩 Complete / PASS | no material boundary blocker |
-| `P8.04` | External authoritative-system connector pattern validation | R25 | 🟨 Current / local execution required | real external authority integration evidence |
-| `P8.05` | External ingress/egress Event, duplicate, replay, uncertainty + reconciliation semantics | P8.04 | ⬜ Pending | fail-closed external effect/evidence semantics |
+| `P8.04` | External authoritative-system connector pattern validation | R25 | 🟩 Complete / PASS | real external authority integration evidence |
+| `P8.05` | External ingress/egress Event, duplicate, replay, uncertainty + reconciliation semantics | P8.04 | 🟨 Current | fail-closed external effect/evidence semantics |
 | `P8.06` | External product/extension onboarding + governed dependency resolution | P8.05 | ⬜ Pending | repeatable explicit onboarding/dependency proof |
 | `R26` | Cross-Organization Security / Integration Health Review | P8.06 | ⬜ Pending gate | security/isolation/integration-health review |
 | `P8.07` | Portability/export/migration/customer-handover interoperability proof | R26 | ⬜ Pending | governed external handover/export evidence |
@@ -154,27 +154,28 @@ P8.04 may proceed only within the bounded contract and requires real owner-opera
 
 ### P8.04 — External authoritative-system connector pattern validation
 
-**Status: Current / local execution required.**
+**Status: Complete / PASS.**
 
-Exercise the real EIS source boundary while preserving authority.
+Evidence: [`P8-04-eis-authoritative-system-live-validation.md`](../reviews/P8-04-eis-authoritative-system-live-validation.md) — `Complete / PASS`.
 
-Required behavior:
+The bounded live read-only EIS revalidation for notice `0344100006426000005` completed:
 
-- use the real product-owned EIS retrieval path for the exact selected notice;
-- keep EIS as `External Reference` authority;
-- establish one fresh observation time and exact current source/document snapshot;
-- independently verify the new snapshot from owner-only runtime state;
-- compare deterministically with the immutable P6 baseline;
-- classify material items as `UNCHANGED`, `ADDED`, `REMOVED` or `CHANGED`;
-- produce overall `NO_CHANGE`, `CHANGE_DETECTED`, or explicit fail/incomplete/uncertain state;
-- preserve verified TLS and explicit unavailable/degraded behavior;
-- keep secrets outside canonical history and ordinary logs;
-- bind exact external object/version/freshness evidence where material;
-- preserve required provenance/Execution Context/Event evidence;
-- keep connector implementation replaceable/product-owned;
-- perform no EIS/ETP mutation, submission, signature, customer/supplier messaging, redistribution or cross-Organization action.
+- exactly one top-level live run (`toa-run-20260820083457-21337c`);
+- fresh observation `2026-08-20T08:34:57.365770+00:00`;
+- immutable P6 baseline SHA-256 `74e943d855406b04741f040fed271bddfaada9a9cc6e7da4501735a6e8725121` verified fail-closed;
+- aggregate result `NO_CHANGE` (all 7 material documents byte-identical);
+- independent byte + manifest re-verification passed;
+- network-free offline re-comparison byte-identical;
+- governed evidence admission + reconstruction complete without external-effect replay.
 
-A failed current retrieval must never be represented as `NO_CHANGE` by falling back to the historical P6 snapshot.
+The live run preserved the external boundary:
+
+- one Organization (`ООО «Арвектум»`), External Reference authority;
+- read-only retrieval only; no mutation, submission, signature, messaging, redistribution or cross-Organization action;
+- no secrets in canonical history or logs;
+- verified TLS required and enforced;
+- a failed current retrieval would never be represented as `NO_CHANGE`; missing/incomplete baseline blocks PASS;
+- P6 historical evidence preserved immutable.
 
 ### P8.05 — External ingress/egress Event, duplicate, replay, uncertainty + reconciliation semantics
 
@@ -446,6 +447,6 @@ Phase 8 does not inherently establish:
 
 ## 10. Current canonical action
 
-> **P8.04 — External authoritative-system connector pattern validation.**
+> **P8.05 — External ingress/egress Event, duplicate, replay, uncertainty + reconciliation semantics.**
 
-P8.00, P8.01, P8.02, P8.03 and R25 are `Complete / PASS`; Phase 8 is `Active` only for the bounded EIS temporal revalidation outcome. P8.04 requires real local owner-operated execution. Do not advance to P8.05 until P8.04 produces verified evidence or an explicit fail/defer disposition.
+P8.00, P8.01, P8.02, P8.03, R25 and P8.04 are `Complete / PASS`; Phase 8 is `Active` only for the bounded EIS temporal revalidation outcome. P8.04 executed the real owner-operated live EIS revalidation and returned a verified `NO_CHANGE` with complete governed evidence. P8.05 validates RFC-0005/RFC-0006 duplicate/replay/uncertainty and reconciliation semantics at the external boundary.
