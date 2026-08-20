@@ -1,28 +1,39 @@
-name: reference-python-ci
+name: Reference Python CI
 
 on:
-  push:
-    paths:
-      - "reference/python/**"
-      - ".gitignore"
-      - ".github/workflows/reference-python-ci.yml"
   pull_request:
     paths:
       - "reference/python/**"
       - ".gitignore"
       - ".github/workflows/reference-python-ci.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: reference-python-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test:
+    name: Full reference test suite
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+
     defaults:
       run:
         working-directory: reference/python
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+
       - name: Reject tracked Python generated artifacts
         working-directory: .
         shell: bash
@@ -33,5 +44,6 @@ jobs:
             printf '%s\n' "$tracked"
             exit 1
           fi
-      - name: Run reference Python tests
-        run: python -m unittest discover -s tests -p "test_*.py"
+
+      - name: Run architecture fitness tests
+        run: python -m unittest discover -s tests -v

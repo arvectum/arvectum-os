@@ -36,12 +36,12 @@ The root `.gitignore` prevents normal reintroduction of these generated files, w
 
 ## 4. Canonical CI
 
-`.github/workflows/reference-python-ci.yml` runs on pushes and pull requests that touch the reference harness, its workflow, or the repository Python-ignore rules. CI:
+`.github/workflows/reference-python-ci.yml` runs for pull requests that touch the reference harness, its workflow, or the repository Python-ignore rules, and can also be invoked manually with `workflow_dispatch`. CI:
 
 1. checks out the exact repository revision;
 2. installs Python 3.12;
 3. rejects tracked generated Python bytecode/cache artifacts;
-4. runs the complete unittest discovery suite.
+4. runs the complete unittest discovery suite in verbose mode.
 
 A milestone Code Health Gate may cite the exact successful workflow run as evidence. CI success is necessary evidence for that gate when the reference harness changed, but it is not sufficient by itself: the required engineering-quality review must also assess duplication, cohesion, coupling/testability, dead/obsolete paths and other material maintainability risks.
 

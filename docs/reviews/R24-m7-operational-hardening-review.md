@@ -63,7 +63,7 @@ R21–R23 evidence remains consistent with RFC-0005/RFC-0006: canonical provenan
 
 The canonical tree tracked `reference/python/__pycache__/` containing interpreter-generated `.pyc` files from Python 3.12/3.14. The repository also lacked a root `.gitignore` protection for this class of generated artifact.
 
-**Disposition:** resolved in the R24 branch by deleting the tracked cache tree, adding minimal Python generated-artifact ignore rules, and adding a CI guard that fails if bytecode/cache paths become tracked again.
+**Disposition:** resolved in the R24 branch by deleting the tracked cache tree, adding Python generated-artifact ignore rules, and adding a CI guard that fails if bytecode/cache paths become tracked again.
 
 ### Finding R24-02 — stale reference-harness status documentation
 
@@ -83,12 +83,13 @@ No R24 correction weakens tenant/Organization scoping, least privilege, credenti
 
 ## 7. Cross-review
 
-Functional cross-review iteration 1 considered architecture/governance, security/authority, product/platform boundary, operations/recovery and maintainability. It raised R24-01 and R24-02; both are addressed by the R24 change set. No further material architecture or security objection remains before automated validation.
+- **Iteration 1 — architecture/security/maintainability:** raised R24-01 and R24-02; both were remediated in the R24 change set.
+- **Iteration 2 — minimal-change/CI review:** found that the first remediation draft unnecessarily replaced existing workflow controls (`workflow_dispatch`, `permissions`, `concurrency`, timeout and verbose suite invocation). The patch was revised to preserve those controls and add only the required `.gitignore` trigger plus generated-artifact guard.
 
-A final read-after-write/CI review is still required before changing this record to `Complete / PASS`.
+After iteration 2 no further material architecture, security, product/platform or workflow-governance objection remains before automated validation. A final read-after-write/CI review is still required before changing this record to `Complete / PASS`.
 
 ## 8. Verdict
 
-`R24 criterion-12 review = CONDITIONALLY PASSING, awaiting exact branch CI and resulting-state verification.`
+`R24 criterion-12 review = CONDITIONALLY PASSING, awaiting exact PR CI and resulting-state verification.`
 
 Criterion 13 is intentionally not claimed here. The separate `M7-milestone-code-health-gate.md` record must pass after the R24 fixes and exact CI evidence are verified.
