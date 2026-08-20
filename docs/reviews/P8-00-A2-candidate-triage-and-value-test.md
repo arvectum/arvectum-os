@@ -30,6 +30,7 @@ A2 does **not**:
 - select the final Phase 8 activation outcome;
 - decide platform responsibility under A5;
 - move the EIS connector into Arvectum OS;
+- treat technical EIS access, token possession or successful retrieval as legal/contractual permission beyond the currently evidenced operating contour;
 - authorize EIS mutation, customer-facing service, redistribution or cross-Organization use;
 - create a generic Telegram/notification capability;
 - centralize Discount Parser source adapters, crawling, normalization, deduplication or classification;
@@ -64,7 +65,7 @@ Each candidate is assessed qualitatively against the eight dimensions required b
 1. **real organizational value now** — whether the external boundary currently supports a real Arvectum outcome rather than a hypothetical future use;
 2. **consequence and reversibility** — whether the validation can remain bounded and recoverable without creating unnecessary consequential external effects;
 3. **external dependency maturity/readiness** — whether the current external integration path has enough exercised behavior to support a bounded next validation without pretending the dependency is controlled by Arvectum OS;
-4. **authority/data-rights clarity** — whether current evidence identifies the authoritative source and enough permitted-use scope to proceed safely to deeper boundary mapping;
+4. **authority/data-rights clarity** — whether current evidence identifies the authoritative source and enough rights information to determine what remains unresolved and must fail closed before broader use;
 5. **distinctness from M6/M7 internal validation** — whether Phase 8 can add materially new external-ecosystem evidence rather than rerun an already proven owner-operated case;
 6. **ability to generate reusable platform evidence** — whether the boundary can test domain-neutral platform semantics such as authority preservation, exact-version reliance, provenance, failure behavior, governed external effects or interoperability without importing product business logic;
 7. **cost of keeping the mechanism product-local** — whether the current product-local implementation already satisfies the real need cheaply enough that platform generalization would be speculative;
@@ -76,11 +77,11 @@ A2 deliberately does not assign synthetic numeric weights or fabricated business
 
 | Candidate | Value now | Consequence / reversibility | External readiness | Authority / rights clarity | Distinctness from M6/M7 | Reusable platform evidence | Cost of staying product-local | Premature-stability risk | A2 disposition |
 |---|---|---|---|---|---|---|---|---|---|
-| `A1-C01` ЕИС / `zakupki.gov.ru` | Strong | Favorable for a bounded read-only case; no mutation required | Moderate; real retrieval works, but trust/availability remain external | Partial but usable for read-only authoritative-source validation; broader rights remain unresolved | Moderate; prior M6 retrieval exists, so A3 must define a new bounded outcome rather than repeat it | Strong for external-authority, exact-version/provenance and fail-closed integration evidence | Low today; connector can remain product-owned | Low if kept read-only/provisional; higher if generalized into a stable connector/API | `SHORTLIST_FOR_A3` |
+| `A1-C01` ЕИС / `zakupki.gov.ru` | Strong | Favorable for a bounded read-only case; no mutation required | Moderate; real retrieval works, but trust/availability remain external | Authority is clear; rights are incomplete. Current evidence supports only a bounded candidate under deny-by-default, not a broader legal/contractual permission claim | Moderate; prior M6 retrieval exists, so A3 must define a new bounded outcome rather than repeat it | Strong for external-authority, exact-version/provenance and fail-closed integration evidence | Low today; connector can remain product-owned | Low if kept read-only/provisional; higher if generalized into a stable connector/API | `SHORTLIST_FOR_A3` |
 | `A1-C02` Telegram effect boundary | Real but bounded | Consequential external publication; replay/duplicate risk requires controls | Strong for the current controlled test path | Partial; owner-controlled test target and secret boundary are known, broader customer/cross-Organization rights are not | Weak; M6/M7 already proved controlled publication plus reconstruction without replay | Moderate, but largely duplicates already proven RFC-0005/RFC-0006 pressure | Low; product publisher/ledger already owns the behavior | Moderate if reframed as generic notification/Telegram infrastructure | `CONTAIN_PRODUCT_LOCAL / NOT_SHORTLISTED` |
 | `A1-C03` public discount/promo sources | Real for Discount Parser | Read-oriented collection is bounded, but downstream use/redistribution may create rights exposure | Moderate; multiple adapters already implement retry/backoff and failure isolation | Blocking for broader Phase 8 use because source-specific permitted-use/redistribution/retention scope is not canonical | Weak-to-moderate; the source set already exists inside the M6 product contour | Weak-to-moderate; generic external-source provenance is reusable, but parsing/dedup/classification remain product-specific | Low; Source SDK/adapters already exist product-locally | High if volatile source adapters or uncertain rights are generalized into platform commitments | `DEFER_RIGHTS_GAP / NOT_SHORTLISTED` |
 
-The table expresses comparative evidence, not a lifecycle decision or formal risk rating.
+The table expresses comparative evidence, not a lifecycle decision, legal opinion or formal risk rating.
 
 ## 5. Candidate analysis
 
@@ -108,9 +109,11 @@ This is enough to show that the dependency is real and operationally imperfect. 
 
 The authority boundary is clear enough for A2: EIS remains authoritative for the registry/source-document scope and the current default authority mode is `External Reference`.
 
-Rights clarity is only partial. Existing evidence supports bounded read-only retrieval/use inside the current Tender Operator contour, while broader mutation, redistribution, customer-facing service, cross-Organization reuse and credential rights remain outside the established Phase 8 basis.
+The rights boundary is not equivalently complete. Canonical evidence proves that a bounded read-only retrieval path has been exercised inside the current Tender Operator contour and that handling/export restrictions exist; it does **not** by itself establish a comprehensive legal or contractual permission basis for Phase 8 use. Technical access, possession of an individual-person token or successful retrieval does not create such rights.
 
-A3/A4 therefore must keep any selected outcome inside the evidenced permitted-use envelope unless new canonical rights evidence is added.
+A3 may therefore keep EIS on the shortlist only as a bounded candidate under deny-by-default assumptions. A4 must explicitly map purpose, legal/contractual rights, credential use, classification, disclosure, retention, deletion and export constraints before any selected outcome is treated as authorized beyond the already evidenced operational contour.
+
+Broader mutation, redistribution, customer-facing service and cross-Organization reuse remain unresolved and must not be inferred.
 
 #### Distinctness from M6/M7
 
@@ -218,7 +221,7 @@ This is a shortlist, not an activation selection or platform-responsibility appr
 
 P8.00-A3 must now either:
 
-- define one bounded EIS-related external outcome that is materially new relative to the M6/M7 evidence and stays within evidenced authority/data-rights constraints; or
+- define one bounded EIS-related external outcome that is materially new relative to the M6/M7 evidence and remains deny-by-default for unresolved rights until A4 maps them explicitly; or
 - record `DEFER` rather than recycling the prior P6 retrieval proof or inventing a broader external demand.
 
 A3 must not select:
@@ -251,11 +254,11 @@ A functional cross-review was applied to the A2 triage before closure.
 
 ### Iteration 3 — security / rights / data governance
 
-**Finding:** the public discount-source set is technically exercised, but technical accessibility could be mistaken for sufficient rights to broaden platform use.
+**Finding:** technical accessibility could be mistaken for sufficient rights both for EIS retrieval and for the public discount-source set. In particular, successful EIS access or token possession must not be presented as a comprehensive legal/contractual rights basis.
 
-**Revision:** unresolved source-specific permitted-use, redistribution and retention scope is treated as a blocking A2 condition for broader Phase 8 use, while the current product-local contour remains unchanged.
+**Revision:** EIS authority is now separated explicitly from incomplete rights evidence; A4 must map purpose/legal/contractual/credential/data-governance scope before broader reliance. The public-source permitted-use, redistribution and retention gap remains a blocking A2 condition for broader Phase 8 use.
 
-**Result:** no material rights overclaim remains.
+**Result:** no material authority or rights overclaim remains.
 
 ### Iteration 4 — operations / evidence integrity
 
@@ -276,11 +279,11 @@ P8.00-A2 exit criteria are satisfied:
 - the shortlist contains no more than three candidates and in fact contains one;
 - Telegram is explicitly contained product-locally on current evidence;
 - the public discount/promo source set is explicitly deferred because of the unresolved rights gap and product-local sufficiency;
-- EIS remains the sole A3 candidate without implying connector platformization;
+- EIS remains the sole A3 candidate without implying connector platformization or broader legal/contractual rights;
 - Phase 8 remains `Draft / Exploratory`.
 
 The correct next canonical action is:
 
 > **P8.00-A3 — Select one bounded external outcome.**
 
-A3 must either identify a materially new bounded EIS-related external outcome or record `DEFER`. P8.01 remains unauthorized until the remaining P8.00 gates and fresh owner activation decision are complete.
+A3 must either identify a materially new bounded EIS-related external outcome under deny-by-default unresolved-rights assumptions or record `DEFER`. P8.01 remains unauthorized until the remaining P8.00 gates and fresh owner activation decision are complete.
