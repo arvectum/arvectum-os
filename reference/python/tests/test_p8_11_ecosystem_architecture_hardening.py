@@ -48,7 +48,7 @@ class P811EcosystemArchitectureHardeningTests(unittest.TestCase):
         path = SOURCE_ROOT / "external_consumer_onboarding.py"
         source = path.read_text(encoding="utf-8")
         module_docstring = ast.get_docstring(ast.parse(source, filename=str(path))) or ""
-        lowered = module_docstring.lower()
+        lowered = " ".join(module_docstring.lower().split())
         self.assertIn("internal reference slice", lowered)
         self.assertIn("does not define a public sdk/api", lowered)
         self.assertIn("package/registry protocol", lowered)
@@ -96,9 +96,10 @@ class P811EcosystemArchitectureHardeningTests(unittest.TestCase):
         self.assertIn("only canonical source for current action", readme)
         self.assertNotIn("The current canonical action is **P6.03", readme)
         self.assertNotIn("The current canonical action is **P8.11", readme)
+        self.assertNotIn("The current canonical action is **R28", readme)
         self.assertNotIn("The current canonical action is **P8.12", readme)
 
-    def test_p8_11_review_preserves_next_closure_gate_and_non_promotions(self) -> None:
+    def test_p8_11_review_preserves_next_hardening_gate_and_non_promotions(self) -> None:
         review = (
             DOCS_ROOT
             / "reviews"
@@ -107,7 +108,8 @@ class P811EcosystemArchitectureHardeningTests(unittest.TestCase):
         self.assertIn("Status: `Complete / PASS", review)
         self.assertIn("No capability is promoted to `Active`", review)
         self.assertIn("P8.08 realistic two-Organization isolation remains explicitly unproven", review)
-        self.assertIn("`P8.12 — Phase 8 / M8 closure review`", review)
+        self.assertIn("`R28 — M8 Ecosystem Hardening + Milestone Code Health Gate`", review)
+        self.assertIn("P8.12 remains after R28", review)
 
 
 if __name__ == "__main__":
