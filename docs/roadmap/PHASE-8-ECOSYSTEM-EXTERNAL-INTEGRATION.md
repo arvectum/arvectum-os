@@ -1,9 +1,9 @@
 # Arvectum OS Phase 8 — Ecosystem and External Integration
 
 Status: `Draft / Exploratory`
-Version: `0.1.0`
+Version: `0.1.1`
 Created: `2026-08-17`
-Updated: `2026-08-17`
+Updated: `2026-08-20`
 Owner: `ООО «Арвектум»`
 Task classification: `platform` with `product_contract` and `governance`
 Parent roadmap: [`ROADMAP.md`](ROADMAP.md)
@@ -34,6 +34,8 @@ Activation requires:
 - explicit Organization/authority/data-rights scope;
 - evidence that the chosen integration requires platform responsibility rather than a product-local adapter only;
 - disposition of any production/readiness/stable-boundary gates crossed by the proposed external reliance.
+
+P7.12 has satisfied the first item only: `Phase 7 / M7 = Complete / PASS` for the declared `Persistent Internal / owner-operated` baseline. The remaining activation requirements are not inferred from milestone closure and must be decided separately before any P8 work item becomes Current.
 
 ## 3. Draft work breakdown
 
@@ -157,6 +159,10 @@ M8 does not inherently mean:
 
 ## 7. Current status
 
-Phase 8 remains `Draft / Exploratory` while Phase 7 is active.
+Phase 7 / M7 is `Complete / PASS`, satisfying only the predecessor-closure condition for Phase 8 activation.
 
-No P8 work item is the current canonical action until M7 closes and Phase 8 activation is separately revalidated.
+Phase 8 remains `Draft / Exploratory`. No P8 work item is the current canonical action until the remaining activation requirements are revalidated and fresh owner approval activates the phase.
+
+Current handoff action:
+
+> **Phase 8 activation / external-ecosystem boundary revalidation — governance decision before any P8 work item.**
