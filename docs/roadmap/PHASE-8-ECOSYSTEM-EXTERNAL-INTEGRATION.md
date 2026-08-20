@@ -1,7 +1,7 @@
 # Arvectum OS Phase 8 — Ecosystem and External Integration
 
 Status: `Active`
-Version: `1.3.0`
+Version: `1.4.0`
 Created: `2026-08-17`
 Updated: `2026-08-20`
 Activated: `2026-08-20`
@@ -15,7 +15,9 @@ Restoration decision: [`DECISION-2026-08-17-PHASE-7-8-ROADMAP-RESTORATION`](../g
 Pre-activation plan: [`P8-00-PHASE-8-ACTIVATION-BOUNDARY-REVALIDATION.md`](P8-00-PHASE-8-ACTIVATION-BOUNDARY-REVALIDATION.md) — `Complete / PASS 1.3.0`
 Activation decision: [`DECISION-2026-08-20-PHASE-8-ACTIVATION`](../governance/decisions/DECISION-2026-08-20-PHASE-8-ACTIVATION.md) — `Approved`
 
-Version `1.3.0` completes P8.06 external product/extension onboarding and governed dependency resolution using the separately maintained `arvectum/creative-test-agent` consumer, an exact Provisional Product Contract, exact CAP-004 `1.0.0` resolution, fail-closed least-privilege/private-coupling checks and a `1248 tests / OK` reference baseline; it advances the current canonical action to R26. No Platform Capability/Product Contract lifecycle, readiness, conformance, public-surface or commercial status changes.
+Version `1.4.0` completes R26 Cross-Organization Security / Integration Health Review with a bounded `PASS`: P8.01–P8.06 compose without a demonstrated current cross-Organization bypass, ambient privilege, secret leakage, authority inversion, replay/duplicate hazard or hidden integration coupling. The review explicitly does not claim realistic multi-Organization isolation; P8.08 remains responsible for that proof if a second Organization is genuinely activated. It advances the current canonical action to P8.07. No Platform Capability/Product Contract lifecycle, readiness, conformance, public-surface or commercial status changes.
+
+Version `1.3.0` completed P8.06 external product/extension onboarding and governed dependency resolution using the separately maintained `arvectum/creative-test-agent` consumer, an exact Provisional Product Contract, exact CAP-004 `1.0.0` resolution, fail-closed least-privilege/private-coupling checks and a `1248 tests / OK` reference baseline; it advanced the current canonical action to R26. No Platform Capability/Product Contract lifecycle, readiness, conformance, public-surface or commercial status changes.
 
 ## 1. Purpose
 
@@ -82,8 +84,8 @@ No second Organization, customer or portability recipient is implied by activati
 | `P8.04` | External authoritative-system connector pattern validation | R25 | 🟩 Complete / PASS | real external authority integration evidence |
 | `P8.05` | External ingress/egress Event, duplicate, replay, uncertainty + reconciliation semantics | P8.04 | 🟩 Complete / PASS | fail-closed external effect/evidence semantics |
 | `P8.06` | External product/extension onboarding + governed dependency resolution | P8.05 | 🟩 Complete / PASS | repeatable explicit onboarding/dependency proof |
-| `R26` | Cross-Organization Security / Integration Health Review | P8.06 | 🟨 Current | security/isolation/integration-health review |
-| `P8.07` | Portability/export/migration/customer-handover interoperability proof | R26 | ⬜ Pending | governed external handover/export evidence |
+| `R26` | Cross-Organization Security / Integration Health Review | P8.06 | 🟩 Complete / PASS | bounded security/isolation/integration-health review |
+| `P8.07` | Portability/export/migration/customer-handover interoperability proof | R26 | 🟨 Current | governed external handover/export evidence |
 | `P8.08` | Multi-Organization isolation + cross-organization security validation | P8.07 | ⬜ Pending | realistic isolation/failure-closed evidence when a second Organization is actually in scope |
 | `P8.09` | External operator/developer integration experience + documentation | P8.08 | ⬜ Pending | bounded repeatable integration experience |
 | `R27` | Portability / Ecosystem Reuse Review | P8.09 | ⬜ Pending gate | reuse/portability/no-speculative-generalization review |
@@ -234,21 +236,21 @@ P8.06 does not make CAP-004 `Active`, make the Product Contract `Stable`, create
 
 ### R26 — Cross-Organization Security / Integration Health Review
 
-**Status: Current.**
+**Status: Complete / PASS.**
 
-Review P8.01–P8.06 with emphasis on:
+Evidence: [`R26-cross-organization-security-integration-health-review.md`](../reviews/R26-cross-organization-security-integration-health-review.md) — `Complete / PASS`.
 
-- Organization isolation;
-- least privilege/default denial;
-- secrets and privileged support paths;
-- external authority preservation;
-- provenance/replay/uncertainty semantics;
-- integration dependency direction and hidden coupling;
-- incident/recovery impact;
-- contract/version drift;
-- concrete ADR/stable-boundary triggers.
+R26 reviewed P8.01–P8.06 with emphasis on Organization scope/isolation guards, least privilege/default denial, secrets and privileged paths, external authority, provenance/replay/uncertainty, dependency direction/hidden coupling, incident/recovery behavior, contract/version drift and ADR/stable-boundary triggers.
+
+No material blocker remains for the current one-Organization owner-operated contour. Existing paths fail closed on Organization mismatch, excess scope, undeclared/private coupling, duplicate/replay/uncertain outcome, version mismatch and disabled/removed external-consumer reliance. The temporary P8.04 technical grant is revoked and historical recovery does not restore reusable secrets, authority or external effects.
+
+R26 explicitly does **not** prove realistic multi-Organization tenant isolation. P8.08 remains the required proof if a second Organization is genuinely activated. A P8.06 onboarding receipt is point-in-time derived evidence, not current permission/authority/compatibility; any future persistent runtime reliance must revalidate current contract/provider/access governance before use or recovery resumption.
+
+No R26-specific ADR or stable/public surface is required.
 
 ### P8.07 — Portability/export/migration/customer-handover interoperability proof
+
+**Status: Current.**
 
 Exercise organization control beyond the owner-operated deployment only when a concrete permitted external recipient/scope exists.
 
@@ -411,9 +413,9 @@ P8.05 duplicate / replay / uncertainty        PASS
    ↓
 P8.06 external product / extension onboarding PASS
    ↓
-R26 Integration Health / Cross-Org Security   CURRENT
+R26 Integration Health / Cross-Org Security   PASS
    ↓
-P8.07 portability / handover proof
+P8.07 portability / handover proof            CURRENT
    ↓
 P8.08 multi-Organization isolation validation
    ↓
@@ -430,7 +432,7 @@ R28 M8 hardening + code-health gate
 P8.12 M8 closure
 ```
 
-P8.04 is the first action in this sequence that required the real owner-operated local Tender Operator/EIS runtime, existing credentials/trust path and owner-only raw execution artifacts. P8.05 and P8.06 completed repository-side semantic/evidence validation without expanding the P8.03 read-only EIS rights boundary or requiring new local execution.
+P8.04 is the first action in this sequence that required the real owner-operated local Tender Operator/EIS runtime, existing credentials/trust path and owner-only raw execution artifacts. P8.05, P8.06 and R26 completed repository-side semantic/evidence/review work without expanding the P8.03 read-only EIS rights boundary or requiring new local execution.
 
 ## 8. M8 exit criteria
 
@@ -473,6 +475,6 @@ Phase 8 does not inherently establish:
 
 ## 10. Current canonical action
 
-> **R26 — Cross-Organization Security / Integration Health Review.**
+> **P8.07 — Portability/export/migration/customer-handover interoperability proof.**
 
-P8.00, P8.01, P8.02, P8.03, R25, P8.04, P8.05 and P8.06 are `Complete / PASS`. P8.06 proved governed onboarding/dependency resolution for the real separately maintained Creative Test Agent extension through an exact Provisional Product Contract and exact CAP-004 `1.0.0` evidence, with `1248 tests / OK`, no private coupling/shared mutable state, no lifecycle promotion and no public/stable platform surface. R26 is now current.
+P8.00, P8.01, P8.02, P8.03, R25, P8.04, P8.05, P8.06 and R26 are `Complete / PASS`. R26 found no material blocker in the current one-Organization security/integration contour, while explicitly preserving P8.08 as the future realistic multi-Organization isolation proof and requiring any future persistent runtime reliance to revalidate current Product Contract/provider/access governance rather than trusting a historical onboarding receipt. P8.07 is now current.
