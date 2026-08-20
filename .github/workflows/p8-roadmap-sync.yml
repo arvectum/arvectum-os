@@ -1,0 +1,65 @@
+name: P8.04 roadmap sync patch
+
+on:
+  push:
+    branches:
+      - p8-04-roadmap-sync-fix
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply exact roadmap synchronization correction
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo 'dc659b04d1c77fccca2d6a0a9b29fcc7877288597b1ea88eb10a1d1856b183ad  docs/roadmap/ROADMAP.md' | sha256sum -c -
+          echo '55b5a398b17498b15263089b5a6e92b6bd40bd9973e4c76fe7f2384bdf9a6db8  docs/roadmap/PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md' | sha256sum -c -
+          python - <<'PY'
+          from pathlib import Path
+
+          master = Path('docs/roadmap/ROADMAP.md')
+          text = master.read_text(encoding='utf-8')
+          text = text.replace('Version: `2.61.0`', 'Version: `2.61.1`', 1)
+          text = text.replace(
+              '## 2. Version note\n\nVersion `2.61.0` completes',
+              '## 2. Version note\n\nVersion `2.61.1` is a post-merge roadmap synchronization correction: it aligns the detailed Phase 8 roadmap reference with `1.1.1` and preserves `P8.04 = Complete / PASS` / `P8.05 = Current`; it changes no lifecycle, readiness, conformance or commercial status.\n\nVersion `2.61.0` completes',
+              1,
+          )
+          text = text.replace(
+              'PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md) — `Active 1.0.0`',
+              'PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md) — `Active 1.1.1`',
+              1,
+          )
+          master.write_text(text, encoding='utf-8')
+
+          phase = Path('docs/roadmap/PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md')
+          text = phase.read_text(encoding='utf-8')
+          text = text.replace('Version: `1.1.0`', 'Version: `1.1.1`', 1)
+          text = text.replace(
+              'Activation decision: [`DECISION-2026-08-20-PHASE-8-ACTIVATION`](../governance/decisions/DECISION-2026-08-20-PHASE-8-ACTIVATION.md) — `Approved`\n\n## 1. Purpose',
+              'Activation decision: [`DECISION-2026-08-20-PHASE-8-ACTIVATION`](../governance/decisions/DECISION-2026-08-20-PHASE-8-ACTIVATION.md) — `Approved`\n\nVersion `1.1.1` is a post-merge synchronization correction only: it updates the lower critical-path rendering to match the already canonical `P8.04 = Complete / PASS` and `P8.05 = Current` state; no lifecycle, readiness, conformance or commercial status changes.\n\n## 1. Purpose',
+              1,
+          )
+          text = text.replace(
+              'P8.04 real external connector validation      CURRENT / LOCAL\n   ↓\nP8.05 duplicate / replay / uncertainty semantics',
+              'P8.04 real external connector validation      PASS\n   ↓\nP8.05 duplicate / replay / uncertainty          CURRENT',
+              1,
+          )
+          phase.write_text(text, encoding='utf-8')
+          PY
+          echo '3a61fb51422aa6528ce3d9ecb166f26709919346eeffe4b7ada2e0bd6293e88a  docs/roadmap/ROADMAP.md' | sha256sum -c -
+          echo 'a48b054b6f2202d39999910e3cb5c570a19b54b04cb1ac909c512d7cc33c5a7c  docs/roadmap/PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md' | sha256sum -c -
+          git diff --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/roadmap/ROADMAP.md docs/roadmap/PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md
+          git commit -m 'docs: synchronize P8.04 closure roadmap state'
+          git push origin HEAD:p8-04-roadmap-sync-fix
