@@ -36,6 +36,12 @@ Reference and operational-proof code must continue to preserve the accepted inva
 - Product-specific workflows, schemas, knowledge, approval rules and UX remain product-owned unless a governed platform decision explicitly changes that boundary.
 - External authoritative systems may remain authoritative; the harness must not create a competing source of truth.
 
+## Bounded external integration reference
+
+The [external operator/developer integration runbook](../../docs/implementation/P8-09-EXTERNAL-OPERATOR-DEVELOPER-INTEGRATION-RUNBOOK.md) documents how to reproduce the currently validated Creative Test Agent external-consumer case with exact source/Product Contract/dependency pins, safe credential handling, fail-closed outcomes, evidence inspection and lifecycle-aware disable/remove/upgrade guidance.
+
+The runbook is bounded evidence for that exact case. It is not a public/stable SDK/API or a general compatibility promise, and this README does not assign it independent roadmap or lifecycle status.
+
 ## Validation
 
 Run the complete local reference suite from this directory:
