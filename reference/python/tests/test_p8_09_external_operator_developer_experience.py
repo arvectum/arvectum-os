@@ -135,6 +135,7 @@ class P809ExternalOperatorDeveloperExperienceTests(unittest.TestCase):
             SOURCE_DECLARATION_BLOB_SHA,
             PRODUCT_CONTRACT_VERSION_VALUE,
             CAPABILITY_CONTRACT_VERSION,
+            PROVIDER_GOVERNANCE_REFERENCE,
             OP_RECONSTRUCT_EXECUTION,
             "creative-test-audit-reconstruction",
         ):
@@ -162,6 +163,7 @@ class P809ExternalOperatorDeveloperExperienceTests(unittest.TestCase):
         self.assertEqual(receipt.dependency_id, CAP_004_AUDIT_RECONSTRUCTION)
         self.assertEqual(receipt.dependency_contract_version, CAPABILITY_CONTRACT_VERSION)
         self.assertEqual(receipt.operation_name, OP_RECONSTRUCT_EXECUTION)
+        self.assertEqual(receipt.provider_governance_reference, PROVIDER_GOVERNANCE_REFERENCE)
         self.assertEqual(receipt.organization, self.organization)
 
     def test_documented_version_and_scope_drift_fail_closed(self) -> None:
@@ -219,7 +221,7 @@ class P809ExternalOperatorDeveloperExperienceTests(unittest.TestCase):
 
         runbook = RUNBOOK_PATH.read_text(encoding="utf-8")
         self.assertIn("credentials must be separately reprovisioned", runbook)
-        self.assertIn("never copy secrets into onboarding receipts", runbook)
+        self.assertIn("never commit or copy reusable secrets", runbook)
 
 
 if __name__ == "__main__":
