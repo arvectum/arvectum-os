@@ -45,12 +45,12 @@ class ExternalConsumerOnboardingError(ProductContractValidationError):
     """External source evidence cannot be reconciled with the governed boundary."""
 
 
-class ExternalConsumerLifecycleError(ExternalConsumerOnboardingError):
-    """A disable/remove/upgrade transition is not safe from the current evidence."""
+class ExternalConsumerRelianceStateError(ExternalConsumerOnboardingError):
+    """A disable/remove/upgrade transition is not safe from the current reliance state."""
 
 
-class ExternalConsumerLifecycle(str, Enum):
-    """Lifecycle of the bounded onboarding reliance, not Product Contract lifecycle."""
+class ExternalConsumerRelianceState(str, Enum):
+    """Operational reliance state; explicitly not a governed lifecycle model."""
 
     ONBOARDED = "Onboarded"
     DISABLED = "Disabled"
@@ -163,7 +163,7 @@ class ExternalConsumerOnboardingReceipt:
     dependency_contract_version: str
     operation_name: str
     provider_governance_reference: str
-    lifecycle: ExternalConsumerLifecycle
+    state: ExternalConsumerRelianceState
     transition_reason: str | None = None
 
     def __post_init__(self) -> None:
@@ -184,8 +184,8 @@ class ExternalConsumerOnboardingReceipt:
         _require_text(self.dependency_contract_version, label="onboarding dependency contract version")
         _require_text(self.operation_name, label="onboarding operation")
         _require_text(self.provider_governance_reference, label="provider governance reference")
-        if not isinstance(self.lifecycle, ExternalConsumerLifecycle):
-            raise ValueError("onboarding lifecycle must be explicit")
+        if not isinstance(self.state, ExternalConsumerRelianceState):
+            raise ValueError("onboarding reliance state must be explicit")
         if self.transition_reason is not None:
             _require_text(self.transition_reason, label="onboarding transition reason")
 
@@ -299,7 +299,7 @@ def onboard_external_consumer(
         dependency_contract_version=request.dependency_contract_version,
         operation_name=request.operation_name,
         provider_governance_reference=evaluation.governance_references[0],
-        lifecycle=ExternalConsumerLifecycle.ONBOARDED,
+        state=ExternalConsumerRelianceState.ONBOARDED,
     )
 
 
@@ -310,8 +310,8 @@ def require_external_consumer_enabled(
 
     if not isinstance(receipt, ExternalConsumerOnboardingReceipt):
         raise TypeError("external reliance requires an onboarding receipt")
-    if receipt.lifecycle is not ExternalConsumerLifecycle.ONBOARDED:
-        raise ExternalConsumerLifecycleError("external consumer reliance is not enabled")
+    if receipt.state is not ExternalConsumerRelianceState.ONBOARDED:
+        raise ExternalConsumerRelianceStateError("external consumer reliance is not enabled")
     return receipt
 
 
@@ -326,7 +326,7 @@ def disable_external_consumer(
     _require_text(reason, label="external consumer disable reason")
     return replace(
         receipt,
-        lifecycle=ExternalConsumerLifecycle.DISABLED,
+        state=ExternalConsumerRelianceState.DISABLED,
         transition_reason=reason,
     )
 
@@ -340,12 +340,12 @@ def remove_external_consumer(
 
     if not isinstance(receipt, ExternalConsumerOnboardingReceipt):
         raise TypeError("external removal requires an onboarding receipt")
-    if receipt.lifecycle is not ExternalConsumerLifecycle.DISABLED:
-        raise ExternalConsumerLifecycleError("external consumer must be disabled before removal")
+    if receipt.state is not ExternalConsumerRelianceState.DISABLED:
+        raise ExternalConsumerRelianceStateError("external consumer must be disabled before removal")
     _require_text(reason, label="external consumer removal reason")
     return replace(
         receipt,
-        lifecycle=ExternalConsumerLifecycle.REMOVED,
+        state=ExternalConsumerRelianceState.REMOVED,
         transition_reason=reason,
     )
 
@@ -365,13 +365,15 @@ def upgrade_external_consumer(
         raise TypeError("external upgrade requires the previous onboarding receipt")
     require_external_consumer_enabled(previous)
     if source.repository != previous.repository or source.consumer_id != previous.consumer_id:
-        raise ExternalConsumerLifecycleError("external upgrade must preserve repository and consumer identity")
+        raise ExternalConsumerRelianceStateError("external upgrade must preserve repository and consumer identity")
     if source.consumer_version == previous.consumer_version:
-        raise ExternalConsumerLifecycleError("external upgrade requires a new immutable consumer version")
+        raise ExternalConsumerRelianceStateError("external upgrade requires a new immutable consumer version")
     if source.commit_sha == previous.source_commit_sha:
-        raise ExternalConsumerLifecycleError("external upgrade requires a new immutable source commit")
+        raise ExternalConsumerRelianceStateError("external upgrade requires a new immutable source commit")
     if effective_product_contract.version_id == previous.product_contract.version_id:
-        raise ExternalConsumerLifecycleError("external upgrade requires a new immutable Product Contract Version")
+        raise ExternalConsumerRelianceStateError(
+            "external upgrade requires a new immutable Product Contract Version"
+        )
 
     return onboard_external_consumer(
         source=source,
