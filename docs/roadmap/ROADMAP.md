@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.58.0`
+Version: `2.59.0`
 Created: `2026-08-07`
 Updated: `2026-08-20`
 Owner: `ООО «Арвектум»`
@@ -17,17 +17,20 @@ Detailed completed-phase history remains in the corresponding phase roadmaps, re
 
 ## 2. Version note
 
-Version `2.58.0` closes `P8.00-A1 — External-demand evidence inventory` as `Complete / PASS` and advances the current pre-activation action to `P8.00-A2 — Candidate triage and value test`.
+Version `2.59.0` closes `P8.00-A2 — Candidate triage and value test` as `Complete / PASS` and advances the current pre-activation action to `P8.00-A3 — Select one bounded external outcome`.
 
-A1 canonically records three evidence-backed external candidates without ranking or selecting them:
+A2 qualitatively triaged only the three evidence-backed A1 candidates and produced one-item shortlist:
 
-- ЕИС / `zakupki.gov.ru` authoritative tender-document boundary;
-- Telegram controlled external publication effect boundary;
-- Discount Parser public discount/promo source set, with unresolved source-specific rights details.
+- ЕИС / `zakupki.gov.ru` authoritative tender-document boundary — `SHORTLIST_FOR_A3`.
 
-A1 also records that the reviewed evidence does not yet identify a named second partner/customer Organization, an external portability/handover recipient, or a new external product/extension consumer beyond the existing owner-operated M6/M7 baseline. No missing candidate class is filled by assumption.
+A2 explicitly contains/defer the remaining candidates on current evidence:
 
-Canonical facts preserved from `2.57.0`:
+- Telegram controlled external publication effect boundary — `CONTAIN_PRODUCT_LOCAL / NOT_SHORTLISTED` because M6/M7 already materially validated the same external-effect/reconstruction pressure and no broader generic Telegram/notification platform need is evidenced;
+- Discount Parser public discount/promo source set — `DEFER_RIGHTS_GAP / NOT_SHORTLISTED` because source-specific permitted-use/redistribution/retention scope is not canonically established and the current adapter/normalization behavior remains product-owned.
+
+The A2 shortlist does not platformize the EIS connector. A3 must define a materially new bounded EIS-related external outcome beyond the existing M6 retrieval proof or record `DEFER` rather than recycle old evidence.
+
+Canonical facts preserved from `2.58.0`:
 
 - `Phase 7 = Complete / PASS`;
 - `M7 = achieved` for the declared `Persistent Internal / owner-operated` scope;
@@ -40,7 +43,7 @@ Canonical facts preserved from `2.57.0`:
 - no external/customer Production, Stable Product Contract, Active Platform Capability, public/stable API/wire/deployment surface, SLA/support or certification claim exists;
 - Phase 8 remains `Draft / Exploratory` and has not been activated.
 
-Phase 8 activation still requires completion of P8.00-A2 through A8, including one bounded outcome, explicit Organization/authority/data-rights scope, justified platform responsibility, stable/readiness/ADR gate disposition and fresh owner activation approval.
+Phase 8 activation still requires completion of P8.00-A3 through A8, including one bounded outcome, explicit Organization/authority/data-rights scope, justified platform responsibility, stable/readiness/ADR gate disposition and fresh owner activation approval.
 
 This planning update does not itself activate Phase 8 or create any external commitment.
 
@@ -176,8 +179,8 @@ P8.00 is deliberately outside active P8 execution. It decides whether the extern
 | Substep | Work | Status | Exit |
 |---|---|---|---|
 | `P8.00-A1` | External-demand evidence inventory | 🟩 Complete / PASS | concrete candidate register |
-| `P8.00-A2` | Candidate triage + value/platform-need test | 🟨 Current / next | shortlist ≤ 3 candidates |
-| `P8.00-A3` | Select one bounded external outcome | ⬜ Pending | named activation outcome |
+| `P8.00-A2` | Candidate triage + value/platform-need test | 🟩 Complete / PASS | shortlist ≤ 3 candidates |
+| `P8.00-A3` | Select one bounded external outcome | 🟨 Current / next | named activation outcome or explicit `DEFER` |
 | `P8.00-A4` | Organization / identity / authority / data-rights map | ⬜ Pending | explicit deny-by-default boundary |
 | `P8.00-A5` | Platform-responsibility necessity test | ⬜ Pending | `PLATFORM_REQUIRED`, `PRODUCT_LOCAL` or `DEFER` |
 | `P8.00-A6` | Stable/readiness/ADR gate scan | ⬜ Pending | explicit required governance or `NO-GATE` |
@@ -185,6 +188,17 @@ P8.00 is deliberately outside active P8 execution. It decides whether the extern
 | `P8.00-A8` | Fresh owner activation decision | ⬜ Pending | Phase 8 `Active` or explicit `DEFER` |
 
 A1 evidence: [`P8-00-A1-external-demand-evidence-inventory.md`](../reviews/P8-00-A1-external-demand-evidence-inventory.md).
+
+A2 evidence: [`P8-00-A2-candidate-triage-and-value-test.md`](../reviews/P8-00-A2-candidate-triage-and-value-test.md).
+
+Current A2 shortlist:
+
+1. ЕИС / `zakupki.gov.ru` authoritative tender-document boundary.
+
+Contained/deferred on current evidence:
+
+- Telegram controlled external publication effect boundary — product-local containment;
+- Discount Parser public discount/promo source set — deferred pending source-specific rights clarity and new external value evidence.
 
 Candidate classes include:
 
@@ -318,6 +332,6 @@ Successful integration is evidence, not automatic lifecycle promotion.
 
 ## 12. Current canonical action
 
-> **P8.00-A2 — Candidate triage and value test.**
+> **P8.00-A3 — Select one bounded external outcome.**
 
-A1 is `Complete / PASS`. The immediate next action is to qualitatively triage only the evidence-backed A1 candidates, produce a shortlist of no more than three and disposition contained/rejected candidates without inventing value, rights or external demand. No P8.01 implementation may begin until one selected outcome passes the remaining P8.00 gates and fresh owner activation approval is recorded.
+A1 and A2 are `Complete / PASS`. The immediate next action is to work from the one-item A2 shortlist and either define a materially new bounded EIS-related external outcome beyond the existing M6 retrieval proof or record `DEFER`. No P8.01 implementation may begin until one selected outcome passes the remaining P8.00 gates and fresh owner activation approval is recorded.
