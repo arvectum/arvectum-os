@@ -1,7 +1,7 @@
 # Arvectum OS Phase 9 — Productive Workspace & Daily Operations
 
 Status: `Active`
-Version: `1.5.0`
+Version: `1.6.0`
 Created: `2026-08-21`
 Updated: `2026-08-21`
 Owner: `ООО «Арвектум»`
@@ -64,8 +64,8 @@ The existing P4/P7 UI remains a diagnostic/reference/recovery surface. It is not
 | `R29` | Productive Workspace Boundary Review | 🟩 Complete / PASS | boundary PASS after 6 iterations; ADR-0001 owner-approved and Accepted |
 | `P9.03` | Real application shell + navigation + organization/user context | 🟩 Complete / PASS | real ADR-0001 shell/BFF/session/release boundary implemented and regression-verified |
 | `P9.04` | `My Work` / Needs Attention projection | 🟩 Complete / PASS | actionable owner queue without raw execution hunting |
-| **`P9.05`** | **Human-friendly Records / Documents / Knowledge + global search** | **🟨 Current** | understandable discovery and object context |
-| `P9.06` | Executions / Decisions / governed actions UX | ⬜ | owner can inspect and perform one real governed action |
+| `P9.05` | Human-friendly Records / Documents / Knowledge + global search | 🟩 Complete / PASS | understandable discovery and object context |
+| **`P9.06`** | **Executions / Decisions / governed actions UX** | **🟨 Current** | owner can inspect and perform one real governed action |
 | `R30` | M9-alpha Usability / Information Architecture Review | ⬜ gate | ordinary workflow usable without terminal/internal IDs |
 | `M9-alpha` | Usable Internal Workspace | ⬜ milestone | daily core work usable through browser UI |
 | `P9.07` | Product-owned workspace surfaces / composition | ⬜ | at least two real product surfaces inside Workspace |
@@ -220,7 +220,32 @@ Application release `p9.04.1` remains `bounded-internal-provisional`; internal a
 
 P9.04 closes the queue/overview portion of J1 but does not claim full end-to-end J1 or `M9-alpha`: P9.05/P9.06 and R30 remain required for human-friendly exact object context, governed-action continuation and full J1–J4 usability evidence.
 
-## 11. M9-alpha exit criteria
+## 11. P9.05 implementation and closure result
+
+Status: `Complete / PASS`.
+
+Canonical evidence: [`P9-05-human-friendly-records-documents-knowledge-global-search.md`](../reviews/P9-05-human-friendly-records-documents-knowledge-global-search.md).
+
+P9.05 established the first human-friendly discovery and exact-object-context layer through the P9.03/P9.04/ADR-0001 application boundary:
+
+1. internal `arvectum.workspace.discovery/1` derived discovery and `arvectum.workspace.object-context/1` read contracts;
+2. persistent global search plus dedicated Records, Documents and Knowledge routes;
+3. server-resolved Organization/Actor scope and current protected-read revalidation;
+4. human-readable semantic role/title/summary/source/authority/state in the ordinary path;
+5. opaque browser object references, with exact Subject/Version/provenance available only through explicit technical drill-down;
+6. real P9.01 F1 EIS notice `0344100006426000005` discoverable by human/external context and opened with `ЕИС / zakupki.gov.ru` / `External Reference` semantics intact;
+7. `Observation`, Organizational Memory, Knowledge Candidate and validated Knowledge kept semantically distinct;
+8. fail-closed degraded search/object behavior with no denied-result cardinality oracle and no stale protected details represented as current;
+9. no durable search source of truth in the current implementation and no consequential write/effect path;
+10. Workspace release `p9.05.1`, internal application contract `3`, still `bounded-internal-provisional` and non-public.
+
+Functional cross-review completed two iterations. Iteration 1 passed source behavior/typecheck/tests/storage/build gates and found only the expected committed production-asset mismatch; exact CI-built assets were reconciled through a bounded one-shot helper and that helper was removed before closure. Iteration 2 passed Productive Workspace CI run `32477614572` and Reference Python CI run `32477614687` with no remaining material objection.
+
+P9.05 closes the J2/J3 implementation slice for the declared real F1 discovery/context path. It does not claim full M9-alpha: P9.06 must still prove one bounded real governed interaction and R30 must review the complete J1–J4 ordinary path.
+
+P9.05 creates no public/stable API, Product Contract or Platform Capability lifecycle transition, customer Production claim, broader conformance promise or Organizational Authority.
+
+## 12. M9-alpha exit criteria
 
 `M9-alpha — Usable Internal Workspace` is achieved only when the owner can, through the normal private Workspace and without terminal/GitHub/internal-ID knowledge for ordinary steps:
 
@@ -236,7 +261,7 @@ P9.04 closes the queue/overview portion of J1 but does not claim full end-to-end
 
 M9-alpha is an internal usability milestone, not a public/stable interface, Production/customer readiness or lifecycle transition.
 
-## 12. M9 exit criteria
+## 13. M9 exit criteria
 
 `M9 — Daily-use organizational workbench` requires the exact activated internal scope to demonstrate:
 
@@ -252,7 +277,7 @@ M9-alpha is an internal usability milestone, not a public/stable interface, Prod
 10. R29–R32 findings are closed or explicitly accepted by appropriate authority;
 11. M9 Milestone Code Health Gate passes before closure.
 
-## 13. Explicit non-goals
+## 14. Explicit non-goals
 
 Phase 9 does not by itself establish:
 
@@ -267,10 +292,10 @@ Phase 9 does not by itself establish:
 - AI Organizational Authority or final consequential approval;
 - automatic promotion of observations/generated outputs into validated Knowledge.
 
-## 14. Current canonical action
+## 15. Current canonical action
 
-> **P9.05 — Human-friendly Records / Documents / Knowledge + global search.**
+> **P9.06 — Executions / Decisions / governed actions UX.**
 
-Build the next owner-facing discovery/context layer on top of P9.03/P9.04. The ordinary path must find and open real governed organizational objects by human-readable context without terminal/GitHub/internal identifiers; derived search/discovery remains non-authoritative and current source Authorization/Data Governance/minimization must be revalidated before protected existence/content is disclosed.
+Build the next owner-facing governed-action layer on top of the P9.03–P9.05 Productive Workspace. The ordinary path must let the owner inspect one real Execution/Decision in human terms and perform at least one bounded real governed interaction while preserving current Authorization, Organizational Authority, Data Governance, Consequential Approval, provenance, idempotency/retry and no-effect-on-replay invariants at the command boundary.
 
-The remaining near-term sequence is `P9.05 → P9.06 → R30 → M9-alpha`. P9.04 provides the attention entry point; M9-alpha remains unachieved until the full declared exit set passes.
+The remaining near-term sequence is `P9.06 → R30 → M9-alpha`. P9.05 provides human-friendly discovery/context; M9-alpha remains unachieved until the full declared exit set passes.
