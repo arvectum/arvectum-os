@@ -12,6 +12,7 @@ from fastapi.staticfiles import StaticFiles
 from .access import AccessContext, AccessResolver, P704AccessResolver, WorkspaceAccessError
 from .attention import AttentionProvider, RuntimeAttentionProvider
 from .config import WorkspaceSettings
+from .discovery import DiscoveryError, DiscoveryKind, DiscoveryProvider, ObjectUnavailable, RuntimeDiscoveryProvider
 from .release import WorkspaceRelease, load_release
 from .security import SessionStore, WorkspaceSession
 
@@ -53,7 +54,10 @@ def _navigation() -> list[dict[str, Any]]:
     return [
         {"id": "home", "label": "Home", "href": "/", "availability": "available"},
         {"id": "my-work", "label": "My Work", "href": "/my-work", "availability": "available"},
-        {"id": "search", "label": "Search", "href": "/search", "availability": "planned-p9.05"},
+        {"id": "search", "label": "Search", "href": "/search", "availability": "available"},
+        {"id": "records", "label": "Records", "href": "/records", "availability": "available"},
+        {"id": "documents", "label": "Documents", "href": "/documents", "availability": "available"},
+        {"id": "knowledge", "label": "Knowledge", "href": "/knowledge", "availability": "available"},
         {"id": "governed", "label": "Governed actions", "href": "/governed", "availability": "planned-p9.06"},
         {"id": "products", "label": "Products", "href": "/products", "availability": "planned-p9.07"},
     ]
@@ -95,6 +99,7 @@ def create_app(
     *,
     access_resolver: AccessResolver | None = None,
     attention_provider: AttentionProvider | None = None,
+    discovery_provider: DiscoveryProvider | None = None,
     session_store: SessionStore | None = None,
     static_dir: Path | None = None,
 ) -> FastAPI:
@@ -102,6 +107,7 @@ def create_app(
     release = load_release()
     resolver = access_resolver or P704AccessResolver(settings.runtime_root)
     attention = attention_provider or RuntimeAttentionProvider(settings.runtime_root)
+    discovery = discovery_provider or RuntimeDiscoveryProvider(settings.runtime_root)
     store = session_store or SessionStore(
         idle_seconds=settings.session_idle_seconds,
         absolute_seconds=settings.session_absolute_seconds,
@@ -113,6 +119,7 @@ def create_app(
     app.state.release = release
     app.state.access_resolver = resolver
     app.state.attention_provider = attention
+    app.state.discovery_provider = discovery
     app.state.session_store = store
     app.state.static_root = static_root
 
@@ -215,9 +222,33 @@ def create_app(
     @app.get("/api/app/v1/my-work")
     async def read_my_work(current: tuple[WorkspaceSession, AccessContext] = Depends(_authorize_current)) -> dict[str, Any]:
         _, access = current
-        # The browser cannot choose Organization/Actor/source scope. The provider
-        # receives the current server-authorized access context after revalidation.
         return attention.project(access).to_payload()
+
+    @app.get("/api/app/v1/discovery")
+    async def read_discovery(
+        q: str = "",
+        kind: str | None = None,
+        current: tuple[WorkspaceSession, AccessContext] = Depends(_authorize_current),
+    ) -> dict[str, Any]:
+        _, access = current
+        try:
+            kind_filter = DiscoveryKind(kind) if kind is not None else None
+            return discovery.search(access, query=q, kind=kind_filter).to_payload()
+        except (ValueError, DiscoveryError):
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="DISCOVERY_QUERY_INVALID") from None
+
+    @app.get("/api/app/v1/objects/{object_id}")
+    async def read_object_context(
+        object_id: str,
+        current: tuple[WorkspaceSession, AccessContext] = Depends(_authorize_current),
+    ) -> dict[str, Any]:
+        _, access = current
+        try:
+            return discovery.inspect(access, object_id).to_payload()
+        except ObjectUnavailable:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="OBJECT_UNAVAILABLE") from None
+        except DiscoveryError:
+            raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="DISCOVERY_UNAVAILABLE") from None
 
     @app.post("/api/app/v1/session/logout")
     async def logout(

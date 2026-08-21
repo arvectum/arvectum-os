@@ -1,4 +1,4 @@
-import type { MyWorkProjection, WorkspaceContext } from "./types";
+import type { DiscoveryKind, DiscoveryProjection, MyWorkProjection, ObjectContext, WorkspaceContext } from "./types";
 
 export class WorkspaceApiError extends Error {
   readonly code: string;
@@ -47,6 +47,18 @@ export async function loadWorkspaceContext(): Promise<WorkspaceContext> {
 
 export async function loadMyWork(): Promise<MyWorkProjection> {
   return request<MyWorkProjection>("/api/app/v1/my-work");
+}
+
+export async function loadDiscovery(query = "", kind?: DiscoveryKind): Promise<DiscoveryProjection> {
+  const params = new URLSearchParams();
+  if (query.trim()) params.set("q", query.trim());
+  if (kind) params.set("kind", kind);
+  const suffix = params.size ? `?${params.toString()}` : "";
+  return request<DiscoveryProjection>(`/api/app/v1/discovery${suffix}`);
+}
+
+export async function loadObjectContext(objectId: string): Promise<ObjectContext> {
+  return request<ObjectContext>(`/api/app/v1/objects/${encodeURIComponent(objectId)}`);
 }
 
 export async function logoutWorkspace(csrfToken: string): Promise<void> {
