@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.74.0`
+Version: `2.75.0`
 Created: `2026-08-07`
 Updated: `2026-08-21`
 Owner: `ООО «Арвектум»`
@@ -17,25 +17,25 @@ Detailed completed-phase history remains in the corresponding phase roadmaps, re
 
 ## 2. Version note
 
-Version `2.74.0` closes **`P9.01 — Real operator jobs-to-be-done + acceptance journeys`** as `Complete / PASS` for acceptance-baseline definition and advances Phase 9 to **`P9.02 — Application architecture spike + frontend/BFF/session decision`**.
+Version `2.75.0` closes **`P9.02 — Application architecture spike + frontend/BFF/session decision`** as `Complete / PASS` for architecture-spike scope and advances Phase 9 to **`R29 — Productive Workspace Boundary Review`**.
 
-P9.01 fixes six exact owner/operator jobs and the evidence contract before technology selection. `J1 Morning overview`, `J2 Find anything`, `J3 Understand context` and `J4 Make a governed decision/action` are the M9-alpha blockers. `J5 Work across products` and `J6 Ask Arvectum` are defined now but remain full-M9 targets after M9-alpha, matching the canonical P9.07/P9.08 sequence.
+P9.02 compared four bounded application topologies against the P9.01 `J1`–`J4` M9-alpha blocker workload and selected the preferred gate-ready shape: a React + TypeScript SPA built to static assets, a same-origin Python BFF co-deployed in the existing exact-release runtime unit, opaque server-side sessions, explicit CSRF/origin controls, rebuildable Organization-scoped non-authoritative read models, and compile-time product-owned UI composition without freezing a public/stable plugin contract.
 
-The acceptance registry is anchored in real retained EIS/Tender Operator evidence plus the persistent Tender Operator and Discount Parser contours. Ordinary-path PASS requires no terminal/GitHub/internal-ID knowledge, no authority/success misrepresentation and no Organization-scope violation. Exact technical identity/version/provenance remains reachable on demand. Controlled truthfully representative uncertainty fixtures may be used only when no current real unresolved effect exists and may not be presented as a real production occurrence.
+The selected topology is materially constraining/long-lived, so the ADR threshold was crossed. [`ADR-0001 — Productive Workspace Browser Application Topology`](../adrs/ADR-0001-productive-workspace-browser-application-topology.md) now exists as `Proposed`; it has **not** been represented as Accepted or owner-approved. Broad P9.03 material reliance is therefore gated by R29, which must verify the product/platform, authority/security and stable-surface boundaries and disposition ADR-0001 through valid decision authority.
 
-P9.01 deliberately does **not** select a long-lived frontend framework, BFF/API/session topology or durable read-model technology, and it does not claim that the new Productive Workspace journeys have already been implemented or executed. P9.02 now compares bounded application architecture options against the J1–J4 workload and triggers an ADR before material reliance if the selected topology becomes materially constraining or long-lived.
+P9.02 explicitly rejects growing the P4/P7 `http.server` + rendered-string HTML diagnostic shell into the durable Productive Workspace and rejects a separately deployed Node/full-stack BFF service for the current owner-operated contour because J1–J4 provide no evidence that the added service/authentication/deployment boundary is necessary. Six functional cross-review iterations ended with no material objection for architecture-spike scope.
 
-Canonical P9.01 evidence: [`P9-01-real-operator-jobs-acceptance-journeys.md`](../reviews/P9-01-real-operator-jobs-acceptance-journeys.md). Detailed Phase 9 roadmap: [`PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md`](PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md) `Active 1.1.0`.
+Canonical P9.02 evidence: [`P9-02-application-architecture-spike-frontend-bff-session-decision.md`](../reviews/P9-02-application-architecture-spike-frontend-bff-session-decision.md). Detailed Phase 9 roadmap: [`PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md`](PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md) `Active 1.2.0`.
 
 The intermediate milestone remains **`M9-alpha — Usable Internal Workspace`**: the owner can use the normal private browser Workspace for a useful home page, `My Work`, human-readable discovery/context, real Documents/Knowledge/Records, understandable Executions/Decisions and at least one real governed interaction without needing terminal, GitHub or internal identifiers for ordinary steps.
 
-This roadmap update does not create public/customer Production, Stable Product Contracts, Active Platform Capabilities, public/stable API/SDK/browser compatibility, SLA/support/certification, multi-Organization validation, or AI authority.
+This roadmap update does not create public/customer Production, Stable Product Contracts, Active Platform Capabilities, public/stable API/SDK/browser compatibility, SLA/support/certification, multi-Organization validation, or AI authority. A Proposed ADR does not create an Accepted architectural contract.
 
 ## 3. Architecture and governance baseline
 
 - Constitution `1.2.0` — `Ratified`, frozen;
 - RFC-0001 through RFC-0008 — `Accepted 1.0.0`;
-- no Accepted ADR currently selects a permanent frontend, BFF/API/session, IAM, projection/read-model, public browser or product-UI composition topology;
+- `ADR-0001 — Productive Workspace Browser Application Topology` exists as `Proposed`; no Accepted ADR currently selects a permanent frontend, BFF/API/session, IAM, projection/read-model, public browser or product-UI composition topology;
 - Decision Authority Policy remains `Proposed 0.2.1`; residual authority remains with the owner under Accepted governance;
 - Approved Engineering Quality and Refactoring Gates remain binding;
 - CAP-001 through CAP-004 remain `Incubating / Provisional`;
@@ -82,15 +82,15 @@ The current private P4/P7 UI remains useful as diagnostic/reference/recovery evi
 
 ## 6. Active Phase 9 — Productive Workspace & Daily Operations
 
-Detailed roadmap: [`PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md`](PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md) — `Active 1.1.0`.
+Detailed roadmap: [`PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md`](PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md) — `Active 1.2.0`.
 
 | ID | Work item | Status |
 |---|---|---:|
 | `P9.00` | Productive Workspace activation + outcome baseline | 🟩 Complete / PASS |
 | `P9.01` | Real operator jobs-to-be-done + acceptance journeys | 🟩 Complete / PASS |
-| **`P9.02`** | **Application architecture spike + frontend/BFF/session decision** | **🟨 Current** |
-| `R29` | Productive Workspace Boundary Review | ⬜ gate |
-| `P9.03` | Real application shell + navigation + organization/user context | ⬜ |
+| `P9.02` | Application architecture spike + frontend/BFF/session decision | 🟩 Complete / PASS |
+| **`R29`** | **Productive Workspace Boundary Review** | **🟨 Current gate** |
+| `P9.03` | Real application shell + navigation + organization/user context | ⬜ blocked by R29 |
 | `P9.04` | `My Work` / Needs Attention projection | ⬜ |
 | `P9.05` | Human-friendly Records / Documents / Knowledge + global search | ⬜ |
 | `P9.06` | Executions / Decisions / governed actions UX | ⬜ |
@@ -112,9 +112,9 @@ P9.00 activation                                      PASS
         ↓
 P9.01 real owner jobs / acceptance journeys           PASS
         ↓
-P9.02 application architecture spike + ADR gate       CURRENT
+P9.02 application architecture spike + Proposed ADR   PASS
         ↓
-R29 Productive Workspace Boundary Review
+R29 Productive Workspace Boundary Review              CURRENT
         ↓
 P9.03 real application shell
         ↓
@@ -163,6 +163,6 @@ M9-alpha is internal usability evidence only; it creates no public/stable surfac
 
 ## 9. Current canonical action
 
-> **P9.02 — Application architecture spike + frontend/BFF/session decision.**
+> **R29 — Productive Workspace Boundary Review.**
 
-P9.02 must compare bounded application architecture options against the P9.01 J1–J4 acceptance workload and evidence contract. The existing P4/P7 `http.server` + rendered-string HTML shell remains diagnostic/reference/recovery evidence and must not become the long-lived Productive Workspace merely by accretion. If the selected frontend/BFF/session/API/read-model topology becomes materially constraining or long-lived, capture the decision at the appropriate ADR level before material reliance.
+R29 must review the P9.02 preferred topology and Proposed ADR-0001 against the Constitution and Accepted RFCs, with explicit attention to browser/server trust, server-side Authorization/Organizational Authority/Data Governance revalidation, Organization isolation, non-authoritative projections, product-owned UI boundaries, P7.06 exact-release deployment and absence of accidental public/stable API/browser commitments. R29 must disposition ADR-0001 through valid decision authority before P9.03 materially relies on the topology.
