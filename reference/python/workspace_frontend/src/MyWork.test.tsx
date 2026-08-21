@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { MyWork } from "./MyWork";
 import type { MyWorkProjection } from "./types";
 
+// R30 clean-head trigger after deterministic production-asset reconciliation.
 const projection: MyWorkProjection = {
   schema: "arvectum.workspace.my-work/1",
   generated_at: "2026-08-21T10:00:00Z",
