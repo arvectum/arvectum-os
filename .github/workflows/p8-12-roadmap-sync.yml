@@ -1,19 +1,16 @@
-name: P8.12 One-shot Roadmap Sync
+name: P8.12 Final One-shot Status Sync
 
 on:
   push:
     branches:
       - p8-12-m8-closure
-  pull_request:
-    branches:
-      - main
 
 permissions:
   contents: write
 
 jobs:
   sync:
-    if: ${{ github.event_name == 'pull_request' || !contains(github.event.head_commit.message, '[p8-12-sync]') }}
+    if: ${{ !contains(github.event.head_commit.message, '[p8-12-final-sync]') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -21,70 +18,29 @@ jobs:
           ref: p8-12-m8-closure
           fetch-depth: 0
 
-      - name: Apply fail-closed P8.12 roadmap closure sync
+      - name: Remove stale active-tense wording
         shell: bash
         run: |
           set -euo pipefail
           python - <<'PY'
           from pathlib import Path
-          import re
-
-          def replace_once(text: str, old: str, new: str, label: str) -> str:
-              count = text.count(old)
-              if count != 1:
-                  raise SystemExit(f"{label}: expected exactly one anchor, found {count}")
-              return text.replace(old, new, 1)
-
-          master_path = Path('docs/roadmap/ROADMAP.md')
-          phase_path = Path('docs/roadmap/PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md')
-          master = master_path.read_text(encoding='utf-8')
-          phase = phase_path.read_text(encoding='utf-8')
-
-          master = replace_once(master, 'Version: `2.71.0`', 'Version: `2.72.0`', 'master version')
-          master_note = '''Version `2.72.0` completes P8.12 Phase 8 / M8 closure review as `Complete / PASS` and records `M8 — Governed external ecosystem baseline` as achieved only for the exact activated one-Organization scope. All M8 exit criteria are satisfied for that declared scope; criterion 9 remains conditionally `NOT ACTIVATED / NOT PROVEN` because no genuine second Organization was activated and therefore realistic two-Organization isolation was not truthfully exercisable. P8.12 preserves P8.07 external customer/cross-Organization transfer as `NOT ACTIVATED`, CAP-001 through CAP-004 as `Incubating / Provisional`, P8.03 and P8.06 Product Contracts as `Provisional 0.1.0`, the existing `Local / Persistent Internal / owner-operated` operating contour and scoped conformance, and the absence of any public/stable SDK/API/manifest/registry/export-format, external/customer Production, SLA/support/certification or commercial promise. The stale informative `docs/architecture/CAPABILITY-CATALOG.md` inventory was retired to an explicit historical pointer to the active governed capability catalog; this performs no lifecycle transition. P8.12 does not admit Phase 9 or any other post-M8 implementation program; after closure, a further numbered implementation action requires a separate governed roadmap/activation decision.\n\n'''
-          master = replace_once(master, '## 2. Version note\n\nVersion `2.71.0`', '## 2. Version note\n\n' + master_note + 'Version `2.71.0`', 'master version note')
-          master = replace_once(master, '| `Phase 8` | Ecosystem and External Integration | 🟨 Active | `M8` Governed external ecosystem baseline — not yet achieved |', '| `Phase 8` | Ecosystem and External Integration | 🟩 Complete / PASS | `M8` Governed external ecosystem baseline — achieved for exact activated scope |', 'master phase 8 strategic row')
-          master = replace_once(master, '## 8. Active Phase 8 — Ecosystem and External Integration\n\nDetailed roadmap: [`PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md`](PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md) — `Active 1.11.0`.', '## 8. Completed Phase 8 — Ecosystem and External Integration\n\nDetailed roadmap: [`PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md`](PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md) — `Complete / PASS 1.12.0`.', 'master phase 8 heading')
-          master = replace_once(master, '| `P8.12` | Phase 8 / M8 closure review | 🟨 Current |', '| `P8.12` | Phase 8 / M8 closure review | 🟩 Complete / PASS |', 'master p8.12 row')
-          master = replace_once(master, '- [`M8 Milestone Code Health Gate`](../reviews/M8-milestone-code-health-gate.md).', '- [`M8 Milestone Code Health Gate`](../reviews/M8-milestone-code-health-gate.md);\n- [`P8.12 Phase 8 / M8 closure review`](../reviews/P8-12-phase-8-m8-closure-review.md).', 'master closure evidence link')
-          master = replace_once(master, 'P8.12 M8 closure                            CURRENT', 'P8.12 M8 closure                            PASS', 'master critical path')
-          master = replace_once(master, 'P8.12 is now the current closure review.', 'P8.12 closes M8 as `Complete / PASS` only for the exact activated scope; realistic two-Organization isolation and actual external customer/cross-Organization transfer remain outside the proven scope.', 'master critical path narrative')
-          master = replace_once(master, 'R28 satisfies the M8 Milestone Code Health Gate and leaves no unresolved material hardening finding, but only P8.12 may decide whether the full exit criteria justify M8 closure.', 'R28 satisfies the M8 Milestone Code Health Gate and leaves no unresolved material hardening finding. P8.12 evaluated the complete criterion set and records M8 as achieved only for the exact activated one-Organization scope, while preserving every explicitly unactivated/unproven relationship class.', 'master M8 definition conclusion')
-          master_current = '''## 12. Current canonical action\n\n> **No active numbered implementation work item is currently admitted after M8 closure.**\n\nPhase 8 is `Complete / PASS` and `M8 — Governed external ecosystem baseline` is achieved only for the exact activated one-Organization scope. P8.12 did not itself admit Phase 9 or any other post-M8 implementation program.\n\nAny further numbered implementation phase or milestone must be introduced through a separate governed roadmap/activation decision that revalidates the concrete outcome, Organization/authority/data-rights boundary, Product Contract implications, ADR/lifecycle/readiness gates and applicable evidence.\n\nThe closure does not change CAP-001 through CAP-004 from `Incubating / Provisional`, does not change P8.03 or P8.06 Product Contracts from `Provisional 0.1.0`, does not expand the `Local / Persistent Internal / owner-operated` operating contour or scoped conformance, and does not establish realistic two-Organization isolation, customer/cross-Organization handover, public/stable interfaces, external/customer Production, support/SLA/certification or commercial commitments.\n'''
-          if not re.search(r'## 12\. Current canonical action\n.*\Z', master, flags=re.S):
-              raise SystemExit('master current action: anchor not found')
-          master = re.sub(r'## 12\. Current canonical action\n.*\Z', master_current, master, count=1, flags=re.S)
-
-          phase = replace_once(phase, 'Status: `Active`\nVersion: `1.11.0`', 'Status: `Complete / PASS`\nVersion: `1.12.0`', 'phase status/version')
-          phase_note = '''Version `1.12.0` completes P8.12 Phase 8 / M8 closure review as `Complete / PASS` and records M8 as achieved only for the exact activated one-Organization scope. The fourteen M8 exit criteria are satisfied within that scope: criterion 9 remains conditionally `NOT ACTIVATED / NOT PROVEN` because no genuine second Organization exists in the activated boundary, so no synthetic multi-Organization proof is invented. The closure preserves P8.07 external customer/cross-Organization transfer as `NOT ACTIVATED`, CAP-001 through CAP-004 as `Incubating / Provisional`, P8.03 and P8.06 Product Contracts as `Provisional 0.1.0`, the existing owner-operated operating/conformance contour and all P8.10 claim limits. The stale informative architecture capability inventory is retired to a historical pointer to the active governed catalog, without performing any lifecycle transition. P8.12 does not admit Phase 9 or any post-M8 implementation program; further work must return to the canonical master roadmap and a separate governed activation decision.\n\n'''
-          phase = replace_once(phase, 'Version `1.11.0`', phase_note + 'Version `1.11.0`', 'phase version note')
-          phase = replace_once(phase, '| `P8.12` | Phase 8 / M8 closure review | R28 | 🟨 Current | exact M8 closure scope or explicit non-closure |', '| `P8.12` | Phase 8 / M8 closure review | R28 | 🟩 Complete / PASS | scoped M8 closure with explicit unproven classes |', 'phase p8.12 row')
-          p812_section = '''### P8.12 — Phase 8 / M8 closure review\n\n**Status: Complete / PASS.**\n\nM8 is achieved only for the exact activated one-Organization scope. P8.12 confirms that every unconditional M8 exit criterion passes and that criterion 9 was not activated because no genuine second Organization exists in the canonical scope.\n\nClosure evidence and limitations are recorded in [`P8-12-phase-8-m8-closure-review.md`](../reviews/P8-12-phase-8-m8-closure-review.md).\n\nThe closure does not activate realistic two-Organization isolation, external customer/cross-Organization transfer, public/stable integration surfaces, Stable Product Contracts, Active Platform Capabilities, external/customer Production, support/SLA/certification or commercial commitments. It admits no Phase 9 or other post-M8 implementation program.\n\n'''
-          if not re.search(r'### P8\.12 — Phase 8 / M8 closure review\n.*?(?=## 7\.)', phase, flags=re.S):
-              raise SystemExit('phase P8.12 section: anchor not found')
-          phase = re.sub(r'### P8\.12 — Phase 8 / M8 closure review\n.*?(?=## 7\.)', p812_section, phase, count=1, flags=re.S)
-          phase = replace_once(phase, 'P8.12 M8 closure                              CURRENT', 'P8.12 M8 closure                              PASS', 'phase critical path')
-          phase = replace_once(phase, 'P8.12 is now the current closure review and must decide M8 only for the exact activated scope.', 'P8.12 completed the closure review and records M8 as achieved only for the exact activated scope; it does not broaden any unactivated relationship class or admit a post-M8 implementation program.', 'phase critical path narrative')
-          phase = replace_once(phase, 'R28 satisfies criterion 14 and leaves no unresolved material hardening finding, but only P8.12 may decide whether the complete criterion set justifies M8 closure.', 'R28 satisfies criterion 14 and leaves no unresolved material hardening finding. P8.12 evaluated the complete criterion set and records M8 as achieved only for the exact activated one-Organization scope; criterion 9 remains `NOT ACTIVATED / NOT PROVEN` because its second-Organization precondition never became true.', 'phase M8 criteria conclusion')
-          phase_current = '''## 10. Current canonical action\n\n> **Phase 8 is closed; no further Phase 8 implementation action is active.**\n\nP8.12 is `Complete / PASS`; `M8 — Governed external ecosystem baseline` is achieved only for the exact activated one-Organization scope. This detailed roadmap therefore has no remaining current work item.\n\nP8.12 does not admit Phase 9 or any other post-M8 program. Canonical sequencing returns to [`ROADMAP.md`](ROADMAP.md); a future numbered implementation action requires a separate governed roadmap/activation decision.\n\nAll closure limitations remain binding: P8.08 realistic two-Organization isolation is `NOT ACTIVATED / NOT PROVEN`; P8.07 external customer/cross-Organization transfer is `NOT ACTIVATED`; CAP-001 through CAP-004 remain `Incubating / Provisional`; Product Contracts remain Provisional; no public/stable interface, external/customer Production, support/SLA/certification or commercial promise is created.\n'''
-          if not re.search(r'## 10\. Current canonical action\n.*\Z', phase, flags=re.S):
-              raise SystemExit('phase current action: anchor not found')
-          phase = re.sub(r'## 10\. Current canonical action\n.*\Z', phase_current, phase, count=1, flags=re.S)
-
-          master_path.write_text(master, encoding='utf-8')
-          phase_path.write_text(phase, encoding='utf-8')
+          path = Path('docs/roadmap/PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md')
+          text = path.read_text(encoding='utf-8')
+          old = 'Phase 8 is now `Active` only for the bounded outcome approved by P8.00/A8:'
+          new = 'Phase 8 was activated only for the bounded outcome approved by P8.00/A8:'
+          if text.count(old) != 1:
+              raise SystemExit(f'stale Phase 8 active-tense anchor count={text.count(old)}')
+          path.write_text(text.replace(old, new, 1), encoding='utf-8')
           PY
-
           git diff --check
-          git diff -- docs/roadmap/ROADMAP.md docs/roadmap/PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md
 
-      - name: Commit synchronized roadmaps
+      - name: Commit final status sync
         shell: bash
         run: |
           set -euo pipefail
           git config user.name "Arvectum Roadmap Sync"
           git config user.email "actions@users.noreply.github.com"
-          git add docs/roadmap/ROADMAP.md docs/roadmap/PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md
-          git diff --cached --quiet && { echo "No roadmap changes to commit"; exit 1; }
-          git commit -m "[p8-12-sync] synchronize M8 closure roadmaps"
+          git add docs/roadmap/PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md
+          git diff --cached --quiet && { echo "No status change"; exit 1; }
+          git commit -m "[p8-12-final-sync] remove stale Phase 8 active wording"
           git push origin HEAD:p8-12-m8-closure
