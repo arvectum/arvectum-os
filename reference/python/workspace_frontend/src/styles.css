@@ -24,7 +24,9 @@ nav small { color: #6b7280; font-size: .7rem; text-transform: uppercase; letter-
 .context-chip { min-width: 0; display: grid; padding-right: 1rem; }
 .context-chip strong { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .eyebrow { color: #69717d; font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; }
-.quiet-button { margin-left: auto; border: 1px solid #cbd1d8; border-radius: .55rem; background: white; padding: .6rem .85rem; cursor: pointer; }
+.quiet-button, .quiet-link { border: 1px solid #cbd1d8; border-radius: .55rem; background: white; padding: .6rem .85rem; color: inherit; }
+.quiet-button { margin-left: auto; cursor: pointer; }
+.quiet-link { margin-left: auto; text-decoration: none; font-weight: 650; white-space: nowrap; }
 main { padding: 3.5rem clamp(1.5rem, 5vw, 5rem); }
 .hero, .placeholder, .my-work { max-width: 1080px; }
 h1 { margin: .5rem 0 1rem; max-width: 16ch; font-size: clamp(2rem, 4vw, 3.4rem); line-height: 1.05; letter-spacing: -.035em; }
@@ -41,6 +43,8 @@ h1 { margin: .5rem 0 1rem; max-width: 16ch; font-size: clamp(2rem, 4vw, 3.4rem);
 
 .my-work-heading { display: flex; gap: 1.5rem; align-items: flex-start; justify-content: space-between; }
 .my-work-heading > div > p:last-child { max-width: 70ch; color: #515965; line-height: 1.55; }
+.my-work-embedded { margin-top: 3.5rem; padding-top: 2.5rem; border-top: 1px solid #dde1e7; }
+.my-work-embedded h2 { margin: .4rem 0 .75rem; font-size: clamp(1.7rem, 3vw, 2.4rem); letter-spacing: -.025em; }
 .projection-health { margin: 1.5rem 0 1rem; display: grid; grid-template-columns: auto 1fr auto; gap: .5rem 1rem; align-items: baseline; padding: 1rem; border: 1px solid #cbd1d8; border-radius: .8rem; background: white; }
 .projection-health strong { text-transform: uppercase; font-size: .78rem; letter-spacing: .06em; }
 .projection-health span { line-height: 1.45; }
@@ -77,11 +81,11 @@ h1 { margin: .5rem 0 1rem; max-width: 16ch; font-size: clamp(2rem, 4vw, 3.4rem);
   nav ul { display: flex; overflow-x: auto; }
   nav a { white-space: nowrap; }
   .topbar { position: static; padding: 1rem; flex-wrap: wrap; }
-  .quiet-button { margin-left: 0; }
+  .quiet-button, .quiet-link { margin-left: 0; }
   main { padding: 2rem 1rem; }
   .status-grid { grid-template-columns: 1fr; }
   .my-work-heading { display: block; }
-  .my-work-heading .quiet-button { margin-top: .75rem; }
+  .my-work-heading .quiet-button, .my-work-heading .quiet-link { display: inline-block; margin-top: .75rem; }
   .projection-health { grid-template-columns: 1fr; }
   .queue-toolbar { display: grid; }
   .queue-toolbar select { width: 100%; }
