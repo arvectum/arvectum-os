@@ -130,6 +130,18 @@ class ProductSurfaceProjectionTests(unittest.TestCase):
         self.assertNotIn("organization_id", serialized)
         self.assertNotIn("principal_id", serialized)
 
+    def test_ambiguous_tender_evidence_fails_closed_without_selecting_one_item(self) -> None:
+        second = self.root / "state" / "governed" / "items" / "item-b"
+        second.mkdir(parents=True)
+        with patch("workspace_app.products.p703.verify_store", return_value={"integrity": "PASS"}), patch(
+            "workspace_app.products.p703.verify_item", return_value=self._tender_manifest()
+        ):
+            payload = RuntimeProductSurfacesProvider(self.root).project(_access()).to_payload()
+        tender = next(item for item in payload["products"] if item["id"] == "tender-operator")
+        self.assertEqual(tender["evidence_state"], "unavailable")
+        self.assertEqual(tender["evidence_code"], "TENDER_RETAINED_EVIDENCE_AMBIGUOUS")
+        self.assertEqual(tender["work"], [])
+
     def test_tampered_discount_report_fails_closed_without_product_work(self) -> None:
         self.temp.cleanup()
         self.temp = tempfile.TemporaryDirectory()
