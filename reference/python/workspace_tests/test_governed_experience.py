@@ -211,7 +211,7 @@ class GovernedBffTests(unittest.TestCase):
         self.assertEqual(self.provider.inspections, 1)
         self.assertGreaterEqual(self.resolver.calls, 2)
 
-    def test_post_requires_origin_csrf_and_fresh_server_authorization(self) -> None:
+    def test_post_requires_origin_csrf_empty_input_and_fresh_server_authorization(self) -> None:
         missing_csrf = self.client.post(
             "/api/app/v1/governed/preflight",
             headers={**self.headers, "Origin": "http://127.0.0.1:8769"},
@@ -226,11 +226,19 @@ class GovernedBffTests(unittest.TestCase):
         self.assertEqual(wrong_origin.status_code, 403)
         self.assertEqual(self.provider.runs, 0)
 
+        supplied_governance = self.client.post(
+            "/api/app/v1/governed/preflight",
+            headers={**self.headers, CSRF_HEADER: self.csrf, "Origin": "http://127.0.0.1:8769"},
+            json={"approval": True, "authority": "browser-must-be-rejected"},
+        )
+        self.assertEqual(supplied_governance.status_code, 400)
+        self.assertEqual(supplied_governance.json()["detail"], "GOVERNED_PREFLIGHT_INPUT_REJECTED")
+        self.assertEqual(self.provider.runs, 0)
+
         before = self.resolver.calls
         valid = self.client.post(
             "/api/app/v1/governed/preflight",
             headers={**self.headers, CSRF_HEADER: self.csrf, "Origin": "http://127.0.0.1:8769"},
-            json={"approval": True, "authority": "browser-must-not-be-consumed"},
         )
         self.assertEqual(valid.status_code, 200)
         self.assertEqual(valid.json()["outcome"], "Waiting")
