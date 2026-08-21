@@ -1,0 +1,26 @@
+{
+  "name": "@arvectum/productive-workspace",
+  "private": true,
+  "version": "0.0.0-p9.03",
+  "type": "module",
+  "scripts": {
+    "build": "tsc --noEmit && vite build",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "guard:web-storage": "node scripts/assert-no-web-storage.mjs"
+  },
+  "dependencies": {
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
+  },
+  "devDependencies": {
+    "@testing-library/react": "16.3.1",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.4",
+    "@vitejs/plugin-react": "6.0.1",
+    "jsdom": "27.0.1",
+    "typescript": "7.0.2",
+    "vite": "8.1.0",
+    "vitest": "4.1.0"
+  }
+}

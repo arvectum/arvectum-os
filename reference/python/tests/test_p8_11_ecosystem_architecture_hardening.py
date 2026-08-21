@@ -15,7 +15,7 @@ CAPABILITY_IDS = ("CAP-001", "CAP-002", "CAP-003", "CAP-004")
 
 
 class P811EcosystemArchitectureHardeningTests(unittest.TestCase):
-    """Guards the bounded P8.11 ADR/refactoring/lifecycle disposition."""
+    """Guards the bounded historical P8.11 ADR/refactoring/lifecycle disposition."""
 
     @staticmethod
     def _section(text: str, start: str, end: str) -> str:
@@ -72,14 +72,7 @@ class P811EcosystemArchitectureHardeningTests(unittest.TestCase):
         self.assertIn("realistic two-Organization isolation remains unproven", p808)
         self.assertIn("Complete / NOT ACTIVATED", p808)
 
-    def test_no_adr_file_exists_without_revisiting_p8_11_disposition(self) -> None:
-        adr_files = tuple(
-            path.name
-            for path in (DOCS_ROOT / "adrs").glob("ADR-*.md")
-            if path.is_file()
-        )
-        self.assertEqual(adr_files, ())
-
+    def test_p8_11_adr_disposition_remains_historical_and_bounded(self) -> None:
         review = (
             DOCS_ROOT
             / "reviews"
@@ -121,18 +114,25 @@ class P811EcosystemArchitectureHardeningTests(unittest.TestCase):
         r28_row = "| `R28` | M8 Ecosystem Hardening + Milestone Code Health Gate |"
         p812_row = "| `P8.12` | Phase 8 / M8 closure review |"
 
-        for roadmap in (phase8, master):
-            with self.subTest(roadmap="phase8" if roadmap is phase8 else "master"):
-                self.assertIn(p811_row, roadmap)
-                self.assertIn(r28_row, roadmap)
-                self.assertIn(p812_row, roadmap)
-                self.assertLess(roadmap.index(p811_row), roadmap.index(r28_row))
-                self.assertLess(roadmap.index(r28_row), roadmap.index(p812_row))
+        self.assertIn(p811_row, phase8)
+        self.assertIn(r28_row, phase8)
+        self.assertIn(p812_row, phase8)
+        self.assertLess(phase8.index(p811_row), phase8.index(r28_row))
+        self.assertLess(phase8.index(r28_row), phase8.index(p812_row))
+        p811_line = next(
+            line for line in phase8.splitlines() if line.startswith(p811_row)
+        )
+        self.assertIn("🟩 Complete / PASS", p811_line)
 
-                p811_line = next(
-                    line for line in roadmap.splitlines() if line.startswith(p811_row)
-                )
-                self.assertIn("🟩 Complete / PASS", p811_line)
+        phase8_rows = [
+            line
+            for line in master.splitlines()
+            if line.startswith("| `Phase 8` | Ecosystem and External Integration |")
+        ]
+        self.assertEqual(len(phase8_rows), 1)
+        self.assertIn("🟩 Complete / PASS", phase8_rows[0])
+        self.assertIn("M8", phase8_rows[0])
+        self.assertIn("exact activated one-Organization scope", phase8_rows[0])
 
 
 if __name__ == "__main__":

@@ -41,6 +41,41 @@ assert_canonical_checkout() {
   printf '%s\n' "$head"
 }
 
+ensure_workspace_runtime_dependencies() {
+  release=$1
+  venv=$2
+  lock="$release/source/reference/python/workspace_app/requirements.lock"
+
+  # Pre-P9 releases legitimately have no Workspace lock.
+  [ -f "$lock" ] || return 0
+
+  stamp="$venv/.workspace-requirements.sha256"
+  lock_sha=$(shasum -a 256 "$lock" | awk '{print $1}')
+  installed_sha=""
+
+  if [ -f "$stamp" ]; then
+    installed_sha=$(cat "$stamp")
+  fi
+
+  if [ "$installed_sha" != "$lock_sha" ]; then
+    "$venv/bin/python" -m pip install \
+      --disable-pip-version-check \
+      -r "$lock" >/dev/null \
+      || fail "workspace runtime dependency install failed for exact target release"
+
+    tmp_stamp="$stamp.tmp.$$"
+    printf '%s\n' "$lock_sha" > "$tmp_stamp"
+    chmod 600 "$tmp_stamp"
+    mv "$tmp_stamp" "$stamp"
+  fi
+
+  "$venv/bin/python" - <<'PY' >/dev/null 2>&1 \
+    || fail "workspace runtime dependency verification failed for exact target release"
+import fastapi
+import uvicorn
+PY
+}
+
 prepare_target() {
   target=$1
   release="$RUNTIME_ROOT/releases/$target"
@@ -66,6 +101,7 @@ EOF
   fi
   venv="$RUNTIME_ROOT/venvs/$target"
   if [ ! -x "$venv/bin/python" ]; then python3 -m venv "$venv"; fi
+  ensure_workspace_runtime_dependencies "$release" "$venv"
 }
 
 current_release() {

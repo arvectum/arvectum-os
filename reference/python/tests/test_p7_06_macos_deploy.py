@@ -138,5 +138,93 @@ class ShellTests(unittest.TestCase):
         self.assertIn('> "$summary.sha256"', text)
         self.assertIn('chmod 600 "$summary.sha256"', text)
 
+class WorkspaceDependencyTests(unittest.TestCase):
+    def _deploy_text(self):
+        return DEPLOY.read_text()
+
+    def test_ensure_workspace_runtime_dependencies_exists(self):
+        self.assertIn("ensure_workspace_runtime_dependencies()", self._deploy_text())
+
+    def test_uses_workspace_app_requirements_lock(self):
+        self.assertIn("workspace_app/requirements.lock", self._deploy_text())
+
+    def test_hashes_lock_with_sha256(self):
+        text = self._deploy_text()
+        self.assertIn("shasum -a 256", text)
+        self.assertIn("lock_sha", text)
+        self.assertIn('$(shasum -a 256 "$lock" | awk', text)
+
+    def test_stamp_semantics(self):
+        text = self._deploy_text()
+        self.assertIn('.workspace-requirements.sha256', text)
+        self.assertIn('stamp="$venv/.workspace-requirements.sha256"', text)
+        self.assertIn('installed_sha=$(cat "$stamp")', text)
+
+    def test_install_uses_venv_python(self):
+        text = self._deploy_text()
+        self.assertIn('"$venv/bin/python" -m pip install', text)
+
+    def test_install_uses_requirements_lock_file(self):
+        text = self._deploy_text()
+        self.assertIn('-r "$lock"', text)
+
+    def test_install_failure_is_fail_closed(self):
+        text = self._deploy_text()
+        self.assertIn("workspace runtime dependency install failed for exact target release", text)
+
+    def test_fastapi_and_uvicorn_are_verified(self):
+        text = self._deploy_text()
+        self.assertIn("import fastapi", text)
+        self.assertIn("import uvicorn", text)
+        self.assertIn("workspace runtime dependency verification failed for exact target release", text)
+
+    def test_prepare_target_calls_helper_after_venv_creation(self):
+        text = self._deploy_text()
+        prepare_start = text.index("prepare_target()")
+        prepare_end = text.index("\ncurrent_release()", prepare_start)
+        prepare_body = text[prepare_start:prepare_end]
+        self.assertIn("if [ ! -x \"$venv/bin/python\" ]; then python3 -m venv \"$venv\"; fi", prepare_body)
+        self.assertIn('ensure_workspace_runtime_dependencies "$release" "$venv"', prepare_body)
+        venv_line = prepare_body.index('if [ ! -x "$venv/bin/python" ]')
+        helper_line = prepare_body.index('ensure_workspace_runtime_dependencies "$release" "$venv"')
+        self.assertLess(venv_line, helper_line)
+
+    def test_missing_lock_is_noop(self):
+        text = self._deploy_text()
+        self.assertIn('[ -f "$lock" ] || return 0', text)
+
+    def test_stamp_written_only_after_successful_install(self):
+        text = self._deploy_text()
+        install_pos = text.index('pip install \\\n')
+        stamp_pos = text.index('mv "$tmp_stamp" "$stamp"')
+        self.assertLess(install_pos, stamp_pos)
+
+    def test_atomic_stamp_update(self):
+        text = self._deploy_text()
+        self.assertIn('tmp_stamp="$stamp.tmp.$$"', text)
+        self.assertIn('mv "$tmp_stamp" "$stamp"', text)
+        self.assertIn('chmod 600 "$tmp_stamp"', text)
+
+    def test_no_credentials_in_source(self):
+        text = self._deploy_text()
+        for token in ("password=", "token=", "api_key=", "secret="):
+            self.assertNotIn(token, text)
+
+    def test_no_new_network_transports(self):
+        text = self._deploy_text()
+        for token in ("curl ", "wget ", "ssh ", "scp ", "nc "):
+            self.assertNotIn(token, text)
+
+    def test_venv_isolation_per_release(self):
+        text = self._deploy_text()
+        self.assertIn('venv="$RUNTIME_ROOT/venvs/$target"', text)
+
+    def test_preserves_preexisting_deploy_invariants(self):
+        text = self._deploy_text()
+        self.assertIn("restore_plist_and_start", text)
+        self.assertIn("rollback_and_record_failure", text)
+        self.assertIn("backup_preupdate", text)
+        self.assertIn("acquire_lock", text)
+
 if __name__ == "__main__":
     unittest.main()

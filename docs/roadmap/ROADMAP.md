@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.76.0`
+Version: `2.77.0`
 Created: `2026-08-07`
 Updated: `2026-08-21`
 Owner: `ООО «Арвектум»`
@@ -17,26 +17,27 @@ Detailed completed-phase history remains in the corresponding phase roadmaps, re
 
 ## 2. Version note
 
-Version `2.76.0` closes **`R29 — Productive Workspace Boundary Review`** as `Complete / PASS` after six functional cross-review iterations, records valid owner approval and acceptance of **`ADR-0001 — Productive Workspace Browser Application Topology`**, and advances Phase 9 to **`P9.03 — Real application shell + navigation + organization/user context`**.
+Version `2.77.0` closes **`P9.03 — Real application shell + navigation + organization/user context`** as `Complete / PASS` after six repository-level functional cross-review iterations and advances Phase 9 to **`P9.04 — My Work / Needs Attention projection`**.
 
-R29 found and closed four material architecture-boundary gaps before ADR acceptance:
+P9.03 implements Accepted ADR-0001 with:
 
-1. protected browser reads/search/projections must enforce current server-side Organization/Authorization/Data Governance/minimization before returning content, counts, previews or existence information;
-2. server-side sessions must be bounded, revocable and safely rotated on security-sensitive binding changes, with no ambient cross-Organization authority;
-3. compile-time product UI must not create private platform access or turn `/bff/*` into hidden Product Contract coupling or an accidental public/stable external API;
-4. exact-release P7.06 deployment must account for browser caching/frontend-BFF release skew and fail safely for consequential actions.
+1. a real React + TypeScript SPA compiled into committed release-pinned content-hashed static assets;
+2. a same-origin co-deployed Python BFF with server-resolved Organization and attributable human actor context;
+3. current protected-read Authorization/Data Governance/minimization, opaque bounded/revocable server-side sessions and explicit Host/Origin/CSRF controls;
+4. no bearer/session material in browser Web Storage and a strict loopback-only HTTP exception for the current owner-operated contour;
+5. exact application release identity with stale-client/reload failure semantics;
+6. domain-neutral navigation with P9.04–P9.07 destinations truthfully marked planned rather than implemented;
+7. exact P7.06 release coupling for the BFF runtime lock through the release-specific venv while preserving pre-P9 rollback compatibility and existing P4/P7 diagnostic/recovery surfaces.
 
-After those revisions, R29 found no remaining material conflict with Constitution `1.2.0` or Accepted RFC-0001…RFC-0008. The owner approval record [`DECISION-2026-08-21 — ADR-0001 Acceptance`](../governance/decisions/DECISION-2026-08-21-ADR-0001-ACCEPTANCE.md) approves the exact R29-reviewed proposal blob `47963cc4c9ca62e986dffbe09ac67b5c6345a111`; ADR-0001 is now `Accepted` for the exact internal Phase 9 scope.
+One material P9.03 finding was resolved before closure: P7.06 already archived the exact Workspace runtime lock but did not install it into a newly prepared release-specific venv. Commit `c4520513e58a813858a53fb807e01473b9146c26` adds exact-release dependency installation, SHA-256 stamp idempotence and fail-closed FastAPI/Uvicorn verification without creating a second independent service lifecycle.
 
-The Accepted topology is React + TypeScript SPA static assets + same-origin co-deployed Python BFF + opaque bounded/revocable server-side session + explicit CSRF/origin/host controls + Organization-scoped non-authoritative projections/search + compile-time product-owned UI composition through governed boundaries, all within one exact-release P7.06 deployable unit.
+Final implementation/reconciliation head `8989730d01ae43419d6b5c927b32c8b0ab82dd83` passed `Reference Python CI #242` (`1301 tests`, `OK`, generated-artifact guard PASS) and `Productive Workspace CI #10` (BFF security/context and SPA typecheck/test/Web-Storage/reproducibility/release-asset gates PASS) against the then-current canonical `main`, including the independent approved P6.02 repository-locator reconciliation.
 
-Acceptance is architecture authority, not implementation evidence. P9.03 must implement and test the declared trust/session/release boundaries before later usability gates can rely on them.
+Canonical P9.03 evidence: [`P9-03-real-application-shell-navigation-organization-user-context.md`](../reviews/P9-03-real-application-shell-navigation-organization-user-context.md). Detailed Phase 9 roadmap: [`PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md`](PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md) `Active 1.4.0`.
 
-Canonical R29 evidence: [`R29-productive-workspace-boundary-review.md`](../reviews/R29-productive-workspace-boundary-review.md). Detailed Phase 9 roadmap: [`PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md`](PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md) `Active 1.3.0`.
+The intermediate milestone remains **`M9-alpha — Usable Internal Workspace`** and is **not yet achieved**. P9.04–P9.06 and R30 remain necessary before that milestone can pass.
 
-The intermediate milestone remains **`M9-alpha — Usable Internal Workspace`**: the owner can use the normal private browser Workspace for a useful home page, `My Work`, human-readable discovery/context, real Documents/Knowledge/Records, understandable Executions/Decisions and at least one real governed interaction without needing terminal, GitHub or internal identifiers for ordinary steps.
-
-This roadmap update does not create public/customer Production, Stable Product Contracts, Active Platform Capabilities, public/stable API/SDK/browser compatibility, SLA/support/certification, multi-Organization validation, or AI authority.
+P9.03 closure does not create public/customer Production, Stable Product Contracts, Active Platform Capabilities, public/stable API/SDK/browser compatibility, SLA/support/certification, multi-Organization validation or Organizational/AI authority.
 
 ## 3. Architecture and governance baseline
 
@@ -49,7 +50,7 @@ This roadmap update does not create public/customer Production, Stable Product C
 - CAP-001 through CAP-004 remain `Incubating / Provisional`;
 - P6.02, P6.06, P8.03 and P8.06 Product Contracts remain Provisional within their exact scopes;
 - the operating environment remains `Local / Persistent Internal / owner-operated` with scoped conformance;
-- no Platform Capability is `Active` and no Product Contract is `Stable` merely because M0–M8 completed, Phase 9 activated or ADR-0001 was accepted;
+- no Platform Capability is `Active` and no Product Contract is `Stable` merely because M0–M8 completed, Phase 9 activated, ADR-0001 was accepted or P9.03 completed;
 - no public/stable SDK/API/wire/browser surface, external/customer Production, SLA/support/certification or broader conformance claim exists.
 
 ## 4. Strategic roadmap
@@ -90,7 +91,7 @@ The current private P4/P7 UI remains useful as diagnostic/reference/recovery evi
 
 ## 6. Active Phase 9 — Productive Workspace & Daily Operations
 
-Detailed roadmap: [`PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md`](PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md) — `Active 1.3.0`.
+Detailed roadmap: [`PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md`](PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md) — `Active 1.4.0`.
 
 | ID | Work item | Status |
 |---|---|---:|
@@ -98,8 +99,8 @@ Detailed roadmap: [`PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md`](PHASE-9-P
 | `P9.01` | Real operator jobs-to-be-done + acceptance journeys | 🟩 Complete / PASS |
 | `P9.02` | Application architecture spike + frontend/BFF/session decision | 🟩 Complete / PASS |
 | `R29` | Productive Workspace Boundary Review | 🟩 Complete / PASS |
-| **`P9.03`** | **Real application shell + navigation + organization/user context** | **🟨 Current** |
-| `P9.04` | `My Work` / Needs Attention projection | ⬜ |
+| `P9.03` | Real application shell + navigation + organization/user context | 🟩 Complete / PASS |
+| **`P9.04`** | **`My Work` / Needs Attention projection** | **🟨 Current** |
 | `P9.05` | Human-friendly Records / Documents / Knowledge + global search | ⬜ |
 | `P9.06` | Executions / Decisions / governed actions UX | ⬜ |
 | `R30` | M9-alpha Usability / Information Architecture Review | ⬜ gate |
@@ -124,9 +125,9 @@ P9.02 application architecture spike                  PASS
         ↓
 R29 boundary review + ADR-0001 acceptance              PASS
         ↓
-P9.03 real application shell                          CURRENT
+P9.03 real application shell                          PASS
         ↓
-P9.04 My Work / Needs Attention
+P9.04 My Work / Needs Attention                        CURRENT
         ↓
 P9.05 human-friendly Records/Documents/Knowledge/search
         ↓
@@ -171,6 +172,8 @@ M9-alpha is internal usability evidence only; it creates no public/stable surfac
 
 ## 9. Current canonical action
 
-> **P9.03 — Real application shell + navigation + organization/user context.**
+> **P9.04 — `My Work` / Needs Attention projection.**
 
-Implement the Accepted ADR-0001 topology as a bounded real application shell. P9.03 must establish the actual React + TypeScript static frontend and same-origin Python BFF/session boundary, explicit attributable actor + Organization context, protected read enforcement, session/CSRF/origin/host controls, exact-release frontend/BFF packaging and safe stale-client handling before later P9.04–P9.06 flows rely on the shell. P9.03 does not itself claim M9-alpha or public/customer Production.
+Build the first useful owner-facing work queue through the closed P9.03 browser/BFF/session boundary. It must be a non-authoritative Organization-scoped projection; current Authorization/Data Governance/minimization must be enforced before returning protected item existence/counts/previews; visibility must not imply permission, Organizational Authority or consequential approval; ordinary owner use must not require raw execution/internal identifiers.
+
+P9.04 does not itself achieve M9-alpha. The remaining critical sequence is `P9.04 → P9.05 → P9.06 → R30 → M9-alpha`.

@@ -60,7 +60,7 @@ class P312Phase3M3ClosureTests(unittest.TestCase):
         self.assertIn("CAP-001 through CAP-004 remain `Incubating / Provisional`", roadmap)
         self.assertIn("no Platform Capability is `Active`", roadmap)
         self.assertIn(
-            "phase status, capability lifecycle, Product Contract lifecycle, operational environment/readiness, conformance maturity and commercial claims remain distinct.",
+            "Roadmap status does not itself change Platform Capability lifecycle, Product Contract lifecycle, operational environment/readiness, conformance maturity, SLA/support or commercial commitments.",
             roadmap,
         )
 

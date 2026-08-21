@@ -12,7 +12,6 @@ LEGACY_CAPABILITY_CATALOG = REPO_ROOT / "docs" / "architecture" / "CAPABILITY-CA
 ACTIVE_CAPABILITY_CATALOG = REPO_ROOT / "docs" / "catalogs" / "PLATFORM-CAPABILITY-CANDIDATE-CATALOG.md"
 P803_CONTRACT = REPO_ROOT / "docs" / "contracts" / "P8-03-EIS-EXTERNAL-AUTHORITY-REVALIDATION-CONTRACT.md"
 P806_CONTRACT = REPO_ROOT / "docs" / "contracts" / "P8-06-CREATIVE-TEST-AGENT-PROVISIONAL-PRODUCT-CONTRACT.md"
-ADR_DIR = REPO_ROOT / "docs" / "adrs"
 
 
 def _text(path: Path) -> str:
@@ -31,8 +30,8 @@ class P812Phase8M8ClosureTests(unittest.TestCase):
     """Stable historical guards for scoped Phase 8 / M8 closure.
 
     The tests deliberately protect the closure meaning and its non-claims. They
-    do not pin a future master-roadmap current action, so a later separately
-    governed phase can be admitted without rewriting P8.12 history.
+    do not pin a future master-roadmap current action or later ADR inventory, so
+    separately governed later phases can advance without rewriting P8.12 history.
     """
 
     def test_closure_review_records_scoped_m8_pass_and_conditional_multi_org_limit(self) -> None:
@@ -52,11 +51,9 @@ class P812Phase8M8ClosureTests(unittest.TestCase):
         phase8_row = _row(master, "| `Phase 8` | Ecosystem and External Integration |")
         self.assertIn("🟩 Complete / PASS", phase8_row)
         self.assertIn("M8", phase8_row)
-        self.assertIn("achieved for exact activated scope", phase8_row)
+        self.assertIn("exact activated one-Organization scope", phase8_row)
 
-        p812_master = _row(master, "| `P8.12` | Phase 8 / M8 closure review |")
         p812_phase = _row(phase, "| `P8.12` | Phase 8 / M8 closure review |")
-        self.assertIn("🟩 Complete / PASS", p812_master)
         self.assertIn("🟩 Complete / PASS", p812_phase)
         self.assertIn("Status: `Complete / PASS`", phase)
 
@@ -97,11 +94,11 @@ class P812Phase8M8ClosureTests(unittest.TestCase):
                 self.assertNotIn("Lifecycle: `Stable`", contract)
                 self.assertNotIn("Status: `Stable`", contract)
 
-    def test_closure_introduces_no_accepted_adr_or_public_stable_commitment(self) -> None:
-        adr_files = sorted(path.name for path in ADR_DIR.glob("*.md") if path.name != "README.md")
-        self.assertEqual(adr_files, [])
-
-        review = _normalized(CLOSURE_REVIEW).lower()
+    def test_closure_records_historical_adr_state_and_no_public_stable_commitment(self) -> None:
+        review_original = _text(CLOSURE_REVIEW)
+        review = " ".join(review_original.split()).lower()
+        self.assertIn("Accepted ADRs: none currently recorded", review_original)
+        self.assertIn("Accepted ADR index — no Accepted ADR currently exists", review_original)
         for marker in (
             "no public/stable api, sdk, manifest, registry, connector protocol or export format is admitted",
             "no external/customer production",
