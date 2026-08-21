@@ -6,7 +6,7 @@ const surfaceCopy: Record<string, { eyebrow: string; title: string; intro: strin
   search: {
     eyebrow: "Global discovery",
     title: "Find organizational context",
-    intro: "Search current governed Records, Documents and Knowledge by human context. Search is a non-authoritative projection; opening a result revalidates the current source before context is shown.",
+    intro: "Search current governed Records, Documents, Knowledge and Executions by human context. Search is a non-authoritative projection; opening a result revalidates the current source before context is shown.",
   },
   record: {
     eyebrow: "Records",
@@ -28,6 +28,10 @@ const surfaceCopy: Record<string, { eyebrow: string; title: string; intro: strin
 function navigate(href: string) {
   window.history.pushState({}, "", href);
   window.dispatchEvent(new PopStateEvent("popstate"));
+}
+
+function parseKind(value: string | null): DiscoveryKind | undefined {
+  return value === "record" || value === "document" || value === "knowledge" || value === "execution" ? value : undefined;
 }
 
 function ResultCard({ item }: { item: DiscoveryResult }) {
@@ -62,30 +66,42 @@ function ResultCard({ item }: { item: DiscoveryResult }) {
 }
 
 export function Discovery({ kind }: { kind?: DiscoveryKind }) {
-  const routeQuery = new URLSearchParams(window.location.search).get("q") ?? "";
+  const route = new URLSearchParams(window.location.search);
+  const routeQuery = route.get("q") ?? "";
+  const routeKind = parseKind(route.get("kind"));
+  const effectiveKind = kind ?? routeKind;
   const [query, setQuery] = useState(routeQuery);
+  const [selectedKind, setSelectedKind] = useState<DiscoveryKind | "all">(routeKind ?? "all");
   const [projection, setProjection] = useState<DiscoveryProjection | null>(null);
   const [error, setError] = useState<string | null>(null);
   const copy = surfaceCopy[kind ?? "search"];
 
   useEffect(() => {
+    setQuery(routeQuery);
+    if (!kind) setSelectedKind(routeKind ?? "all");
+  }, [routeQuery, routeKind, kind]);
+
+  useEffect(() => {
     let cancelled = false;
     setError(null);
     setProjection(null);
-    void loadDiscovery(routeQuery, kind)
+    void loadDiscovery(routeQuery, effectiveKind)
       .then((value) => { if (!cancelled) setProjection(value); })
       .catch((reason) => {
         if (cancelled) return;
         setError(reason instanceof WorkspaceApiError ? reason.code : "DISCOVERY_UNAVAILABLE");
       });
     return () => { cancelled = true; };
-  }, [routeQuery, kind]);
+  }, [routeQuery, effectiveKind]);
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const trimmed = query.trim();
     const base = kind === "record" ? "/records" : kind === "document" ? "/documents" : kind === "knowledge" ? "/knowledge" : "/search";
-    navigate(trimmed ? `${base}?q=${encodeURIComponent(trimmed)}` : base);
+    const params = new URLSearchParams();
+    if (trimmed) params.set("q", trimmed);
+    if (!kind && selectedKind !== "all") params.set("kind", selectedKind);
+    navigate(params.size ? `${base}?${params.toString()}` : base);
   };
 
   return (
@@ -109,6 +125,18 @@ export function Discovery({ kind }: { kind?: DiscoveryKind }) {
           />
           <button type="submit">Search</button>
         </div>
+        {!kind ? (
+          <label className="discovery-kind-filter">
+            Result type
+            <select value={selectedKind} onChange={(event) => setSelectedKind(event.target.value as DiscoveryKind | "all")}>
+              <option value="all">All result types</option>
+              <option value="record">Records</option>
+              <option value="document">Documents</option>
+              <option value="knowledge">Knowledge</option>
+              <option value="execution">Executions</option>
+            </select>
+          </label>
+        ) : null}
       </form>
 
       {error ? (
