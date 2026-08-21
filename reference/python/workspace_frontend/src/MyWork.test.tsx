@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { MyWork } from "./MyWork";
 import type { MyWorkProjection } from "./types";
 
+// R30 clean-head trigger after deterministic production-asset reconciliation.
 const projection: MyWorkProjection = {
   schema: "arvectum.workspace.my-work/1",
   generated_at: "2026-08-21T10:00:00Z",
@@ -122,8 +123,8 @@ afterEach(() => {
   window.history.replaceState({}, "", "/");
 });
 
-describe("P9.04 My Work", () => {
-  it("renders a human-readable non-authoritative queue and controlled uncertainty honestly", async () => {
+describe("P9.04 My Work with R30 integration", () => {
+  it("renders a human-readable non-authoritative queue and routes only real retained preflight context", async () => {
     window.history.replaceState({}, "", "/my-work");
     mockProjection(projection);
     render(<MyWork />);
@@ -134,7 +135,10 @@ describe("P9.04 My Work", () => {
     expect(screen.getByText("Reconciliation is required before any retry.")).toBeTruthy();
     expect(screen.getAllByText("Scenario evidence").length).toBeGreaterThan(0);
     expect(screen.queryByRole("button", { name: /approve|retry/i })).toBeNull();
-    expect(screen.getAllByRole("link", { name: "Inspect" })[0].getAttribute("href")).toMatch(/^\/my-work\?focus=/);
+    expect(screen.getAllByRole("link", { name: "Inspect reason" })[0].getAttribute("href")).toMatch(/^\/my-work\?focus=/);
+    const contextLinks = screen.getAllByRole("link", { name: "Open execution context" });
+    expect(contextLinks).toHaveLength(1);
+    expect(contextLinks[0].getAttribute("href")).toBe("/governed");
   });
 
   it("filters only the already-authorized browser projection", async () => {
@@ -147,6 +151,7 @@ describe("P9.04 My Work", () => {
     expect(screen.getByText("1 visible item")).toBeTruthy();
     expect(screen.getByText("External outcome is uncertain")).toBeTruthy();
     expect(screen.queryByText("Informational note")).toBeNull();
+    expect(screen.queryByRole("link", { name: "Open execution context" })).toBeNull();
   });
 
   it("shows stale projection health without presenting stale queue items as current", async () => {
@@ -181,5 +186,6 @@ describe("P9.04 My Work", () => {
     expect(await screen.findByText("Stale")).toBeTruthy();
     expect(screen.getByText("Workspace source is not current")).toBeTruthy();
     expect(screen.getByText(/Work items are withheld/)).toBeTruthy();
+    expect(screen.queryByRole("link", { name: "Open execution context" })).toBeNull();
   });
 });

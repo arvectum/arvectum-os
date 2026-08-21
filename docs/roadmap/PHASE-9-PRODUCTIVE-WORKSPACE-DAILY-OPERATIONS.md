@@ -1,14 +1,14 @@
 # Arvectum OS Phase 9 — Productive Workspace & Daily Operations
 
 Status: `Active`
-Version: `1.7.0`
+Version: `1.8.0`
 Created: `2026-08-21`
 Updated: `2026-08-21`
 Owner: `ООО «Арвектум»`
 Task classification: `platform` with `product_contract` and `governance`
 Parent roadmap: [`ROADMAP.md`](ROADMAP.md)
 Milestone: `M9 — Daily-use organizational workbench`
-Intermediate milestone: `M9-alpha — Usable Internal Workspace`
+Intermediate milestone: `M9-alpha — Usable Internal Workspace — Achieved / PASS`
 Architecture baseline: Constitution `1.2.0`; RFC-0001 through RFC-0008 `1.0.0` (`Accepted`); ADR-0001 `Accepted`
 Predecessor: `Phase 8 / M8 — Complete / PASS`
 Activation decision: [`DECISION-2026-08-21-PHASE-9-PRODUCTIVE-WORKSPACE-ACTIVATION`](../governance/decisions/DECISION-2026-08-21-PHASE-9-PRODUCTIVE-WORKSPACE-ACTIVATION.md)
@@ -66,9 +66,9 @@ The existing P4/P7 UI remains a diagnostic/reference/recovery surface. It is not
 | `P9.04` | `My Work` / Needs Attention projection | 🟩 Complete / PASS | actionable owner queue without raw execution hunting |
 | `P9.05` | Human-friendly Records / Documents / Knowledge + global search | 🟩 Complete / PASS | understandable discovery and object context |
 | `P9.06` | Executions / Decisions / governed actions UX | 🟩 Complete / PASS | owner can inspect and perform one real governed action |
-| **`R30`** | **M9-alpha Usability / Information Architecture Review** | **🟨 Current** | ordinary workflow usable without terminal/internal IDs |
-| `M9-alpha` | Usable Internal Workspace | ⬜ milestone | daily core work usable through browser UI |
-| `P9.07` | Product-owned workspace surfaces / composition | ⬜ | at least two real product surfaces inside Workspace |
+| `R30` | M9-alpha Usability / Information Architecture Review | 🟩 Complete / PASS | ordinary workflow usable without terminal/internal IDs |
+| `M9-alpha` | Usable Internal Workspace | 🟩 Achieved / PASS | daily core work usable through browser UI |
+| **`P9.07`** | **Product-owned workspace surfaces / composition** | **🟨 Current** | at least two real product surfaces inside Workspace |
 | `P9.08` | Arvectum AI Copilot + source-grounded organizational assistance | ⬜ | useful AI analysis/proposals with provenance and authority-safe execution |
 | `P9.09` | Activity, notifications and attention routing | ⬜ | human-readable operational timeline/alerts projection |
 | `P9.10` | ООО «Арвектум» organization composition | ⬜ | company-level navigation over products/projects/knowledge/work |
@@ -294,9 +294,32 @@ P9.06 creates no public/stable API, Product Contract or Platform Capability life
 8. pass the exact P9.01 J1–J4 acceptance script;
 9. pass R29 and R30 with no unresolved material finding.
 
-M9-alpha is an internal usability milestone, not a public/stable interface, Production/customer readiness or lifecycle transition.
+R30 confirms all nine criteria as `PASS` for the exact private internal scope. M9-alpha is internal usability evidence only; it creates no public/stable surface or readiness/lifecycle promotion and does not substitute for P9.11 real daily-use dogfooding.
 
-## 14. M9 exit criteria
+## 14. R30 / M9-alpha review result
+
+Status: `R30 Complete / PASS`; `M9-alpha Achieved / PASS` within the exact private internal scope.
+
+Canonical evidence: [`R30-m9-alpha-usability-information-architecture-review.md`](../reviews/R30-m9-alpha-usability-information-architecture-review.md).
+
+R30 completed three functional cross-review iterations. Material findings repaired the ordinary J1→J3 attention/context continuation, J2 result-type narrowing, J3→J4 governed continuation, SPA focus management and technical-evidence-on-demand behavior. The final iteration found no remaining material objection.
+
+The integrated P9.01 J1–J4 acceptance path passes with:
+
+- no ordinary terminal/GitHub/internal-ID dependency;
+- real EIS-backed human discovery/context with `External Reference` authority preserved;
+- real retained Execution/Decision context in human terms;
+- independent Authorization, Organizational Authority, Data Governance and Consequential Approval states;
+- real P7.06-UI4 `WAITING / fail-closed` preflight through the normal Productive Workspace;
+- no browser-provided authority, canonical mutation or external effect;
+- exact technical identity/version/provenance rendered only after explicit drill-down;
+- text-first critical state and explicit main-focus continuity on SPA navigation.
+
+Clean implementation/reconciliation head `441106e65f7a69c54ff3ff89885ef1596b03e0a7` passed Productive Workspace CI #60 / run `32487968433` and Reference Python CI #292 / run `32487968464` (`1301 tests`, `OK`).
+
+`M9-alpha` therefore satisfies all declared section 13 exit criteria. This is scoped internal usability evidence, not a public/stable interface, customer Production/readiness claim, lifecycle promotion, full M9 closure or substitute for P9.11 real daily-use dogfooding.
+
+## 15. M9 exit criteria
 
 `M9 — Daily-use organizational workbench` requires the exact activated internal scope to demonstrate:
 
@@ -312,7 +335,7 @@ M9-alpha is an internal usability milestone, not a public/stable interface, Prod
 10. R29–R32 findings are closed or explicitly accepted by appropriate authority;
 11. M9 Milestone Code Health Gate passes before closure.
 
-## 15. Explicit non-goals
+## 16. Explicit non-goals
 
 Phase 9 does not by itself establish:
 
@@ -327,10 +350,10 @@ Phase 9 does not by itself establish:
 - AI Organizational Authority or final consequential approval;
 - automatic promotion of observations/generated outputs into validated Knowledge.
 
-## 16. Current canonical action
+## 17. Current canonical action
 
-> **R30 — M9-alpha Usability / Information Architecture Review.**
+> **P9.07 — Product-owned workspace surfaces / composition.**
 
-Execute/review the complete P9.01 J1–J4 ordinary path through the new normal private Workspace: Home/My Work → human-readable discovery/context → real Execution/Decision → bounded real governed preflight. Confirm zero ordinary dependency on terminal/GitHub/internal IDs, truthful source/authority/uncertainty semantics, accessible textual meaning, fail-closed denial/unavailable behavior and exact technical identity/provenance available on demand.
+Compose at least two real product-owned surfaces into Workspace through explicit Product Contract/extension boundaries while keeping product schemas, workflows, approvals, knowledge, templates and UX product-owned. The shared platform application must remain domain-neutral and must not gain hidden access to product internals.
 
-The remaining near-term sequence is `R30 → M9-alpha`. P9.03–P9.06 provide the implemented building blocks; M9-alpha remains unachieved until the R30 gate and full declared exit set pass.
+P9.07 is the first post-M9-alpha implementation slice and targets the evidence needed for P9.01 J5. M9 remains open; P9.08–P9.12 and R31/R32 still govern the remaining AI, activity, company composition, dogfooding and hardening work.

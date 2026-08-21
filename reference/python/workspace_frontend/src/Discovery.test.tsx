@@ -101,7 +101,7 @@ afterEach(() => {
   window.history.replaceState({}, "", "/");
 });
 
-describe("P9.05 discovery", () => {
+describe("P9.05 discovery with R30 integration", () => {
   it("finds the real-document shape by human notice context without rendering internal ids", async () => {
     window.history.replaceState({}, "", "/search?q=0344100006426000005");
     vi.stubGlobal("fetch", vi.fn(async () => new Response(JSON.stringify(projection), {
@@ -114,6 +114,21 @@ describe("P9.05 discovery", () => {
     expect(screen.getByText(/Derived search · never canonical authority/)).toBeTruthy();
     expect(screen.queryByText("document-subject/internal-exact")).toBeNull();
     expect(screen.getByRole("link", { name: "Open context" })).toBeTruthy();
+  });
+
+  it("offers a human-readable result-type narrowing control for ambiguous global discovery", async () => {
+    window.history.replaceState({}, "", "/search?q=0344100006426000005");
+    vi.stubGlobal("fetch", vi.fn(async () => new Response(JSON.stringify(projection), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    })));
+    render(<Discovery />);
+    await screen.findByRole("heading", { name: "Document — EIS exact notice attachment evidence" });
+    fireEvent.change(screen.getByLabelText("Result type"), { target: { value: "document" } });
+    fireEvent.click(screen.getByRole("button", { name: "Search" }));
+    const params = new URLSearchParams(window.location.search);
+    expect(params.get("q")).toBe("0344100006426000005");
+    expect(params.get("kind")).toBe("document");
   });
 
   it("preserves Knowledge semantic distinctions", async () => {
@@ -141,6 +156,7 @@ describe("P9.05 discovery", () => {
     render(<Discovery kind="knowledge" />);
     expect(await screen.findByText("Observation — not validated Knowledge")).toBeTruthy();
     expect(screen.getByRole("heading", { name: "Observation — Arvectum OS governed state" })).toBeTruthy();
+    expect(screen.queryByLabelText("Result type")).toBeNull();
   });
 
   it("keeps denied or unavailable results minimized", async () => {
@@ -164,7 +180,7 @@ describe("P9.05 discovery", () => {
     expect(screen.queryByText(/secret object/i)).toBeNull();
   });
 
-  it("opens human context first and keeps exact ids in technical drill-down", async () => {
+  it("opens human context first, links to governed continuation, and keeps exact ids in technical drill-down", async () => {
     vi.stubGlobal("fetch", vi.fn(async () => new Response(JSON.stringify(objectContext), {
       status: 200,
       headers: { "Content-Type": "application/json" },
@@ -175,6 +191,8 @@ describe("P9.05 discovery", () => {
     expect(screen.getByText("External Reference")).toBeTruthy();
     expect(screen.getByText(/This read-only view grants no Authorization/)).toBeTruthy();
     expect(screen.getByText("Outcome: Waiting.")).toBeTruthy();
+    expect(screen.getByRole("link", { name: "Open related execution and governed action" }).getAttribute("href")).toBe("/governed");
+    expect(screen.queryByText("document-subject/internal-exact")).toBeNull();
     const technical = screen.getByText("Exact technical identity and provenance");
     fireEvent.click(technical);
     expect(screen.getByText("document-subject/internal-exact")).toBeTruthy();

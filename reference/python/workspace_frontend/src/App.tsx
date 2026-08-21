@@ -29,7 +29,10 @@ export function App() {
 
   useEffect(() => { void refresh(); }, [refresh]);
   useEffect(() => {
-    const listener = () => rerenderForRoute((value) => value + 1);
+    const listener = () => {
+      rerenderForRoute((value) => value + 1);
+      document.getElementById("workspace-main")?.focus();
+    };
     window.addEventListener("popstate", listener);
     return () => window.removeEventListener("popstate", listener);
   }, []);

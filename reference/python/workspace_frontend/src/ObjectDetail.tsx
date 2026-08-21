@@ -2,32 +2,41 @@ import { useEffect, useState } from "react";
 import { loadObjectContext, WorkspaceApiError } from "./api";
 import type { ObjectContext } from "./types";
 
-function backToDiscovery() {
-  window.history.pushState({}, "", "/search");
+function navigate(href: string) {
+  window.history.pushState({}, "", href);
   window.dispatchEvent(new PopStateEvent("popstate"));
 }
 
+function backToDiscovery() {
+  navigate("/search");
+}
+
 function TechnicalDetails({ item }: { item: ObjectContext }) {
+  const [revealed, setRevealed] = useState(false);
   return (
     <details className="technical-details">
-      <summary>Exact technical identity and provenance</summary>
-      <p>These identifiers are evidence for exact reconstruction. They are not required for ordinary navigation.</p>
-      <dl>
-        <div><dt>Subject identity</dt><dd><code>{item.technical.subject_identity}</code></dd></div>
-        <div><dt>Version identity</dt><dd><code>{item.technical.version_identity}</code></dd></div>
-        <div><dt>Schema version</dt><dd><code>{item.technical.schema_version}</code></dd></div>
-        <div><dt>Source release</dt><dd><code>{item.technical.source_release_sha}</code></dd></div>
-        {item.technical.related_execution_subject ? <div><dt>Execution subject</dt><dd><code>{item.technical.related_execution_subject}</code></dd></div> : null}
-        {item.technical.related_execution_version ? <div><dt>Execution version</dt><dd><code>{item.technical.related_execution_version}</code></dd></div> : null}
-        {item.technical.related_event_version ? <div><dt>Related event</dt><dd><code>{item.technical.related_event_version}</code></dd></div> : null}
-        {item.technical.related_checkpoint ? <div><dt>Recovery checkpoint</dt><dd><code>{item.technical.related_checkpoint}</code></dd></div> : null}
-      </dl>
-      <h3>Provenance references</h3>
-      {item.technical.provenance_refs.length ? (
-        <ul className="provenance-list">
-          {item.technical.provenance_refs.map((ref) => <li key={ref}><code>{ref}</code></li>)}
-        </ul>
-      ) : <p>No provenance references are declared in the current retained source.</p>}
+      <summary onClick={() => setRevealed(true)}>Exact technical identity and provenance</summary>
+      {revealed ? (
+        <>
+          <p>These identifiers are evidence for exact reconstruction. They are not required for ordinary navigation.</p>
+          <dl>
+            <div><dt>Subject identity</dt><dd><code>{item.technical.subject_identity}</code></dd></div>
+            <div><dt>Version identity</dt><dd><code>{item.technical.version_identity}</code></dd></div>
+            <div><dt>Schema version</dt><dd><code>{item.technical.schema_version}</code></dd></div>
+            <div><dt>Source release</dt><dd><code>{item.technical.source_release_sha}</code></dd></div>
+            {item.technical.related_execution_subject ? <div><dt>Execution subject</dt><dd><code>{item.technical.related_execution_subject}</code></dd></div> : null}
+            {item.technical.related_execution_version ? <div><dt>Execution version</dt><dd><code>{item.technical.related_execution_version}</code></dd></div> : null}
+            {item.technical.related_event_version ? <div><dt>Related event</dt><dd><code>{item.technical.related_event_version}</code></dd></div> : null}
+            {item.technical.related_checkpoint ? <div><dt>Recovery checkpoint</dt><dd><code>{item.technical.related_checkpoint}</code></dd></div> : null}
+          </dl>
+          <h3>Provenance references</h3>
+          {item.technical.provenance_refs.length ? (
+            <ul className="provenance-list">
+              {item.technical.provenance_refs.map((ref) => <li key={ref}><code>{ref}</code></li>)}
+            </ul>
+          ) : <p>No provenance references are declared in the current retained source.</p>}
+        </>
+      ) : null}
     </details>
   );
 }
@@ -105,6 +114,16 @@ export function ObjectDetail({ objectId }: { objectId: string }) {
               <ul>{item.governed_preflight.waiting_gates.map((gate) => <li key={gate}>{gate}</li>)}</ul>
             </>
           ) : null}
+          <a
+            className="context-action-link"
+            href="/governed"
+            onClick={(event) => {
+              event.preventDefault();
+              navigate("/governed");
+            }}
+          >
+            Open related execution and governed action
+          </a>
         </section>
       ) : null}
 

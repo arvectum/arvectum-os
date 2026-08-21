@@ -47,6 +47,19 @@ function pushWorkspaceHref(href: string): void {
   window.dispatchEvent(new PopStateEvent("popstate"));
 }
 
+function governedContextHref(item: AttentionItem): string | null {
+  // P9.04 has one bounded live adapter: the retained P7.06-UI4 waiting preflight.
+  // Scenario/system items must not gain an action route merely from presentation state.
+  if (
+    item.evidence_mode === "live" &&
+    item.kind === "waiting-input" &&
+    item.technical_evidence_available
+  ) {
+    return "/governed";
+  }
+  return null;
+}
+
 export function MyWork({ embedded = false }: { embedded?: boolean }) {
   const [state, setState] = useState<LoadState>({ kind: "loading" });
   const [group, setGroup] = useState<AttentionGroup | "all">("all");
@@ -117,6 +130,11 @@ export function MyWork({ embedded = false }: { embedded?: boolean }) {
     pushWorkspaceHref(item.open_href);
   };
 
+  const navigateContext = (href: string) => (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    pushWorkspaceHref(href);
+  };
+
   return (
     <section className={`my-work${embedded ? " my-work-embedded" : ""}`} aria-labelledby={titleId}>
       <div className="my-work-heading">
@@ -155,12 +173,17 @@ export function MyWork({ embedded = false }: { embedded?: boolean }) {
             <div><dt>Source</dt><dd>{focused.source}</dd></div>
             <div><dt>Why now</dt><dd>{groupLabels[focused.group]}</dd></div>
             <div><dt>Legitimate next step</dt><dd>{focused.next_step}</dd></div>
-            <div><dt>Interaction</dt><dd>Inspect only — current authority is revalidated elsewhere.</dd></div>
+            <div><dt>Interaction</dt><dd>Inspect this projection first; any governed continuation is revalidated server-side.</dd></div>
             {focused.technical_evidence_available ? (
-              <div><dt>Technical evidence</dt><dd>Available in the governed source; exact identity/provenance drill-down is handled by the context surfaces activated after P9.04.</dd></div>
+              <div><dt>Technical evidence</dt><dd>Exact identity and provenance are available from the related governed context on demand.</dd></div>
             ) : null}
           </dl>
           {focused.evidence_mode === "scenario" ? <p className="scenario-note">Controlled scenario evidence — not a live occurrence.</p> : null}
+          {governedContextHref(focused) ? (
+            <a className="context-action-link" href={governedContextHref(focused) ?? "/governed"} onClick={navigateContext(governedContextHref(focused) ?? "/governed")}>
+              Open execution context
+            </a>
+          ) : null}
           <a href="/my-work" onClick={(event) => {
             event.preventDefault();
             pushWorkspaceHref("/my-work");
@@ -217,25 +240,31 @@ export function MyWork({ embedded = false }: { embedded?: boolean }) {
         </div>
       ) : (
         <div className="attention-list">
-          {visible.map((item) => (
-            <article className="attention-card" key={item.id}>
-              <div className="attention-card-topline">
-                <span className={`urgency urgency-${item.urgency}`}>{item.urgency} urgency</span>
-                <span>{kindLabels[item.kind]}</span>
-                {item.evidence_mode === "scenario" ? <span>Scenario evidence</span> : null}
-              </div>
-              <h2>{item.title}</h2>
-              <p>{item.reason}</p>
-              <dl>
-                <div><dt>Source</dt><dd>{item.source}</dd></div>
-                <div><dt>Next step</dt><dd>{item.next_step}</dd></div>
-              </dl>
-              <div className="attention-card-footer">
-                <small>{displayTime(item.observed_at)}</small>
-                <a href={item.open_href} onClick={navigateTo(item)}>Inspect</a>
-              </div>
-            </article>
-          ))}
+          {visible.map((item) => {
+            const contextHref = governedContextHref(item);
+            return (
+              <article className="attention-card" key={item.id}>
+                <div className="attention-card-topline">
+                  <span className={`urgency urgency-${item.urgency}`}>{item.urgency} urgency</span>
+                  <span>{kindLabels[item.kind]}</span>
+                  {item.evidence_mode === "scenario" ? <span>Scenario evidence</span> : null}
+                </div>
+                <h2>{item.title}</h2>
+                <p>{item.reason}</p>
+                <dl>
+                  <div><dt>Source</dt><dd>{item.source}</dd></div>
+                  <div><dt>Next step</dt><dd>{item.next_step}</dd></div>
+                </dl>
+                <div className="attention-card-footer">
+                  <small>{displayTime(item.observed_at)}</small>
+                  <div className="attention-actions">
+                    <a href={item.open_href} onClick={navigateTo(item)}>Inspect reason</a>
+                    {contextHref ? <a href={contextHref} onClick={navigateContext(contextHref)}>Open execution context</a> : null}
+                  </div>
+                </div>
+              </article>
+            );
+          })}
         </div>
       )}
     </section>
