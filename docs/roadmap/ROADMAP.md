@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.79.0`
+Version: `2.80.0`
 Created: `2026-08-07`
 Updated: `2026-08-21`
 Owner: `ООО «Арвектум»`
@@ -17,26 +17,26 @@ Detailed completed-phase history remains in the corresponding phase roadmaps, re
 
 ## 2. Version note
 
-Version `2.79.0` closes **`P9.05 — Human-friendly Records / Documents / Knowledge + global search`** as `Complete / PASS` after two functional cross-review iterations and advances Phase 9 to **`P9.06 — Executions / Decisions / governed actions UX`**.
+Version `2.80.0` closes **`P9.06 — Executions / Decisions / governed actions UX`** as `Complete / PASS` after five functional cross-review iterations and advances Phase 9 to **`R30 — M9-alpha Usability / Information Architecture Review`**.
 
-P9.05 adds the first human-first governed discovery/context layer through the Accepted ADR-0001 / P9.03 application boundary:
+P9.06 adds the first normal Productive Workspace governed-action surface through Accepted ADR-0001:
 
-1. internal `arvectum.workspace.discovery/1` and `arvectum.workspace.object-context/1` derived read contracts with no canonical or Organizational Authority;
-2. persistent global search plus dedicated Records, Documents and Knowledge browser surfaces;
-3. current server-side Organization/Actor scope and access/source revalidation before protected result/object disclosure;
-4. opaque browser object references and human-readable ordinary-path title/source/authority/state/context, with exact Subject/Version/provenance exposed only on demand;
-5. fail-closed degraded behavior and minimized denial semantics that do not expose protected denied-result counts or stale protected details as current;
-6. preservation of `Observation ≠ validated Knowledge` and Document `External Reference` authority-source semantics;
-7. direct P9.01 F1 evidence: real EIS notice `0344100006426000005` is discoverable without internal identifier knowledge and opens into human-first context;
-8. no durable search source of truth, no mutation/governed-action path and no permission/authority inference from search visibility.
+1. human-readable inspection of the real retained EIS-backed Execution/Decision context;
+2. independent Authorization, Organizational Authority, Data Governance and Consequential Approval states;
+3. real owner-initiated P7.06-UI4 governed preflight through the React/TypeScript Workspace;
+4. fresh server-side access and preflight revalidation at the POST command boundary;
+5. fail-closed rejection of browser-supplied governance payloads;
+6. truthful `WAITING / fail-closed` outcome with only minimized owner-local non-canonical proof evidence;
+7. no canonical mutation, external effect, new authority engine or second source of truth;
+8. exact Subject/Version/Execution/Event/provenance retained as drill-down evidence rather than ordinary navigation input.
 
-The first review iteration found only the expected stale committed-SPA-asset mismatch after source gates passed; exact CI-built assets were reconciled through a bounded one-shot helper that was removed before closure. The second clean iteration passed Productive Workspace CI run `32477614572` and Reference Python CI run `32477614687` with no remaining material objection.
+The clean implementation/reconciliation head `627134709aa5348716b10ae9cac80afceb4bd8ed` passed `Productive Workspace CI #47` / run `32482850242` and `Reference Python CI #279` / run `32482850284` (`1301 tests`, `OK`). Exact CI-built production assets were reconciled and all temporary write-capable reconciliation helpers were removed from the closure state.
 
-Canonical P9.05 evidence: [`P9-05-human-friendly-records-documents-knowledge-global-search.md`](../reviews/P9-05-human-friendly-records-documents-knowledge-global-search.md). Detailed Phase 9 roadmap: [`PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md`](PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md) `Active 1.6.0`.
+Canonical P9.06 evidence: [`P9-06-executions-decisions-governed-actions-ux.md`](../reviews/P9-06-executions-decisions-governed-actions-ux.md). Detailed Phase 9 roadmap: [`PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md`](PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md) `Active 1.7.0`.
 
-The intermediate milestone remains **`M9-alpha — Usable Internal Workspace`** and is **not yet achieved**. P9.06 and R30 remain necessary for a real governed action and full P9.01 J1–J4 ordinary-path usability evidence.
+The intermediate milestone remains **`M9-alpha — Usable Internal Workspace`** and is **not yet achieved**. P9.03–P9.06 now implement the declared J1–J4 building blocks, but R30 must still execute/review the integrated ordinary-path usability and information-architecture evidence before M9-alpha can be closed.
 
-P9.05 closure does not create public/customer Production, Stable Product Contracts, Active Platform Capabilities, public/stable API/SDK/browser compatibility, SLA/support/certification, broader conformance or Organizational/AI authority.
+P9.06 closure does not create public/customer Production, Stable Product Contracts, Active Platform Capabilities, public/stable API/SDK/browser compatibility, SLA/support/certification, broader conformance or Organizational/AI authority.
 
 ## 3. Architecture and governance baseline
 
@@ -49,7 +49,7 @@ P9.05 closure does not create public/customer Production, Stable Product Contrac
 - CAP-001 through CAP-004 remain `Incubating / Provisional`;
 - P6.02, P6.06, P8.03 and P8.06 Product Contracts remain Provisional within their exact scopes;
 - the operating environment remains `Local / Persistent Internal / owner-operated` with scoped conformance;
-- no Platform Capability is `Active` and no Product Contract is `Stable` merely because M0–M8 completed, Phase 9 activated, ADR-0001 was accepted or P9.03/P9.04 completed;
+- no Platform Capability is `Active` and no Product Contract is `Stable` merely because M0–M8 completed, Phase 9 activated, ADR-0001 was accepted or P9.03/P9.04/P9.05/P9.06 completed;
 - no public/stable SDK/API/wire/browser surface, external/customer Production, SLA/support/certification or broader conformance claim exists.
 
 ## 4. Strategic roadmap
@@ -90,7 +90,7 @@ The current private P4/P7 UI remains useful as diagnostic/reference/recovery evi
 
 ## 6. Active Phase 9 — Productive Workspace & Daily Operations
 
-Detailed roadmap: [`PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md`](PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md) — `Active 1.6.0`.
+Detailed roadmap: [`PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md`](PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md) — `Active 1.7.0`.
 
 | ID | Work item | Status |
 |---|---|---:|
@@ -101,8 +101,8 @@ Detailed roadmap: [`PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md`](PHASE-9-P
 | `P9.03` | Real application shell + navigation + organization/user context | 🟩 Complete / PASS |
 | `P9.04` | `My Work` / Needs Attention projection | 🟩 Complete / PASS |
 | `P9.05` | Human-friendly Records / Documents / Knowledge + global search | 🟩 Complete / PASS |
-| **`P9.06`** | **Executions / Decisions / governed actions UX** | **🟨 Current** |
-| `R30` | M9-alpha Usability / Information Architecture Review | ⬜ gate |
+| `P9.06` | Executions / Decisions / governed actions UX | 🟩 Complete / PASS |
+| **`R30`** | **M9-alpha Usability / Information Architecture Review** | **🟨 Current** |
 | `M9-alpha` | Usable Internal Workspace | ⬜ milestone |
 | `P9.07` | Product-owned workspace surfaces / composition | ⬜ |
 | `P9.08` | Arvectum AI Copilot + source-grounded organizational assistance | ⬜ |
@@ -130,9 +130,9 @@ P9.04 My Work / Needs Attention                       PASS
         ↓
 P9.05 human-friendly Records/Documents/Knowledge/search PASS
         ↓
-P9.06 Executions/Decisions/governed actions             CURRENT
+P9.06 Executions/Decisions/governed actions             PASS
         ↓
-R30 usability / information architecture review
+R30 usability / information architecture review              CURRENT
         ↓
 M9-alpha — USABLE INTERNAL WORKSPACE
 ```
@@ -171,8 +171,8 @@ M9-alpha is internal usability evidence only; it creates no public/stable surfac
 
 ## 9. Current canonical action
 
-> **P9.06 — Executions / Decisions / governed actions UX.**
+> **R30 — M9-alpha Usability / Information Architecture Review.**
 
-Build the next owner-facing governed-action layer through the existing ADR-0001 Productive Workspace boundary. The operator must be able to inspect one real Execution/Decision in human terms and perform at least one bounded real governed interaction without the UI itself becoming Authorization, Organizational Authority or Consequential Approval; all consequential canonical change/effects remain subject to Governed Execution and current command-boundary gates.
+Execute the integrated P9.01 J1–J4 ordinary-path review through the normal private Productive Workspace. Verify that the owner can move from Home/My Work through human-readable discovery/context into the real governed preflight without terminal/GitHub/internal-ID knowledge, while preserving truthful authority/source/uncertainty semantics, fail-closed security and exact technical drill-down on demand.
 
-P9.06 does not itself achieve M9-alpha. The remaining critical sequence is `P9.06 → R30 → M9-alpha`.
+R30 is the remaining gate before `M9-alpha`. P9.06 implementation completion does not by itself declare the milestone achieved.

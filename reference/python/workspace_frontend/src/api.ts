@@ -1,4 +1,12 @@
-import type { DiscoveryKind, DiscoveryProjection, MyWorkProjection, ObjectContext, WorkspaceContext } from "./types";
+import type {
+  DiscoveryKind,
+  DiscoveryProjection,
+  GovernedExperienceProjection,
+  GovernedPreflightResult,
+  MyWorkProjection,
+  ObjectContext,
+  WorkspaceContext,
+} from "./types";
 
 export class WorkspaceApiError extends Error {
   readonly code: string;
@@ -59,6 +67,17 @@ export async function loadDiscovery(query = "", kind?: DiscoveryKind): Promise<D
 
 export async function loadObjectContext(objectId: string): Promise<ObjectContext> {
   return request<ObjectContext>(`/api/app/v1/objects/${encodeURIComponent(objectId)}`);
+}
+
+export async function loadGovernedExperience(): Promise<GovernedExperienceProjection> {
+  return request<GovernedExperienceProjection>("/api/app/v1/governed");
+}
+
+export async function runGovernedPreflight(csrfToken: string): Promise<GovernedPreflightResult> {
+  return request<GovernedPreflightResult>("/api/app/v1/governed/preflight", {
+    method: "POST",
+    headers: { "X-Arvectum-CSRF": csrfToken },
+  });
 }
 
 export async function logoutWorkspace(csrfToken: string): Promise<void> {
