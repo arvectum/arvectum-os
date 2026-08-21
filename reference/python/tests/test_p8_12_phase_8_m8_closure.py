@@ -83,7 +83,8 @@ class P812Phase8M8ClosureTests(unittest.TestCase):
 
         self.assertIn("Status: `Deprecated / Informative`", legacy)
         self.assertIn("PLATFORM-CAPABILITY-CANDIDATE-CATALOG.md", legacy)
-        self.assertIn("not the current lifecycle inventory", legacy)
+        self.assertIn("current lifecycle inventory", legacy)
+        self.assertIn("**not**", legacy)
         self.assertIn("performs **no lifecycle transition**", legacy)
         self.assertNotIn("No capability is currently recorded as `Active` or `Incubating`", legacy)
 
