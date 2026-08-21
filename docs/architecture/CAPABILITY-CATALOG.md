@@ -1,205 +1,45 @@
-# Arvectum OS Capability Catalog
+# Arvectum OS Capability Catalog — Legacy Pointer
 
-Status: `Informative`
-Version: `0.7.1`
-Updated: `2026-08-07`
-Architecture basis: `RFC-0001 v1.0.0 Accepted`
-Constitution basis: `1.2.0`
+Status: `Deprecated / Informative`
+Version: `0.8.0`
+Updated: `2026-08-21`
+Superseded by: [`docs/catalogs/PLATFORM-CAPABILITY-CANDIDATE-CATALOG.md`](../catalogs/PLATFORM-CAPABILITY-CANDIDATE-CATALOG.md)
+Architecture basis: Constitution `1.2.0`; RFC-0001 through RFC-0008 `1.0.0` (`Accepted`)
 
 ## Purpose
 
-This catalog records platform capabilities that have entered a governed lifecycle and separately lists exploratory areas that may or may not ever become platform work.
+This file is retained only as a historical navigation pointer for repository paths that previously referenced `docs/architecture/CAPABILITY-CATALOG.md`.
 
-It does not catalog ordinary product features or Product Experiments.
+It is **not** the current lifecycle inventory and must not be used to infer whether a Platform Capability is `Candidate`, `Incubating`, `Active`, `Deprecated` or `Retired`.
 
-Listing an item does not authorize implementation, allocate budget, create a roadmap commitment or prove that platform responsibility is appropriate.
+The current governed capability lifecycle inventory is maintained in:
 
-## Architectural Responsibility and Legal Rights
+> [`docs/catalogs/PLATFORM-CAPABILITY-CANDIDATE-CATALOG.md`](../catalogs/PLATFORM-CAPABILITY-CANDIDATE-CATALOG.md)
 
-Architectural responsibility means responsibility for capability boundaries, contracts, canonical state, lifecycle, validation, migration and operational support within Arvectum OS.
+That active catalog currently records the governed status of CAP-001 through CAP-004. This legacy-pointer update performs **no lifecycle transition** and grants no implementation, readiness, conformance, support or commercial status.
 
-It does not determine legal title, intellectual-property ownership, licensing, confidentiality or contractual data rights.
+## Stable lifecycle semantics
 
-## Product Experiments Are Not Platform Capabilities
-
-A Product Experiment remains under product or operational responsibility while uncertainty is high.
-
-A completely product-local experiment does not require a Product Contract. An experiment interacting with platform capabilities, shared event history or canonical platform state requires a proportionate `Provisional` Product Contract under RFC-0001.
-
-A reusable pattern enters the governed capability lifecycle only after a recorded decision creates a `Candidate` or `Incubating` Platform Capability with a proposed domain-neutral boundary.
-
-## Capability Lifecycle
+Platform Capability lifecycle remains:
 
 ```text
 Candidate → Incubating → Active → Deprecated → Retired
 ```
 
-- `Candidate` — governed platform proposal with an accountable owner, sponsor or constitutional rationale, review date and no implementation commitment unless separately approved.
-- `Incubating` — limited domain-neutral platform boundary being tested through real consumers under a Provisional Contract.
-- `Active` — approved shared capability with a supported stable contract, evidence for platform responsibility and approved operational readiness for its declared scope.
-- `Deprecated` — available for migration but not recommended for new consumers.
-- `Retired` — unavailable except through preserved history or explicit archival support.
+Platform Capability lifecycle is distinct from Product Contract lifecycle:
 
-Lifecycle transitions must identify the proposal, decision authority, architectural owner, effective date and canonical decision reference.
+```text
+Draft → Provisional → Stable → Deprecated → Retired
+```
 
-An item without an accountable owner, sponsor or constitutional rationale, and review date is not a lifecycle `Candidate`; it remains exploratory only.
+A roadmap milestone, successful product integration, experiment result or evidence package does not itself promote either lifecycle.
 
-## Lifecycle-specific Requirements
+## Authority and conformance
 
-### Candidate
+Current lifecycle status must be read from the active governed catalog together with the applicable Constitution, Accepted RFC/ADR, approved decisions, Product Contracts and evidence.
 
-A Candidate entry must identify:
+This pointer is informative only. It does not create a public/stable platform contract, conformance claim, compatibility promise, operational-readiness statement, SLA/support commitment or commercial promise.
 
-- proposed organizational outcome;
-- architectural owner;
-- sponsor or constitutional rationale;
-- intended domain-neutral boundary;
-- expected consumers or strategic need;
-- reuse hypothesis;
-- review date;
-- criteria for incubation, containment or rejection.
+## Historical note
 
-A Candidate does not require an implemented contract or implementation commitment.
-
-### Incubating
-
-An Incubating entry must additionally identify:
-
-- source Product Experiment or organizational need;
-- sponsoring consumers;
-- bounded scope and budget;
-- Provisional domain-neutral contract;
-- Canonical Record responsibilities and authority modes;
-- provisional Kernel metamodel assumptions where applicable;
-- external authoritative systems and synchronization obligations;
-- dependencies and emitted events;
-- security, authority and data-handling rules;
-- retention, deletion, export and portability obligations;
-- compatibility and migration requirements;
-- promotion, return-to-product, replacement and retirement criteria.
-
-### Active
-
-An Active entry must additionally identify:
-
-- supported stable public contract;
-- compatibility and migration policy;
-- accountable operational support;
-- approved operational-readiness evidence proportionate to scope, consequence and customer commitments;
-- support and escalation path;
-- observability and health evidence;
-- incident and recovery path;
-- continuity and dependency assumptions;
-- backup, reconstruction or restoration path where applicable;
-- customer-facing operational commitments;
-- evidence supporting centralized platform responsibility;
-- maintained security, portability and lifecycle obligations;
-- approved decision authority and canonical promotion reference;
-- migration, deprecation and retirement communication path.
-
-A capability must not be represented as `Active` before these requirements are approved for its declared scope.
-
-## Commercial Commitment Integrity
-
-Commercial or customer-facing materials must reflect the lifecycle and approved conformance state recorded for a capability.
-
-A Product Experiment, Candidate or Incubating capability must not be represented as an Active supported platform capability.
-
-A catalog entry must not be used to justify a customer commitment, conformance claim, compatibility promise, support obligation, portability promise or SLA-like commitment that has not been approved by the applicable decision authority.
-
-Exploratory items are hypotheses only and must not be marketed or contracted as delivered capabilities.
-
-## Decision Authority
-
-Every lifecycle transition must comply with RFC-0001 and the approved Decision Authority Policy.
-
-A proposer may not solely approve their own transition to `Active`, material exception, stable public-contract change, material customer-facing commitment or acceptance of a material known gap.
-
-Until authority is delegated through an approved policy, the owner of Arvectum OS retains residual decision authority.
-
-## Canonical Record Authority Modes
-
-A capability that governs or consumes Canonical Records must identify the applicable authority mode:
-
-- `Native`;
-- `External Reference`;
-- `Governed Replica`.
-
-A capability must not create a competing source of truth when an external system remains authoritative.
-
-## Kernel Metamodel Status
-
-Until RFC-0002 is accepted, any capability depending on relationships among Identity, Canonical Record, Typed Relationship, Event and Execution Context must declare those assumptions `Provisional`.
-
-No capability may publish an irreversible public contract that fixes a Kernel metamodel interpretation without an approved RFC or ADR.
-
-## Current Horizon
-
-The Current Horizon contains only capabilities relevant to an approved near-term product workflow or mandatory governance requirement and having an owner, sponsor or constitutional rationale, scope and review date.
-
-No Current Horizon platform capability has yet been approved in this catalog.
-
-## Active and Incubating Capabilities
-
-No capability is currently recorded as `Active` or `Incubating`.
-
-## Candidate Capabilities
-
-No capability is currently recorded as a lifecycle `Candidate`.
-
-## Exploratory Inventory
-
-`Exploratory` is not a capability lifecycle state.
-
-| Exploratory area | Possible organizational outcome |
-|---|---|
-| Identity and Authority | Attribute actions, enforce least privilege and represent delegated authority |
-| Canonical Records, Kernel Metamodel, Authority, Relationships and Assets | Preserve governed objects, versions, authority modes and their graph |
-| Security, Privacy and Tenant Isolation | Enforce classification, minimization, isolation, retention, deletion and auditability |
-| Organizational Control and Portability | Provide governed export, migration, handover and deletion capabilities |
-| Product Contracts and Extension Registry | Validate product-platform compatibility and registered extensions |
-| Governed Workflow Execution | Execute repeatable processes within explicit Execution Contexts |
-| Events, Provenance and Observability | Reconstruct meaningful actions, causes, inputs and outputs |
-| Governance and Approvals | Apply proportional decision authority to consequential changes and decisions |
-| Validation | Execute reusable structural, semantic, quality, security and policy controls |
-| Organizational Memory | Retain structured operational experience with provenance and permitted use |
-| Organizational Knowledge | Preserve validated, reusable organizational understanding |
-| Standards and Policies | Version approved methods and behavioral constraints |
-| Decisions | Preserve context, alternatives, rationale, consequences and authority |
-| Documents and Artifacts | Manage versions, generation context, classification and lifecycle of deliverables |
-| Search and Context Resolution | Resolve relevant records without creating a second source of truth |
-| Integration and Adapter Management | Operate replaceable technology, external systems of record and adapters |
-
-Exploratory areas may be removed, merged or renamed without deprecation because no supported capability contract exists.
-
-## Conformance
-
-A capability claiming RFC-0001 conformance must separately record:
-
-- subject lifecycle;
-- operational environment;
-- conformance maturity;
-- applicable requirements;
-- authority modes;
-- provisional Kernel assumptions;
-- data and tenant scope;
-- manual controls;
-- operational-readiness evidence where applicable;
-- applicable customer-facing commitments and their canonical references;
-- exceptions and their decision authorities;
-- known gaps;
-- review date.
-
-A catalog listing alone is not a conformance claim.
-
-## Exit and De-platformization
-
-A capability should be returned to a product, replaced, deprecated or retired when centralized responsibility is no longer justified.
-
-Exit decisions must preserve required history, contractual commitments, governed export and migration paths.
-
-## Change Rule
-
-A catalog change requires an RFC when it changes a foundational law, Kernel primitive, metamodel constraint, authority mode, decision-authority invariant, commercial-commitment integrity rule, operational-readiness invariant, product boundary, security invariant, sovereignty rule or portability obligation.
-
-Other lifecycle changes may be governed by an ADR or approved catalog-maintenance process when evidence, authority, responsibility, conformance scope and migration are recorded.
+Earlier revisions of this file contained a pre-incubation capability inventory. That inventory became stale after the governed CAP-001 through CAP-004 incubation decisions and is intentionally no longer reproduced here. Repository history remains available for historical analysis.
