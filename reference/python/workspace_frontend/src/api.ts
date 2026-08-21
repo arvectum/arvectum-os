@@ -5,6 +5,7 @@ import type {
   GovernedPreflightResult,
   MyWorkProjection,
   ObjectContext,
+  ProductCompositionProjection,
   WorkspaceContext,
 } from "./types";
 
@@ -67,6 +68,10 @@ export async function loadDiscovery(query = "", kind?: DiscoveryKind): Promise<D
 
 export async function loadObjectContext(objectId: string): Promise<ObjectContext> {
   return request<ObjectContext>(`/api/app/v1/objects/${encodeURIComponent(objectId)}`);
+}
+
+export async function loadProductComposition(): Promise<ProductCompositionProjection> {
+  return request<ProductCompositionProjection>("/api/app/v1/products");
 }
 
 export async function loadGovernedExperience(): Promise<GovernedExperienceProjection> {
