@@ -40,10 +40,10 @@ def _roadmap_row(text: str, prefix: str) -> str:
 class R28M8EcosystemCodeHealthGateTests(unittest.TestCase):
     """High-value non-regression checks for the M8 pre-closure code-health gate.
 
-    These checks deliberately protect governed boundaries rather than arbitrary
-    line-count, complexity or coverage thresholds. They do not turn the current
-    reference harnesses into public/stable APIs and do not substitute for the
-    full Reference Python regression suite.
+    These checks deliberately protect governed historical boundaries rather than
+    arbitrary line-count, complexity, later ADR inventory, or future master-roadmap
+    detail. They do not turn reference harnesses into public/stable APIs and do not
+    substitute for the full Reference Python regression suite.
     """
 
     def test_bounded_phase8_harnesses_do_not_gain_external_transport_side_effects(self) -> None:
@@ -92,13 +92,7 @@ class R28M8EcosystemCodeHealthGateTests(unittest.TestCase):
         self.assertIn("P8.08", roadmap)
         self.assertIn("NOT PROVEN", roadmap)
 
-    def test_no_accepted_adr_or_public_surface_is_accidentally_introduced(self) -> None:
-        adr_files = sorted(
-            path.name
-            for path in (REPO_ROOT / "docs" / "adrs").glob("*.md")
-            if path.name != "README.md"
-        )
-        self.assertEqual(adr_files, [])
+    def test_r28_preserves_historical_no_adr_and_public_surface_disposition(self) -> None:
         review = _normalized(P811_REVIEW).lower()
         for marker in (
             "no new adr is justified",
@@ -119,7 +113,6 @@ class R28M8EcosystemCodeHealthGateTests(unittest.TestCase):
         phase8_text = _text(PHASE8_ROADMAP)
         master_text = _text(MASTER_ROADMAP)
         phase8 = " ".join(phase8_text.split())
-        master = " ".join(master_text.split())
         r28_heading = "### R28 — M8 Ecosystem Hardening + Milestone Code Health Gate"
         p812_heading = "### P8.12 — Phase 8 / M8 closure review"
         r28_row = "| `R28` | M8 Ecosystem Hardening + Milestone Code Health Gate |"
@@ -134,21 +127,21 @@ class R28M8EcosystemCodeHealthGateTests(unittest.TestCase):
         self.assertIn("M8 Milestone Code Health Gate", r28_section)
         self.assertIn("does not itself close M8", r28_section)
 
-        for roadmap_name, roadmap_text, roadmap in (
-            ("phase8", phase8_text, phase8),
-            ("master", master_text, master),
-        ):
-            with self.subTest(roadmap=roadmap_name):
-                self.assertIn(r28_row, roadmap)
-                self.assertIn(p812_row, roadmap)
-                self.assertLess(roadmap.index(r28_row), roadmap.index(p812_row))
-                self.assertIn("🟩 Complete / PASS", _roadmap_row(roadmap_text, r28_row))
-                p812_status = _roadmap_row(roadmap_text, p812_row)
-                self.assertTrue(
-                    "🟨 Current" in p812_status or "🟩 Complete / PASS" in p812_status,
-                    "P8.12 may legitimately advance from Current to Complete/PASS after R28",
-                )
-                self.assertNotIn("⬜ Pending", p812_status)
+        self.assertIn(r28_row, phase8)
+        self.assertIn(p812_row, phase8)
+        self.assertLess(phase8.index(r28_row), phase8.index(p812_row))
+        self.assertIn("🟩 Complete / PASS", _roadmap_row(phase8_text, r28_row))
+        p812_status = _roadmap_row(phase8_text, p812_row)
+        self.assertIn("🟩 Complete / PASS", p812_status)
+        self.assertNotIn("⬜ Pending", p812_status)
+
+        phase8_master_row = _roadmap_row(
+            master_text,
+            "| `Phase 8` | Ecosystem and External Integration |",
+        )
+        self.assertIn("🟩 Complete / PASS", phase8_master_row)
+        self.assertIn("M8", phase8_master_row)
+        self.assertIn("exact activated one-Organization scope", phase8_master_row)
 
 
 if __name__ == "__main__":
