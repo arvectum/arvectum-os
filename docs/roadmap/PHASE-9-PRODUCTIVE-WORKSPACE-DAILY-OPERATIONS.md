@@ -1,7 +1,7 @@
 # Arvectum OS Phase 9 — Productive Workspace & Daily Operations
 
 Status: `Active`
-Version: `1.3.0`
+Version: `1.4.0`
 Created: `2026-08-21`
 Updated: `2026-08-21`
 Owner: `ООО «Арвектум»`
@@ -62,8 +62,8 @@ The existing P4/P7 UI remains a diagnostic/reference/recovery surface. It is not
 | `P9.01` | Real operator jobs-to-be-done + acceptance journeys | 🟩 Complete / PASS | six exact owner jobs, real/truthful fixtures, acceptance evidence contract and M9-alpha script fixed |
 | `P9.02` | Application architecture spike + frontend/BFF/session decision | 🟩 Complete / PASS | four bounded topology prototypes compared; preferred topology fixed; ADR-0001 proposed |
 | `R29` | Productive Workspace Boundary Review | 🟩 Complete / PASS | boundary PASS after 6 iterations; ADR-0001 owner-approved and Accepted |
-| **`P9.03`** | **Real application shell + navigation + organization/user context** | **🟨 Current** | pleasant persistent workspace shell on Accepted ADR-0001 topology |
-| `P9.04` | `My Work` / Needs Attention projection | ⬜ | actionable owner queue without raw execution hunting |
+| `P9.03` | Real application shell + navigation + organization/user context | 🟩 Complete / PASS | real ADR-0001 shell/BFF/session/release boundary implemented and regression-verified |
+| **`P9.04`** | **`My Work` / Needs Attention projection** | **🟨 Current** | actionable owner queue without raw execution hunting |
 | `P9.05` | Human-friendly Records / Documents / Knowledge + global search | ⬜ | understandable discovery and object context |
 | `P9.06` | Executions / Decisions / governed actions UX | ⬜ | owner can inspect and perform one real governed action |
 | `R30` | M9-alpha Usability / Information Architecture Review | ⬜ gate | ordinary workflow usable without terminal/internal IDs |
@@ -153,23 +153,38 @@ Final R29 result: no material conflict remains with Constitution `1.2.0`, Accept
 
 ADR-0001 is therefore binding architecture for the current `Local / Persistent Internal / owner-operated` Phase 9 application scope. Acceptance does not prove implementation conformance, public/customer readiness or lifecycle promotion.
 
-## 9. P9.03 implementation boundary
+## 9. P9.03 implementation and closure result
 
-P9.03 now owns the first material implementation of ADR-0001 and must establish, at minimum:
+Status: `Complete / PASS`.
+
+Canonical evidence: [`P9-03-real-application-shell-navigation-organization-user-context.md`](../reviews/P9-03-real-application-shell-navigation-organization-user-context.md).
+
+P9.03 established the first material implementation of ADR-0001:
 
 1. real React + TypeScript application shell built to release-pinned static assets;
 2. same-origin Python BFF with no browser reliance on private platform internals;
-3. explicit attributable actor and Organization context resolution;
+3. explicit attributable actor and Organization context resolved server-side;
 4. protected read-side Authorization/Data Governance/minimization;
 5. opaque bounded/revocable session behavior and security-sensitive identifier rotation;
 6. CSRF + configured Host/Origin enforcement;
 7. no auth/session bearer material in browser Web Storage;
-8. bounded loopback-only HTTP exception or stronger HTTPS profile;
+8. bounded loopback-only HTTP exception for the current private contour, with stronger HTTPS/Secure-cookie requirements outside it;
 9. exact application release identity and safe stale-client/reload behavior;
 10. domain-neutral navigation/application shell without product business logic leakage;
-11. diagnostic/reference P4/P7 surface preserved or explicitly governed through replacement/retirement rather than silently destroyed.
+11. existing P4/P7 diagnostic/reference/recovery surfaces preserved.
 
-P9.03 may create subordinate implementation standards/tests where useful, but it must not silently redefine ADR-0001 or freeze a public Product Contract surface.
+Final repository-level functional cross-review completed six iterations. One material deployment gap was found and resolved before closure: P7.06 now installs/verifies the exact release's own Workspace runtime lock into the release-specific venv while preserving pre-P9 rollback compatibility and per-release isolation.
+
+Final implementation evidence before this roadmap/review-only closure edit:
+
+- implementation/reconciliation head `8989730d01ae43419d6b5c927b32c8b0ab82dd83`;
+- `Reference Python CI #242` — `SUCCESS`, `1301 tests`, `OK`;
+- generated-Python-artifact rejection — `PASS`;
+- `Productive Workspace CI #10` — `SUCCESS`;
+- frontend typecheck/tests/Web-Storage/reproducibility/release-asset gates — `SUCCESS`;
+- BFF security/context tests — `SUCCESS`.
+
+P9.03 creates no public/stable API, Stable Product Contract, Active Platform Capability, customer Production claim or Organizational Authority. Application release `p9.03.1` remains `bounded-internal-provisional`.
 
 ## 10. M9-alpha exit criteria
 
@@ -220,8 +235,8 @@ Phase 9 does not by itself establish:
 
 ## 13. Current canonical action
 
-> **P9.03 — Real application shell + navigation + organization/user context.**
+> **P9.04 — `My Work` / Needs Attention projection.**
 
-Implement the Accepted ADR-0001 topology as a bounded real application shell. Do not skip directly to broad P9.04–P9.06 feature work until the shell proves the browser/BFF/session/Organization/release boundary on which those flows depend.
+Build the first useful owner-facing work queue on top of the now-closed P9.03 application boundary. The projection must remain non-authoritative, Organization-scoped, authorization/data-governance filtered and human-readable; it must not require raw execution/internal identifiers for ordinary use or infer permission/authority from visibility.
 
-The intended near-term sequence is `P9.03 → P9.04 → P9.05 → P9.06 → R30 → M9-alpha`, after which daily use begins as the primary validation loop for the remainder of Phase 9.
+The intended near-term sequence is `P9.04 → P9.05 → P9.06 → R30 → M9-alpha`. P9.03 shell/session/release boundaries remain the application foundation for these flows; M9-alpha is not achieved until the full declared exit set passes.
