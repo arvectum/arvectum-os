@@ -7,7 +7,7 @@ on:
       - ".github/workflows/p9-06-dist-evidence.yml"
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -17,8 +17,10 @@ jobs:
       run:
         working-directory: reference/python/workspace_frontend
     steps:
-      - name: Check out repository
+      - name: Check out exact PR head
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
@@ -36,3 +38,14 @@ jobs:
           path: reference/python/workspace_frontend/dist
           include-hidden-files: true
           if-no-files-found: error
+      - name: Reconcile deterministic dist onto PR branch
+        run: |
+          git add -A dist
+          if git diff --cached --quiet; then
+            echo "dist already exact"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "P9.06 reconcile exact CI-built Workspace assets"
+          git push origin HEAD:${GITHUB_HEAD_REF}
