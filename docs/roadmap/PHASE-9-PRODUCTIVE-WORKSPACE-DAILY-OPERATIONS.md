@@ -1,7 +1,7 @@
 # Arvectum OS Phase 9 — Productive Workspace & Daily Operations
 
 Status: `Active`
-Version: `1.4.0`
+Version: `1.5.0`
 Created: `2026-08-21`
 Updated: `2026-08-21`
 Owner: `ООО «Арвектум»`
@@ -63,8 +63,8 @@ The existing P4/P7 UI remains a diagnostic/reference/recovery surface. It is not
 | `P9.02` | Application architecture spike + frontend/BFF/session decision | 🟩 Complete / PASS | four bounded topology prototypes compared; preferred topology fixed; ADR-0001 proposed |
 | `R29` | Productive Workspace Boundary Review | 🟩 Complete / PASS | boundary PASS after 6 iterations; ADR-0001 owner-approved and Accepted |
 | `P9.03` | Real application shell + navigation + organization/user context | 🟩 Complete / PASS | real ADR-0001 shell/BFF/session/release boundary implemented and regression-verified |
-| **`P9.04`** | **`My Work` / Needs Attention projection** | **🟨 Current** | actionable owner queue without raw execution hunting |
-| `P9.05` | Human-friendly Records / Documents / Knowledge + global search | ⬜ | understandable discovery and object context |
+| `P9.04` | `My Work` / Needs Attention projection | 🟩 Complete / PASS | actionable owner queue without raw execution hunting |
+| **`P9.05`** | **Human-friendly Records / Documents / Knowledge + global search** | **🟨 Current** | understandable discovery and object context |
 | `P9.06` | Executions / Decisions / governed actions UX | ⬜ | owner can inspect and perform one real governed action |
 | `R30` | M9-alpha Usability / Information Architecture Review | ⬜ gate | ordinary workflow usable without terminal/internal IDs |
 | `M9-alpha` | Usable Internal Workspace | ⬜ milestone | daily core work usable through browser UI |
@@ -186,7 +186,41 @@ Final implementation evidence before this roadmap/review-only closure edit:
 
 P9.03 creates no public/stable API, Stable Product Contract, Active Platform Capability, customer Production claim or Organizational Authority. Application release `p9.03.1` remains `bounded-internal-provisional`.
 
-## 10. M9-alpha exit criteria
+## 10. P9.04 implementation and closure result
+
+Status: `Complete / PASS`.
+
+Canonical evidence: [`P9-04-my-work-needs-attention-projection.md`](../reviews/P9-04-my-work-needs-attention-projection.md).
+
+P9.04 established the first useful owner-facing work queue through the P9.03/ADR-0001 application boundary:
+
+1. internal `arvectum.workspace.my-work/1` read contract with explicit derived/non-authoritative semantics;
+2. server-resolved Organization/Actor scope and current P7.04 access revalidation before projection disclosure;
+3. no protected denied-source existence/count leakage;
+4. opaque projection-local focus links rather than raw governed/execution identifiers;
+5. truthful live source adapters limited to already-proven P7.05 runtime health and P7.06 UI4 real owner preflight semantics;
+6. controlled scenario evidence clearly marked as scenario rather than current organizational fact;
+7. explicit `fresh / stale / degraded` projection health with fail-closed withholding of protected work when current state cannot be revalidated;
+8. human-readable title/reason/source/legitimate next step and text-first attention categories;
+9. compact `Needs attention` directly on Home plus full `/my-work` filtering/sorting/focus view;
+10. no approve/retry/canonical mutation path and no inference of Authorization, Organizational Authority or Consequential Approval from visibility.
+
+Functional cross-review completed four iterations. Material findings repaired test isolation, the P9.01 J1 Home visibility gap and exact CI-built production-asset reconciliation. The fourth iteration found no remaining material objection; the review stopped below the user-approved maximum of 10 rather than manufacturing additional iterations.
+
+Final implementation evidence before this roadmap/review-only closure edit:
+
+- implementation/reconciliation head `04776a93703aa8fd2e7cd9d2fa808fb62d16596b`;
+- `Reference Python CI #258` — `SUCCESS`, `1301 tests`, `OK`;
+- generated-Python-artifact rejection — `PASS`;
+- `Productive Workspace CI #26` — `SUCCESS`;
+- BFF security/context tests — `SUCCESS`;
+- frontend typecheck/tests/Web-Storage/build/reproducibility/release-asset verification — `SUCCESS`.
+
+Application release `p9.04.1` remains `bounded-internal-provisional`; internal app contract is `2`. P9.04 creates no public/stable API, Product Contract or Platform Capability lifecycle transition, customer Production claim or Organizational Authority.
+
+P9.04 closes the queue/overview portion of J1 but does not claim full end-to-end J1 or `M9-alpha`: P9.05/P9.06 and R30 remain required for human-friendly exact object context, governed-action continuation and full J1–J4 usability evidence.
+
+## 11. M9-alpha exit criteria
 
 `M9-alpha — Usable Internal Workspace` is achieved only when the owner can, through the normal private Workspace and without terminal/GitHub/internal-ID knowledge for ordinary steps:
 
@@ -202,7 +236,7 @@ P9.03 creates no public/stable API, Stable Product Contract, Active Platform Cap
 
 M9-alpha is an internal usability milestone, not a public/stable interface, Production/customer readiness or lifecycle transition.
 
-## 11. M9 exit criteria
+## 12. M9 exit criteria
 
 `M9 — Daily-use organizational workbench` requires the exact activated internal scope to demonstrate:
 
@@ -218,7 +252,7 @@ M9-alpha is an internal usability milestone, not a public/stable interface, Prod
 10. R29–R32 findings are closed or explicitly accepted by appropriate authority;
 11. M9 Milestone Code Health Gate passes before closure.
 
-## 12. Explicit non-goals
+## 13. Explicit non-goals
 
 Phase 9 does not by itself establish:
 
@@ -233,10 +267,10 @@ Phase 9 does not by itself establish:
 - AI Organizational Authority or final consequential approval;
 - automatic promotion of observations/generated outputs into validated Knowledge.
 
-## 13. Current canonical action
+## 14. Current canonical action
 
-> **P9.04 — `My Work` / Needs Attention projection.**
+> **P9.05 — Human-friendly Records / Documents / Knowledge + global search.**
 
-Build the first useful owner-facing work queue on top of the now-closed P9.03 application boundary. The projection must remain non-authoritative, Organization-scoped, authorization/data-governance filtered and human-readable; it must not require raw execution/internal identifiers for ordinary use or infer permission/authority from visibility.
+Build the next owner-facing discovery/context layer on top of P9.03/P9.04. The ordinary path must find and open real governed organizational objects by human-readable context without terminal/GitHub/internal identifiers; derived search/discovery remains non-authoritative and current source Authorization/Data Governance/minimization must be revalidated before protected existence/content is disclosed.
 
-The intended near-term sequence is `P9.04 → P9.05 → P9.06 → R30 → M9-alpha`. P9.03 shell/session/release boundaries remain the application foundation for these flows; M9-alpha is not achieved until the full declared exit set passes.
+The remaining near-term sequence is `P9.05 → P9.06 → R30 → M9-alpha`. P9.04 provides the attention entry point; M9-alpha remains unachieved until the full declared exit set passes.

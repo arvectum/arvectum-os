@@ -10,6 +10,7 @@ from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from .access import AccessContext, AccessResolver, P704AccessResolver, WorkspaceAccessError
+from .attention import AttentionProvider, RuntimeAttentionProvider
 from .config import WorkspaceSettings
 from .release import WorkspaceRelease, load_release
 from .security import SessionStore, WorkspaceSession
@@ -51,7 +52,7 @@ def _security_event(code: str, request: Request, store: SessionStore, detail: st
 def _navigation() -> list[dict[str, Any]]:
     return [
         {"id": "home", "label": "Home", "href": "/", "availability": "available"},
-        {"id": "my-work", "label": "My Work", "href": "/my-work", "availability": "planned-p9.04"},
+        {"id": "my-work", "label": "My Work", "href": "/my-work", "availability": "available"},
         {"id": "search", "label": "Search", "href": "/search", "availability": "planned-p9.05"},
         {"id": "governed", "label": "Governed actions", "href": "/governed", "availability": "planned-p9.06"},
         {"id": "products", "label": "Products", "href": "/products", "availability": "planned-p9.07"},
@@ -93,12 +94,14 @@ def create_app(
     settings: WorkspaceSettings | None = None,
     *,
     access_resolver: AccessResolver | None = None,
+    attention_provider: AttentionProvider | None = None,
     session_store: SessionStore | None = None,
     static_dir: Path | None = None,
 ) -> FastAPI:
     settings = settings or WorkspaceSettings.from_env()
     release = load_release()
     resolver = access_resolver or P704AccessResolver(settings.runtime_root)
+    attention = attention_provider or RuntimeAttentionProvider(settings.runtime_root)
     store = session_store or SessionStore(
         idle_seconds=settings.session_idle_seconds,
         absolute_seconds=settings.session_absolute_seconds,
@@ -109,6 +112,7 @@ def create_app(
     app.state.settings = settings
     app.state.release = release
     app.state.access_resolver = resolver
+    app.state.attention_provider = attention
     app.state.session_store = store
     app.state.static_root = static_root
 
@@ -207,6 +211,13 @@ def create_app(
     async def read_context(current: tuple[WorkspaceSession, AccessContext] = Depends(_authorize_current)) -> dict[str, Any]:
         session, _ = current
         return _context_payload(settings=settings, release=release, session=session)
+
+    @app.get("/api/app/v1/my-work")
+    async def read_my_work(current: tuple[WorkspaceSession, AccessContext] = Depends(_authorize_current)) -> dict[str, Any]:
+        _, access = current
+        # The browser cannot choose Organization/Actor/source scope. The provider
+        # receives the current server-authorized access context after revalidation.
+        return attention.project(access).to_payload()
 
     @app.post("/api/app/v1/session/logout")
     async def logout(

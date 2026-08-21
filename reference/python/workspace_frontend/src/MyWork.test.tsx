@@ -1,0 +1,185 @@
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { MyWork } from "./MyWork";
+import type { MyWorkProjection } from "./types";
+
+const projection: MyWorkProjection = {
+  schema: "arvectum.workspace.my-work/1",
+  generated_at: "2026-08-21T10:00:00Z",
+  projection: {
+    derived: true,
+    canonical_authority: false,
+    organizational_authority_provided: false,
+    consequential_action_available: false,
+    visibility_implies_permission: false,
+  },
+  scope: {
+    organization_resolved_server_side: true,
+    actor_resolved_server_side: true,
+    denied_item_counts_exposed: false,
+  },
+  health: {
+    state: "fresh",
+    code: "OK",
+    message: "Attention sources were evaluated against current governed state.",
+    observed_at: "2026-08-21T10:00:00Z",
+    heartbeat_age_seconds: 1.5,
+  },
+  items: [
+    {
+      id: "11111111111111111111",
+      kind: "waiting-input",
+      group: "decision-required",
+      urgency: "high",
+      title: "Governed preflight is waiting",
+      reason: "Decision evidence is missing.",
+      source: "ЕИС / zakupki.gov.ru",
+      next_step: "Inspect blockers through the governed flow.",
+      evidence_mode: "live",
+      observed_at: "2026-08-21T10:00:00Z",
+      open_href: "/my-work?focus=11111111111111111111",
+      interaction: "inspect-only",
+      technical_evidence_available: true,
+      authority_provided: false,
+    },
+    {
+      id: "22222222222222222222",
+      kind: "reconciliation-required",
+      group: "reconciliation-required",
+      urgency: "high",
+      title: "External outcome is uncertain",
+      reason: "Reconciliation is required before any retry.",
+      source: "Controlled P8.05 acceptance scenario",
+      next_step: "Reconcile the outcome; do not retry blindly.",
+      evidence_mode: "scenario",
+      observed_at: "2026-08-21T09:00:00Z",
+      open_href: "/my-work?focus=22222222222222222222",
+      interaction: "inspect-only",
+      technical_evidence_available: false,
+      authority_provided: false,
+    },
+    {
+      id: "33333333333333333333",
+      kind: "guarded-action-failed",
+      group: "blocked-failed",
+      urgency: "medium",
+      title: "Guarded action failed",
+      reason: "A fail-closed guard blocked the attempted operation.",
+      source: "Controlled acceptance scenario",
+      next_step: "Inspect the failed guard before a new governed attempt.",
+      evidence_mode: "scenario",
+      observed_at: "2026-08-21T08:00:00Z",
+      open_href: "/my-work?focus=33333333333333333333",
+      interaction: "inspect-only",
+      technical_evidence_available: false,
+      authority_provided: false,
+    },
+    {
+      id: "44444444444444444444",
+      kind: "recent-outcome",
+      group: "recent-outcome",
+      urgency: "low",
+      title: "Recent important outcome",
+      reason: "A governed operation completed.",
+      source: "Controlled acceptance scenario",
+      next_step: "Inspect only if context is needed.",
+      evidence_mode: "scenario",
+      observed_at: "2026-08-21T07:00:00Z",
+      open_href: "/my-work?focus=44444444444444444444",
+      interaction: "inspect-only",
+      technical_evidence_available: false,
+      authority_provided: false,
+    },
+    {
+      id: "55555555555555555555",
+      kind: "informational",
+      group: "informational",
+      urgency: "low",
+      title: "Informational note",
+      reason: "No action is required.",
+      source: "Controlled acceptance scenario",
+      next_step: "No action required.",
+      evidence_mode: "scenario",
+      observed_at: "2026-08-21T06:00:00Z",
+      open_href: "/my-work?focus=55555555555555555555",
+      interaction: "inspect-only",
+      technical_evidence_available: false,
+      authority_provided: false,
+    },
+  ],
+};
+
+function mockProjection(value: MyWorkProjection) {
+  vi.stubGlobal("fetch", vi.fn(async () => new Response(JSON.stringify(value), {
+    status: 200,
+    headers: { "Content-Type": "application/json" },
+  })));
+}
+
+afterEach(() => {
+  cleanup();
+  vi.unstubAllGlobals();
+  window.history.replaceState({}, "", "/");
+});
+
+describe("P9.04 My Work", () => {
+  it("renders a human-readable non-authoritative queue and controlled uncertainty honestly", async () => {
+    window.history.replaceState({}, "", "/my-work");
+    mockProjection(projection);
+    render(<MyWork />);
+
+    expect(await screen.findByRole("heading", { name: "Needs attention" })).toBeTruthy();
+    expect(screen.getByText(/This queue is non-authoritative/)).toBeTruthy();
+    expect(screen.getByText("External outcome is uncertain")).toBeTruthy();
+    expect(screen.getByText("Reconciliation is required before any retry.")).toBeTruthy();
+    expect(screen.getAllByText("Scenario evidence").length).toBeGreaterThan(0);
+    expect(screen.queryByRole("button", { name: /approve|retry/i })).toBeNull();
+    expect(screen.getAllByRole("link", { name: "Inspect" })[0].getAttribute("href")).toMatch(/^\/my-work\?focus=/);
+  });
+
+  it("filters only the already-authorized browser projection", async () => {
+    window.history.replaceState({}, "", "/my-work");
+    mockProjection(projection);
+    render(<MyWork />);
+
+    await screen.findByRole("heading", { name: "Needs attention" });
+    fireEvent.change(screen.getByLabelText("Work state"), { target: { value: "reconciliation-required" } });
+    expect(screen.getByText("1 visible item")).toBeTruthy();
+    expect(screen.getByText("External outcome is uncertain")).toBeTruthy();
+    expect(screen.queryByText("Informational note")).toBeNull();
+  });
+
+  it("shows stale projection health without presenting stale queue items as current", async () => {
+    window.history.replaceState({}, "", "/my-work");
+    mockProjection({
+      ...projection,
+      health: {
+        ...projection.health,
+        state: "stale",
+        code: "HEARTBEAT_STALE",
+        message: "Work items are withheld until current source state can be revalidated.",
+      },
+      items: [{
+        id: "66666666666666666666",
+        kind: "recoverable-system-condition",
+        group: "blocked-failed",
+        urgency: "high",
+        title: "Workspace source is not current",
+        reason: "The persistent runtime heartbeat is stale.",
+        source: "Arvectum OS persistent runtime",
+        next_step: "Restore source health, then refresh.",
+        evidence_mode: "live",
+        observed_at: "2026-08-21T10:00:00Z",
+        open_href: "/my-work?focus=66666666666666666666",
+        interaction: "inspect-only",
+        technical_evidence_available: false,
+        authority_provided: false,
+      }],
+    });
+    render(<MyWork />);
+
+    expect(await screen.findByText("Stale")).toBeTruthy();
+    expect(screen.getByText("Workspace source is not current")).toBeTruthy();
+    expect(screen.getByText(/Work items are withheld/)).toBeTruthy();
+  });
+});

@@ -1,4 +1,4 @@
-import type { WorkspaceContext } from "./types";
+import type { MyWorkProjection, WorkspaceContext } from "./types";
 
 export class WorkspaceApiError extends Error {
   readonly code: string;
@@ -43,6 +43,10 @@ export async function loadWorkspaceContext(): Promise<WorkspaceContext> {
     }
     throw error;
   }
+}
+
+export async function loadMyWork(): Promise<MyWorkProjection> {
+  return request<MyWorkProjection>("/api/app/v1/my-work");
 }
 
 export async function logoutWorkspace(csrfToken: string): Promise<void> {
