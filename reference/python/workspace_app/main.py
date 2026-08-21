@@ -13,6 +13,7 @@ from .access import AccessContext, AccessResolver, P704AccessResolver, Workspace
 from .attention import AttentionProvider, RuntimeAttentionProvider
 from .config import WorkspaceSettings
 from .discovery import DiscoveryError, DiscoveryKind, DiscoveryProvider, ObjectUnavailable, RuntimeDiscoveryProvider
+from .governed import GovernedExperienceError, GovernedExperienceProvider, RuntimeGovernedExperienceProvider
 from .release import WorkspaceRelease, load_release
 from .security import SessionStore, WorkspaceSession
 
@@ -58,7 +59,7 @@ def _navigation() -> list[dict[str, Any]]:
         {"id": "records", "label": "Records", "href": "/records", "availability": "available"},
         {"id": "documents", "label": "Documents", "href": "/documents", "availability": "available"},
         {"id": "knowledge", "label": "Knowledge", "href": "/knowledge", "availability": "available"},
-        {"id": "governed", "label": "Governed actions", "href": "/governed", "availability": "planned-p9.06"},
+        {"id": "governed", "label": "Governed actions", "href": "/governed", "availability": "available"},
         {"id": "products", "label": "Products", "href": "/products", "availability": "planned-p9.07"},
     ]
 
@@ -100,6 +101,7 @@ def create_app(
     access_resolver: AccessResolver | None = None,
     attention_provider: AttentionProvider | None = None,
     discovery_provider: DiscoveryProvider | None = None,
+    governed_provider: GovernedExperienceProvider | None = None,
     session_store: SessionStore | None = None,
     static_dir: Path | None = None,
 ) -> FastAPI:
@@ -108,6 +110,7 @@ def create_app(
     resolver = access_resolver or P704AccessResolver(settings.runtime_root)
     attention = attention_provider or RuntimeAttentionProvider(settings.runtime_root)
     discovery = discovery_provider or RuntimeDiscoveryProvider(settings.runtime_root)
+    governed = governed_provider or RuntimeGovernedExperienceProvider(settings.runtime_root)
     store = session_store or SessionStore(
         idle_seconds=settings.session_idle_seconds,
         absolute_seconds=settings.session_absolute_seconds,
@@ -120,6 +123,7 @@ def create_app(
     app.state.access_resolver = resolver
     app.state.attention_provider = attention
     app.state.discovery_provider = discovery
+    app.state.governed_provider = governed
     app.state.session_store = store
     app.state.static_root = static_root
 
@@ -249,6 +253,26 @@ def create_app(
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="OBJECT_UNAVAILABLE") from None
         except DiscoveryError:
             raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="DISCOVERY_UNAVAILABLE") from None
+
+    @app.get("/api/app/v1/governed")
+    async def read_governed_experience(
+        current: tuple[WorkspaceSession, AccessContext] = Depends(_authorize_current),
+    ) -> dict[str, object]:
+        _, access = current
+        try:
+            return governed.inspect(access).to_payload()
+        except GovernedExperienceError:
+            raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="GOVERNED_EXPERIENCE_UNAVAILABLE") from None
+
+    @app.post("/api/app/v1/governed/preflight")
+    async def run_governed_preflight(
+        current: tuple[WorkspaceSession, AccessContext] = Depends(_csrf_protected),
+    ) -> dict[str, object]:
+        _, access = current
+        try:
+            return governed.run_preflight(access).to_payload()
+        except GovernedExperienceError:
+            raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="GOVERNED_PREFLIGHT_UNAVAILABLE") from None
 
     @app.post("/api/app/v1/session/logout")
     async def logout(
