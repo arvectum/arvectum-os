@@ -136,15 +136,20 @@ R28 adds `reference/python/tests/test_r28_m8_ecosystem_code_health_gate.py` with
 4. preservation of the P8.08 `NOT ACTIVATED / NOT PROVEN` limitation;
 5. the current no-Accepted-ADR / no accidental public-surface disposition;
 6. the repository generated-Python-artifact CI guard;
-7. mandatory R28-before-P8.12 sequencing.
+7. mandatory R28-before-P8.12 sequencing without coupling the test to a transient roadmap `Current` status or one Markdown table shape.
 
 The tests protect governed semantics rather than arbitrary line-count, complexity or coverage-percentage thresholds.
 
 Evidence:
 
 - prior P8.11 executable baseline: `1270 tests / OK` recorded canonically;
-- R28 adds seven test methods on top of that baseline;
-- `Reference Python CI #211` for PR #110 / commit `6a11456ed06dbb4f98ba7b6c81128c382c068d86`: `success`.
+- R28 introduced seven dedicated semantic code-health regression test methods and reconciled one stale P8.11 roadmap guard;
+- initial R28 executable gate: `Reference Python CI #211` / commit `6a11456ed06dbb4f98ba7b6c81128c382c068d86` — `success`;
+- final executable/test synchronization head before review-record-only closure edits: commit `ce4479e77123425a11155f3a421ecf80231807ec`;
+- final full executable suite on that head: `Reference Python CI #220` — `success`, `Ran 1278 tests in 22.125s`, `OK`;
+- the CI generated-artifact rejection step also completed successfully on #220.
+
+The later edits to this review and its companion M8 gate record are documentation-only closure synchronization. They do not alter the reviewed runtime or executable guards; the PR must still have a green required CI on its final merge head.
 
 R28 does not claim that test count alone establishes correctness. The PASS rests on the scoped review plus executable regression evidence.
 
@@ -202,7 +207,7 @@ Required canonical state after this review is recorded:
 
 ## 12. Functional cross-review
 
-Five iterations were completed, within the maximum seven.
+Seven iterations were completed, which is the configured maximum. All material objections found during the cycle were resolved before merge; the final iteration ended in PASS.
 
 ### Iteration 1 — architecture / dependency direction
 
@@ -236,11 +241,40 @@ Revision: explicit non-public/non-stable disposition retained; R28 adds a regres
 
 Disposition: `resolved`.
 
-### Iteration 5 — executable regression / sequencing
+### Iteration 5 — initial executable regression gate
 
 Result: `PASS`.
 
-`Reference Python CI #211` completed successfully with the new seven-test R28 gate. Sequencing remains R28 before P8.12, and roadmap synchronization advances only after the gate PASS.
+`Reference Python CI #211` completed successfully with the initial seven-test R28 gate. This established the executable baseline for the hardening review, but roadmap synchronization was still subjected to subsequent cross-review rather than treated as automatically safe.
+
+### Iteration 6 — sequencing guard durability
+
+Result: `REVISE`.
+
+Material objection: the first R28 sequencing assertion encoded the temporary state in which `R28` itself was `Current`. Correctly advancing the roadmap to `R28 Complete / PASS → P8.12 Current` would therefore have made the new regression guard fail after the intended state transition.
+
+Revision: the guard was rewritten to protect the durable historical invariant `P8.11 → R28 → P8.12` and R28 completion, without requiring a transient `Current` marker.
+
+Disposition: `resolved`.
+
+### Iteration 7 — full-suite stale guard and roadmap-shape reconciliation
+
+Result: `REVISE → PASS`.
+
+The final full-suite review exposed two stale/over-specific test assumptions rather than an architecture defect:
+
+1. the P8.11 architecture-fitness guard still pinned exact older roadmap versions/status text, so a legitimate R28 roadmap advance caused failure;
+2. the revised R28 roadmap assertion initially assumed the master and detailed Phase 8 roadmaps used the same Markdown table shape, although the detailed roadmap contains an additional dependency column.
+
+Revision:
+
+- P8.11 now protects the durable historical `P8.11 → R28 → P8.12` sequence instead of obsolete roadmap versions/transient status;
+- R28 sequencing verification is table-shape independent and checks semantic ordering/completion rather than a brittle literal row shape;
+- no runtime behavior, authority boundary, lifecycle, public surface or product/platform responsibility was broadened to make the tests pass.
+
+Final evidence on executable/test head `ce4479e77123425a11155f3a421ecf80231807ec`: `Reference Python CI #220 = success`; generated-artifact guard passed; full suite `1278 tests / OK`.
+
+Disposition: `resolved`; final iteration result `PASS`.
 
 No material objection remains.
 
