@@ -214,7 +214,7 @@ export type ProductContractBoundary = {
 };
 
 export type ProductSurface = {
-  id: "tender-operator" | "discount-parser";
+  id: string;
   name: string;
   purpose: string;
   evidence_state: "available" | "unavailable";
@@ -225,7 +225,7 @@ export type ProductSurface = {
   work: ProductWorkItem[];
   boundary: ProductContractBoundary;
   technical: {
-    operational_contour: "P7.07" | "P7.08";
+    operational_contour: string;
     evidence_classification: string;
     raw_product_state_exposed: false;
     raw_platform_identifiers_exposed: false;
