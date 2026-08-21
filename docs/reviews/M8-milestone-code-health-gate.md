@@ -59,7 +59,7 @@ Primary Phase 8 implementation surfaces reviewed:
 | Duplication/unnecessary abstraction | `PASS` | Evidence-local repetition remains attributable; speculative framework extraction rejected |
 | Dead/obsolete paths | `PASS` | No material abandoned Phase 8 runtime/compatibility path identified |
 | Generated/repository noise | `PASS` | CI rejects tracked Python generated artifacts; R28 protects that guard |
-| Regression protection | `PASS` | Seven R28 regression checks added; full Reference Python CI #211 succeeded |
+| Regression protection | `PASS` | Seven dedicated R28 semantic guards plus stale-roadmap-guard reconciliation; full Reference Python CI #220 succeeded with `1278 tests / OK` |
 | Migration/reversibility/portability | `PASS — scoped` | Exact fail-closed upgrades/removal and bounded handover semantics retained; no universal format claimed |
 | Accidental stable/public surface | `PASS` | No public SDK/API/manifest/registry/export format or Accepted ADR introduced |
 | Performance | `NOT MATERIAL` | No measured/contracted external service performance boundary exists in M8 scope |
@@ -70,22 +70,35 @@ Primary Phase 8 implementation surfaces reviewed:
 
 No unresolved material code-health defect remains.
 
-R28 hardening action added one durable regression gate rather than performing speculative runtime refactoring:
+R28 hardening added one durable regression gate rather than performing speculative runtime refactoring:
 
 - `reference/python/tests/test_r28_m8_ecosystem_code_health_gate.py`.
 
 The added checks protect the current bounded external-integration architecture against accidental live-transport coupling, public/stable surface drift, erasure of P8.08 limitations, customer-transfer/effect-replay activation, loss of generated-artifact hygiene and sequencing drift.
+
+The seven-iteration cross-review also identified and removed brittle roadmap-test coupling:
+
+- the new R28 sequencing guard no longer depends on a transient `R28 Current` status;
+- the older P8.11 guard no longer pins obsolete roadmap versions/status text;
+- roadmap sequencing verification no longer assumes identical Markdown table shapes in master and detailed roadmaps.
+
+These were test/evidence maintainability defects, not runtime architecture defects. No runtime behavior or authority boundary was broadened as remediation.
 
 No material finding required owner risk acceptance.
 
 ## 5. Evidence
 
 - P8.11 prior executable baseline: `1270 tests / OK` recorded canonically;
-- R28 adds seven semantic code-health regression test methods;
+- R28 introduced seven dedicated semantic code-health regression test methods and reconciled one stale P8.11 roadmap guard;
 - PR: `#110 — R28 — M8 ecosystem hardening and code health gate`;
-- executable commit: `6a11456ed06dbb4f98ba7b6c81128c382c068d86`;
-- GitHub Actions: `Reference Python CI #211` — `success`;
+- initial executable gate: commit `6a11456ed06dbb4f98ba7b6c81128c382c068d86`, `Reference Python CI #211` — `success`;
+- final executable/test synchronization head before review-record-only closure edits: `ce4479e77123425a11155f3a421ecf80231807ec`;
+- final full executable suite on that head: `Reference Python CI #220` — `success`, `Ran 1278 tests in 22.125s`, `OK`;
+- generated-Python-artifact rejection step: `PASS` on #220;
+- functional cross-review: `7/7 iterations`, final result `PASS` with all material objections resolved;
 - detailed engineering review: `docs/reviews/R28-m8-ecosystem-hardening-review.md`.
+
+The subsequent edits to the two review records are documentation-only closure synchronization and do not change the reviewed runtime/test semantics. The PR must nevertheless retain a green required CI on its final merge head.
 
 A green regression suite is necessary evidence but is not treated as sufficient by itself; the detailed R28 review records the engineering assessment and bounded claims.
 
