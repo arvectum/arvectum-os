@@ -110,13 +110,16 @@ class R28M8EcosystemCodeHealthGateTests(unittest.TestCase):
         self.assertIn("\\.py[co]$", workflow)
         self.assertIn("\\.pytest_cache/", workflow)
 
-    def test_r28_remains_mandatory_before_p8_12_until_gate_is_recorded(self) -> None:
+    def test_r28_completion_remains_ordered_before_p8_12_without_transient_status_coupling(self) -> None:
         roadmap = _normalized(PHASE8_ROADMAP)
         r28 = roadmap.index("### R28 — M8 Ecosystem Hardening + Milestone Code Health Gate")
         p812 = roadmap.index("### P8.12 — Phase 8 / M8 closure review")
         self.assertLess(r28, p812)
-        self.assertIn("Required before P8.12", roadmap)
-        self.assertIn("Material findings must be resolved or explicitly accepted", roadmap)
+        r28_section = roadmap[r28:p812]
+        self.assertIn("Status: Complete / PASS", r28_section)
+        self.assertIn("Milestone gate:", r28_section)
+        self.assertIn("M8 Milestone Code Health Gate", r28_section)
+        self.assertIn("does not itself close M8", r28_section)
 
 
 if __name__ == "__main__":
