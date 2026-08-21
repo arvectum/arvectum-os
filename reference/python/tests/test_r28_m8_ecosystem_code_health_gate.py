@@ -37,7 +37,7 @@ class R28M8EcosystemCodeHealthGateTests(unittest.TestCase):
     """High-value non-regression checks for the M8 pre-closure code-health gate.
 
     These checks deliberately protect governed boundaries rather than arbitrary
-    line-count, complexity or coverage thresholds.  They do not turn the current
+    line-count, complexity or coverage thresholds. They do not turn the current
     reference harnesses into public/stable APIs and do not substitute for the
     full Reference Python regression suite.
     """
@@ -128,14 +128,11 @@ class R28M8EcosystemCodeHealthGateTests(unittest.TestCase):
         self.assertIn("M8 Milestone Code Health Gate", r28_section)
         self.assertIn("does not itself close M8", r28_section)
 
-        for roadmap in (phase8, master):
-            with self.subTest(roadmap="phase8" if roadmap is phase8 else "master"):
+        for roadmap_name, roadmap in (("phase8", phase8), ("master", master)):
+            with self.subTest(roadmap=roadmap_name):
                 self.assertIn(r28_row, roadmap)
                 self.assertIn(p812_row, roadmap)
                 self.assertLess(roadmap.index(r28_row), roadmap.index(p812_row))
-                r28_line = next(
-                    line for line in roadmap.split(" | ") if False
-                ) if False else None
                 self.assertIn(
                     "| `R28` | M8 Ecosystem Hardening + Milestone Code Health Gate | 🟩 Complete / PASS |",
                     roadmap,
