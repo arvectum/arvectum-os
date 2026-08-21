@@ -1,7 +1,7 @@
 # Arvectum OS Phase 9 — Productive Workspace & Daily Operations
 
 Status: `Active`
-Version: `1.1.0`
+Version: `1.2.0`
 Created: `2026-08-21`
 Updated: `2026-08-21`
 Owner: `ООО «Арвектум»`
@@ -9,7 +9,7 @@ Task classification: `platform` with `product_contract` and `governance`
 Parent roadmap: [`ROADMAP.md`](ROADMAP.md)
 Milestone: `M9 — Daily-use organizational workbench`
 Intermediate milestone: `M9-alpha — Usable Internal Workspace`
-Architecture baseline: Constitution `1.2.0`; RFC-0001 through RFC-0008 `1.0.0` (`Accepted`)
+Architecture baseline: Constitution `1.2.0`; RFC-0001 through RFC-0008 `1.0.0` (`Accepted`); ADR-0001 `Proposed`
 Predecessor: `Phase 8 / M8 — Complete / PASS`
 Activation decision: [`DECISION-2026-08-21-PHASE-9-PRODUCTIVE-WORKSPACE-ACTIVATION`](../governance/decisions/DECISION-2026-08-21-PHASE-9-PRODUCTIVE-WORKSPACE-ACTIVATION.md)
 
@@ -60,9 +60,9 @@ The existing P4/P7 UI remains a diagnostic/reference/recovery surface. It is not
 |---|---|---:|---|
 | `P9.00` | Productive Workspace activation + outcome baseline | 🟩 Complete / PASS | Phase 9 activated, UX problem and milestone scope fixed |
 | `P9.01` | Real operator jobs-to-be-done + acceptance journeys | 🟩 Complete / PASS | six exact owner jobs, real/truthful fixtures, acceptance evidence contract and M9-alpha script fixed |
-| `P9.02` | Application architecture spike + frontend/BFF/session decision | 🟨 Current | bounded prototypes + ADR if threshold crossed |
-| `R29` | Productive Workspace Boundary Review | ⬜ gate | platform/product/authority/security/stable-surface boundary PASS |
-| `P9.03` | Real application shell + navigation + organization/user context | ⬜ | pleasant persistent workspace shell |
+| `P9.02` | Application architecture spike + frontend/BFF/session decision | 🟩 Complete / PASS | four bounded topology prototypes compared; preferred topology fixed; ADR-0001 Proposed |
+| **`R29`** | **Productive Workspace Boundary Review** | **🟨 Current gate** | platform/product/authority/security/stable-surface boundary PASS + ADR-0001 disposition |
+| `P9.03` | Real application shell + navigation + organization/user context | ⬜ blocked by R29 | pleasant persistent workspace shell |
 | `P9.04` | `My Work` / Needs Attention projection | ⬜ | actionable owner queue without raw execution hunting |
 | `P9.05` | Human-friendly Records / Documents / Knowledge + global search | ⬜ | understandable discovery and object context |
 | `P9.06` | Executions / Decisions / governed actions UX | ⬜ | owner can inspect and perform one real governed action |
@@ -117,22 +117,51 @@ Task duration and primary interactions are measured during prototypes/dogfooding
 
 P9.01 completed five functional cross-review iterations with no remaining material objection. It does not claim that J1–J6 are already implemented or that M9-alpha/M9 has passed.
 
-## 7. P9.02 architecture decision rule
+## 7. P9.02 — Application architecture spike result
 
-P9.02 may prototype frontend/application boundary options. It MUST NOT inherit `http.server` + rendered-string HTML as the long-lived architecture merely because it exists.
+Status: `Complete / PASS — preferred topology fixed; ADR-0001 Proposed; R29 decision gate pending`.
 
-P9.02 must evaluate candidates against the P9.01 acceptance journeys, especially J1–J4, and evaluate at minimum:
+Canonical evidence: [`P9-02-application-architecture-spike-frontend-bff-session-decision.md`](../reviews/P9-02-application-architecture-spike-frontend-bff-session-decision.md).
 
-- persistent browser application ergonomics;
-- server/application boundary and authorization revalidation;
-- session/CSRF/origin/security model;
-- read-model/projection strategy without competing canonical state;
-- product-owned UI contribution/composition mechanism;
-- deploy/update/rollback fit with P7.06;
-- accessibility/testing/observability;
-- reversibility and operational complexity.
+Proposed ADR: [`ADR-0001 — Productive Workspace Browser Application Topology`](../adrs/ADR-0001-productive-workspace-browser-application-topology.md).
 
-If the chosen framework/BFF/session/API topology becomes materially constraining or long-lived, create an ADR before material reliance. No RFC change is expected unless the semantic architecture itself must change.
+P9.02 compared four bounded topology prototypes against P9.01 J1–J4:
+
+1. accrete existing `http.server` + rendered-string HTML — rejected for Productive Workspace;
+2. Python server-rendered HTML + progressive enhancement — valid fallback, not preferred;
+3. React + TypeScript SPA + same-origin co-deployed Python BFF — preferred;
+4. separately deployed full-stack Node/BFF + Python platform service — rejected for current owner-operated scope.
+
+The preferred gate-ready topology is:
+
+```text
+Browser
+  -> React + TypeScript Productive Workspace SPA
+     built to static production assets
+  -> same-origin /bff/*
+     Python BFF/application boundary
+       -> governed query/read-model services
+       -> application command boundary
+       -> Governed Execution where consequential change is required
+       -> explicit Product Contract adapters
+```
+
+Selected constraints:
+
+- frontend assets and Python BFF remain one exact-release deployable unit under P7.06;
+- Node/Vite-class tooling is build/CI only for current production scope;
+- browser receives no reusable platform credential and stores no auth/session bearer material in Web Storage;
+- session is opaque and server-side; cookie/session lifecycle, CSRF and origin checks are explicit;
+- any current loopback-only HTTP exception is bounded, visible and may not silently expand to LAN/remote use; non-loopback exposure requires HTTPS + `Secure` session cookie;
+- UI state is never Authorization or Organizational Authority;
+- consequential action revalidates session/Organization/Authorization/Organizational Authority/Data Governance/approval requirements server-side before Governed Execution;
+- read models/search are rebuildable, Organization-scoped and non-authoritative;
+- product UI remains product-owned; initial compile-time composition is allowed only through an explicit registered boundary and does not freeze a public/stable plugin schema before P9.07/Product Contract evidence;
+- no dedicated search store, public API, external IdP, remote microfrontend, WebSocket, SSR/full-stack Node runtime or separate BFF service is standardized by P9.02.
+
+Six functional cross-review iterations ended with `PASS` and no remaining material objection for architecture-spike scope.
+
+Because the preferred topology is long-lived/materially constraining, ADR-0001 was created as `Proposed`. P9.02 does not fabricate Acceptance or owner approval. R29 must disposition the ADR through valid decision authority before P9.03 materially relies on it.
 
 ## 8. M9-alpha exit criteria
 
@@ -183,8 +212,8 @@ Phase 9 does not by itself establish:
 
 ## 11. Current canonical action
 
-> **P9.02 — Application architecture spike + frontend/BFF/session decision.**
+> **R29 — Productive Workspace Boundary Review.**
 
-Use the P9.01 J1–J4 acceptance journeys as the primary architecture-spike workload. Do not begin broad Workspace implementation before bounded options have been compared and any materially constraining/long-lived frontend/BFF/session/API choice has been captured at the appropriate ADR level.
+Use the P9.02 evidence and Proposed ADR-0001 as the review subject. R29 must verify compatibility with Constitution/RFC-0001…RFC-0008; browser/server trust and session/CSRF/origin controls; server-side Organization/Authorization/Organizational Authority/Data Governance revalidation; non-authoritative projection semantics; product-owned UI boundaries; P7.06 exact-release deployment/rollback; and absence of accidental public/stable API/browser/support commitments.
 
-The intended near-term sequence is `P9.02 → R29 → P9.03…P9.06 → R30 → M9-alpha`, after which daily use begins as the primary validation loop for the remainder of Phase 9.
+R29 must disposition Proposed ADR-0001 through valid decision authority before P9.03 materially relies on the selected topology. The intended near-term sequence is `R29 → P9.03…P9.06 → R30 → M9-alpha`, after which daily use begins as the primary validation loop for the remainder of Phase 9.
