@@ -55,19 +55,22 @@ export function Shell({ context, onLogout }: { context: WorkspaceContext; onLogo
 
         <main id="workspace-main" tabIndex={-1}>
           {active.id === "home" ? (
-            <section className="hero" aria-labelledby="home-title">
-              <p className="eyebrow">Productive Workspace</p>
-              <h1 id="home-title">Your organization context is established.</h1>
-              <p>
-                The application boundary is active, and My Work now adds a bounded,
-                non-authoritative projection of current attention signals.
-              </p>
-              <div className="status-grid">
-                <article><span>Context</span><strong>Server resolved</strong><p>Browser input cannot choose the Organization or actor.</p></article>
-                <article><span>Protected reads</span><strong>Revalidated</strong><p>Current least-privilege access is checked before protected projections are returned.</p></article>
-                <article><span>Authority</span><strong>Not implied</strong><p>Session and queue visibility do not create Organizational Authority.</p></article>
-              </div>
-            </section>
+            <>
+              <section className="hero" aria-labelledby="home-title">
+                <p className="eyebrow">Productive Workspace</p>
+                <h1 id="home-title">Your organization context is established.</h1>
+                <p>
+                  The application boundary is active, and My Work adds a bounded,
+                  non-authoritative projection of current attention signals directly to the daily home view.
+                </p>
+                <div className="status-grid">
+                  <article><span>Context</span><strong>Server resolved</strong><p>Browser input cannot choose the Organization or actor.</p></article>
+                  <article><span>Protected reads</span><strong>Revalidated</strong><p>Current least-privilege access is checked before protected projections are returned.</p></article>
+                  <article><span>Authority</span><strong>Not implied</strong><p>Session and queue visibility do not create Organizational Authority.</p></article>
+                </div>
+              </section>
+              <MyWork embedded />
+            </>
           ) : active.id === "my-work" ? (
             <MyWork />
           ) : (
