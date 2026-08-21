@@ -193,3 +193,73 @@ export type ObjectContext = {
     exact_version_exposed_on_demand: true;
   };
 };
+
+export type GovernedDecision = {
+  name: "Authorization" | "Organizational Authority" | "Data Governance" | "Consequential Approval";
+  state: string;
+  basis: string;
+};
+
+export type GovernedExperienceProjection = {
+  schema: "arvectum.workspace.governed-experience/1";
+  generated_at: string;
+  presentation: {
+    title: string;
+    summary: string;
+    source: string;
+    authority_mode: string;
+    authority_scope: string;
+    validation_status: string;
+  };
+  execution: {
+    status: string;
+    meaning: string;
+    waiting_decisions: string[];
+    technical_identity_available: true;
+  };
+  decisions: GovernedDecision[];
+  action: {
+    kind: "governed-preflight";
+    label: string;
+    available: boolean;
+    consequential: false;
+    canonical_mutation_requested: false;
+    external_effect_requested: false;
+    authority_provided: false;
+    explanation: string;
+  };
+  technical: {
+    release_sha: string;
+    source_subject: string;
+    source_version: string;
+    execution_subject: string;
+    execution_version: string;
+    event_version: string;
+    checkpoint_id: string;
+    provenance_refs: string[];
+  };
+  scope: {
+    organization_resolved_server_side: true;
+    actor_resolved_server_side: true;
+    current_access_revalidated: true;
+    organizational_authority_provided: false;
+    visibility_implies_permission: false;
+  };
+};
+
+export type GovernedPreflightResult = {
+  schema: "arvectum.workspace.governed-preflight-result/1";
+  recorded_at: string;
+  outcome: string;
+  status_text: string;
+  canonical_mutation_requested: false;
+  canonical_mutation_performed: false;
+  external_effect_requested: false;
+  external_effect_performed: false;
+  organizational_authority_provided: false;
+  consequential_approval_provided: false;
+  evidence: {
+    classification: "owner-local non-canonical proof evidence";
+    sha256: string;
+  };
+};
