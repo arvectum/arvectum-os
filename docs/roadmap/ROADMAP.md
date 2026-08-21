@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.73.0`
+Version: `2.74.0`
 Created: `2026-08-07`
 Updated: `2026-08-21`
 Owner: `ООО «Арвектум»`
@@ -17,17 +17,19 @@ Detailed completed-phase history remains in the corresponding phase roadmaps, re
 
 ## 2. Version note
 
-Version `2.73.0` activates **Phase 9 — Productive Workspace & Daily Operations** after M8 closure and closes `P9.00 — Productive Workspace activation + outcome baseline` as `Complete / PASS`.
+Version `2.74.0` closes **`P9.01 — Real operator jobs-to-be-done + acceptance journeys`** as `Complete / PASS` for acceptance-baseline definition and advances Phase 9 to **`P9.02 — Application architecture spike + frontend/BFF/session decision`**.
 
-The activation is driven by evidence from actual owner use: the current P4/P7 browser workspace correctly proves live governed-state inspection, exact identity/version/provenance, private least-privilege access and fail-closed governed preflight, but remains intentionally a technical/reference interface rather than a productive daily workbench. This is consistent with its canonical implementation boundary and is now treated as a material product/operational gap to solve.
+P9.01 fixes six exact owner/operator jobs and the evidence contract before technology selection. `J1 Morning overview`, `J2 Find anything`, `J3 Understand context` and `J4 Make a governed decision/action` are the M9-alpha blockers. `J5 Work across products` and `J6 Ask Arvectum` are defined now but remain full-M9 targets after M9-alpha, matching the canonical P9.07/P9.08 sequence.
 
-Phase 9 is activated through [`DECISION-2026-08-21-PHASE-9-PRODUCTIVE-WORKSPACE-ACTIVATION`](../governance/decisions/DECISION-2026-08-21-PHASE-9-PRODUCTIVE-WORKSPACE-ACTIVATION.md). The detailed roadmap is [`PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md`](PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md) `Active 1.0.0`. The P9.00 evidence record is [`P9-00-productive-workspace-activation-outcome-baseline.md`](../reviews/P9-00-productive-workspace-activation-outcome-baseline.md).
+The acceptance registry is anchored in real retained EIS/Tender Operator evidence plus the persistent Tender Operator and Discount Parser contours. Ordinary-path PASS requires no terminal/GitHub/internal-ID knowledge, no authority/success misrepresentation and no Organization-scope violation. Exact technical identity/version/provenance remains reachable on demand. Controlled truthfully representative uncertainty fixtures may be used only when no current real unresolved effect exists and may not be presented as a real production occurrence.
 
-P9.00 deliberately does **not** select a long-lived frontend framework, BFF/API/session topology or durable read-model technology. P9.01 must first define real owner jobs-to-be-done and acceptance journeys; P9.02 will then evaluate application architecture and trigger an ADR before material reliance if the selected technology becomes materially constraining or long-lived.
+P9.01 deliberately does **not** select a long-lived frontend framework, BFF/API/session topology or durable read-model technology, and it does not claim that the new Productive Workspace journeys have already been implemented or executed. P9.02 now compares bounded application architecture options against the J1–J4 workload and triggers an ADR before material reliance if the selected topology becomes materially constraining or long-lived.
 
-The new intermediate milestone is **`M9-alpha — Usable Internal Workspace`**: the owner can use the normal private browser Workspace for a useful home page, `My Work`, human-readable discovery/context, real Documents/Knowledge/Records, understandable Executions/Decisions and at least one real governed interaction without needing terminal, GitHub or internal identifiers for ordinary steps.
+Canonical P9.01 evidence: [`P9-01-real-operator-jobs-acceptance-journeys.md`](../reviews/P9-01-real-operator-jobs-acceptance-journeys.md). Detailed Phase 9 roadmap: [`PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md`](PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md) `Active 1.1.0`.
 
-This activation does not create public/customer Production, Stable Product Contracts, Active Platform Capabilities, public/stable API/SDK/browser compatibility, SLA/support/certification, multi-Organization validation, or AI authority.
+The intermediate milestone remains **`M9-alpha — Usable Internal Workspace`**: the owner can use the normal private browser Workspace for a useful home page, `My Work`, human-readable discovery/context, real Documents/Knowledge/Records, understandable Executions/Decisions and at least one real governed interaction without needing terminal, GitHub or internal identifiers for ordinary steps.
+
+This roadmap update does not create public/customer Production, Stable Product Contracts, Active Platform Capabilities, public/stable API/SDK/browser compatibility, SLA/support/certification, multi-Organization validation, or AI authority.
 
 ## 3. Architecture and governance baseline
 
@@ -80,13 +82,13 @@ The current private P4/P7 UI remains useful as diagnostic/reference/recovery evi
 
 ## 6. Active Phase 9 — Productive Workspace & Daily Operations
 
-Detailed roadmap: [`PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md`](PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md) — `Active 1.0.0`.
+Detailed roadmap: [`PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md`](PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md) — `Active 1.1.0`.
 
 | ID | Work item | Status |
 |---|---|---:|
 | `P9.00` | Productive Workspace activation + outcome baseline | 🟩 Complete / PASS |
-| **`P9.01`** | **Real operator jobs-to-be-done + acceptance journeys** | **🟨 Current** |
-| `P9.02` | Application architecture spike + frontend/BFF/session decision | ⬜ |
+| `P9.01` | Real operator jobs-to-be-done + acceptance journeys | 🟩 Complete / PASS |
+| **`P9.02`** | **Application architecture spike + frontend/BFF/session decision** | **🟨 Current** |
 | `R29` | Productive Workspace Boundary Review | ⬜ gate |
 | `P9.03` | Real application shell + navigation + organization/user context | ⬜ |
 | `P9.04` | `My Work` / Needs Attention projection | ⬜ |
@@ -108,9 +110,9 @@ Detailed roadmap: [`PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md`](PHASE-9-P
 ```text
 P9.00 activation                                      PASS
         ↓
-P9.01 real owner jobs / acceptance journeys           CURRENT
+P9.01 real owner jobs / acceptance journeys           PASS
         ↓
-P9.02 application architecture spike + ADR gate
+P9.02 application architecture spike + ADR gate       CURRENT
         ↓
 R29 Productive Workspace Boundary Review
         ↓
@@ -140,7 +142,8 @@ After M9-alpha the owner should begin using the new Workspace as the primary val
 5. inspect one real Execution/Decision in human terms;
 6. perform at least one bounded real governed interaction;
 7. reach exact technical identity/version/provenance details on demand rather than as the primary UX;
-8. R29 and R30 have no unresolved material finding.
+8. pass P9.01 J1–J4 with ordinary-path internal-ID dependency = false, terminal/GitHub escape = false, authority/success misrepresentation = false and Organization-scope violation = false;
+9. R29 and R30 have no unresolved material finding.
 
 M9-alpha is internal usability evidence only; it creates no public/stable surface or readiness/lifecycle promotion.
 
@@ -148,8 +151,8 @@ M9-alpha is internal usability evidence only; it creates no public/stable surfac
 
 `M9 — Daily-use organizational workbench` requires M9-alpha plus:
 
-- at least two real product-owned surfaces composed through explicit boundaries;
-- source-grounded, uncertainty-aware and authority-safe AI Copilot;
+- at least two real product-owned surfaces composed through explicit boundaries and P9.01 J5 passed;
+- source-grounded, uncertainty-aware and authority-safe AI Copilot and P9.01 J6 passed;
 - non-authoritative activity/notification projections;
 - useful ООО «Арвектум» company-level composition without Kernel product/company leakage;
 - real owner working sessions completed primarily through Workspace;
@@ -160,6 +163,6 @@ M9-alpha is internal usability evidence only; it creates no public/stable surfac
 
 ## 9. Current canonical action
 
-> **P9.01 — Real operator jobs-to-be-done + acceptance journeys.**
+> **P9.02 — Application architecture spike + frontend/BFF/session decision.**
 
-P9.01 must turn the six initial journeys (`Morning overview`, `Find anything`, `Understand context`, `Make a governed decision/action`, `Work across products`, `Ask Arvectum`) into exact real owner workflows and acceptance evidence. Broad UI implementation or long-lived frontend technology selection should not precede this baseline.
+P9.02 must compare bounded application architecture options against the P9.01 J1–J4 acceptance workload and evidence contract. The existing P4/P7 `http.server` + rendered-string HTML shell remains diagnostic/reference/recovery evidence and must not become the long-lived Productive Workspace merely by accretion. If the selected frontend/BFF/session/API/read-model topology becomes materially constraining or long-lived, capture the decision at the appropriate ADR level before material reliance.
