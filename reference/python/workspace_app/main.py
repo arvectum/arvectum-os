@@ -194,6 +194,22 @@ def create_app(
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="CSRF_REJECTED")
         return session, access
 
+    def _require_empty_governed_request(request: Request) -> None:
+        if request.headers.get("transfer-encoding"):
+            _security_event("GOVERNED_PREFLIGHT_INPUT_REJECTED", request, store, "transfer-encoding")
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="GOVERNED_PREFLIGHT_INPUT_REJECTED")
+        raw_length = request.headers.get("content-length")
+        if raw_length is None:
+            return
+        try:
+            length = int(raw_length)
+        except ValueError:
+            _security_event("GOVERNED_PREFLIGHT_INPUT_REJECTED", request, store, "invalid-content-length")
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="GOVERNED_PREFLIGHT_INPUT_REJECTED") from None
+        if length != 0:
+            _security_event("GOVERNED_PREFLIGHT_INPUT_REJECTED", request, store, "non-empty-body")
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="GOVERNED_PREFLIGHT_INPUT_REJECTED")
+
     @app.post("/api/app/v1/session/bootstrap")
     async def bootstrap_session(request: Request, response: Response) -> dict[str, Any]:
         if not _is_loopback_client(request.client.host if request.client else None):
@@ -266,8 +282,10 @@ def create_app(
 
     @app.post("/api/app/v1/governed/preflight")
     async def run_governed_preflight(
+        request: Request,
         current: tuple[WorkspaceSession, AccessContext] = Depends(_csrf_protected),
     ) -> dict[str, object]:
+        _require_empty_governed_request(request)
         _, access = current
         try:
             return governed.run_preflight(access).to_payload()
