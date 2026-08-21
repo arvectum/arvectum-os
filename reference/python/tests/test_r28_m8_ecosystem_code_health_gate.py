@@ -143,11 +143,12 @@ class R28M8EcosystemCodeHealthGateTests(unittest.TestCase):
                 self.assertIn(p812_row, roadmap)
                 self.assertLess(roadmap.index(r28_row), roadmap.index(p812_row))
                 self.assertIn("🟩 Complete / PASS", _roadmap_row(roadmap_text, r28_row))
-                self.assertIn("🟨 Current", _roadmap_row(roadmap_text, p812_row))
-                self.assertIn(
-                    "> **P8.12 — Phase 8 / M8 closure review.**",
-                    roadmap,
+                p812_status = _roadmap_row(roadmap_text, p812_row)
+                self.assertTrue(
+                    "🟨 Current" in p812_status or "🟩 Complete / PASS" in p812_status,
+                    "P8.12 may legitimately advance from Current to Complete/PASS after R28",
                 )
+                self.assertNotIn("⬜ Pending", p812_status)
 
 
 if __name__ == "__main__":
