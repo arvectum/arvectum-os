@@ -1,7 +1,7 @@
+import { MyWork } from "./MyWork";
 import type { NavigationItem, WorkspaceContext } from "./types";
 
 const plannedCopy: Record<string, string> = {
-  "my-work": "Attention queues arrive in P9.04.",
   search: "Human-friendly records and search arrive in P9.05.",
   governed: "Governed action UX arrives in P9.06.",
   products: "Product-owned surfaces arrive in P9.07 through explicit boundaries.",
@@ -59,21 +59,22 @@ export function Shell({ context, onLogout }: { context: WorkspaceContext; onLogo
               <p className="eyebrow">Productive Workspace</p>
               <h1 id="home-title">Your organization context is established.</h1>
               <p>
-                This shell is intentionally narrow: server-side identity, Organization scope,
-                session safety and application release compatibility are active before daily-work
-                projections are added.
+                The application boundary is active, and My Work now adds a bounded,
+                non-authoritative projection of current attention signals.
               </p>
               <div className="status-grid">
                 <article><span>Context</span><strong>Server resolved</strong><p>Browser input cannot choose the Organization or actor.</p></article>
-                <article><span>Protected reads</span><strong>Revalidated</strong><p>Current least-privilege access is checked before shell context is returned.</p></article>
-                <article><span>Authority</span><strong>Not implied</strong><p>An authenticated session does not create Organizational Authority.</p></article>
+                <article><span>Protected reads</span><strong>Revalidated</strong><p>Current least-privilege access is checked before protected projections are returned.</p></article>
+                <article><span>Authority</span><strong>Not implied</strong><p>Session and queue visibility do not create Organizational Authority.</p></article>
               </div>
             </section>
+          ) : active.id === "my-work" ? (
+            <MyWork />
           ) : (
             <section className="placeholder" aria-labelledby="placeholder-title">
               <p className="eyebrow">Navigation spine</p>
               <h1 id="placeholder-title">{active.label}</h1>
-              <p>{plannedCopy[active.id] ?? "This surface is not activated in P9.03."}</p>
+              <p>{plannedCopy[active.id] ?? "This surface is not activated in the current release."}</p>
               <p className="boundary-note">No product or canonical business data is exposed by this placeholder.</p>
             </section>
           )}
