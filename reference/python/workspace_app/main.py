@@ -14,6 +14,7 @@ from .attention import AttentionProvider, RuntimeAttentionProvider
 from .config import WorkspaceSettings
 from .discovery import DiscoveryError, DiscoveryKind, DiscoveryProvider, ObjectUnavailable, RuntimeDiscoveryProvider
 from .governed import GovernedExperienceError, GovernedExperienceProvider, RuntimeGovernedExperienceProvider
+from .products import ProductCompositionError, ProductCompositionProvider, RuntimeProductCompositionProvider
 from .release import WorkspaceRelease, load_release
 from .security import SessionStore, WorkspaceSession
 
@@ -60,7 +61,7 @@ def _navigation() -> list[dict[str, Any]]:
         {"id": "documents", "label": "Documents", "href": "/documents", "availability": "available"},
         {"id": "knowledge", "label": "Knowledge", "href": "/knowledge", "availability": "available"},
         {"id": "governed", "label": "Governed actions", "href": "/governed", "availability": "available"},
-        {"id": "products", "label": "Products", "href": "/products", "availability": "planned-p9.07"},
+        {"id": "products", "label": "Products", "href": "/products", "availability": "available"},
     ]
 
 
@@ -102,6 +103,7 @@ def create_app(
     attention_provider: AttentionProvider | None = None,
     discovery_provider: DiscoveryProvider | None = None,
     governed_provider: GovernedExperienceProvider | None = None,
+    product_provider: ProductCompositionProvider | None = None,
     session_store: SessionStore | None = None,
     static_dir: Path | None = None,
 ) -> FastAPI:
@@ -111,6 +113,7 @@ def create_app(
     attention = attention_provider or RuntimeAttentionProvider(settings.runtime_root)
     discovery = discovery_provider or RuntimeDiscoveryProvider(settings.runtime_root)
     governed = governed_provider or RuntimeGovernedExperienceProvider(settings.runtime_root)
+    products = product_provider or RuntimeProductCompositionProvider(settings.runtime_root)
     store = session_store or SessionStore(
         idle_seconds=settings.session_idle_seconds,
         absolute_seconds=settings.session_absolute_seconds,
@@ -124,6 +127,7 @@ def create_app(
     app.state.attention_provider = attention
     app.state.discovery_provider = discovery
     app.state.governed_provider = governed
+    app.state.product_provider = products
     app.state.session_store = store
     app.state.static_root = static_root
 
@@ -269,6 +273,16 @@ def create_app(
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="OBJECT_UNAVAILABLE") from None
         except DiscoveryError:
             raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="DISCOVERY_UNAVAILABLE") from None
+
+    @app.get("/api/app/v1/products")
+    async def read_product_composition(
+        current: tuple[WorkspaceSession, AccessContext] = Depends(_authorize_current),
+    ) -> dict[str, Any]:
+        _, access = current
+        try:
+            return products.project(access).to_payload()
+        except ProductCompositionError:
+            raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="PRODUCT_COMPOSITION_UNAVAILABLE") from None
 
     @app.get("/api/app/v1/governed")
     async def read_governed_experience(

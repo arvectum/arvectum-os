@@ -1,7 +1,7 @@
 # Arvectum OS Phase 9 — Productive Workspace & Daily Operations
 
 Status: `Active`
-Version: `1.8.0`
+Version: `1.9.0`
 Created: `2026-08-21`
 Updated: `2026-08-21`
 Owner: `ООО «Арвектум»`
@@ -68,8 +68,8 @@ The existing P4/P7 UI remains a diagnostic/reference/recovery surface. It is not
 | `P9.06` | Executions / Decisions / governed actions UX | 🟩 Complete / PASS | owner can inspect and perform one real governed action |
 | `R30` | M9-alpha Usability / Information Architecture Review | 🟩 Complete / PASS | ordinary workflow usable without terminal/internal IDs |
 | `M9-alpha` | Usable Internal Workspace | 🟩 Achieved / PASS | daily core work usable through browser UI |
-| **`P9.07`** | **Product-owned workspace surfaces / composition** | **🟨 Current** | at least two real product surfaces inside Workspace |
-| `P9.08` | Arvectum AI Copilot + source-grounded organizational assistance | ⬜ | useful AI analysis/proposals with provenance and authority-safe execution |
+| `P9.07` | Product-owned workspace surfaces / composition | 🟩 Complete / PASS | two real product-owned surfaces composed; P9.01 J5 passed |
+| **`P9.08`** | **Arvectum AI Copilot + source-grounded organizational assistance** | **🟨 Current** | useful AI analysis/proposals with provenance and authority-safe execution |
 | `P9.09` | Activity, notifications and attention routing | ⬜ | human-readable operational timeline/alerts projection |
 | `P9.10` | ООО «Арвектум» organization composition | ⬜ | company-level navigation over products/projects/knowledge/work |
 | `R31` | Product Composition / AI Safety Review | ⬜ gate | no product leakage, hidden coupling or AI authority escalation |
@@ -352,8 +352,30 @@ Phase 9 does not by itself establish:
 
 ## 17. Current canonical action
 
-> **P9.07 — Product-owned workspace surfaces / composition.**
+> **P9.08 — Arvectum AI Copilot + source-grounded organizational assistance.**
 
-Compose at least two real product-owned surfaces into Workspace through explicit Product Contract/extension boundaries while keeping product schemas, workflows, approvals, knowledge, templates and UX product-owned. The shared platform application must remain domain-neutral and must not gain hidden access to product internals.
+Add source-grounded, uncertainty-aware and authority-safe AI assistance to Workspace through explicit governed boundaries while keeping product schemas, workflows, approvals, knowledge, templates and UX product-owned. The shared platform application must remain domain-neutral and must not gain hidden access to product internals.
 
-P9.07 is the first post-M9-alpha implementation slice and targets the evidence needed for P9.01 J5. M9 remains open; P9.08–P9.12 and R31/R32 still govern the remaining AI, activity, company composition, dogfooding and hardening work.
+P9.07 is complete within the exact private internal scope. M9 remains open; P9.08–P9.12 and R31/R32 still govern the remaining AI, activity, company composition, dogfooding and hardening work.
+
+## 18. P9.07 closure result
+
+Status: `Complete / PASS` within the exact private internal scope.
+
+P9.07 composed two product-owned read-only context surfaces, Tender Operator and Discount Parser, through the explicit compile-time boundary permitted by Accepted ADR-0001. The shared composition schema remains domain-neutral; product schemas, workflows, approval rules, knowledge, templates and detailed UX remain product-owned.
+
+Closure evidence:
+
+- final implementation/reconciliation head `8e947d1631c850a9cda683edd2d425501b2ac6ce`;
+- Productive Workspace CI `#82` / run `32523233168` — `SUCCESS`;
+- Reference Python CI `#314` / run `32523233189` — `SUCCESS`;
+- functional cross-review completed 2 iterations with no material objection;
+- P9.01 J5 passed: Home/company context -> Products -> Tender Operator -> back/company context -> Discount Parser;
+- Organization/Actor continuity preserved and product switching does not widen authorization;
+- internal IDs are not required on the ordinary path; technical references are on demand only;
+- no cross-product business relationship is inferred;
+- no canonical mutation, external effect or authority grant is available;
+- P6.02/P6.06 remain `Provisional 0.1.0`; CAP-001/CAP-004 and all lifecycle states remain unchanged;
+- release `p9.07.1`, application contract `5`, remains bounded-internal-provisional and non-public.
+
+Limitations: these are internal read-only product context surfaces, not full product command UIs or a public plugin API. P9.07 is not Stable/Active lifecycle evidence, public/customer Production evidence, or an SLA/support/conformance expansion.

@@ -263,3 +263,53 @@ export type GovernedPreflightResult = {
     sha256: string;
   };
 };
+
+export type ProductSurfaceContext = {
+  id: string;
+  label: string;
+  ownership: "product-owned";
+  repository: string;
+  product_contract: {
+    id: string;
+    version: string;
+    lifecycle: "Provisional";
+  };
+  contour: {
+    id: string;
+    operating_scope: string;
+    status: string;
+    summary: string;
+    shared_dependencies: string[];
+    source_authority: string;
+  };
+  interaction: {
+    kind: "inspect-product-context";
+    product_specific_work_stays_product_owned: true;
+    authority_provided: false;
+    canonical_mutation_available: false;
+    external_effect_available: false;
+  };
+  technical: {
+    product_release_sha: string | null;
+    evidence_refs: string[];
+  };
+};
+
+export type ProductCompositionProjection = {
+  schema: "arvectum.workspace.product-composition/1";
+  generated_at: string;
+  projection: {
+    derived: true;
+    canonical_authority: false;
+    product_semantics_owned_by_platform: false;
+    organizational_authority_provided: false;
+    cross_product_business_relationship_inferred: false;
+  };
+  scope: {
+    organization_resolved_server_side: true;
+    actor_resolved_server_side: true;
+    current_access_revalidated: true;
+    switching_products_broadens_authorization: false;
+  };
+  products: ProductSurfaceContext[];
+};
