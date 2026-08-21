@@ -1,0 +1,118 @@
+name: P9.03 deployment coupling patch
+
+on:
+  push:
+    branches:
+      - p9-03-real-workspace-shell
+    paths:
+      - ".github/workflows/p9-03-deployment-coupling-patch.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: p9-03-real-workspace-shell
+          fetch-depth: 0
+
+      - name: Patch P7.06 exact-release Workspace dependency coupling
+        shell: python
+        run: |
+          from pathlib import Path
+
+          deploy_path = Path("reference/python/p7_06_macos_deploy.sh")
+          deploy = deploy_path.read_text(encoding="utf-8")
+
+          helper = r'''ensure_workspace_runtime_dependencies() {
+            release=$1
+            venv=$2
+            lock="$release/source/reference/python/workspace_app/requirements.lock"
+            [ -f "$lock" ] || return 0
+
+            stamp="$venv/.workspace-requirements.sha256"
+            lock_sha=$(shasum -a 256 "$lock" | awk '{print $1}')
+            installed_sha=""
+            if [ -f "$stamp" ]; then installed_sha=$(cat "$stamp"); fi
+
+            if [ "$installed_sha" != "$lock_sha" ]; then
+              "$venv/bin/python" -m pip install --disable-pip-version-check -r "$lock" >/dev/null \
+                || fail "workspace runtime dependency install failed for exact target release"
+              tmp_stamp="$stamp.tmp.$$"
+              printf '%s\n' "$lock_sha" > "$tmp_stamp"
+              chmod 600 "$tmp_stamp"
+              mv "$tmp_stamp" "$stamp"
+            fi
+
+            "$venv/bin/python" - <<'PY' >/dev/null 2>&1 \
+              || fail "workspace runtime dependency verification failed for exact target release"
+          import fastapi
+          import uvicorn
+          PY
+          }
+
+          '''
+
+          if "ensure_workspace_runtime_dependencies()" not in deploy:
+              marker = "prepare_target() {\n"
+              if marker not in deploy:
+                  raise SystemExit("prepare_target marker not found")
+              deploy = deploy.replace(marker, helper + marker, 1)
+
+          old = '  if [ ! -x "$venv/bin/python" ]; then python3 -m venv "$venv"; fi\n}'
+          new = '  if [ ! -x "$venv/bin/python" ]; then python3 -m venv "$venv"; fi\n  ensure_workspace_runtime_dependencies "$release" "$venv"\n}'
+          if 'ensure_workspace_runtime_dependencies "$release" "$venv"' not in deploy:
+              if old not in deploy:
+                  raise SystemExit("prepare_target venv marker not found")
+              deploy = deploy.replace(old, new, 1)
+          deploy_path.write_text(deploy, encoding="utf-8")
+
+          test_path = Path("reference/python/tests/test_p7_06_macos_deploy.py")
+          tests = test_path.read_text(encoding="utf-8")
+          method = r'''    def test_workspace_runtime_dependencies_are_release_pinned_and_fail_closed(self):
+              text = DEPLOY.read_text()
+              hook_start = text.index("ensure_workspace_runtime_dependencies()")
+              hook_end = text.index("prepare_target()", hook_start)
+              hook = text[hook_start:hook_end]
+              self.assertIn('workspace_app/requirements.lock', hook)
+              self.assertIn('shasum -a 256 "$lock"', hook)
+              self.assertIn('"$venv/bin/python" -m pip install --disable-pip-version-check -r "$lock"', hook)
+              self.assertIn('workspace runtime dependency install failed for exact target release', hook)
+              self.assertIn('import fastapi', hook)
+              self.assertIn('import uvicorn', hook)
+              self.assertIn('.workspace-requirements.sha256', hook)
+
+              prepare_start = text.index("prepare_target()")
+              prepare_end = text.index("current_release()", prepare_start)
+              prepare = text[prepare_start:prepare_end]
+              self.assertIn('ensure_workspace_runtime_dependencies "$release" "$venv"', prepare)
+              self.assertLess(
+                  prepare.index('python3 -m venv "$venv"'),
+                  prepare.index('ensure_workspace_runtime_dependencies "$release" "$venv"'),
+              )
+
+          '''
+          if "test_workspace_runtime_dependencies_are_release_pinned_and_fail_closed" not in tests:
+              marker = "    def test_first_r22_upgrade_admits_only_exact_proven_legacy_observer_shape(self):\n"
+              if marker not in tests:
+                  raise SystemExit("P7.06 test insertion marker not found")
+              tests = tests.replace(marker, method + marker, 1)
+          test_path.write_text(tests, encoding="utf-8")
+
+          Path(".github/workflows/p9-03-deployment-coupling-patch.yml").unlink()
+
+      - name: Validate patch before commit
+        run: |
+          sh -n reference/python/p7_06_macos_deploy.sh
+          python -m unittest reference.python.tests.test_p7_06_macos_deploy -v
+
+      - name: Commit generated patch
+        run: |
+          git config user.name "arvectum-ci"
+          git config user.email "arvectum-ci@users.noreply.github.com"
+          git add reference/python/p7_06_macos_deploy.sh reference/python/tests/test_p7_06_macos_deploy.py .github/workflows/p9-03-deployment-coupling-patch.yml
+          git commit -m "fix: couple Workspace runtime deps to exact P7.06 release"
+          git push origin HEAD:p9-03-real-workspace-shell
