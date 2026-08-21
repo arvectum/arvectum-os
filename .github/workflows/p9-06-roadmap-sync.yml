@@ -1,7 +1,9 @@
 name: P9.06 Temporary Roadmap Sync
 
 on:
-  pull_request:
+  push:
+    branches:
+      - "p9-06-governed-actions-ux"
     paths:
       - ".github/workflows/p9-06-roadmap-sync.yml"
 
@@ -14,10 +16,10 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
-      - name: Check out PR branch
+      - name: Check out branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
+          ref: ${{ github.ref_name }}
 
       - name: Synchronize canonical roadmaps
         shell: python
@@ -151,4 +153,4 @@ The remaining near-term sequence is `R30 → M9-alpha`. P9.03–P9.06 provide th
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -m "P9.06 synchronize canonical roadmaps"
-          git push origin HEAD:${GITHUB_HEAD_REF}
+          git push origin HEAD:${GITHUB_REF_NAME}
