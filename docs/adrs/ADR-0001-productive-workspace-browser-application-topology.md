@@ -1,12 +1,19 @@
 # ADR-0001 — Productive Workspace Browser Application Topology
 
-Status: `Proposed`
+Status: `Accepted`
 Date: `2026-08-21`
+Accepted: `2026-08-21`
 Owner: `ООО «Арвектум»`
 Task classification: `platform` with `product_contract`
 Related RFCs: RFC-0001, RFC-0002, RFC-0003, RFC-0004, RFC-0005, RFC-0006, RFC-0007, RFC-0008
 Related work: `P9.02 — Application architecture spike + frontend/BFF/session decision`
-Review gate: `R29 — Productive Workspace Boundary Review`
+Review gate: [`R29 — Productive Workspace Boundary Review`](../reviews/R29-productive-workspace-boundary-review.md) — `Complete / PASS`
+Approval: [`DECISION-2026-08-21 — ADR-0001 Acceptance`](../governance/decisions/DECISION-2026-08-21-ADR-0001-ACCEPTANCE.md) — `Approved`
+Approved reviewed proposal blob: `47963cc4c9ca62e986dffbe09ac67b5c6345a111`
+
+## Acceptance publication note
+
+The conditional decision text below is retained from the owner-approved R29-reviewed proposal identified by the immutable blob above. Its acceptance condition is satisfied by the canonical owner approval and R29 PASS references in this publication header.
 
 ## 1. Context
 
@@ -21,7 +28,7 @@ The existing `http.server` + rendered-string HTML shell was intentionally bounde
 
 The selected browser/application topology is materially constraining and expected to shape P9.03–P9.12, so it crosses the ADR threshold. No Accepted RFC requires a particular frontend framework, BFF process topology or session technology.
 
-This ADR is `Proposed`; it has no normative Accepted force until dispositioned by valid decision authority. The P9.02 review and R29 boundary review are the detailed evidence base.
+The P9.02 architecture spike and R29 boundary review are the detailed evidence base.
 
 ## 2. Decision
 
@@ -191,7 +198,7 @@ Valid fallback, but not preferred. It would keep operations simple yet is less s
 
 ### C. React + TypeScript SPA + co-deployed Python BFF
 
-Selected by this ADR proposal as the best current balance of usability, explicit trust boundary, testability, reversibility and P7.06 operational simplicity.
+Selected by this ADR as the best current balance of usability, explicit trust boundary, testability, reversibility and P7.06 operational simplicity.
 
 ### D. Full-stack Node application/BFF + separate Python platform service
 
@@ -212,7 +219,7 @@ Any later move to a separately deployed BFF, public browser/API surface, remote 
 
 ## 6. Acceptance conditions
 
-Before this ADR may be treated as Accepted implementation authority, R29 must confirm at minimum:
+R29 confirmed the following conditions before this Accepted publication:
 
 - no conflict with Constitution `1.2.0` or Accepted RFC-0001…RFC-0008;
 - no browser-side authority or credential persistence shortcut;
@@ -226,6 +233,8 @@ Before this ADR may be treated as Accepted implementation authority, R29 must co
 - BFF/browser surface remains internal and release-scoped rather than an accidental public/stable API/browser promise;
 - loopback-only transport exception cannot be mistaken for remote-ready security.
 
+These are architecture constraints. P9.03 and later gates still require implementation evidence.
+
 ## 7. Evidence
 
 Primary evidence:
@@ -233,7 +242,8 @@ Primary evidence:
 - [`P9-02-application-architecture-spike-frontend-bff-session-decision.md`](../reviews/P9-02-application-architecture-spike-frontend-bff-session-decision.md)
 - [`P9-01-real-operator-jobs-acceptance-journeys.md`](../reviews/P9-01-real-operator-jobs-acceptance-journeys.md)
 - [`P7-06-governed-deploy-implementation-review.md`](../reviews/P7-06-governed-deploy-implementation-review.md)
-- `R29 — Productive Workspace Boundary Review` once canonically published
+- [`R29 — Productive Workspace Boundary Review`](../reviews/R29-productive-workspace-boundary-review.md)
+- [`DECISION-2026-08-21 — ADR-0001 Acceptance`](../governance/decisions/DECISION-2026-08-21-ADR-0001-ACCEPTANCE.md)
 
 Current subordinate external implementation guidance checked during P9.02:
 
