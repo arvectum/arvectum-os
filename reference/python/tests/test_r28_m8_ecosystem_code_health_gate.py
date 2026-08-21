@@ -33,6 +33,10 @@ def _import_roots(path: Path) -> set[str]:
     return roots
 
 
+def _roadmap_row(text: str, prefix: str) -> str:
+    return next(line for line in text.splitlines() if line.startswith(prefix))
+
+
 class R28M8EcosystemCodeHealthGateTests(unittest.TestCase):
     """High-value non-regression checks for the M8 pre-closure code-health gate.
 
@@ -112,8 +116,10 @@ class R28M8EcosystemCodeHealthGateTests(unittest.TestCase):
         self.assertIn("\\.pytest_cache/", workflow)
 
     def test_r28_completion_remains_ordered_before_p8_12_without_transient_status_coupling(self) -> None:
-        phase8 = _normalized(PHASE8_ROADMAP)
-        master = _normalized(MASTER_ROADMAP)
+        phase8_text = _text(PHASE8_ROADMAP)
+        master_text = _text(MASTER_ROADMAP)
+        phase8 = " ".join(phase8_text.split())
+        master = " ".join(master_text.split())
         r28_heading = "### R28 — M8 Ecosystem Hardening + Milestone Code Health Gate"
         p812_heading = "### P8.12 — Phase 8 / M8 closure review"
         r28_row = "| `R28` | M8 Ecosystem Hardening + Milestone Code Health Gate |"
@@ -128,19 +134,16 @@ class R28M8EcosystemCodeHealthGateTests(unittest.TestCase):
         self.assertIn("M8 Milestone Code Health Gate", r28_section)
         self.assertIn("does not itself close M8", r28_section)
 
-        for roadmap_name, roadmap in (("phase8", phase8), ("master", master)):
+        for roadmap_name, roadmap_text, roadmap in (
+            ("phase8", phase8_text, phase8),
+            ("master", master_text, master),
+        ):
             with self.subTest(roadmap=roadmap_name):
                 self.assertIn(r28_row, roadmap)
                 self.assertIn(p812_row, roadmap)
                 self.assertLess(roadmap.index(r28_row), roadmap.index(p812_row))
-                self.assertIn(
-                    "| `R28` | M8 Ecosystem Hardening + Milestone Code Health Gate | 🟩 Complete / PASS |",
-                    roadmap,
-                )
-                self.assertIn(
-                    "| `P8.12` | Phase 8 / M8 closure review | 🟨 Current |",
-                    roadmap,
-                )
+                self.assertIn("🟩 Complete / PASS", _roadmap_row(roadmap_text, r28_row))
+                self.assertIn("🟨 Current", _roadmap_row(roadmap_text, p812_row))
                 self.assertIn(
                     "> **P8.12 — Phase 8 / M8 closure review.**",
                     roadmap,
