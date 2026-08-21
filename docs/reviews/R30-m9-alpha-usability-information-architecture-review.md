@@ -172,7 +172,7 @@ Normal CI on that head:
 - reference architecture suite — `1301 tests`, `OK`;
 - generated-Python-artifact rejection — PASS.
 
-A temporary one-shot Node 24 production-asset reconciliation workflow was used only to commit the exact deterministic `dist`; it was removed before the clean implementation head and is absent from the R30 closure state.
+After canonical review/roadmap synchronization, the final closure branch head also passes the normal Productive Workspace and Reference Python CI gates. Temporary write-capable synchronization helpers are absent from the final PR diff and closure state.
 
 ## 8. M9-alpha exit evaluation
 
