@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.81.0`
+Version: `2.82.0`
 Created: `2026-08-07`
 Updated: `2026-08-21`
 Owner: `ООО «Арвектум»`
@@ -17,7 +17,9 @@ Detailed completed-phase history remains in the corresponding phase roadmaps, re
 
 ## 2. Version note
 
-Version `2.81.0` closes **`R30 — M9-alpha Usability / Information Architecture Review`** as `Complete / PASS`, records **`M9-alpha — Usable Internal Workspace`** as `Achieved / PASS` within its exact private internal scope, and advances Phase 9 to **`P9.07 — Product-owned workspace surfaces / composition`**.
+Version `2.82.0` closes **`P9.07 — Product-owned workspace surfaces / composition`** as `Complete / PASS` within its exact private internal scope and advances Phase 9 to **`P9.08 — Arvectum AI Copilot + source-grounded organizational assistance`**.
+
+P9.07 final evidence: implementation/reconciliation head `8e947d1631c850a9cda683edd2d425501b2ac6ce`; Productive Workspace CI `#82` / run `32523233168` and Reference Python CI `#314` / run `32523233189` passed; functional cross-review completed 2 iterations with no material objection; P9.01 J5 passed. Product Contracts and Platform Capabilities remain unchanged.
 
 R30 executed the integrated P9.01 J1–J4 ordinary path over the P9.03–P9.06 Productive Workspace and repaired material usability/IA findings before closure:
 
@@ -100,8 +102,8 @@ Detailed roadmap: [`PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md`](PHASE-9-P
 | `P9.06` | Executions / Decisions / governed actions UX | 🟩 Complete / PASS |
 | `R30` | M9-alpha Usability / Information Architecture Review | 🟩 Complete / PASS |
 | `M9-alpha` | Usable Internal Workspace | 🟩 Achieved / PASS |
-| **`P9.07`** | **Product-owned workspace surfaces / composition** | **🟨 Current** |
-| `P9.08` | Arvectum AI Copilot + source-grounded organizational assistance | ⬜ |
+| `P9.07` | Product-owned workspace surfaces / composition | 🟩 Complete / PASS |
+| **`P9.08`** | **Arvectum AI Copilot + source-grounded organizational assistance** | **🟨 Current** |
 | `P9.09` | Activity, notifications and attention routing | ⬜ |
 | `P9.10` | ООО «Арвектум» organization composition | ⬜ |
 | `R31` | Product Composition / AI Safety Review | ⬜ gate |
@@ -169,8 +171,8 @@ R30 confirms these criteria as `PASS` for the exact private internal scope. M9-a
 
 ## 9. Current canonical action
 
-> **P9.07 — Product-owned workspace surfaces / composition.**
+> **P9.08 — Arvectum AI Copilot + source-grounded organizational assistance.**
 
-Compose at least two real product-owned surfaces into the Productive Workspace through explicit governed boundaries. Preserve product ownership of product schemas, workflows, approval rules, knowledge, templates and UX; do not move product business logic into shared platform code merely for convenience.
+Add source-grounded, uncertainty-aware and authority-safe AI assistance to the Productive Workspace through explicit governed boundaries. Preserve product ownership of product schemas, workflows, approval rules, knowledge, templates and UX; do not move product business logic into shared platform code merely for convenience.
 
-P9.07 must provide the implementation evidence needed for P9.01 J5 while preserving the R30/M9-alpha ordinary-path, authority, security and provenance guarantees. Product Contract and Platform Capability lifecycle states remain unchanged unless separately transitioned through their own governed decisions.
+P9.07 is complete within its exact internal scope. P9.08 must add source-grounded, uncertainty-aware and authority-safe AI assistance while preserving the R30/M9-alpha and P9.07 ordinary-path, authority, security and provenance guarantees. Product Contract and Platform Capability lifecycle states remain unchanged unless separately transitioned through their own governed decisions.

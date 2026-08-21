@@ -1,6 +1,6 @@
 # P9.07 — Product-owned workspace surfaces / composition
 
-Status: `In Progress`
+Status: `Complete / PASS`
 Date: `2026-08-21`
 Owner: `ООО «Арвектум»`
 Task classification: `platform` with `product_contract` and `governance`
@@ -28,6 +28,26 @@ Canonical baseline checked before implementation: Constitution `1.2.0`; RFC-0001
 - technical Product Contract/release/evidence refs available only through explicit drill-down;
 - Workspace release target `p9.07.1`, internal app contract `5`, still `bounded-internal-provisional` / non-public.
 
-## Review state
+## Closure evidence
 
-Functional cross-review and CI are pending. This document MUST NOT be treated as closure evidence until status is changed to `Complete / PASS` after clean final-head normal CI and all material findings are resolved.
+- Final implementation/reconciliation head: `8e947d1631c850a9cda683edd2d425501b2ac6ce`.
+- Productive Workspace CI `#82` / run `32523233168`: `SUCCESS`, including BFF security/context, typecheck, frontend tests, Web Storage guard, production build, committed-asset reproducibility and release-pinned asset boundary.
+- Reference Python CI `#314` / run `32523233189`: `SUCCESS`.
+- Functional cross-review: 2 iterations, with no remaining material objection. This review is functional evidence, not formal governance approval.
+- P9.01 J5 — Work across products: `PASS` through the ordinary path `Home/company context -> Products -> Tender Operator -> back/company context -> Discount Parser`.
+- Two product-owned surfaces are composed: Tender Operator and Discount Parser.
+- Organization and Actor continuity is server-resolved and revalidated; switching products does not widen authorization.
+- Internal IDs are not required on the ordinary path; technical references are available only through explicit drill-down.
+- No cross-product business relationship is inferred.
+- No canonical mutation, external effect or authority grant is available through this surface; unavailable or unverifiable product evidence fails closed.
+- P6.02 and P6.06 remain `Provisional 0.1.0`; CAP-001 and CAP-004 lifecycle states remain unchanged.
+- Workspace release remains `p9.07.1`, application contract `5`, `bounded-internal-provisional`, `public_api: false`.
+- Temporary artifact-capture instrumentation and helper workflow are absent.
+
+## Explicit limitations
+
+- Surfaces are internal read-only product context surfaces, not full product command UIs.
+- The composition boundary is not a public plugin API.
+- This evidence does not establish Stable Product Contract or Active Platform Capability lifecycle status.
+- This is not public/customer Production evidence.
+- No SLA, support or conformance expansion is claimed.
