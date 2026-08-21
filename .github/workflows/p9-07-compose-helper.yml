@@ -1,0 +1,381 @@
+name: P9.07 Temporary Composition Build
+
+on:
+  push:
+    branches:
+      - "p9-07-product-workspace-composition"
+    paths:
+      - ".github/workflows/p9-07-compose-helper.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  compose:
+    if: github.repository == 'arvectum/arvectum-os' && github.ref == 'refs/heads/p9-07-product-workspace-composition'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: p9-07-product-workspace-composition
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: reference/python/workspace_frontend/package-lock.json
+      - name: Apply bounded P9.07 composition slice
+        shell: python
+        run: |
+          from pathlib import Path
+
+          root = Path("reference/python")
+
+          products = root / "workspace_app/products.py"
+          text = products.read_text(encoding="utf-8")
+          text = text.replace("from .access import AccessContext\n", "from .access import AccessContext\nimport p7_03_durable_state as p703\n")
+          text = text.replace(
+              '''        manifest = _read_json(\n            self.runtime_root / "state" / "governed" / "items" / item_id / "manifest.json",\n            label="P7.07 governed item manifest",\n        )\n''',
+              '''        try:\n            manifest = p703.verify_item(self.runtime_root / "state" / "governed" / "items" / item_id)\n        except Exception as exc:\n            raise ProductCompositionError("P7.07 governed item integrity verification failed") from exc\n''',
+          )
+          text = text.replace(
+              "A verified Discount Parser CAP-004 reconstruction context is retained. Reconstruction is read-only and does not replay Telegram or another external effect.",
+              "A verified Discount Parser CAP-004 reconstruction context is retained. Reconstruction is read-only and does not replay a historical external effect.",
+          )
+          text = text.replace(
+              "Product-owned publication evidence; platform reconstruction is read-only",
+              "Product-owned external-outcome evidence; platform reconstruction is read-only",
+          )
+          products.write_text(text, encoding="utf-8")
+
+          main = root / "workspace_app/main.py"
+          text = main.read_text(encoding="utf-8")
+          text = text.replace(
+              "from .governed import GovernedExperienceError, GovernedExperienceProvider, RuntimeGovernedExperienceProvider\n",
+              "from .governed import GovernedExperienceError, GovernedExperienceProvider, RuntimeGovernedExperienceProvider\nfrom .products import ProductCompositionError, ProductCompositionProvider, RuntimeProductCompositionProvider\n",
+          )
+          text = text.replace(
+              '{"id": "products", "label": "Products", "href": "/products", "availability": "planned-p9.07"},',
+              '{"id": "products", "label": "Products", "href": "/products", "availability": "available"},',
+          )
+          text = text.replace(
+              "    governed_provider: GovernedExperienceProvider | None = None,\n    session_store: SessionStore | None = None,",
+              "    governed_provider: GovernedExperienceProvider | None = None,\n    product_provider: ProductCompositionProvider | None = None,\n    session_store: SessionStore | None = None,",
+          )
+          text = text.replace(
+              "    governed = governed_provider or RuntimeGovernedExperienceProvider(settings.runtime_root)\n    store = session_store or SessionStore(",
+              "    governed = governed_provider or RuntimeGovernedExperienceProvider(settings.runtime_root)\n    products = product_provider or RuntimeProductCompositionProvider(settings.runtime_root)\n    store = session_store or SessionStore(",
+          )
+          text = text.replace(
+              "    app.state.governed_provider = governed\n    app.state.session_store = store",
+              "    app.state.governed_provider = governed\n    app.state.product_provider = products\n    app.state.session_store = store",
+          )
+          marker = '''    @app.get("/api/app/v1/governed")\n'''
+          route = '''    @app.get("/api/app/v1/products")\n    async def read_product_composition(\n        current: tuple[WorkspaceSession, AccessContext] = Depends(_authorize_current),\n    ) -> dict[str, Any]:\n        _, access = current\n        try:\n            return products.project(access).to_payload()\n        except ProductCompositionError:\n            raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="PRODUCT_COMPOSITION_UNAVAILABLE") from None\n\n'''
+          if route not in text:
+              text = text.replace(marker, route + marker)
+          main.write_text(text, encoding="utf-8")
+
+          types = root / "workspace_frontend/src/types.ts"
+          text = types.read_text(encoding="utf-8")
+          addition = r'''
+
+export type ProductSurfaceContext = {
+  id: string;
+  label: string;
+  ownership: "product-owned";
+  repository: string;
+  product_contract: {
+    id: string;
+    version: string;
+    lifecycle: "Provisional";
+  };
+  contour: {
+    id: string;
+    operating_scope: string;
+    status: string;
+    summary: string;
+    shared_dependencies: string[];
+    source_authority: string;
+  };
+  interaction: {
+    kind: "inspect-product-context";
+    product_specific_work_stays_product_owned: true;
+    authority_provided: false;
+    canonical_mutation_available: false;
+    external_effect_available: false;
+  };
+  technical: {
+    product_release_sha: string | null;
+    evidence_refs: string[];
+  };
+};
+
+export type ProductCompositionProjection = {
+  schema: "arvectum.workspace.product-composition/1";
+  generated_at: string;
+  projection: {
+    derived: true;
+    canonical_authority: false;
+    product_semantics_owned_by_platform: false;
+    organizational_authority_provided: false;
+    cross_product_business_relationship_inferred: false;
+  };
+  scope: {
+    organization_resolved_server_side: true;
+    actor_resolved_server_side: true;
+    current_access_revalidated: true;
+    switching_products_broadens_authorization: false;
+  };
+  products: ProductSurfaceContext[];
+};
+'''
+          if "export type ProductSurfaceContext" not in text:
+              text += addition
+          types.write_text(text, encoding="utf-8")
+
+          api = root / "workspace_frontend/src/api.ts"
+          text = api.read_text(encoding="utf-8")
+          text = text.replace("  ObjectContext,\n  WorkspaceContext,", "  ObjectContext,\n  ProductCompositionProjection,\n  WorkspaceContext,")
+          marker = "export async function loadGovernedExperience(): Promise<GovernedExperienceProjection> {"
+          addition = '''export async function loadProductComposition(): Promise<ProductCompositionProjection> {\n  return request<ProductCompositionProjection>("/api/app/v1/products");\n}\n\n'''
+          if addition not in text:
+              text = text.replace(marker, addition + marker)
+          api.write_text(text, encoding="utf-8")
+
+          surface_dir = root / "workspace_frontend/src/product_surfaces"
+          surface_dir.mkdir(parents=True, exist_ok=True)
+          (surface_dir / "types.ts").write_text(r'''import type { ProductSurfaceContext } from "../types";
+
+export type ProductSurfaceContribution = {
+  id: string;
+  render: (surface: ProductSurfaceContext) => JSX.Element;
+};
+''', encoding="utf-8")
+          (surface_dir / "TenderOperatorSurface.tsx").write_text(r'''import type { ProductSurfaceContext } from "../types";
+
+export function TenderOperatorSurface({ surface }: { surface: ProductSurfaceContext }) {
+  return (
+    <section className="hero" aria-labelledby="tender-surface-title">
+      <p className="eyebrow">Product-owned surface · {surface.contour.id}</p>
+      <h1 id="tender-surface-title">Tender Operator</h1>
+      <p>{surface.contour.summary}</p>
+      <div className="status-grid">
+        <article><span>Product Contract</span><strong>{surface.product_contract.id} · {surface.product_contract.lifecycle} {surface.product_contract.version}</strong><p>Composition does not promote this lifecycle.</p></article>
+        <article><span>Shared reliance</span><strong>{surface.contour.shared_dependencies.join(", ")}</strong><p>Exact Tender Operator platform reliance remains contract-scoped.</p></article>
+        <article><span>Authority</span><strong>{surface.contour.source_authority}</strong><p>The Workspace presentation does not replace the authoritative source.</p></article>
+      </div>
+      <p className="boundary-note">Tender schemas, procurement rules and product workflows remain owned by Tender Operator. This read-only composition grants no authorization, Organizational Authority or consequential approval.</p>
+      <details><summary>Technical Product Contract and provenance</summary><dl><dt>Repository</dt><dd>{surface.repository}</dd><dt>Product release</dt><dd>{surface.technical.product_release_sha ?? "Not exposed by retained evidence"}</dd><dt>Evidence</dt><dd>{surface.technical.evidence_refs.join(" · ")}</dd></dl></details>
+    </section>
+  );
+}
+''', encoding="utf-8")
+          (surface_dir / "DiscountParserSurface.tsx").write_text(r'''import type { ProductSurfaceContext } from "../types";
+
+export function DiscountParserSurface({ surface }: { surface: ProductSurfaceContext }) {
+  return (
+    <section className="hero" aria-labelledby="discount-surface-title">
+      <p className="eyebrow">Product-owned surface · {surface.contour.id}</p>
+      <h1 id="discount-surface-title">Discount Parser</h1>
+      <p>{surface.contour.summary}</p>
+      <div className="status-grid">
+        <article><span>Product Contract</span><strong>{surface.product_contract.id} · {surface.product_contract.lifecycle} {surface.product_contract.version}</strong><p>Composition does not promote this lifecycle.</p></article>
+        <article><span>Shared reliance</span><strong>{surface.contour.shared_dependencies.join(", ")}</strong><p>Platform reconstruction remains read-only.</p></article>
+        <article><span>Effect boundary</span><strong>No effect replay</strong><p>Offer/publication/database/template and delivery semantics remain product-owned and are not copied into the shared Workspace contract.</p></article>
+      </div>
+      <p className="boundary-note">This surface exposes a verified retained context only. Product-specific publication work must continue through the product-owned governed boundary; the Workspace grants no authorization, Organizational Authority or approval.</p>
+      <details><summary>Technical Product Contract and provenance</summary><dl><dt>Repository</dt><dd>{surface.repository}</dd><dt>Product release</dt><dd>{surface.technical.product_release_sha ?? "Not exposed by retained evidence"}</dd><dt>Evidence</dt><dd>{surface.technical.evidence_refs.join(" · ")}</dd></dl></details>
+    </section>
+  );
+}
+''', encoding="utf-8")
+          (surface_dir / "registry.tsx").write_text(r'''import { DiscountParserSurface } from "./DiscountParserSurface";
+import { TenderOperatorSurface } from "./TenderOperatorSurface";
+import type { ProductSurfaceContribution } from "./types";
+
+export const productSurfaceRegistry: Readonly<Record<string, ProductSurfaceContribution>> = Object.freeze({
+  "tender-operator": { id: "tender-operator", render: (surface) => <TenderOperatorSurface surface={surface} /> },
+  "discount-parser": { id: "discount-parser", render: (surface) => <DiscountParserSurface surface={surface} /> },
+});
+''', encoding="utf-8")
+
+          (root / "workspace_frontend/src/Products.tsx").write_text(r'''import { useEffect, useState } from "react";
+import { loadProductComposition, WorkspaceApiError } from "./api";
+import { productSurfaceRegistry } from "./product_surfaces/registry";
+import type { ProductCompositionProjection } from "./types";
+
+type State = { kind: "loading" } | { kind: "ready"; data: ProductCompositionProjection } | { kind: "error"; code: string };
+
+function navigateTo(href: string) {
+  window.history.pushState({}, "", href);
+  window.dispatchEvent(new PopStateEvent("popstate"));
+}
+
+export function Products({ productId }: { productId?: string | null }) {
+  const [state, setState] = useState<State>({ kind: "loading" });
+  useEffect(() => {
+    let live = true;
+    loadProductComposition().then(
+      (data) => { if (live) setState({ kind: "ready", data }); },
+      (error) => { if (live) setState({ kind: "error", code: error instanceof WorkspaceApiError ? error.code : "PRODUCT_COMPOSITION_UNAVAILABLE" }); },
+    );
+    return () => { live = false; };
+  }, []);
+
+  if (state.kind === "loading") return <section className="placeholder" aria-live="polite">Loading product contexts…</section>;
+  if (state.kind === "error") return <section className="placeholder" role="alert"><h1>Product contexts unavailable</h1><p>Current product evidence could not be revalidated. Nothing is inferred from stale or missing product state.</p><code>{state.code}</code></section>;
+
+  if (productId) {
+    const surface = state.data.products.find((item) => item.id === productId);
+    const contribution = productSurfaceRegistry[productId];
+    if (!surface || !contribution || contribution.id !== surface.id) {
+      return <section className="placeholder" role="alert"><h1>Product surface unavailable</h1><p>The requested product contribution is not registered in this exact Workspace release.</p></section>;
+    }
+    return <>{contribution.render(surface)}</>;
+  }
+
+  return (
+    <section className="hero" aria-labelledby="products-title">
+      <p className="eyebrow">Company workspace · explicit Product Contract boundaries</p>
+      <h1 id="products-title">Products</h1>
+      <p>Move between real product contexts while each product keeps ownership of its business semantics and execution boundary.</p>
+      <div className="status-grid">
+        {state.data.products.map((surface) => (
+          <article key={surface.id}>
+            <span>{surface.ownership}</span><strong>{surface.label}</strong>
+            <p>{surface.product_contract.id} · {surface.product_contract.lifecycle} {surface.product_contract.version}</p>
+            <p>{surface.contour.summary}</p>
+            <a href={`/products/${surface.id}`} onClick={(event) => { event.preventDefault(); navigateTo(`/products/${surface.id}`); }}>Open {surface.label}</a>
+          </article>
+        ))}
+      </div>
+      <p className="boundary-note">These contexts are composed, not merged: the Workspace does not infer a business relationship between products and switching products does not broaden access or authority.</p>
+    </section>
+  );
+}
+''', encoding="utf-8")
+
+          shell = root / "workspace_frontend/src/Shell.tsx"
+          text = shell.read_text(encoding="utf-8")
+          text = text.replace('import { ObjectDetail } from "./ObjectDetail";\n', 'import { ObjectDetail } from "./ObjectDetail";\nimport { Products } from "./Products";\n')
+          text = text.replace('const plannedCopy: Record<string, string> = {\n  products: "Product-owned surfaces arrive in P9.07 through explicit boundaries.",\n};\n\n', '')
+          text = text.replace(
+              '  if (current.startsWith("/objects/")) return items.find((item) => item.id === "search") ?? items[0];\n',
+              '  if (current.startsWith("/objects/")) return items.find((item) => item.id === "search") ?? items[0];\n  if (current.startsWith("/products/")) return items.find((item) => item.id === "products") ?? items[0];\n',
+          )
+          text = text.replace(
+              '  const objectId = currentPath.startsWith("/objects/") ? decodeURIComponent(currentPath.slice("/objects/".length)) : null;\n',
+              '  const objectId = currentPath.startsWith("/objects/") ? decodeURIComponent(currentPath.slice("/objects/".length)) : null;\n  const productId = currentPath.startsWith("/products/") ? decodeURIComponent(currentPath.slice("/products/".length)) : null;\n',
+          )
+          text = text.replace(
+              '          ) : active.id === "governed" ? (\n            <Governed csrfToken={context.session.csrf_token} />\n          ) : (\n            <section className="placeholder" aria-labelledby="placeholder-title">\n              <p className="eyebrow">Navigation spine</p>\n              <h1 id="placeholder-title">{active.label}</h1>\n              <p>{plannedCopy[active.id] ?? "This surface is not activated in the current release."}</p>\n              <p className="boundary-note">No product or canonical business data is exposed by this placeholder.</p>\n            </section>\n          )}',
+              '          ) : active.id === "governed" ? (\n            <Governed csrfToken={context.session.csrf_token} />\n          ) : active.id === "products" ? (\n            <Products productId={productId} />\n          ) : (\n            <section className="placeholder" aria-labelledby="placeholder-title">\n              <p className="eyebrow">Navigation spine</p>\n              <h1 id="placeholder-title">{active.label}</h1>\n              <p>This surface is not activated in the current release.</p>\n              <p className="boundary-note">No product or canonical business data is exposed by this placeholder.</p>\n            </section>\n          )}',
+          )
+          shell.write_text(text, encoding="utf-8")
+
+          release = root / "workspace_app/release.json"
+          text = release.read_text(encoding="utf-8").replace('"release_id": "p9.06.2"', '"release_id": "p9.07.1"').replace('"app_api_contract": "4"', '"app_api_contract": "5"')
+          release.write_text(text, encoding="utf-8")
+
+          test_backend = root / "workspace_tests/test_product_composition.py"
+          test_backend.write_text(r'''from __future__ import annotations
+
+import hashlib
+import json
+import tempfile
+import unittest
+from pathlib import Path
+
+from fastapi.testclient import TestClient
+from arvectum_os_ref.identity import Identity
+from workspace_app.access import AccessContext
+from workspace_app.config import WorkspaceSettings
+from workspace_app.main import RELEASE_HEADER, create_app
+from workspace_app.products import ProductCompositionError, ProductCompositionProjection, ProductSurface
+
+
+class FakeResolver:
+    def authorize(self) -> AccessContext:
+        return AccessContext(Identity("organization", "org-a", "platform"), Identity("principal", "owner", "org-a"), "human", "credential-a", "grant-a")
+
+
+class FakeProducts:
+    def __init__(self, fail: bool = False): self.fail = fail; self.calls = 0
+    def project(self, access: AccessContext) -> ProductCompositionProjection:
+        self.calls += 1
+        if self.fail: raise ProductCompositionError("unavailable")
+        return ProductCompositionProjection((
+            ProductSurface("tender-operator", "Tender Operator", "arvectum/tender-agent", "P6.02", "0.1.0", "Provisional", "P7.07", "Persistent Internal / owner-operated", "verified-retained-context", "Tender context", ("CAP-001",), "ЕИС / zakupki.gov.ru — External Reference", "inspect-product-context", ("governed-item:x",)),
+            ProductSurface("discount-parser", "Discount Parser", "arvectum/discount-parser", "P6.06", "0.1.0", "Provisional", "P7.08", "Persistent Internal / owner-operated", "verified-retained-context", "Discount context", ("CAP-004",), "Product-owned external-outcome evidence; platform reconstruction is read-only", "inspect-product-context", ("execution:y",)),
+        ))
+
+
+def settings(root: Path) -> WorkspaceSettings:
+    return WorkspaceSettings(runtime_root=root, public_origin="http://127.0.0.1:8769", bind_host="127.0.0.1", bind_port=8769, allowed_hosts=("127.0.0.1:8769",), organization_label="ООО «Арвектум»", actor_label="Owner operator", session_idle_seconds=60, session_absolute_seconds=300, allow_loopback_http=True)
+
+
+class ProductCompositionBffTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.temp = tempfile.TemporaryDirectory(); root = Path(self.temp.name); static = root / "dist"; static.mkdir(); (static / "index.html").write_text("ok")
+        self.provider = FakeProducts(); self.app = create_app(settings(root), access_resolver=FakeResolver(), product_provider=self.provider, static_dir=static); self.client = TestClient(self.app, base_url="http://127.0.0.1:8769"); self.headers = {RELEASE_HEADER: "p9.07.1"}
+        response = self.client.post("/api/app/v1/session/bootstrap", headers={**self.headers, "Origin": "http://127.0.0.1:8769"}); self.assertEqual(response.status_code, 200)
+    def tearDown(self) -> None: self.temp.cleanup()
+    def test_products_requires_current_session_and_returns_only_non_authoritative_composition(self) -> None:
+        response = self.client.get("/api/app/v1/products", headers=self.headers); self.assertEqual(response.status_code, 200); payload = response.json(); self.assertFalse(payload["projection"]["canonical_authority"]); self.assertFalse(payload["projection"]["cross_product_business_relationship_inferred"]); self.assertEqual([p["product_contract"]["lifecycle"] for p in payload["products"]], ["Provisional", "Provisional"]); self.assertTrue(all(not p["interaction"]["authority_provided"] for p in payload["products"])); self.assertEqual(self.provider.calls, 1)
+    def test_unavailable_product_evidence_fails_closed(self) -> None:
+        self.app.state.product_provider = FakeProducts(True)
+        # Route closes over the injected provider, so use a fresh app for explicit failure evidence.
+        failing = create_app(settings(Path(self.temp.name)), access_resolver=FakeResolver(), product_provider=FakeProducts(True), static_dir=Path(self.temp.name) / "dist")
+        client = TestClient(failing, base_url="http://127.0.0.1:8769"); boot = client.post("/api/app/v1/session/bootstrap", headers={**self.headers, "Origin": "http://127.0.0.1:8769"}); self.assertEqual(boot.status_code, 200); response = client.get("/api/app/v1/products", headers=self.headers); self.assertEqual(response.status_code, 503); self.assertEqual(response.json()["detail"], "PRODUCT_COMPOSITION_UNAVAILABLE")
+
+
+class ProductCompositionPayloadTests(unittest.TestCase):
+    def test_neutral_projection_does_not_define_product_domain_fields(self) -> None:
+        surface = ProductSurface("discount-parser", "Discount Parser", "arvectum/discount-parser", "P6.06", "0.1.0", "Provisional", "P7.08", "Persistent Internal / owner-operated", "verified-retained-context", "Verified read-only reconstruction", ("CAP-004",), "Product-owned external-outcome evidence", "inspect-product-context", ("execution:x",))
+        raw = json.dumps(ProductCompositionProjection((surface,)).to_payload(), sort_keys=True)
+        for forbidden in ("offer_id", "publication_id", "template_version", "telegram_message_id", "tender_id", "bid"):
+            self.assertNotIn(forbidden, raw)
+''', encoding="utf-8")
+
+          test_front = root / "workspace_frontend/src/P907.test.tsx"
+          test_front.write_text(r'''import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { App } from "./App";
+import type { ProductCompositionProjection, WorkspaceContext } from "./types";
+
+const context: WorkspaceContext = { schema: "arvectum.workspace.shell-context/1", release: { id: "p9.07.1", app_api_contract: "5", classification: "bounded-internal-provisional", public_api: false }, organization: { label: "ООО «Арвектум»", scope_resolved_server_side: true }, actor: { label: "Owner operator", attributable: true, scope_resolved_server_side: true, authentication_source: "P7.04 owner-local credential" }, session: { csrf_token: "csrf", bounded: true, revocable: true, authority_provided: false }, navigation: [{ id: "home", label: "Home", href: "/", availability: "available" }, { id: "my-work", label: "My Work", href: "/my-work", availability: "available" }, { id: "search", label: "Search", href: "/search", availability: "available" }, { id: "records", label: "Records", href: "/records", availability: "available" }, { id: "documents", label: "Documents", href: "/documents", availability: "available" }, { id: "knowledge", label: "Knowledge", href: "/knowledge", availability: "available" }, { id: "governed", label: "Governed actions", href: "/governed", availability: "available" }, { id: "products", label: "Products", href: "/products", availability: "available" }], data_governance: { protected_read_revalidated: true, response_minimized: "shell-context-only", canonical_state_in_browser: false } };
+const products: ProductCompositionProjection = { schema: "arvectum.workspace.product-composition/1", generated_at: "2026-08-21T14:00:00Z", projection: { derived: true, canonical_authority: false, product_semantics_owned_by_platform: false, organizational_authority_provided: false, cross_product_business_relationship_inferred: false }, scope: { organization_resolved_server_side: true, actor_resolved_server_side: true, current_access_revalidated: true, switching_products_broadens_authorization: false }, products: [
+  { id: "tender-operator", label: "Tender Operator", ownership: "product-owned", repository: "arvectum/tender-agent", product_contract: { id: "P6.02", version: "0.1.0", lifecycle: "Provisional" }, contour: { id: "P7.07", operating_scope: "Persistent Internal / owner-operated", status: "verified-retained-context", summary: "Persistent Tender Operator context is available through its declared CAP-001 Product Contract reliance. EIS remains externally authoritative.", shared_dependencies: ["CAP-001"], source_authority: "ЕИС / zakupki.gov.ru — External Reference" }, interaction: { kind: "inspect-product-context", product_specific_work_stays_product_owned: true, authority_provided: false, canonical_mutation_available: false, external_effect_available: false }, technical: { product_release_sha: "a".repeat(40), evidence_refs: ["governed-item:abc"] } },
+  { id: "discount-parser", label: "Discount Parser", ownership: "product-owned", repository: "arvectum/discount-parser", product_contract: { id: "P6.06", version: "0.1.0", lifecycle: "Provisional" }, contour: { id: "P7.08", operating_scope: "Persistent Internal / owner-operated", status: "verified-retained-context", summary: "A verified Discount Parser CAP-004 reconstruction context is retained. Reconstruction is read-only and does not replay a historical external effect.", shared_dependencies: ["CAP-004"], source_authority: "Product-owned external-outcome evidence; platform reconstruction is read-only" }, interaction: { kind: "inspect-product-context", product_specific_work_stays_product_owned: true, authority_provided: false, canonical_mutation_available: false, external_effect_available: false }, technical: { product_release_sha: "b".repeat(40), evidence_refs: ["execution:dp-real"] } },
+] };
+function json(value: object) { return new Response(JSON.stringify(value), { status: 200, headers: { "Content-Type": "application/json" } }); }
+afterEach(() => { cleanup(); vi.unstubAllGlobals(); window.history.replaceState({}, "", "/"); });
+describe("P9.07 J5 product composition", () => {
+  it("moves across two explicit product-owned surfaces without losing company context or implying authority", async () => {
+    const paths: string[] = []; vi.stubGlobal("fetch", vi.fn(async (input: RequestInfo | URL) => { const path = String(input); paths.push(path); if (path === "/api/app/v1/context") return json(context); if (path === "/api/app/v1/products") return json(products); if (path === "/api/app/v1/my-work") return json({ schema:"arvectum.workspace.my-work/1",generated_at:"",projection:{derived:true,canonical_authority:false,organizational_authority_provided:false,consequential_action_available:false,visibility_implies_permission:false},scope:{organization_resolved_server_side:true,actor_resolved_server_side:true,denied_item_counts_exposed:false},health:{state:"fresh",code:"OK",message:"",observed_at:"",heartbeat_age_seconds:0},items:[] }); throw new Error(`unexpected ${path}`); }));
+    render(<App />); await screen.findByText("ООО «Арвектум»"); fireEvent.click(screen.getByRole("link", { name: /^Products/ })); expect(await screen.findByRole("heading", { name: "Products" })).toBeTruthy();
+    fireEvent.click(screen.getByRole("link", { name: "Open Tender Operator" })); expect(await screen.findByRole("heading", { name: "Tender Operator" })).toBeTruthy(); expect(screen.getByText(/P6\.02 · Provisional 0\.1\.0/)).toBeTruthy(); expect(screen.getByText("CAP-001")).toBeTruthy(); expect(screen.getByText(/ЕИС \/ zakupki\.gov\.ru/)).toBeTruthy(); expect(screen.queryByText("governed-item:abc")).toBeNull();
+    fireEvent.click(screen.getByRole("link", { name: "Home" })); await waitFor(() => expect(document.activeElement?.id).toBe("workspace-main")); expect(screen.getByText("ООО «Арвектум»")).toBeTruthy(); expect(screen.getByText("Owner operator")).toBeTruthy();
+    fireEvent.click(screen.getByRole("link", { name: /^Products/ })); await screen.findByRole("heading", { name: "Products" }); fireEvent.click(screen.getByRole("link", { name: "Open Discount Parser" })); expect(await screen.findByRole("heading", { name: "Discount Parser" })).toBeTruthy(); expect(screen.getByText(/P6\.06 · Provisional 0\.1\.0/)).toBeTruthy(); expect(screen.getByText("CAP-004")).toBeTruthy(); expect(screen.getByText(/No effect replay/)).toBeTruthy(); expect(screen.queryByText("execution:dp-real")).toBeNull();
+    expect(paths.every((path) => ["/api/app/v1/context", "/api/app/v1/my-work", "/api/app/v1/products"].includes(path))).toBe(true);
+  });
+});
+''', encoding="utf-8")
+
+      - name: Build exact frontend assets
+        working-directory: reference/python/workspace_frontend
+        run: |
+          npm ci --no-audit --no-fund
+          npm run typecheck
+          npm test
+          npm run guard:web-storage
+          npm run build
+      - name: Commit implementation and deterministic assets
+        run: |
+          git add reference/python/workspace_app reference/python/workspace_tests reference/python/workspace_frontend
+          git diff --cached --check
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "P9.07 compose Tender and Discount product surfaces"
+          git push origin HEAD:p9-07-product-workspace-composition
