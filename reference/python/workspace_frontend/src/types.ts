@@ -194,6 +194,64 @@ export type ObjectContext = {
   };
 };
 
+export type ProductWorkItem = {
+  label: string;
+  value: string;
+  meaning: string;
+};
+
+export type ProductContractBoundary = {
+  contract: string;
+  governance_ref: string;
+  version: string;
+  lifecycle: "Provisional";
+  compatibility_line: string;
+  dependencies: string[];
+  explicitly_omitted_dependencies: string[];
+  product_semantics_owner: "product";
+  platform_business_logic_owner: false;
+  inspectable: true;
+};
+
+export type ProductSurface = {
+  id: "tender-operator" | "discount-parser";
+  name: string;
+  purpose: string;
+  evidence_state: "available" | "unavailable";
+  evidence_code: string;
+  source: string;
+  authority_mode: string;
+  summary: string;
+  work: ProductWorkItem[];
+  boundary: ProductContractBoundary;
+  technical: {
+    operational_contour: "P7.07" | "P7.08";
+    evidence_classification: string;
+    raw_product_state_exposed: false;
+    raw_platform_identifiers_exposed: false;
+  };
+};
+
+export type ProductSurfacesProjection = {
+  schema: "arvectum.workspace.product-surfaces/1";
+  generated_at: string;
+  projection: {
+    derived: true;
+    canonical_authority: false;
+    product_business_logic_in_platform: false;
+    hidden_coupling: false;
+    consequential_action_available: false;
+    visibility_implies_permission: false;
+  };
+  scope: {
+    organization_resolved_server_side: true;
+    actor_resolved_server_side: true;
+    current_access_revalidated: true;
+    cross_organization_composition: false;
+  };
+  products: ProductSurface[];
+};
+
 export type GovernedDecision = {
   name: "Authorization" | "Organizational Authority" | "Data Governance" | "Consequential Approval";
   state: string;
