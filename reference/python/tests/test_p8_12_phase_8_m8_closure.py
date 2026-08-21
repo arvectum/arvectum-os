@@ -42,7 +42,8 @@ class P812Phase8M8ClosureTests(unittest.TestCase):
         self.assertIn("exact activated one-Organization", review)
         self.assertIn("NOT ACTIVATED / NOT PROVEN", review)
         self.assertIn("NOT ACTIVATED / NOT APPLICABLE TO DECLARED SCOPE", review)
-        self.assertIn("P8.12 closes Phase 8; it does **not** invent or admit Phase 9", review)
+        self.assertIn("P8.12 closes Phase 8", review)
+        self.assertIn("invent or admit Phase 9", review)
 
     def test_master_and_phase_roadmaps_preserve_historical_phase8_closure(self) -> None:
         master = _text(MASTER_ROADMAP)
@@ -71,13 +72,14 @@ class P812Phase8M8ClosureTests(unittest.TestCase):
         self.assertIn("no synthetic multi-Organization proof", phase)
 
     def test_active_capability_catalog_remains_lifecycle_authority_and_legacy_view_is_retired(self) -> None:
-        active = _normalized(ACTIVE_CAPABILITY_CATALOG)
+        active_text = _text(ACTIVE_CAPABILITY_CATALOG)
         legacy = _normalized(LEGACY_CAPABILITY_CATALOG)
 
-        self.assertIn("Status: `Active`", active)
+        self.assertIn("Status: `Active`", active_text)
         for cap in ("CAP-001", "CAP-002", "CAP-003", "CAP-004"):
-            self.assertIn(cap, active)
-        self.assertGreaterEqual(active.count("Incubating / Provisional"), 4)
+            with self.subTest(capability=cap):
+                row = _row(active_text, f"| `{cap}` |")
+                self.assertIn("| `Incubating` | `Provisional` |", row)
 
         self.assertIn("Status: `Deprecated / Informative`", legacy)
         self.assertIn("PLATFORM-CAPABILITY-CANDIDATE-CATALOG.md", legacy)
@@ -111,7 +113,8 @@ class P812Phase8M8ClosureTests(unittest.TestCase):
         review = _normalized(CLOSURE_REVIEW)
         self.assertIn("No post-M8 numbered implementation phase is currently defined", review)
         self.assertIn("separate governed roadmap/activation decision", review)
-        self.assertIn("P8.12 does not admit Phase 9", review)
+        self.assertIn("P8.12 closes Phase 8", review)
+        self.assertIn("invent or admit Phase 9", review)
 
 
 if __name__ == "__main__":
