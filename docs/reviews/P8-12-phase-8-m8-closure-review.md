@@ -1,6 +1,6 @@
 # P8.12 — Phase 8 / M8 Closure Review
 
-Status: `Closure candidate — final repository verification pending`
+Status: `Complete / PASS`
 Date: `2026-08-21`
 Owner: `ООО «Арвектум»`
 Task classification: `platform` with `governance` and `product_contract`
@@ -63,7 +63,7 @@ M8 closure is evaluated only for the activated Phase 8 contour:
 | 11 | Conformance / commercial / support claims exactly bounded to evidence | `PASS` | P8.10 retains internal owner-operated scoped conformance and creates no external/customer Production, support, SLA, certification or commercial promise |
 | 12 | Reuse versus containment recommendations evidence-backed | `PASS` | R27 retains proven Product Contract/dependency/CAP-004 reuse while containing product-local declarations and task-local handover formats |
 | 13 | R25–R28 material findings dispositioned | `PASS` | R25, R26, R27 and R28 are complete; R28 has no unresolved material finding |
-| 14 | M8 Milestone Code Health Gate passes before closure | `PASS` | R28 and `M8-milestone-code-health-gate.md` are `Complete / PASS`; final R28 PR-head CI passed `1278 tests / OK` |
+| 14 | M8 Milestone Code Health Gate passes before closure | `PASS` | R28 and `M8-milestone-code-health-gate.md` are `Complete / PASS`; final R28 PR-head CI passed `1278 tests / OK` and P8.12 final executable synchronization later passed `1285 tests / OK` |
 
 ## 5. Closure finding
 
@@ -125,24 +125,77 @@ This keeps roadmap closure distinct from speculative future planning.
 
 ## 10. Functional cross-review
 
-Cross-review is in progress and will be finalized only after the resulting roadmap state, closure regression guard and final PR CI are verified.
+Six iterations were completed. All material objections discovered during the cycle were resolved before merge; the final executable/repository iteration passed.
 
-Current findings:
+### Iteration 1 — higher authority / M8 exit criteria
 
-1. `PASS` — higher-authority / M8 criteria: scoped closure is consistent with Constitution and Accepted RFCs;
-2. `PASS` — security / sovereignty: criterion 9 remains unactivated rather than fabricated;
-3. `PASS` — lifecycle / stable-surface / commercial claims: no promotion or promise is justified;
-4. `REVISE → resolved` — documentation/status: stale legacy capability inventory replaced by an explicit historical pointer;
-5. final repository/CI verification — pending.
+Result: `PASS`.
+
+The scoped closure is consistent with Constitution `1.2.0`, Accepted RFC-0001 through RFC-0008 and the Approved M8 Milestone Code Health Gate. No Accepted RFC/ADR amendment is required.
+
+### Iteration 2 — security / sovereignty / conditional multi-Organization scope
+
+Result: `PASS`.
+
+Criterion 9 remains conditional on a genuine second Organization. Because no such Organization was activated, P8.08 remains `NOT ACTIVATED / NOT PROVEN`; no synthetic tenant, authority grant or data-rights scope was fabricated to force a broader milestone claim.
+
+### Iteration 3 — lifecycle / stable surface / conformance / commercial claims
+
+Result: `PASS`.
+
+No capability or Product Contract promotion, public/stable interface, external/customer Production readiness, support/SLA/certification or commercial promise is justified by closure.
+
+### Iteration 4 — documentation/status authority
+
+Result: `REVISE → PASS`.
+
+A stale informative pre-incubation capability inventory under `docs/architecture/CAPABILITY-CATALOG.md` could conflict with readers selecting the current Active governed catalog. It was retired to a historical pointer to `docs/catalogs/PLATFORM-CAPABILITY-CANDIDATE-CATALOG.md` without changing lifecycle state.
+
+Disposition: `resolved`.
+
+### Iteration 5 — roadmap and regression durability
+
+Result: `REVISE → PASS`.
+
+The review exposed documentation/test brittleness rather than a runtime defect:
+
+- the first fail-closed exact-anchor roadmap synchronization correctly refused an incorrect detailed-roadmap section anchor and was narrowed to the actual structure;
+- read-after-write found and removed stale present-tense wording that still said Phase 8 "is now Active" after the header had correctly moved to `Complete / PASS`;
+- `Reference Python CI #226` exposed stale/transient regression assumptions, including the older R28 guard requiring P8.12 to remain `Current` after legitimate closure;
+- those guards were rewritten to protect durable historical semantics rather than obsolete roadmap status/version text;
+- `Reference Python CI #230` then exposed one remaining Markdown-format literal assertion in the new P8.12 guard, which was removed without changing governed semantics.
+
+No runtime behavior, authority boundary, lifecycle state, stable/public surface or product/platform responsibility was broadened to make the tests pass.
+
+Disposition: `resolved`.
+
+### Iteration 6 — final executable and repository verification
+
+Result: `PASS`.
+
+Final executable/test synchronization head before this review-record-only closure edit: `986e18dbe8bf51e21c84901f1b83183e9687227e`.
+
+Evidence:
+
+- `Reference Python CI #231` — `success`;
+- generated-Python-artifact rejection step — `PASS`;
+- full Reference Python suite — `Ran 1285 tests in 26.515s`, `OK`;
+- P8.12 adds seven durable closure regression tests;
+- the prior R28 regression guard remains green after removing only its transient P8.12-status coupling;
+- final durable PR diff contains only the two roadmaps, this closure review, the retired legacy capability pointer and the two regression-test files; no temporary synchronization workflow, runtime implementation, Accepted RFC or ADR change remains.
+
+No material objection remains after iteration 6. No owner risk acceptance is required for P8.12 closure.
+
+This final review-record update is documentation-only. The PR must nevertheless retain a green required CI on its final merge head before merge.
 
 Functional cross-review is not formal RFC/ADR acceptance, lifecycle promotion, operational-readiness approval, conformance certification or commercial authority.
 
-## 11. Closure candidate verdict
-
-Subject to final repository-state and CI verification:
+## 11. Final verdict
 
 > **`P8.12 = Complete / PASS`**
 >
 > **`M8 = Achieved / PASS — exact activated scope only`**
 
-The final canonical verdict must preserve every limitation in this review and must not admit a post-M8 implementation phase implicitly.
+The verdict preserves every limitation in this review and does not admit a post-M8 implementation phase implicitly.
+
+Phase 8 is closed. Canonical sequencing returns to the master roadmap, which currently admits no active numbered implementation work item after M8. A future numbered phase or milestone requires a separate governed roadmap/activation decision.
