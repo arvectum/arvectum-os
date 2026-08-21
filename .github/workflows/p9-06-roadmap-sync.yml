@@ -8,6 +8,7 @@ on:
 permissions:
   contents: write
 
+# One-shot closure helper; removed immediately after roadmap synchronization.
 jobs:
   sync:
     runs-on: ubuntu-24.04
