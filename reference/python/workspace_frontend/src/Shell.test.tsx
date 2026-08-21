@@ -1,7 +1,7 @@
-import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { cleanup, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { Shell } from "./Shell";
-import type { WorkspaceContext } from "./types";
+import type { MyWorkProjection, WorkspaceContext } from "./types";
 
 const context: WorkspaceContext = {
   schema: "arvectum.workspace.shell-context/1",
@@ -16,8 +16,58 @@ const context: WorkspaceContext = {
   data_governance: { protected_read_revalidated: true, response_minimized: "shell-context-only", canonical_state_in_browser: false }
 };
 
+const projection: MyWorkProjection = {
+  schema: "arvectum.workspace.my-work/1",
+  generated_at: "2026-08-21T10:00:00Z",
+  projection: {
+    derived: true,
+    canonical_authority: false,
+    organizational_authority_provided: false,
+    consequential_action_available: false,
+    visibility_implies_permission: false,
+  },
+  scope: {
+    organization_resolved_server_side: true,
+    actor_resolved_server_side: true,
+    denied_item_counts_exposed: false,
+  },
+  health: {
+    state: "fresh",
+    code: "OK",
+    message: "Attention sources are current.",
+    observed_at: "2026-08-21T10:00:00Z",
+    heartbeat_age_seconds: 1,
+  },
+  items: [{
+    id: "11111111111111111111",
+    kind: "waiting-input",
+    group: "decision-required",
+    urgency: "high",
+    title: "Governed preflight is waiting",
+    reason: "Decision evidence is missing.",
+    source: "ЕИС / zakupki.gov.ru",
+    next_step: "Inspect blockers through the governed flow.",
+    evidence_mode: "live",
+    observed_at: "2026-08-21T10:00:00Z",
+    open_href: "/my-work?focus=11111111111111111111",
+    interaction: "inspect-only",
+    technical_evidence_available: true,
+    authority_provided: false,
+  }],
+};
+
+afterEach(() => {
+  cleanup();
+  vi.unstubAllGlobals();
+  window.history.replaceState({}, "", "/");
+});
+
 describe("P9.04 shell", () => {
-  it("presents explicit Organization and attributable actor context", () => {
+  it("presents explicit context and a useful Needs Attention projection on Home", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => new Response(JSON.stringify(projection), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    })));
     window.history.replaceState({}, "", "/");
     render(<Shell context={context} onLogout={() => undefined} />);
     expect(screen.getByLabelText("Organization: ООО «Арвектум»")).toBeTruthy();
@@ -25,5 +75,8 @@ describe("P9.04 shell", () => {
     expect(screen.getByRole("navigation", { name: "Workspace navigation" })).toBeTruthy();
     expect(screen.getByRole("link", { name: "My Work" })).toBeTruthy();
     expect(screen.getByText("Not implied")).toBeTruthy();
+    expect(await screen.findByRole("heading", { name: "Needs attention" })).toBeTruthy();
+    expect(screen.getByText("Governed preflight is waiting")).toBeTruthy();
+    expect(screen.getByRole("link", { name: "Open My Work" })).toBeTruthy();
   });
 });
