@@ -2,9 +2,13 @@ import { useEffect, useState } from "react";
 import { loadObjectContext, WorkspaceApiError } from "./api";
 import type { ObjectContext } from "./types";
 
-function backToDiscovery() {
-  window.history.pushState({}, "", "/search");
+function navigate(href: string) {
+  window.history.pushState({}, "", href);
   window.dispatchEvent(new PopStateEvent("popstate"));
+}
+
+function backToDiscovery() {
+  navigate("/search");
 }
 
 function TechnicalDetails({ item }: { item: ObjectContext }) {
@@ -105,6 +109,16 @@ export function ObjectDetail({ objectId }: { objectId: string }) {
               <ul>{item.governed_preflight.waiting_gates.map((gate) => <li key={gate}>{gate}</li>)}</ul>
             </>
           ) : null}
+          <a
+            className="context-action-link"
+            href="/governed"
+            onClick={(event) => {
+              event.preventDefault();
+              navigate("/governed");
+            }}
+          >
+            Open related execution and governed action
+          </a>
         </section>
       ) : null}
 
