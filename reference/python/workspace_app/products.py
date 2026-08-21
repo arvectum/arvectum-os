@@ -194,6 +194,8 @@ def _verified_tender_surface(runtime_root: Path) -> ProductSurface:
             candidates.append(metadata)
         if not candidates:
             return _unavailable_tender("TENDER_RETAINED_EVIDENCE_NOT_FOUND")
+        if len(candidates) != 1:
+            return _unavailable_tender("TENDER_RETAINED_EVIDENCE_AMBIGUOUS")
         metadata = candidates[0]
         required = {
             "product_contract_version": "0.1.0",
