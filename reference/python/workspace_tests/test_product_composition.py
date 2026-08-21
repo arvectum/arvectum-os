@@ -40,38 +40,8 @@ class FakeProducts:
             raise ProductCompositionError("unavailable")
         return ProductCompositionProjection(
             (
-                ProductSurface(
-                    "tender-operator",
-                    "Tender Operator",
-                    "arvectum/tender-agent",
-                    "P6.02",
-                    "0.1.0",
-                    "Provisional",
-                    "P7.07",
-                    "Persistent Internal / owner-operated",
-                    "verified-retained-context",
-                    "Tender context",
-                    ("CAP-001",),
-                    "ЕИС / zakupki.gov.ru — External Reference",
-                    "inspect-product-context",
-                    ("governed-item:x",),
-                ),
-                ProductSurface(
-                    "discount-parser",
-                    "Discount Parser",
-                    "arvectum/discount-parser",
-                    "P6.06",
-                    "0.1.0",
-                    "Provisional",
-                    "P7.08",
-                    "Persistent Internal / owner-operated",
-                    "verified-retained-context",
-                    "Discount context",
-                    ("CAP-004",),
-                    "Product-owned external-outcome evidence; platform reconstruction is read-only",
-                    "inspect-product-context",
-                    ("execution:y",),
-                ),
+                ProductSurface("tender-operator", "Tender Operator", "arvectum/tender-agent", "P6.02", "0.1.0", "Provisional", "P7.07", "Persistent Internal / owner-operated", "verified-retained-context", "Tender context", ("CAP-001",), "ЕИС / zakupki.gov.ru — External Reference", "inspect-product-context", ("governed-item:x",)),
+                ProductSurface("discount-parser", "Discount Parser", "arvectum/discount-parser", "P6.06", "0.1.0", "Provisional", "P7.08", "Persistent Internal / owner-operated", "verified-retained-context", "Discount context", ("CAP-004",), "Product-owned external-outcome evidence; platform reconstruction is read-only", "inspect-product-context", ("execution:y",)),
             )
         )
 
@@ -91,6 +61,10 @@ def settings(root: Path) -> WorkspaceSettings:
     )
 
 
+def client_for(app) -> TestClient:
+    return TestClient(app, base_url="http://127.0.0.1:8769", client=("127.0.0.1", 50000))
+
+
 class ProductCompositionBffTests(unittest.TestCase):
     def setUp(self) -> None:
         self.temp = tempfile.TemporaryDirectory()
@@ -99,23 +73,13 @@ class ProductCompositionBffTests(unittest.TestCase):
         static.mkdir()
         (static / "index.html").write_text("ok", encoding="utf-8")
         self.provider = FakeProducts()
-        self.client = TestClient(
-            create_app(
-                settings(root),
-                access_resolver=FakeResolver(),
-                product_provider=self.provider,
-                static_dir=static,
-            ),
-            base_url="http://127.0.0.1:8769",
-        )
+        self.client = client_for(create_app(settings(root), access_resolver=FakeResolver(), product_provider=self.provider, static_dir=static))
         self.headers = {RELEASE_HEADER: "p9.07.1"}
-        response = self.client.post(
-            "/api/app/v1/session/bootstrap",
-            headers={**self.headers, "Origin": "http://127.0.0.1:8769"},
-        )
+        response = self.client.post("/api/app/v1/session/bootstrap", headers={**self.headers, "Origin": "http://127.0.0.1:8769"})
         self.assertEqual(response.status_code, 200)
 
     def tearDown(self) -> None:
+        self.client.close()
         self.temp.cleanup()
 
     def test_products_returns_only_non_authoritative_explicit_composition(self) -> None:
@@ -126,75 +90,37 @@ class ProductCompositionBffTests(unittest.TestCase):
         self.assertFalse(payload["projection"]["product_semantics_owned_by_platform"])
         self.assertFalse(payload["projection"]["cross_product_business_relationship_inferred"])
         self.assertFalse(payload["scope"]["switching_products_broadens_authorization"])
-        self.assertEqual(
-            [item["product_contract"]["lifecycle"] for item in payload["products"]],
-            ["Provisional", "Provisional"],
-        )
+        self.assertEqual([item["product_contract"]["lifecycle"] for item in payload["products"]], ["Provisional", "Provisional"])
         self.assertTrue(all(not item["interaction"]["authority_provided"] for item in payload["products"]))
         self.assertTrue(all(not item["interaction"]["canonical_mutation_available"] for item in payload["products"]))
         self.assertEqual(self.provider.calls, 1)
 
     def test_product_composition_requires_current_session(self) -> None:
-        other = TestClient(
-            create_app(
-                settings(Path(self.temp.name)),
-                access_resolver=FakeResolver(),
-                product_provider=self.provider,
-                static_dir=Path(self.temp.name) / "dist",
-            ),
-            base_url="http://127.0.0.1:8769",
-        )
-        response = other.get("/api/app/v1/products", headers=self.headers)
-        self.assertEqual(response.status_code, 401)
-        self.assertEqual(response.json()["detail"], "SESSION_REQUIRED")
+        other = client_for(create_app(settings(Path(self.temp.name)), access_resolver=FakeResolver(), product_provider=self.provider, static_dir=Path(self.temp.name) / "dist"))
+        try:
+            response = other.get("/api/app/v1/products", headers=self.headers)
+            self.assertEqual(response.status_code, 401)
+            self.assertEqual(response.json()["detail"], "SESSION_REQUIRED")
+        finally:
+            other.close()
 
     def test_unavailable_product_evidence_fails_closed(self) -> None:
-        failing = TestClient(
-            create_app(
-                settings(Path(self.temp.name)),
-                access_resolver=FakeResolver(),
-                product_provider=FakeProducts(fail=True),
-                static_dir=Path(self.temp.name) / "dist",
-            ),
-            base_url="http://127.0.0.1:8769",
-        )
-        boot = failing.post(
-            "/api/app/v1/session/bootstrap",
-            headers={**self.headers, "Origin": "http://127.0.0.1:8769"},
-        )
-        self.assertEqual(boot.status_code, 200)
-        response = failing.get("/api/app/v1/products", headers=self.headers)
-        self.assertEqual(response.status_code, 503)
-        self.assertEqual(response.json()["detail"], "PRODUCT_COMPOSITION_UNAVAILABLE")
+        failing = client_for(create_app(settings(Path(self.temp.name)), access_resolver=FakeResolver(), product_provider=FakeProducts(fail=True), static_dir=Path(self.temp.name) / "dist"))
+        try:
+            boot = failing.post("/api/app/v1/session/bootstrap", headers={**self.headers, "Origin": "http://127.0.0.1:8769"})
+            self.assertEqual(boot.status_code, 200)
+            response = failing.get("/api/app/v1/products", headers=self.headers)
+            self.assertEqual(response.status_code, 503)
+            self.assertEqual(response.json()["detail"], "PRODUCT_COMPOSITION_UNAVAILABLE")
+        finally:
+            failing.close()
 
 
 class ProductCompositionPayloadTests(unittest.TestCase):
     def test_neutral_projection_does_not_define_product_domain_fields(self) -> None:
-        surface = ProductSurface(
-            "discount-parser",
-            "Discount Parser",
-            "arvectum/discount-parser",
-            "P6.06",
-            "0.1.0",
-            "Provisional",
-            "P7.08",
-            "Persistent Internal / owner-operated",
-            "verified-retained-context",
-            "Verified read-only reconstruction",
-            ("CAP-004",),
-            "Product-owned external-outcome evidence",
-            "inspect-product-context",
-            ("execution:x",),
-        )
+        surface = ProductSurface("discount-parser", "Discount Parser", "arvectum/discount-parser", "P6.06", "0.1.0", "Provisional", "P7.08", "Persistent Internal / owner-operated", "verified-retained-context", "Verified read-only reconstruction", ("CAP-004",), "Product-owned external-outcome evidence", "inspect-product-context", ("execution:x",))
         raw = json.dumps(ProductCompositionProjection((surface,)).to_payload(), sort_keys=True)
-        for forbidden in (
-            "offer_id",
-            "publication_id",
-            "template_version",
-            "telegram_message_id",
-            "tender_id",
-            "bid",
-        ):
+        for forbidden in ("offer_id", "publication_id", "template_version", "telegram_message_id", "tender_id", "bid"):
             self.assertNotIn(forbidden, raw)
 
 
