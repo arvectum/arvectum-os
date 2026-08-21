@@ -7,6 +7,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Protocol
 
+import p7_03_durable_state as p703
+
 from .access import AccessContext
 
 
@@ -115,8 +117,7 @@ def _read_json(path: Path, *, label: str) -> dict[str, Any]:
 
 
 def _verify_sidecar(json_path: Path, digest_path: Path, *, label: str) -> str:
-    value = _read_json(json_path, label=label)
-    del value
+    _read_json(json_path, label=label)
     try:
         raw = json_path.read_bytes()
         line = digest_path.read_text(encoding="utf-8").strip()
@@ -130,11 +131,11 @@ def _verify_sidecar(json_path: Path, digest_path: Path, *, label: str) -> str:
 
 
 class RuntimeProductCompositionProvider:
-    """Read-only composition over already-proven P7.07/P7.08 operational evidence.
+    """Read-only composition over already-proven P7.07/P7.08 evidence.
 
-    This adapter does not load product code, product databases, Telegram state, or
-    procurement domain models. It exposes only a minimal product-neutral envelope
-    required for Workspace composition and leaves detailed product semantics to
+    This adapter does not load product code, product databases, external effect
+    clients, or product domain models. It exposes only a minimal product-neutral
+    envelope required for Workspace composition and leaves detailed semantics to
     compile-time product-owned contributions.
     """
 
@@ -159,12 +160,12 @@ class RuntimeProductCompositionProvider:
             if config.get(key) != value:
                 raise ProductCompositionError(f"P7.07 Tender Operator boundary mismatch: {key}")
         item_id = config.get("storage_item_id")
-        if not isinstance(item_id, str) or len(item_id) != 64:
+        if not isinstance(item_id, str) or len(item_id) != 64 or any(ch not in "0123456789abcdef" for ch in item_id):
             raise ProductCompositionError("P7.07 Tender Operator item reference invalid")
-        manifest = _read_json(
-            self.runtime_root / "state" / "governed" / "items" / item_id / "manifest.json",
-            label="P7.07 governed item manifest",
-        )
+        try:
+            manifest = p703.verify_item(self.runtime_root / "state" / "governed" / "items" / item_id)
+        except Exception as exc:
+            raise ProductCompositionError("P7.07 governed item integrity verification failed") from exc
         metadata = manifest.get("metadata")
         if not isinstance(metadata, dict):
             raise ProductCompositionError("P7.07 governed item metadata missing")
@@ -255,17 +256,14 @@ class RuntimeProductCompositionProvider:
             contour="P7.08",
             operating_scope="Persistent Internal / owner-operated",
             status="verified-retained-context",
-            summary="A verified Discount Parser CAP-004 reconstruction context is retained. Reconstruction is read-only and does not replay Telegram or another external effect.",
+            summary="A verified Discount Parser CAP-004 reconstruction context is retained. Reconstruction is read-only and does not replay a historical external effect.",
             shared_dependencies=("CAP-004",),
-            source_authority="Product-owned publication evidence; platform reconstruction is read-only",
+            source_authority="Product-owned external-outcome evidence; platform reconstruction is read-only",
             interaction="inspect-product-context",
             technical_refs=(f"execution:{execution_id}", f"report-sha256:{report_sha}"),
             product_release_sha=release_sha,
         )
 
     def project(self, access: AccessContext) -> ProductCompositionProjection:
-        del access  # Current Organization/Actor access is revalidated by the BFF before this provider is invoked.
-        products: list[ProductSurface] = []
-        for loader in (self._tender, self._discount):
-            products.append(loader())
-        return ProductCompositionProjection(tuple(products))
+        del access
+        return ProductCompositionProjection((self._tender(), self._discount()))
