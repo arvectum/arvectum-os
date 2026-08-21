@@ -10,6 +10,7 @@ on:
 permissions:
   contents: write
 
+# One-shot closure helper; removed immediately after roadmap synchronization.
 jobs:
   sync:
     if: github.repository == 'arvectum/arvectum-os' && github.ref == 'refs/heads/r30-m9-alpha-usability-review'
