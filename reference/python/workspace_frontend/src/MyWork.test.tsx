@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { MyWork } from "./MyWork";
 import type { MyWorkProjection } from "./types";
@@ -117,6 +117,7 @@ function mockProjection(value: MyWorkProjection) {
 }
 
 afterEach(() => {
+  cleanup();
   vi.unstubAllGlobals();
   window.history.replaceState({}, "", "/");
 });
