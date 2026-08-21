@@ -67,57 +67,8 @@ jobs:
         run: npm run guard:web-storage
       - name: Rebuild production assets
         run: npm run build
-      - name: Upload rebuilt production assets for P9.05 reconciliation
-        uses: actions/upload-artifact@v4
-        with:
-          name: workspace-dist-p9-05
-          path: reference/python/workspace_frontend/dist
-          if-no-files-found: error
-          include-hidden-files: true
       - name: Require committed lock and production assets to be reproducible
         run: git diff --exit-code -- package-lock.json dist
       - name: Verify release-pinned production asset boundary
         working-directory: reference/python
         run: python -c 'from pathlib import Path; from workspace_app.assets import verify_frontend_assets; from workspace_app.release import load_release; print(verify_frontend_assets(Path("workspace_frontend"), load_release()))'
-
-  reconcile-assets:
-    name: One-shot P9.05 production asset reconciliation
-    if: >-
-      github.event_name == 'pull_request' &&
-      github.event.pull_request.number == 116 &&
-      github.event.pull_request.head.ref == 'p9-05-human-friendly-discovery' &&
-      github.event.pull_request.head.repo.full_name == github.repository &&
-      github.actor == 'arvectum'
-    permissions:
-      contents: write
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    defaults:
-      run:
-        working-directory: reference/python/workspace_frontend
-    steps:
-      - name: Check out exact PR head branch
-        uses: actions/checkout@v4
-        with:
-          ref: p9-05-human-friendly-discovery
-      - name: Set up Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "24"
-          cache: npm
-          cache-dependency-path: reference/python/workspace_frontend/package-lock.json
-      - name: Install exact frontend dependencies
-        run: npm ci --no-audit --no-fund
-      - name: Rebuild exact production assets
-        run: npm run build
-      - name: Commit only reconciled production assets
-        working-directory: .
-        run: |
-          git add -- reference/python/workspace_frontend/dist
-          if git diff --cached --quiet; then
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "Reconcile P9.05 Workspace production assets"
-          git push origin HEAD:p9-05-human-friendly-discovery
