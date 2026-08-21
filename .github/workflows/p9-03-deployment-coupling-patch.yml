@@ -1,17 +1,19 @@
 name: P9.03 deployment coupling patch
 
 on:
-  push:
+  pull_request:
     branches:
-      - p9-03-real-workspace-shell
+      - main
     paths:
       - ".github/workflows/p9-03-deployment-coupling-patch.yml"
+  workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
   patch:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
