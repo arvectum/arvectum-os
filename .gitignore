@@ -8,3 +8,7 @@ __pycache__/
 htmlcov/
 .mypy_cache/
 .ruff_cache/
+
+# Productive Workspace build/install scratch
+node_modules/
+.lock-venv/
