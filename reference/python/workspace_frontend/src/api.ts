@@ -5,6 +5,7 @@ import type {
   GovernedPreflightResult,
   MyWorkProjection,
   ObjectContext,
+  ProductSurfacesProjection,
   WorkspaceContext,
 } from "./types";
 
@@ -71,6 +72,10 @@ export async function loadObjectContext(objectId: string): Promise<ObjectContext
 
 export async function loadGovernedExperience(): Promise<GovernedExperienceProjection> {
   return request<GovernedExperienceProjection>("/api/app/v1/governed");
+}
+
+export async function loadProductSurfaces(): Promise<ProductSurfacesProjection> {
+  return request<ProductSurfacesProjection>("/api/app/v1/products");
 }
 
 export async function runGovernedPreflight(csrfToken: string): Promise<GovernedPreflightResult> {
