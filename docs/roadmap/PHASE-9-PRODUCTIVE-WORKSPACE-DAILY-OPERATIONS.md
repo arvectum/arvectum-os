@@ -1,7 +1,7 @@
 # Arvectum OS Phase 9 — Productive Workspace & Daily Operations
 
 Status: `Active`
-Version: `1.6.0`
+Version: `1.7.0`
 Created: `2026-08-21`
 Updated: `2026-08-21`
 Owner: `ООО «Арвектум»`
@@ -65,8 +65,8 @@ The existing P4/P7 UI remains a diagnostic/reference/recovery surface. It is not
 | `P9.03` | Real application shell + navigation + organization/user context | 🟩 Complete / PASS | real ADR-0001 shell/BFF/session/release boundary implemented and regression-verified |
 | `P9.04` | `My Work` / Needs Attention projection | 🟩 Complete / PASS | actionable owner queue without raw execution hunting |
 | `P9.05` | Human-friendly Records / Documents / Knowledge + global search | 🟩 Complete / PASS | understandable discovery and object context |
-| **`P9.06`** | **Executions / Decisions / governed actions UX** | **🟨 Current** | owner can inspect and perform one real governed action |
-| `R30` | M9-alpha Usability / Information Architecture Review | ⬜ gate | ordinary workflow usable without terminal/internal IDs |
+| `P9.06` | Executions / Decisions / governed actions UX | 🟩 Complete / PASS | owner can inspect and perform one real governed action |
+| **`R30`** | **M9-alpha Usability / Information Architecture Review** | **🟨 Current** | ordinary workflow usable without terminal/internal IDs |
 | `M9-alpha` | Usable Internal Workspace | ⬜ milestone | daily core work usable through browser UI |
 | `P9.07` | Product-owned workspace surfaces / composition | ⬜ | at least two real product surfaces inside Workspace |
 | `P9.08` | Arvectum AI Copilot + source-grounded organizational assistance | ⬜ | useful AI analysis/proposals with provenance and authority-safe execution |
@@ -245,7 +245,42 @@ P9.05 closes the J2/J3 implementation slice for the declared real F1 discovery/c
 
 P9.05 creates no public/stable API, Product Contract or Platform Capability lifecycle transition, customer Production claim, broader conformance promise or Organizational Authority.
 
-## 12. M9-alpha exit criteria
+## 12. P9.06 implementation and closure result
+
+Status: `Complete / PASS`.
+
+Canonical evidence: [`P9-06-executions-decisions-governed-actions-ux.md`](../reviews/P9-06-executions-decisions-governed-actions-ux.md).
+
+P9.06 established the first normal Productive Workspace governed-action experience through the Accepted ADR-0001 boundary:
+
+1. human-readable inspection of the real retained P7.06-UI4 EIS-backed Execution/Decision context;
+2. truthful `ЕИС / zakupki.gov.ru` / `External Reference` source-authority presentation;
+3. four independent governance decision concepts — Authorization, Organizational Authority, Data Governance and Consequential Approval — without collapsing technical access into authority;
+4. a real owner-initiated `Run governed preflight` interaction through the React/TypeScript Workspace;
+5. current server-side access plus fresh real preflight reconstruction at the POST command boundary;
+6. fail-closed rejection of any browser-supplied governance payload before provider execution;
+7. real `WAITING / fail-closed` result with minimized owner-local non-canonical proof evidence only;
+8. no canonical mutation, external effect, new approval/authority engine, competing source of truth or product-specific business logic moved into the platform;
+9. exact Subject/Version/Execution/Event/checkpoint/provenance available through technical drill-down rather than required ordinary navigation;
+10. Workspace release `p9.06.1`, internal application contract `4`, still `bounded-internal-provisional` and non-public.
+
+Functional cross-review completed five iterations. Material findings tightened the command-input boundary and reconciled the exact CI-built production assets; the fifth iteration found no remaining material objection.
+
+Final implementation/reconciliation evidence before the closure/roadmap-only edits:
+
+- implementation head `627134709aa5348716b10ae9cac80afceb4bd8ed`;
+- `Productive Workspace CI #47` / run `32482850242` — `SUCCESS`;
+- `Reference Python CI #279` / run `32482850284` — `SUCCESS`, `1301 tests`, `OK`;
+- generated-Python-artifact rejection — `PASS`;
+- frontend typecheck/tests/Web-Storage/build/reproducibility/release-pin gates — `PASS`;
+- BFF security/context/governed-action tests — `PASS`;
+- temporary asset-reconciliation workflow removed before closure.
+
+P9.06 implements the P9.01 J4 real fail-closed governed-interaction slice without manufacturing missing governance decisions or a demo mutation. It does not itself achieve `M9-alpha`: R30 must still execute/review the integrated J1–J4 ordinary path and the remaining milestone evidence.
+
+P9.06 creates no public/stable API, Product Contract or Platform Capability lifecycle transition, external/customer Production claim, broader conformance promise or Organizational Authority.
+
+## 13. M9-alpha exit criteria
 
 `M9-alpha — Usable Internal Workspace` is achieved only when the owner can, through the normal private Workspace and without terminal/GitHub/internal-ID knowledge for ordinary steps:
 
@@ -261,7 +296,7 @@ P9.05 creates no public/stable API, Product Contract or Platform Capability life
 
 M9-alpha is an internal usability milestone, not a public/stable interface, Production/customer readiness or lifecycle transition.
 
-## 13. M9 exit criteria
+## 14. M9 exit criteria
 
 `M9 — Daily-use organizational workbench` requires the exact activated internal scope to demonstrate:
 
@@ -277,7 +312,7 @@ M9-alpha is an internal usability milestone, not a public/stable interface, Prod
 10. R29–R32 findings are closed or explicitly accepted by appropriate authority;
 11. M9 Milestone Code Health Gate passes before closure.
 
-## 14. Explicit non-goals
+## 15. Explicit non-goals
 
 Phase 9 does not by itself establish:
 
@@ -292,10 +327,10 @@ Phase 9 does not by itself establish:
 - AI Organizational Authority or final consequential approval;
 - automatic promotion of observations/generated outputs into validated Knowledge.
 
-## 15. Current canonical action
+## 16. Current canonical action
 
-> **P9.06 — Executions / Decisions / governed actions UX.**
+> **R30 — M9-alpha Usability / Information Architecture Review.**
 
-Build the next owner-facing governed-action layer on top of the P9.03–P9.05 Productive Workspace. The ordinary path must let the owner inspect one real Execution/Decision in human terms and perform at least one bounded real governed interaction while preserving current Authorization, Organizational Authority, Data Governance, Consequential Approval, provenance, idempotency/retry and no-effect-on-replay invariants at the command boundary.
+Execute/review the complete P9.01 J1–J4 ordinary path through the new normal private Workspace: Home/My Work → human-readable discovery/context → real Execution/Decision → bounded real governed preflight. Confirm zero ordinary dependency on terminal/GitHub/internal IDs, truthful source/authority/uncertainty semantics, accessible textual meaning, fail-closed denial/unavailable behavior and exact technical identity/provenance available on demand.
 
-The remaining near-term sequence is `P9.06 → R30 → M9-alpha`. P9.05 provides human-friendly discovery/context; M9-alpha remains unachieved until the full declared exit set passes.
+The remaining near-term sequence is `R30 → M9-alpha`. P9.03–P9.06 provide the implemented building blocks; M9-alpha remains unachieved until the R30 gate and full declared exit set pass.
