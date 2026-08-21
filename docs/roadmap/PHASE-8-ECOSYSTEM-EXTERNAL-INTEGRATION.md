@@ -41,7 +41,7 @@ Phase 8 is the governed continuation after Arvectum OS proved the persistent int
 
 Its purpose is to validate interaction beyond the prior point-in-time owner-operated product evidence through a concrete external authoritative-system boundary while preserving Organization sovereignty, explicit contracts, external authority, provenance, failure-closed behavior and proportionality.
 
-Phase 8 is now `Active` only for the bounded outcome approved by P8.00/A8:
+Phase 8 was activated only for the bounded outcome approved by P8.00/A8:
 
 > **EIS authoritative-source revalidation across time for notice `0344100006426000005`, comparing a fresh exact external observation with the immutable P6 baseline and proving freshness/version-drift semantics without rewriting historical evidence.**
 
