@@ -42,7 +42,12 @@ function currentFocus(): string | null {
   return new URLSearchParams(window.location.search).get("focus");
 }
 
-export function MyWork() {
+function pushWorkspaceHref(href: string): void {
+  window.history.pushState({}, "", href);
+  window.dispatchEvent(new PopStateEvent("popstate"));
+}
+
+export function MyWork({ embedded = false }: { embedded?: boolean }) {
   const [state, setState] = useState<LoadState>({ kind: "loading" });
   const [group, setGroup] = useState<AttentionGroup | "all">("all");
   const [urgency, setUrgency] = useState<AttentionUrgency | "all">("all");
@@ -63,16 +68,22 @@ export function MyWork() {
 
   useEffect(() => { void refresh(); }, [refresh]);
 
-  const focusId = currentFocus();
+  const focusId = embedded ? null : currentFocus();
+  const titleId = embedded ? "home-my-work-title" : "my-work-title";
+  const Heading = embedded ? "h2" : "h1";
 
   if (state.kind === "loading") {
-    return <section className="my-work" aria-live="polite"><p>Loading current attention sources…</p></section>;
+    return (
+      <section className={`my-work${embedded ? " my-work-embedded" : ""}`} aria-live="polite">
+        <p>Loading current attention sources…</p>
+      </section>
+    );
   }
   if (state.kind === "error") {
     return (
-      <section className="my-work my-work-error" role="alert">
+      <section className={`my-work my-work-error${embedded ? " my-work-embedded" : ""}`} role="alert">
         <p className="eyebrow">My Work</p>
-        <h1>Needs attention is unavailable.</h1>
+        <Heading>Needs attention is unavailable.</Heading>
         <p>
           {state.reloadRequired
             ? "The application release changed. Reload before relying on this projection."
@@ -97,24 +108,31 @@ export function MyWork() {
       }
       return (Date.parse(right.observed_at ?? "") || 0) - (Date.parse(left.observed_at ?? "") || 0);
     });
+  const visible = embedded ? filtered.slice(0, 3) : filtered;
   const focused = focusId ? projection.items.find((item) => item.id === focusId) : undefined;
 
   const navigateTo = (item: AttentionItem) => (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
     if (!item.open_href.startsWith("/my-work?focus=")) return;
-    window.history.pushState({}, "", item.open_href);
-    window.dispatchEvent(new PopStateEvent("popstate"));
+    pushWorkspaceHref(item.open_href);
   };
 
   return (
-    <section className="my-work" aria-labelledby="my-work-title">
+    <section className={`my-work${embedded ? " my-work-embedded" : ""}`} aria-labelledby={titleId}>
       <div className="my-work-heading">
         <div>
           <p className="eyebrow">My Work · derived projection</p>
-          <h1 id="my-work-title">Needs attention</h1>
+          <Heading id={titleId}>Needs attention</Heading>
           <p>Current owner-facing signals, filtered server-side before they reach the browser.</p>
         </div>
-        <button type="button" className="quiet-button" onClick={() => void refresh()}>Refresh</button>
+        {embedded ? (
+          <a className="quiet-link" href="/my-work" onClick={(event) => {
+            event.preventDefault();
+            pushWorkspaceHref("/my-work");
+          }}>Open My Work</a>
+        ) : (
+          <button type="button" className="quiet-button" onClick={() => void refresh()}>Refresh</button>
+        )}
       </div>
 
       <div className={`projection-health projection-health-${projection.health.state}`} role="status">
@@ -128,7 +146,7 @@ export function MyWork() {
         approval, or a right to retry an uncertain external effect.
       </p>
 
-      {focused ? (
+      {!embedded && focused ? (
         <article className="attention-detail" aria-labelledby="focused-attention-title">
           <p className="eyebrow">Focused work item · {kindLabels[focused.kind]}</p>
           <h2 id="focused-attention-title">{focused.title}</h2>
@@ -138,61 +156,68 @@ export function MyWork() {
             <div><dt>Why now</dt><dd>{groupLabels[focused.group]}</dd></div>
             <div><dt>Legitimate next step</dt><dd>{focused.next_step}</dd></div>
             <div><dt>Interaction</dt><dd>Inspect only — current authority is revalidated elsewhere.</dd></div>
+            {focused.technical_evidence_available ? (
+              <div><dt>Technical evidence</dt><dd>Available in the governed source; exact identity/provenance drill-down is handled by the context surfaces activated after P9.04.</dd></div>
+            ) : null}
           </dl>
           {focused.evidence_mode === "scenario" ? <p className="scenario-note">Controlled scenario evidence — not a live occurrence.</p> : null}
           <a href="/my-work" onClick={(event) => {
             event.preventDefault();
-            window.history.pushState({}, "", "/my-work");
-            window.dispatchEvent(new PopStateEvent("popstate"));
+            pushWorkspaceHref("/my-work");
           }}>Back to queue</a>
         </article>
-      ) : focusId ? (
+      ) : !embedded && focusId ? (
         <div className="attention-unavailable" role="status">
           <strong>Work item unavailable in the current projection.</strong>
           <p>It may no longer be visible, current, or authorized. No protected existence detail is disclosed.</p>
           <a href="/my-work" onClick={(event) => {
             event.preventDefault();
-            window.history.pushState({}, "", "/my-work");
-            window.dispatchEvent(new PopStateEvent("popstate"));
+            pushWorkspaceHref("/my-work");
           }}>Back to queue</a>
         </div>
       ) : null}
 
-      <div className="queue-toolbar" aria-label="My Work filters">
-        <label>
-          Work state
-          <select value={group} onChange={(event) => setGroup(event.target.value as AttentionGroup | "all")}>
-            <option value="all">All visible work</option>
-            {Object.entries(groupLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
-          </select>
-        </label>
-        <label>
-          Urgency
-          <select value={urgency} onChange={(event) => setUrgency(event.target.value as AttentionUrgency | "all")}>
-            <option value="all">All urgency</option>
-            <option value="high">High</option>
-            <option value="medium">Medium</option>
-            <option value="low">Low</option>
-          </select>
-        </label>
-        <label>
-          Sort
-          <select value={sort} onChange={(event) => setSort(event.target.value as "urgency" | "newest")}>
-            <option value="urgency">Urgency first</option>
-            <option value="newest">Newest first</option>
-          </select>
-        </label>
-      </div>
+      {!embedded ? (
+        <div className="queue-toolbar" aria-label="My Work filters">
+          <label>
+            Work state
+            <select value={group} onChange={(event) => setGroup(event.target.value as AttentionGroup | "all")}>
+              <option value="all">All visible work</option>
+              {Object.entries(groupLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+            </select>
+          </label>
+          <label>
+            Urgency
+            <select value={urgency} onChange={(event) => setUrgency(event.target.value as AttentionUrgency | "all")}>
+              <option value="all">All urgency</option>
+              <option value="high">High</option>
+              <option value="medium">Medium</option>
+              <option value="low">Low</option>
+            </select>
+          </label>
+          <label>
+            Sort
+            <select value={sort} onChange={(event) => setSort(event.target.value as "urgency" | "newest")}>
+              <option value="urgency">Urgency first</option>
+              <option value="newest">Newest first</option>
+            </select>
+          </label>
+        </div>
+      ) : null}
 
-      <div className="queue-summary" aria-live="polite">{filtered.length} visible item{filtered.length === 1 ? "" : "s"}</div>
-      {filtered.length === 0 ? (
+      <div className="queue-summary" aria-live="polite">
+        {embedded && projection.items.length > visible.length
+          ? `Showing ${visible.length} of ${projection.items.length} visible items`
+          : `${visible.length} visible item${visible.length === 1 ? "" : "s"}`}
+      </div>
+      {visible.length === 0 ? (
         <div className="empty-queue">
           <strong>No visible items match this view.</strong>
           <p>This does not assert that no protected work exists outside the current authorized projection.</p>
         </div>
       ) : (
         <div className="attention-list">
-          {filtered.map((item) => (
+          {visible.map((item) => (
             <article className="attention-card" key={item.id}>
               <div className="attention-card-topline">
                 <span className={`urgency urgency-${item.urgency}`}>{item.urgency} urgency</span>
