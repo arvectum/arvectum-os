@@ -274,19 +274,19 @@ def _verified_discount_surface(runtime_root: Path) -> ProductSurface:
         value = _read_verified_json(report, digest)
         if value.get("schema") != p708.REPORT_SCHEMA or value.get("schema_version") != p708.REPORT_SCHEMA_VERSION:
             return _unavailable_discount("DISCOUNT_REPORT_SCHEMA_MISMATCH")
-        boundary = value.get("boundary")
+        continuity = value.get("continuity")
         product_evidence = value.get("product_evidence")
         cap004 = value.get("cap004")
         containment = value.get("containment")
-        if not all(isinstance(item, Mapping) for item in (boundary, product_evidence, cap004, containment)):
+        if not all(isinstance(item, Mapping) for item in (continuity, product_evidence, cap004, containment)):
             return _unavailable_discount("DISCOUNT_REPORT_INCOMPLETE")
-        assert isinstance(boundary, Mapping)
+        assert isinstance(continuity, Mapping)
         assert isinstance(product_evidence, Mapping)
         assert isinstance(cap004, Mapping)
         assert isinstance(containment, Mapping)
-        if boundary.get("product_contract_version") != "0.1.0" or boundary.get("product_contract_continuity") != "PASS":
+        if continuity.get("product_contract_version") != "0.1.0" or continuity.get("product_contract_continuity") != "PASS":
             return _unavailable_discount("DISCOUNT_CONTRACT_REVALIDATION_FAILED")
-        if boundary.get("shared_dependencies") != ["CAP-004"]:
+        if continuity.get("shared_dependencies") != ["CAP-004"]:
             return _unavailable_discount("DISCOUNT_DEPENDENCY_BOUNDARY_CHANGED")
         if cap004.get("read_only") is not True or cap004.get("reconstruction_complete") is not True:
             return _unavailable_discount("DISCOUNT_RECONSTRUCTION_INCOMPLETE")
