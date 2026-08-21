@@ -1,0 +1,44 @@
+name: P9.07 Temporary Dist Sync
+
+on:
+  push:
+    branches:
+      - "p9-07-product-owned-workspace-surfaces"
+    paths:
+      - ".github/workflows/p9-07-dist-sync.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.repository == 'arvectum/arvectum-os' && github.ref == 'refs/heads/p9-07-product-owned-workspace-surfaces'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: p9-07-product-owned-workspace-surfaces
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: reference/python/workspace_frontend/package-lock.json
+      - name: Install exact frontend dependencies
+        working-directory: reference/python/workspace_frontend
+        run: npm ci --no-audit --no-fund
+      - name: Build exact production assets
+        working-directory: reference/python/workspace_frontend
+        run: npm run build
+      - name: Commit deterministic dist
+        run: |
+          git add reference/python/workspace_frontend/dist
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo "dist already synchronized"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "P9.07 reconcile exact Workspace production assets"
+          git push origin HEAD:p9-07-product-owned-workspace-surfaces
