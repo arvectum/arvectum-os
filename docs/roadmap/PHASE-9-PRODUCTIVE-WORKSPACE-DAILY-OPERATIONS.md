@@ -1,7 +1,7 @@
 # Arvectum OS Phase 9 — Productive Workspace & Daily Operations
 
 Status: `Active`
-Version: `1.0.0`
+Version: `1.1.0`
 Created: `2026-08-21`
 Updated: `2026-08-21`
 Owner: `ООО «Арвектум»`
@@ -59,8 +59,8 @@ The existing P4/P7 UI remains a diagnostic/reference/recovery surface. It is not
 | ID | Work item | Status | Exit outcome |
 |---|---|---:|---|
 | `P9.00` | Productive Workspace activation + outcome baseline | 🟩 Complete / PASS | Phase 9 activated, UX problem and milestone scope fixed |
-| `P9.01` | Real operator jobs-to-be-done + acceptance journeys | 🟨 Current | exact daily jobs, fixtures/evidence, M9-alpha acceptance script |
-| `P9.02` | Application architecture spike + frontend/BFF/session decision | ⬜ | bounded prototypes + ADR if threshold crossed |
+| `P9.01` | Real operator jobs-to-be-done + acceptance journeys | 🟩 Complete / PASS | six exact owner jobs, real/truthful fixtures, acceptance evidence contract and M9-alpha script fixed |
+| `P9.02` | Application architecture spike + frontend/BFF/session decision | 🟨 Current | bounded prototypes + ADR if threshold crossed |
 | `R29` | Productive Workspace Boundary Review | ⬜ gate | platform/product/authority/security/stable-surface boundary PASS |
 | `P9.03` | Real application shell + navigation + organization/user context | ⬜ | pleasant persistent workspace shell |
 | `P9.04` | `My Work` / Needs Attention projection | ⬜ | actionable owner queue without raw execution hunting |
@@ -90,57 +90,38 @@ P9.00 is `Complete / PASS` because:
 
 ## 6. P9.01 — Real operator jobs-to-be-done + acceptance journeys
 
-Status: `Current`.
+Status: `Complete / PASS — acceptance baseline fixed; downstream journey execution pending`.
 
-P9.01 defines executable human outcomes before selecting technology or drawing final screens.
+Canonical evidence: [`P9-01-real-operator-jobs-acceptance-journeys.md`](../reviews/P9-01-real-operator-jobs-acceptance-journeys.md).
 
-Minimum journeys to validate:
+P9.01 fixes six executable human outcomes before technology selection:
 
-### J1 — Morning overview / what needs attention
+1. **J1 — Morning overview / what needs attention** — `M9-alpha blocker`;
+2. **J2 — Find anything** — `M9-alpha blocker` for at least one real governed object;
+3. **J3 — Understand context** — `M9-alpha blocker`;
+4. **J4 — Make a governed decision/action** — `M9-alpha blocker`;
+5. **J5 — Work across products** — full `M9` target after M9-alpha/P9.07, not an alpha blocker;
+6. **J6 — Ask Arvectum** — full `M9` target after M9-alpha/P9.08, not an alpha blocker.
 
-The owner opens Workspace and can understand, without internal identifiers:
+The acceptance fixture registry is anchored in real retained EIS/Tender Operator evidence, the persistent Tender Operator contour and the persistent Discount Parser contour. Truthfully representative controlled uncertainty fixtures are allowed only when no current real unresolved effect exists, must be visibly scenario evidence and must preserve the already-proven uncertainty/reconciliation semantics.
 
-- what requires a decision;
-- what is blocked or failed;
-- what is awaiting reconciliation;
-- important recent product/workflow outcomes;
-- which items are informational only.
+For ordinary paths, hard acceptance requires:
 
-### J2 — Find anything
+- zero dependency on terminal/GitHub/internal identifier knowledge;
+- zero authority/success misrepresentation;
+- zero Organization-scope violation;
+- truthful external authority and uncertainty handling;
+- exact technical identity/version/provenance reachable on demand rather than as primary navigation.
 
-The owner can search/navigate using human terms to find a document, governed record, execution, product context or validated knowledge and then reach exact technical history when needed.
+Task duration and primary interactions are measured during prototypes/dogfooding as comparative usability evidence; P9.01 deliberately does not invent a public UX SLA or arbitrary pre-prototype click/time threshold.
 
-### J3 — Understand context
-
-For one real object, the owner can answer:
-
-- what is this;
-- why is it relevant;
-- where did it come from;
-- what is authoritative;
-- what changed;
-- what process/product is related;
-- what action, if any, is required.
-
-### J4 — Make a governed decision/action
-
-The owner can inspect context and gates, submit a bounded governed action through the existing runtime boundary, and see the result/blocked state without the UI manufacturing authority.
-
-### J5 — Work across products
-
-The owner can enter at least Tender Operator and one other real product surface while retaining explicit Organization/Product Contract/context boundaries.
-
-### J6 — Ask Arvectum
-
-The owner can ask a natural-language organizational question and receive a source-grounded answer/proposal that distinguishes evidence, uncertainty and authority; any consequential follow-up routes through Governed Execution.
-
-P9.01 must use real or truthfully representative current Arvectum work, not synthetic UX-only examples where real evidence is available.
+P9.01 completed five functional cross-review iterations with no remaining material objection. It does not claim that J1–J6 are already implemented or that M9-alpha/M9 has passed.
 
 ## 7. P9.02 architecture decision rule
 
 P9.02 may prototype frontend/application boundary options. It MUST NOT inherit `http.server` + rendered-string HTML as the long-lived architecture merely because it exists.
 
-Evaluate at minimum:
+P9.02 must evaluate candidates against the P9.01 acceptance journeys, especially J1–J4, and evaluate at minimum:
 
 - persistent browser application ergonomics;
 - server/application boundary and authorization revalidation;
@@ -164,7 +145,8 @@ If the chosen framework/BFF/session/API topology becomes materially constraining
 5. inspect one real Execution/Decision in human terms;
 6. perform at least one bounded real governed interaction through the UI;
 7. reach technical identity/version/provenance details on demand rather than as the primary UX;
-8. pass R29 and R30 with no unresolved material finding.
+8. pass the exact P9.01 J1–J4 acceptance script;
+9. pass R29 and R30 with no unresolved material finding.
 
 M9-alpha is an internal usability milestone, not a public/stable interface, Production/customer readiness or lifecycle transition.
 
@@ -173,8 +155,8 @@ M9-alpha is an internal usability milestone, not a public/stable interface, Prod
 `M9 — Daily-use organizational workbench` requires the exact activated internal scope to demonstrate:
 
 1. M9-alpha achieved;
-2. at least two real product-owned surfaces composed into Workspace without platform business-logic leakage;
-3. AI Copilot is source-grounded, uncertainty-aware and authority-safe;
+2. at least two real product-owned surfaces composed into Workspace without platform business-logic leakage and P9.01 J5 passed;
+3. AI Copilot is source-grounded, uncertainty-aware and authority-safe and P9.01 J6 passed;
 4. activity/notifications remain non-authoritative projections;
 5. company-level composition is useful without turning organization-specific semantics into shared Kernel behavior;
 6. real owner working sessions can be completed primarily through Workspace;
@@ -201,6 +183,8 @@ Phase 9 does not by itself establish:
 
 ## 11. Current canonical action
 
-> **P9.01 — Real operator jobs-to-be-done + acceptance journeys.**
+> **P9.02 — Application architecture spike + frontend/BFF/session decision.**
 
-Do not select the long-lived frontend framework or begin broad UI implementation before P9.01 fixes the real owner journeys and acceptance evidence. The intended near-term sequence is `P9.01 → P9.02 → R29 → P9.03…P9.06 → R30 → M9-alpha`, after which daily use begins as the primary validation loop for the remainder of Phase 9.
+Use the P9.01 J1–J4 acceptance journeys as the primary architecture-spike workload. Do not begin broad Workspace implementation before bounded options have been compared and any materially constraining/long-lived frontend/BFF/session/API choice has been captured at the appropriate ADR level.
+
+The intended near-term sequence is `P9.02 → R29 → P9.03…P9.06 → R30 → M9-alpha`, after which daily use begins as the primary validation loop for the remainder of Phase 9.
