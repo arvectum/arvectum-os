@@ -8,6 +8,7 @@ import unittest
 REPO_ROOT = Path(__file__).resolve().parents[3]
 REFERENCE_ROOT = REPO_ROOT / "reference" / "python"
 PHASE8_ROADMAP = REPO_ROOT / "docs" / "roadmap" / "PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md"
+MASTER_ROADMAP = REPO_ROOT / "docs" / "roadmap" / "ROADMAP.md"
 P811_REVIEW = REPO_ROOT / "docs" / "reviews" / "P8-11-ecosystem-architecture-hardening-adr-refactoring-lifecycle-disposition.md"
 P808_REVIEW = REPO_ROOT / "docs" / "reviews" / "P8-08-multi-organization-isolation-cross-organization-security-validation.md"
 CI_WORKFLOW = REPO_ROOT / ".github" / "workflows" / "reference-python-ci.yml"
@@ -111,15 +112,42 @@ class R28M8EcosystemCodeHealthGateTests(unittest.TestCase):
         self.assertIn("\\.pytest_cache/", workflow)
 
     def test_r28_completion_remains_ordered_before_p8_12_without_transient_status_coupling(self) -> None:
-        roadmap = _normalized(PHASE8_ROADMAP)
-        r28 = roadmap.index("### R28 — M8 Ecosystem Hardening + Milestone Code Health Gate")
-        p812 = roadmap.index("### P8.12 — Phase 8 / M8 closure review")
+        phase8 = _normalized(PHASE8_ROADMAP)
+        master = _normalized(MASTER_ROADMAP)
+        r28_heading = "### R28 — M8 Ecosystem Hardening + Milestone Code Health Gate"
+        p812_heading = "### P8.12 — Phase 8 / M8 closure review"
+        r28_row = "| `R28` | M8 Ecosystem Hardening + Milestone Code Health Gate |"
+        p812_row = "| `P8.12` | Phase 8 / M8 closure review |"
+
+        r28 = phase8.index(r28_heading)
+        p812 = phase8.index(p812_heading)
         self.assertLess(r28, p812)
-        r28_section = roadmap[r28:p812]
+        r28_section = phase8[r28:p812]
         self.assertIn("Status: Complete / PASS", r28_section)
         self.assertIn("Milestone gate:", r28_section)
         self.assertIn("M8 Milestone Code Health Gate", r28_section)
         self.assertIn("does not itself close M8", r28_section)
+
+        for roadmap in (phase8, master):
+            with self.subTest(roadmap="phase8" if roadmap is phase8 else "master"):
+                self.assertIn(r28_row, roadmap)
+                self.assertIn(p812_row, roadmap)
+                self.assertLess(roadmap.index(r28_row), roadmap.index(p812_row))
+                r28_line = next(
+                    line for line in roadmap.split(" | ") if False
+                ) if False else None
+                self.assertIn(
+                    "| `R28` | M8 Ecosystem Hardening + Milestone Code Health Gate | 🟩 Complete / PASS |",
+                    roadmap,
+                )
+                self.assertIn(
+                    "| `P8.12` | Phase 8 / M8 closure review | 🟨 Current |",
+                    roadmap,
+                )
+                self.assertIn(
+                    "> **P8.12 — Phase 8 / M8 closure review.**",
+                    roadmap,
+                )
 
 
 if __name__ == "__main__":
