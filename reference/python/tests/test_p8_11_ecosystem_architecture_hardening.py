@@ -111,29 +111,28 @@ class P811EcosystemArchitectureHardeningTests(unittest.TestCase):
         self.assertIn("`R28 — M8 Ecosystem Hardening + Milestone Code Health Gate`", review)
         self.assertIn("P8.12 remains after R28", review)
 
-    def test_phase_and_master_roadmaps_are_synchronized_to_r28(self) -> None:
+    def test_phase_and_master_roadmaps_preserve_p8_11_hardening_sequence(self) -> None:
         phase8 = (
             DOCS_ROOT / "roadmap" / "PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md"
         ).read_text(encoding="utf-8")
         master = (DOCS_ROOT / "roadmap" / "ROADMAP.md").read_text(encoding="utf-8")
 
-        self.assertIn("Version: `1.10.0`", phase8)
-        self.assertIn("Version: `2.70.0`", master)
-        self.assertIn("`Active 1.10.0`", master)
+        p811_row = "| `P8.11` | Ecosystem architecture hardening + ADR/refactoring/lifecycle disposition |"
+        r28_row = "| `R28` | M8 Ecosystem Hardening + Milestone Code Health Gate |"
+        p812_row = "| `P8.12` | Phase 8 / M8 closure review |"
+
         for roadmap in (phase8, master):
-            self.assertIn(
-                "| `P8.11` | Ecosystem architecture hardening + ADR/refactoring/lifecycle disposition |",
-                roadmap,
-            )
-            self.assertIn("🟩 Complete / PASS", roadmap)
-            self.assertIn("| `R28` | M8 Ecosystem Hardening + Milestone Code Health Gate |", roadmap)
-            self.assertIn("🟨 Current", roadmap)
-            self.assertIn(
-                "> **R28 — M8 Ecosystem Hardening + Milestone Code Health Gate.**",
-                roadmap,
-            )
-            self.assertIn("| `P8.12` | Phase 8 / M8 closure review |", roadmap)
-            self.assertIn("⬜ Pending", roadmap)
+            with self.subTest(roadmap="phase8" if roadmap is phase8 else "master"):
+                self.assertIn(p811_row, roadmap)
+                self.assertIn(r28_row, roadmap)
+                self.assertIn(p812_row, roadmap)
+                self.assertLess(roadmap.index(p811_row), roadmap.index(r28_row))
+                self.assertLess(roadmap.index(r28_row), roadmap.index(p812_row))
+
+                p811_line = next(
+                    line for line in roadmap.splitlines() if line.startswith(p811_row)
+                )
+                self.assertIn("🟩 Complete / PASS", p811_line)
 
 
 if __name__ == "__main__":

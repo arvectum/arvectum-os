@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.70.0`
+Version: `2.71.0`
 Created: `2026-08-07`
 Updated: `2026-08-21`
 Owner: `ООО «Арвектум»`
@@ -16,6 +16,8 @@ Roadmap status does not itself change Platform Capability lifecycle, Product Con
 Detailed completed-phase history remains in the corresponding phase roadmaps, reviews and repository history rather than being duplicated indefinitely in this master roadmap.
 
 ## 2. Version note
+
+Version `2.71.0` completes R28 M8 Ecosystem Hardening + Milestone Code Health Gate as `Complete / PASS — no unresolved material hardening finding`, synchronizes the detailed Phase 8 roadmap to `1.11.0` and advances the current canonical action to P8.12. R28 applied the Approved Engineering Quality and Refactoring Gate across the material Phase 8 code/evidence surfaces, found no unresolved architecture/dependency-direction, correctness, security/privacy/isolation, maintainability, generated/dead-code, regression, migration/reversibility, accidental-public-surface or documentation/status defect, and added seven semantic regression checks rather than speculative runtime refactoring. `Reference Python CI #211` passed successfully. The M8 Milestone Code Health Gate is `Complete / PASS`, but M8 remains not yet achieved until P8.12 evaluates the full exit criteria. The PASS remains scoped to the actually activated one-Organization contour: P8.08 realistic two-Organization isolation remains `NOT ACTIVATED / NOT PROVEN`, P8.07 external customer/cross-Organization transfer remains `NOT ACTIVATED`, CAP-001 through CAP-004 remain `Incubating / Provisional`, Product Contracts remain Provisional, and no Accepted ADR/public-stable SDK/API/manifest/registry/export format, external/customer Production, support/SLA/certification or commercial promise is created.
 
 Version `2.70.0` completes P8.11 Ecosystem architecture hardening + ADR/refactoring/lifecycle disposition as `Complete / PASS — bounded ecosystem architecture retained; no ADR, lifecycle promotion or shared-surface generalization justified`, synchronizes the detailed Phase 8 roadmap to `1.10.0` and advances the current canonical action to R28. P8.11 found no Constitution/RFC conflict, no current concrete ADR trigger and no material runtime/generalization refactor requirement. CAP-001 through CAP-004 remain `Incubating / Provisional`; CAP-004 receives stronger external-reuse evidence only; Product Contracts remain Provisional; the P8.06 onboarding helper, P8.07 handover package and P8.09 runbook remain bounded reference evidence; Creative Test Agent declaration semantics remain product-owned; EIS behavior remains Tender Operator-owned; P8.08 realistic two-Organization isolation remains `NOT PROVEN`; P8.07 external customer transfer remains `NOT ACTIVATED`; and no public/stable SDK/API/manifest/registry/export format, Production/support/SLA/certification or commercial promise is created. Root README planning drift was structurally hardened by deferring mutable sequencing exclusively to this roadmap while preserving historical milestone continuity. Five functional cross-review iterations completed: initial `Reference Python CI #204` exposed two regressions that were fixed, sequencing was corrected to preserve the mandatory R28 gate, and follow-up `Reference Python CI #207` passed `1270 tests / OK`.
 
@@ -176,6 +178,18 @@ P8.11 then hardened the resulting ecosystem architecture without converting evid
 - initial CI regressions were fixed and `Reference Python CI #207` passed `1270 tests / OK`;
 - review evidence: [`P8-11-ecosystem-architecture-hardening-adr-refactoring-lifecycle-disposition.md`](../reviews/P8-11-ecosystem-architecture-hardening-adr-refactoring-lifecycle-disposition.md).
 
+R28 then applied the mandatory M8 engineering hardening and code-health gate:
+
+- architecture/dependency direction and product/platform ownership remain correct;
+- correctness, exact-version, duplicate/replay/uncertainty/reconciliation and portability/authority invariants remain fail closed;
+- security PASS remains scoped to the actual one-Organization contour, with P8.08 realistic two-Organization isolation still `NOT ACTIVATED / NOT PROVEN`;
+- no material dead/generated-code, unnecessary-abstraction or maintainability defect requires runtime refactoring;
+- seven semantic regression checks were added to protect the bounded Phase 8 surfaces and generated-artifact hygiene;
+- no accidental Accepted ADR, public/stable SDK/API/manifest/registry/export format or lifecycle/readiness/commercial promotion was introduced;
+- `Reference Python CI #211` completed successfully;
+- detailed review: [`R28-m8-ecosystem-hardening-review.md`](../reviews/R28-m8-ecosystem-hardening-review.md);
+- milestone gate: [`M8-milestone-code-health-gate.md`](../reviews/M8-milestone-code-health-gate.md) — `Complete / PASS`.
+
 Activation boundary:
 
 - governing Organization: `ООО «Арвектум»` only;
@@ -188,6 +202,7 @@ Activation boundary:
 - R25, R26 and R27: `Complete / PASS`;
 - P8.10 external claims boundary: `Complete / PASS`;
 - P8.11 ecosystem architecture hardening: `Complete / PASS`;
+- R28 M8 ecosystem hardening + Milestone Code Health Gate: `Complete / PASS`;
 - P8.07 external customer/cross-Organization transfer: `NOT ACTIVATED`;
 - P8.08 realistic two-Organization isolation: `NOT ACTIVATED / NOT PROVEN`;
 - P8.09 external operator/developer experience: `Complete / PASS` for the exact bounded case only;
@@ -342,7 +357,7 @@ Telegram remains product-local on current evidence. The Discount Parser public-s
 
 ## 8. Active Phase 8 — Ecosystem and External Integration
 
-Detailed roadmap: [`PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md`](PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md) — `Active 1.10.0`.
+Detailed roadmap: [`PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md`](PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md) — `Active 1.11.0`.
 
 | ID | Work item | Status |
 |---|---|---:|
@@ -360,8 +375,8 @@ Detailed roadmap: [`PHASE-8-ECOSYSTEM-EXTERNAL-INTEGRATION.md`](PHASE-8-ECOSYSTE
 | `R27` | Portability / Ecosystem Reuse Review | 🟩 Complete / PASS |
 | `P8.10` | Scoped external conformance/commercial/support boundary review | 🟩 Complete / PASS |
 | `P8.11` | Ecosystem architecture hardening + ADR/refactoring/lifecycle disposition | 🟩 Complete / PASS |
-| `R28` | M8 Ecosystem Hardening + Milestone Code Health Gate | 🟨 Current |
-| `P8.12` | Phase 8 / M8 closure review | ⬜ Pending |
+| `R28` | M8 Ecosystem Hardening + Milestone Code Health Gate | 🟩 Complete / PASS |
+| `P8.12` | Phase 8 / M8 closure review | 🟨 Current |
 
 Completed active-phase preparation/evidence:
 
@@ -380,7 +395,9 @@ Completed active-phase preparation/evidence:
 - [`P8.09 integration experience review`](../reviews/P8-09-external-operator-developer-integration-experience-documentation.md);
 - [`R27 Portability / Ecosystem Reuse Review`](../reviews/R27-portability-ecosystem-reuse-review.md);
 - [`P8.10 scoped external conformance/commercial/support boundary review`](../reviews/P8-10-scoped-external-conformance-commercial-support-boundary-review.md);
-- [`P8.11 ecosystem architecture hardening / ADR-refactoring-lifecycle disposition`](../reviews/P8-11-ecosystem-architecture-hardening-adr-refactoring-lifecycle-disposition.md).
+- [`P8.11 ecosystem architecture hardening / ADR-refactoring-lifecycle disposition`](../reviews/P8-11-ecosystem-architecture-hardening-adr-refactoring-lifecycle-disposition.md);
+- [`R28 M8 ecosystem hardening review`](../reviews/R28-m8-ecosystem-hardening-review.md);
+- [`M8 Milestone Code Health Gate`](../reviews/M8-milestone-code-health-gate.md).
 
 ### Current critical path
 
@@ -415,12 +432,12 @@ P8.10 external claims boundary              PASS
         ↓
 P8.11 architecture / ADR / lifecycle hardening PASS
         ↓
-R28 M8 hardening + code-health gate         CURRENT
+R28 M8 hardening + code-health gate         PASS
         ↓
-P8.12 M8 closure
+P8.12 M8 closure                            CURRENT
 ```
 
-P8.04 was the first current task requiring the real owner-operated Tender Operator/EIS runtime, existing credentials/trust path and owner-only raw artifacts; it completed with a verified live `NO_CHANGE`. P8.05, P8.06, R26, P8.07, P8.09, R27, P8.10 and P8.11 then completed repository-side semantic/evidence/review/hardening work without expanding the P8.03 read-only EIS rights boundary, inventing a customer/recipient or requiring new local execution. P8.08 revalidated the conditional multi-Organization gate and closed as `NOT ACTIVATED` because canonical scope still has one governing Organization; no synthetic Organization was introduced and realistic two-Organization isolation remains explicitly unproven. Actual external customer/cross-Organization handover remains unactivated. R27 contains current onboarding/export helper surfaces rather than promoting them prematurely. P8.10 fixes the externally usable factual evidence wording while explicitly creating no Production, support, compatibility, conformance, lifecycle or commercial promise. P8.11 retains the bounded architecture, creates no ADR or lifecycle promotion, removes README planning drift and protects the disposition with executable regression guards; `Reference Python CI #207` passed `1270 tests / OK`. R28 is the mandatory current pre-closure code-health gate.
+P8.04 was the first current task requiring the real owner-operated Tender Operator/EIS runtime, existing credentials/trust path and owner-only raw artifacts; it completed with a verified live `NO_CHANGE`. P8.05, P8.06, R26, P8.07, P8.09, R27, P8.10, P8.11 and R28 then completed repository-side semantic/evidence/review/hardening work without expanding the P8.03 read-only EIS rights boundary, inventing a customer/recipient or requiring new local execution. P8.08 revalidated the conditional multi-Organization gate and closed as `NOT ACTIVATED` because canonical scope still has one governing Organization; no synthetic Organization was introduced and realistic two-Organization isolation remains explicitly unproven. Actual external customer/cross-Organization handover remains unactivated. R27 contains current onboarding/export helper surfaces rather than promoting them prematurely. P8.10 fixes the externally usable factual evidence wording while explicitly creating no Production, support, compatibility, conformance, lifecycle or commercial promise. P8.11 retains the bounded architecture, creates no ADR or lifecycle promotion, removes README planning drift and protects the disposition with executable regression guards. R28 passes the Approved M8 Milestone Code Health Gate, adds seven semantic regression checks and records successful `Reference Python CI #211`; it creates no new RFC/ADR, lifecycle transition or public/stable surface and does not itself close M8. P8.12 is now the current closure review.
 
 ## 9. M8 milestone definition
 
@@ -441,7 +458,7 @@ P8.04 was the first current task requiring the real owner-operated Tender Operat
 13. R25–R28 material findings are dispositioned;
 14. the M8 Milestone Code Health Gate passes before closure.
 
-If the activated scope does not include a second Organization, public API, customer deployment or handover recipient, M8 closure must state those limitations and must not imply validation of those classes. P8.06 provides one real external consumer proof only for its bounded read-only Provisional contract; R26 does not broaden that scope; P8.07 proves only bounded semantic interoperability mechanics and leaves actual external customer/cross-Organization transfer `NOT ACTIVATED`; P8.08 confirms that realistic two-Organization isolation is likewise `NOT ACTIVATED / NOT PROVEN` under the current one-Organization scope; P8.09 makes only that exact existing external-consumer integration repeatable; R27 confirms that no new shared/stable external onboarding or universal export abstraction is justified from the current evidence; P8.10 permits factual descriptions of those validated cases but creates no external/customer conformance, support, compatibility, Production or commercial commitment; P8.11 confirms that no ADR, material runtime generalization or lifecycle transition is justified before R28.
+If the activated scope does not include a second Organization, public API, customer deployment or handover recipient, M8 closure must state those limitations and must not imply validation of those classes. P8.06 provides one real external consumer proof only for its bounded read-only Provisional contract; R26 does not broaden that scope; P8.07 proves only bounded semantic interoperability mechanics and leaves actual external customer/cross-Organization transfer `NOT ACTIVATED`; P8.08 confirms that realistic two-Organization isolation is likewise `NOT ACTIVATED / NOT PROVEN` under the current one-Organization scope; P8.09 makes only that exact existing external-consumer integration repeatable; R27 confirms that no new shared/stable external onboarding or universal export abstraction is justified from the current evidence; P8.10 permits factual descriptions of those validated cases but creates no external/customer conformance, support, compatibility, Production or commercial commitment; P8.11 confirms that no ADR, material runtime generalization or lifecycle transition is justified; R28 satisfies the M8 Milestone Code Health Gate and leaves no unresolved material hardening finding, but only P8.12 may decide whether the full exit criteria justify M8 closure.
 
 ## 10. Non-goals and invariant guardrails
 
@@ -482,6 +499,6 @@ Successful integration is evidence, not automatic lifecycle promotion.
 
 ## 12. Current canonical action
 
-> **R28 — M8 Ecosystem Hardening + Milestone Code Health Gate.**
+> **P8.12 — Phase 8 / M8 closure review.**
 
-P8.11 is `Complete / PASS — bounded ecosystem architecture retained; no ADR, lifecycle promotion or shared-surface generalization justified`. CAP-001 through CAP-004 remain `Incubating / Provisional`; CAP-004 has stronger external-reuse evidence only; Product Contracts remain Provisional; current external onboarding/export/runbook artifacts remain bounded reference evidence; Creative Test Agent and EIS product-owned boundaries are preserved; P8.08 realistic two-Organization isolation remains `NOT PROVEN`; P8.07 external customer transfer remains `NOT ACTIVATED`; and no public/stable integration/export compatibility, Production/support/SLA/certification or lifecycle promotion is created. `Reference Python CI #207` passed `1270 tests / OK`. R28 is now the current canonical action; P8.12 remains pending until R28 passes, and this sequencing change does not alter lifecycle/readiness/conformance/public-surface/support/commercial status.
+R28 is `Complete / PASS — no unresolved material hardening finding`; the M8 Milestone Code Health Gate is `Complete / PASS`, with seven added semantic regression checks and successful `Reference Python CI #211`. M8 remains not yet achieved because R28 does not itself perform milestone closure. CAP-001 through CAP-004 remain `Incubating / Provisional`; Product Contracts remain Provisional; current external onboarding/export/runbook artifacts remain bounded reference evidence; Creative Test Agent and EIS product-owned boundaries are preserved; P8.08 realistic two-Organization isolation remains `NOT ACTIVATED / NOT PROVEN`; P8.07 external customer/cross-Organization transfer remains `NOT ACTIVATED`; and no public/stable integration/export compatibility, external/customer Production, support/SLA/certification or lifecycle promotion is created. P8.12 is now the current canonical action and must decide M8 closure only for the exact activated scope.
