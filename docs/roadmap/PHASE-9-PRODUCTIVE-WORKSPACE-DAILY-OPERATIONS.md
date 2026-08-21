@@ -1,7 +1,7 @@
 # Arvectum OS Phase 9 — Productive Workspace & Daily Operations
 
 Status: `Active`
-Version: `1.2.0`
+Version: `1.3.0`
 Created: `2026-08-21`
 Updated: `2026-08-21`
 Owner: `ООО «Арвектум»`
@@ -9,7 +9,7 @@ Task classification: `platform` with `product_contract` and `governance`
 Parent roadmap: [`ROADMAP.md`](ROADMAP.md)
 Milestone: `M9 — Daily-use organizational workbench`
 Intermediate milestone: `M9-alpha — Usable Internal Workspace`
-Architecture baseline: Constitution `1.2.0`; RFC-0001 through RFC-0008 `1.0.0` (`Accepted`); ADR-0001 `Proposed`
+Architecture baseline: Constitution `1.2.0`; RFC-0001 through RFC-0008 `1.0.0` (`Accepted`); ADR-0001 `Accepted`
 Predecessor: `Phase 8 / M8 — Complete / PASS`
 Activation decision: [`DECISION-2026-08-21-PHASE-9-PRODUCTIVE-WORKSPACE-ACTIVATION`](../governance/decisions/DECISION-2026-08-21-PHASE-9-PRODUCTIVE-WORKSPACE-ACTIVATION.md)
 
@@ -60,9 +60,9 @@ The existing P4/P7 UI remains a diagnostic/reference/recovery surface. It is not
 |---|---|---:|---|
 | `P9.00` | Productive Workspace activation + outcome baseline | 🟩 Complete / PASS | Phase 9 activated, UX problem and milestone scope fixed |
 | `P9.01` | Real operator jobs-to-be-done + acceptance journeys | 🟩 Complete / PASS | six exact owner jobs, real/truthful fixtures, acceptance evidence contract and M9-alpha script fixed |
-| `P9.02` | Application architecture spike + frontend/BFF/session decision | 🟩 Complete / PASS | four bounded topology prototypes compared; preferred topology fixed; ADR-0001 Proposed |
-| **`R29`** | **Productive Workspace Boundary Review** | **🟨 Current gate** | platform/product/authority/security/stable-surface boundary PASS + ADR-0001 disposition |
-| `P9.03` | Real application shell + navigation + organization/user context | ⬜ blocked by R29 | pleasant persistent workspace shell |
+| `P9.02` | Application architecture spike + frontend/BFF/session decision | 🟩 Complete / PASS | four bounded topology prototypes compared; preferred topology fixed; ADR-0001 proposed |
+| `R29` | Productive Workspace Boundary Review | 🟩 Complete / PASS | boundary PASS after 6 iterations; ADR-0001 owner-approved and Accepted |
+| **`P9.03`** | **Real application shell + navigation + organization/user context** | **🟨 Current** | pleasant persistent workspace shell on Accepted ADR-0001 topology |
 | `P9.04` | `My Work` / Needs Attention projection | ⬜ | actionable owner queue without raw execution hunting |
 | `P9.05` | Human-friendly Records / Documents / Knowledge + global search | ⬜ | understandable discovery and object context |
 | `P9.06` | Executions / Decisions / governed actions UX | ⬜ | owner can inspect and perform one real governed action |
@@ -119,11 +119,9 @@ P9.01 completed five functional cross-review iterations with no remaining materi
 
 ## 7. P9.02 — Application architecture spike result
 
-Status: `Complete / PASS — preferred topology fixed; ADR-0001 Proposed; R29 decision gate pending`.
+Status: `Complete / PASS — preferred topology fixed and taken through R29`.
 
 Canonical evidence: [`P9-02-application-architecture-spike-frontend-bff-session-decision.md`](../reviews/P9-02-application-architecture-spike-frontend-bff-session-decision.md).
-
-Proposed ADR: [`ADR-0001 — Productive Workspace Browser Application Topology`](../adrs/ADR-0001-productive-workspace-browser-application-topology.md).
 
 P9.02 compared four bounded topology prototypes against P9.01 J1–J4:
 
@@ -132,38 +130,48 @@ P9.02 compared four bounded topology prototypes against P9.01 J1–J4:
 3. React + TypeScript SPA + same-origin co-deployed Python BFF — preferred;
 4. separately deployed full-stack Node/BFF + Python platform service — rejected for current owner-operated scope.
 
-The preferred gate-ready topology is:
+The preferred topology crossed the ADR threshold and proceeded to R29 rather than becoming implementation authority merely through roadmap text.
 
-```text
-Browser
-  -> React + TypeScript Productive Workspace SPA
-     built to static production assets
-  -> same-origin /bff/*
-     Python BFF/application boundary
-       -> governed query/read-model services
-       -> application command boundary
-       -> Governed Execution where consequential change is required
-       -> explicit Product Contract adapters
-```
+## 8. R29 — Productive Workspace Boundary Review result
 
-Selected constraints:
+Status: `Complete / PASS — 6 functional cross-review iterations; ADR-0001 Accepted`.
 
-- frontend assets and Python BFF remain one exact-release deployable unit under P7.06;
-- Node/Vite-class tooling is build/CI only for current production scope;
-- browser receives no reusable platform credential and stores no auth/session bearer material in Web Storage;
-- session is opaque and server-side; cookie/session lifecycle, CSRF and origin checks are explicit;
-- any current loopback-only HTTP exception is bounded, visible and may not silently expand to LAN/remote use; non-loopback exposure requires HTTPS + `Secure` session cookie;
-- UI state is never Authorization or Organizational Authority;
-- consequential action revalidates session/Organization/Authorization/Organizational Authority/Data Governance/approval requirements server-side before Governed Execution;
-- read models/search are rebuildable, Organization-scoped and non-authoritative;
-- product UI remains product-owned; initial compile-time composition is allowed only through an explicit registered boundary and does not freeze a public/stable plugin schema before P9.07/Product Contract evidence;
-- no dedicated search store, public API, external IdP, remote microfrontend, WebSocket, SSR/full-stack Node runtime or separate BFF service is standardized by P9.02.
+Canonical review: [`R29-productive-workspace-boundary-review.md`](../reviews/R29-productive-workspace-boundary-review.md).
 
-Six functional cross-review iterations ended with `PASS` and no remaining material objection for architecture-spike scope.
+Accepted ADR: [`ADR-0001 — Productive Workspace Browser Application Topology`](../adrs/ADR-0001-productive-workspace-browser-application-topology.md).
 
-Because the preferred topology is long-lived/materially constraining, ADR-0001 was created as `Proposed`. P9.02 does not fabricate Acceptance or owner approval. R29 must disposition the ADR through valid decision authority before P9.03 materially relies on it.
+Owner approval: [`DECISION-2026-08-21 — ADR-0001 Acceptance`](../governance/decisions/DECISION-2026-08-21-ADR-0001-ACCEPTANCE.md).
 
-## 8. M9-alpha exit criteria
+R29 confirmed the P9.02 topology only after revising four material boundaries:
+
+- protected reads/search/projections are server-authorized, Organization-scoped and minimized before returning protected data or metadata;
+- server-side session state is bounded/revocable and cannot create ambient Organization/authority scope;
+- compile-time product UI gains no hidden platform access and the BFF remains internal/release-scoped rather than an accidental public/stable API;
+- exact-release deployment includes safe browser frontend/BFF release-skew handling.
+
+Final R29 result: no material conflict remains with Constitution `1.2.0`, Accepted RFC-0001…RFC-0008, applicable Product Contract boundaries or P7.06 exact-release semantics.
+
+ADR-0001 is therefore binding architecture for the current `Local / Persistent Internal / owner-operated` Phase 9 application scope. Acceptance does not prove implementation conformance, public/customer readiness or lifecycle promotion.
+
+## 9. P9.03 implementation boundary
+
+P9.03 now owns the first material implementation of ADR-0001 and must establish, at minimum:
+
+1. real React + TypeScript application shell built to release-pinned static assets;
+2. same-origin Python BFF with no browser reliance on private platform internals;
+3. explicit attributable actor and Organization context resolution;
+4. protected read-side Authorization/Data Governance/minimization;
+5. opaque bounded/revocable session behavior and security-sensitive identifier rotation;
+6. CSRF + configured Host/Origin enforcement;
+7. no auth/session bearer material in browser Web Storage;
+8. bounded loopback-only HTTP exception or stronger HTTPS profile;
+9. exact application release identity and safe stale-client/reload behavior;
+10. domain-neutral navigation/application shell without product business logic leakage;
+11. diagnostic/reference P4/P7 surface preserved or explicitly governed through replacement/retirement rather than silently destroyed.
+
+P9.03 may create subordinate implementation standards/tests where useful, but it must not silently redefine ADR-0001 or freeze a public Product Contract surface.
+
+## 10. M9-alpha exit criteria
 
 `M9-alpha — Usable Internal Workspace` is achieved only when the owner can, through the normal private Workspace and without terminal/GitHub/internal-ID knowledge for ordinary steps:
 
@@ -179,7 +187,7 @@ Because the preferred topology is long-lived/materially constraining, ADR-0001 w
 
 M9-alpha is an internal usability milestone, not a public/stable interface, Production/customer readiness or lifecycle transition.
 
-## 9. M9 exit criteria
+## 11. M9 exit criteria
 
 `M9 — Daily-use organizational workbench` requires the exact activated internal scope to demonstrate:
 
@@ -195,7 +203,7 @@ M9-alpha is an internal usability milestone, not a public/stable interface, Prod
 10. R29–R32 findings are closed or explicitly accepted by appropriate authority;
 11. M9 Milestone Code Health Gate passes before closure.
 
-## 10. Explicit non-goals
+## 12. Explicit non-goals
 
 Phase 9 does not by itself establish:
 
@@ -210,10 +218,10 @@ Phase 9 does not by itself establish:
 - AI Organizational Authority or final consequential approval;
 - automatic promotion of observations/generated outputs into validated Knowledge.
 
-## 11. Current canonical action
+## 13. Current canonical action
 
-> **R29 — Productive Workspace Boundary Review.**
+> **P9.03 — Real application shell + navigation + organization/user context.**
 
-Use the P9.02 evidence and Proposed ADR-0001 as the review subject. R29 must verify compatibility with Constitution/RFC-0001…RFC-0008; browser/server trust and session/CSRF/origin controls; server-side Organization/Authorization/Organizational Authority/Data Governance revalidation; non-authoritative projection semantics; product-owned UI boundaries; P7.06 exact-release deployment/rollback; and absence of accidental public/stable API/browser/support commitments.
+Implement the Accepted ADR-0001 topology as a bounded real application shell. Do not skip directly to broad P9.04–P9.06 feature work until the shell proves the browser/BFF/session/Organization/release boundary on which those flows depend.
 
-R29 must disposition Proposed ADR-0001 through valid decision authority before P9.03 materially relies on the selected topology. The intended near-term sequence is `R29 → P9.03…P9.06 → R30 → M9-alpha`, after which daily use begins as the primary validation loop for the remainder of Phase 9.
+The intended near-term sequence is `P9.03 → P9.04 → P9.05 → P9.06 → R30 → M9-alpha`, after which daily use begins as the primary validation loop for the remainder of Phase 9.
