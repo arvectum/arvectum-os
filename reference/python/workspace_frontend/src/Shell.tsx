@@ -1,10 +1,10 @@
 import { Discovery } from "./Discovery";
+import { Governed } from "./Governed";
 import { MyWork } from "./MyWork";
 import { ObjectDetail } from "./ObjectDetail";
 import type { NavigationItem, WorkspaceContext } from "./types";
 
 const plannedCopy: Record<string, string> = {
-  governed: "Governed action UX arrives in P9.06.",
   products: "Product-owned surfaces arrive in P9.07 through explicit boundaries.",
 };
 
@@ -84,13 +84,13 @@ export function Shell({ context, onLogout }: { context: WorkspaceContext; onLogo
                 <p className="eyebrow">Productive Workspace</p>
                 <h1 id="home-title">Your organization context is established.</h1>
                 <p>
-                  My Work surfaces current attention signals, while P9.05 discovery lets you find and understand
-                  governed Records, Documents and Knowledge without ordinary-path dependence on internal identifiers.
+                  My Work surfaces current attention signals, discovery finds governed organizational context, and
+                  Governed actions now exposes real execution/decision preflight without turning the browser into authority.
                 </p>
                 <div className="status-grid">
                   <article><span>Context</span><strong>Server resolved</strong><p>Browser input cannot choose the Organization or actor.</p></article>
                   <article><span>Protected reads</span><strong>Revalidated</strong><p>Current least-privilege access is checked before protected projections are returned.</p></article>
-                  <article><span>Authority</span><strong>Not implied</strong><p>Session, search results and queue visibility do not create Organizational Authority.</p></article>
+                  <article><span>Authority</span><strong>Not implied</strong><p>Session, search results, queue visibility and action buttons do not create Organizational Authority.</p></article>
                 </div>
               </section>
               <MyWork embedded />
@@ -105,6 +105,8 @@ export function Shell({ context, onLogout }: { context: WorkspaceContext; onLogo
             <Discovery kind="document" />
           ) : active.id === "knowledge" ? (
             <Discovery kind="knowledge" />
+          ) : active.id === "governed" ? (
+            <Governed csrfToken={context.session.csrf_token} />
           ) : (
             <section className="placeholder" aria-labelledby="placeholder-title">
               <p className="eyebrow">Navigation spine</p>
