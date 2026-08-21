@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.77.0`
+Version: `2.78.0`
 Created: `2026-08-07`
 Updated: `2026-08-21`
 Owner: `ООО «Арвектум»`
@@ -17,27 +17,26 @@ Detailed completed-phase history remains in the corresponding phase roadmaps, re
 
 ## 2. Version note
 
-Version `2.77.0` closes **`P9.03 — Real application shell + navigation + organization/user context`** as `Complete / PASS` after six repository-level functional cross-review iterations and advances Phase 9 to **`P9.04 — My Work / Needs Attention projection`**.
+Version `2.78.0` closes **`P9.04 — My Work / Needs Attention projection`** as `Complete / PASS` after four functional cross-review iterations and advances Phase 9 to **`P9.05 — Human-friendly Records / Documents / Knowledge + global search`**.
 
-P9.03 implements Accepted ADR-0001 with:
+P9.04 adds the first useful owner-facing attention projection through the Accepted ADR-0001 / P9.03 application boundary:
 
-1. a real React + TypeScript SPA compiled into committed release-pinned content-hashed static assets;
-2. a same-origin co-deployed Python BFF with server-resolved Organization and attributable human actor context;
-3. current protected-read Authorization/Data Governance/minimization, opaque bounded/revocable server-side sessions and explicit Host/Origin/CSRF controls;
-4. no bearer/session material in browser Web Storage and a strict loopback-only HTTP exception for the current owner-operated contour;
-5. exact application release identity with stale-client/reload failure semantics;
-6. domain-neutral navigation with P9.04–P9.07 destinations truthfully marked planned rather than implemented;
-7. exact P7.06 release coupling for the BFF runtime lock through the release-specific venv while preserving pre-P9 rollback compatibility and existing P4/P7 diagnostic/recovery surfaces.
+1. internal `arvectum.workspace.my-work/1` derived read contract with no canonical or Organizational Authority;
+2. current server-side Organization/Actor scope and access revalidation before protected projection disclosure;
+3. minimized denial semantics that do not expose protected source existence/counts;
+4. truthful live signals from already-proven P7.05 runtime health and P7.06 UI4 preflight semantics, with controlled scenario evidence visibly marked as non-live;
+5. explicit `fresh / stale / degraded` health and fail-closed withholding of protected work when source currency cannot be revalidated;
+6. human-readable reason/source/next step, opaque projection-local focus links and no ordinary dependency on raw governed/execution identifiers;
+7. compact `Needs attention` directly on Home plus full `/my-work` filtering/sorting/focus view;
+8. no approval/retry/canonical mutation path and no inference of permission/authority from visibility.
 
-One material P9.03 finding was resolved before closure: P7.06 already archived the exact Workspace runtime lock but did not install it into a newly prepared release-specific venv. Commit `c4520513e58a813858a53fb807e01473b9146c26` adds exact-release dependency installation, SHA-256 stamp idempotence and fail-closed FastAPI/Uvicorn verification without creating a second independent service lifecycle.
+The four review iterations repaired frontend-test isolation, the P9.01 J1 Home-visibility gap and exact CI-built production-asset reconciliation; the final semantic/security review found no remaining material objection. Final implementation/reconciliation head `04776a93703aa8fd2e7cd9d2fa808fb62d16596b` passed `Reference Python CI #258` (`1301 tests`, `OK`, generated-artifact guard PASS) and `Productive Workspace CI #26` (BFF security/context plus SPA typecheck/test/Web-Storage/build/reproducibility/release-asset gates PASS).
 
-Final implementation/reconciliation head `8989730d01ae43419d6b5c927b32c8b0ab82dd83` passed `Reference Python CI #242` (`1301 tests`, `OK`, generated-artifact guard PASS) and `Productive Workspace CI #10` (BFF security/context and SPA typecheck/test/Web-Storage/reproducibility/release-asset gates PASS) against the then-current canonical `main`, including the independent approved P6.02 repository-locator reconciliation.
+Canonical P9.04 evidence: [`P9-04-my-work-needs-attention-projection.md`](../reviews/P9-04-my-work-needs-attention-projection.md). Detailed Phase 9 roadmap: [`PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md`](PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md) `Active 1.5.0`.
 
-Canonical P9.03 evidence: [`P9-03-real-application-shell-navigation-organization-user-context.md`](../reviews/P9-03-real-application-shell-navigation-organization-user-context.md). Detailed Phase 9 roadmap: [`PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md`](PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md) `Active 1.4.0`.
+The intermediate milestone remains **`M9-alpha — Usable Internal Workspace`** and is **not yet achieved**. P9.05, P9.06 and R30 remain necessary for human-friendly exact object context, governed-action continuation and full P9.01 J1–J4 usability evidence.
 
-The intermediate milestone remains **`M9-alpha — Usable Internal Workspace`** and is **not yet achieved**. P9.04–P9.06 and R30 remain necessary before that milestone can pass.
-
-P9.03 closure does not create public/customer Production, Stable Product Contracts, Active Platform Capabilities, public/stable API/SDK/browser compatibility, SLA/support/certification, multi-Organization validation or Organizational/AI authority.
+P9.04 closure does not create public/customer Production, Stable Product Contracts, Active Platform Capabilities, public/stable API/SDK/browser compatibility, SLA/support/certification, realistic multi-Organization validation or Organizational/AI authority.
 
 ## 3. Architecture and governance baseline
 
@@ -50,7 +49,7 @@ P9.03 closure does not create public/customer Production, Stable Product Contrac
 - CAP-001 through CAP-004 remain `Incubating / Provisional`;
 - P6.02, P6.06, P8.03 and P8.06 Product Contracts remain Provisional within their exact scopes;
 - the operating environment remains `Local / Persistent Internal / owner-operated` with scoped conformance;
-- no Platform Capability is `Active` and no Product Contract is `Stable` merely because M0–M8 completed, Phase 9 activated, ADR-0001 was accepted or P9.03 completed;
+- no Platform Capability is `Active` and no Product Contract is `Stable` merely because M0–M8 completed, Phase 9 activated, ADR-0001 was accepted or P9.03/P9.04 completed;
 - no public/stable SDK/API/wire/browser surface, external/customer Production, SLA/support/certification or broader conformance claim exists.
 
 ## 4. Strategic roadmap
@@ -91,7 +90,7 @@ The current private P4/P7 UI remains useful as diagnostic/reference/recovery evi
 
 ## 6. Active Phase 9 — Productive Workspace & Daily Operations
 
-Detailed roadmap: [`PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md`](PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md) — `Active 1.4.0`.
+Detailed roadmap: [`PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md`](PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md) — `Active 1.5.0`.
 
 | ID | Work item | Status |
 |---|---|---:|
@@ -100,8 +99,8 @@ Detailed roadmap: [`PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md`](PHASE-9-P
 | `P9.02` | Application architecture spike + frontend/BFF/session decision | 🟩 Complete / PASS |
 | `R29` | Productive Workspace Boundary Review | 🟩 Complete / PASS |
 | `P9.03` | Real application shell + navigation + organization/user context | 🟩 Complete / PASS |
-| **`P9.04`** | **`My Work` / Needs Attention projection** | **🟨 Current** |
-| `P9.05` | Human-friendly Records / Documents / Knowledge + global search | ⬜ |
+| `P9.04` | `My Work` / Needs Attention projection | 🟩 Complete / PASS |
+| **`P9.05`** | **Human-friendly Records / Documents / Knowledge + global search** | **🟨 Current** |
 | `P9.06` | Executions / Decisions / governed actions UX | ⬜ |
 | `R30` | M9-alpha Usability / Information Architecture Review | ⬜ gate |
 | `M9-alpha` | Usable Internal Workspace | ⬜ milestone |
@@ -127,9 +126,9 @@ R29 boundary review + ADR-0001 acceptance              PASS
         ↓
 P9.03 real application shell                          PASS
         ↓
-P9.04 My Work / Needs Attention                        CURRENT
+P9.04 My Work / Needs Attention                       PASS
         ↓
-P9.05 human-friendly Records/Documents/Knowledge/search
+P9.05 human-friendly Records/Documents/Knowledge/search CURRENT
         ↓
 P9.06 Executions/Decisions/governed actions
         ↓
@@ -172,8 +171,8 @@ M9-alpha is internal usability evidence only; it creates no public/stable surfac
 
 ## 9. Current canonical action
 
-> **P9.04 — `My Work` / Needs Attention projection.**
+> **P9.05 — Human-friendly Records / Documents / Knowledge + global search.**
 
-Build the first useful owner-facing work queue through the closed P9.03 browser/BFF/session boundary. It must be a non-authoritative Organization-scoped projection; current Authorization/Data Governance/minimization must be enforced before returning protected item existence/counts/previews; visibility must not imply permission, Organizational Authority or consequential approval; ordinary owner use must not require raw execution/internal identifiers.
+Build the next owner-facing discovery/context layer through the P9.03/P9.04 Productive Workspace boundary. The ordinary path must find and open real governed organizational objects by human-readable context without terminal/GitHub/internal identifiers; derived discovery/search must remain non-authoritative; current source Authorization/Data Governance/minimization must be revalidated before protected existence/content is disclosed.
 
-P9.04 does not itself achieve M9-alpha. The remaining critical sequence is `P9.04 → P9.05 → P9.06 → R30 → M9-alpha`.
+P9.05 does not itself achieve M9-alpha. The remaining critical sequence is `P9.05 → P9.06 → R30 → M9-alpha`.
