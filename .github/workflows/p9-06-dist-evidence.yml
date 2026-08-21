@@ -1,0 +1,38 @@
+name: P9.06 Temporary Dist Evidence
+
+on:
+  pull_request:
+    paths:
+      - "reference/python/workspace_frontend/**"
+      - ".github/workflows/p9-06-dist-evidence.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: reference/python/workspace_frontend
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: reference/python/workspace_frontend/package-lock.json
+      - name: Install exact frontend dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Build exact production assets
+        run: npm run build
+      - name: Upload exact production assets
+        uses: actions/upload-artifact@v4
+        with:
+          name: p9-06-workspace-dist
+          path: reference/python/workspace_frontend/dist
+          include-hidden-files: true
+          if-no-files-found: error
