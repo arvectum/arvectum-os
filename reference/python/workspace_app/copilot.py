@@ -127,7 +127,6 @@ class LoopbackChatModel:
     def synthesize(self, question: str, evidence: tuple[CopilotEvidence, ...]) -> str:
         packet = [
             {
-                "source_id": item.source_id,
                 "label": item.label,
                 "summary": item.summary,
                 "authority": item.authority,
