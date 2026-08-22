@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.94.0`
+Version: `2.95.0`
 Created: `2026-08-07`
 Updated: `2026-08-22`
 Owner: `ООО «Арвектум»`
@@ -17,19 +17,15 @@ Detailed completed-phase history remains in the corresponding phase roadmaps, re
 
 ## 2. Version note
 
-Version `2.94.0` preserves `P9.11 — Real daily-use dogfooding + friction/backlog closure` as the current **critical-path** action while closing `INT-B6 — Integration security/reliability review` and advancing Lane B to `INT-B7 — First real connector pilot admission package`.
+Version `2.95.0` preserves `P9.11 — Real daily-use dogfooding + friction/backlog closure` as the current **critical-path** action and closes all internally executable work in the current Lane-B integration block through the `INT-B7` admission boundary.
 
-M9-alpha is already achieved and P9.07–P9.10 plus R31 are `Complete / PASS`. P9.11 depends materially on real owner working sessions, so bounded work that does not falsify or bypass P9.11 evidence may proceed concurrently.
+`INT-B7 — First real connector pilot admission package` is now canonically prepared and cross-reviewed, but the pilot is **NOT ADMITTED** because no exact real 1С/CRM/СЭД/ЭДО endpoint/deployment/account has been supplied. The integration block is therefore `Internally complete / operational continuation externally blocked`.
+
+No synthetic endpoint, credential, metadata, failure result or pilot evidence may be created merely to make the lane appear complete. When an exact real endpoint becomes available, Lane B resumes by populating and executing the existing INT-B7 package rather than inventing a new planning task.
+
+M9-alpha remains achieved and P9.07–P9.10 plus R31 remain `Complete / PASS`. P9.11 depends materially on real owner working sessions; bounded parallel work remains permitted only where it does not falsify or bypass required evidence.
 
 Canonical parallel-workstream plan: [`PARALLEL-WORKSTREAMS-POST-M9-ALPHA.md`](PARALLEL-WORKSTREAMS-POST-M9-ALPHA.md) `1.0.0`.
-
-`INT-B1` through `INT-B5` remain closed at their previously recorded scopes.
-
-`INT-B6` is closed by [`INT-B6 — Integration Security / Reliability Review`](../reviews/INT-B6-integration-security-reliability-review.md) `1.0.0` — `PASS for bounded read-only pilot admission after reconciliation`, 4 of maximum 7 iterations. The review confirms Organization isolation, external authority, least-privilege credential boundaries, secret/private-key handling, explicit operation allowlists, freshness/completeness semantics, duplicate/gap/replay safety, uncertainty/reconciliation, source-occurrence/Event admission, data minimization/retention, fail-closed behavior and termination requirements across INT-B2–INT-B5.
-
-The PASS is deliberately scoped. It does not activate a connector or authorize any external write/effect. Endpoint-specific discovery, credentials, data-purpose/classification, Product Contract where required, compatibility evidence, failure/reconciliation tests and ADR disposition remain mandatory before governed reliance.
-
-`1С:ERP` remains the preferred first real pilot candidate because INT-B1 ranked 1С first and INT-B3 already defines the narrow read-only procurement projection. The next Lane-B artifact MUST use an exact real endpoint/deployment if one is available. Synthetic customer/deployment evidence is not accepted.
 
 This update does not create a new numbered phase, public/stable connector/API/SDK, customer Production, Stable Product Contract, Active Platform Capability, SLA/support/certification or broader conformance claim.
 
@@ -94,22 +90,22 @@ Detailed concurrency rules and boundaries: [`PARALLEL-WORKSTREAMS-POST-M9-ALPHA.
 | Lane | Scope | Status | May progress during P9.11? |
 |---|---|---:|---:|
 | **A — Productive Workspace dogfooding** | real UI use, friction capture/repair, P9.11 → R32 → P9.12 | 🟨 Critical path | yes — primary |
-| **B — Russian-market integrations** | INT-B1–INT-B6 baseline/gate; first real bounded pilot admission | 🟨 INT-B1–INT-B6 complete; INT-B7 ready / real-endpoint dependent | **yes** |
+| **B — Russian-market integrations** | portfolio/design/security gate + first real connector admission boundary | 🟦 Internally complete / operational continuation externally blocked | only when exact real endpoint exists |
 | **C — Product ↔ Workspace composition** | Tender/Discount/Creative/Proxy product-owned projections and governed entry points | 🟦 Available | yes, within Product Contract/product-local boundaries |
 | **D — Reliability / DX / technical debt** | CI, dependencies, observability, recovery regressions, evidence-backed cleanup | 🟦 Continuous | yes |
 | **E — Future external/customer readiness** | second-Organization/customer/deployment/regulatory discovery only | ⬜ Discovery | yes, no customer-Production implementation |
 
-### 6.1 Lane A — current UI branch
+### 6.1 Lane A — current critical path
 
-Current action remains:
+Current action:
 
 > **P9.11 — Real daily-use dogfooding + friction/backlog closure.**
 
 The owner uses the Productive Workspace for real work, records friction, and validates whether ordinary work can remain inside the Workspace rather than escaping to terminal/GitHub/internal identifiers. Material defects are fixed as they appear. R32 remains locked until real-session evidence and backlog disposition satisfy P9.11.
 
-### 6.2 Lane B — integration sequence
+### 6.2 Lane B — Russian-market integration block
 
-Canonical integration sequence:
+Canonical integration sequence and state:
 
 1. `INT-B1 — Integration portfolio baseline` — **Complete / PASS**;
 2. `INT-B2 — Domain-neutral connector boundary pattern` — **Complete / PASS**;
@@ -117,57 +113,58 @@ Canonical integration sequence:
 4. `INT-B4 — CRM designs` — **Complete / PASS**;
 5. `INT-B5 — СЭД/ECM/ЭДО design` — **Complete / PASS**;
 6. `INT-B6 — Integration security/reliability review` — **Complete / scoped PASS** for bounded read-only pilot admission;
-7. **`INT-B7 — First real connector pilot admission package` — Ready / real-endpoint dependent**.
+7. [`INT-B7 — First real connector pilot admission package`](../architecture/INT-B7-first-real-connector-pilot-admission-package.md) `1.0.0` — **Prepared / blocked on exact real endpoint**; cross-review [`INT-B7 functional cross-review`](../reviews/INT-B7-functional-cross-review.md) — **PASS for package completeness / pilot NOT ADMITTED**, 3 of maximum 7 iterations.
 
-INT-B6 gate disposition:
+The current Lane-B block has no further internally executable task. `INT-B8` is not invented because the existing roadmap has no evidence-based need for one before a real pilot exists.
 
-- all current candidates preserve external authority and begin from `External Reference`;
-- one endpoint binding resolves to one governing Organization scope for admitted data;
-- external IDs remain external aliases/references;
-- dedicated least-privilege integration credentials are required; secrets/private keys remain outside ordinary canonical state, prompts, logs and repository files;
-- authentication/API permission does not create Organizational Authority;
-- operation allowlists remain explicit and read-only for the admitted first scopes;
-- partial, stale, unavailable and schema-incompatible states must be explicit;
-- webhook/event-feed/callback data is a source occurrence before canonical Event admission;
-- duplicate/gap/retry/replay behavior must be deterministic and replay must not repeat external effects;
-- document/content collection is minimized; derived artifacts remain non-authoritative by default;
-- signing/sending/posting/payment/approval/stage-transition and other business writes remain prohibited;
-- connector disable/termination preserves lawful history and external authority while revoking credentials/subscriptions and disposing non-authoritative caches according to retention;
-- materially shared runtime/topology choices remain ADR triggers rather than implicit implementation decisions.
+#### INT-B7 prepared material
 
-INT-B7 admission package MUST contain endpoint-specific evidence for:
+The prepared package already contains:
 
-- exact real system/account/portal/box/deployment;
-- Organization mapping and external authority scope;
-- one bounded outcome;
+- preferred first candidate: `1С:ERP 2.5` read-only procurement projection;
+- bounded outcome statement;
 - exact read-only operation allowlist;
-- dedicated least-privilege credential binding and revocation;
-- purpose/classification/minimization/retention/deletion/portability;
-- API/configuration/version compatibility;
-- freshness/completeness and stale-state semantics;
-- authentication, authorization, timeout, source-unavailable, partial-pagination/cursor-gap, schema-drift and credential-revocation failure tests;
-- reconciliation and deterministic duplicate handling;
-- source-occurrence/Event boundary where webhooks or feeds are used;
+- endpoint intake record/schema;
+- external-authority and Organization binding requirements;
+- dedicated least-privilege credential requirements without storing secrets;
+- data-purpose/classification/minimization/retention/deletion/portability intake;
+- compatibility discovery procedure;
+- freshness/completeness and stale-state requirements;
+- authentication/authorization/network/source/pagination/schema/credential failure-test matrix;
+- deterministic duplicate/reconciliation requirements;
 - connector disable/termination test;
-- applicable Product Contract before governed product/shared-platform reliance;
-- ADR disposition for any materially shared implementation constraint.
+- Product Contract gate;
+- ADR trigger disposition;
+- explicit current decision `NOT ADMITTED` while the real endpoint is absent.
 
-Preferred candidate is the INT-B3 `1С:ERP 2.5` read-only procurement projection. However, INT-B7 MUST NOT fabricate an endpoint. If no exact real 1С deployment is available, Lane B remains ready/blocked on real endpoint or may select another already-designed candidate only when an exact real binding and concrete organizational outcome exist.
+#### Resume condition
+
+Lane B resumes only when an exact real binding exists for one of the already-designed candidates, preferably the INT-B3 `1С:ERP 2.5` candidate:
+
+- actual deployment/account/portal/box identity;
+- actual reachable integration endpoint;
+- actual deployment/API/configuration metadata;
+- dedicated least-privilege integration principal/credential binding;
+- concrete bounded data scope and purpose.
+
+At that point the existing INT-B7 package is populated and executed. Real evidence then determines whether the pilot is admitted. No synthetic customer/deployment evidence is acceptable.
+
+All business writes/effects remain closed: 1С posting/writes/payments, CRM writes/stage transitions, Directum approvals/workflow mutation, Диадок signing/sending/annulment and arbitrary vendor API passthrough require later operation-specific governed design and authority gates.
 
 ## 7. Concurrency map
 
 ```text
                          ┌─ Lane A: P9.11 real UI dogfooding ──→ R32 ─→ P9.12/M9
                          │
-current canonical main ──┼─ Lane B: INT-B7 first real connector admission
-                         │             └─ exact endpoint required; no synthetic evidence
+current canonical main ──┼─ Lane B: internally complete
+                         │          └─ resume INT-B7 only on exact real endpoint
                          │
                          ├─ Lane C: product ↔ Workspace composition
                          ├─ Lane D: reliability / DX / technical debt
                          └─ Lane E: future external/customer discovery
 ```
 
-Only Lane A is on the critical path to M9. Parallel lanes must revalidate against current `main` before merge and must not silently change shared Workspace/BFF/session/security or connector-contract boundaries.
+Only Lane A is on the current critical path to M9. Parallel lanes must revalidate against current `main` before merge and must not silently change shared Workspace/BFF/session/security or connector-contract boundaries.
 
 ## 8. M9 definition
 
@@ -192,8 +189,8 @@ Parallel integration progress is not itself an M9 closure criterion and therefor
 
 > **P9.11 — Real daily-use dogfooding + friction/backlog closure.**
 
-**Parallel integration:**
+**Lane B:**
 
-> **INT-B7 — First real connector pilot admission package — Ready / real-endpoint dependent.**
+> **No current internally executable action. INT-B7 is prepared and blocked on an exact real endpoint.**
 
-INT-B7 may proceed concurrently only when an exact real endpoint and bounded outcome exist. Until then, the integration lane must not fabricate operational evidence or treat a reference profile as a live deployment. No first material governed connector reliance is admitted without the endpoint-specific evidence, applicable Product Contract/governance gates and INT-B6 conditions recorded above.
+When the external prerequisite becomes available, resume the existing INT-B7 package. Until then, do not create synthetic pilot evidence and do not invent a follow-on integration task merely to keep the lane active.
