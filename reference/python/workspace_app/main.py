@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import asyncio
 import ipaddress
+import json
 import logging
 from pathlib import Path
 from typing import Any
@@ -12,6 +14,7 @@ from fastapi.staticfiles import StaticFiles
 from .access import AccessContext, AccessResolver, P704AccessResolver, WorkspaceAccessError
 from .attention import AttentionProvider, RuntimeAttentionProvider
 from .config import WorkspaceSettings
+from .copilot import CopilotError, CopilotProvider, LoopbackChatModel, RuntimeCopilotProvider, normalize_question
 from .discovery import DiscoveryError, DiscoveryKind, DiscoveryProvider, ObjectUnavailable, RuntimeDiscoveryProvider
 from .governed import GovernedExperienceError, GovernedExperienceProvider, RuntimeGovernedExperienceProvider
 from .products import ProductCompositionError, ProductCompositionProvider, RuntimeProductCompositionProvider
@@ -22,6 +25,7 @@ logger = logging.getLogger("arvectum.workspace.security")
 SAFE_METHODS = frozenset({"GET", "HEAD", "OPTIONS"})
 RELEASE_HEADER = "X-Arvectum-Workspace-Release"
 CSRF_HEADER = "X-Arvectum-CSRF"
+MAX_COPILOT_REQUEST_BYTES = 4096
 
 
 def _is_loopback_client(host: str | None) -> bool:
@@ -60,6 +64,7 @@ def _navigation() -> list[dict[str, Any]]:
         {"id": "records", "label": "Records", "href": "/records", "availability": "available"},
         {"id": "documents", "label": "Documents", "href": "/documents", "availability": "available"},
         {"id": "knowledge", "label": "Knowledge", "href": "/knowledge", "availability": "available"},
+        {"id": "copilot", "label": "Ask Arvectum", "href": "/copilot", "availability": "available"},
         {"id": "governed", "label": "Governed actions", "href": "/governed", "availability": "available"},
         {"id": "products", "label": "Products", "href": "/products", "availability": "available"},
     ]
@@ -104,6 +109,7 @@ def create_app(
     discovery_provider: DiscoveryProvider | None = None,
     governed_provider: GovernedExperienceProvider | None = None,
     product_provider: ProductCompositionProvider | None = None,
+    copilot_provider: CopilotProvider | None = None,
     session_store: SessionStore | None = None,
     static_dir: Path | None = None,
 ) -> FastAPI:
@@ -114,6 +120,16 @@ def create_app(
     discovery = discovery_provider or RuntimeDiscoveryProvider(settings.runtime_root)
     governed = governed_provider or RuntimeGovernedExperienceProvider(settings.runtime_root)
     products = product_provider or RuntimeProductCompositionProvider(settings.runtime_root)
+    model = (
+        LoopbackChatModel(
+            settings.copilot_model_url,
+            settings.copilot_model_name,
+            settings.copilot_model_timeout_seconds,
+        )
+        if settings.copilot_model_url
+        else None
+    )
+    copilot = copilot_provider or RuntimeCopilotProvider(discovery, products, model=model)
     store = session_store or SessionStore(
         idle_seconds=settings.session_idle_seconds,
         absolute_seconds=settings.session_absolute_seconds,
@@ -128,6 +144,7 @@ def create_app(
     app.state.discovery_provider = discovery
     app.state.governed_provider = governed
     app.state.product_provider = products
+    app.state.copilot_provider = copilot
     app.state.session_store = store
     app.state.static_root = static_root
 
@@ -214,6 +231,33 @@ def create_app(
             _security_event("GOVERNED_PREFLIGHT_INPUT_REJECTED", request, store, "non-empty-body")
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="GOVERNED_PREFLIGHT_INPUT_REJECTED")
 
+    async def _copilot_question(request: Request) -> str:
+        if request.headers.get("transfer-encoding"):
+            _security_event("COPILOT_INPUT_REJECTED", request, store, "transfer-encoding")
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="COPILOT_INPUT_REJECTED")
+        raw_length = request.headers.get("content-length")
+        if raw_length is not None:
+            try:
+                length = int(raw_length)
+            except ValueError:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="COPILOT_INPUT_REJECTED") from None
+            if length <= 0 or length > MAX_COPILOT_REQUEST_BYTES:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="COPILOT_INPUT_REJECTED")
+        raw = await request.body()
+        if not raw or len(raw) > MAX_COPILOT_REQUEST_BYTES:
+            _security_event("COPILOT_INPUT_REJECTED", request, store, "body-size")
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="COPILOT_INPUT_REJECTED")
+        try:
+            payload = json.loads(raw.decode("utf-8"))
+        except (UnicodeDecodeError, json.JSONDecodeError):
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="COPILOT_INPUT_REJECTED") from None
+        if not isinstance(payload, dict) or set(payload) != {"question"}:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="COPILOT_INPUT_REJECTED")
+        try:
+            return normalize_question(payload["question"])
+        except CopilotError:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="COPILOT_QUESTION_INVALID") from None
+
     @app.post("/api/app/v1/session/bootstrap")
     async def bootstrap_session(request: Request, response: Response) -> dict[str, Any]:
         if not _is_loopback_client(request.client.host if request.client else None):
@@ -283,6 +327,19 @@ def create_app(
             return products.project(access).to_payload()
         except ProductCompositionError:
             raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="PRODUCT_COMPOSITION_UNAVAILABLE") from None
+
+    @app.post("/api/app/v1/copilot/ask")
+    async def ask_copilot(
+        request: Request,
+        current: tuple[WorkspaceSession, AccessContext] = Depends(_csrf_protected),
+    ) -> dict[str, object]:
+        question = await _copilot_question(request)
+        _, access = current
+        try:
+            answer = await asyncio.to_thread(copilot.answer, access, question)
+            return answer.to_payload()
+        except CopilotError:
+            raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="COPILOT_UNAVAILABLE") from None
 
     @app.get("/api/app/v1/governed")
     async def read_governed_experience(

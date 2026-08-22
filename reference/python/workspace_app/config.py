@@ -41,6 +41,23 @@ def _is_loopback(host: str) -> bool:
         return False
 
 
+def _copilot_endpoint() -> str | None:
+    value = os.environ.get("ARVECTUM_WORKSPACE_COPILOT_MODEL_URL")
+    if value is None or not value.strip():
+        return None
+    endpoint = value.strip()
+    parsed = urlsplit(endpoint)
+    if parsed.scheme not in {"http", "https"} or not parsed.hostname or not parsed.path:
+        raise ConfigurationError("ARVECTUM_WORKSPACE_COPILOT_MODEL_URL must be an absolute HTTP(S) endpoint")
+    if parsed.username or parsed.password or parsed.query or parsed.fragment:
+        raise ConfigurationError("Copilot model endpoint must not embed credentials, query parameters, or fragments")
+    if not _is_loopback(parsed.hostname):
+        raise ConfigurationError("P9.08 Copilot model endpoint is restricted to loopback in the current owner-operated contour")
+    if parsed.port is not None and not 1 <= parsed.port <= 65535:
+        raise ConfigurationError("Copilot model endpoint port is invalid")
+    return endpoint
+
+
 @dataclass(frozen=True)
 class WorkspaceSettings:
     runtime_root: Path
@@ -53,6 +70,9 @@ class WorkspaceSettings:
     session_idle_seconds: int
     session_absolute_seconds: int
     allow_loopback_http: bool
+    copilot_model_url: str | None = None
+    copilot_model_name: str = "local-grounded-model"
+    copilot_model_timeout_seconds: int = 20
 
     @property
     def secure_cookie(self) -> bool:
@@ -105,6 +125,15 @@ class WorkspaceSettings:
         absolute = _positive_int("ARVECTUM_WORKSPACE_SESSION_ABSOLUTE_SECONDS", 28800)
         if idle > absolute:
             raise ConfigurationError("session idle expiry cannot exceed absolute expiry")
+
+        copilot_model_url = _copilot_endpoint()
+        copilot_model_name = os.environ.get("ARVECTUM_WORKSPACE_COPILOT_MODEL", "local-grounded-model").strip()
+        if not copilot_model_name or len(copilot_model_name) > 160:
+            raise ConfigurationError("ARVECTUM_WORKSPACE_COPILOT_MODEL must be bounded non-empty text")
+        copilot_model_timeout_seconds = _positive_int("ARVECTUM_WORKSPACE_COPILOT_MODEL_TIMEOUT_SECONDS", 20)
+        if copilot_model_timeout_seconds > 120:
+            raise ConfigurationError("Copilot model timeout exceeds the bounded P9.08 profile")
+
         return cls(
             runtime_root=runtime_root,
             public_origin=origin.rstrip("/"),
@@ -116,6 +145,9 @@ class WorkspaceSettings:
             session_idle_seconds=idle,
             session_absolute_seconds=absolute,
             allow_loopback_http=allow_loopback_http,
+            copilot_model_url=copilot_model_url,
+            copilot_model_name=copilot_model_name,
+            copilot_model_timeout_seconds=copilot_model_timeout_seconds,
         )
 
 

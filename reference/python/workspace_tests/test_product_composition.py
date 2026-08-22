@@ -16,6 +16,7 @@ from workspace_app.products import (
     ProductCompositionProjection,
     ProductSurface,
 )
+from workspace_app.release import load_release
 
 
 class FakeResolver:
@@ -74,7 +75,7 @@ class ProductCompositionBffTests(unittest.TestCase):
         (static / "index.html").write_text("ok", encoding="utf-8")
         self.provider = FakeProducts()
         self.client = client_for(create_app(settings(root), access_resolver=FakeResolver(), product_provider=self.provider, static_dir=static))
-        self.headers = {RELEASE_HEADER: "p9.07.1"}
+        self.headers = {RELEASE_HEADER: load_release().release_id}
         response = self.client.post("/api/app/v1/session/bootstrap", headers={**self.headers, "Origin": "http://127.0.0.1:8769"})
         self.assertEqual(response.status_code, 200)
 

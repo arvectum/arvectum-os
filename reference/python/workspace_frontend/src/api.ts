@@ -1,4 +1,5 @@
 import type {
+  CopilotAnswer,
   DiscoveryKind,
   DiscoveryProjection,
   GovernedExperienceProjection,
@@ -72,6 +73,14 @@ export async function loadObjectContext(objectId: string): Promise<ObjectContext
 
 export async function loadProductComposition(): Promise<ProductCompositionProjection> {
   return request<ProductCompositionProjection>("/api/app/v1/products");
+}
+
+export async function askCopilot(question: string, csrfToken: string): Promise<CopilotAnswer> {
+  return request<CopilotAnswer>("/api/app/v1/copilot/ask", {
+    method: "POST",
+    headers: { "X-Arvectum-CSRF": csrfToken },
+    body: JSON.stringify({ question }),
+  });
 }
 
 export async function loadGovernedExperience(): Promise<GovernedExperienceProjection> {

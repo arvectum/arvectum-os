@@ -1,9 +1,9 @@
 # Arvectum OS Phase 9 — Productive Workspace & Daily Operations
 
 Status: `Active`
-Version: `1.9.0`
+Version: `1.10.0`
 Created: `2026-08-21`
-Updated: `2026-08-21`
+Updated: `2026-08-22`
 Owner: `ООО «Арвектум»`
 Task classification: `platform` with `product_contract` and `governance`
 Parent roadmap: [`ROADMAP.md`](ROADMAP.md)
@@ -69,8 +69,8 @@ The existing P4/P7 UI remains a diagnostic/reference/recovery surface. It is not
 | `R30` | M9-alpha Usability / Information Architecture Review | 🟩 Complete / PASS | ordinary workflow usable without terminal/internal IDs |
 | `M9-alpha` | Usable Internal Workspace | 🟩 Achieved / PASS | daily core work usable through browser UI |
 | `P9.07` | Product-owned workspace surfaces / composition | 🟩 Complete / PASS | two real product-owned surfaces composed; P9.01 J5 passed |
-| **`P9.08`** | **Arvectum AI Copilot + source-grounded organizational assistance** | **🟨 Current** | useful AI analysis/proposals with provenance and authority-safe execution |
-| `P9.09` | Activity, notifications and attention routing | ⬜ | human-readable operational timeline/alerts projection |
+| `P9.08` | Arvectum AI Copilot + source-grounded organizational assistance | 🟩 Complete / PASS | J6 source-grounded assistance accepted within bounded internal scope |
+| **`P9.09`** | **Activity, notifications and attention routing** | **🟨 Current** | human-readable operational timeline/alerts projection |
 | `P9.10` | ООО «Арвектум» organization composition | ⬜ | company-level navigation over products/projects/knowledge/work |
 | `R31` | Product Composition / AI Safety Review | ⬜ gate | no product leakage, hidden coupling or AI authority escalation |
 | `P9.11` | Real daily-use dogfooding + friction/backlog closure | ⬜ | real working sessions completed primarily through Workspace |
@@ -352,11 +352,11 @@ Phase 9 does not by itself establish:
 
 ## 17. Current canonical action
 
-> **P9.08 — Arvectum AI Copilot + source-grounded organizational assistance.**
+> **P9.09 — Activity, notifications and attention routing.**
 
-Add source-grounded, uncertainty-aware and authority-safe AI assistance to Workspace through explicit governed boundaries while keeping product schemas, workflows, approvals, knowledge, templates and UX product-owned. The shared platform application must remain domain-neutral and must not gain hidden access to product internals.
+Add a human-readable operational activity/notification projection that routes attention without turning telemetry, derived timelines or notification delivery into canonical authority. Preserve the P9.04 attention semantics, P9.05 provenance/source distinctions, P9.06 Governed Execution boundary, P9.07 product ownership boundary and P9.08 AI authority/grounding guarantees.
 
-P9.07 is complete within the exact private internal scope. M9 remains open; P9.08–P9.12 and R31/R32 still govern the remaining AI, activity, company composition, dogfooding and hardening work.
+P9.08 is complete within the exact private internal scope. M9 remains open; P9.09–P9.12 and R31/R32 still govern the remaining activity, company composition, dogfooding and hardening work.
 
 ## 18. P9.07 closure result
 
@@ -379,3 +379,14 @@ Closure evidence:
 - release `p9.07.1`, application contract `5`, remains bounded-internal-provisional and non-public.
 
 Limitations: these are internal read-only product context surfaces, not full product command UIs or a public plugin API. P9.07 is not Stable/Active lifecycle evidence, public/customer Production evidence, or an SLA/support/conformance expansion.
+
+
+## 19. P9.08 closure result
+
+Status: `Complete / PASS` within the exact private internal scope.
+
+P9.08 added the source-grounded `Ask Arvectum` surface and passed P9.01 J6 implementation acceptance. Material facts remain tied to inspectable Workspace evidence; synthesis, uncertainty and unavailable evidence are distinct; generated output is transient by default; AI grants no authorization, Organizational Authority or consequential approval; consequential follow-up routes to Governed Execution.
+
+Closure evidence is recorded in [`P9-08-arvectum-ai-copilot-source-grounded-organizational-assistance.md`](../reviews/P9-08-arvectum-ai-copilot-source-grounded-organizational-assistance.md). Productive Workspace CI #90 / run `32553258369` and Reference Python CI #322 / run `32553258317` passed on implementation head `e5bedffa778cd2487929f826f10359071c1f0b76`. Workspace release is `p9.08.1`, internal application contract `6`, still `bounded-internal-provisional` and non-public.
+
+No Product Contract or Platform Capability lifecycle promotion occurred. External/cloud model providers remain outside the current owner-operated contour pending a separate governed data/privacy/contract decision. P9.11 still owns real daily-use dogfooding evidence.
