@@ -1,0 +1,41 @@
+name: P9.10 canonical closure helper
+
+on:
+  push:
+    branches: [p9-10-arvectum-organization-composition]
+    paths:
+      - ".github/p9_10_close.py"
+      - ".github/workflows/p9-10-close.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  close:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: p9-10-arvectum-organization-composition
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Apply review and roadmap closure
+        run: python .github/p9_10_close.py
+      - name: Verify expected closure markers
+        run: |
+          grep -F 'Version: `2.85.0`' docs/roadmap/ROADMAP.md
+          grep -F '**`R31`** | **Product Composition / AI Safety Review** | **🟨 Current gate**' docs/roadmap/ROADMAP.md
+          grep -F 'Version: `1.12.0`' docs/roadmap/PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md
+          grep -F 'Status: `Complete / PASS`' docs/reviews/P9-10-arvectum-organization-composition.md
+      - name: Commit closure and remove helper
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs
+          git rm .github/p9_10_close.py .github/workflows/p9-10-close.yml
+          git commit -m "P9.10: close organization composition and advance R31"
+          git push origin HEAD:p9-10-arvectum-organization-composition
