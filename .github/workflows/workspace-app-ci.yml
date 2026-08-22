@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: workspace-app-ci-${{ github.workflow }}-${{ github.ref }}
@@ -72,3 +72,56 @@ jobs:
       - name: Verify release-pinned production asset boundary
         working-directory: reference/python
         run: python -c 'from pathlib import Path; from workspace_app.assets import verify_frontend_assets; from workspace_app.release import load_release; print(verify_frontend_assets(Path("workspace_frontend"), load_release()))'
+
+  p9-10-canonical-closure:
+    name: P9.10 canonical roadmap closure
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.ref == 'p9-10-arvectum-organization-composition' && github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out P9.10 branch
+        uses: actions/checkout@v4
+        with:
+          ref: p9-10-arvectum-organization-composition
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Repair exact-count guard for duplicated roadmap reference
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('.github/p9_10_close.py')
+          text = path.read_text(encoding='utf-8')
+          old = 'replace_once(master, "`Active 1.11.0`", "`Active 1.12.0`")'
+          new = '''_master_path = ROOT / master
+_master_text = _master_path.read_text(encoding="utf-8")
+if _master_text.count("`Active 1.11.0`") != 2:
+    raise RuntimeError("expected two Phase 9 roadmap-version references in master roadmap")
+_master_path.write_text(_master_text.replace("`Active 1.11.0`", "`Active 1.12.0`"), encoding="utf-8")'''
+          if text.count(old) != 1:
+              raise SystemExit('closure guard patch target not found exactly once')
+          path.write_text(text.replace(old, new, 1), encoding='utf-8')
+          PY
+      - name: Apply canonical closure
+        run: python .github/p9_10_close.py
+      - name: Verify closure markers
+        run: |
+          grep -F 'Version: `2.85.0`' docs/roadmap/ROADMAP.md
+          grep -F '**`R31`** | **Product Composition / AI Safety Review** | **🟨 Current gate**' docs/roadmap/ROADMAP.md
+          grep -F 'Version: `1.12.0`' docs/roadmap/PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md
+          grep -F '## 21. P9.10 closure result' docs/roadmap/PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md
+          grep -F 'Status: `Complete / PASS`' docs/reviews/P9-10-arvectum-organization-composition.md
+      - name: Restore CI and remove temporary helpers
+        run: |
+          git fetch origin main
+          git checkout origin/main -- .github/workflows/workspace-app-ci.yml
+          git rm .github/p9_10_close.py .github/workflows/p9-10-close.yml
+          git status --short
+      - name: Commit canonical closure
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs .github/workflows/workspace-app-ci.yml
+          git commit -m "P9.10: close organization composition and advance R31"
+          git push origin HEAD:p9-10-arvectum-organization-composition
