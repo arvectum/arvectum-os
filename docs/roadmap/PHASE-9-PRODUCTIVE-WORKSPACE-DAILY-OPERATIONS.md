@@ -1,7 +1,7 @@
 # Arvectum OS Phase 9 — Productive Workspace & Daily Operations
 
 Status: `Active`
-Version: `1.11.0`
+Version: `1.12.0`
 Created: `2026-08-21`
 Updated: `2026-08-22`
 Owner: `ООО «Арвектум»`
@@ -71,8 +71,8 @@ The existing P4/P7 UI remains a diagnostic/reference/recovery surface. It is not
 | `P9.07` | Product-owned workspace surfaces / composition | 🟩 Complete / PASS | two real product-owned surfaces composed; P9.01 J5 passed |
 | `P9.08` | Arvectum AI Copilot + source-grounded organizational assistance | 🟩 Complete / PASS | J6 source-grounded assistance accepted within bounded internal scope |
 | `P9.09` | Activity, notifications and attention routing | 🟩 Complete / PASS | non-authoritative observed timeline + current attention routing |
-| **`P9.10`** | **ООО «Арвектум» organization composition** | **🟨 Current** | company-level navigation over products/projects/knowledge/work |
-| `R31` | Product Composition / AI Safety Review | ⬜ gate | no product leakage, hidden coupling or AI authority escalation |
+| `P9.10` | ООО «Арвектум» organization composition | 🟩 Complete / PASS | company-level navigation over products/projects/knowledge/work |
+| **`R31`** | **Product Composition / AI Safety Review** | **🟨 Current gate** | no product leakage, hidden coupling or AI authority escalation |
 | `P9.11` | Real daily-use dogfooding + friction/backlog closure | ⬜ | real working sessions completed primarily through Workspace |
 | `R32` | M9 Productive Workspace Hardening + Milestone Code Health Gate | ⬜ gate | security/usability/maintainability/code-health PASS |
 | `P9.12` | Phase 9 / M9 closure review | ⬜ | M9 exact-scope closure or explicit non-closure |
@@ -352,11 +352,11 @@ Phase 9 does not by itself establish:
 
 ## 17. Current canonical action
 
-> **P9.10 — ООО «Арвектум» organization composition.**
+> **R31 — Product Composition / AI Safety Review.**
 
-Compose company-level navigation over products, projects, knowledge and work through explicit boundaries without moving product/company semantics into Kernel authority. Preserve Organization scope, source authority, provenance, product ownership and Governed Execution boundaries.
+Review the integrated P9.07–P9.10 product-owned composition, AI assistance, activity and company-level organization composition for product leakage, hidden coupling, source/provenance loss, AI authority escalation and unsafe bypass of Governed Execution. No lifecycle transition is implied by passing the review.
 
-P9.09 is complete within the exact private internal scope. M9 remains open; P9.10–P9.12 and R31/R32 still govern company composition, dogfooding and hardening work.
+P9.10 is complete within the exact private internal scope. M9 remains open; R31, P9.11, R32 and P9.12 still govern composition safety, dogfooding, hardening and final closure.
 
 ## 18. P9.07 closure result
 
@@ -401,3 +401,15 @@ P9.09 adds Activity as a non-authoritative observed timeline and current attenti
 Closure evidence: [`P9-09-activity-notifications-attention-routing.md`](../reviews/P9-09-activity-notifications-attention-routing.md). Final implementation head `c335e293022193de93b349fa5d86325501c74e4f`; Productive Workspace CI `#103` / run `32555963482` and Reference Python CI `#335` / run `32555963477` passed. Workspace release is `p9.09.1`, internal application contract `7`, still `bounded-internal-provisional` and non-public.
 
 No Product Contract or Platform Capability lifecycle promotion occurred. No email/push channel, durable read receipt, public notification API or customer-facing Production/support commitment is established.
+
+## 21. P9.10 closure result
+
+Status: `Complete / PASS` within the exact private internal scope.
+
+P9.10 adds an `Organization` Workspace surface backed by `arvectum.workspace.organization-composition/1`. The projection composes existing authorized Products, non-canonical project lenses, Knowledge context and Work/attention context without introducing a company database, canonical Project source of truth or company/product semantics in Kernel.
+
+Closure evidence: [`P9-10-arvectum-organization-composition.md`](../reviews/P9-10-arvectum-organization-composition.md). Post-remediation implementation/review head `98cc9c0b0f42bc401ba2dd5c8eedc73e3516e73a`; Productive Workspace CI `#111` / run `32557218451` and Reference Python CI `#343` / run `32557218465` passed. Functional cross-review completed 3 iterations; the first two identified and repaired explicit RFC-0007 semantic preservation and minimized BFF structural-error handling, and the third found no remaining material objection.
+
+Products remain product-owned behind P9.07/Product Contract boundaries. Project lenses are navigation-only and explicitly non-canonical. Knowledge keeps Observation / Organizational Memory / Knowledge Candidate / validated Knowledge distinctions visible. Work/attention grants no Authorization, Organizational Authority or approval and exposes no consequential action. Organization/Actor scope remains server-resolved and current access is revalidated at the BFF boundary.
+
+Workspace release is `p9.10.1`, internal application contract `8`, still `bounded-internal-provisional` and non-public. No Product Contract or Platform Capability lifecycle promotion, public/stable API, customer Production, SLA/support/certification or broader conformance claim is introduced.
