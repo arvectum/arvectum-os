@@ -67,52 +67,8 @@ jobs:
         run: npm run guard:web-storage
       - name: Rebuild production assets
         run: npm run build
-      - name: Upload rebuilt production assets for bounded reconciliation
-        uses: actions/upload-artifact@v4
-        with:
-          name: p9-08-workspace-frontend-dist
-          path: reference/python/workspace_frontend/dist
-          include-hidden-files: true
-          if-no-files-found: error
-      - name: Report production asset reconciliation state
-        run: |
-          if git diff --quiet -- package-lock.json dist; then
-            echo "Production assets already reproducible."
-          else
-            echo "Production assets require the bounded P9.08 reconciliation job."
-          fi
-
-  reconcile-assets:
-    name: One-shot CI-built asset reconciliation
-    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
-    needs: frontend
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    permissions:
-      contents: write
-    steps:
-      - name: Check out exact PR head branch
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.ref }}
-      - name: Download CI-built production assets
-        uses: actions/download-artifact@v4
-        with:
-          name: p9-08-workspace-frontend-dist
-          path: /tmp/p9-08-workspace-frontend-dist
-      - name: Reconcile only the generated dist tree
-        shell: bash
-        run: |
-          set -euo pipefail
-          rm -rf reference/python/workspace_frontend/dist
-          mkdir -p reference/python/workspace_frontend/dist
-          cp -a /tmp/p9-08-workspace-frontend-dist/. reference/python/workspace_frontend/dist/
-          if git diff --quiet -- reference/python/workspace_frontend/dist; then
-            echo "No reconciliation commit required."
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A reference/python/workspace_frontend/dist
-          git commit -m "P9.08 reconcile CI-built Workspace assets"
-          git push origin HEAD:${{ github.event.pull_request.head.ref }}
+      - name: Require committed lock and production assets to be reproducible
+        run: git diff --exit-code -- package-lock.json dist
+      - name: Verify release-pinned production asset boundary
+        working-directory: reference/python
+        run: python -c 'from pathlib import Path; from workspace_app.assets import verify_frontend_assets; from workspace_app.release import load_release; print(verify_frontend_assets(Path("workspace_frontend"), load_release()))'
