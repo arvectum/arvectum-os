@@ -1,3 +1,4 @@
+# Trigger the branch-local closure helper after its workflow definition exists on the branch.
 name: P9.10 canonical closure helper
 
 on:
