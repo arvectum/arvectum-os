@@ -1,9 +1,9 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.82.0`
+Version: `2.83.0`
 Created: `2026-08-07`
-Updated: `2026-08-21`
+Updated: `2026-08-22`
 Owner: `ООО «Арвектум»`
 Task classification: `governance`
 
@@ -17,9 +17,9 @@ Detailed completed-phase history remains in the corresponding phase roadmaps, re
 
 ## 2. Version note
 
-Version `2.82.0` closes **`P9.07 — Product-owned workspace surfaces / composition`** as `Complete / PASS` within its exact private internal scope and advances Phase 9 to **`P9.08 — Arvectum AI Copilot + source-grounded organizational assistance`**.
+Version `2.83.0` closes **`P9.08 — Arvectum AI Copilot + source-grounded organizational assistance`** as `Complete / PASS` within its exact private internal scope and advances Phase 9 to **`P9.09 — Activity, notifications and attention routing`**.
 
-P9.07 final evidence: implementation/reconciliation head `8e947d1631c850a9cda683edd2d425501b2ac6ce`; Productive Workspace CI `#82` / run `32523233168` and Reference Python CI `#314` / run `32523233189` passed; functional cross-review completed 2 iterations with no material objection; P9.01 J5 passed. Product Contracts and Platform Capabilities remain unchanged.
+P9.08 final implementation/test evidence: head `e5bedffa778cd2487929f826f10359071c1f0b76`; Productive Workspace CI `#90` / run `32553258369` and Reference Python CI `#322` / run `32553258317` passed; functional cross-review completed 3 iterations with no material objection; P9.01 J6 implementation acceptance passed. Product Contracts and Platform Capabilities remain unchanged.
 
 R30 executed the integrated P9.01 J1–J4 ordinary path over the P9.03–P9.06 Productive Workspace and repaired material usability/IA findings before closure:
 
@@ -103,8 +103,8 @@ Detailed roadmap: [`PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md`](PHASE-9-P
 | `R30` | M9-alpha Usability / Information Architecture Review | 🟩 Complete / PASS |
 | `M9-alpha` | Usable Internal Workspace | 🟩 Achieved / PASS |
 | `P9.07` | Product-owned workspace surfaces / composition | 🟩 Complete / PASS |
-| **`P9.08`** | **Arvectum AI Copilot + source-grounded organizational assistance** | **🟨 Current** |
-| `P9.09` | Activity, notifications and attention routing | ⬜ |
+| `P9.08` | Arvectum AI Copilot + source-grounded organizational assistance | 🟩 Complete / PASS |
+| **`P9.09`** | **Activity, notifications and attention routing** | **🟨 Current** |
 | `P9.10` | ООО «Арвектум» organization composition | ⬜ |
 | `R31` | Product Composition / AI Safety Review | ⬜ gate |
 | `P9.11` | Real daily-use dogfooding + friction/backlog closure | ⬜ |
@@ -171,8 +171,8 @@ R30 confirms these criteria as `PASS` for the exact private internal scope. M9-a
 
 ## 9. Current canonical action
 
-> **P9.08 — Arvectum AI Copilot + source-grounded organizational assistance.**
+> **P9.09 — Activity, notifications and attention routing.**
 
-Add source-grounded, uncertainty-aware and authority-safe AI assistance to the Productive Workspace through explicit governed boundaries. Preserve product ownership of product schemas, workflows, approval rules, knowledge, templates and UX; do not move product business logic into shared platform code merely for convenience.
+Add a human-readable operational activity/notification projection that routes attention without turning telemetry, derived timelines or notification delivery into canonical authority. Preserve P9.04 attention semantics, P9.05 provenance/source distinctions, P9.06 Governed Execution, P9.07 product ownership and P9.08 AI grounding/authority boundaries.
 
-P9.07 is complete within its exact internal scope. P9.08 must add source-grounded, uncertainty-aware and authority-safe AI assistance while preserving the R30/M9-alpha and P9.07 ordinary-path, authority, security and provenance guarantees. Product Contract and Platform Capability lifecycle states remain unchanged unless separately transitioned through their own governed decisions.
+P9.08 is complete within its exact internal scope. Product Contract and Platform Capability lifecycle states remain unchanged unless separately transitioned through their own governed decisions. Full M9 remains open through P9.09–P9.12 and R31/R32.
