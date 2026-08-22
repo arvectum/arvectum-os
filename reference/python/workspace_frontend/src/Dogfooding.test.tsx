@@ -21,6 +21,10 @@ const recorded: DogfoodingObservation = {
 };
 
 function backlog(items: DogfoodingObservation[] = []): DogfoodingBacklog {
+  const materialOpen = items.filter((item) => item.status === "open" && item.severity !== "minor").length;
+  const deferredMaterial = items.filter(
+    (item) => item.status === "dispositioned" && item.disposition === "deferred" && item.severity !== "minor",
+  ).length;
   return {
     schema: "arvectum.workspace.dogfooding-backlog/1",
     generated_at: "2026-08-22T08:00:00Z",
@@ -38,11 +42,12 @@ function backlog(items: DogfoodingObservation[] = []): DogfoodingBacklog {
       current_access_revalidated: true,
       cross_organization_aggregation: false,
     },
-    retention: { bounded: true, days: 90, max_items: 200, free_text_minimized: true },
+    retention: { bounded: true, days: 90, max_items: 200, free_text_minimized: true, pruned_on_access: true },
     summary: {
       total: items.length,
       open: items.filter((item) => item.status === "open").length,
-      material_open: items.filter((item) => item.status === "open" && item.severity !== "minor").length,
+      material_open: materialOpen,
+      closure_blocking: materialOpen + deferredMaterial,
     },
     items,
   };
@@ -91,18 +96,28 @@ describe("P9.11 dogfooding", () => {
 
     expect(await screen.findByText(recorded.summary)).toBeTruthy();
     expect(screen.getByText("Open")).toBeTruthy();
+    expect(screen.getByText(/still block P9.11 friction-backlog closure/)).toBeTruthy();
     expect(fetchMock).toHaveBeenCalled();
   });
 
-  it("does not expose an authority-like risk acceptance disposition", async () => {
-    vi.stubGlobal("fetch", vi.fn(async () => new Response(JSON.stringify(backlog([recorded])), {
+  it("does not expose risk acceptance or invalid routing for security-authority blockers", async () => {
+    const securityFinding: DogfoodingObservation = {
+      ...recorded,
+      id: "security-1",
+      severity: "blocker",
+      classification: "security-authority",
+      summary: "Authority boundary is ambiguous",
+    };
+    vi.stubGlobal("fetch", vi.fn(async () => new Response(JSON.stringify(backlog([securityFinding])), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     })));
     render(<Dogfooding csrfToken="csrf-test" />);
 
-    expect(await screen.findByText(recorded.summary)).toBeTruthy();
+    expect(await screen.findByText(securityFinding.summary)).toBeTruthy();
     expect(screen.queryByRole("option", { name: /accept risk/i })).toBeNull();
+    expect(screen.queryByRole("option", { name: "Deferred with explicit rationale" })).toBeNull();
+    expect(screen.queryByRole("option", { name: "Routed to product-owned backlog" })).toBeNull();
     expect(screen.getByRole("option", { name: "Routed to governance work" })).toBeTruthy();
     await waitFor(() => expect(screen.getByRole("button", { name: "Disposition" })).toBeTruthy());
   });
