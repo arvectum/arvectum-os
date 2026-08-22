@@ -1,0 +1,41 @@
+name: P9.09 temporary frontend asset reconciliation
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - ".github/workflows/p9-09-rebuild.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: p9-09-activity-notifications-attention-routing
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: reference/python/workspace_frontend/package-lock.json
+      - name: Rebuild and verify frontend
+        working-directory: reference/python/workspace_frontend
+        run: |
+          npm ci --no-audit --no-fund
+          npm run typecheck
+          npm test
+          npm run guard:web-storage
+          npm run build
+      - name: Commit reconciled production assets and remove helper
+        run: |
+          git rm .github/workflows/p9-09-rebuild.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "P9.09 reconcile Activity production assets"
+          git push origin HEAD:p9-09-activity-notifications-attention-routing
