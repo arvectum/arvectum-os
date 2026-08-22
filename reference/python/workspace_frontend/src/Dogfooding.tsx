@@ -1,4 +1,5 @@
-import { FormEvent, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import type { FormEvent } from "react";
 import {
   dispositionDogfoodingObservation,
   loadDogfoodingBacklog,
@@ -55,6 +56,14 @@ const dispositionLabels: Record<DogfoodingDisposition, string> = {
   deferred: "Deferred with explicit rationale",
 };
 
+function allowedDispositions(item: DogfoodingObservation): DogfoodingDisposition[] {
+  const allowed: DogfoodingDisposition[] = ["resolved", "not-reproducible"];
+  if (item.classification === "product-specific") allowed.push("routed-product");
+  if (item.classification === "governance" || item.classification === "security-authority") allowed.push("routed-governance");
+  if (item.severity !== "blocker" && item.classification !== "security-authority") allowed.push("deferred");
+  return allowed;
+}
+
 type LoadState =
   | { kind: "loading" }
   | { kind: "ready"; backlog: DogfoodingBacklog }
@@ -71,6 +80,7 @@ function DispositionForm({
 }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const allowed = allowedDispositions(item);
 
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -96,8 +106,8 @@ function DispositionForm({
     <form className="dogfood-disposition" onSubmit={(event) => void submit(event)}>
       <label>
         Disposition
-        <select name="disposition" defaultValue="resolved">
-          {(Object.keys(dispositionLabels) as DogfoodingDisposition[]).map((value) => (
+        <select name="disposition" defaultValue={allowed[0]}>
+          {allowed.map((value) => (
             <option key={value} value={value}>{dispositionLabels[value]}</option>
           ))}
         </select>
@@ -211,7 +221,7 @@ export function Dogfooding({ csrfToken }: { csrfToken: string }) {
         </label>
         <div className="dogfood-actions">
           <button type="submit" disabled={captureBusy}>{captureBusy ? "Recording…" : "Record observation"}</button>
-          <span>Retention: 90 days · capacity: 200 entries</span>
+          <span>Retention: 90 days · capacity: 200 entries · expired entries pruned on access</span>
         </div>
         {captureError ? <p className="dogfood-error" role="alert">{captureError}</p> : null}
       </form>
@@ -221,12 +231,15 @@ export function Dogfooding({ csrfToken }: { csrfToken: string }) {
       {state.kind === "ready" ? (
         <section aria-labelledby="dogfood-backlog-title">
           <div className="dogfood-summary">
-            <div><span>Total</span><strong>{state.backlog.summary.total}</strong></div>
-            <div><span>Open</span><strong>{state.backlog.summary.open}</strong></div>
-            <div><span>Open blocker/material</span><strong>{state.backlog.summary.material_open}</strong></div>
+            <div><span>Total retained</span><strong>{state.backlog.summary.total}</strong></div>
+            <div><span>Open observations</span><strong>{state.backlog.summary.open}</strong></div>
+            <div><span>P9.11 closure-blocking</span><strong>{state.backlog.summary.closure_blocking}</strong></div>
           </div>
           <h2 id="dogfood-backlog-title">Friction backlog</h2>
           {state.backlog.items.length === 0 ? <p>No observations captured yet. Real owner sessions are still required for P9.11 closure.</p> : null}
+          {state.backlog.summary.closure_blocking > 0 ? (
+            <p className="dogfood-boundary">Blocker/material observations that are open or deferred still block P9.11 friction-backlog closure.</p>
+          ) : null}
           <div className="dogfood-list">
             {state.backlog.items.map((item) => (
               <article key={item.id} className="dogfood-item">
