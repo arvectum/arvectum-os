@@ -32,7 +32,7 @@ The integrated path is now `Home / My Work → real Execution context → human 
 
 Clean implementation/reconciliation head `441106e65f7a69c54ff3ff89885ef1596b03e0a7` passed `Productive Workspace CI #60` / run `32487968433` and `Reference Python CI #292` / run `32487968464` (`1301 tests`, `OK`). Production assets are deterministic/release-pinned and temporary reconciliation helpers are absent from the closure state.
 
-Canonical evidence: [`R30-m9-alpha-usability-information-architecture-review.md`](../reviews/R30-m9-alpha-usability-information-architecture-review.md). Detailed Phase 9 roadmap: [`PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md`](PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md) `Active 1.8.0`.
+Canonical evidence: [`R30-m9-alpha-usability-information-architecture-review.md`](../reviews/R30-m9-alpha-usability-information-architecture-review.md). Detailed Phase 9 roadmap: [`PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md`](PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md) `Active 1.10.0`.
 
 `M9-alpha` is internal usability evidence only. It does not establish public/customer Production, a public/stable browser/API/SDK surface, SLA/support/certification, Stable Product Contracts, Active Platform Capabilities, full M9 closure, manual daily-use dogfooding or Organizational/AI Authority.
 
@@ -88,7 +88,7 @@ The current private P4/P7 UI remains useful as diagnostic/reference/recovery evi
 
 ## 6. Active Phase 9 — Productive Workspace & Daily Operations
 
-Detailed roadmap: [`PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md`](PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md) — `Active 1.8.0`.
+Detailed roadmap: [`PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md`](PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md) — `Active 1.10.0`.
 
 | ID | Work item | Status |
 |---|---|---:|
@@ -134,10 +134,14 @@ R30 usability / information architecture review       PASS
         ↓
 M9-alpha — USABLE INTERNAL WORKSPACE                  ACHIEVED
         ↓
-P9.07 product-owned workspace surfaces / composition  CURRENT
+P9.07 product-owned workspace surfaces / composition  PASS
+        ↓
+P9.08 source-grounded Arvectum AI Copilot              PASS
+        ↓
+P9.09 activity / notifications / attention routing     CURRENT
 ```
 
-M9-alpha is now achieved. The owner can begin using the new Workspace as the primary validation loop while P9.07–P9.12 add real product composition, AI assistance, activity/notifications, company-level composition and harden the daily-use baseline.
+M9-alpha is achieved, and P9.07/P9.08 are now complete. The owner can continue using the Workspace as the primary validation loop while P9.09–P9.12 add activity/notifications, company-level composition, real daily-use dogfooding and final hardening.
 
 ## 7. M9-alpha definition
 
