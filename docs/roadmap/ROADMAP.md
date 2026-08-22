@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.86.0`
+Version: `2.87.0`
 Created: `2026-08-07`
 Updated: `2026-08-22`
 Owner: `ООО «Арвектум»`
@@ -17,7 +17,9 @@ Detailed completed-phase history remains in the corresponding phase roadmaps, re
 
 ## 2. Version note
 
-Version `2.86.0` closes **`R31 — Product Composition / AI Safety Review`** as `Complete / PASS` after three functional cross-review iterations and advances Phase 9 to **`P9.11 — Real daily-use dogfooding + friction/backlog closure`**.
+Version `2.87.0` records the **implementation-ready P9.11 dogfooding contour** while keeping **`P9.11 — Real daily-use dogfooding + friction/backlog closure`** as the current canonical action. Real owner working-session evidence and real friction disposition are still pending, so R32 is not yet unlocked.
+
+Version `2.86.0` closed **`R31 — Product Composition / AI Safety Review`** as `Complete / PASS` after three functional cross-review iterations and advanced Phase 9 to P9.11.
 
 R31 final implementation/review evidence: clean post-remediation head `022db6e18a8e7128c1984e6f46908d48351c54e8`; Productive Workspace CI `#125` / run `32559626999` and Reference Python CI `#356` / run `32559627003` passed. R31 found and closed two material P9.08 integration findings: unvalidated Knowledge roles are now presented as `source-context` rather than `sourced-fact`, and Copilot no longer provides a generic unbound `/governed` shortcut. Follow-up is evidence-first and requires a context-bound governed continuation. Product boundaries, source/provenance semantics, Activity non-authority, Organization scope, Product Contract lifecycle and Platform Capability lifecycle remain unchanged.
 
@@ -107,7 +109,7 @@ Detailed roadmap: [`PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md`](PHASE-9-P
 | `P9.09` | Activity, notifications and attention routing | 🟩 Complete / PASS |
 | `P9.10` | ООО «Арвектум» organization composition | 🟩 Complete / PASS |
 | `R31` | Product Composition / AI Safety Review | 🟩 Complete / PASS |
-| **`P9.11`** | **Real daily-use dogfooding + friction/backlog closure** | **🟨 Current** |
+| **`P9.11`** | **Real daily-use dogfooding + friction/backlog closure** | **🟨 Current — implementation ready / real sessions pending** |
 | `R32` | M9 Productive Workspace Hardening + Milestone Code Health Gate | ⬜ gate |
 | `P9.12` | Phase 9 / M9 closure review | ⬜ |
 
@@ -184,5 +186,7 @@ R30 confirms these criteria as `PASS` for the exact private internal scope. M9-a
 > **P9.11 — Real daily-use dogfooding + friction/backlog closure.**
 
 Use the private Productive Workspace as the primary interface for real owner working sessions. Capture recurring friction and incomplete journeys as evidence, distinguish usability defects from product-specific or governance gaps, repair material blockers without weakening security/authority boundaries, and disposition the resulting backlog before R32.
+
+The `p9.11.0` internal Workspace release now provides the bounded dogfooding Observation/backlog mechanism and closure-blocking controls documented in [`P9-11-real-daily-use-dogfooding-friction-backlog-closure.md`](../reviews/P9-11-real-daily-use-dogfooding-friction-backlog-closure.md). This is implementation readiness only: no synthetic session evidence is accepted, and P9.11 remains current until real owner sessions and the resulting backlog satisfy its exit criteria.
 
 R31 is complete within its exact private internal scope. Product Contract and Platform Capability lifecycle states remain unchanged. Full M9 remains open through P9.11, R32 and P9.12.
