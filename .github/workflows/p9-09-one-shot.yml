@@ -45,8 +45,6 @@ jobs:
           npm test
           npm run guard:web-storage
           npm run build
-      - name: Record closure evidence after green implementation checks
-        run: python tools/p9_09_apply.py close --run-id "${GITHUB_RUN_ID}"
       - name: Remove one-shot helper and commit reconciled implementation
         run: |
           git rm tools/p9_09_apply.py .github/workflows/p9-09-one-shot.yml
