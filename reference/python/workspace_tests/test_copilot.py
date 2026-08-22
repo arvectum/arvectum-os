@@ -139,7 +139,7 @@ class CopilotGroundingTests(unittest.TestCase):
         )
         payload = answer.to_payload()
         kinds = [claim["kind"] for claim in payload["claims"]]
-        self.assertIn("sourced-fact", kinds)
+        self.assertIn("source-context", kinds)
         self.assertIn("synthesis", kinds)
         self.assertTrue(payload["model"]["used"])
         self.assertEqual(payload["model"]["output_role"], "synthesis-only")
@@ -148,12 +148,36 @@ class CopilotGroundingTests(unittest.TestCase):
         self.assertFalse(payload["generation"]["canonical_state_changed"])
         self.assertFalse(payload["generation"]["external_effect_performed"])
         self.assertFalse(payload["generation"]["organizational_authority_provided"])
-        self.assertTrue(payload["follow_up"]["routes_to_governed_execution"])
+        self.assertFalse(payload["follow_up"]["routes_to_governed_execution"])
+        self.assertEqual(payload["follow_up"]["kind"], "inspect-evidence-first")
+        self.assertEqual(payload["follow_up"]["href"], "/objects/" + "a" * 20)
+        self.assertTrue(payload["follow_up"]["context_bound_governed_continuation_required"])
         self.assertEqual(discovery.last_access, ACCESS)
         self.assertEqual(products.last_access, ACCESS)
         serialized_model_evidence = " ".join(item.summary for item in model.evidence)
         self.assertNotIn("secret-technical-ref", serialized_model_evidence)
         self.assertTrue(all(source["inspectable_in_workspace"] for source in payload["sources"]))
+
+    def test_unvalidated_knowledge_role_is_source_context_not_fact(self) -> None:
+        observation = DiscoveryResult(
+            object_id="b" * 20,
+            kind=DiscoveryKind.KNOWLEDGE,
+            semantic_role="Observation",
+            title="Supplier observation",
+            summary="Observation — not validated Knowledge. Governed observation context is available.",
+            source_label="Arvectum OS governed state",
+            authority_mode="Native",
+            state_label="retained · unvalidated",
+            knowledge_role="Observation — not validated Knowledge",
+        )
+        payload = RuntimeCopilotProvider(FakeDiscovery((observation,)), FakeProducts(())).answer(
+            ACCESS, "Что известно про supplier observation?"
+        ).to_payload()
+        source_claims = [claim for claim in payload["claims"] if claim["kind"] == "source-context"]
+        self.assertTrue(source_claims)
+        self.assertTrue(all(claim["kind"] != "sourced-fact" for claim in payload["claims"]))
+        self.assertEqual(payload["sources"][0]["knowledge_role"], "Observation — not validated Knowledge")
+        self.assertTrue(payload["semantics"]["unvalidated_knowledge_not_presented_as_fact"])
 
     def test_model_outage_never_replaces_missing_synthesis_with_invented_certainty(self) -> None:
         answer = RuntimeCopilotProvider(
@@ -165,7 +189,7 @@ class CopilotGroundingTests(unittest.TestCase):
         self.assertFalse(payload["model"]["used"])
         self.assertEqual(payload["model"]["failure"], "MODEL_UNAVAILABLE")
         self.assertTrue(any(claim["kind"] == "uncertainty" for claim in payload["claims"]))
-        self.assertTrue(any(claim["kind"] == "sourced-fact" for claim in payload["claims"]))
+        self.assertTrue(any(claim["kind"] == "source-context" for claim in payload["claims"]))
 
     def test_unknown_question_returns_unavailable_evidence_instead_of_guessing(self) -> None:
         answer = RuntimeCopilotProvider(FakeDiscovery(()), FakeProducts(())).answer(
@@ -230,7 +254,7 @@ class RecordingCopilot:
         )
         return CopilotAnswer(
             generated_at="2026-08-22T00:00:00Z",
-            claims=(CopilotClaim("sourced-fact", "Inspectable governed evidence.", (source.source_id,)),),
+            claims=(CopilotClaim("source-context", "Inspectable governed evidence.", (source.source_id,)),),
             sources=(source,),
             model_provider="test",
             model_name="test",

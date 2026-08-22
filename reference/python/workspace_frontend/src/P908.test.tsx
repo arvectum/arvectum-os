@@ -5,7 +5,7 @@ import type { CopilotAnswer, WorkspaceContext } from "./types";
 
 const context: WorkspaceContext = {
   schema: "arvectum.workspace.shell-context/1",
-  release: { id: "p9.08.1", app_api_contract: "6", classification: "bounded-internal-provisional", public_api: false },
+  release: { id: "p9.10.2", app_api_contract: "9", classification: "bounded-internal-provisional", public_api: false },
   organization: { label: "ООО «Арвектум»", scope_resolved_server_side: true },
   actor: { label: "Owner operator", attributable: true, scope_resolved_server_side: true, authentication_source: "P7.04 owner-local credential" },
   session: { csrf_token: "csrf-p908", bounded: true, revocable: true, authority_provided: false },
@@ -24,11 +24,11 @@ const context: WorkspaceContext = {
 };
 
 const answer: CopilotAnswer = {
-  schema: "arvectum.workspace.copilot-answer/1",
+  schema: "arvectum.workspace.copilot-answer/2",
   generated_at: "2026-08-22T00:00:00Z",
   claims: [
     {
-      kind: "sourced-fact",
+      kind: "source-context",
       text: "A governed External Reference to the EIS notice is available. Authority/source: External Reference · ЕИС / zakupki.gov.ru.",
       source_refs: ["object:aaaaaaaaaaaaaaaaaaaa"],
     },
@@ -73,7 +73,8 @@ const answer: CopilotAnswer = {
     cross_organization_retrieval: false,
   },
   semantics: {
-    sourced_fact_distinct_from_synthesis: true,
+    source_context_distinct_from_synthesis: true,
+    unvalidated_knowledge_not_presented_as_fact: true,
     uncertainty_explicit: true,
     unavailable_evidence_explicit: true,
     observation_memory_candidate_not_flattened_to_knowledge: true,
@@ -88,11 +89,12 @@ const answer: CopilotAnswer = {
     question_persisted: false,
   },
   follow_up: {
-    kind: "governed-review",
-    label: "Review governed actions",
-    href: "/governed",
+    kind: "inspect-evidence-first",
+    label: "Inspect cited evidence before action",
+    href: "/objects/aaaaaaaaaaaaaaaaaaaa",
     direct_consequential_action: false,
-    routes_to_governed_execution: true,
+    routes_to_governed_execution: false,
+    context_bound_governed_continuation_required: true,
   },
 };
 
@@ -107,7 +109,7 @@ afterEach(() => {
 });
 
 describe("P9.08 J6 Ask Arvectum", () => {
-  it("asks naturally, separates claim roles, opens evidence, and routes consequences to governed review", async () => {
+  it("asks naturally, separates claim roles, opens evidence, and requires evidence-bound continuation", async () => {
     let copilotInit: RequestInit | undefined;
     vi.stubGlobal("fetch", vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
       const path = String(input);
@@ -128,13 +130,14 @@ describe("P9.08 J6 Ask Arvectum", () => {
     });
     fireEvent.click(screen.getByRole("button", { name: "Ask Arvectum" }));
 
-    expect(await screen.findByText("Sourced fact")).toBeTruthy();
+    expect(await screen.findByText("Source context")).toBeTruthy();
     expect(screen.getByText("AI synthesis")).toBeTruthy();
     expect(screen.getByText("Uncertainty")).toBeTruthy();
     expect(screen.getByText("Transient · not validated Knowledge")).toBeTruthy();
     expect(screen.getByText("Not provided")).toBeTruthy();
     expect(screen.getByRole("link", { name: "Open evidence in Workspace" }).getAttribute("href")).toBe("/objects/aaaaaaaaaaaaaaaaaaaa");
-    expect(screen.getByRole("link", { name: "Review governed actions" }).getAttribute("href")).toBe("/governed");
+    expect(screen.getByRole("link", { name: "Inspect cited evidence before action" }).getAttribute("href")).toBe("/objects/aaaaaaaaaaaaaaaaaaaa");
+    expect(screen.queryByRole("link", { name: "Review governed actions" })).toBeNull();
     expect(screen.queryByText("aaaaaaaaaaaaaaaaaaaa")).toBeNull();
 
     await waitFor(() => expect(copilotInit).toBeTruthy());

@@ -1,7 +1,7 @@
 # Arvectum OS Phase 9 — Productive Workspace & Daily Operations
 
 Status: `Active`
-Version: `1.12.0`
+Version: `1.13.0`
 Created: `2026-08-21`
 Updated: `2026-08-22`
 Owner: `ООО «Арвектум»`
@@ -72,8 +72,8 @@ The existing P4/P7 UI remains a diagnostic/reference/recovery surface. It is not
 | `P9.08` | Arvectum AI Copilot + source-grounded organizational assistance | 🟩 Complete / PASS | J6 source-grounded assistance accepted within bounded internal scope |
 | `P9.09` | Activity, notifications and attention routing | 🟩 Complete / PASS | non-authoritative observed timeline + current attention routing |
 | `P9.10` | ООО «Арвектум» organization composition | 🟩 Complete / PASS | company-level navigation over products/projects/knowledge/work |
-| **`R31`** | **Product Composition / AI Safety Review** | **🟨 Current gate** | no product leakage, hidden coupling or AI authority escalation |
-| `P9.11` | Real daily-use dogfooding + friction/backlog closure | ⬜ | real working sessions completed primarily through Workspace |
+| `R31` | Product Composition / AI Safety Review | 🟩 Complete / PASS | no product leakage, hidden coupling or AI authority escalation |
+| **`P9.11`** | **Real daily-use dogfooding + friction/backlog closure** | **🟨 Current** | real working sessions completed primarily through Workspace |
 | `R32` | M9 Productive Workspace Hardening + Milestone Code Health Gate | ⬜ gate | security/usability/maintainability/code-health PASS |
 | `P9.12` | Phase 9 / M9 closure review | ⬜ | M9 exact-scope closure or explicit non-closure |
 
@@ -352,11 +352,11 @@ Phase 9 does not by itself establish:
 
 ## 17. Current canonical action
 
-> **R31 — Product Composition / AI Safety Review.**
+> **P9.11 — Real daily-use dogfooding + friction/backlog closure.**
 
-Review the integrated P9.07–P9.10 product-owned composition, AI assistance, activity and company-level organization composition for product leakage, hidden coupling, source/provenance loss, AI authority escalation and unsafe bypass of Governed Execution. No lifecycle transition is implied by passing the review.
+Use the private Productive Workspace as the primary interface for real owner working sessions. Capture recurring friction and incomplete journeys, distinguish Workspace usability defects from product-specific or governance gaps, repair material blockers without weakening security/authority boundaries, and disposition the resulting backlog before R32.
 
-P9.10 is complete within the exact private internal scope. M9 remains open; R31, P9.11, R32 and P9.12 still govern composition safety, dogfooding, hardening and final closure.
+R31 is complete within the exact private internal scope. M9 remains open; P9.11, R32 and P9.12 still govern real daily-use evidence, hardening and final closure.
 
 ## 18. P9.07 closure result
 
@@ -413,3 +413,22 @@ Closure evidence: [`P9-10-arvectum-organization-composition.md`](../reviews/P9-1
 Products remain product-owned behind P9.07/Product Contract boundaries. Project lenses are navigation-only and explicitly non-canonical. Knowledge keeps Observation / Organizational Memory / Knowledge Candidate / validated Knowledge distinctions visible. Work/attention grants no Authorization, Organizational Authority or approval and exposes no consequential action. Organization/Actor scope remains server-resolved and current access is revalidated at the BFF boundary.
 
 Workspace release is `p9.10.1`, internal application contract `8`, still `bounded-internal-provisional` and non-public. No Product Contract or Platform Capability lifecycle promotion, public/stable API, customer Production, SLA/support/certification or broader conformance claim is introduced.
+
+## 22. R31 closure result
+
+Status: `Complete / PASS` within the exact private internal scope after three functional cross-review iterations.
+
+Canonical evidence: [`R31-product-composition-ai-safety-review.md`](../reviews/R31-product-composition-ai-safety-review.md).
+
+R31 reviewed the integrated P9.07–P9.10 product composition, AI Copilot, Activity/attention and organization-composition surfaces against Constitution `1.2.0`, Accepted RFC-0001…RFC-0008, Accepted ADR-0001 and the P6.02/P6.06 Provisional Product Contracts.
+
+Two material AI-safety findings were found and remediated before PASS:
+
+1. Copilot's previous `sourced-fact` presentation could visually overstate Observation / Organizational Memory / Knowledge Candidate context despite preserved Knowledge-role notes. The internal response contract is now `arvectum.workspace.copilot-answer/2`; the presentation role is `source-context`, and unvalidated Knowledge roles are explicitly not presented as fact.
+2. Copilot's previous generic `Review governed actions → /governed` follow-up was not causally bound to the cited evidence and could route unrelated product/Knowledge questions to the retained EIS preflight. Follow-up is now `inspect-evidence-first`, links only to cited Workspace context, does not route directly to Governed Execution, and requires any later governed continuation to be context-bound to the relevant Execution/Decision.
+
+Product adapters remain explicit/release-scoped over declared retained evidence and do not import product databases or domain models. Tender and Discount semantics remain product-owned under P6.02/P6.06. Activity remains a non-authoritative observed projection rather than canonical Event/audit authority. Organization composition remains rebuildable, Organization-scoped and non-canonical; project lenses remain non-canonical.
+
+Clean post-remediation implementation/review head `022db6e18a8e7128c1984e6f46908d48351c54e8` passed Productive Workspace CI `#125` / run `32559626999` and Reference Python CI `#356` / run `32559627003`. Workspace release is `p9.10.2`, internal application contract `9`, still `bounded-internal-provisional` and non-public.
+
+R31 creates no Product Contract or Platform Capability lifecycle promotion, no public/stable interface, no AI authority, no new canonical source of truth and no customer Production/SLA/support/conformance expansion.
