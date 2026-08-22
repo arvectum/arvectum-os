@@ -115,12 +115,12 @@ def normalize_disposition(payload: object) -> dict[str, str]:
 def _validate_disposition(item: dict[str, Any], disposition: str) -> None:
     classification = item.get("classification")
     severity = item.get("severity")
+    if severity == "blocker" and disposition not in {"resolved", "not-reproducible"}:
+        raise DogfoodingInputError("blockers must remain open until resolved or shown not reproducible")
     if disposition == "routed-product" and classification != "product-specific":
         raise DogfoodingInputError("only product-specific observations can route to product backlog")
     if disposition == "routed-governance" and classification not in {"governance", "security-authority"}:
         raise DogfoodingInputError("only governance or security-authority observations can route to governance")
-    if disposition == "deferred" and severity == "blocker":
-        raise DogfoodingInputError("blockers cannot be deferred")
     if classification == "security-authority" and disposition in {"deferred", "routed-product"}:
         raise DogfoodingInputError("security-authority observations cannot be deferred or routed to product backlog")
 
