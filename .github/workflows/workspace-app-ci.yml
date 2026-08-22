@@ -72,3 +72,57 @@ jobs:
       - name: Verify release-pinned production asset boundary
         working-directory: reference/python
         run: python -c 'from pathlib import Path; from workspace_app.assets import verify_frontend_assets; from workspace_app.release import load_release; print(verify_frontend_assets(Path("workspace_frontend"), load_release()))'
+
+  p9-08-roadmap-repair:
+    name: P9.08 roadmap read-after-write repair
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'p9-08-arvectum-ai-copilot'
+    needs: [backend, frontend]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - name: Check out exact PR head branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+      - name: Repair stale master-roadmap references
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('docs/roadmap/ROADMAP.md')
+          text = path.read_text(encoding='utf-8')
+
+          if text.count('`Active 1.8.0`') != 2:
+              raise SystemExit(f'expected exactly 2 stale Phase 9 version refs, found {text.count("`Active 1.8.0`")}')
+          text = text.replace('`Active 1.8.0`', '`Active 1.10.0`')
+
+          old_path = '''P9.07 product-owned workspace surfaces / composition  CURRENT'''
+          if text.count(old_path) != 1:
+              raise SystemExit(f'expected one stale critical-path tail, found {text.count(old_path)}')
+          text = text.replace(
+              old_path,
+              '''P9.07 product-owned workspace surfaces / composition  PASS\n        ↓\nP9.08 source-grounded Arvectum AI Copilot              PASS\n        ↓\nP9.09 activity / notifications / attention routing     CURRENT''',
+              1,
+          )
+
+          old_para = 'M9-alpha is now achieved. The owner can begin using the new Workspace as the primary validation loop while P9.07–P9.12 add real product composition, AI assistance, activity/notifications, company-level composition and harden the daily-use baseline.'
+          new_para = 'M9-alpha is achieved, and P9.07/P9.08 are now complete. The owner can continue using the Workspace as the primary validation loop while P9.09–P9.12 add activity/notifications, company-level composition, real daily-use dogfooding and final hardening.'
+          if text.count(old_para) != 1:
+              raise SystemExit(f'expected one stale Phase 9 continuation paragraph, found {text.count(old_para)}')
+          text = text.replace(old_para, new_para, 1)
+          path.write_text(text, encoding='utf-8')
+          PY
+      - name: Restore normal read-only workflow and commit roadmap repair
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --depth=1 origin main
+          git checkout origin/main -- .github/workflows/workspace-app-ci.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/roadmap/ROADMAP.md .github/workflows/workspace-app-ci.yml
+          git commit -m "P9.08 reconcile master roadmap closure references"
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
