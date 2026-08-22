@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import tempfile
 import unittest
 from pathlib import Path
@@ -75,8 +76,10 @@ class DogfoodingStoreTests(unittest.TestCase):
             self.assertFalse(projection["projection"]["validated_knowledge"])
             self.assertFalse(projection["projection"]["organizational_authority_provided"])
             self.assertEqual(projection["summary"]["material_open"], 1)
+            self.assertEqual(projection["summary"]["closure_blocking"], 1)
             self.assertEqual(projection["retention"]["days"], 90)
             self.assertEqual(projection["retention"]["max_items"], 200)
+            self.assertTrue(projection["retention"]["pruned_on_access"])
 
     def test_disposition_preserves_observation_and_requires_rationale(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -94,8 +97,65 @@ class DogfoodingStoreTests(unittest.TestCase):
             projection = store.project(access).to_payload()
             self.assertEqual(projection["summary"]["open"], 0)
             self.assertEqual(projection["summary"]["material_open"], 0)
+            self.assertEqual(projection["summary"]["closure_blocking"], 0)
             with self.assertRaises(DogfoodingInputError):
                 store.disposition(access, recorded["id"], {"disposition": "resolved", "rationale": "again"})
+
+    def test_material_deferred_friction_remains_closure_blocking(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            store = DogfoodingStore(Path(tmp))
+            access = FakeResolver().authorize()
+            recorded = store.record(access, "p9.11-test", observation("Repeated navigation friction"))
+            store.disposition(
+                access,
+                recorded["id"],
+                {"disposition": "deferred", "rationale": "Bounded follow-up is explicitly scheduled after owner sessions."},
+            )
+            projection = store.project(access).to_payload()
+            self.assertEqual(projection["summary"]["open"], 0)
+            self.assertEqual(projection["summary"]["closure_blocking"], 1)
+
+    def test_security_and_blocker_findings_cannot_be_dispositioned_around_governance(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            store = DogfoodingStore(Path(tmp))
+            access = FakeResolver().authorize()
+            finding = observation("Authority boundary is ambiguous")
+            finding["severity"] = "blocker"
+            finding["classification"] = "security-authority"
+            recorded = store.record(access, "p9.11-test", finding)
+
+            with self.assertRaises(DogfoodingInputError):
+                store.disposition(
+                    access,
+                    recorded["id"],
+                    {"disposition": "deferred", "rationale": "Do it later."},
+                )
+            with self.assertRaises(DogfoodingInputError):
+                store.disposition(
+                    access,
+                    recorded["id"],
+                    {"disposition": "routed-product", "rationale": "Wrong boundary."},
+                )
+            routed = store.disposition(
+                access,
+                recorded["id"],
+                {"disposition": "routed-governance", "rationale": "Governance/security review required before closure."},
+            )
+            self.assertEqual(routed["disposition"], "routed-governance")
+            self.assertEqual(store.project(access).to_payload()["summary"]["closure_blocking"], 0)
+
+    def test_expired_observations_are_physically_pruned_on_access(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            store = DogfoodingStore(Path(tmp))
+            access = FakeResolver().authorize()
+            store.record(access, "p9.11-test", observation("Old friction"))
+            persisted = json.loads(store.path.read_text(encoding="utf-8"))
+            persisted[0]["recorded_at"] = "2000-01-01T00:00:00Z"
+            store.path.write_text(json.dumps(persisted), encoding="utf-8")
+
+            projection = store.project(access).to_payload()
+            self.assertEqual(projection["summary"]["total"], 0)
+            self.assertEqual(json.loads(store.path.read_text(encoding="utf-8")), [])
 
     def test_input_taxonomy_is_closed_and_free_text_is_bounded(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -151,6 +211,7 @@ class DogfoodingBffTests(unittest.TestCase):
         backlog = self.client.get("/api/app/v1/dogfooding", headers=self.headers)
         self.assertEqual(backlog.status_code, 200)
         self.assertEqual(backlog.json()["summary"]["material_open"], 1)
+        self.assertEqual(backlog.json()["summary"]["closure_blocking"], 1)
 
         dispositioned = self.client.post(
             f"/api/app/v1/dogfooding/observations/{observation_id}/disposition",
@@ -158,7 +219,9 @@ class DogfoodingBffTests(unittest.TestCase):
             json={"disposition": "resolved", "rationale": "Repaired and rechecked in the ordinary path."},
         )
         self.assertEqual(dispositioned.status_code, 200)
-        self.assertEqual(self.client.get("/api/app/v1/dogfooding", headers=self.headers).json()["summary"]["open"], 0)
+        final_backlog = self.client.get("/api/app/v1/dogfooding", headers=self.headers).json()["summary"]
+        self.assertEqual(final_backlog["open"], 0)
+        self.assertEqual(final_backlog["closure_blocking"], 0)
 
     def test_browser_cannot_select_scope_and_payload_is_minimized(self) -> None:
         recorded = self.client.post(
