@@ -1,7 +1,7 @@
 # Arvectum OS Phase 9 — Productive Workspace & Daily Operations
 
 Status: `Active`
-Version: `1.10.0`
+Version: `1.11.0`
 Created: `2026-08-21`
 Updated: `2026-08-22`
 Owner: `ООО «Арвектум»`
@@ -70,8 +70,8 @@ The existing P4/P7 UI remains a diagnostic/reference/recovery surface. It is not
 | `M9-alpha` | Usable Internal Workspace | 🟩 Achieved / PASS | daily core work usable through browser UI |
 | `P9.07` | Product-owned workspace surfaces / composition | 🟩 Complete / PASS | two real product-owned surfaces composed; P9.01 J5 passed |
 | `P9.08` | Arvectum AI Copilot + source-grounded organizational assistance | 🟩 Complete / PASS | J6 source-grounded assistance accepted within bounded internal scope |
-| **`P9.09`** | **Activity, notifications and attention routing** | **🟨 Current** | human-readable operational timeline/alerts projection |
-| `P9.10` | ООО «Арвектум» organization composition | ⬜ | company-level navigation over products/projects/knowledge/work |
+| `P9.09` | Activity, notifications and attention routing | 🟩 Complete / PASS | non-authoritative observed timeline + current attention routing |
+| **`P9.10`** | **ООО «Арвектум» organization composition** | **🟨 Current** | company-level navigation over products/projects/knowledge/work |
 | `R31` | Product Composition / AI Safety Review | ⬜ gate | no product leakage, hidden coupling or AI authority escalation |
 | `P9.11` | Real daily-use dogfooding + friction/backlog closure | ⬜ | real working sessions completed primarily through Workspace |
 | `R32` | M9 Productive Workspace Hardening + Milestone Code Health Gate | ⬜ gate | security/usability/maintainability/code-health PASS |
@@ -352,11 +352,11 @@ Phase 9 does not by itself establish:
 
 ## 17. Current canonical action
 
-> **P9.09 — Activity, notifications and attention routing.**
+> **P9.10 — ООО «Арвектум» organization composition.**
 
-Add a human-readable operational activity/notification projection that routes attention without turning telemetry, derived timelines or notification delivery into canonical authority. Preserve the P9.04 attention semantics, P9.05 provenance/source distinctions, P9.06 Governed Execution boundary, P9.07 product ownership boundary and P9.08 AI authority/grounding guarantees.
+Compose company-level navigation over products, projects, knowledge and work through explicit boundaries without moving product/company semantics into Kernel authority. Preserve Organization scope, source authority, provenance, product ownership and Governed Execution boundaries.
 
-P9.08 is complete within the exact private internal scope. M9 remains open; P9.09–P9.12 and R31/R32 still govern the remaining activity, company composition, dogfooding and hardening work.
+P9.09 is complete within the exact private internal scope. M9 remains open; P9.10–P9.12 and R31/R32 still govern company composition, dogfooding and hardening work.
 
 ## 18. P9.07 closure result
 
@@ -390,3 +390,14 @@ P9.08 added the source-grounded `Ask Arvectum` surface and passed P9.01 J6 imple
 Closure evidence is recorded in [`P9-08-arvectum-ai-copilot-source-grounded-organizational-assistance.md`](../reviews/P9-08-arvectum-ai-copilot-source-grounded-organizational-assistance.md). Productive Workspace CI #90 / run `32553258369` and Reference Python CI #322 / run `32553258317` passed on implementation head `e5bedffa778cd2487929f826f10359071c1f0b76`. Workspace release is `p9.08.1`, internal application contract `6`, still `bounded-internal-provisional` and non-public.
 
 No Product Contract or Platform Capability lifecycle promotion occurred. External/cloud model providers remain outside the current owner-operated contour pending a separate governed data/privacy/contract decision. P9.11 still owns real daily-use dogfooding evidence.
+
+
+## 20. P9.09 closure result
+
+Status: `Complete / PASS` within the exact private internal scope.
+
+P9.09 adds Activity as a non-authoritative observed timeline and current attention-routing surface. Alerts reuse P9.04 My Work semantics; projection timestamps are not represented as canonical Event occurrence; no durable read/unread state, notification authority or new consequential action path is created.
+
+Closure evidence: [`P9-09-activity-notifications-attention-routing.md`](../reviews/P9-09-activity-notifications-attention-routing.md). Final implementation head `c335e293022193de93b349fa5d86325501c74e4f`; Productive Workspace CI `#103` / run `32555963482` and Reference Python CI `#335` / run `32555963477` passed. Workspace release is `p9.09.1`, internal application contract `7`, still `bounded-internal-provisional` and non-public.
+
+No Product Contract or Platform Capability lifecycle promotion occurred. No email/push channel, durable read receipt, public notification API or customer-facing Production/support commitment is established.

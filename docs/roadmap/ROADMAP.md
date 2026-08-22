@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.83.0`
+Version: `2.84.0`
 Created: `2026-08-07`
 Updated: `2026-08-22`
 Owner: `ООО «Арвектум»`
@@ -17,9 +17,9 @@ Detailed completed-phase history remains in the corresponding phase roadmaps, re
 
 ## 2. Version note
 
-Version `2.83.0` closes **`P9.08 — Arvectum AI Copilot + source-grounded organizational assistance`** as `Complete / PASS` within its exact private internal scope and advances Phase 9 to **`P9.09 — Activity, notifications and attention routing`**.
+Version `2.84.0` closes **`P9.09 — Activity, notifications and attention routing`** as `Complete / PASS` within its exact private internal scope and advances Phase 9 to **`P9.10 — ООО «Арвектум» organization composition`**.
 
-P9.08 final implementation/test evidence: head `e5bedffa778cd2487929f826f10359071c1f0b76`; Productive Workspace CI `#90` / run `32553258369` and Reference Python CI `#322` / run `32553258317` passed; functional cross-review completed 3 iterations with no material objection; P9.01 J6 implementation acceptance passed. Product Contracts and Platform Capabilities remain unchanged.
+P9.09 final implementation/test evidence: head `c335e293022193de93b349fa5d86325501c74e4f`; Productive Workspace CI `#103` / run `32555963482` and Reference Python CI `#335` / run `32555963477` passed; functional cross-review completed 3 iterations with no material objection after one UI styling remediation. Activity remains a non-authoritative read-side projection, alerts reuse P9.04 attention semantics, and no notification/read-receipt authority is created. Product Contracts and Platform Capabilities remain unchanged.
 
 R30 executed the integrated P9.01 J1–J4 ordinary path over the P9.03–P9.06 Productive Workspace and repaired material usability/IA findings before closure:
 
@@ -32,7 +32,7 @@ The integrated path is now `Home / My Work → real Execution context → human 
 
 Clean implementation/reconciliation head `441106e65f7a69c54ff3ff89885ef1596b03e0a7` passed `Productive Workspace CI #60` / run `32487968433` and `Reference Python CI #292` / run `32487968464` (`1301 tests`, `OK`). Production assets are deterministic/release-pinned and temporary reconciliation helpers are absent from the closure state.
 
-Canonical evidence: [`R30-m9-alpha-usability-information-architecture-review.md`](../reviews/R30-m9-alpha-usability-information-architecture-review.md). Detailed Phase 9 roadmap: [`PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md`](PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md) `Active 1.10.0`.
+Canonical evidence: [`R30-m9-alpha-usability-information-architecture-review.md`](../reviews/R30-m9-alpha-usability-information-architecture-review.md). Detailed Phase 9 roadmap: [`PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md`](PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md) `Active 1.11.0`.
 
 `M9-alpha` is internal usability evidence only. It does not establish public/customer Production, a public/stable browser/API/SDK surface, SLA/support/certification, Stable Product Contracts, Active Platform Capabilities, full M9 closure, manual daily-use dogfooding or Organizational/AI Authority.
 
@@ -88,7 +88,7 @@ The current private P4/P7 UI remains useful as diagnostic/reference/recovery evi
 
 ## 6. Active Phase 9 — Productive Workspace & Daily Operations
 
-Detailed roadmap: [`PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md`](PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md) — `Active 1.10.0`.
+Detailed roadmap: [`PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md`](PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md) — `Active 1.11.0`.
 
 | ID | Work item | Status |
 |---|---|---:|
@@ -104,8 +104,8 @@ Detailed roadmap: [`PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md`](PHASE-9-P
 | `M9-alpha` | Usable Internal Workspace | 🟩 Achieved / PASS |
 | `P9.07` | Product-owned workspace surfaces / composition | 🟩 Complete / PASS |
 | `P9.08` | Arvectum AI Copilot + source-grounded organizational assistance | 🟩 Complete / PASS |
-| **`P9.09`** | **Activity, notifications and attention routing** | **🟨 Current** |
-| `P9.10` | ООО «Арвектум» organization composition | ⬜ |
+| `P9.09` | Activity, notifications and attention routing | 🟩 Complete / PASS |
+| **`P9.10`** | **ООО «Арвектум» organization composition** | **🟨 Current** |
 | `R31` | Product Composition / AI Safety Review | ⬜ gate |
 | `P9.11` | Real daily-use dogfooding + friction/backlog closure | ⬜ |
 | `R32` | M9 Productive Workspace Hardening + Milestone Code Health Gate | ⬜ gate |
@@ -138,10 +138,12 @@ P9.07 product-owned workspace surfaces / composition  PASS
         ↓
 P9.08 source-grounded Arvectum AI Copilot              PASS
         ↓
-P9.09 activity / notifications / attention routing     CURRENT
+P9.09 activity / notifications / attention routing     PASS
+        ↓
+P9.10 company organization composition                    CURRENT
 ```
 
-M9-alpha is achieved, and P9.07/P9.08 are now complete. The owner can continue using the Workspace as the primary validation loop while P9.09–P9.12 add activity/notifications, company-level composition, real daily-use dogfooding and final hardening.
+M9-alpha is achieved, and P9.07–P9.09 are now complete. The owner can continue using the Workspace as the primary validation loop while P9.10–P9.12 add company-level composition, real daily-use dogfooding and final hardening.
 
 ## 7. M9-alpha definition
 
@@ -175,8 +177,8 @@ R30 confirms these criteria as `PASS` for the exact private internal scope. M9-a
 
 ## 9. Current canonical action
 
-> **P9.09 — Activity, notifications and attention routing.**
+> **P9.10 — ООО «Арвектум» organization composition.**
 
-Add a human-readable operational activity/notification projection that routes attention without turning telemetry, derived timelines or notification delivery into canonical authority. Preserve P9.04 attention semantics, P9.05 provenance/source distinctions, P9.06 Governed Execution, P9.07 product ownership and P9.08 AI grounding/authority boundaries.
+Compose company-level navigation over products, projects, knowledge and work through explicit boundaries without moving product/company semantics into Kernel authority. Preserve Organization scope, source authority, provenance, product ownership and Governed Execution boundaries.
 
 P9.08 is complete within its exact internal scope. Product Contract and Platform Capability lifecycle states remain unchanged unless separately transitioned through their own governed decisions. Full M9 remains open through P9.09–P9.12 and R31/R32.

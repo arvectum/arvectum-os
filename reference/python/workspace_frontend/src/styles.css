@@ -186,3 +186,11 @@ h1 { margin: .5rem 0 1rem; max-width: 16ch; font-size: clamp(2rem, 4vw, 3.4rem);
   .copilot-form-footer, .copilot-follow-up { align-items: stretch; flex-direction: column; }
   .copilot-form-footer button, .copilot-follow-up .quiet-link { width: 100%; text-align: center; }
 }
+
+
+/* P9.09 activity projection */
+.activity-page { display: grid; gap: 1.25rem; }
+.activity-alerts, .activity-timeline { display: grid; gap: .75rem; }
+.activity-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .75rem; }
+.activity-list article { border: 1px solid var(--border); border-radius: 14px; padding: 1rem; background: var(--panel); }
+.activity-list time { display: block; margin: .35rem 0; color: var(--muted); font-size: .9rem; }

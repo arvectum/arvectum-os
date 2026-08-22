@@ -60,6 +60,7 @@ def _navigation() -> list[dict[str, Any]]:
     return [
         {"id": "home", "label": "Home", "href": "/", "availability": "available"},
         {"id": "my-work", "label": "My Work", "href": "/my-work", "availability": "available"},
+        {"id": "activity", "label": "Activity", "href": "/activity", "availability": "available"},
         {"id": "search", "label": "Search", "href": "/search", "availability": "available"},
         {"id": "records", "label": "Records", "href": "/records", "availability": "available"},
         {"id": "documents", "label": "Documents", "href": "/documents", "availability": "available"},

@@ -1,3 +1,4 @@
+import { Activity } from "./Activity";
 import { Copilot } from "./Copilot";
 import { Discovery } from "./Discovery";
 import { Governed } from "./Governed";
@@ -84,8 +85,8 @@ export function Shell({ context, onLogout }: { context: WorkspaceContext; onLogo
                 <p className="eyebrow">Productive Workspace</p>
                 <h1 id="home-title">Your organization context is established.</h1>
                 <p>
-                  My Work surfaces current attention signals, discovery finds governed organizational context, Ask Arvectum
-                  provides source-grounded assistance, and Governed actions keeps consequential work behind current authority gates.
+                  My Work surfaces current attention signals, Activity shows an observed non-authoritative timeline and current alerts,
+                  discovery finds governed organizational context, Ask Arvectum provides source-grounded assistance, and Governed actions keeps consequential work behind current authority gates.
                 </p>
                 <div className="status-grid">
                   <article><span>Context</span><strong>Server resolved</strong><p>Browser input cannot choose the Organization or actor.</p></article>
@@ -97,6 +98,8 @@ export function Shell({ context, onLogout }: { context: WorkspaceContext; onLogo
             </>
           ) : active.id === "my-work" ? (
             <MyWork />
+          ) : active.id === "activity" ? (
+            <Activity />
           ) : active.id === "search" ? (
             <Discovery />
           ) : active.id === "records" ? (
