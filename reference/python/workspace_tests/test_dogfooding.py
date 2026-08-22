@@ -115,7 +115,7 @@ class DogfoodingStoreTests(unittest.TestCase):
             self.assertEqual(projection["summary"]["open"], 0)
             self.assertEqual(projection["summary"]["closure_blocking"], 1)
 
-    def test_security_and_blocker_findings_cannot_be_dispositioned_around_governance(self) -> None:
+    def test_blocker_cannot_be_deferred_or_routed_out_of_closure(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             store = DogfoodingStore(Path(tmp))
             access = FakeResolver().authorize()
@@ -124,24 +124,24 @@ class DogfoodingStoreTests(unittest.TestCase):
             finding["classification"] = "security-authority"
             recorded = store.record(access, "p9.11-test", finding)
 
-            with self.assertRaises(DogfoodingInputError):
-                store.disposition(
-                    access,
-                    recorded["id"],
-                    {"disposition": "deferred", "rationale": "Do it later."},
-                )
-            with self.assertRaises(DogfoodingInputError):
-                store.disposition(
-                    access,
-                    recorded["id"],
-                    {"disposition": "routed-product", "rationale": "Wrong boundary."},
-                )
-            routed = store.disposition(
+            for disposition in ("deferred", "routed-product", "routed-governance"):
+                with self.subTest(disposition=disposition), self.assertRaises(DogfoodingInputError):
+                    store.disposition(
+                        access,
+                        recorded["id"],
+                        {"disposition": disposition, "rationale": "A blocker must remain open until factual closure."},
+                    )
+
+            projection = store.project(access).to_payload()
+            self.assertEqual(projection["summary"]["open"], 1)
+            self.assertEqual(projection["summary"]["closure_blocking"], 1)
+
+            resolved = store.disposition(
                 access,
                 recorded["id"],
-                {"disposition": "routed-governance", "rationale": "Governance/security review required before closure."},
+                {"disposition": "resolved", "rationale": "The authority boundary was repaired and the ordinary journey rechecked."},
             )
-            self.assertEqual(routed["disposition"], "routed-governance")
+            self.assertEqual(resolved["disposition"], "resolved")
             self.assertEqual(store.project(access).to_payload()["summary"]["closure_blocking"], 0)
 
     def test_expired_observations_are_physically_pruned_on_access(self) -> None:
