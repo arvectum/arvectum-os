@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.87.0`
+Version: `2.88.0`
 Created: `2026-08-07`
 Updated: `2026-08-22`
 Owner: `ООО «Арвектум»`
@@ -9,7 +9,7 @@ Task classification: `governance`
 
 ## 1. Purpose
 
-This document is the canonical planning source for Arvectum OS development sequencing. It coordinates work but does not override the Constitution, Accepted RFC/ADR, approved governance, Product Contracts, code/tests or canonical implementation evidence.
+This document is the canonical planning source for Arvectum OS development sequencing and concurrency. It coordinates work but does not override the Constitution, Accepted RFC/ADR, approved governance, Product Contracts, code/tests or canonical implementation evidence.
 
 Roadmap status does not itself change Platform Capability lifecycle, Product Contract lifecycle, operational environment/readiness, conformance maturity, SLA/support or commercial commitments.
 
@@ -17,40 +17,27 @@ Detailed completed-phase history remains in the corresponding phase roadmaps, re
 
 ## 2. Version note
 
-Version `2.87.0` records the **implementation-ready P9.11 dogfooding contour** while keeping **`P9.11 — Real daily-use dogfooding + friction/backlog closure`** as the current canonical action. Real owner working-session evidence and real friction disposition are still pending, so R32 is not yet unlocked.
+Version `2.88.0` preserves `P9.11 — Real daily-use dogfooding + friction/backlog closure` as the current **critical-path** action while making the available parallel development lanes explicit.
 
-Version `2.86.0` closed **`R31 — Product Composition / AI Safety Review`** as `Complete / PASS` after three functional cross-review iterations and advanced Phase 9 to P9.11.
+M9-alpha is already achieved and P9.07–P9.10 plus R31 are `Complete / PASS`. P9.11 now depends materially on real owner working sessions, so bounded work that does not falsify or bypass P9.11 evidence may proceed concurrently.
 
-R31 final implementation/review evidence: clean post-remediation head `022db6e18a8e7128c1984e6f46908d48351c54e8`; Productive Workspace CI `#125` / run `32559626999` and Reference Python CI `#356` / run `32559627003` passed. R31 found and closed two material P9.08 integration findings: unvalidated Knowledge roles are now presented as `source-context` rather than `sourced-fact`, and Copilot no longer provides a generic unbound `/governed` shortcut. Follow-up is evidence-first and requires a context-bound governed continuation. Product boundaries, source/provenance semantics, Activity non-authority, Organization scope, Product Contract lifecycle and Platform Capability lifecycle remain unchanged.
+Canonical parallel-workstream plan: [`PARALLEL-WORKSTREAMS-POST-M9-ALPHA.md`](PARALLEL-WORKSTREAMS-POST-M9-ALPHA.md) `1.0.0`.
 
-R30 executed the integrated P9.01 J1–J4 ordinary path over the P9.03–P9.06 Productive Workspace and repaired material usability/IA findings before closure:
+The newly explicit integration lane is **design/evidence-first**. It may inventory and design governed integration boundaries for 1С, Битрикс24, amoCRM, СЭД/ECM/ЭДО and other concrete external systems while P9.11 dogfooding continues. A real connector implementation is admitted only after a concrete organizational outcome, external authority/data-rights scope, platform-responsibility disposition and required Product Contract/ADR/governance gates exist. This prevents speculative universal connectors and product-business-logic leakage into Arvectum OS.
 
-1. real live My Work attention now continues to human Execution/Decision context;
-2. real F1 object context now continues to the related governed action without internal-ID copy/paste;
-3. global discovery exposes human-readable result-type narrowing;
-4. SPA focus continuity and technical-evidence-on-demand behavior are explicit.
-
-The integrated path is now `Home / My Work → real Execution context → human EIS search/narrowing → real object context → related governed action → real WAITING/fail-closed preflight`. Ordinary internal-ID dependency, terminal/GitHub escape, authority/success misrepresentation and Organization-scope violation are all false in the R30 acceptance record.
-
-Clean implementation/reconciliation head `441106e65f7a69c54ff3ff89885ef1596b03e0a7` passed `Productive Workspace CI #60` / run `32487968433` and `Reference Python CI #292` / run `32487968464` (`1301 tests`, `OK`). Production assets are deterministic/release-pinned and temporary reconciliation helpers are absent from the closure state.
-
-Canonical evidence: [`R30-m9-alpha-usability-information-architecture-review.md`](../reviews/R30-m9-alpha-usability-information-architecture-review.md). Detailed Phase 9 roadmap: [`PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md`](PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md) `Active 1.13.0`.
-
-`M9-alpha` is internal usability evidence only. It does not establish public/customer Production, a public/stable browser/API/SDK surface, SLA/support/certification, Stable Product Contracts, Active Platform Capabilities, full M9 closure, manual daily-use dogfooding or Organizational/AI Authority.
+This update does not create a new numbered phase, public/stable connector/API/SDK, customer Production, Stable Product Contract, Active Platform Capability, SLA/support/certification or broader conformance claim.
 
 ## 3. Architecture and governance baseline
 
 - Constitution `1.2.0` — `Ratified`, frozen;
 - RFC-0001 through RFC-0008 — `Accepted 1.0.0`;
 - `ADR-0001 — Productive Workspace Browser Application Topology` — `Accepted 2026-08-21` for the exact internal Phase 9 application topology;
-- ADR-0001 acceptance evidence: R29 `Complete / PASS` after 6 iterations + `DECISION-2026-08-21-ADR-0001-ACCEPTANCE` `Approved`;
 - Decision Authority Policy remains `Proposed 0.2.1`; residual authority remains with the owner under Accepted governance;
 - Approved Engineering Quality and Refactoring Gates remain binding;
 - CAP-001 through CAP-004 remain `Incubating / Provisional`;
 - P6.02, P6.06, P8.03 and P8.06 Product Contracts remain Provisional within their exact scopes;
-- the operating environment remains `Local / Persistent Internal / owner-operated` with scoped conformance;
-- no Platform Capability is `Active` and no Product Contract is `Stable` merely because M0–M8 completed, Phase 9 activated, ADR-0001 was accepted, P9.03–P9.06 completed or M9-alpha was achieved;
-- no public/stable SDK/API/wire/browser surface, external/customer Production, SLA/support/certification or broader conformance claim exists.
+- operating environment remains `Local / Persistent Internal / owner-operated` with scoped conformance;
+- no public/stable SDK/API/wire/browser/connector surface, external/customer Production, SLA/support/certification or broader conformance claim exists.
 
 ## 4. Strategic roadmap
 
@@ -67,28 +54,7 @@ Canonical evidence: [`R30-m9-alpha-usability-information-architecture-review.md`
 | `Phase 8` | Ecosystem and External Integration | 🟩 Complete / PASS | `M8` Governed external ecosystem baseline — exact activated one-Organization scope |
 | **`Phase 9`** | **Productive Workspace & Daily Operations** | **🟨 Active** | **`M9` Daily-use organizational workbench** |
 
-## 5. Completed baseline through M8
-
-Arvectum OS has already established, within its exact proven scopes:
-
-- governed Kernel/runtime semantics, exact versions, relationships, provenance and Governed Execution;
-- bounded shared capabilities CAP-001 through CAP-004 (`Incubating / Provisional`);
-- operator/workspace semantic model;
-- Product Contract and extension integration mechanisms;
-- real Tender Operator and Discount Parser validation;
-- persistent owner-operated Mac mini runtime;
-- durable state, backup/restore and host-loss recovery;
-- least-privilege identity/access/secrets operations;
-- health/observability/audit visibility;
-- governed deploy/update/rollback/version/migration;
-- private live technical/operator workspace and real owner preflight interaction;
-- persistent Tender Operator and Discount Parser operational contours;
-- bounded external-authority validation and Creative Test Agent external-consumer evidence;
-- Phase 8 hardening and M8 Milestone Code Health Gate.
-
-The current private P4/P7 UI remains useful as diagnostic/reference/recovery evidence, but it is not considered the final productive daily Workspace.
-
-## 6. Active Phase 9 — Productive Workspace & Daily Operations
+## 5. Active Phase 9 — Productive Workspace & Daily Operations
 
 Detailed roadmap: [`PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md`](PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md) — `Active 1.13.0`.
 
@@ -113,66 +79,66 @@ Detailed roadmap: [`PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md`](PHASE-9-P
 | `R32` | M9 Productive Workspace Hardening + Milestone Code Health Gate | ⬜ gate |
 | `P9.12` | Phase 9 / M9 closure review | ⬜ |
 
-### Critical path to first genuinely useful Workspace
+P9.11 remains the critical path to M9. The `p9.11.0` internal Workspace release contains the bounded real-session Observation/backlog mechanism; synthetic owner-session evidence is not accepted.
+
+## 6. Parallel development lanes
+
+Detailed concurrency rules and boundaries: [`PARALLEL-WORKSTREAMS-POST-M9-ALPHA.md`](PARALLEL-WORKSTREAMS-POST-M9-ALPHA.md).
+
+| Lane | Scope | Status | May progress during P9.11? |
+|---|---|---:|---:|
+| **A — Productive Workspace dogfooding** | real UI use, friction capture/repair, P9.11 → R32 → P9.12 | 🟨 Critical path | yes — primary |
+| **B — Russian-market integrations** | integration portfolio, connector boundary design, 1С/CRM/СЭД/ЭДО concrete designs | 🟨 Active design | **yes** |
+| **C — Product ↔ Workspace composition** | Tender/Discount/Creative/Proxy product-owned projections and governed entry points | 🟦 Available | yes, within Product Contract/product-local boundaries |
+| **D — Reliability / DX / technical debt** | CI, dependencies, observability, recovery regressions, evidence-backed cleanup | 🟦 Continuous | yes |
+| **E — Future external/customer readiness** | second-Organization/customer/deployment/regulatory discovery only | ⬜ Discovery | yes, no customer-Production implementation |
+
+### 6.1 Lane A — current UI branch
+
+Current action remains:
+
+> **P9.11 — Real daily-use dogfooding + friction/backlog closure.**
+
+The owner uses the Productive Workspace for real work, records friction, and validates whether ordinary work can remain inside the Workspace rather than escaping to terminal/GitHub/internal identifiers. Material defects are fixed as they appear. R32 remains locked until real-session evidence and backlog disposition satisfy P9.11.
+
+### 6.2 Lane B — integration design in parallel
+
+Immediate integration sequence:
+
+1. `INT-B1 — Integration portfolio baseline` — rank concrete outcomes for 1С, Битрикс24, amoCRM, СЭД/ECM/ЭДО and other real systems;
+2. `INT-B2 — Domain-neutral connector boundary pattern` — identity/version, authority mode, exact operations, credentials reference, duplicate/replay/uncertainty/reconciliation, provenance, disable/rollback/termination;
+3. `INT-B3 — 1С first-candidate design` — select a concrete configuration/outcome and define read/write/effect/identity/reconciliation/Product Contract boundary;
+4. `INT-B4 — CRM designs` — Битрикс24 and amoCRM remain separate concrete integrations; shared abstraction only after reuse evidence;
+5. `INT-B5 — СЭД/ECM/ЭДО design` — start from an actual deployment and preserve document/signature/retention authority;
+6. `INT-B6 — Integration security/reliability review` — prerequisite before first material real connector implementation.
+
+The integration lane may design and prototype bounded adapters in isolation, but a real governed reliance/connector implementation requires the applicable Product Contract and governance boundary before use.
+
+## 7. Concurrency map
 
 ```text
-P9.00 activation                                      PASS
-        ↓
-P9.01 real owner jobs / acceptance journeys           PASS
-        ↓
-P9.02 application architecture spike                  PASS
-        ↓
-R29 boundary review + ADR-0001 acceptance              PASS
-        ↓
-P9.03 real application shell                          PASS
-        ↓
-P9.04 My Work / Needs Attention                       PASS
-        ↓
-P9.05 human-friendly Records/Documents/Knowledge/search PASS
-        ↓
-P9.06 Executions/Decisions/governed actions            PASS
-        ↓
-R30 usability / information architecture review       PASS
-        ↓
-M9-alpha — USABLE INTERNAL WORKSPACE                  ACHIEVED
-        ↓
-P9.07 product-owned workspace surfaces / composition  PASS
-        ↓
-P9.08 source-grounded Arvectum AI Copilot              PASS
-        ↓
-P9.09 activity / notifications / attention routing     PASS
-        ↓
-P9.10 company organization composition                PASS
-        ↓
-R31 Product Composition / AI Safety Review             PASS
-        ↓
-P9.11 real daily-use dogfooding + friction closure          CURRENT
+                         ┌─ Lane A: P9.11 real UI dogfooding ──→ R32 ─→ P9.12/M9
+                         │
+current canonical main ──┼─ Lane B: integration design
+                         │          ├─ 1С
+                         │          ├─ Битрикс24
+                         │          ├─ amoCRM
+                         │          └─ СЭД/ECM/ЭДО
+                         │
+                         ├─ Lane C: product ↔ Workspace composition
+                         ├─ Lane D: reliability / DX / technical debt
+                         └─ Lane E: future external/customer discovery
 ```
 
-M9-alpha is achieved, P9.07–P9.10 are complete and R31 has passed after closing its two material AI-safety findings. Phase 9 now moves to real owner daily-use dogfooding; usability friction discovered there remains evidence to be dispositioned before R32 hardening and P9.12 closure.
-
-## 7. M9-alpha definition
-
-`M9-alpha — Usable Internal Workspace` requires the owner to complete ordinary core work through the private browser Workspace without terminal/GitHub/internal-ID knowledge for ordinary steps:
-
-1. open a useful home page;
-2. see work requiring attention;
-3. find a real organizational object using human-readable context;
-4. open a real Document/Record/Knowledge item and understand its context;
-5. inspect one real Execution/Decision in human terms;
-6. perform at least one bounded real governed interaction;
-7. reach exact technical identity/version/provenance details on demand rather than as the primary UX;
-8. pass P9.01 J1–J4 with ordinary-path internal-ID dependency = false, terminal/GitHub escape = false, authority/success misrepresentation = false and Organization-scope violation = false;
-9. R29 and R30 have no unresolved material finding.
-
-R30 confirms these criteria as `PASS` for the exact private internal scope. M9-alpha is internal usability evidence only; it creates no public/stable surface or readiness/lifecycle promotion and does not substitute for P9.11 real daily-use dogfooding.
+Only Lane A is on the critical path to M9. Parallel lanes must revalidate against current `main` before merge and must not silently change shared Workspace/BFF/session/security or connector-contract boundaries.
 
 ## 8. M9 definition
 
-`M9 — Daily-use organizational workbench` requires M9-alpha plus:
+`M9 — Daily-use organizational workbench` requires:
 
-- at least two real product-owned surfaces composed through explicit boundaries and P9.01 J5 passed;
-- source-grounded, uncertainty-aware and authority-safe AI Copilot and P9.01 J6 passed;
+- M9-alpha remains valid;
+- at least two real product-owned surfaces composed through explicit boundaries;
+- source-grounded, uncertainty-aware and authority-safe AI Copilot;
 - non-authoritative activity/notification projections;
 - useful ООО «Арвектум» company-level composition without Kernel product/company leakage;
 - real owner working sessions completed primarily through Workspace;
@@ -181,12 +147,16 @@ R30 confirms these criteria as `PASS` for the exact private internal scope. M9-a
 - R29–R32 material findings closed or explicitly accepted;
 - pre-closure M9 Milestone Code Health Gate PASS.
 
-## 9. Current canonical action
+Parallel integration progress is not itself an M9 closure criterion and therefore cannot replace P9.11 evidence.
+
+## 9. Current canonical actions
+
+**Critical path:**
 
 > **P9.11 — Real daily-use dogfooding + friction/backlog closure.**
 
-Use the private Productive Workspace as the primary interface for real owner working sessions. Capture recurring friction and incomplete journeys as evidence, distinguish usability defects from product-specific or governance gaps, repair material blockers without weakening security/authority boundaries, and disposition the resulting backlog before R32.
+**Parallel integration design:**
 
-The `p9.11.0` internal Workspace release now provides the bounded dogfooding Observation/backlog mechanism and closure-blocking controls documented in [`P9-11-real-daily-use-dogfooding-friction-backlog-closure.md`](../reviews/P9-11-real-daily-use-dogfooding-friction-backlog-closure.md). This is implementation readiness only: no synthetic session evidence is accepted, and P9.11 remains current until real owner sessions and the resulting backlog satisfy its exit criteria.
+> **INT-B1 — Integration portfolio baseline.**
 
-R31 is complete within its exact private internal scope. Product Contract and Platform Capability lifecycle states remain unchanged. Full M9 remains open through P9.11, R32 and P9.12.
+These actions may proceed concurrently because INT-B1 is design/evidence work and does not depend on synthetic P9.11 completion or alter the current Productive Workspace authority/security boundary.
