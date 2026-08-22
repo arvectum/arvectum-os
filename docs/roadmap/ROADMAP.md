@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.85.0`
+Version: `2.86.0`
 Created: `2026-08-07`
 Updated: `2026-08-22`
 Owner: `ООО «Арвектум»`
@@ -17,9 +17,9 @@ Detailed completed-phase history remains in the corresponding phase roadmaps, re
 
 ## 2. Version note
 
-Version `2.85.0` closes **`P9.10 — ООО «Арвектум» organization composition`** as `Complete / PASS` within its exact private internal scope and advances Phase 9 to **`R31 — Product Composition / AI Safety Review`**.
+Version `2.86.0` closes **`R31 — Product Composition / AI Safety Review`** as `Complete / PASS` after three functional cross-review iterations and advances Phase 9 to **`P9.11 — Real daily-use dogfooding + friction/backlog closure`**.
 
-P9.10 final implementation/test evidence: post-remediation head `98cc9c0b0f42bc401ba2dd5c8eedc73e3516e73a`; Productive Workspace CI `#111` / run `32557218451` and Reference Python CI `#343` / run `32557218465` passed; functional cross-review completed 3 iterations with no remaining material objection. Organization composition remains a rebuildable non-authoritative read side over existing authorized product, project-lens, knowledge and work projections; project lenses are explicitly non-canonical, RFC-0007 Knowledge-role distinctions remain explicit, and no company/product semantics or Organizational Authority move into Kernel. Product Contracts and Platform Capabilities remain unchanged.
+R31 final implementation/review evidence: clean post-remediation head `022db6e18a8e7128c1984e6f46908d48351c54e8`; Productive Workspace CI `#125` / run `32559626999` and Reference Python CI `#356` / run `32559627003` passed. R31 found and closed two material P9.08 integration findings: unvalidated Knowledge roles are now presented as `source-context` rather than `sourced-fact`, and Copilot no longer provides a generic unbound `/governed` shortcut. Follow-up is evidence-first and requires a context-bound governed continuation. Product boundaries, source/provenance semantics, Activity non-authority, Organization scope, Product Contract lifecycle and Platform Capability lifecycle remain unchanged.
 
 R30 executed the integrated P9.01 J1–J4 ordinary path over the P9.03–P9.06 Productive Workspace and repaired material usability/IA findings before closure:
 
@@ -32,7 +32,7 @@ The integrated path is now `Home / My Work → real Execution context → human 
 
 Clean implementation/reconciliation head `441106e65f7a69c54ff3ff89885ef1596b03e0a7` passed `Productive Workspace CI #60` / run `32487968433` and `Reference Python CI #292` / run `32487968464` (`1301 tests`, `OK`). Production assets are deterministic/release-pinned and temporary reconciliation helpers are absent from the closure state.
 
-Canonical evidence: [`R30-m9-alpha-usability-information-architecture-review.md`](../reviews/R30-m9-alpha-usability-information-architecture-review.md). Detailed Phase 9 roadmap: [`PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md`](PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md) `Active 1.12.0`.
+Canonical evidence: [`R30-m9-alpha-usability-information-architecture-review.md`](../reviews/R30-m9-alpha-usability-information-architecture-review.md). Detailed Phase 9 roadmap: [`PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md`](PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md) `Active 1.13.0`.
 
 `M9-alpha` is internal usability evidence only. It does not establish public/customer Production, a public/stable browser/API/SDK surface, SLA/support/certification, Stable Product Contracts, Active Platform Capabilities, full M9 closure, manual daily-use dogfooding or Organizational/AI Authority.
 
@@ -88,7 +88,7 @@ The current private P4/P7 UI remains useful as diagnostic/reference/recovery evi
 
 ## 6. Active Phase 9 — Productive Workspace & Daily Operations
 
-Detailed roadmap: [`PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md`](PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md) — `Active 1.12.0`.
+Detailed roadmap: [`PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md`](PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md) — `Active 1.13.0`.
 
 | ID | Work item | Status |
 |---|---|---:|
@@ -106,8 +106,8 @@ Detailed roadmap: [`PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md`](PHASE-9-P
 | `P9.08` | Arvectum AI Copilot + source-grounded organizational assistance | 🟩 Complete / PASS |
 | `P9.09` | Activity, notifications and attention routing | 🟩 Complete / PASS |
 | `P9.10` | ООО «Арвектум» organization composition | 🟩 Complete / PASS |
-| **`R31`** | **Product Composition / AI Safety Review** | **🟨 Current gate** |
-| `P9.11` | Real daily-use dogfooding + friction/backlog closure | ⬜ |
+| `R31` | Product Composition / AI Safety Review | 🟩 Complete / PASS |
+| **`P9.11`** | **Real daily-use dogfooding + friction/backlog closure** | **🟨 Current** |
 | `R32` | M9 Productive Workspace Hardening + Milestone Code Health Gate | ⬜ gate |
 | `P9.12` | Phase 9 / M9 closure review | ⬜ |
 
@@ -142,10 +142,12 @@ P9.09 activity / notifications / attention routing     PASS
         ↓
 P9.10 company organization composition                PASS
         ↓
-R31 Product Composition / AI Safety Review             CURRENT GATE
+R31 Product Composition / AI Safety Review             PASS
+        ↓
+P9.11 real daily-use dogfooding + friction closure          CURRENT
 ```
 
-M9-alpha is achieved, and P9.07–P9.10 are now complete. The owner can continue using the Workspace as the primary validation loop while R31 reviews composition/AI boundaries before P9.11 daily-use dogfooding and the remaining hardening/closure work.
+M9-alpha is achieved, P9.07–P9.10 are complete and R31 has passed after closing its two material AI-safety findings. Phase 9 now moves to real owner daily-use dogfooding; usability friction discovered there remains evidence to be dispositioned before R32 hardening and P9.12 closure.
 
 ## 7. M9-alpha definition
 
@@ -179,8 +181,8 @@ R30 confirms these criteria as `PASS` for the exact private internal scope. M9-a
 
 ## 9. Current canonical action
 
-> **R31 — Product Composition / AI Safety Review.**
+> **P9.11 — Real daily-use dogfooding + friction/backlog closure.**
 
-Review the integrated P9.07–P9.10 product-composition, Copilot, activity and organization-composition surfaces for product leakage, hidden coupling, authority escalation, source/provenance loss and unsafe AI-to-action shortcuts. Treat this as a review gate, not lifecycle promotion or product/platform expansion.
+Use the private Productive Workspace as the primary interface for real owner working sessions. Capture recurring friction and incomplete journeys as evidence, distinguish usability defects from product-specific or governance gaps, repair material blockers without weakening security/authority boundaries, and disposition the resulting backlog before R32.
 
-P9.10 is complete within its exact internal scope. Product Contract and Platform Capability lifecycle states remain unchanged unless separately transitioned through their own governed decisions. Full M9 remains open through R31, P9.11, R32 and P9.12.
+R31 is complete within its exact private internal scope. Product Contract and Platform Capability lifecycle states remain unchanged. Full M9 remains open through P9.11, R32 and P9.12.
