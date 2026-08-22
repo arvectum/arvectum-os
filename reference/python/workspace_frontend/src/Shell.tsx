@@ -1,6 +1,7 @@
 import { Activity } from "./Activity";
 import { Copilot } from "./Copilot";
 import { Discovery } from "./Discovery";
+import { Dogfooding } from "./Dogfooding";
 import { Governed } from "./Governed";
 import { MyWork } from "./MyWork";
 import { ObjectDetail } from "./ObjectDetail";
@@ -117,6 +118,8 @@ export function Shell({ context, onLogout }: { context: WorkspaceContext; onLogo
             <Governed csrfToken={context.session.csrf_token} />
           ) : active.id === "products" ? (
             <Products productId={productId} />
+          ) : active.id === "dogfooding" ? (
+            <Dogfooding csrfToken={context.session.csrf_token} />
           ) : (
             <section className="placeholder" aria-labelledby="placeholder-title">
               <p className="eyebrow">Navigation spine</p>
