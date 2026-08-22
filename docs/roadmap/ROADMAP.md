@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.90.0`
+Version: `2.91.0`
 Created: `2026-08-07`
 Updated: `2026-08-22`
 Owner: `ООО «Арвектум»`
@@ -17,7 +17,7 @@ Detailed completed-phase history remains in the corresponding phase roadmaps, re
 
 ## 2. Version note
 
-Version `2.90.0` preserves `P9.11 — Real daily-use dogfooding + friction/backlog closure` as the current **critical-path** action while closing `INT-B2 — Domain-neutral connector boundary pattern` and advancing the parallel integration lane to `INT-B3 — 1С first-candidate design`.
+Version `2.91.0` preserves `P9.11 — Real daily-use dogfooding + friction/backlog closure` as the current **critical-path** action while closing `INT-B3 — 1С first-candidate design` and advancing the parallel integration lane to `INT-B4 — CRM designs`.
 
 M9-alpha is already achieved and P9.07–P9.10 plus R31 are `Complete / PASS`. P9.11 now depends materially on real owner working sessions, so bounded work that does not falsify or bypass P9.11 evidence may proceed concurrently.
 
@@ -26,6 +26,8 @@ Canonical parallel-workstream plan: [`PARALLEL-WORKSTREAMS-POST-M9-ALPHA.md`](PA
 `INT-B1` is closed by [`INT-B1 — Integration Portfolio Baseline`](../architecture/INT-B1-integration-portfolio-baseline.md) `1.0.0` plus [`INT-B1 functional cross-review`](../reviews/INT-B1-functional-cross-review.md) — `PASS after bounded reconciliation`, 3 of maximum 7 iterations. The baseline ranks 1С first, Битрикс24 second, amoCRM third, then deployment-specific СЭД/ECM/АСУД, ЭДО/signature, regulated procurement and bounded watchlist classes. It preserves external authority, product-owned business semantics and the existing non-admission of a generic connector marketplace/broad adapter framework.
 
 `INT-B2` is closed by [`INT-B2 — Domain-Neutral Connector Boundary Pattern`](../architecture/INT-B2-domain-neutral-connector-boundary-pattern.md) `1.0.0` plus [`INT-B2 functional cross-review`](../reviews/INT-B2-functional-cross-review.md) — `PASS after bounded reconciliation`, 3 of maximum 7 iterations. It standardizes only the domain-neutral connector governance envelope: connector/endpoint identity and versioning, external authority mode, explicit operation/effect contracts, indirect credential references, Organization/security/authority context, duplicate/idempotency/retry/replay rules, uncertainty/reconciliation, source-occurrence versus canonical-Event admission, provenance and disable/upgrade/rollback/termination semantics. It does not create a universal business-object model, generic connector runtime, public API/SDK or new Platform Capability.
+
+`INT-B3` is closed by [`INT-B3 — 1С First-Candidate Design`](../architecture/INT-B3-1c-erp-first-candidate-design.md) `1.0.0` plus [`INT-B3 functional cross-review`](../reviews/INT-B3-functional-cross-review.md) — `PASS after bounded reconciliation`, 3 of maximum 7 iterations. The first concrete 1С target is the standard `1С:ERP Управление предприятием 2` configuration family `2.5`, reference self-hosted/client-server deployment with published OData, dedicated least-privilege integration identity and a strictly read-only procurement attention projection. 1С remains authoritative, the initial Arvectum mode is `External Reference`, exact deployment metadata must be discovered before reliance, and all 1С create/update/post/payment-like effects remain excluded.
 
 The integration lane remains **design/evidence-first**. It may inventory and design governed integration boundaries for 1С, Битрикс24, amoCRM, СЭД/ECM/ЭДО and other concrete external systems while P9.11 dogfooding continues. A real connector implementation is admitted only after a concrete organizational outcome, external authority/data-rights scope, platform-responsibility disposition and required Product Contract/ADR/governance gates exist. This prevents speculative universal connectors and product-business-logic leakage into Arvectum OS.
 
@@ -92,7 +94,7 @@ Detailed concurrency rules and boundaries: [`PARALLEL-WORKSTREAMS-POST-M9-ALPHA.
 | Lane | Scope | Status | May progress during P9.11? |
 |---|---|---:|---:|
 | **A — Productive Workspace dogfooding** | real UI use, friction capture/repair, P9.11 → R32 → P9.12 | 🟨 Critical path | yes — primary |
-| **B — Russian-market integrations** | integration portfolio, connector boundary design, 1С/CRM/СЭД/ЭДО concrete designs | 🟨 Active design — INT-B1/INT-B2 complete, INT-B3 current | **yes** |
+| **B — Russian-market integrations** | integration portfolio, connector boundary design, 1С/CRM/СЭД/ЭДО concrete designs | 🟨 Active design — INT-B1/B2/B3 complete, INT-B4 current | **yes** |
 | **C — Product ↔ Workspace composition** | Tender/Discount/Creative/Proxy product-owned projections and governed entry points | 🟦 Available | yes, within Product Contract/product-local boundaries |
 | **D — Reliability / DX / technical debt** | CI, dependencies, observability, recovery regressions, evidence-backed cleanup | 🟦 Continuous | yes |
 | **E — Future external/customer readiness** | second-Organization/customer/deployment/regulatory discovery only | ⬜ Discovery | yes, no customer-Production implementation |
@@ -111,8 +113,8 @@ Canonical integration sequence:
 
 1. `INT-B1 — Integration portfolio baseline` — **Complete / PASS**; ranked candidate register in [`INT-B1-integration-portfolio-baseline.md`](../architecture/INT-B1-integration-portfolio-baseline.md);
 2. `INT-B2 — Domain-neutral connector boundary pattern` — **Complete / PASS**; governance envelope in [`INT-B2-domain-neutral-connector-boundary-pattern.md`](../architecture/INT-B2-domain-neutral-connector-boundary-pattern.md), with no universal business schema/runtime/public API implied;
-3. **`INT-B3 — 1С first-candidate design` — Current**; select one concrete 1С configuration/deployment and bounded organizational outcome, then define exact read/write/effect/identity/reconciliation/Product Contract boundary using INT-B2;
-4. `INT-B4 — CRM designs` — Битрикс24 and amoCRM remain separate concrete integrations; shared abstraction only after reuse evidence;
+3. `INT-B3 — 1С first-candidate design` — **Complete / PASS**; first concrete target in [`INT-B3-1c-erp-first-candidate-design.md`](../architecture/INT-B3-1c-erp-first-candidate-design.md): standard `1С:ERP Управление предприятием 2` family `2.5`, reference self-hosted/client-server OData publication, read-only procurement projection, 1С authoritative and no admitted write/effect operations;
+4. **`INT-B4 — CRM designs` — Current**; Битрикс24 and amoCRM remain separate concrete integrations; shared abstraction only after reuse evidence;
 5. `INT-B5 — СЭД/ECM/ЭДО design` — start from an actual deployment and preserve document/signature/retention authority;
 6. `INT-B6 — Integration security/reliability review` — prerequisite before first material real connector implementation.
 
@@ -128,6 +130,16 @@ INT-B2 boundary disposition:
 - system/product/customer-owned: 1С configuration schemas and posting rules, CRM pipelines and mappings, СЭД taxonomies/routing, ЭДО signing/legal semantics, ЕИС domain interpretation and customer mappings/transformations;
 - no shared runtime, broker, secrets technology, connector marketplace or public API/SDK is selected by INT-B2; materially constraining shared implementation choices require ADR trigger analysis.
 
+INT-B3 disposition:
+
+- selected concrete reference configuration: standard `1С:ERP Управление предприятием 2`, family `2.5`;
+- initial interface: published standard OData, but only as the concrete 1С adapter choice rather than a universal connector protocol;
+- bounded outcome: authoritative procurement order/status visibility and attention support in Workspace;
+- authority: 1С remains authoritative, Arvectum starts with `External Reference`;
+- first operations are read-only plus metadata discovery; create/update/post/cancel/payment-like operations are explicitly excluded;
+- exact real deployment/version/metadata/authentication must be discovered and pinned before governed reliance;
+- a Product Contract is required before product/shared-platform reliance and INT-B6 remains required before material real connector implementation.
+
 The integration lane may design and prototype bounded adapters in isolation, but a real governed reliance/connector implementation requires the applicable Product Contract and governance boundary before use.
 
 ## 7. Concurrency map
@@ -135,10 +147,9 @@ The integration lane may design and prototype bounded adapters in isolation, but
 ```text
                          ┌─ Lane A: P9.11 real UI dogfooding ──→ R32 ─→ P9.12/M9
                          │
-current canonical main ──┼─ Lane B: INT-B3 concrete 1С design
-                         │          ├─ INT-B4: Битрикс24
-                         │          ├─ INT-B4: amoCRM
-                         │          └─ INT-B5: concrete СЭД/ECM/ЭДО
+current canonical main ──┼─ Lane B: INT-B4 CRM designs
+                         │          ├─ Битрикс24 concrete design
+                         │          └─ amoCRM concrete design
                          │
                          ├─ Lane C: product ↔ Workspace composition
                          ├─ Lane D: reliability / DX / technical debt
@@ -172,6 +183,6 @@ Parallel integration progress is not itself an M9 closure criterion and therefor
 
 **Parallel integration design:**
 
-> **INT-B3 — 1С first-candidate design.**
+> **INT-B4 — CRM designs.**
 
-These actions may proceed concurrently because INT-B3 is bounded design/evidence work and does not depend on synthetic P9.11 completion or alter the current Productive Workspace authority/security boundary. INT-B3 must begin from one concrete 1С configuration/deployment and bounded organizational outcome; a universal 1С model remains out of scope.
+These actions may proceed concurrently because INT-B4 is bounded design/evidence work and does not depend on synthetic P9.11 completion or alter the current Productive Workspace authority/security boundary. Битрикс24 and amoCRM must remain separate concrete designs until materially similar reuse evidence supports a shared abstraction.
