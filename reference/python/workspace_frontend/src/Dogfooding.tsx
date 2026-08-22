@@ -58,8 +58,11 @@ const dispositionLabels: Record<DogfoodingDisposition, string> = {
 
 function allowedDispositions(item: DogfoodingObservation): DogfoodingDisposition[] {
   const allowed: DogfoodingDisposition[] = ["resolved", "not-reproducible"];
-  if (item.classification === "product-specific") allowed.push("routed-product");
-  if (item.classification === "governance" || item.classification === "security-authority") allowed.push("routed-governance");
+  if (item.severity !== "blocker" && item.classification === "product-specific") allowed.push("routed-product");
+  if (
+    item.severity !== "blocker"
+    && (item.classification === "governance" || item.classification === "security-authority")
+  ) allowed.push("routed-governance");
   if (item.severity !== "blocker" && item.classification !== "security-authority") allowed.push("deferred");
   return allowed;
 }
