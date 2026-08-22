@@ -123,7 +123,9 @@ describe("P9.08 J6 Ask Arvectum", () => {
     render(<App />);
 
     expect(await screen.findByRole("heading", { name: /Ask the organization/i })).toBeTruthy();
-    fireEvent.click(screen.getByRole("button", { name: /EIS notice 0344100006426000005/i }));
+    fireEvent.change(screen.getByLabelText("Question"), {
+      target: { value: "What is the current status of EIS notice 0344100006426000005 and which source is authoritative?" },
+    });
     fireEvent.click(screen.getByRole("button", { name: "Ask Arvectum" }));
 
     expect(await screen.findByText("Sourced fact")).toBeTruthy();
@@ -133,6 +135,7 @@ describe("P9.08 J6 Ask Arvectum", () => {
     expect(screen.getByText("Not provided")).toBeTruthy();
     expect(screen.getByRole("link", { name: "Open evidence in Workspace" }).getAttribute("href")).toBe("/objects/aaaaaaaaaaaaaaaaaaaa");
     expect(screen.getByRole("link", { name: "Review governed actions" }).getAttribute("href")).toBe("/governed");
+    expect(screen.queryByText("aaaaaaaaaaaaaaaaaaaa")).toBeNull();
 
     await waitFor(() => expect(copilotInit).toBeTruthy());
     const headers = new Headers(copilotInit?.headers);
