@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: workspace-app-ci-${{ github.workflow }}-${{ github.ref }}
@@ -72,67 +72,3 @@ jobs:
       - name: Verify release-pinned production asset boundary
         working-directory: reference/python
         run: python -c 'from pathlib import Path; from workspace_app.assets import verify_frontend_assets; from workspace_app.release import load_release; print(verify_frontend_assets(Path("workspace_frontend"), load_release()))'
-
-  roadmap-sync:
-    name: P9.11 one-time roadmap reconciliation
-    if: github.event_name == 'pull_request' && github.head_ref == 'p9-11-dogfooding'
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - name: Check out P9.11 branch
-        uses: actions/checkout@v4
-        with:
-          ref: p9-11-dogfooding
-      - name: Synchronize roadmaps and remove temporary helper
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-
-          master_path = Path("docs/roadmap/ROADMAP.md")
-          master = master_path.read_text(encoding="utf-8")
-          assert "Version: `2.87.0`" in master
-          master = master.replace("`Active 1.13.0`", "`Active 1.14.0`")
-          master_path.write_text(master, encoding="utf-8")
-
-          phase_path = Path("docs/roadmap/PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md")
-          phase = phase_path.read_text(encoding="utf-8")
-          assert "Version: `1.13.0`" in phase
-          phase = phase.replace("Version: `1.13.0`", "Version: `1.14.0`", 1)
-          old_row = "| **`P9.11`** | **Real daily-use dogfooding + friction/backlog closure** | **🟨 Current** | real working sessions completed primarily through Workspace |"
-          new_row = "| **`P9.11`** | **Real daily-use dogfooding + friction/backlog closure** | **🟨 Current — implementation ready / real sessions pending** | real working sessions completed primarily through Workspace |"
-          assert old_row in phase
-          phase = phase.replace(old_row, new_row, 1)
-          old_action = "Use the private Productive Workspace as the primary interface for real owner working sessions. Capture recurring friction and incomplete journeys, distinguish Workspace usability defects from product-specific or governance gaps, repair material blockers without weakening security/authority boundaries, and disposition the resulting backlog before R32."
-          new_action = old_action + "\n\nImplementation readiness is now available in Workspace release `p9.11.0`, internal application contract `10`, through a bounded owner-operated Observation backlog. This mechanism does not itself satisfy real daily-use evidence; P9.11 remains `Current` until real owner sessions occur and the resulting friction is dispositioned under the exit criteria."
-          assert old_action in phase
-          phase = phase.replace(old_action, new_action, 1)
-          assert "## 23. P9.11 implementation-readiness state" not in phase
-          phase = phase.rstrip() + """
-
-## 23. P9.11 implementation-readiness state
-
-Status: `Implementation Ready / Owner-session evidence pending`.
-
-Canonical evidence: [`P9-11-real-daily-use-dogfooding-friction-backlog-closure.md`](../reviews/P9-11-real-daily-use-dogfooding-friction-backlog-closure.md).
-
-Workspace release `p9.11.0`, internal application contract `10`, adds a bounded private dogfooding surface and same-origin BFF contour for real owner-session friction capture. Entries are Organization-scoped Observations, not canonical RFC-0006 Events or validated RFC-0007 Knowledge; they grant no Authorization, Organizational Authority or consequential approval. Retention is bounded and physically pruned, browser-selected scope is rejected by design, and unsafe writes remain current-access/origin/CSRF/release protected.
-
-The backlog separates Workspace usability, product-specific, governance and security/authority findings. Open or deferred material observations remain `closure_blocking`. Blockers cannot be deferred or routed out of closure: they remain open until factual resolution/recheck or are shown not reproducible. Product/governance routing is classification-constrained for non-blocker findings and does not promote product semantics into platform behavior.
-
-This state is **not P9.11 closure**. Real owner working sessions have not been fabricated or inferred from automated tests. P9.11 remains the current canonical action, M9 remains open, and R32 does not become current until real owner-session evidence exists and the resulting backlog satisfies the P9.11 exit criteria.
-""" + "\n"
-          phase_path.write_text(phase, encoding="utf-8")
-          PY
-          rm -f .github/workflows/p9-11-roadmap-sync.yml
-      - name: Commit reconciliation
-        run: |
-          if git diff --quiet -- docs/roadmap .github/workflows/p9-11-roadmap-sync.yml; then
-            echo "Roadmaps already synchronized."
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/roadmap/ROADMAP.md docs/roadmap/PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md
-          git add -A .github/workflows/p9-11-roadmap-sync.yml
-          git commit -m "P9.11 synchronize implementation-readiness roadmap state"
-          git push origin HEAD:p9-11-dogfooding
