@@ -100,7 +100,7 @@ describe("P9.11 dogfooding", () => {
     expect(fetchMock).toHaveBeenCalled();
   });
 
-  it("does not expose risk acceptance or invalid routing for security-authority blockers", async () => {
+  it("exposes only factual closure choices for security-authority blockers", async () => {
     const securityFinding: DogfoodingObservation = {
       ...recorded,
       id: "security-1",
@@ -118,7 +118,9 @@ describe("P9.11 dogfooding", () => {
     expect(screen.queryByRole("option", { name: /accept risk/i })).toBeNull();
     expect(screen.queryByRole("option", { name: "Deferred with explicit rationale" })).toBeNull();
     expect(screen.queryByRole("option", { name: "Routed to product-owned backlog" })).toBeNull();
-    expect(screen.getByRole("option", { name: "Routed to governance work" })).toBeTruthy();
+    expect(screen.queryByRole("option", { name: "Routed to governance work" })).toBeNull();
+    expect(screen.getByRole("option", { name: "Resolved and rechecked" })).toBeTruthy();
+    expect(screen.getByRole("option", { name: "Not reproducible after recheck" })).toBeTruthy();
     await waitFor(() => expect(screen.getByRole("button", { name: "Disposition" })).toBeTruthy());
   });
 });
