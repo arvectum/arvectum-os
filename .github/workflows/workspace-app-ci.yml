@@ -72,3 +72,72 @@ jobs:
       - name: Verify release-pinned production asset boundary
         working-directory: reference/python
         run: python -c 'from pathlib import Path; from workspace_app.assets import verify_frontend_assets; from workspace_app.release import load_release; print(verify_frontend_assets(Path("workspace_frontend"), load_release()))'
+
+  p9-08-canonical-closure:
+    name: P9.08 canonical roadmap closure
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'p9-08-arvectum-ai-copilot'
+    needs: [backend, frontend]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - name: Check out exact PR head branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 1
+      - name: Synchronize canonical Phase 9 and master roadmaps
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          phase = Path('docs/roadmap/PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md')
+          text = phase.read_text(encoding='utf-8')
+          replacements = [
+              ('Version: `1.9.0`', 'Version: `1.10.0`'),
+              ('Updated: `2026-08-21`', 'Updated: `2026-08-22`'),
+              ('| **`P9.08`** | **Arvectum AI Copilot + source-grounded organizational assistance** | **🟨 Current** | useful AI analysis/proposals with provenance and authority-safe execution |', '| `P9.08` | Arvectum AI Copilot + source-grounded organizational assistance | 🟩 Complete / PASS | J6 source-grounded assistance accepted within bounded internal scope |'),
+              ('| `P9.09` | Activity, notifications and attention routing | ⬜ | human-readable operational timeline/alerts projection |', '| **`P9.09`** | **Activity, notifications and attention routing** | **🟨 Current** | human-readable operational timeline/alerts projection |'),
+              ('> **P9.08 — Arvectum AI Copilot + source-grounded organizational assistance.**\n\nAdd source-grounded, uncertainty-aware and authority-safe AI assistance to Workspace through explicit governed boundaries while keeping product schemas, workflows, approvals, knowledge, templates and UX product-owned. The shared platform application must remain domain-neutral and must not gain hidden access to product internals.\n\nP9.07 is complete within the exact private internal scope. M9 remains open; P9.08–P9.12 and R31/R32 still govern the remaining AI, activity, company composition, dogfooding and hardening work.', '> **P9.09 — Activity, notifications and attention routing.**\n\nAdd a human-readable operational activity/notification projection that routes attention without turning telemetry, derived timelines or notification delivery into canonical authority. Preserve the P9.04 attention semantics, P9.05 provenance/source distinctions, P9.06 Governed Execution boundary, P9.07 product ownership boundary and P9.08 AI authority/grounding guarantees.\n\nP9.08 is complete within the exact private internal scope. M9 remains open; P9.09–P9.12 and R31/R32 still govern the remaining activity, company composition, dogfooding and hardening work.'),
+          ]
+          for old, new in replacements:
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f'phase replacement expected once, found {count}: {old[:100]}')
+              text = text.replace(old, new, 1)
+          text += '''\n\n## 19. P9.08 closure result\n\nStatus: `Complete / PASS` within the exact private internal scope.\n\nP9.08 added the source-grounded `Ask Arvectum` surface and passed P9.01 J6 implementation acceptance. Material facts remain tied to inspectable Workspace evidence; synthesis, uncertainty and unavailable evidence are distinct; generated output is transient by default; AI grants no authorization, Organizational Authority or consequential approval; consequential follow-up routes to Governed Execution.\n\nClosure evidence is recorded in [`P9-08-arvectum-ai-copilot-source-grounded-organizational-assistance.md`](../reviews/P9-08-arvectum-ai-copilot-source-grounded-organizational-assistance.md). Productive Workspace CI #90 / run `32553258369` and Reference Python CI #322 / run `32553258317` passed on implementation head `e5bedffa778cd2487929f826f10359071c1f0b76`. Workspace release is `p9.08.1`, internal application contract `6`, still `bounded-internal-provisional` and non-public.\n\nNo Product Contract or Platform Capability lifecycle promotion occurred. External/cloud model providers remain outside the current owner-operated contour pending a separate governed data/privacy/contract decision. P9.11 still owns real daily-use dogfooding evidence.\n'''
+          phase.write_text(text, encoding='utf-8')
+
+          master = Path('docs/roadmap/ROADMAP.md')
+          text = master.read_text(encoding='utf-8')
+          replacements = [
+              ('Version: `2.82.0`', 'Version: `2.83.0`'),
+              ('Updated: `2026-08-21`', 'Updated: `2026-08-22`'),
+              ('Version `2.82.0` closes **`P9.07 — Product-owned workspace surfaces / composition`** as `Complete / PASS` within its exact private internal scope and advances Phase 9 to **`P9.08 — Arvectum AI Copilot + source-grounded organizational assistance`**.', 'Version `2.83.0` closes **`P9.08 — Arvectum AI Copilot + source-grounded organizational assistance`** as `Complete / PASS` within its exact private internal scope and advances Phase 9 to **`P9.09 — Activity, notifications and attention routing`**.'),
+              ('P9.07 final evidence: implementation/reconciliation head `8e947d1631c850a9cda683edd2d425501b2ac6ce`; Productive Workspace CI `#82` / run `32523233168` and Reference Python CI `#314` / run `32523233189` passed; functional cross-review completed 2 iterations with no material objection; P9.01 J5 passed. Product Contracts and Platform Capabilities remain unchanged.', 'P9.08 final implementation/test evidence: head `e5bedffa778cd2487929f826f10359071c1f0b76`; Productive Workspace CI `#90` / run `32553258369` and Reference Python CI `#322` / run `32553258317` passed; functional cross-review completed 3 iterations with no material objection; P9.01 J6 implementation acceptance passed. Product Contracts and Platform Capabilities remain unchanged.'),
+              ('| **`P9.08`** | **Arvectum AI Copilot + source-grounded organizational assistance** | **🟨 Current** |', '| `P9.08` | Arvectum AI Copilot + source-grounded organizational assistance | 🟩 Complete / PASS |'),
+              ('| `P9.09` | Activity, notifications and attention routing | ⬜ |', '| **`P9.09`** | **Activity, notifications and attention routing** | **🟨 Current** |'),
+              ('> **P9.08 — Arvectum AI Copilot + source-grounded organizational assistance.**\n\nAdd source-grounded, uncertainty-aware and authority-safe AI assistance to the Productive Workspace through explicit governed boundaries. Preserve product ownership of product schemas, workflows, approval rules, knowledge, templates and UX; do not move product business logic into shared platform code merely for convenience.\n\nP9.07 is complete within its exact internal scope. P9.08 must add source-grounded, uncertainty-aware and authority-safe AI assistance while preserving the R30/M9-alpha and P9.07 ordinary-path, authority, security and provenance guarantees. Product Contract and Platform Capability lifecycle states remain unchanged unless separately transitioned through their own governed decisions.', '> **P9.09 — Activity, notifications and attention routing.**\n\nAdd a human-readable operational activity/notification projection that routes attention without turning telemetry, derived timelines or notification delivery into canonical authority. Preserve P9.04 attention semantics, P9.05 provenance/source distinctions, P9.06 Governed Execution, P9.07 product ownership and P9.08 AI grounding/authority boundaries.\n\nP9.08 is complete within its exact internal scope. Product Contract and Platform Capability lifecycle states remain unchanged unless separately transitioned through their own governed decisions. Full M9 remains open through P9.09–P9.12 and R31/R32.'),
+          ]
+          for old, new in replacements:
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f'master replacement expected once, found {count}: {old[:100]}')
+              text = text.replace(old, new, 1)
+          master.write_text(text, encoding='utf-8')
+          PY
+      - name: Remove temporary closure machinery and restore normal CI workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --depth=1 origin main
+          git checkout origin/main -- .github/workflows/workspace-app-ci.yml
+          git rm -f .github/workflows/p9-08-closure-sync.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/roadmap/PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md docs/roadmap/ROADMAP.md .github/workflows/workspace-app-ci.yml
+          git commit -m "P9.08 close Copilot and advance roadmap to P9.09"
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
