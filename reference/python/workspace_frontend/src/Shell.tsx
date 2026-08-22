@@ -1,3 +1,4 @@
+import { Copilot } from "./Copilot";
 import { Discovery } from "./Discovery";
 import { Governed } from "./Governed";
 import { MyWork } from "./MyWork";
@@ -83,13 +84,13 @@ export function Shell({ context, onLogout }: { context: WorkspaceContext; onLogo
                 <p className="eyebrow">Productive Workspace</p>
                 <h1 id="home-title">Your organization context is established.</h1>
                 <p>
-                  My Work surfaces current attention signals, discovery finds governed organizational context, and
-                  Governed actions exposes real execution/decision preflight without turning the browser into authority.
+                  My Work surfaces current attention signals, discovery finds governed organizational context, Ask Arvectum
+                  provides source-grounded assistance, and Governed actions keeps consequential work behind current authority gates.
                 </p>
                 <div className="status-grid">
                   <article><span>Context</span><strong>Server resolved</strong><p>Browser input cannot choose the Organization or actor.</p></article>
-                  <article><span>Protected reads</span><strong>Revalidated</strong><p>Current least-privilege access is checked before protected projections are returned.</p></article>
-                  <article><span>Authority</span><strong>Not implied</strong><p>Session, search results, queue visibility and action buttons do not create Organizational Authority.</p></article>
+                  <article><span>AI assistance</span><strong>Grounded, transient</strong><p>Sourced facts, synthesis and uncertainty stay distinguishable and inspectable.</p></article>
+                  <article><span>Authority</span><strong>Not implied</strong><p>Session, search results, Copilot answers and action buttons do not create Organizational Authority.</p></article>
                 </div>
               </section>
               <MyWork embedded />
@@ -104,6 +105,8 @@ export function Shell({ context, onLogout }: { context: WorkspaceContext; onLogo
             <Discovery kind="document" />
           ) : active.id === "knowledge" ? (
             <Discovery kind="knowledge" />
+          ) : active.id === "copilot" ? (
+            <Copilot csrfToken={context.session.csrf_token} />
           ) : active.id === "governed" ? (
             <Governed csrfToken={context.session.csrf_token} />
           ) : active.id === "products" ? (
