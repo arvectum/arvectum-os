@@ -1,4 +1,5 @@
-import { FormEvent, useState } from "react";
+import { useState } from "react";
+import type { FormEvent } from "react";
 import { askCopilot, WorkspaceApiError } from "./api";
 import type { CopilotAnswer, CopilotClaimKind } from "./types";
 
@@ -93,9 +94,6 @@ export function Copilot({ csrfToken }: { csrfToken: string }) {
               <article className={`claim-card claim-${claim.kind}`} key={`${claim.kind}-${index}`}>
                 <span className="claim-kind">{claimLabels[claim.kind]}</span>
                 <p>{claim.text}</p>
-                {claim.source_refs.length ? (
-                  <small>Evidence: {claim.source_refs.map((ref) => ref.replace(/^object:|^product:/, "")).join(", ")}</small>
-                ) : null}
               </article>
             ))}
           </div>
