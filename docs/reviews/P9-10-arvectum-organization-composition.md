@@ -1,10 +1,11 @@
 # P9.10 — ООО «Арвектум» organization composition
 
-Status: `Implementation review checkpoint — roadmap closure pending`
+Status: `Complete / PASS`
 Date: `2026-08-22`
 Owner: `ООО «Арвектум»`
 Task classification: `platform` with `product_contract` and `governance`
 Predecessor: `P9.09 — Complete / PASS`
+Next canonical action: `R31 — Product Composition / AI Safety Review`
 
 ## Canonical baseline checked
 
@@ -33,14 +34,15 @@ Workspace release advances to `p9.10.1`, internal application contract `8`, stil
 
 ## Functional cross-review
 
-Two iterations completed so far, within the maximum of 7.
+Three iterations completed, within the maximum of 7.
 
 1. **Architecture / product boundary / security.** Confirmed that company-level composition is a read-side navigation layer over existing authorized projections, not a canonical company database. Project contexts were deliberately represented as non-canonical project lenses rather than inventing a Project source of truth.
 2. **RFC-0007 / BFF failure semantics.** Found that the first implementation preserved Knowledge-role distinctions mainly through summary prose and let a structural composition error fall through as a generic server error. Remediation added explicit `semantic_note` presentation and a minimized `ORGANIZATION_COMPOSITION_UNAVAILABLE` 503 boundary. Bounded backend/frontend verification and exact-release rebuild passed after remediation.
+3. **Post-remediation integrated review.** Re-read the complete PR diff after independent CI, including composition source boundaries, Organization/Actor scope, project-lens truthfulness, Knowledge-role preservation, attention routing, BFF error minimization, frontend presentation, tests and exact release assets. No remaining material architecture, security, product-boundary, authority, provenance, AI-safety, reproducibility or maintainability objection was found.
 
-A final post-CI implementation review and canonical roadmap synchronization remain before `Complete / PASS`.
+Functional cross-review is implementation evidence, not RFC/ADR acceptance, lifecycle promotion or delegated Organizational Authority.
 
-## Verification checkpoint
+## Verification evidence
 
 Initial implementation head `381919128c140b7f0eb3d95117714de51ae61469` passed independent PR gates before the cross-review remediation:
 
@@ -49,7 +51,12 @@ Initial implementation head `381919128c140b7f0eb3d95117714de51ae61469` passed in
 
 The remediation helper subsequently passed the same bounded backend/frontend suites, Web Storage guard, production build and release-asset verification before removing itself. The helper-removal commit is intentionally not treated as independent CI evidence because GitHub marks runs for commits touching temporary workflow definitions as `action_required`.
 
-A clean ordinary PR head will be used for the independent post-remediation merge gate.
+Post-remediation implementation/review head `98cc9c0b0f42bc401ba2dd5c8eedc73e3516e73a` then passed the independent merge gates:
+
+- Productive Workspace CI `#111` / run `32557218451` — `SUCCESS`;
+- Reference Python CI `#343` / run `32557218465` — `SUCCESS`.
+
+The subsequent closure commits are documentation-only relative to that tested implementation. Canonical roadmaps are synchronized to master `2.85.0` / Phase 9 `1.12.0`, with `R31 — Product Composition / AI Safety Review` as the next action.
 
 ## Explicit limitations
 
