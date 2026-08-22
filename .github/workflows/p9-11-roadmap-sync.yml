@@ -19,42 +19,29 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: p9-11-dogfooding
-      - name: Synchronize master and Phase 9 roadmaps
+      - name: Synchronize Phase 9 implementation-readiness state
         run: |
           python - <<'PY'
           from pathlib import Path
 
           master_path = Path("docs/roadmap/ROADMAP.md")
           master = master_path.read_text(encoding="utf-8")
-          assert "Version: `2.86.0`" in master
-          master = master.replace("Version: `2.86.0`", "Version: `2.87.0`", 1)
-          old_note = "Version `2.86.0` closes **`R31 — Product Composition / AI Safety Review`** as `Complete / PASS` after three functional cross-review iterations and advances Phase 9 to **`P9.11 — Real daily-use dogfooding + friction/backlog closure`**."
-          new_note = "Version `2.87.0` records the **implementation-ready P9.11 dogfooding contour** while keeping **`P9.11 — Real daily-use dogfooding + friction/backlog closure`** as the current canonical action. Real owner working-session evidence and real friction disposition are still pending, so R32 is not yet unlocked.\n\nVersion `2.86.0` closed **`R31 — Product Composition / AI Safety Review`** as `Complete / PASS` after three functional cross-review iterations and advanced Phase 9 to P9.11."
-          assert old_note in master
-          master = master.replace(old_note, new_note, 1)
+          assert "Version: `2.87.0`" in master
           master = master.replace("`Active 1.13.0`", "`Active 1.14.0`")
-          old_row = "| **`P9.11`** | **Real daily-use dogfooding + friction/backlog closure** | **🟨 Current** |"
-          new_row = "| **`P9.11`** | **Real daily-use dogfooding + friction/backlog closure** | **🟨 Current — implementation ready / real sessions pending** |"
-          assert old_row in master
-          master = master.replace(old_row, new_row, 1)
-          old_action = "Use the private Productive Workspace as the primary interface for real owner working sessions. Capture recurring friction and incomplete journeys as evidence, distinguish usability defects from product-specific or governance gaps, repair material blockers without weakening security/authority boundaries, and disposition the resulting backlog before R32."
-          new_action = old_action + "\n\nThe `p9.11.0` internal Workspace release now provides the bounded dogfooding Observation/backlog mechanism and closure-blocking controls documented in [`P9-11-real-daily-use-dogfooding-friction-backlog-closure.md`](../reviews/P9-11-real-daily-use-dogfooding-friction-backlog-closure.md). This is implementation readiness only: no synthetic session evidence is accepted, and P9.11 remains current until real owner sessions and the resulting backlog satisfy its exit criteria."
-          assert old_action in master
-          master = master.replace(old_action, new_action, 1)
           master_path.write_text(master, encoding="utf-8")
 
           phase_path = Path("docs/roadmap/PHASE-9-PRODUCTIVE-WORKSPACE-DAILY-OPERATIONS.md")
           phase = phase_path.read_text(encoding="utf-8")
           assert "Version: `1.13.0`" in phase
           phase = phase.replace("Version: `1.13.0`", "Version: `1.14.0`", 1)
-          old_phase_row = "| **`P9.11`** | **Real daily-use dogfooding + friction/backlog closure** | **🟨 Current** | real working sessions completed primarily through Workspace |"
-          new_phase_row = "| **`P9.11`** | **Real daily-use dogfooding + friction/backlog closure** | **🟨 Current — implementation ready / real sessions pending** | real working sessions completed primarily through Workspace |"
-          assert old_phase_row in phase
-          phase = phase.replace(old_phase_row, new_phase_row, 1)
-          old_phase_action = "Use the private Productive Workspace as the primary interface for real owner working sessions. Capture recurring friction and incomplete journeys, distinguish Workspace usability defects from product-specific or governance gaps, repair material blockers without weakening security/authority boundaries, and disposition the resulting backlog before R32."
-          new_phase_action = old_phase_action + "\n\nImplementation readiness is now available in Workspace release `p9.11.0`, internal application contract `10`, through a bounded owner-operated Observation backlog. This mechanism does not itself satisfy real daily-use evidence; P9.11 remains `Current` until real owner sessions occur and the resulting friction is dispositioned under the exit criteria."
-          assert old_phase_action in phase
-          phase = phase.replace(old_phase_action, new_phase_action, 1)
+          old_row = "| **`P9.11`** | **Real daily-use dogfooding + friction/backlog closure** | **🟨 Current** | real working sessions completed primarily through Workspace |"
+          new_row = "| **`P9.11`** | **Real daily-use dogfooding + friction/backlog closure** | **🟨 Current — implementation ready / real sessions pending** | real working sessions completed primarily through Workspace |"
+          assert old_row in phase
+          phase = phase.replace(old_row, new_row, 1)
+          old_action = "Use the private Productive Workspace as the primary interface for real owner working sessions. Capture recurring friction and incomplete journeys, distinguish Workspace usability defects from product-specific or governance gaps, repair material blockers without weakening security/authority boundaries, and disposition the resulting backlog before R32."
+          new_action = old_action + "\n\nImplementation readiness is now available in Workspace release `p9.11.0`, internal application contract `10`, through a bounded owner-operated Observation backlog. This mechanism does not itself satisfy real daily-use evidence; P9.11 remains `Current` until real owner sessions occur and the resulting friction is dispositioned under the exit criteria."
+          assert old_action in phase
+          phase = phase.replace(old_action, new_action, 1)
           assert "## 23. P9.11 implementation-readiness state" not in phase
           phase = phase.rstrip() + """
 
