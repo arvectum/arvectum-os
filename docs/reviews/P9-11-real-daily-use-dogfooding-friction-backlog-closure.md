@@ -68,7 +68,7 @@ The derived backlog exposes `closure_blocking` as the count of retained blocker/
 - still `open`; or
 - dispositioned as `deferred`.
 
-A blocker cannot be deferred. A security/authority finding cannot be deferred or routed to a product backlog. Product routing is available only for `product-specific` observations; governance routing is available only for `governance` or `security-authority` observations. The UI narrows choices accordingly, and the BFF/store enforce the same rules independently so UI behavior is not the security boundary.
+A blocker cannot be deferred or routed out of closure. It may leave closure-blocking state only after factual `resolved` + ordinary-journey recheck or `not-reproducible` + recheck. A security/authority finding cannot be deferred or routed to a product backlog. Product routing is available only for non-blocker `product-specific` observations; governance routing is available only for applicable non-blocker `governance` or `security-authority` observations. The UI narrows choices accordingly, and the BFF/store enforce the same rules independently so UI behavior is not the security boundary.
 
 There is deliberately no `accept risk` disposition in this mechanism. A consequential risk/authority exception, if ever justified, must use the applicable canonical governance/decision path rather than a dogfooding backlog shortcut.
 
@@ -118,16 +118,49 @@ Reviewed the complete branch against R31 head after remediation:
 - browser-supplied scope headers/query parameters do not select scope;
 - writes remain release/origin/CSRF protected;
 - no new canonical Kernel primitive or Product Contract lifecycle promise appears;
-- generated production assets are deterministic and the temporary asset-build helper is removed from the resulting branch;
+- generated production assets are deterministic and the temporary asset-build helper is removed from the resulting implementation branch;
 - tests cover scope minimization, retention pruning, closed taxonomy, authority-safe routing and closure-blocking semantics.
 
 Result: no material architecture/product-boundary objection found before independent PR CI.
 
-### Iteration 3 — independent CI and post-CI review
+### Iteration 3 — closure semantics, deterministic assets and independent CI
 
-Pending at the time this record was first written. PR `#125` was opened for independent `Productive Workspace CI` and `Reference Python CI` gates. This section must be updated from actual run evidence before merge.
+One additional material closure-semantics objection was found: a `blocker` could still be dispositioned as `routed-governance`, which could remove it from the closure-blocking count before the blocking condition was factually resolved or shown not reproducible.
+
+Remediation:
+
+- blocker disposition is now restricted to `resolved` or `not-reproducible`;
+- both outcomes require an explicit rationale and the operating protocol requires ordinary-journey recheck;
+- non-blocker product/governance routing remains classification-constrained;
+- UI and backend independently enforce the same allowed-disposition set.
+
+An intermediate Productive Workspace CI attempt after this source change failed only at the committed-production-asset reproducibility gate because `dist` still represented the previous source revision. The deterministic production assets were rebuilt and committed; no test/security failure was masked.
+
+Final clean implementation/reconciliation head `95aa06463f69489edcae204bdbcd6ea7013e9fdb` then passed:
+
+- Productive Workspace CI run `32561762336` — `SUCCESS`;
+  - BFF security and context tests — `SUCCESS`;
+  - frontend typecheck — `SUCCESS`;
+  - frontend interaction tests — `SUCCESS`;
+  - browser Web Storage rejection gate — `SUCCESS`;
+  - production build — `SUCCESS`;
+  - committed production-asset reproducibility — `SUCCESS`;
+  - release-pinned production-asset boundary — `SUCCESS`;
+- Reference Python CI run `32561762312` — `SUCCESS`;
+  - tracked Python generated-artifact rejection — `SUCCESS`;
+  - architecture fitness suite — `SUCCESS`.
+
+Post-CI repository-hygiene commits are documentation/workflow cleanup only and do not alter the tested P9.11 implementation. Temporary reconciliation helpers are not intended to survive merge.
+
+Result: no remaining material implementation objection. Functional cross-review stops after 3 iterations of the allowed maximum 7.
 
 Functional cross-review is implementation evidence only; it is not RFC/ADR acceptance, Product Contract promotion, Platform Capability promotion, operational-readiness approval or delegated Organizational Authority.
+
+## P9.11 implementation-readiness result
+
+The bounded capture/disposition mechanism is implementation-ready within the exact private `Local / Persistent Internal / owner-operated` Workspace scope. Master roadmap `2.87.0` records this state while keeping P9.11 as the current canonical action.
+
+This result does **not** establish P9.11 closure, M9 closure, customer Production/readiness, a public/stable API/browser contract, SLA/support/certification, Stable Product Contracts or Active Platform Capabilities.
 
 ## P9.11 closure conditions still pending
 
