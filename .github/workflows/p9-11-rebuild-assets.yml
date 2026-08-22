@@ -1,0 +1,52 @@
+name: P9.11 deterministic asset rebuild
+
+on:
+  push:
+    branches:
+      - p9-11-dogfooding
+    paths:
+      - "reference/python/workspace_app/release.json"
+      - "reference/python/workspace_frontend/src/**"
+      - "reference/python/workspace_frontend/package*.json"
+      - ".github/workflows/p9-11-rebuild-assets.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  rebuild:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: p9-11-dogfooding
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: reference/python/workspace_frontend/package-lock.json
+      - name: Install exact frontend dependencies
+        working-directory: reference/python/workspace_frontend
+        run: npm ci --no-audit --no-fund
+      - name: Typecheck, interaction tests, and Web Storage guard
+        working-directory: reference/python/workspace_frontend
+        run: |
+          npm run typecheck
+          npm test
+          npm run guard:web-storage
+      - name: Rebuild production assets
+        working-directory: reference/python/workspace_frontend
+        run: npm run build
+      - name: Commit deterministic assets
+        run: |
+          if git diff --quiet -- reference/python/workspace_frontend/dist; then
+            echo "Production assets already match source."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reference/python/workspace_frontend/dist
+          git commit -m "P9.11 rebuild deterministic Workspace production assets"
+          git push origin HEAD:p9-11-dogfooding
