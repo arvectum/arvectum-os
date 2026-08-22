@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import asyncio
 import ipaddress
+import json
 import logging
 from pathlib import Path
 from typing import Any
@@ -12,7 +14,7 @@ from fastapi.staticfiles import StaticFiles
 from .access import AccessContext, AccessResolver, P704AccessResolver, WorkspaceAccessError
 from .attention import AttentionProvider, RuntimeAttentionProvider
 from .config import WorkspaceSettings
-from .copilot import CopilotError, CopilotProvider, LoopbackChatModel, RuntimeCopilotProvider
+from .copilot import CopilotError, CopilotProvider, LoopbackChatModel, RuntimeCopilotProvider, normalize_question
 from .discovery import DiscoveryError, DiscoveryKind, DiscoveryProvider, ObjectUnavailable, RuntimeDiscoveryProvider
 from .governed import GovernedExperienceError, GovernedExperienceProvider, RuntimeGovernedExperienceProvider
 from .products import ProductCompositionError, ProductCompositionProvider, RuntimeProductCompositionProvider
@@ -241,15 +243,17 @@ def create_app(
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="COPILOT_INPUT_REJECTED") from None
             if length <= 0 or length > MAX_COPILOT_REQUEST_BYTES:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="COPILOT_INPUT_REJECTED")
+        raw = await request.body()
+        if not raw or len(raw) > MAX_COPILOT_REQUEST_BYTES:
+            _security_event("COPILOT_INPUT_REJECTED", request, store, "body-size")
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="COPILOT_INPUT_REJECTED")
         try:
-            payload = await request.json()
-        except Exception:
+            payload = json.loads(raw.decode("utf-8"))
+        except (UnicodeDecodeError, json.JSONDecodeError):
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="COPILOT_INPUT_REJECTED") from None
         if not isinstance(payload, dict) or set(payload) != {"question"}:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="COPILOT_INPUT_REJECTED")
         try:
-            from .copilot import normalize_question
-
             return normalize_question(payload["question"])
         except CopilotError:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="COPILOT_QUESTION_INVALID") from None
@@ -332,7 +336,8 @@ def create_app(
         question = await _copilot_question(request)
         _, access = current
         try:
-            return copilot.answer(access, question).to_payload()
+            answer = await asyncio.to_thread(copilot.answer, access, question)
+            return answer.to_payload()
         except CopilotError:
             raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="COPILOT_UNAVAILABLE") from None
 
