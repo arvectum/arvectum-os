@@ -1,7 +1,7 @@
 # Arvectum OS Canonical Roadmap
 
 Status: `Active`
-Version: `2.92.0`
+Version: `2.93.0`
 Created: `2026-08-07`
 Updated: `2026-08-22`
 Owner: `ООО «Арвектум»`
@@ -17,9 +17,9 @@ Detailed completed-phase history remains in the corresponding phase roadmaps, re
 
 ## 2. Version note
 
-Version `2.92.0` preserves `P9.11 — Real daily-use dogfooding + friction/backlog closure` as the current **critical-path** action while closing `INT-B4 — CRM designs` and advancing the parallel integration lane to `INT-B5 — СЭД/ECM/ЭДО design`.
+Version `2.93.0` preserves `P9.11 — Real daily-use dogfooding + friction/backlog closure` as the current **critical-path** action while closing `INT-B5 — СЭД/ECM/ЭДО design` and advancing the parallel integration lane to `INT-B6 — Integration security/reliability review`.
 
-M9-alpha is already achieved and P9.07–P9.10 plus R31 are `Complete / PASS`. P9.11 now depends materially on real owner working sessions, so bounded work that does not falsify or bypass P9.11 evidence may proceed concurrently.
+M9-alpha is already achieved and P9.07–P9.10 plus R31 are `Complete / PASS`. P9.11 depends materially on real owner working sessions, so bounded work that does not falsify or bypass P9.11 evidence may proceed concurrently.
 
 Canonical parallel-workstream plan: [`PARALLEL-WORKSTREAMS-POST-M9-ALPHA.md`](PARALLEL-WORKSTREAMS-POST-M9-ALPHA.md) `1.0.0`.
 
@@ -31,7 +31,9 @@ Canonical parallel-workstream plan: [`PARALLEL-WORKSTREAMS-POST-M9-ALPHA.md`](PA
 
 `INT-B4` is closed by [`INT-B4 — CRM Designs`](../architecture/INT-B4-crm-designs.md) `1.0.0` plus [`INT-B4 functional cross-review`](../reviews/INT-B4-functional-cross-review.md) — `PASS after bounded reconciliation`, 3 of maximum 7 iterations. Битрикс24 and amoCRM remain separate concrete adapters. Both start read/projection-first with the external CRM authoritative and Arvectum using `External Reference`; Bitrix24 preserves its portal/user-context webhook-or-OAuth authorization semantics, while amoCRM uses OAuth 2.0/API v4 and separately governed webhook subscriptions. Pipeline/stage/custom-field/task semantics remain vendor/account/product-owned. No generic CRM schema/runtime or write authorization is created.
 
-The integration lane remains **design/evidence-first**. A real connector implementation is admitted only after a concrete organizational outcome, external authority/data-rights scope, platform-responsibility disposition and required Product Contract/ADR/governance gates exist.
+`INT-B5` is closed by [`INT-B5 — СЭД/ECM/ЭДО Design`](../architecture/INT-B5-sed-ecm-edo-design.md) `1.0.0` plus [`INT-B5 functional cross-review`](../reviews/INT-B5-functional-cross-review.md) — `PASS after bounded reconciliation`, 4 of maximum 7 iterations. The concrete profiles are Directum RX through its organization-controlled Integration Service REST/OData surface and Контур.Диадок through one organization box/account and official HTTP API. Both begin read/projection-first with external authority preserved and `External Reference` as the initial Arvectum mode. Directum document-card/version/workflow semantics remain deployment/product-owned; Диадок message/document/docflow/signature evidence remains provider-side authority. Signature evidence is explicitly separated from Organizational Authority and legal-validity conclusions. Signing, sending, approval, registration, deletion and other external document mutations are not admitted by INT-B5.
+
+The integration lane remains **design/evidence-first**. A real connector implementation is admitted only after a concrete organizational outcome, external authority/data-rights scope, platform-responsibility disposition and required Product Contract/ADR/governance gates exist. `INT-B6` is now the mandatory cross-portfolio security/reliability gate before the first material real connector implementation.
 
 This update does not create a new numbered phase, public/stable connector/API/SDK, customer Production, Stable Product Contract, Active Platform Capability, SLA/support/certification or broader conformance claim.
 
@@ -96,7 +98,7 @@ Detailed concurrency rules and boundaries: [`PARALLEL-WORKSTREAMS-POST-M9-ALPHA.
 | Lane | Scope | Status | May progress during P9.11? |
 |---|---|---:|---:|
 | **A — Productive Workspace dogfooding** | real UI use, friction capture/repair, P9.11 → R32 → P9.12 | 🟨 Critical path | yes — primary |
-| **B — Russian-market integrations** | integration portfolio, connector boundary design, 1С/CRM/СЭД/ЭДО concrete designs | 🟨 Active design — INT-B1/B2/B3/B4 complete, INT-B5 current | **yes** |
+| **B — Russian-market integrations** | integration portfolio, connector boundary design, 1С/CRM/СЭД/ЭДО concrete designs, integration security/reliability gate | 🟨 INT-B1–INT-B5 complete; INT-B6 current gate | **yes** |
 | **C — Product ↔ Workspace composition** | Tender/Discount/Creative/Proxy product-owned projections and governed entry points | 🟦 Available | yes, within Product Contract/product-local boundaries |
 | **D — Reliability / DX / technical debt** | CI, dependencies, observability, recovery regressions, evidence-backed cleanup | 🟦 Continuous | yes |
 | **E — Future external/customer readiness** | second-Organization/customer/deployment/regulatory discovery only | ⬜ Discovery | yes, no customer-Production implementation |
@@ -109,33 +111,52 @@ Current action remains:
 
 The owner uses the Productive Workspace for real work, records friction, and validates whether ordinary work can remain inside the Workspace rather than escaping to terminal/GitHub/internal identifiers. Material defects are fixed as they appear. R32 remains locked until real-session evidence and backlog disposition satisfy P9.11.
 
-### 6.2 Lane B — integration design in parallel
+### 6.2 Lane B — integration design and gate
 
 Canonical integration sequence:
 
 1. `INT-B1 — Integration portfolio baseline` — **Complete / PASS**;
 2. `INT-B2 — Domain-neutral connector boundary pattern` — **Complete / PASS**;
 3. `INT-B3 — 1С first-candidate design` — **Complete / PASS**;
-4. `INT-B4 — CRM designs` — **Complete / PASS**; Битрикс24 and amoCRM remain separate concrete designs with read-first external-authority-preserving boundaries;
-5. **`INT-B5 — СЭД/ECM/ЭДО design` — Current**; start from named actual deployment/provider profiles and preserve document/card/version/workflow/signature/retention authority;
-6. `INT-B6 — Integration security/reliability review` — prerequisite before first material real connector implementation.
+4. `INT-B4 — CRM designs` — **Complete / PASS**;
+5. `INT-B5 — СЭД/ECM/ЭДО design` — **Complete / PASS**; Directum RX and Контур.Диадок remain separate concrete profiles with external document/signature authority preserved;
+6. **`INT-B6 — Integration security/reliability review` — Current gate**; cross-review INT-B2–INT-B5 before any first material real connector implementation.
 
-INT-B4 disposition:
+INT-B5 disposition:
 
-- Битрикс24: one concrete portal binding, official REST API, least-privilege user context, incoming webhook or OAuth according to deployment, read-first CRM/task projection;
-- amoCRM: one concrete account binding, API v4 + OAuth 2.0, read-first CRM/task projection, webhook subscription changes treated as explicit administrative effects;
-- both: external CRM remains authoritative, Arvectum starts with `External Reference`, vendor IDs remain external references, partial/stale state is explicit, secrets remain indirect references;
-- no common CRM pipeline/stage/custom-field/task semantics, common DTO/runtime or generic CRM API is admitted;
-- future business writes require explicit operation/effect contracts, Governed Execution where consequential, Product Contract declaration and INT-B6 review.
+- Directum RX: organization-controlled deployment, official Integration Service REST/OData v4 surface, read-only document/card/version/task/workflow projection;
+- Контур.Диадок: one organization box/account, official HTTP API + OAuth integration, read-only document/message/docflow/signature information and bounded event-feed retrieval;
+- external systems remain authoritative; Arvectum begins with `External Reference`;
+- vendor IDs remain external references; document bytes/files/vendor IDs do not become Arvectum Document identity by implication;
+- Диадок feed items and Directum observations are source occurrences before RFC-0006 Event admission;
+- signature/certificate evidence is not Organizational Authority, approval or a blanket legal-validity conclusion;
+- metadata/reference retrieval is preferred where full content is unnecessary; derived OCR/search/summary/preview artifacts remain non-authoritative by default;
+- signing, sending, approval, registration, deletion and other external document mutations are explicitly excluded from INT-B5;
+- no universal СЭД/ECM/ЭДО schema, shared content repository, event-ingestion runtime or signing/key-management runtime is admitted.
 
-The integration lane may design and prototype bounded adapters in isolation, but a real governed reliance/connector implementation requires the applicable Product Contract and governance boundary before use.
+INT-B6 must review the complete candidate portfolio for:
+
+- Organization/tenant isolation;
+- authentication versus authorization versus Organizational Authority;
+- credential/secret/private-key handling and revocation;
+- least privilege and operation allowlists;
+- external authority and no competing sources of truth;
+- content minimization, classification, retention/deletion and portability;
+- duplicate/gap/retry/replay semantics;
+- uncertainty/reconciliation and partial-state handling;
+- webhook/event-feed/source-occurrence admission;
+- failure/degraded mode and fail-closed behavior;
+- connector disable/termination/rollback;
+- operational evidence needed before a first material real connector implementation.
+
+The integration lane may continue bounded design/evidence work during P9.11, but no first material real connector implementation is admitted before INT-B6 disposition and applicable Product Contract/governance gates.
 
 ## 7. Concurrency map
 
 ```text
                          ┌─ Lane A: P9.11 real UI dogfooding ──→ R32 ─→ P9.12/M9
                          │
-current canonical main ──┼─ Lane B: INT-B5 СЭД/ECM/ЭДО design
+current canonical main ──┼─ Lane B: INT-B6 integration security/reliability gate
                          │
                          ├─ Lane C: product ↔ Workspace composition
                          ├─ Lane D: reliability / DX / technical debt
@@ -167,8 +188,8 @@ Parallel integration progress is not itself an M9 closure criterion and therefor
 
 > **P9.11 — Real daily-use dogfooding + friction/backlog closure.**
 
-**Parallel integration design:**
+**Parallel integration gate:**
 
-> **INT-B5 — СЭД/ECM/ЭДО design.**
+> **INT-B6 — Integration security/reliability review.**
 
-These actions may proceed concurrently because INT-B5 is bounded design/evidence work and does not depend on synthetic P9.11 completion or alter the current Productive Workspace authority/security boundary. INT-B5 must start from named concrete deployment/provider profiles and preserve external document, signature and retention authority.
+These actions may proceed concurrently because INT-B6 is bounded review/evidence work and does not depend on synthetic P9.11 completion or alter the current Productive Workspace authority/security boundary. No first material real connector implementation is admitted before INT-B6 closes its material findings and the applicable Product Contract/governance gates exist.
