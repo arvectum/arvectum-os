@@ -112,6 +112,19 @@ def normalize_disposition(payload: object) -> dict[str, str]:
     return {"disposition": disposition, "rationale": rationale}
 
 
+def _validate_disposition(item: dict[str, Any], disposition: str) -> None:
+    classification = item.get("classification")
+    severity = item.get("severity")
+    if disposition == "routed-product" and classification != "product-specific":
+        raise DogfoodingInputError("only product-specific observations can route to product backlog")
+    if disposition == "routed-governance" and classification not in {"governance", "security-authority"}:
+        raise DogfoodingInputError("only governance or security-authority observations can route to governance")
+    if disposition == "deferred" and severity == "blocker":
+        raise DogfoodingInputError("blockers cannot be deferred")
+    if classification == "security-authority" and disposition in {"deferred", "routed-product"}:
+        raise DogfoodingInputError("security-authority observations cannot be deferred or routed to product backlog")
+
+
 @dataclass(frozen=True)
 class DogfoodingProjection:
     generated_at: str
@@ -123,6 +136,12 @@ class DogfoodingProjection:
             1
             for item in self.items
             if item["status"] == "open" and item["severity"] in {"blocker", "material"}
+        )
+        closure_blocking = sum(
+            1
+            for item in self.items
+            if item["severity"] in {"blocker", "material"}
+            and (item["status"] == "open" or item.get("disposition") == "deferred")
         )
         return {
             "schema": DOGFOODING_SCHEMA,
@@ -146,11 +165,13 @@ class DogfoodingProjection:
                 "days": RETENTION_DAYS,
                 "max_items": MAX_ITEMS,
                 "free_text_minimized": True,
+                "pruned_on_access": True,
             },
             "summary": {
                 "total": len(self.items),
                 "open": open_items,
                 "material_open": material_open,
+                "closure_blocking": closure_blocking,
             },
             "items": list(self.items),
         }
@@ -175,9 +196,9 @@ class DogfoodingStore:
             raw = json.loads(self.path.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError) as exc:
             raise DogfoodingError("dogfooding observation store is unavailable") from exc
-        if not isinstance(raw, list):
+        if not isinstance(raw, list) or any(not isinstance(item, dict) for item in raw):
             raise DogfoodingError("dogfooding observation store is invalid")
-        return [item for item in raw if isinstance(item, dict)]
+        return raw
 
     def _write_all(self, items: list[dict[str, Any]]) -> None:
         self.path.parent.mkdir(parents=True, exist_ok=True)
@@ -186,12 +207,19 @@ class DogfoodingStore:
         except OSError:
             pass
         temporary = self.path.with_suffix(".tmp")
-        temporary.write_text(json.dumps(items, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         try:
-            os.chmod(temporary, 0o600)
-        except OSError:
-            pass
-        os.replace(temporary, self.path)
+            temporary.write_text(json.dumps(items, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+            try:
+                os.chmod(temporary, 0o600)
+            except OSError:
+                pass
+            os.replace(temporary, self.path)
+        except OSError as exc:
+            try:
+                temporary.unlink(missing_ok=True)
+            except OSError:
+                pass
+            raise DogfoodingError("dogfooding observation store could not be persisted") from exc
 
     @staticmethod
     def _retained(items: list[dict[str, Any]], now: datetime) -> list[dict[str, Any]]:
@@ -200,20 +228,29 @@ class DogfoodingStore:
         for item in items:
             recorded_at = item.get("recorded_at")
             if not isinstance(recorded_at, str):
-                continue
+                raise DogfoodingError("dogfooding observation has no valid recording time")
             try:
                 parsed = datetime.fromisoformat(recorded_at.replace("Z", "+00:00"))
-            except ValueError:
-                continue
+            except ValueError as exc:
+                raise DogfoodingError("dogfooding observation has invalid recording time") from exc
+            if parsed.tzinfo is None:
+                raise DogfoodingError("dogfooding observation recording time is not timezone-aware")
             if parsed >= cutoff:
                 retained.append(item)
         return retained[-MAX_ITEMS:]
+
+    def _load_retained(self, now: datetime) -> list[dict[str, Any]]:
+        raw = self._read_all()
+        retained = self._retained(raw, now)
+        if retained != raw:
+            self._write_all(retained)
+        return retained
 
     def project(self, access: AccessContext) -> DogfoodingProjection:
         organization_key = _scope_key(access.organization)
         now = _now()
         with self._lock:
-            items = self._retained(self._read_all(), now)
+            items = self._load_retained(now)
         visible = tuple(
             {key: value for key, value in item.items() if key not in {"organization_scope_key", "actor_scope_key"}}
             for item in items
@@ -238,11 +275,9 @@ class DogfoodingStore:
             "dispositioned_at": None,
         }
         with self._lock:
-            items = self._retained(self._read_all(), now)
-            if len(items) >= MAX_ITEMS:
-                raise DogfoodingError("dogfooding observation store reached its bounded capacity")
+            items = self._load_retained(now)
             items.append(item)
-            self._write_all(items)
+            self._write_all(items[-MAX_ITEMS:])
         return {key: value for key, value in item.items() if key not in {"organization_scope_key", "actor_scope_key"}}
 
     def disposition(self, access: AccessContext, observation_id: str, payload: object) -> dict[str, Any]:
@@ -252,13 +287,14 @@ class DogfoodingStore:
         organization_key = _scope_key(access.organization)
         now = _now()
         with self._lock:
-            items = self._retained(self._read_all(), now)
+            items = self._load_retained(now)
             matched: dict[str, Any] | None = None
             for item in items:
                 if item.get("id") != observation_id or item.get("organization_scope_key") != organization_key:
                     continue
                 if item.get("status") != "open":
                     raise DogfoodingInputError("observation is already dispositioned")
+                _validate_disposition(item, normalized["disposition"])
                 item["status"] = "dispositioned"
                 item["disposition"] = normalized["disposition"]
                 item["disposition_rationale"] = normalized["rationale"]
