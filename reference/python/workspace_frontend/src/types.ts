@@ -378,3 +378,56 @@ export type CopilotAnswer = {
     routes_to_governed_execution: true;
   };
 };
+
+export type OrganizationLaneState = "ready" | "degraded" | "unavailable";
+
+export type OrganizationNavItem = {
+  id: string;
+  kind: "product" | "project-lens" | "knowledge" | "work";
+  label: string;
+  summary: string;
+  href: string;
+  source: string;
+  authority: string;
+  ownership: string;
+  state: string;
+  provenance_available: boolean;
+  semantic_note: string | null;
+  canonical_project_record: false;
+  interaction: "navigate-and-inspect";
+  authority_provided: false;
+  consequential_action_available: false;
+};
+
+export type OrganizationLane = {
+  id: "products" | "projects" | "knowledge" | "work";
+  label: string;
+  summary: string;
+  state: OrganizationLaneState;
+  source_boundary: string;
+  items: OrganizationNavItem[];
+};
+
+export type OrganizationCompositionProjection = {
+  schema: "arvectum.workspace.organization-composition/1";
+  generated_at: string;
+  health: { state: "ready" | "degraded" };
+  projection: {
+    derived: true;
+    canonical_authority: false;
+    organizational_authority_provided: false;
+    company_semantics_promoted_to_kernel: false;
+    project_lenses_are_canonical_records: false;
+    source_projection_authority_preserved: true;
+    canonical_mutation_available: false;
+    external_effect_available: false;
+  };
+  scope: {
+    organization_resolved_server_side: true;
+    actor_resolved_server_side: true;
+    current_access_revalidated: true;
+    cross_organization_aggregation: false;
+    denied_source_counts_exposed: false;
+  };
+  lanes: OrganizationLane[];
+};

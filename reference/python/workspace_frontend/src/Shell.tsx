@@ -4,6 +4,7 @@ import { Discovery } from "./Discovery";
 import { Governed } from "./Governed";
 import { MyWork } from "./MyWork";
 import { ObjectDetail } from "./ObjectDetail";
+import { Organization } from "./Organization";
 import { Products } from "./Products";
 import type { NavigationItem, WorkspaceContext } from "./types";
 
@@ -96,6 +97,8 @@ export function Shell({ context, onLogout }: { context: WorkspaceContext; onLogo
               </section>
               <MyWork embedded />
             </>
+          ) : active.id === "organization" ? (
+            <Organization organizationLabel={context.organization.label} />
           ) : active.id === "my-work" ? (
             <MyWork />
           ) : active.id === "activity" ? (

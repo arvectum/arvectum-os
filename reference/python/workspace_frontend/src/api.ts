@@ -6,6 +6,7 @@ import type {
   GovernedPreflightResult,
   MyWorkProjection,
   ObjectContext,
+  OrganizationCompositionProjection,
   ProductCompositionProjection,
   WorkspaceContext,
 } from "./types";
@@ -73,6 +74,10 @@ export async function loadObjectContext(objectId: string): Promise<ObjectContext
 
 export async function loadProductComposition(): Promise<ProductCompositionProjection> {
   return request<ProductCompositionProjection>("/api/app/v1/products");
+}
+
+export async function loadOrganizationComposition(): Promise<OrganizationCompositionProjection> {
+  return request<OrganizationCompositionProjection>("/api/app/v1/organization");
 }
 
 export async function askCopilot(question: string, csrfToken: string): Promise<CopilotAnswer> {

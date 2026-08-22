@@ -17,6 +17,7 @@ from .config import WorkspaceSettings
 from .copilot import CopilotError, CopilotProvider, LoopbackChatModel, RuntimeCopilotProvider, normalize_question
 from .discovery import DiscoveryError, DiscoveryKind, DiscoveryProvider, ObjectUnavailable, RuntimeDiscoveryProvider
 from .governed import GovernedExperienceError, GovernedExperienceProvider, RuntimeGovernedExperienceProvider
+from .organization import OrganizationCompositionError, OrganizationCompositionProvider, RuntimeOrganizationCompositionProvider
 from .products import ProductCompositionError, ProductCompositionProvider, RuntimeProductCompositionProvider
 from .release import WorkspaceRelease, load_release
 from .security import SessionStore, WorkspaceSession
@@ -59,6 +60,7 @@ def _security_event(code: str, request: Request, store: SessionStore, detail: st
 def _navigation() -> list[dict[str, Any]]:
     return [
         {"id": "home", "label": "Home", "href": "/", "availability": "available"},
+        {"id": "organization", "label": "Organization", "href": "/organization", "availability": "available"},
         {"id": "my-work", "label": "My Work", "href": "/my-work", "availability": "available"},
         {"id": "activity", "label": "Activity", "href": "/activity", "availability": "available"},
         {"id": "search", "label": "Search", "href": "/search", "availability": "available"},
@@ -110,6 +112,7 @@ def create_app(
     discovery_provider: DiscoveryProvider | None = None,
     governed_provider: GovernedExperienceProvider | None = None,
     product_provider: ProductCompositionProvider | None = None,
+    organization_provider: OrganizationCompositionProvider | None = None,
     copilot_provider: CopilotProvider | None = None,
     session_store: SessionStore | None = None,
     static_dir: Path | None = None,
@@ -121,6 +124,7 @@ def create_app(
     discovery = discovery_provider or RuntimeDiscoveryProvider(settings.runtime_root)
     governed = governed_provider or RuntimeGovernedExperienceProvider(settings.runtime_root)
     products = product_provider or RuntimeProductCompositionProvider(settings.runtime_root)
+    organization = organization_provider or RuntimeOrganizationCompositionProvider(products, discovery, attention)
     model = (
         LoopbackChatModel(
             settings.copilot_model_url,
@@ -145,6 +149,7 @@ def create_app(
     app.state.discovery_provider = discovery
     app.state.governed_provider = governed
     app.state.product_provider = products
+    app.state.organization_provider = organization
     app.state.copilot_provider = copilot
     app.state.session_store = store
     app.state.static_root = static_root
@@ -328,6 +333,16 @@ def create_app(
             return products.project(access).to_payload()
         except ProductCompositionError:
             raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="PRODUCT_COMPOSITION_UNAVAILABLE") from None
+
+    @app.get("/api/app/v1/organization")
+    async def read_organization_composition(
+        current: tuple[WorkspaceSession, AccessContext] = Depends(_authorize_current),
+    ) -> dict[str, Any]:
+        _, access = current
+        try:
+            return organization.project(access).to_payload()
+        except OrganizationCompositionError:
+            raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="ORGANIZATION_COMPOSITION_UNAVAILABLE") from None
 
     @app.post("/api/app/v1/copilot/ask")
     async def ask_copilot(
