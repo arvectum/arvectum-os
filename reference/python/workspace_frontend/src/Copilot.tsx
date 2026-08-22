@@ -4,9 +4,9 @@ import { askCopilot, WorkspaceApiError } from "./api";
 import type { CopilotAnswer, CopilotClaimKind } from "./types";
 
 const starters = [
-  "What is the current status of EIS notice 0344100006426000005 and which source is authoritative?",
-  "Why is Tender Operator context available in the current workspace, and what evidence supports it?",
-  "What Discount Parser reconstruction context is retained, and what uncertainty or reconciliation limits remain?",
+  "What is the current status and which source is authoritative?",
+  "What inspectable evidence supports this organizational context?",
+  "What uncertainty, freshness, or reconciliation limits remain?",
 ];
 
 const claimLabels: Record<CopilotClaimKind, string> = {
