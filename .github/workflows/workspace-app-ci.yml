@@ -18,6 +18,59 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  r31-remediation:
+    name: R31 bounded AI-safety remediation
+    if: github.actor != 'github-actions[bot]'
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out R31 branch
+        uses: actions/checkout@v4
+        with:
+          ref: r31-product-composition-ai-safety-review
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: reference/python/workspace_frontend/package-lock.json
+      - name: Apply bounded remediation
+        run: python .github/r31_remediate.py
+      - name: Verify backend
+        run: |
+          python -m pip install --disable-pip-version-check -r reference/python/workspace_app/requirements-dev.lock
+          cd reference/python
+          python -m compileall -q workspace_app workspace_tests p9_03_workspace.py
+          python -m unittest discover -s workspace_tests -v
+      - name: Verify and build frontend
+        run: |
+          cd reference/python/workspace_frontend
+          npm ci --no-audit --no-fund
+          npm run typecheck
+          npm test
+          npm run guard:web-storage
+          npm run build
+      - name: Verify exact release assets
+        run: |
+          cd reference/python
+          python -c 'from pathlib import Path; from workspace_app.assets import verify_frontend_assets; from workspace_app.release import load_release; print(verify_frontend_assets(Path("workspace_frontend"), load_release()))'
+      - name: Commit remediation and remove carrier
+        run: |
+          git checkout origin/main -- .github/workflows/workspace-app-ci.yml
+          git rm .github/r31_remediate.py
+          git add reference/python/workspace_app reference/python/workspace_tests reference/python/workspace_frontend .github/workflows/workspace-app-ci.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "R31: harden Copilot source and action boundaries"
+          git push origin HEAD:r31-product-composition-ai-safety-review
+
   backend:
     name: BFF security and context tests
     runs-on: ubuntu-latest
