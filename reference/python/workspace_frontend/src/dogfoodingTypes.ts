@@ -56,11 +56,13 @@ export type DogfoodingBacklog = {
     days: number;
     max_items: number;
     free_text_minimized: true;
+    pruned_on_access: true;
   };
   summary: {
     total: number;
     open: number;
     material_open: number;
+    closure_blocking: number;
   };
   items: DogfoodingObservation[];
 };
