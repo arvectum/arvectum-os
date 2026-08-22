@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { loadGovernedExperience, loadMyWork, WorkspaceApiError } from "./api";
 import type { AttentionItem, GovernedExperienceProjection, MyWorkProjection } from "./types";
+import "./Activity.css";
 
 type ReadyState = { kind: "ready"; work: MyWorkProjection; governed: GovernedExperienceProjection };
 type LoadState = { kind: "loading" } | ReadyState | { kind: "error"; code: string; reloadRequired: boolean };
