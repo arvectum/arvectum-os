@@ -314,7 +314,7 @@ export type ProductCompositionProjection = {
   products: ProductSurfaceContext[];
 };
 
-export type CopilotClaimKind = "sourced-fact" | "synthesis" | "uncertainty" | "unavailable-evidence";
+export type CopilotClaimKind = "source-context" | "synthesis" | "uncertainty" | "unavailable-evidence";
 
 export type CopilotClaim = {
   kind: CopilotClaimKind;
@@ -335,7 +335,7 @@ export type CopilotSource = {
 };
 
 export type CopilotAnswer = {
-  schema: "arvectum.workspace.copilot-answer/1";
+  schema: "arvectum.workspace.copilot-answer/2";
   generated_at: string;
   claims: CopilotClaim[];
   sources: CopilotSource[];
@@ -356,7 +356,8 @@ export type CopilotAnswer = {
     cross_organization_retrieval: false;
   };
   semantics: {
-    sourced_fact_distinct_from_synthesis: true;
+    source_context_distinct_from_synthesis: true;
+    unvalidated_knowledge_not_presented_as_fact: true;
     uncertainty_explicit: true;
     unavailable_evidence_explicit: true;
     observation_memory_candidate_not_flattened_to_knowledge: true;
@@ -371,11 +372,12 @@ export type CopilotAnswer = {
     question_persisted: false;
   };
   follow_up: {
-    kind: "governed-review";
+    kind: "inspect-evidence-first";
     label: string;
-    href: "/governed";
+    href: string | null;
     direct_consequential_action: false;
-    routes_to_governed_execution: true;
+    routes_to_governed_execution: false;
+    context_bound_governed_continuation_required: true;
   };
 };
 

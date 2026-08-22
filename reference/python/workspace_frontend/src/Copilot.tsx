@@ -10,7 +10,7 @@ const starters = [
 ];
 
 const claimLabels: Record<CopilotClaimKind, string> = {
-  "sourced-fact": "Sourced fact",
+  "source-context": "Source context",
   synthesis: "AI synthesis",
   uncertainty: "Uncertainty",
   "unavailable-evidence": "Unavailable evidence",
@@ -44,7 +44,7 @@ export function Copilot({ csrfToken }: { csrfToken: string }) {
         <p className="eyebrow">Arvectum AI Copilot</p>
         <h1 id="copilot-title">Ask the organization, then inspect the evidence.</h1>
         <p>
-          Ask a natural-language question. Arvectum separates sourced facts, AI synthesis, uncertainty and unavailable
+          Ask a natural-language question. Arvectum separates source context, AI synthesis, uncertainty and unavailable
           evidence. The answer is a transient output: it is not validated Knowledge, permission, approval or authority.
         </p>
       </div>
@@ -124,7 +124,7 @@ export function Copilot({ csrfToken }: { csrfToken: string }) {
             <article>
               <span className="eyebrow">Model</span>
               <strong>{answer.model.used ? `${answer.model.provider} · ${answer.model.model}` : "No synthesis used"}</strong>
-              <p>{answer.model.failure ? `Model limitation: ${answer.model.failure}` : "Free-form model output can only appear as synthesis, never as sourced fact."}</p>
+              <p>{answer.model.failure ? `Model limitation: ${answer.model.failure}` : "Free-form model output can only appear as synthesis, never as source context or validated Knowledge."}</p>
             </article>
             <article>
               <span className="eyebrow">Authority</span>
@@ -141,9 +141,9 @@ export function Copilot({ csrfToken }: { csrfToken: string }) {
           <div className="copilot-follow-up">
             <div>
               <strong>Need a consequential follow-up?</strong>
-              <p>Review the current governed execution/decision gates. Copilot does not execute the consequence itself.</p>
+              <p>Inspect the cited evidence or product context first. A governed continuation may be offered only from context actually bound to the relevant execution or decision. Copilot does not choose an unrelated execution.</p>
             </div>
-            <a className="quiet-link" href={answer.follow_up.href}>{answer.follow_up.label}</a>
+            {answer.follow_up.href ? <a className="quiet-link" href={answer.follow_up.href}>{answer.follow_up.label}</a> : <span className="boundary-note">No context-bound continuation is available.</span>}
           </div>
         </div>
       ) : null}

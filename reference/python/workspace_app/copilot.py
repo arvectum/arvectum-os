@@ -112,7 +112,7 @@ class LoopbackChatModel:
     adapter receives a minimized evidence packet, never Workspace credentials,
     actor/Organization technical identifiers, raw product stores, or hidden
     platform state. Its free-form output is always classified as synthesis and
-    never promoted to sourced fact or validated Knowledge.
+    never promoted to source context, validated Knowledge, or authority.
     """
 
     def __init__(self, endpoint: str, model: str, timeout_seconds: int) -> None:
@@ -194,7 +194,7 @@ class CopilotAnswer:
 
     def to_payload(self) -> dict[str, object]:
         return {
-            "schema": "arvectum.workspace.copilot-answer/1",
+            "schema": "arvectum.workspace.copilot-answer/2",
             "generated_at": self.generated_at,
             "claims": [claim.to_payload() for claim in self.claims],
             "sources": [source.to_payload() for source in self.sources],
@@ -215,7 +215,8 @@ class CopilotAnswer:
                 "cross_organization_retrieval": False,
             },
             "semantics": {
-                "sourced_fact_distinct_from_synthesis": True,
+                "source_context_distinct_from_synthesis": True,
+                "unvalidated_knowledge_not_presented_as_fact": True,
                 "uncertainty_explicit": True,
                 "unavailable_evidence_explicit": True,
                 "observation_memory_candidate_not_flattened_to_knowledge": True,
@@ -230,11 +231,12 @@ class CopilotAnswer:
                 "question_persisted": False,
             },
             "follow_up": {
-                "kind": "governed-review",
-                "label": "Review governed actions",
-                "href": "/governed",
+                "kind": "inspect-evidence-first",
+                "label": "Inspect cited evidence before action",
+                "href": self.sources[0].open_href if self.sources else None,
                 "direct_consequential_action": False,
-                "routes_to_governed_execution": True,
+                "routes_to_governed_execution": False,
+                "context_bound_governed_continuation_required": True,
             },
         }
 
@@ -356,7 +358,7 @@ class RuntimeCopilotProvider:
             knowledge_note = f" {source.knowledge_role}." if source.knowledge_role else ""
             claims.append(
                 CopilotClaim(
-                    kind="sourced-fact",
+                    kind="source-context",
                     text=f"{source.summary} Authority/source: {source.authority}.{knowledge_note}",
                     source_refs=(source.source_id,),
                 )
@@ -391,7 +393,7 @@ class RuntimeCopilotProvider:
                 claims.append(
                     CopilotClaim(
                         kind="uncertainty",
-                        text="AI synthesis is currently unavailable. The sourced evidence above remains inspectable; no answer was invented to replace the missing model output.",
+                        text="AI synthesis is currently unavailable. The source context above remains inspectable; no answer was invented to replace the missing model output.",
                         source_refs=tuple(item.source_id for item in evidence),
                     )
                 )
@@ -408,7 +410,7 @@ class RuntimeCopilotProvider:
             claims.append(
                 CopilotClaim(
                     kind="uncertainty",
-                    text="No AI synthesis model is configured in this Workspace profile. Only source-grounded facts are shown.",
+                    text="No AI synthesis model is configured in this Workspace profile. Only source-grounded context is shown; it is not promoted to validated Knowledge.",
                     source_refs=tuple(item.source_id for item in evidence),
                 )
             )
