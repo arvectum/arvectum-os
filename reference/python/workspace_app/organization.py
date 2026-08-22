@@ -47,6 +47,7 @@ class OrganizationNavItem:
     ownership: str
     state: str
     provenance_available: bool
+    semantic_note: str | None = None
     canonical_project_record: bool = False
 
     def __post_init__(self) -> None:
@@ -55,6 +56,8 @@ class OrganizationNavItem:
         href = _bounded(self.href, field="href", limit=1024)
         if not href.startswith("/") or href.startswith("//"):
             raise OrganizationCompositionError("organization navigation href must stay inside Workspace")
+        if self.semantic_note is not None:
+            _bounded(self.semantic_note, field="semantic_note", limit=1024)
         if not isinstance(self.provenance_available, bool) or not isinstance(self.canonical_project_record, bool):
             raise OrganizationCompositionError("organization navigation truth flags must be explicit")
 
@@ -70,6 +73,7 @@ class OrganizationNavItem:
             "ownership": self.ownership,
             "state": self.state,
             "provenance_available": self.provenance_available,
+            "semantic_note": self.semantic_note,
             "canonical_project_record": self.canonical_project_record,
             "interaction": "navigate-and-inspect",
             "authority_provided": False,
@@ -249,6 +253,7 @@ class RuntimeOrganizationCompositionProvider:
                 ownership="source-owned governed context",
                 state=item.state_label,
                 provenance_available=True,
+                semantic_note=item.knowledge_role or item.semantic_role,
             )
             for item in projection.results[:12]
         )

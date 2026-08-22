@@ -392,6 +392,7 @@ export type OrganizationNavItem = {
   ownership: string;
   state: string;
   provenance_available: boolean;
+  semantic_note: string | null;
   canonical_project_record: false;
   interaction: "navigate-and-inspect";
   authority_provided: false;

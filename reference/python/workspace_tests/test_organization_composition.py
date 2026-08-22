@@ -48,6 +48,8 @@ class Discovery:
                 source_label="Arvectum OS governed state",
                 authority_mode="Native",
                 state_label="validated",
+                knowledge_role="Knowledge Candidate — not validated Knowledge",
+                semantic_role="Knowledge Candidate",
             ),),
         )
 
@@ -104,6 +106,7 @@ class OrganizationCompositionTests(unittest.TestCase):
         self.assertFalse(project["canonical_project_record"])
         self.assertIn("not a canonical Project record", project["summary"])
         self.assertEqual(lanes["knowledge"]["items"][0]["href"], "/objects/" + "a" * 20)
+        self.assertEqual(lanes["knowledge"]["items"][0]["semantic_note"], "Knowledge Candidate — not validated Knowledge")
         self.assertEqual(lanes["work"]["items"][0]["href"], "/my-work?focus=" + "b" * 20)
         self.assertFalse(lanes["work"]["items"][0]["authority_provided"])
 

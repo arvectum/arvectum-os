@@ -38,6 +38,7 @@ function Lane({ lane }: { lane: OrganizationLane }) {
                 <div><dt>Source</dt><dd>{item.source}</dd></div>
                 <div><dt>Authority</dt><dd>{item.authority}</dd></div>
                 <div><dt>Ownership</dt><dd>{item.ownership}</dd></div>
+                {item.semantic_note ? <div><dt>Semantics</dt><dd>{item.semantic_note}</dd></div> : null}
               </dl>
               {item.kind === "project-lens" ? <p className="boundary-note">Navigation lens only · not a canonical Project record.</p> : null}
               <a href={item.href} onClick={(event) => navigate(item.href, event)}>Open context</a>

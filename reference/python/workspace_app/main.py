@@ -17,7 +17,7 @@ from .config import WorkspaceSettings
 from .copilot import CopilotError, CopilotProvider, LoopbackChatModel, RuntimeCopilotProvider, normalize_question
 from .discovery import DiscoveryError, DiscoveryKind, DiscoveryProvider, ObjectUnavailable, RuntimeDiscoveryProvider
 from .governed import GovernedExperienceError, GovernedExperienceProvider, RuntimeGovernedExperienceProvider
-from .organization import OrganizationCompositionProvider, RuntimeOrganizationCompositionProvider
+from .organization import OrganizationCompositionError, OrganizationCompositionProvider, RuntimeOrganizationCompositionProvider
 from .products import ProductCompositionError, ProductCompositionProvider, RuntimeProductCompositionProvider
 from .release import WorkspaceRelease, load_release
 from .security import SessionStore, WorkspaceSession
@@ -339,7 +339,10 @@ def create_app(
         current: tuple[WorkspaceSession, AccessContext] = Depends(_authorize_current),
     ) -> dict[str, Any]:
         _, access = current
-        return organization.project(access).to_payload()
+        try:
+            return organization.project(access).to_payload()
+        except OrganizationCompositionError:
+            raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="ORGANIZATION_COMPOSITION_UNAVAILABLE") from None
 
     @app.post("/api/app/v1/copilot/ask")
     async def ask_copilot(

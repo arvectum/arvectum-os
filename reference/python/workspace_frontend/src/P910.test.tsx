@@ -18,10 +18,10 @@ const composition: OrganizationCompositionProjection = {
   },
   lanes: [
     { id: "products", label: "Products", summary: "Explicit product boundaries.", state: "ready", source_boundary: "P9.07 product-owned composition", items: [
-      { id: "product:tender", kind: "product", label: "Tender Operator", summary: "Product context", href: "/products/tender-operator", source: "P7.07", authority: "ЕИС — External Reference", ownership: "product-owned", state: "verified", provenance_available: true, canonical_project_record: false, interaction: "navigate-and-inspect", authority_provided: false, consequential_action_available: false },
+      { id: "product:tender", kind: "product", label: "Tender Operator", summary: "Product context", href: "/products/tender-operator", source: "P7.07", authority: "ЕИС — External Reference", ownership: "product-owned", state: "verified", provenance_available: true, semantic_note: null, canonical_project_record: false, interaction: "navigate-and-inspect", authority_provided: false, consequential_action_available: false },
     ] },
     { id: "projects", label: "Project lenses", summary: "Navigation lenses.", state: "ready", source_boundary: "Declared product contours", items: [
-      { id: "project-lens:tender", kind: "project-lens", label: "Tender Operator operating contour", summary: "Not a canonical Project record.", href: "/products/tender-operator", source: "P7.07", authority: "ЕИС — External Reference", ownership: "product-owned source; Workspace navigation lens", state: "verified", provenance_available: true, canonical_project_record: false, interaction: "navigate-and-inspect", authority_provided: false, consequential_action_available: false },
+      { id: "project-lens:tender", kind: "project-lens", label: "Tender Operator operating contour", summary: "Not a canonical Project record.", href: "/products/tender-operator", source: "P7.07", authority: "ЕИС — External Reference", ownership: "product-owned source; Workspace navigation lens", state: "verified", provenance_available: true, semantic_note: null, canonical_project_record: false, interaction: "navigate-and-inspect", authority_provided: false, consequential_action_available: false },
     ] },
     { id: "knowledge", label: "Knowledge", summary: "Governed context.", state: "ready", source_boundary: "P9.05 Discovery", items: [] },
     { id: "work", label: "Work", summary: "Attention context.", state: "ready", source_boundary: "P9.04/P9.09 attention", items: [] },
