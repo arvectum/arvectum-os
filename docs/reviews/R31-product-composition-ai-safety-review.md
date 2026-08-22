@@ -1,11 +1,12 @@
 # R31 — Product Composition / AI Safety Review
 
-Status: `Implementation review checkpoint — independent CI and final closure pending`
+Status: `Complete / PASS`
 Date: `2026-08-22`
 Owner: `ООО «Арвектум»`
 Task classification: `platform` with `product_contract` and `governance`
 Reviewed integration scope: `P9.07` through `P9.10`
 Predecessor: `P9.10 — Complete / PASS`
+Next canonical action: `P9.11 — Real daily-use dogfooding + friction/backlog closure`
 
 ## 1. Canonical baseline checked
 
@@ -48,7 +49,7 @@ The approved P6.02 repository-locator reconciliation resolves the current implem
 
 ### 3.2 AI Copilot — P9.08
 
-**Initial result: FAIL with two material findings. Post-remediation result: PASS pending independent CI.**
+**Initial result: FAIL with two material findings. Post-remediation result: PASS.**
 
 The underlying retrieval boundary was already strong: server-resolved Organization/Actor scope, current authorization reuse, minimized evidence packets, inspectable sources, source authority/freshness/Knowledge-role metadata, untrusted-evidence prompt treatment, synthesis-only model output, transient generation and no canonical mutation/external effect/authority grant.
 
@@ -112,9 +113,17 @@ Results:
 
 No new material objection was found in iteration 2.
 
-A final post-independent-CI diff review remains before R31 may be recorded `Complete / PASS`.
+### Iteration 3 — post-independent-CI final net-diff review
 
-## 5. Verification checkpoint
+Reviewed the complete PR net diff after independent CI, including the versioned Copilot response contract, source-context presentation, evidence-first follow-up, regression tests, exact production assets, Product Contract boundaries, Activity/Organization composition invariants and roadmap closure.
+
+The old release JS asset is absent from the resulting branch asset set; the manifest points to the exact rebuilt `p9.10.2` asset and the reproducibility/release-pin gates passed. Temporary remediation/closure helpers and workflow carriers are absent from the final net diff.
+
+No remaining material architecture, product-boundary, hidden-coupling, security, Organization-scope, authority, provenance, Knowledge-lifecycle, AI-safety, action-routing, reproducibility or maintainability objection was found. Functional cross-review therefore stops at iteration 3 rather than manufacturing further iterations.
+
+Functional cross-review is implementation/review evidence; it is not RFC/ADR acceptance, Product Contract/Capability lifecycle promotion or delegated Organizational Authority.
+
+## 5. Verification evidence
 
 One-shot remediation verification completed successfully before committing the clean implementation head:
 
@@ -123,16 +132,22 @@ One-shot remediation verification completed successfully before committing the c
 - frontend tests — PASS;
 - browser Web Storage guard — PASS;
 - production frontend build — PASS;
-- exact release asset verification — PASS;
-- temporary remediation helper and carrier workflow are absent from the final net implementation diff.
+- exact release asset verification — PASS.
 
 Clean remediation implementation head: `078206fce89f0cac417dc576bcbd3b1894afcbc0`.
 
-GitHub marks workflow runs attached directly to the helper-removal/workflow-restoration commit as `action_required`; those runs are intentionally not treated as independent closure evidence. A normal review-document commit will provide the independent PR CI head.
+GitHub marks workflow runs attached directly to helper-removal/workflow-restoration commits as `action_required`; those runs are intentionally not used as independent closure evidence.
+
+Independent clean review head `022db6e18a8e7128c1984e6f46908d48351c54e8` passed:
+
+- Productive Workspace CI `#125` / run `32559626999` — `SUCCESS`;
+- Reference Python CI `#356` / run `32559627003` — `SUCCESS`.
+
+Canonical roadmaps are synchronized to master `2.86.0` / Phase 9 `1.13.0`, with `P9.11 — Real daily-use dogfooding + friction/backlog closure` as the next action. Workspace release is `p9.10.2`, internal application contract `9`, still `bounded-internal-provisional` and `public_api: false`.
 
 ## 6. Explicit non-effects
 
-Passing R31 will not by itself:
+R31 `Complete / PASS` does not by itself:
 
 - make P6.02 or P6.06 `Stable`;
 - make CAP-001/CAP-004 or any other capability `Active`;
