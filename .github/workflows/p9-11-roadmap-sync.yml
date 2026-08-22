@@ -20,8 +20,8 @@ jobs:
         with:
           ref: p9-11-dogfooding
       - name: Synchronize master and Phase 9 roadmaps
-        shell: python
         run: |
+          python - <<'PY'
           from pathlib import Path
 
           master_path = Path("docs/roadmap/ROADMAP.md")
@@ -55,7 +55,8 @@ jobs:
           new_phase_action = old_phase_action + "\n\nImplementation readiness is now available in Workspace release `p9.11.0`, internal application contract `10`, through a bounded owner-operated Observation backlog. This mechanism does not itself satisfy real daily-use evidence; P9.11 remains `Current` until real owner sessions occur and the resulting friction is dispositioned under the exit criteria."
           assert old_phase_action in phase
           phase = phase.replace(old_phase_action, new_phase_action, 1)
-          section = """
+          assert "## 23. P9.11 implementation-readiness state" not in phase
+          phase = phase.rstrip() + """
 
 ## 23. P9.11 implementation-readiness state
 
@@ -68,10 +69,9 @@ Workspace release `p9.11.0`, internal application contract `10`, adds a bounded 
 The backlog separates Workspace usability, product-specific, governance and security/authority findings. Open or deferred material observations remain `closure_blocking`. Blockers cannot be deferred or routed out of closure: they remain open until factual resolution/recheck or are shown not reproducible. Product/governance routing is classification-constrained for non-blocker findings and does not promote product semantics into platform behavior.
 
 This state is **not P9.11 closure**. Real owner working sessions have not been fabricated or inferred from automated tests. P9.11 remains the current canonical action, M9 remains open, and R32 does not become current until real owner-session evidence exists and the resulting backlog satisfies the P9.11 exit criteria.
-"""
-          assert "## 23. P9.11 implementation-readiness state" not in phase
-          phase = phase.rstrip() + section + "\n"
+""" + "\n"
           phase_path.write_text(phase, encoding="utf-8")
+          PY
       - name: Commit synchronized roadmaps
         run: |
           git config user.name "github-actions[bot]"
