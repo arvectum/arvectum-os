@@ -10,6 +10,12 @@ import type {
   ProductCompositionProjection,
   WorkspaceContext,
 } from "./types";
+import type {
+  DogfoodingBacklog,
+  DogfoodingDisposition,
+  DogfoodingObservation,
+  DogfoodingObservationInput,
+} from "./dogfoodingTypes";
 
 export class WorkspaceApiError extends Error {
   readonly code: string;
@@ -78,6 +84,37 @@ export async function loadProductComposition(): Promise<ProductCompositionProjec
 
 export async function loadOrganizationComposition(): Promise<OrganizationCompositionProjection> {
   return request<OrganizationCompositionProjection>("/api/app/v1/organization");
+}
+
+export async function loadDogfoodingBacklog(): Promise<DogfoodingBacklog> {
+  return request<DogfoodingBacklog>("/api/app/v1/dogfooding");
+}
+
+export async function recordDogfoodingObservation(
+  input: DogfoodingObservationInput,
+  csrfToken: string,
+): Promise<DogfoodingObservation> {
+  return request<DogfoodingObservation>("/api/app/v1/dogfooding/observations", {
+    method: "POST",
+    headers: { "X-Arvectum-CSRF": csrfToken },
+    body: JSON.stringify(input),
+  });
+}
+
+export async function dispositionDogfoodingObservation(
+  observationId: string,
+  disposition: DogfoodingDisposition,
+  rationale: string,
+  csrfToken: string,
+): Promise<DogfoodingObservation> {
+  return request<DogfoodingObservation>(
+    `/api/app/v1/dogfooding/observations/${encodeURIComponent(observationId)}/disposition`,
+    {
+      method: "POST",
+      headers: { "X-Arvectum-CSRF": csrfToken },
+      body: JSON.stringify({ disposition, rationale }),
+    },
+  );
 }
 
 export async function askCopilot(question: string, csrfToken: string): Promise<CopilotAnswer> {

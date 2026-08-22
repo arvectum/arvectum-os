@@ -16,6 +16,7 @@ from .attention import AttentionProvider, RuntimeAttentionProvider
 from .config import WorkspaceSettings
 from .copilot import CopilotError, CopilotProvider, LoopbackChatModel, RuntimeCopilotProvider, normalize_question
 from .discovery import DiscoveryError, DiscoveryKind, DiscoveryProvider, ObjectUnavailable, RuntimeDiscoveryProvider
+from .dogfooding import DogfoodingError, DogfoodingInputError, DogfoodingStore
 from .governed import GovernedExperienceError, GovernedExperienceProvider, RuntimeGovernedExperienceProvider
 from .organization import OrganizationCompositionError, OrganizationCompositionProvider, RuntimeOrganizationCompositionProvider
 from .products import ProductCompositionError, ProductCompositionProvider, RuntimeProductCompositionProvider
@@ -27,6 +28,7 @@ SAFE_METHODS = frozenset({"GET", "HEAD", "OPTIONS"})
 RELEASE_HEADER = "X-Arvectum-Workspace-Release"
 CSRF_HEADER = "X-Arvectum-CSRF"
 MAX_COPILOT_REQUEST_BYTES = 4096
+MAX_DOGFOODING_REQUEST_BYTES = 2048
 
 
 def _is_loopback_client(host: str | None) -> bool:
@@ -70,6 +72,7 @@ def _navigation() -> list[dict[str, Any]]:
         {"id": "copilot", "label": "Ask Arvectum", "href": "/copilot", "availability": "available"},
         {"id": "governed", "label": "Governed actions", "href": "/governed", "availability": "available"},
         {"id": "products", "label": "Products", "href": "/products", "availability": "available"},
+        {"id": "dogfooding", "label": "Dogfooding", "href": "/dogfooding", "availability": "available"},
     ]
 
 
@@ -114,6 +117,7 @@ def create_app(
     product_provider: ProductCompositionProvider | None = None,
     organization_provider: OrganizationCompositionProvider | None = None,
     copilot_provider: CopilotProvider | None = None,
+    dogfooding_store: DogfoodingStore | None = None,
     session_store: SessionStore | None = None,
     static_dir: Path | None = None,
 ) -> FastAPI:
@@ -135,6 +139,7 @@ def create_app(
         else None
     )
     copilot = copilot_provider or RuntimeCopilotProvider(discovery, products, model=model)
+    dogfooding = dogfooding_store or DogfoodingStore(settings.runtime_root)
     store = session_store or SessionStore(
         idle_seconds=settings.session_idle_seconds,
         absolute_seconds=settings.session_absolute_seconds,
@@ -151,6 +156,7 @@ def create_app(
     app.state.product_provider = products
     app.state.organization_provider = organization
     app.state.copilot_provider = copilot
+    app.state.dogfooding_store = dogfooding
     app.state.session_store = store
     app.state.static_root = static_root
 
@@ -264,6 +270,27 @@ def create_app(
         except CopilotError:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="COPILOT_QUESTION_INVALID") from None
 
+    async def _dogfooding_payload(request: Request) -> object:
+        if request.headers.get("transfer-encoding"):
+            _security_event("DOGFOODING_INPUT_REJECTED", request, store, "transfer-encoding")
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="DOGFOODING_INPUT_REJECTED")
+        raw_length = request.headers.get("content-length")
+        if raw_length is not None:
+            try:
+                length = int(raw_length)
+            except ValueError:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="DOGFOODING_INPUT_REJECTED") from None
+            if length <= 0 or length > MAX_DOGFOODING_REQUEST_BYTES:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="DOGFOODING_INPUT_REJECTED")
+        raw = await request.body()
+        if not raw or len(raw) > MAX_DOGFOODING_REQUEST_BYTES:
+            _security_event("DOGFOODING_INPUT_REJECTED", request, store, "body-size")
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="DOGFOODING_INPUT_REJECTED")
+        try:
+            return json.loads(raw.decode("utf-8"))
+        except (UnicodeDecodeError, json.JSONDecodeError):
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="DOGFOODING_INPUT_REJECTED") from None
+
     @app.post("/api/app/v1/session/bootstrap")
     async def bootstrap_session(request: Request, response: Response) -> dict[str, Any]:
         if not _is_loopback_client(request.client.host if request.client else None):
@@ -343,6 +370,45 @@ def create_app(
             return organization.project(access).to_payload()
         except OrganizationCompositionError:
             raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="ORGANIZATION_COMPOSITION_UNAVAILABLE") from None
+
+    @app.get("/api/app/v1/dogfooding")
+    async def read_dogfooding_backlog(
+        current: tuple[WorkspaceSession, AccessContext] = Depends(_authorize_current),
+    ) -> dict[str, Any]:
+        _, access = current
+        try:
+            return dogfooding.project(access).to_payload()
+        except DogfoodingError:
+            raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="DOGFOODING_UNAVAILABLE") from None
+
+    @app.post("/api/app/v1/dogfooding/observations")
+    async def record_dogfooding_observation(
+        request: Request,
+        current: tuple[WorkspaceSession, AccessContext] = Depends(_csrf_protected),
+    ) -> dict[str, Any]:
+        payload = await _dogfooding_payload(request)
+        _, access = current
+        try:
+            return dogfooding.record(access, release.release_id, payload)
+        except DogfoodingInputError:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="DOGFOODING_INPUT_INVALID") from None
+        except DogfoodingError:
+            raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="DOGFOODING_UNAVAILABLE") from None
+
+    @app.post("/api/app/v1/dogfooding/observations/{observation_id}/disposition")
+    async def disposition_dogfooding_observation(
+        observation_id: str,
+        request: Request,
+        current: tuple[WorkspaceSession, AccessContext] = Depends(_csrf_protected),
+    ) -> dict[str, Any]:
+        payload = await _dogfooding_payload(request)
+        _, access = current
+        try:
+            return dogfooding.disposition(access, observation_id, payload)
+        except DogfoodingInputError:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="DOGFOODING_DISPOSITION_INVALID") from None
+        except DogfoodingError:
+            raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="DOGFOODING_UNAVAILABLE") from None
 
     @app.post("/api/app/v1/copilot/ask")
     async def ask_copilot(
