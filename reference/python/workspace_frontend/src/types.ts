@@ -313,3 +313,68 @@ export type ProductCompositionProjection = {
   };
   products: ProductSurfaceContext[];
 };
+
+export type CopilotClaimKind = "sourced-fact" | "synthesis" | "uncertainty" | "unavailable-evidence";
+
+export type CopilotClaim = {
+  kind: CopilotClaimKind;
+  text: string;
+  source_refs: string[];
+};
+
+export type CopilotSource = {
+  id: string;
+  label: string;
+  summary: string;
+  authority: string;
+  freshness: string;
+  semantic_role: string;
+  knowledge_role: string | null;
+  open_href: string;
+  inspectable_in_workspace: true;
+};
+
+export type CopilotAnswer = {
+  schema: "arvectum.workspace.copilot-answer/1";
+  generated_at: string;
+  claims: CopilotClaim[];
+  sources: CopilotSource[];
+  model: {
+    provider: string;
+    model: string;
+    used: boolean;
+    failure: string | null;
+    output_role: "synthesis-only" | "not-used";
+    raw_prompt_retained: false;
+    chain_of_thought_retained: false;
+  };
+  scope: {
+    organization_resolved_server_side: true;
+    actor_resolved_server_side: true;
+    current_access_revalidated: true;
+    retrieval_authorization_reused_from_workspace: true;
+    cross_organization_retrieval: false;
+  };
+  semantics: {
+    sourced_fact_distinct_from_synthesis: true;
+    uncertainty_explicit: true;
+    unavailable_evidence_explicit: true;
+    observation_memory_candidate_not_flattened_to_knowledge: true;
+  };
+  generation: {
+    transient_output: true;
+    validated_knowledge: false;
+    canonical_state_changed: false;
+    external_effect_performed: false;
+    organizational_authority_provided: false;
+    consequential_approval_provided: false;
+    question_persisted: false;
+  };
+  follow_up: {
+    kind: "governed-review";
+    label: string;
+    href: "/governed";
+    direct_consequential_action: false;
+    routes_to_governed_execution: true;
+  };
+};
