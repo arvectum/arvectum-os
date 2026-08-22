@@ -1,7 +1,7 @@
 {
   "schema": "arvectum.workspace.application-release/1",
-  "release_id": "p9.09.1",
-  "app_api_contract": "7",
+  "release_id": "p9.10.1",
+  "app_api_contract": "8",
   "classification": "bounded-internal-provisional",
   "public_api": false
 }
