@@ -17,6 +17,7 @@ type ActivityEntry = {
   scenario: boolean;
 };
 
+// Reuse the already-governed P9.04 attention taxonomy instead of creating a second priority model.
 const ALERT_GROUPS = new Set(["decision-required", "blocked-failed", "reconciliation-required"]);
 
 function displayTime(value: string): string {
