@@ -1,11 +1,11 @@
 name: P9.09 one-shot implementation
 
 on:
-  push:
-    branches:
-      - p9-09-activity-notifications-attention-routing
+  pull_request:
+    branches: [main]
     paths:
       - ".github/workflows/p9-09-one-shot.yml"
+      - "tools/p9_09_apply.py"
 
 permissions:
   contents: write
