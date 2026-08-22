@@ -1,0 +1,57 @@
+name: P9.09 one-shot implementation
+
+on:
+  push:
+    branches:
+      - p9-09-activity-notifications-attention-routing
+    paths:
+      - ".github/workflows/p9-09-one-shot.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  implement:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: p9-09-activity-notifications-attention-routing
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: reference/python/workspace_frontend/package-lock.json
+      - name: Apply bounded P9.09 changes
+        run: python tools/p9_09_apply.py apply
+      - name: Install backend test dependencies
+        working-directory: reference/python
+        run: python -m pip install --disable-pip-version-check -r workspace_app/requirements-dev.lock
+      - name: Compile and test Workspace backend
+        working-directory: reference/python
+        run: |
+          python -m compileall -q workspace_app workspace_tests p9_03_workspace.py
+          python -m unittest discover -s workspace_tests -v
+      - name: Install and verify frontend
+        working-directory: reference/python/workspace_frontend
+        run: |
+          npm ci --no-audit --no-fund
+          npm run typecheck
+          npm test
+          npm run guard:web-storage
+          npm run build
+      - name: Record closure evidence after green implementation checks
+        run: python tools/p9_09_apply.py close --run-id "${GITHUB_RUN_ID}"
+      - name: Remove one-shot helper and commit reconciled implementation
+        run: |
+          git rm tools/p9_09_apply.py .github/workflows/p9-09-one-shot.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "P9.09 — Activity, notifications and attention routing"
+          git push origin HEAD:p9-09-activity-notifications-attention-routing
